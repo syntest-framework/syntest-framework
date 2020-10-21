@@ -9,10 +9,10 @@
     "test": "jest",
     "test:c": "jest --coverage"
   },
-  "homepage": "https://github.com/syntest-framework/syntest-solidity",
+  "homepage": "https://github.com/syntest-framework/syntest-framework",
   "repository": {
     "type": "git",
-    "url": "https://github.com/syntest-framework/syntest-solidity"
+    "url": "https://github.com/syntest-framework/syntest-framework"
   },
   "author": "",
   "license": "MIT",
