@@ -2,9 +2,10 @@
   "name": "syntest-framework",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "tsc:w": "tsc -w",
+    "tsc:w": "tsc -w --declaration",
     "lint": "eslint --ext .ts src test/unit --fix",
     "test": "jest",
     "test:c": "jest --coverage"
@@ -16,7 +17,13 @@
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@dagrejs/graphlib": "^2.1.4",
+    "d3": "^4.13.0",
+    "jsdom": "^16.4.0",
+    "seedrandom": "^3.0.5",
+    "winston": "^3.3.3"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
