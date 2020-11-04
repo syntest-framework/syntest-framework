@@ -1,6 +1,10 @@
 # syntest-framework
 Common core of the SynTest Framework
 
+# Prerequisites
+* install Node.js v. 12.18.3 LTL
+* install truffle (`npm install -g truffle`)
+
 # How to use
 Since there is no npm package yet:
 * Clone this project
