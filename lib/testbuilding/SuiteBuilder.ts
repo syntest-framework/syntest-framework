@@ -18,6 +18,7 @@ export abstract class SuiteBuilder {
         this._stringifier = stringifier
     }
 
+    // @ts-ignore
     abstract async writeTest (filePath: string, individual: Individual, addLogs = false, additionalAssertions: { [key: string]: string } = {}): Promise<void>
 
     abstract async createTests (population: Individual[]): Promise<void>

@@ -3,6 +3,7 @@ import {Individual} from "../search/gene/Individual";
 
 export abstract class Stringifier {
 
+    // @ts-ignore
     abstract stringifyIndividual(individual: Individual, addLogs = false, additionalAssertions: { [key: string]: string } = {}): string
 
     abstract stringifyGene(gene: Gene): string
