@@ -15,17 +15,17 @@ const {compare} = require('../operator/DominanceComparator')
  */
 export class MOSA extends NSGA2 {
 
-    private coveredObjectives: Set<number>
-    private uncoveredObjectives: Set<number>
+    private coveredObjectives: Set<Objective>
+    private uncoveredObjectives: Set<Objective>
 
     constructor(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
         super(fitness, geneOptions, sampler);
-        this.coveredObjectives = new Set<number>()
-        this.uncoveredObjectives = new Set<number>()
+        this.coveredObjectives = new Set<Objective>()
+        this.uncoveredObjectives = new Set<Objective>()
 
-        for (let i=0; i<this.objectives.length; i++){
-            this.uncoveredObjectives.add(i)
-        }
+        this.objectives.forEach((objective) => {
+            this.uncoveredObjectives.add(objective)
+        })
     }
 
     async generation (population: Individual[]) {
@@ -99,15 +99,15 @@ export class MOSA extends NSGA2 {
     /*
      See: Preference sorting as discussed in the TSE paper for DynaMOSA
    */
-    protected preferenceSortingAlgorithm(population: Individual[], objectives: Set<number>): Individual[][]{
+    protected preferenceSortingAlgorithm(population: Individual[], objectives: Set<Objective>): Individual[][]{
         let fronts: Individual[][] = [[]]
 
-        if (objectives == null){
+        if (objectives === null){
             logger.debug("It looks like a bug in MOSA: the set of objectives cannot be null")
             return fronts
         }
 
-        if (objectives.size == 0) {
+        if (objectives.size === 0) {
             logger.debug("Trivial case: no objectives for the sorting")
             return fronts
         }
@@ -156,7 +156,7 @@ export class MOSA extends NSGA2 {
     /**
      * It retrieves the front of non-dominated solutions from a list
      */
-    protected getNonDominatedFront(notCovered: Set<number>, remainingSolutions: Individual[]): Individual[]{
+    protected getNonDominatedFront(notCovered: Set<Objective>, remainingSolutions: Individual[]): Individual[]{
         let front: Individual[] = []
         let isDominated: Boolean
 
@@ -185,15 +185,15 @@ export class MOSA extends NSGA2 {
         return front
     }
 
-    protected preferenceCriterion(population: Individual[], objectives: Set<number>): Individual[]{
+    protected preferenceCriterion(population: Individual[], objectives: Set<Objective>): Individual[]{
         let frontZero: Individual[] = []
-        objectives.forEach(function(index){
+        objectives.forEach(function(objective){
             let chosen = population[0]
             for (let individual of population){
-                if (individual.getEvaluation().fitness[index] < chosen.getEvaluation().fitness[index])
+                if (individual.getEvaluation().get(objective) < chosen.getEvaluation().get(objective))
                     // if lower fitness, than it is better
                     chosen = individual
-                else if (individual.getEvaluation().fitness[index] == chosen.getEvaluation().fitness[index]){
+                else if (individual.getEvaluation().get(objective) == chosen.getEvaluation().get(objective)){
                     // at the same level of fitness, we look at test case size
                     if ((individual.root.getChildren().length < chosen.root.getChildren().length &&
                         individual.root.getChildren().length > 1) ||
@@ -214,11 +214,11 @@ export class MOSA extends NSGA2 {
     }
 
     protected updateCoveredGoals(offspring: Individual[]){
-        let covered: number[] = []
-        this.uncoveredObjectives.forEach(function(index) {
+        let covered: Objective[] = []
+        this.uncoveredObjectives.forEach(function(objective) {
             for(let test of offspring){
-                if (test.getEvaluation().fitness[index] == 0.0 && !covered.includes(index)){
-                    covered.push(index)
+                if (test.getEvaluation().get(objective) == 0.0 && !covered.includes(objective)){
+                    covered.push(objective)
                 }
             }
         })
