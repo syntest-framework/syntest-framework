@@ -34,6 +34,8 @@ export class MOSA extends NSGA2 {
         let offspring = this.generateOffspring(population)
 
         // evaluate
+        // FIXME:  we should evaluate only the uncovered objectives instead of all of them
+        // FIXME: I tried to use this.uncoveredObjectives but it does not work
         await this.fitness.evaluateMany(offspring, this.objectives)
         this.updateCoveredGoals(offspring)
 
