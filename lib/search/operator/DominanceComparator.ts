@@ -1,4 +1,5 @@
 import { Individual } from '../gene/Individual'
+import {Objective} from "../..";
 const {fastNonDomSorting} = require('../operator/FastNonDomSorting')
 const {crowdingDistance} = require('../operator/CrowdingDistance')
 const {tournamentSelection} = require('../operator/TournamentSelection')
@@ -9,14 +10,14 @@ export class DominanceComparator {
      * "Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic
      *  Selection of the Targets"
      */
-    protected static compare(individual1: Individual, individual2: Individual, targets: Set<BigInteger>): Number {
+    protected static compare(individual1: Individual, individual2: Individual, targets: Set<Objective>): Number {
         let dominatesX = false
         let dominatesY = false
 
-        for (let index in targets) {
-            if (individual1.getEvaluation().fitness[index] < individual2.getEvaluation().fitness[index])
+        for (let objective of targets) {
+            if (individual1.getEvaluation().get(objective) < individual2.getEvaluation().get(objective))
                 dominatesX = true
-            if (individual1.getEvaluation().fitness[index] > individual2.getEvaluation().fitness[index])
+            if (individual1.getEvaluation().get(objective) > individual2.getEvaluation().get(objective))
                 dominatesY = true
 
             // if the both do not dominates each other, we don't
