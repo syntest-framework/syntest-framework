@@ -15,9 +15,7 @@ export abstract class GA {
     get popsize(): number {
         return this._popsize;
     }
-    get archive(): Individual[] {
-        return this._archive;
-    }
+
     get population(): Individual[] {
         return this._population;
     }
@@ -124,6 +122,13 @@ export abstract class GA {
 
         logger.info(`The termination criteria have been satisfied.`)
         logger.info(`Ending the search process at ${(new Date(Date.now())).toLocaleTimeString()}`)
+        return this.getFinalTestSuite()
+    }
+
+    /** List of test cases that will for the final test suite
+     * @protected
+     */
+    protected getFinalTestSuite(): Individual[]{
         return this._population
     }
 
