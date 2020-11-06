@@ -14,36 +14,35 @@ const {compare} = require('../operator/DominanceComparator')
  * @author Annibale Panichella
  */
 export class MOSA extends NSGA2 {
+    private uncoveredObjectives: Objective[]
 
-    private coveredObjectives: Set<Objective>
-    private uncoveredObjectives: Set<Objective>
+    private archive2: Map<Objective, Individual>
 
     constructor(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
         super(fitness, geneOptions, sampler);
-        this.coveredObjectives = new Set<Objective>()
-        this.uncoveredObjectives = new Set<Objective>()
+        this.uncoveredObjectives = []
 
         this.objectives.forEach((objective) => {
-            this.uncoveredObjectives.add(objective)
+            this.uncoveredObjectives.push(objective)
         })
+
+        // let's initialize the archive
+        this.archive2 = new Map<Objective, Individual>()
     }
 
     async generation (population: Individual[]) {
-        logger.info("MOSA HERE")
+        logger.debug("MOSA generation")
         // create offspring population
         let offspring = this.generateOffspring(population)
 
         // evaluate
-        // FIXME:  we should evaluate only the uncovered objectives instead of all of them
-        // FIXME: I tried to use this.uncoveredObjectives but it does not work
-        await this.fitness.evaluateMany(offspring, this.objectives)
-        this.updateCoveredGoals(offspring)
+        await this.calculateFitness(offspring)
 
         // add the offspring to the population
         population.push(...offspring)
 
         // non-dominated sorting
-        logger.debug("Number of objectives = "+ this.uncoveredObjectives.size)
+        logger.debug("Number of objectives = "+ this.uncoveredObjectives.length)
         let F = this.preferenceSortingAlgorithm(population, this.uncoveredObjectives)
 
         // select new population
@@ -96,10 +95,34 @@ export class MOSA extends NSGA2 {
         return newPopulation
     }
 
+    async calculateFitness (offspring: Individual[]) {
+        let uObj : Objective[] = []
+        for (let obj of this.uncoveredObjectives){
+            uObj.push(obj)
+        }
+        await this.fitness.evaluateMany(offspring, uObj)
+
+        let covered: Objective[] = []
+        for(let objective of this.uncoveredObjectives){
+            for(let test of offspring){
+                if (test.getEvaluation().get(objective) == 0.0 && !covered.includes(objective)){
+                    covered.push(objective)
+                    if (! this.archive2.has(objective)){
+                        this.archive2.set(objective, test)
+                    }
+                }
+            }
+        }
+        for (let index of covered){
+            let element = this.uncoveredObjectives.indexOf(index)
+            this.uncoveredObjectives.splice(element, 1)
+        }
+    }
+
     /*
      See: Preference sorting as discussed in the TSE paper for DynaMOSA
    */
-    protected preferenceSortingAlgorithm(population: Individual[], objectives: Set<Objective>): Individual[][]{
+    protected preferenceSortingAlgorithm(population: Individual[], objectives: Objective[]): Individual[][]{
         let fronts: Individual[][] = [[]]
 
         if (objectives === null){
@@ -107,7 +130,7 @@ export class MOSA extends NSGA2 {
             return fronts
         }
 
-        if (objectives.size === 0) {
+        if (objectives.length === 0) {
             logger.debug("Trivial case: no objectives for the sorting")
             return fronts
         }
@@ -115,10 +138,11 @@ export class MOSA extends NSGA2 {
         // compute the first front using the Preference Criteria
         let frontZero = this.preferenceCriterion(population, objectives)
 
-        frontZero.forEach(function (value) {
-            fronts[0].push(value)
-            value.setRank(0)
-        })
+        for (let individual of frontZero){
+            fronts[0].push(individual)
+            individual.setRank(0)
+        }
+
         logger.debug("First front size :" + frontZero.length)
         logger.debug("Pop size :" + this.popsize)
         logger.debug("Pop + Off size :" + population.length)
@@ -156,7 +180,7 @@ export class MOSA extends NSGA2 {
     /**
      * It retrieves the front of non-dominated solutions from a list
      */
-    protected getNonDominatedFront(notCovered: Set<Objective>, remainingSolutions: Individual[]): Individual[]{
+    protected getNonDominatedFront(notCovered: Objective[], remainingSolutions: Individual[]): Individual[]{
         let front: Individual[] = []
         let isDominated: Boolean
 
@@ -185,9 +209,14 @@ export class MOSA extends NSGA2 {
         return front
     }
 
-    protected preferenceCriterion(population: Individual[], objectives: Set<Objective>): Individual[]{
+    /** Preference criterion in MOSA: for each objective, we select the test case closer to cover it
+     * @param population
+     * @param objectives list of objective to consider
+     * @protected
+     */
+    protected preferenceCriterion(population: Individual[], objectives: Objective[]): Individual[]{
         let frontZero: Individual[] = []
-        objectives.forEach(function(objective){
+        for (let objective of objectives){
             let chosen = population[0]
             for (let individual of population){
                 if (individual.getEvaluation().get(objective) < chosen.getEvaluation().get(objective))
@@ -209,22 +238,16 @@ export class MOSA extends NSGA2 {
             chosen.setRank(0)
             if (!frontZero.includes(chosen))
                 frontZero.push(chosen)
-        })
+        }
         return frontZero
     }
 
-    protected updateCoveredGoals(offspring: Individual[]){
-        let covered: Objective[] = []
-        this.uncoveredObjectives.forEach(function(objective) {
-            for(let test of offspring){
-                if (test.getEvaluation().get(objective) == 0.0 && !covered.includes(objective)){
-                    covered.push(objective)
-                }
-            }
-        })
-        for (let index of covered){
-            this.uncoveredObjectives.delete(index)
-            this.coveredObjectives.add(index)
+    protected getFinalTestSuite(): Individual[]{
+        let suite: Individual[] = []
+        for (let ind of this.archive2.values()){
+            if (! suite.includes(ind))
+                suite.push(ind)
         }
+        return suite
     }
 }
