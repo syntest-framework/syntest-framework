@@ -1,7 +1,7 @@
 import {PrimitiveGene} from '../PrimitiveGene'
 
 import {prng} from '../../..'
-import {Sampler} from "../../sampling/Sampler";
+import {Sampler} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
