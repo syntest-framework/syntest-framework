@@ -2,12 +2,12 @@ import {PrimitiveGene} from '../PrimitiveGene'
 
 import {prng} from '../../..'
 import {getSetting} from "../../..";
-import {Sampler} from "../../sampling/Sampler";
+import {Sampler} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Fixed extends PrimitiveGene {
+export class Fixed extends PrimitiveGene<number> {
     private bits: number;
     private decimals: number;
 
@@ -17,7 +17,7 @@ export class Fixed extends PrimitiveGene {
         this.decimals = decimals
     }
 
-    mutate(sampler: Sampler, depth: number) {
+    mutate(sampler: Sampler, depth: number): Fixed {
         if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
             return sampler.sampleVariable(depth, this.getType())
         }

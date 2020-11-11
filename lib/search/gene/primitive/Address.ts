@@ -1,17 +1,20 @@
 import {PrimitiveGene} from '../PrimitiveGene'
 
-import {prng} from '../../..'
-import {Sampler} from "../../sampling/Sampler";
+import {getSetting, prng} from '../../..'
+import {Sampler} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Address extends PrimitiveGene {
+export class Address extends PrimitiveGene<string> {
     constructor(uniqueId: string, value: string) {
         super('address', 'address', uniqueId, value)
     }
 
     mutate(sampler: Sampler, depth: number) {
+        if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
+            return sampler.sampleVariable(depth, this.getType())
+        }
         // TODO
         return new Address(this.getId(), this.value)
     }

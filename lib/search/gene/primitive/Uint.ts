@@ -1,12 +1,12 @@
 import {PrimitiveGene} from '../PrimitiveGene'
-import {prng} from '../../../util/prng'
-import {Sampler} from "../../sampling/Sampler";
-import {getSetting} from "../../../util/Config";
+import {prng} from '../../..'
+import {Sampler} from "../../..";
+import {getSetting} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Uint extends PrimitiveGene {
+export class Uint extends PrimitiveGene<number> {
     private bits: number;
     constructor(uniqueId = prng.uniqueId(), value: number, bits: number) {
         super('unsignedInteger', `uint${bits}`, uniqueId, value)

@@ -63,7 +63,7 @@ export class RandomSampler extends Sampler {
         }
     }
 
-    sampleVariable(depth: number, type: string): PrimitiveGene {
+    sampleVariable(depth: number, type: string): Gene {
         // TODO constructor types
         if (type === 'bool') {
             return Bool.getRandom()

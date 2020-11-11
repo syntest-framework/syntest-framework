@@ -1,13 +1,13 @@
 import {PrimitiveGene} from '../PrimitiveGene'
 
 import {prng} from '../../..'
-import {Sampler} from "../../sampling/Sampler";
+import {Sampler} from "../../..";
 import {getSetting} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Ufixed extends PrimitiveGene {
+export class Ufixed extends PrimitiveGene<number> {
     private bits: number;
     private decimals: number;
     constructor(uniqueId: string, value: number, bits: number, decimals: number) {
