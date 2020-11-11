@@ -2,6 +2,7 @@ import {PrimitiveGene} from '../PrimitiveGene'
 import {prng} from '../../..'
 import {Sampler} from "../../..";
 import {getSetting} from "../../..";
+import get = Reflect.get;
 
 /**
  * @author Dimitri Stallenberg
@@ -48,7 +49,7 @@ export class Uint extends PrimitiveGene<number> {
         return new Uint(this.getId(), this.value, this.bits)
     }
 
-    static getRandom (bits=256) {
+    static getRandom (bits=getSetting('uint_bits')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = 0

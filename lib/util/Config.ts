@@ -25,7 +25,21 @@ let config: any = {
 
     // logging
     "console_log_level": "debug",
-    "log_to_file": ["info", "warn", "error"]
+    "log_to_file": ["info", "warn", "error"],
+
+    // gene defaults
+    "string_alphabet": '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    "string_maxlength": 32,
+
+    "fixed_bits": 128,
+    "fixed_decimals": 18,
+
+    "ufixed_bits": 128,
+    "ufixed_decimals": 18,
+
+    "int_bits": 256,
+
+    "uint_bits": 256
 }
 
 

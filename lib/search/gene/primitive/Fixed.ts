@@ -52,7 +52,7 @@ export class Fixed extends PrimitiveGene<number> {
         return new Fixed(this.getId(), this.value, this.bits, this.decimals)
     }
 
-    static getRandom (bits=128, decimals=18) {
+    static getRandom (bits=getSetting('fixed_bits'), decimals=getSetting('fixed_decimals')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = -(Math.pow(2, bits) - 1)

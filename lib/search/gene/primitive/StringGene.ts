@@ -111,7 +111,7 @@ export class StringGene extends PrimitiveGene<string> {
         return new StringGene(this.getId(), this.value, this.alphabet, this.maxlength)
     }
 
-    static getRandom (alphabet ='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', maxlength=32) {
+    static getRandom (alphabet = getSetting('string_alphabet'), maxlength=getSetting('string_maxlength')) {
         let valueLength = prng.nextInt(0, maxlength - 1)
         let value = ''
 
