@@ -4,6 +4,16 @@
  */
 
 module.exports = {
+  "roots": [
+    "<rootDir>"
+  ],
+  "testMatch": [
+    "**/__tests__/**/*.+(ts|tsx|js)",
+    "**/?(*.)+(spec|test).+(ts|tsx|js)"
+  ],
+  "transform": {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
