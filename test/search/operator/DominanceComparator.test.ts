@@ -1,5 +1,5 @@
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
-import {Constructor, Objective, Individual, Int} from "../../../lib";
+import {Objective} from "../../../lib";
 import {DummyIndividual} from "../../DummyIndividual.test";
 
 /**
