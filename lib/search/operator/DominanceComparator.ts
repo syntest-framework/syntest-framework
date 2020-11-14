@@ -1,7 +1,7 @@
 import { Individual } from '../gene/Individual'
 import {Objective} from "../..";
 const {fastNonDomSorting} = require('../operator/FastNonDomSorting')
-const {crowdingDistance} = require('../operator/CrowdingDistance')
+const {crowdingDistance} = require('./CrowdingDistance')
 const {tournamentSelection} = require('../operator/TournamentSelection')
 
 export class DominanceComparator {
@@ -10,7 +10,7 @@ export class DominanceComparator {
      * "Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic
      *  Selection of the Targets"
      */
-    protected static compare(individual1: Individual, individual2: Individual, targets: Set<Objective>): Number {
+    static compare(individual1: Individual, individual2: Individual, targets: Set<Objective>): Number {
         let dominatesX = false
         let dominatesY = false
 
