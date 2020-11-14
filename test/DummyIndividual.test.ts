@@ -4,8 +4,11 @@ import {Constructor, Objective} from "../lib";
 
 export class DummyIndividual extends Individual {
 
+    private static counter: number = 0;
+
     constructor() {
-        let actionGene = new Constructor("dummy", "dummy", "dummy", [])
+        DummyIndividual.counter++
+        let actionGene = new Constructor("dummy", "dummy", "dummy"+DummyIndividual.counter, [])
         super(actionGene)
     }
 
