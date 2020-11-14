@@ -2,6 +2,9 @@ import {DominanceComparator} from "../../../lib/search/operator/DominanceCompara
 import {Constructor, Objective, Individual, Int} from "../../../lib";
 import {DummyIndividual} from "../../DummyIndividual.test";
 
+/**
+ * @author Annibale Panichella
+ */
 test('Dominance comparator, fist dominates', () => {
     let objective1 : Objective = { line: 1, locationIdx: 1 };
     let objective2 : Objective = { line: 1, locationIdx: 2 };
