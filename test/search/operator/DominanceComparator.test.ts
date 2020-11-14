@@ -86,5 +86,4 @@ describe('Dominance comparator', function () {
         let value = DominanceComparator.compare(ind1, ind2, set)
         expect(value).to.equal(0)
     })
-
 })
