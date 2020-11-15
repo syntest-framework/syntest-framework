@@ -214,22 +214,23 @@ export class MOSA extends NSGA2 {
      * @param objectives list of objective to consider
      * @protected
      */
-    protected preferenceCriterion(population: Individual[], objectives: Objective[]): Individual[]{
+    public preferenceCriterion(population: Individual[], objectives: Objective[]): Individual[]{
         let frontZero: Individual[] = []
         for (let objective of objectives){
             let chosen = population[0]
-            for (let individual of population){
-                if (individual.getEvaluation().get(objective) < chosen.getEvaluation().get(objective))
+
+            for (let index = 1; index<population.length ; index++){
+                if (population[index].getEvaluation().get(objective) < chosen.getEvaluation().get(objective))
                     // if lower fitness, than it is better
-                    chosen = individual
-                else if (individual.getEvaluation().get(objective) == chosen.getEvaluation().get(objective)){
+                    chosen = population[index]
+                else if (population[index].getEvaluation().get(objective) == chosen.getEvaluation().get(objective)){
                     // at the same level of fitness, we look at test case size
-                    if ((individual.root.getChildren().length < chosen.root.getChildren().length &&
-                        individual.root.getChildren().length > 1) ||
-                        (individual.root.getChildren().length == chosen.root.getChildren().length &&
+                    if ((population[index].root.getChildren().length < chosen.root.getChildren().length &&
+                        population[index].root.getChildren().length > 1) ||
+                        (population[index].root.getChildren().length == chosen.root.getChildren().length &&
                             Math.random()<0.50)) {
                         // Secondary criterion based on tests lengths
-                        chosen = individual
+                        chosen = population[index]
                     }
                 }
             }
