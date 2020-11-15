@@ -4,6 +4,7 @@ import {Fitness} from "../objective/Fitness";
 import {GeneOptionManager} from "../gene/GeneOptionManager";
 import {Sampler} from "../sampling/Sampler";
 import {logger, Objective} from "../..";
+import {DominanceComparator} from "../operator/DominanceComparator";
 
 const {crowdingDistance} = require('../operator/CrowdingDistance')
 const {compare} = require('../operator/DominanceComparator')
@@ -122,7 +123,7 @@ export class MOSA extends NSGA2 {
     /*
      See: Preference sorting as discussed in the TSE paper for DynaMOSA
    */
-    protected preferenceSortingAlgorithm(population: Individual[], objectives: Objective[]): Individual[][]{
+    public preferenceSortingAlgorithm(population: Individual[], objectives: Objective[]): Individual[][]{
         let fronts: Individual[][] = [[]]
 
         if (objectives === null){
@@ -148,22 +149,27 @@ export class MOSA extends NSGA2 {
         logger.debug("Pop + Off size :" + population.length)
 
         // compute the remaining non-dominated Fronts
-        let remainingSolutions: Individual[] = []
-        remainingSolutions = remainingSolutions.filter(obj => frontZero.includes(obj))
+        let remainingSolutions: Individual[] = population
+        for (let selected of frontZero){
+            let index = remainingSolutions.indexOf(selected)
+            remainingSolutions.splice(index, 1)
+        }
 
         let selectedSolutions = frontZero.length
         let frontIndex = 1
 
         while (selectedSolutions < this.popsize && remainingSolutions.length != 0){
-            let front = this.getNonDominatedFront(objectives, remainingSolutions)
+            let front: Individual[] = this.getNonDominatedFront(objectives, remainingSolutions)
+            fronts[frontIndex] = front
             for (let solution of front){
-                fronts[frontIndex].push(solution)
                 solution.setRank(frontIndex)
             }
 
-            remainingSolutions = remainingSolutions.filter(x => {
-                return front.includes(x);
-            })
+            for (let selected of front){
+                let index = remainingSolutions.indexOf(selected)
+                remainingSolutions.splice(index, 1)
+            }
+
             selectedSolutions += front.length
 
             frontIndex += 1
@@ -180,7 +186,9 @@ export class MOSA extends NSGA2 {
     /**
      * It retrieves the front of non-dominated solutions from a list
      */
-    protected getNonDominatedFront(notCovered: Objective[], remainingSolutions: Individual[]): Individual[]{
+    public getNonDominatedFront(notCovered: Objective[], remainingSolutions: Individual[]): Individual[]{
+        const targets = new Set<Objective>(notCovered)
+
         let front: Individual[] = []
         let isDominated: Boolean
 
@@ -188,7 +196,7 @@ export class MOSA extends NSGA2 {
             isDominated = false
             let dominatedSolutions: Individual[] = []
             for (let best of front) {
-                let flag = compare(current, best, notCovered)
+                let flag = DominanceComparator.compare(current, best, targets)
                 if (flag == -1) {
                     dominatedSolutions.push(best)
                 }
@@ -200,9 +208,10 @@ export class MOSA extends NSGA2 {
             if (isDominated)
                 continue
 
-            front = front.filter(x => {
-                return dominatedSolutions.includes(x);
-            })
+            for (let dominated of dominatedSolutions){
+                let index = front.indexOf(dominated)
+                front.splice(index, 1)
+            }
 
             front.push(current)
         }
