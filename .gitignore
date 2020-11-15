@@ -298,10 +298,6 @@ blockchain/geth/**
 blockchain/keystore/**
 blockchain/history
 
-#truffle
-yarn.lock
-package-lock.json
-
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

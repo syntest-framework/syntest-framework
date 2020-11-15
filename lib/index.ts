@@ -18,7 +18,7 @@ export * from './search/gene/primitive/Bool'
 export * from './search/gene/primitive/Fixed'
 // export * from './search/gene/primitive/Hash'
 export * from './search/gene/primitive/Int'
-// export * from './search/gene/primitive/String'
+export * from './search/gene/primitive/StringGene'
 export * from './search/gene/primitive/Ufixed'
 export * from './search/gene/primitive/Uint'
 

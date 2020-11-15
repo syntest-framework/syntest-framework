@@ -2,12 +2,12 @@ import {PrimitiveGene} from '../PrimitiveGene'
 
 import {prng} from '../../..'
 import {getSetting} from "../../..";
-import {Sampler} from "../../sampling/Sampler";
+import {Sampler} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Fixed extends PrimitiveGene {
+export class Fixed extends PrimitiveGene<number> {
     private bits: number;
     private decimals: number;
 
@@ -17,7 +17,7 @@ export class Fixed extends PrimitiveGene {
         this.decimals = decimals
     }
 
-    mutate(sampler: Sampler, depth: number) {
+    mutate(sampler: Sampler, depth: number): Fixed {
         if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
             return sampler.sampleVariable(depth, this.getType())
         }
@@ -52,7 +52,7 @@ export class Fixed extends PrimitiveGene {
         return new Fixed(this.getId(), this.value, this.bits, this.decimals)
     }
 
-    static getRandom (bits=128, decimals=18) {
+    static getRandom (bits=getSetting('fixed_bits'), decimals=getSetting('fixed_decimals')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = -(Math.pow(2, bits) - 1)
