@@ -17,8 +17,11 @@ export abstract class Sampler {
 
     abstract sampleIndividual (): Individual
 
-    abstract sampleArgument (depth: number, type: string): any
-    abstract sampleConstructor (depth: number): any
-    abstract sampleVariable (depth: number, type: string): any
-    abstract sampleFunctionCall (depth: number, type: string): any
+    /**
+     * Should sample any gene based on the type
+     * @param depth
+     * @param type
+     * @param geneType
+     */
+    abstract sampleGene (depth: number, type: string, geneType='primitive'): any
 }

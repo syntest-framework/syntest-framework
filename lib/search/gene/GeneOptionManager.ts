@@ -3,19 +3,18 @@
  * @author Dimitri Stallenberg
  */
 export abstract class GeneOptionManager {
-    get possibleActions(): FunctionDescription[] {
+    get possibleActions(): ActionDescription[] {
         if (!this._possibleActions) {
-            this._possibleActions = this.getPossibleActionsFromAPI()
+            this._possibleActions = this.getPossibleActions()
         }
 
         return this._possibleActions;
     }
-    private _possibleActions: FunctionDescription[];
+    private _possibleActions: ActionDescription[];
     /**
      * Constructor
      */
-    constructor() {
-    }
+    constructor() {}
 
     abstract getConstructorName (): string
 
@@ -24,17 +23,11 @@ export abstract class GeneOptionManager {
      *
      * @returns {[]} A list of function call descriptions
      */
-    abstract getPossibleActionsFromAPI (): FunctionDescription[]
+    abstract getPossibleActions (): ActionDescription[]
 }
 
-export interface ArgumentDescription {
-    type: string,
-    bits?: number,
-    decimals?: number
+export interface ActionDescription {
+    name: string
+    type: string
 }
 
-export interface FunctionDescription {
-    name: string,
-    type: string,
-    args: ArgumentDescription[],
-}

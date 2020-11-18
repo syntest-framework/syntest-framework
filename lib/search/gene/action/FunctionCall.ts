@@ -46,7 +46,7 @@ export class FunctionCall extends ActionGene {
 
         if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
             // resample the gene
-            return sampler.sampleFunctionCall(depth, this.getType())
+            return sampler.sampleGene(depth, this.getType(), 'functionCall')
         } else if (!this.args.length) {
             return this.copy()
         } else {            // randomly pick one of the args
