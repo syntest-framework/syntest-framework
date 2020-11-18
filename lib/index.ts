@@ -44,7 +44,6 @@ export * from './search/optimizer/SimpleGA'
 
 // Sampling
 export * from './search/sampling/Sampler'
-export * from './search/sampling/RandomSampler'
 
 // Test building
 export * from './testbuilding/SuiteBuilder'

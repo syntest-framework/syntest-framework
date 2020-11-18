@@ -30,7 +30,7 @@ export class Constructor extends ActionGene {
     mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
             // resample the gene
-            return sampler.sampleFunctionCall(depth, this.getType())
+            return sampler.sampleGene(depth, this.getType(), 'constructor')
         } else if (!this.args.length) {
             return this.copy()
         } else {

@@ -13,7 +13,7 @@ export class Bool extends PrimitiveGene<boolean> {
 
     mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
-            return sampler.sampleVariable(depth, this.getType())
+            return sampler.sampleGene(depth, this.getType())
         }
         return new Bool(this.getId(), !this.value)
     }
