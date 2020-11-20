@@ -9,7 +9,6 @@ import {CfgObject} from "../../util/CfgObject";
 
 const { Graph, alg } = require('@dagrejs/graphlib')
 
-
 /**
  * Class for evaluating individuals or entire populations.
  *
@@ -37,7 +36,7 @@ export class Fitness {
                 return String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
             })
             if (!edge) {
-                logger.error(`Edge not found during dijkstra operation.}`)
+                logger.error(`Edge not found during dijkstra operation.`)
                 process.exit(1)
             }
 

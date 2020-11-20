@@ -1,6 +1,7 @@
 import {Fitness, GeneOptionManager, Objective, Runner, Sampler} from "../../../lib";
 import {MOSA} from "../../../lib/search/optimizer/MOSA";
 import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyFitness} from "../../mocks/DummyFitness.test";
 
 /**
  * @author Annibale Panichella
@@ -106,6 +107,36 @@ describe('Test MOSA', function () {
         expect(front[1]).toContain(ind4)
         expect(front[2].length).toEqual(1)
         expect(front[2]).toContain(ind1)
+    })
+
+    test('Generation population size', async () => {
+        let objective1: Objective = {line: 1, locationIdx: 1};
+        let objective2: Objective = {line: 1, locationIdx: 2};
+
+        let ind1 = new DummyIndividual();
+        ind1.setDummyEvaluation([objective1, objective2], [2, 3])
+
+        let ind2 = new DummyIndividual();
+        ind2.setDummyEvaluation([objective1, objective2], [0, 2])
+
+        let ind3 = new DummyIndividual();
+        ind3.setDummyEvaluation([objective1, objective2], [2, 0])
+
+        let ind4 = new DummyIndividual();
+        ind4.setDummyEvaluation([objective1, objective2], [1, 1])
+
+        const runner = Runner as jest.Mocked<typeof Runner>;
+        // @ts-ignore
+        let fitness: Fitness = new DummyFitness({ nodes: [], edges: [] }, runner, [objective1, objective2])
+
+        const geneOptions = GeneOptionManager as jest.Mocked<typeof GeneOptionManager>;
+        const sampler = Sampler as jest.Mocked<typeof Sampler>;
+
+        // @ts-ignore
+        const mosa = new MOSA(fitness, geneOptions, sampler)
+        const newPopulation = await mosa.generation([ind1, ind2, ind3, ind4])
+
+        expect(newPopulation.length).toEqual(4)
     })
 
 })
