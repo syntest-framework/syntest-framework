@@ -33,11 +33,21 @@ export class MOSA extends NSGA2 {
 
     async generation (population: Individual[]) {
         logger.debug("MOSA generation")
+        if (!this.uncoveredObjectives.length) {
+            logger.debug("No more objectives left all objectives are covered")
+            return population
+        }
+
         // create offspring population
         let offspring = this.generateOffspring(population)
 
         // evaluate
         await this.calculateFitness(offspring)
+
+        if (!this.uncoveredObjectives.length) {
+            logger.debug("No more objectives left all objectives are covered")
+            return population
+        }
 
         // add the offspring to the population
         population.push(...offspring)
@@ -45,6 +55,7 @@ export class MOSA extends NSGA2 {
         // non-dominated sorting
         logger.debug("Number of objectives = "+ this.uncoveredObjectives.length)
         let F = this.preferenceSortingAlgorithm(population, this.uncoveredObjectives)
+        console.log(F)
 
         // select new population
         let newPopulation = []
@@ -93,6 +104,9 @@ export class MOSA extends NSGA2 {
             }
         }
 
+        if (newPopulation.length !== this.popsize) {
+            throw new Error(`Population sizes do not match ${newPopulation.length} != ${this.popsize}`)
+        }
         return newPopulation
     }
 
