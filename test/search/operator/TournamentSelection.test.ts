@@ -4,7 +4,7 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {Objective} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {tournamentSelection} from "../../../lib/search/operator/TournamentSelection";
 
 const mockMath = Object.create(global.Math);
@@ -29,7 +29,7 @@ describe('Tournament selection', function () {
         //fit('Null my value throws', () => {
         expect(() => {
             tournamentSelection([ind1, ind2], 1)
-        }).toThrow('The tournament size  should be greater than 1 ');
+        }).throws('The tournament size  should be greater than 1 ');
         // });
     })
 
@@ -58,9 +58,9 @@ describe('Tournament selection', function () {
         ind4.setCrowdingDistance(4)
 
         let winner: DummyIndividual = tournamentSelection([ind2, ind1, ind3, ind4], 20)
-        expect(winner.getRank()).toEqual(0)
-        expect(winner.getEvaluation().get(objective1)).toEqual(0)
-        expect(winner.getEvaluation().get(objective2)).toEqual(1)
+        expect(winner.getRank()).to.equal(0)
+        expect(winner.getEvaluation().get(objective1)).to.equal(0)
+        expect(winner.getEvaluation().get(objective2)).to.equal(1)
     })
 
     it('Comparison by crowding distance', () => {
@@ -88,10 +88,10 @@ describe('Tournament selection', function () {
         ind4.setCrowdingDistance(4)
 
         let winner: DummyIndividual = tournamentSelection([ind2, ind1, ind3, ind4], 20)
-        expect(winner.getRank()).toEqual(0)
-        expect(winner.getEvaluation().get(objective1)).toEqual(0)
-        expect(winner.getEvaluation().get(objective2)).toEqual(1)
-        expect(winner.getCrowdingDistance()).toEqual(10)
+        expect(winner.getRank()).to.equal(0)
+        expect(winner.getEvaluation().get(objective1)).to.equal(0)
+        expect(winner.getEvaluation().get(objective2)).to.equal(1)
+        expect(winner.getCrowdingDistance()).to.equal(10)
     })
 
 })

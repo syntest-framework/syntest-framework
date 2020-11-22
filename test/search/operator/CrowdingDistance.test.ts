@@ -4,7 +4,7 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {logger, Objective} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {crowdingDistance} from "../../../lib/search/operator/CrowdingDistance";
 
 /**
@@ -20,7 +20,7 @@ describe('Crowding distance', function () {
     it('front with one solution', () => {
         let ind = new DummyIndividual();
         crowdingDistance([ind])
-        expect(ind.getCrowdingDistance()).toEqual(Number.POSITIVE_INFINITY)
+        expect(ind.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY)
     })
 
 
@@ -29,8 +29,8 @@ describe('Crowding distance', function () {
         let ind2 = new DummyIndividual();
 
         crowdingDistance([ind1, ind2])
-        expect(ind1.getCrowdingDistance()).toEqual(Number.POSITIVE_INFINITY)
-        expect(ind2.getCrowdingDistance()).toEqual(Number.POSITIVE_INFINITY)
+        expect(ind1.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY)
+        expect(ind2.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY)
     })
 
     it('Front with more than two solutions', () => {
@@ -48,9 +48,9 @@ describe('Crowding distance', function () {
         ind3.setDummyEvaluation([objective1, objective2], [1, 1])
 
         crowdingDistance([ind1, ind2, ind3])
-        expect(ind1.getCrowdingDistance()).toEqual(Number.POSITIVE_INFINITY)
-        expect(ind2.getCrowdingDistance()).toEqual(Number.POSITIVE_INFINITY)
-        expect(ind3.getCrowdingDistance()).toEqual(2)
+        expect(ind1.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY)
+        expect(ind2.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY)
+        expect(ind3.getCrowdingDistance()).to.equal(2)
     })
 
     it('Corner case with same obj values for all individual', () => {
@@ -66,8 +66,8 @@ describe('Crowding distance', function () {
         ind3.setDummyEvaluation([objective], [1])
 
         crowdingDistance([ind1, ind2, ind3])
-        expect(ind1.getCrowdingDistance()).toEqual(0)
-        expect(ind2.getCrowdingDistance()).toEqual(0)
-        expect(ind3.getCrowdingDistance()).toEqual(0)
+        expect(ind1.getCrowdingDistance()).to.equal(0)
+        expect(ind2.getCrowdingDistance()).to.equal(0)
+        expect(ind3.getCrowdingDistance()).to.equal(0)
     })
 })

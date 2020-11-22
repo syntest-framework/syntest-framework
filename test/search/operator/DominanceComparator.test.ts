@@ -5,7 +5,7 @@ const expect = chai.expect
 
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
 import {Objective} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 
 /**
  * @author Annibale Panichella
@@ -27,7 +27,7 @@ describe('Dominance comparator', function () {
         set.add(objective2)
         let value = DominanceComparator.compare(ind1, ind2, set)
 
-        expect(value).toEqual(-1)
+        expect(value).to.equal(-1)
     })
 
     it('Second individual dominates', () => {
@@ -45,7 +45,7 @@ describe('Dominance comparator', function () {
         set.add(objective2)
         let value = DominanceComparator.compare(ind1, ind2, set)
 
-        expect(value).toEqual(1)
+        expect(value).to.equal(1)
     })
 
     it('None dominates with two objectives', () => {
@@ -64,7 +64,7 @@ describe('Dominance comparator', function () {
 
         let value = DominanceComparator.compare(ind1, ind2, set)
 
-        expect(value).toEqual(0)
+        expect(value).to.equal(0)
     })
 
     it('None dominates with three objective', () => {
@@ -84,7 +84,7 @@ describe('Dominance comparator', function () {
         set.add(objective3)
 
         let value = DominanceComparator.compare(ind1, ind2, set)
-        expect(value).toEqual(0)
+        expect(value).to.equal(0)
     })
 
 })

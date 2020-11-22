@@ -4,7 +4,7 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {Objective, tournamentSelection} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {fastNonDomSorting} from "../../../lib/search/operator/FastNonDomSorting";
 
 /**
@@ -25,11 +25,11 @@ describe('Fast non-dominated sorting', function () {
         ind3.setDummyEvaluation([objective1, objective2], [2, 0])
 
         const F = fastNonDomSorting([ind1, ind2, ind3])
-        expect(F[0].length).toEqual(2)
-        expect(F[0]).toContain(ind1)
-        expect(F[0]).toContain(ind3)
-        expect(F[1].length).toEqual(1)
-        expect(F[1]).toContain(ind2)
+        expect(F[0].length).to.equal(2)
+        expect(F[0]).to.contain(ind1)
+        expect(F[0]).to.contain(ind3)
+        expect(F[1].length).to.equal(1)
+        expect(F[1]).to.contain(ind2)
     })
 
 })
