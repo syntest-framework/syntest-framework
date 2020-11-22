@@ -28,15 +28,15 @@ export const prng = {
 
         return value * (max - min) + min
     },
-    pickOne: (array: any[]) => {
-        if (!array.length) {
+    pickOne: (options: any[] | string) => {
+        if (!options.length) {
             throw new Error('Cannot pick one of an empty array!!!')
         }
 
         let value = generator()
 
-        let index = Math.round(value * (array.length - 1))
-        return array[index]
+        let index = Math.round(value * (options.length - 1))
+        return options[index]
     },
     uniqueId: (length = 7) => {
         let result           = '';

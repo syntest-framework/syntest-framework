@@ -1,3 +1,8 @@
+import * as sinon from 'sinon'
+import * as chai from 'chai'
+
+const expect = chai.expect
+
 import {Objective, tournamentSelection} from "../../../lib";
 import {DummyIndividual} from "../../DummyIndividual.test";
 import {fastNonDomSorting} from "../../../lib/search/operator/FastNonDomSorting";
@@ -6,7 +11,7 @@ import {fastNonDomSorting} from "../../../lib/search/operator/FastNonDomSorting"
  * @author Annibale Panichella
  */
 describe('Fast non-dominated sorting', function () {
-    test('Sort three solutions', () => {
+    it('Sort three solutions', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 

@@ -1,3 +1,8 @@
+import * as sinon from 'sinon'
+import * as chai from 'chai'
+
+const expect = chai.expect
+
 import {Objective} from "../../../lib";
 import {DummyIndividual} from "../../DummyIndividual.test";
 import {tournamentSelection} from "../../../lib/search/operator/TournamentSelection";
@@ -11,7 +16,7 @@ global.Math = mockMath;
  */
 describe('Tournament selection', function () {
 
-    test('Small Tournament size', () => {
+    it('Small Tournament size', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -28,7 +33,7 @@ describe('Tournament selection', function () {
         // });
     })
 
-    test('Comparison by rank', () => {
+    it('Comparison by rank', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -58,7 +63,7 @@ describe('Tournament selection', function () {
         expect(winner.getEvaluation().get(objective2)).toEqual(1)
     })
 
-    test('Comparison by crowding distance', () => {
+    it('Comparison by crowding distance', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 

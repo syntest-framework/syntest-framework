@@ -1,5 +1,5 @@
-import {GeneOptionManager} from "../gene/GeneOptionManager";
-import {Individual} from "../gene/Individual";
+import {GeneOptionManager} from "../..";
+import {Individual} from "../..";
 
 /**
  * Sampler class

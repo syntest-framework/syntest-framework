@@ -1,3 +1,8 @@
+import * as sinon from 'sinon'
+import * as chai from 'chai'
+
+const expect = chai.expect
+
 import {Fitness, GeneOptionManager, Objective, Runner, Sampler} from "../../../lib";
 import {MOSA} from "../../../lib/search/optimizer/MOSA";
 import {DummyIndividual} from "../../DummyIndividual.test";
@@ -8,7 +13,7 @@ import {DummyFitness} from "../../mocks/DummyFitness.test";
  */
 describe('Test MOSA', function () {
 
-    test('Test Preference criterion', () => {
+    it('Test Preference criterion', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -37,7 +42,7 @@ describe('Test MOSA', function () {
         expect(frontZero).toContain(ind3)
     })
 
-    test('Test Non Dominated front', () => {
+    it('Test Non Dominated front', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -73,7 +78,7 @@ describe('Test MOSA', function () {
         expect(front).toContain(ind4)
     })
 
-    test('Test Preference Sorting', () => {
+    it('Test Preference Sorting', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -109,7 +114,7 @@ describe('Test MOSA', function () {
         expect(front[2]).toContain(ind1)
     })
 
-    test('Generation population size', async () => {
+    it('Generation population size', async () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 

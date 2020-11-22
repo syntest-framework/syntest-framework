@@ -1,26 +1,23 @@
 import {Gene} from "./Gene";
-import {Sampler} from "../sampling/Sampler";
+import {Sampler} from "../..";
 
 /**
  * @author Dimitri Stallenberg
  */
-export abstract class PrimitiveGene extends Gene {
-    set value(value: any) {
-        this._value = value;
-    }
-    get value(): any {
+export abstract class PrimitiveGene<T> extends Gene {
+    get value(): T {
         return this._value;
     }
     private _value: any;
 
-    protected constructor(name: string, type: string, uniqueId: string, value: any) {
+    constructor(name: string, type: string, uniqueId: string, value: T) {
         super(name, type, uniqueId)
         this._value = value
     }
 
-    abstract mutate(sampler: Sampler, depth: number): PrimitiveGene
+    abstract mutate(sampler: Sampler, depth: number): PrimitiveGene<T>
 
-    abstract copy (): PrimitiveGene
+    abstract copy (): PrimitiveGene<T>
 
     hasChildren (): boolean {
         return false
@@ -30,12 +27,8 @@ export abstract class PrimitiveGene extends Gene {
         return []
     }
 
-    static getRandom (): PrimitiveGene {
+    static getRandom (): Gene {
         throw new Error('Unimplemented function!')
-    }
-
-    getValue () {
-        return this._value
     }
 }
 

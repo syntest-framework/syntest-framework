@@ -16,6 +16,7 @@ import {GeneOptionManager} from "../gene/GeneOptionManager";
 import {Constructor} from "../gene/action/Constructor";
 import {getSetting} from "../../util/Config";
 import {PrimitiveGene} from "../gene/PrimitiveGene";
+import {StringGene} from "../gene/primitive/StringGene";
 
 /**
  * RandomSampler class
@@ -63,7 +64,7 @@ export class RandomSampler extends Sampler {
         }
     }
 
-    sampleVariable(depth: number, type: string): PrimitiveGene {
+    sampleVariable(depth: number, type: string): Gene {
         // TODO constructor types
         if (type === 'bool') {
             return Bool.getRandom()
@@ -84,6 +85,8 @@ export class RandomSampler extends Sampler {
             } else {
                 return Fixed.getRandom()
             }
+        } else if (type === 'string') {
+            return StringGene.getRandom()
         }
 
         throw new Error('Unknown type text!')

@@ -1,3 +1,8 @@
+import * as sinon from 'sinon'
+import * as chai from 'chai'
+
+const expect = chai.expect
+
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
 import {Objective} from "../../../lib";
 import {DummyIndividual} from "../../DummyIndividual.test";
@@ -7,7 +12,7 @@ import {DummyIndividual} from "../../DummyIndividual.test";
  */
 describe('Dominance comparator', function () {
 
-    test('Fist individual dominates', () => {
+    it('Fist individual dominates', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -25,7 +30,7 @@ describe('Dominance comparator', function () {
         expect(value).toEqual(-1)
     })
 
-    test('Second individual dominates', () => {
+    it('Second individual dominates', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -43,7 +48,7 @@ describe('Dominance comparator', function () {
         expect(value).toEqual(1)
     })
 
-    test('None dominates with two objectives', () => {
+    it('None dominates with two objectives', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -62,7 +67,7 @@ describe('Dominance comparator', function () {
         expect(value).toEqual(0)
     })
 
-    test('None dominates with three objective', () => {
+    it('None dominates with three objective', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
         let objective3: Objective = {line: 1, locationIdx: 3};
