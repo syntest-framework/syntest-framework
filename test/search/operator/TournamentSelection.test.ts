@@ -29,7 +29,7 @@ describe('Tournament selection', function () {
         //fit('Null my value throws', () => {
         expect(() => {
             tournamentSelection([ind1, ind2], 1)
-        }).throw('The tournament size  should be greater than 1 ');
+        }).throws('The tournament size should be greater than 1 ');
         // });
     })
 
