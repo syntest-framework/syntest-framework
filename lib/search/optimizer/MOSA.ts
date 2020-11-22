@@ -52,14 +52,19 @@ export class MOSA extends NSGA2 {
         // add the offspring to the population
         population.push(...offspring)
 
+
+        return this.environmentalSelection(population, this.popsize)
+    }
+
+    public environmentalSelection(pool: Individual[], size: number): Individual[]{
         // non-dominated sorting
         logger.debug("Number of objectives = "+ this.uncoveredObjectives.length)
-        let F = this.preferenceSortingAlgorithm(population, this.uncoveredObjectives)
+        let F = this.preferenceSortingAlgorithm(pool, this.uncoveredObjectives)
         console.log(F)
 
         // select new population
         let newPopulation = []
-        let remain = this.popsize;
+        let remain = size;
         let index = 0;
 
         logger.debug("First front size = "+ F[0].length)
@@ -100,8 +105,8 @@ export class MOSA extends NSGA2 {
             }
         }
 
-        if (newPopulation.length !== this.popsize) {
-            throw new Error(`Population sizes do not match ${newPopulation.length} != ${this.popsize}`)
+        if (newPopulation.length !== size) {
+            throw new Error(`Population sizes do not match ${newPopulation.length} != ${size}`)
         }
         return newPopulation
     }
