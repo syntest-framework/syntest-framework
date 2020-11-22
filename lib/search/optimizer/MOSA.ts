@@ -62,45 +62,41 @@ export class MOSA extends NSGA2 {
         let remain = this.popsize;
         let index = 0;
 
+        logger.debug("First front size = "+ F[0].length)
+
         // Obtain the next front
         let currentFront: Individual[] = F[index];
 
-        while ((remain > 0) && (remain >= currentFront.length) && !currentFront.length) {
+        while ((remain > 0) && (remain >= currentFront.length)) {
             // Assign crowding distance to individuals
             crowdingDistance(currentFront)
 
             // Add the individuals of this front
-            for (let individual of currentFront) {
-                if (newPopulation.length < this.popsize) {
-                    newPopulation.push(individual)
-                }
-            }
+            newPopulation.push(...currentFront);
 
             // Decrement remain
             remain = remain - currentFront.length
 
             // Obtain the next front
             index++;
-            if (remain > 0) {
-                // @ts-ignore
-                currentFront = F[index]
-            }
+
+            currentFront = F[index]
         }
 
         // Remain is less than front(index).size, insert only the best one
         if (remain > 0 && currentFront.length>0) { // front contains individuals to insert
             crowdingDistance(currentFront)
 
-            currentFront.sort(function(a: Individual, b: Individual) { // sort in descending order of crowding distance
+            currentFront = currentFront.sort(function(a: Individual, b: Individual) { // sort in descending order of crowding distance
                 return b.getCrowdingDistance() - a.getCrowdingDistance()
             })
-            let counter = 0
+
             for (let individual of currentFront) {
-                if (counter > remain)
+                if (remain == 0)
                     break
 
                 newPopulation.push(individual)
-                counter++
+                remain--
             }
         }
 
