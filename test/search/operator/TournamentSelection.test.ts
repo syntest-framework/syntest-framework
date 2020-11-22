@@ -1,5 +1,5 @@
 import {Objective} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {tournamentSelection} from "../../../lib/search/operator/TournamentSelection";
 
 const mockMath = Object.create(global.Math);

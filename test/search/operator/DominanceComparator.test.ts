@@ -1,6 +1,6 @@
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
 import {Objective} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 
 /**
  * @author Annibale Panichella

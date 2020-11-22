@@ -1,5 +1,5 @@
 import {Objective, tournamentSelection} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {fastNonDomSorting} from "../../../lib/search/operator/FastNonDomSorting";
 
 /**

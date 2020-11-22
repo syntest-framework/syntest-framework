@@ -1,6 +1,6 @@
-import {Evaluation} from "../lib/search/objective/Evaluation";
-import {Individual} from "../lib/search/gene/Individual";
-import {Constructor, Objective} from "../lib";
+import {Evaluation} from "../../lib/search/objective/Evaluation";
+import {Individual} from "../../lib/search/gene/Individual";
+import {Constructor, Objective} from "../../lib";
 
 export class DummyIndividual extends Individual {
 

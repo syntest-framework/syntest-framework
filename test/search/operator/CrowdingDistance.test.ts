@@ -1,5 +1,5 @@
 import {logger, Objective} from "../../../lib";
-import {DummyIndividual} from "../../DummyIndividual.test";
+import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {crowdingDistance} from "../../../lib/search/operator/CrowdingDistance";
 
 /**
