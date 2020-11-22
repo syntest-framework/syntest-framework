@@ -146,4 +146,41 @@ describe('Test MOSA', function () {
         expect(newPopulation.length).to.equal(4)
     })
 
+    it('Environmental Selection', async () => {
+        let objective1: Objective = {line: 1, locationIdx: 1};
+        let objective2: Objective = {line: 1, locationIdx: 2};
+
+        let ind1 = new DummyIndividual();
+        ind1.setDummyEvaluation([objective1, objective2], [2, 3])
+
+        let ind2 = new DummyIndividual();
+        ind2.setDummyEvaluation([objective1, objective2], [0, 2])
+
+        let ind3 = new DummyIndividual();
+        ind3.setDummyEvaluation([objective1, objective2], [2, 0])
+
+        let ind4 = new DummyIndividual();
+        ind4.setDummyEvaluation([objective1, objective2], [1, 1])
+
+        let ind5 = new DummyIndividual();
+        ind4.setDummyEvaluation([objective1, objective2], [3, 2])
+
+        let mockedRunner = <Runner>{} as any;
+        let mockedGeneOptions = <GeneOptionManager>{} as any;
+        let mockedSampler = <Sampler>{} as any;
+
+        // @ts-ignore
+        let fitness: Fitness = new DummyFitness({ nodes: [], edges: [] }, mockedRunner, [objective1, objective2])
+
+        // @ts-ignore
+        const mosa = new MOSA(fitness, mockedGeneOptions, mockedSampler)
+        const newPopulation = await mosa.environmentalSelection([ind1, ind2, ind3, ind4, ind5], 4)
+
+        expect(newPopulation.length).to.equal(4)
+        expect(newPopulation).contain(ind1)
+        expect(newPopulation).contain(ind2)
+        expect(newPopulation).contain(ind3)
+        expect(newPopulation).contain(ind4)
+    })
+
 })
