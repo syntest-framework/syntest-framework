@@ -1,4 +1,8 @@
+import * as chai from 'chai'
+
 import {PrimitiveGene, Sampler} from "../../../lib";
+
+const expect = chai.expect
 
 class dummyPrimitiveGene extends PrimitiveGene<string> {
     copy(): PrimitiveGene<string> {
@@ -11,25 +15,25 @@ class dummyPrimitiveGene extends PrimitiveGene<string> {
 }
 
 
-test('Primitive genes have no children', () => {
+it('Primitive genes have no children', () => {
     let gene = new dummyPrimitiveGene('dummy', 'dummyGene', 'randomid', 'randomvalue')
 
     expect(!gene.hasChildren())
 })
 
-test('Primitive genes return empty children array', () => {
+it('Primitive genes return empty children array', () => {
     let gene = new dummyPrimitiveGene('dummy', 'dummyGene', 'randomid', 'randomvalue')
 
-    expect(gene.getChildren()).toEqual([])
+    expect(gene.getChildren().length).to.equal(0)
 })
 
-test('Primitive gene gives correct value', () => {
+it('Primitive gene gives correct value', () => {
     let value = 'randomvalue'
     let gene = new dummyPrimitiveGene('dummy', 'dummyGene', 'randomid', value)
 
-    expect(gene.value).toEqual(value)
+    expect(gene.value).to.equal(value)
 })
 
-test('Primitive gene gives error for getrandom function', () => {
-    expect(dummyPrimitiveGene.getRandom).toThrow()
+it('Primitive gene gives error for getrandom function', () => {
+    expect(dummyPrimitiveGene.getRandom).throws()
 })
