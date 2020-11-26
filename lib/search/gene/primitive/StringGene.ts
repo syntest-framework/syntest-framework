@@ -18,7 +18,7 @@ export class StringGene extends PrimitiveGene<string> {
 
     mutate(sampler: Sampler, depth: number): StringGene {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.getType())
+            return sampler.sampleGene(depth, this.type)
         }
 
         if (this.value.length > 0 && this.value.length < this.maxlength) {
@@ -63,7 +63,7 @@ export class StringGene extends PrimitiveGene<string> {
             }
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     removeMutation(): StringGene {
@@ -78,7 +78,7 @@ export class StringGene extends PrimitiveGene<string> {
             newValue += this.value[i]
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     replaceMutation(): StringGene {
@@ -95,7 +95,7 @@ export class StringGene extends PrimitiveGene<string> {
             }
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     deltaMutation(): StringGene {
@@ -115,11 +115,11 @@ export class StringGene extends PrimitiveGene<string> {
             }
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     copy () {
-        return new StringGene(this.getId(), this.value, this.alphabet, this.maxlength)
+        return new StringGene(this.id, this.value, this.alphabet, this.maxlength)
     }
 
     static getRandom (alphabet = getProperty('string_alphabet'), maxlength=getProperty('string_maxlength')) {

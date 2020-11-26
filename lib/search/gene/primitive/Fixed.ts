@@ -19,7 +19,7 @@ export class Fixed extends PrimitiveGene<number> {
 
     mutate(sampler: Sampler, depth: number): Fixed {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.getType())
+            return sampler.sampleGene(depth, this.type)
         }
 
         if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {
@@ -31,7 +31,7 @@ export class Fixed extends PrimitiveGene<number> {
         let min = -(Math.pow(2, bits) - 1)
         let max = (Math.pow(2, bits) - 1)
 
-        return new Fixed(this.getId(), parseFloat(prng.nextDouble(min, max).toFixed(this.decimals)), this.bits, this.decimals)
+        return new Fixed(this.id, parseFloat(prng.nextDouble(min, max).toFixed(this.decimals)), this.bits, this.decimals)
     }
 
     deltaMutation() {
@@ -45,11 +45,11 @@ export class Fixed extends PrimitiveGene<number> {
         let min = -(Math.pow(2, this.bits) - 1)
         let max = (Math.pow(2, this.bits) - 1)
 
-        return new Fixed(this.getId(), parseFloat(Math.min(max, Math.max(min, this.value + change)).toFixed(this.decimals)), this.bits, this.decimals)
+        return new Fixed(this.id, parseFloat(Math.min(max, Math.max(min, this.value + change)).toFixed(this.decimals)), this.bits, this.decimals)
     }
 
     copy () {
-        return new Fixed(this.getId(), this.value, this.bits, this.decimals)
+        return new Fixed(this.id, this.value, this.bits, this.decimals)
     }
 
     static getRandom (bits=getProperty('fixed_bits'), decimals=getProperty('fixed_decimals')) {

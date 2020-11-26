@@ -18,7 +18,7 @@ export class Ufixed extends PrimitiveGene<number> {
 
     mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.getType())
+            return sampler.sampleGene(depth, this.type)
         }
 
         if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {
@@ -30,7 +30,7 @@ export class Ufixed extends PrimitiveGene<number> {
         let min = 0
         let max = (Math.pow(2, bits) - 1)
 
-        return new Ufixed(this.getId(), parseFloat(prng.nextDouble(min, max).toFixed(this.decimals)), this.bits, this.decimals)
+        return new Ufixed(this.id, parseFloat(prng.nextDouble(min, max).toFixed(this.decimals)), this.bits, this.decimals)
 
     }
 
@@ -45,11 +45,11 @@ export class Ufixed extends PrimitiveGene<number> {
         let min = 0
         let max = (Math.pow(2, this.bits) - 1)
 
-        return new Ufixed(this.getId(), parseFloat(Math.min(max, Math.max(min, this.value + change)).toFixed(this.decimals)), this.bits, this.decimals)
+        return new Ufixed(this.id, parseFloat(Math.min(max, Math.max(min, this.value + change)).toFixed(this.decimals)), this.bits, this.decimals)
     }
 
     copy () {
-        return new Ufixed(this.getId(), this.value, this.bits, this.decimals)
+        return new Ufixed(this.id, this.value, this.bits, this.decimals)
     }
 
     static getRandom (bits=getProperty("ufixed_bits"), decimals=getProperty('ufixed_decimals')) {

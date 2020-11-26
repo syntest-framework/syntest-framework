@@ -1,9 +1,8 @@
 import {prng} from '../..'
 import {ActionGene} from "./ActionGene";
-import {Sampler} from "../sampling/Sampler";
+import {Sampler} from "../..";
 import {getLogger} from "../..";
 import {Stringifier} from "../..";
-import {Objective} from "../..";
 import {Evaluation} from "../objective/Evaluation";
 
 /**
@@ -12,6 +11,9 @@ import {Evaluation} from "../objective/Evaluation";
  * @author Dimitri Stallenberg
  */
 export class Individual {
+    get id(): string {
+        return this._id;
+    }
     get root(): ActionGene {
         return this._root;
     }
@@ -21,7 +23,7 @@ export class Individual {
     private evaluation: Evaluation;
     private crowdingDistance: number;
     private rank: number;
-    private id: string;
+    private _id: string;
 
     /**
      * Constructor
@@ -33,12 +35,12 @@ export class Individual {
         this.evaluation = new Evaluation()
         this.crowdingDistance = 0
         this.rank = 0
-        this.id = prng.uniqueId(20)
-        getLogger().debug(`Created individual: ${this.id}`)
+        this._id = prng.uniqueId(20)
+        getLogger().debug(`Created individual: ${this._id}`)
     }
 
     mutate (sampler: Sampler) {
-        getLogger().debug(`Mutating individual: ${this.id}`)
+        getLogger().debug(`Mutating individual: ${this._id}`)
         return new Individual(this._root.mutate(sampler, 0))
     }
 
@@ -59,10 +61,6 @@ export class Individual {
 
     getEvaluation (): Evaluation {
         return this.evaluation
-    }
-
-    getId (): string {
-        return this.id
     }
 
     getCrowdingDistance(){
