@@ -3,7 +3,7 @@ import { Individual } from '../gene/Individual'
 import {Fitness} from "../objective/Fitness";
 import {GeneOptionManager} from "../gene/GeneOptionManager";
 import {Sampler} from "../sampling/Sampler";
-import {logger, Objective} from "../..";
+import {getLogger, Objective} from "../..";
 import {DominanceComparator} from "../operator/DominanceComparator";
 
 const {crowdingDistance} = require('../operator/CrowdingDistance')
@@ -32,9 +32,9 @@ export class MOSA extends NSGA2 {
     }
 
     async generation (population: Individual[]) {
-        logger.debug("MOSA generation")
+        getLogger().debug("MOSA generation")
         if (!this.uncoveredObjectives.length) {
-            logger.debug("No more objectives left all objectives are covered")
+            getLogger().debug("No more objectives left all objectives are covered")
             return population
         }
 
@@ -45,7 +45,7 @@ export class MOSA extends NSGA2 {
         await this.calculateFitness(offspring)
 
         if (!this.uncoveredObjectives.length) {
-            logger.debug("No more objectives left all objectives are covered")
+            getLogger().debug("No more objectives left all objectives are covered")
             return population
         }
 
@@ -58,7 +58,7 @@ export class MOSA extends NSGA2 {
 
     public environmentalSelection(pool: Individual[], size: number): Individual[]{
         // non-dominated sorting
-        logger.debug("Number of objectives = "+ this.uncoveredObjectives.length)
+        getLogger().debug("Number of objectives = "+ this.uncoveredObjectives.length)
         let F = this.preferenceSortingAlgorithm(pool, this.uncoveredObjectives)
         console.log(F)
 
@@ -67,7 +67,7 @@ export class MOSA extends NSGA2 {
         let remain = size;
         let index = 0;
 
-        logger.debug("First front size = "+ F[0].length)
+        getLogger().debug("First front size = "+ F[0].length)
 
         // Obtain the next front
         let currentFront: Individual[] = F[index];
@@ -142,12 +142,12 @@ export class MOSA extends NSGA2 {
         let fronts: Individual[][] = [[]]
 
         if (objectives === null){
-            logger.debug("It looks like a bug in MOSA: the set of objectives cannot be null")
+            getLogger().debug("It looks like a bug in MOSA: the set of objectives cannot be null")
             return fronts
         }
 
         if (objectives.length === 0) {
-            logger.debug("Trivial case: no objectives for the sorting")
+            getLogger().debug("Trivial case: no objectives for the sorting")
             return fronts
         }
 
@@ -159,9 +159,9 @@ export class MOSA extends NSGA2 {
             individual.setRank(0)
         }
 
-        logger.debug("First front size :" + frontZero.length)
-        logger.debug("Pop size :" + this.popsize)
-        logger.debug("Pop + Off size :" + population.length)
+        getLogger().debug("First front size :" + frontZero.length)
+        getLogger().debug("Pop size :" + this.popsize)
+        getLogger().debug("Pop + Off size :" + population.length)
 
         // compute the remaining non-dominated Fronts
         let remainingSolutions: Individual[] = population
@@ -190,11 +190,11 @@ export class MOSA extends NSGA2 {
             frontIndex += 1
         }
 
-        logger.debug("Number of fronts :" + fronts.length)
-        logger.debug("Front zero size :" + fronts[0].length)
-        //logger.debug("Front one size :" + fronts[1].length)
-        logger.debug("# selected solutions :" +selectedSolutions)
-        logger.debug("Pop size :" +this.popsize)
+        getLogger().debug("Number of fronts :" + fronts.length)
+        getLogger().debug("Front zero size :" + fronts[0].length)
+        //getLogger().debug("Front one size :" + fronts[1].length)
+        getLogger().debug("# selected solutions :" +selectedSolutions)
+        getLogger().debug("Pop size :" +this.popsize)
         return fronts
     }
 

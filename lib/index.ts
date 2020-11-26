@@ -50,7 +50,7 @@ export * from './testbuilding/SuiteBuilder'
 export * from './testbuilding/Stringifier'
 
 // Util
-export * from './graph/cfg'
+export * from './graph/cfgUtils'
 export * from './Config'
 export * from './graph/drawGraph'
 export * from './util/HashSet'

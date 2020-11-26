@@ -1,7 +1,7 @@
 import {prng} from '../..'
 import {ActionGene} from "./ActionGene";
 import {Sampler} from "../sampling/Sampler";
-import {logger} from "../..";
+import {getLogger} from "../..";
 import {Stringifier} from "../..";
 import {Objective} from "../..";
 import {Evaluation} from "../objective/Evaluation";
@@ -34,11 +34,11 @@ export class Individual {
         this.crowdingDistance = 0
         this.rank = 0
         this.id = prng.uniqueId(20)
-        logger.debug(`Created individual: ${this.id}`)
+        getLogger().debug(`Created individual: ${this.id}`)
     }
 
     mutate (sampler: Sampler) {
-        logger.debug(`Mutating individual: ${this.id}`)
+        getLogger().debug(`Mutating individual: ${this.id}`)
         return new Individual(this._root.mutate(sampler, 0))
     }
 

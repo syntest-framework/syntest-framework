@@ -1,66 +1,100 @@
-import {logger} from "./util/logger";
+const Yargs = require('yargs/yargs')
+const decamelize = require('decamelize')
+const path = require('path')
+const findUp = require('find-up')
 
-let config: any = {
-    "seed": null,
+const {properties} = require('./properties')
+import {getLogger} from "./util/logger";
 
-    "population_size": 20,
-
-    "max_depth": 5,
-
-    // mutation chances
-    "resample_gene_chance": 0.01,
-    "delta_mutation_chance": 0.8,
-    "sample_func_as_arg": 0.5,
-
-    "algorithm": "MOSA",
-    "stopping_criteria": [
-        {
-            "criterion": "generation_limit",
-            "limit": 10
-        },
-        {
-            "criterion": "coverage",
-            "limit": 100
-        }
-    ],
+let argv: any = null
 
 
-    // logging
-    "console_log_level": "debug",
-    "log_to_file": ["info", "warn", "error"],
+async function guessCWD (cwd: any) {
+    cwd = cwd || process.env.NYC_CWD || process.cwd()
+    const pkgPath = await findUp('package.json', { cwd })
+    if (pkgPath) {
+        cwd = path.dirname(pkgPath)
+    }
 
-    "draw_cfg": false,
-
-    // gene defaults
-    "string_alphabet": '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    "string_maxlength": 32,
-
-    "fixed_bits": 128,
-    "fixed_decimals": 18,
-
-    "ufixed_bits": 128,
-    "ufixed_decimals": 18,
-
-    "int_bits": 256,
-
-    "uint_bits": 256
+    return cwd
 }
 
+export async function processConfig(config: any, cwd: any) {
+    cwd = await guessCWD(cwd)
 
-export function setConfig(configFromFile: any) {
-    for (let key of Object.keys(configFromFile['search'])) {
-        config[key] = configFromFile['search'][key]
-    }
+    const yargs = Yargs([])
+        .usage('truffle run syntest-solidity [options]')
+        .usage('syntest-solidity [options]')
+        .showHidden(false)
+
+    setupOptions(yargs,  cwd)
+
+    yargs
+        .example('truffle run syntest-solidity --console_log_level debug', 'Setting the debug level')
+        .example('syntest-solidity --population_size 10', 'Setting the population size')
+        .epilog('visit ... for more documentation')
+        .boolean('h')
+        .boolean('version')
+        .help(false)
+        .version(false)
+
+    yargs
+        .config(config)
+        .help('h')
+        .alias('h', 'help')
+        .version()
+
+    let actualArgs = process.argv.slice(process.argv.indexOf('syntest-solidity') + 1)
+
+    argv = yargs
+        .wrap(yargs.terminalWidth())
+        .parse(actualArgs)
+}
+
+function setupOptions (yargs: any, cwd: string) {
+    Object.entries(properties).forEach(([name, setup]) => {
+        const option = {
+            // @ts-ignore
+            description: setup.description,
+            // @ts-ignore
+            default: setup.default,
+            // @ts-ignore
+            type: setup.type,
+            // @ts-ignore
+            alias: setup.alias,
+            global: false
+        }
+
+        if (name === 'cwd') {
+            option.default = cwd
+            option.global = true
+        }
+
+        if (option.type === 'array') {
+            option.type = 'string'
+        }
+
+        const optionName = decamelize(name, '-')
+        yargs.option(optionName, option)
+    })
 }
 
 export function getConfig() { // TODO maybe make immutable
-    return config
+    return argv
 }
 
 export function getSetting(setting: string): any {
-    if (!(setting in config)) {
-        logger.error(`Setting: ${setting} is not set properly.`)
+    if (!argv) {
+        getLogger().error(`First initiate the properties by calling processConfig.`)
         process.exit(1)
     }
-    return config[setting]
+    if (!(setting in argv)) {
+        getLogger().error(`Setting: ${setting} is not a property.`)
+        process.exit(1)
+    }
+    return argv[setting]
+}
+
+export function validateConfig() {
+
 }

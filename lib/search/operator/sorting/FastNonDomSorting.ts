@@ -1,5 +1,5 @@
 import {Individual} from "../../gene/Individual";
-import {logger} from "../../../index";
+import {getLogger} from "../../../index";
 
 /**
  * Sort the population using fast non-dominated sorting
@@ -26,7 +26,7 @@ export function fastNonDomSorting(population: Individual[]) {
             for (let key of p.getEvaluation().keys()) {
                 // TODO maybe add this
                 // if (!q.getEvaluation().has(key)) {
-                //     logger.debug("You cannot use fast non dominated sorting on individuals that have different objectives")
+                //     getLogger().debug("You cannot use fast non dominated sorting on individuals that have different objectives")
                 //     process.exit(1)
                 //     continue
                 // }
