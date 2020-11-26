@@ -1,4 +1,4 @@
-import {getSetting} from "../Config";
+import {getProperty} from "../config";
 
 import { createLogger, LoggerOptions, format, transports } from 'winston';
 
@@ -120,8 +120,8 @@ export function getLogger () {
 export function setupLogger() {
     let options: LoggerOptions = <LoggerOptions> {
         transports: [
-            new transports.Console(settings[getSetting("console_log_level")]),
-            ...getSetting("log_to_file").map((logLevel: string) => new transports.File(settings[logLevel]))
+            new transports.Console(settings[getProperty("console_log_level")]),
+            ...getProperty("log_to_file").map((logLevel: string) => new transports.File(settings[logLevel]))
         ],
         exitOnError: false // do not exit on handled exceptions
     }

@@ -8,7 +8,6 @@ import {getLogger} from "./util/logger";
 
 let argv: any = null
 
-
 async function guessCWD (cwd: any) {
     cwd = cwd || process.env.NYC_CWD || process.cwd()
     const pkgPath = await findUp('package.json', { cwd })
@@ -79,11 +78,7 @@ function setupOptions (yargs: any, cwd: string) {
     })
 }
 
-export function getConfig() { // TODO maybe make immutable
-    return argv
-}
-
-export function getSetting(setting: string): any {
+export function getProperty(setting: string): any {
     if (!argv) {
         getLogger().error(`First initiate the properties by calling processConfig.`)
         process.exit(1)
@@ -93,8 +88,4 @@ export function getSetting(setting: string): any {
         process.exit(1)
     }
     return argv[setting]
-}
-
-export function validateConfig() {
-
 }

@@ -1,6 +1,6 @@
 import {PrimitiveGene} from '../PrimitiveGene'
 
-import {getSetting, prng} from '../../..'
+import {getProperty, prng} from '../../..'
 import {Sampler} from "../../..";
 
 /**
@@ -12,7 +12,7 @@ export class Bool extends PrimitiveGene<boolean> {
     }
 
     mutate(sampler: Sampler, depth: number) {
-        if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
+        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
             return sampler.sampleGene(depth, this.getType())
         }
         return new Bool(this.getId(), !this.value)

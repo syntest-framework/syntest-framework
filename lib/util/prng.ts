@@ -1,4 +1,4 @@
-import {getSetting} from "../Config";
+import {getProperty} from "../config";
 
 const seedrandom = require('seedrandom');
 
@@ -6,7 +6,7 @@ let random: any = null
 
 function generator() {
     if (!random) {
-        const seed = getSetting('seed')
+        const seed = getProperty('seed')
 
         random = seedrandom()
 
