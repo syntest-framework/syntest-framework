@@ -2,7 +2,7 @@ import {Gene} from "../Gene";
 import {ActionGene} from "../ActionGene";
 
 import {prng} from '../../..'
-import {Sampler} from "../../sampling/Sampler";
+import {Sampler} from "../../..";
 import {getProperty} from "../../..";
 
 /**
@@ -30,7 +30,7 @@ export class Constructor extends ActionGene {
     mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
             // resample the gene
-            return sampler.sampleGene(depth, this.getType(), 'constructor')
+            return sampler.sampleGene(depth, this.type, 'constructor')
         } else if (!this.args.length) {
             return this.copy()
         } else {
@@ -38,12 +38,12 @@ export class Constructor extends ActionGene {
             let args = [...this.args.map((a: Gene) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
-            return new Constructor(this._constructorName, this.getType(), this.getId(), args)
+            return new Constructor(this._constructorName, this.type, this.id, args)
         }
     }
 
     copy() {
         let deepCopyArgs = [...this.args.map((a: Gene) => a.copy())]
-        return new Constructor(this._constructorName, this.getType(), this.getId(), deepCopyArgs)
+        return new Constructor(this._constructorName, this.type, this.id, deepCopyArgs)
     }
 }

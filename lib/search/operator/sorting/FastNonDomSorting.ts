@@ -16,7 +16,7 @@ export function fastNonDomSorting(population: Individual[]) {
 
     for (let index = 0; index < population.length; index++) {
         let p = population[index]
-        indices[p.getId()] = index
+        indices[p.id] = index
         let Sp: Individual[] = []
         S[index] = Sp
         n[index] = 0
@@ -60,9 +60,9 @@ export function fastNonDomSorting(population: Individual[]) {
     while (F[i].length !== 0) {
         let H = []
         for (let p of F[i]) {
-            for (let q of S[indices[p.getId()]]) {
-                n[indices[q.getId()]] -= 1
-                if (n[indices[q.getId()]] === 0) {
+            for (let q of S[indices[p.id]]) {
+                n[indices[q.id]] -= 1
+                if (n[indices[q.id]] === 0) {
                     H.push(q)
                 }
 

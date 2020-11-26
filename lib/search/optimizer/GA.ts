@@ -125,7 +125,8 @@ export abstract class GA {
         return this.getFinalTestSuite()
     }
 
-    /** List of test cases that will for the final test suite
+    /**
+     * List of test cases that will for the final test suite
      * @protected
      */
     protected getFinalTestSuite(): Individual[]{

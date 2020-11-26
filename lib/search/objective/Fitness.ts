@@ -74,7 +74,7 @@ export class Fitness {
      * @param objectives the objectives to evaluate
      */
     async evaluateOne (individual: Individual, objectives: Objective[]) {
-        getLogger().debug(`Evaluating individual ${individual.getId()}`)
+        getLogger().debug(`Evaluating individual ${individual.id}`)
 
         let dataPoints = await this.runner.runTest(individual)
 

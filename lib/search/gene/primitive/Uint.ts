@@ -16,7 +16,7 @@ export class Uint extends PrimitiveGene<number> {
 
     mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.getType())
+            return sampler.sampleGene(depth, this.type)
         }
 
         if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {
@@ -28,7 +28,7 @@ export class Uint extends PrimitiveGene<number> {
         let min = 0
         let max = (Math.pow(2, bits) - 1)
 
-        return new Uint(this.getId(), prng.nextInt(min, max), this.bits)
+        return new Uint(this.id, prng.nextInt(min, max), this.bits)
     }
 
     deltaMutation() {
@@ -42,11 +42,11 @@ export class Uint extends PrimitiveGene<number> {
         let min = 0
         let max = (Math.pow(2, this.bits) - 1)
 
-        return new Uint(this.getId(), Math.min(max, Math.max(min, this.value + change)), this.bits)
+        return new Uint(this.id, Math.min(max, Math.max(min, this.value + change)), this.bits)
     }
 
     copy () {
-        return new Uint(this.getId(), this.value, this.bits)
+        return new Uint(this.id, this.value, this.bits)
     }
 
     static getRandom (bits=getProperty('uint_bits')) {

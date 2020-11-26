@@ -19,6 +19,8 @@ function generator() {
 }
 
 /**
+ * The global random generator.
+ *
  * @author Dimitri Stallenberg
  */
 export const prng = {
