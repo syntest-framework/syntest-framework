@@ -1,9 +1,10 @@
 import {drawGraph} from './drawGraph'
+import {getSetting} from "../Config";
 
 /**
  * @author Dimitri Stallenberg
  */
-function createLoops (cfg: any) {
+export function createLoops (cfg: any) {
     let nonFinals: any[] = []
     let loopNode: any[] = []
     for (let node of cfg.nodes) {
@@ -17,7 +18,7 @@ function createLoops (cfg: any) {
         if (node.endLoop) {
             if (!loopNode.length) {
                 // Should not be possible!
-                throw new Error('End loop without start loop!')
+                throw new Error()
             }
             let startOfLoop = loopNode.pop()
             let nonFinalNodes = nonFinals.pop()
@@ -47,7 +48,7 @@ function createLoops (cfg: any) {
     }
 }
 
-function connectNonFinalNodes (cfg: any) {
+export function connectNonFinalNodes (cfg: any) {
     let nonFinals = []
     for (let node of cfg.nodes) {
         if (node.absoluteRoot) {
@@ -101,7 +102,9 @@ export function finalizeCFG (cfg: any) {
     connectNonFinalNodes(cfg)
     createLoops(cfg)
 
-    drawGraph(cfg)
+    if (getSetting('draw_cfg')) {
+        drawGraph(cfg)
+    }
     return cfg
 }
 

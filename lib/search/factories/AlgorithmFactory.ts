@@ -1,4 +1,4 @@
-import {getSetting} from "../../util/Config";
+import {getSetting} from "../../Config";
 import {NSGA2} from "../optimizer/NSGA2";
 import {SimpleGA} from "../optimizer/SimpleGA";
 import {MOSA} from "../optimizer/MOSA";

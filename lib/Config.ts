@@ -1,3 +1,5 @@
+import {logger} from "./util/logger";
+
 let config: any = {
     "seed": null,
 
@@ -27,6 +29,8 @@ let config: any = {
     "console_log_level": "debug",
     "log_to_file": ["info", "warn", "error"],
 
+    "draw_cfg": false,
+
     // gene defaults
     "string_alphabet": '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
     "string_maxlength": 32,
@@ -54,5 +58,9 @@ export function getConfig() { // TODO maybe make immutable
 }
 
 export function getSetting(setting: string): any {
+    if (!(setting in config)) {
+        logger.error(`Setting: ${setting} is not set properly.`)
+        process.exit(1)
+    }
     return config[setting]
 }

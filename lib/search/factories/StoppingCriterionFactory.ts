@@ -1,4 +1,4 @@
-import {getSetting} from "../../util/Config";
+import {getSetting} from "../../Config";
 
 
 export function createCriterionFromConfig() {
