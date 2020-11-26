@@ -2,18 +2,25 @@ import {getSetting} from "../Config";
 
 const seedrandom = require('seedrandom');
 
-const seed = getSetting('seed')
+let random: any = null
 
-let generator = seedrandom()
+function generator() {
+    if (!random) {
+        const seed = getSetting('seed')
 
-if (seed !== null) {
-    generator = seedrandom(seed)
+        random = seedrandom()
+
+        if (seed !== null) {
+            random = seedrandom(seed)
+        }
+    }
+
+    return random()
 }
 
 /**
  * @author Dimitri Stallenberg
  */
-
 export const prng = {
     nextBoolean: (trueChance=0.5) => {
         return generator() < trueChance

@@ -1,11 +1,11 @@
 import {Individual} from "../..";
-import {logger} from "../..";
+import {getLogger} from "../..";
 import {Datapoint, Runner} from "../..";
 import {Objective} from "./Objective";
 import {Evaluation} from "./Evaluation";
 import {Node} from "../../graph/Node";
 import {Edge} from "../../graph/Edge";
-import {CFG} from "../../graph/CfgObject";
+import {CFG} from "../../graph/CFG";
 
 const { Graph, alg } = require('@dagrejs/graphlib')
 
@@ -36,7 +36,7 @@ export class Fitness {
                 return String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
             })
             if (!edge) {
-                logger.error(`Edge not found during dijkstra operation.`)
+                getLogger().error(`Edge not found during dijkstra operation.`)
                 process.exit(1)
             }
 
@@ -74,7 +74,7 @@ export class Fitness {
      * @param objectives the objectives to evaluate
      */
     async evaluateOne (individual: Individual, objectives: Objective[]) {
-        logger.debug(`Evaluating individual ${individual.getId()}`)
+        getLogger().debug(`Evaluating individual ${individual.getId()}`)
 
         let dataPoints = await this.runner.runTest(individual)
 
@@ -188,7 +188,7 @@ export class Fitness {
                 })
 
             if (!branchNode) {
-                logger.error('Branch node not found!')
+                getLogger().error('Branch node not found!')
                 process.exit(1)
             }
 
@@ -237,7 +237,7 @@ export class Fitness {
             }
 
             if (!closestHitNode) {
-                logger.error('Closest hit node not found!')
+                getLogger().error('Closest hit node not found!')
                 process.exit(1)
             }
 

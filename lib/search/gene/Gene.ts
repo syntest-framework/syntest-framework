@@ -1,8 +1,8 @@
+import {Sampler} from "../sampling/Sampler";
+
 /**
  * @author Dimitri Stallenberg
  */
-import {Sampler} from "../sampling/Sampler";
-
 export abstract class Gene {
     private name: string;
     private varName: string
