@@ -1,4 +1,5 @@
 import {Individual} from "../gene/Individual";
+import {logger} from "../..";
 
 /**
  * Sort the population using fast non-dominated sorting
@@ -22,15 +23,22 @@ export function fastNonDomSorting(population: Individual[]) {
         for (let q of population) {
             let pDominatesQ = true
             let qDominatesP = true
-            for (let i = 0; i < p.getEvaluation().fitness.length; i++) {
-                if (p.getEvaluation().fitness[i] === 0 && q.getEvaluation().fitness[i] === 0) {
+            for (let key of p.getEvaluation().keys()) {
+                // TODO maybe add this
+                // if (!q.getEvaluation().has(key)) {
+                //     logger.debug("You cannot use fast non dominated sorting on individuals that have different objectives")
+                //     process.exit(1)
+                //     continue
+                // }
+
+                if (p.getEvaluation().get(key)!! === 0 && q.getEvaluation().get(key)!! === 0) {
                     continue
                 }
-                if (p.getEvaluation().fitness[i] >= q.getEvaluation().fitness[i]) {
+                if (p.getEvaluation().get(key)!! >= q.getEvaluation().get(key)!!) {
                     pDominatesQ = false
                 }
 
-                if (p.getEvaluation().fitness[i] <= q.getEvaluation().fitness[i]) {
+                if (p.getEvaluation().get(key)!! <= q.getEvaluation().get(key)!!) {
                     qDominatesP = false
                 }
             }
@@ -53,8 +61,8 @@ export function fastNonDomSorting(population: Individual[]) {
         let H = []
         for (let p of F[i]) {
             for (let q of S[indices[p.getId()]]) {
-                n[q.getId()] -= 1
-                if (n[q.getId()] === 0) {
+                n[indices[q.getId()]] -= 1
+                if (n[indices[q.getId()]] === 0) {
                     H.push(q)
                 }
 

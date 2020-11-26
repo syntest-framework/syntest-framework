@@ -2,40 +2,27 @@ import {Individual} from "../..";
 import {logger} from "../..";
 import {Datapoint, Runner} from "../..";
 import {Objective} from "./Objective";
+import {Evaluation} from "./Evaluation";
+import {Node} from "../../util/Node";
+import {Edge} from "../../util/Edge";
+import {CfgObject} from "../../util/CfgObject";
 
 const { Graph, alg } = require('@dagrejs/graphlib')
 
-export interface Node {
-    id: string
-    absoluteRoot: boolean
-    root: boolean
-    locationIdx: number
-    line: number
-}
-
-export interface Edge {
-    from: string
-    to: string
-    type: string
-}
-
-export interface CFG {
-    nodes: Node[]
-    edges: Edge[]
-}
-
 /**
+ * Class for evaluating individuals or entire populations.
+ *
  * @author Dimitri Stallenberg
  */
 export class Fitness {
-    private cfg: CFG;
+    private cfg: CfgObject;
     private runner: Runner
     private paths: any;
 
     /**
      * Constructor
      */
-    constructor(cfg: CFG, runner: Runner) {
+    constructor(cfg: CfgObject, runner: Runner) {
         this.cfg = cfg
         this.runner = runner
 
@@ -49,7 +36,7 @@ export class Fitness {
                 return String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
             })
             if (!edge) {
-                logger.error(`Edge not found during dijkstra operation.}`)
+                logger.error(`Edge not found during dijkstra operation.`)
                 process.exit(1)
             }
 
@@ -91,9 +78,7 @@ export class Fitness {
 
         let dataPoints = await this.runner.runTest(individual)
 
-        individual.setEvaluation({
-            fitness: this.calculateDistance(dataPoints, objectives)
-        })
+        individual.setEvaluation(this.calculateDistance(dataPoints, objectives))
     }
 
     /**
@@ -109,6 +94,13 @@ export class Fitness {
         }
     }
 
+    /**
+     * Calculate the branch distance
+     *
+     * @param opcode the opcode (the comparison operator)
+     * @param left the left value of the comparison
+     * @param right the right value of the comparison
+     */
     calcBranchDistance (opcode: string, left: number, right: number) {
         let trueBranch = 0
         let falseBranch = 0
@@ -164,6 +156,12 @@ export class Fitness {
         }
     }
 
+    /**
+     * Calculates the distance between the branches covered and the uncovered branches.
+     *
+     * @param dataPoints the cover information
+     * @param objectives the objectives/targets we want to calculate the distance to
+     */
     calculateDistance (dataPoints: Datapoint[], objectives: Objective[]) {
         let hitNodes = []
 
@@ -174,7 +172,7 @@ export class Fitness {
             }
 
             // Check if the branch in question is currently an objective
-            let objective = objectives.find((o) => {
+            let objective = this.getPossibleObjectives().find((o) => {
                 return o.locationIdx === point.locationIdx && o.line === point.line
             })
 
@@ -203,28 +201,32 @@ export class Fitness {
 
         let nodes = this.cfg.nodes.filter((n: Node) => !n.absoluteRoot && !n.root)
 
-        // find fitness per target
-        let fitness = [...nodes.map((n: Node) => Number.MAX_VALUE - 1)] // MAX Integer preferrably
+        // find fitness per objective
+        let fitness = new Evaluation()
 
-        for (let i = 0; i < nodes.length; i++) {
-            let node = nodes[i]
-
-            let objective = objectives.find((o) => {
-                return o.locationIdx === node.locationIdx && o.line === node.line
+        // loop over current objectives
+        for (let objective of objectives) {
+            // find the node in the CfgObject object that corresponds to the objective
+            let node = nodes.find((n) => {
+                return objective.locationIdx === n.locationIdx && objective.line === n.line
             })
 
-            if (!objective) {
-                fitness[i] = Number.MAX_VALUE
+            // No node found so the objective is uncoverable
+            if (!node) {
+                fitness.set(objective, Number.MAX_VALUE - 1)
                 continue
             }
 
+            // find if the branch was covered
             let hitNode = hitNodes.find((h: any) => h.node === node)
 
+            // if it is covered the distance is 0
             if (hitNode) {
-                fitness[i] = 0
+                fitness.set(objective, 0)
                 continue
             }
 
+            // find the closest covered branch to the objective branch
             let closestHitNode = null
             let smallestDistance = Number.MAX_VALUE
             for (let n of hitNodes) {
@@ -239,11 +241,15 @@ export class Fitness {
                 process.exit(1)
             }
 
+            // the approach distance is equal to the path length between the closest covered branch and the objective branch
             let approachDistance = Math.max(smallestDistance - 1, 0)
+            // calculate the branch distance between: covering the branch needed to get a closer approach distance and the currently covered branch
+            // always between 0 and 1
             let branchDistance = this.calcBranchDistance(closestHitNode.point.opcode, closestHitNode.point.left, closestHitNode.point.right)
 
+            // add the distances
             let distance = approachDistance + branchDistance
-            fitness[i] = Math.min(distance, fitness[i])
+            fitness.set(objective, Math.min(distance, fitness.get(objective)))
         }
 
         return fitness

@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
@@ -7,6 +10,7 @@
     "strictNullChecks": true,
     "declaration": true,
     "outDir": "./dist",
+    "downlevelIteration": true,
     "lib": [
       "dom",
       "es7",
