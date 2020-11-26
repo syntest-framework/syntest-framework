@@ -1,5 +1,5 @@
-import {Individual} from "../gene/Individual";
-import {logger} from "../..";
+import {Individual} from "../../gene/Individual";
+import {logger} from "../../../index";
 
 /**
  * Sort the population using fast non-dominated sorting

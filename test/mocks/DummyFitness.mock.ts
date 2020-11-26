@@ -1,12 +1,12 @@
 import {Fitness, Individual, Objective, Runner} from "../../lib";
-import {CfgObject} from "../../lib/util/CfgObject";
+import {CFG} from "../../lib/graph/CfgObject";
 import {Evaluation} from "../../lib/search/objective/Evaluation";
 
 export class DummyFitness extends Fitness {
 
     private objectives: Objective[]
 
-    constructor(cfg: CfgObject, runner: Runner, objectives: Objective[]) {
+    constructor(cfg: CFG, runner: Runner, objectives: Objective[]) {
         super(cfg, runner);
         this.objectives = objectives
     }

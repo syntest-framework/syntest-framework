@@ -1,4 +1,4 @@
-import {getSetting} from "./Config";
+import {getSetting} from "../Config";
 
 import { createLogger, LoggerOptions, format, transports } from 'winston';
 

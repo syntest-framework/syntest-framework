@@ -1,4 +1,4 @@
-import {getSetting} from "./Config";
+import {getSetting} from "../Config";
 
 const seedrandom = require('seedrandom');
 

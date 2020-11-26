@@ -4,9 +4,9 @@ import {Fitness} from "../objective/Fitness";
 import {GeneOptionManager} from "../gene/GeneOptionManager";
 import {Sampler} from "../sampling/Sampler";
 
-const {fastNonDomSorting} = require('../operator/FastNonDomSorting')
+const {fastNonDomSorting} = require('../operator/sorting/FastNonDomSorting')
 const {crowdingDistance} = require('../operator/CrowdingDistance')
-const {tournamentSelection} = require('../operator/TournamentSelection')
+const {tournamentSelection} = require('../operator/selection/TournamentSelection')
 
 /**
  * Fast Elist Non-dominated Sorting Genetic Algorithm (NSGA-II)

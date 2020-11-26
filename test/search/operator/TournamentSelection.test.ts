@@ -5,7 +5,7 @@ let expect = chai.expect
 
 import {Objective} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
-import {tournamentSelection} from "../../../lib/search/operator/TournamentSelection";
+import {tournamentSelection} from "../../../lib/search/operator/selection/TournamentSelection";
 
 const mockMath = Object.create(global.Math);
 mockMath.random = () => 0.5;

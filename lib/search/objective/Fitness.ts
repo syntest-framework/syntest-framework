@@ -3,9 +3,9 @@ import {logger} from "../..";
 import {Datapoint, Runner} from "../..";
 import {Objective} from "./Objective";
 import {Evaluation} from "./Evaluation";
-import {Node} from "../../util/Node";
-import {Edge} from "../../util/Edge";
-import {CfgObject} from "../../util/CfgObject";
+import {Node} from "../../graph/Node";
+import {Edge} from "../../graph/Edge";
+import {CFG} from "../../graph/CfgObject";
 
 const { Graph, alg } = require('@dagrejs/graphlib')
 
@@ -15,14 +15,14 @@ const { Graph, alg } = require('@dagrejs/graphlib')
  * @author Dimitri Stallenberg
  */
 export class Fitness {
-    private cfg: CfgObject;
+    private cfg: CFG;
     private runner: Runner
     private paths: any;
 
     /**
      * Constructor
      */
-    constructor(cfg: CfgObject, runner: Runner) {
+    constructor(cfg: CFG, runner: Runner) {
         this.cfg = cfg
         this.runner = runner
 
@@ -206,7 +206,7 @@ export class Fitness {
 
         // loop over current objectives
         for (let objective of objectives) {
-            // find the node in the CfgObject object that corresponds to the objective
+            // find the node in the CFG object that corresponds to the objective
             let node = nodes.find((n) => {
                 return objective.locationIdx === n.locationIdx && objective.line === n.line
             })

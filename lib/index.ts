@@ -34,8 +34,8 @@ export * from './search/objective/Objective'
 
 // Operator
 export * from './search/operator/CrowdingDistance'
-export * from './search/operator/FastNonDomSorting'
-export * from './search/operator/TournamentSelection'
+export * from './search/operator/sorting/FastNonDomSorting'
+export * from './search/operator/selection/TournamentSelection'
 
 // Optimizer
 export * from './search/optimizer/GA'
@@ -50,9 +50,9 @@ export * from './testbuilding/SuiteBuilder'
 export * from './testbuilding/Stringifier'
 
 // Util
-export * from './util/cfg'
-export * from './util/Config'
-export * from './util/drawGraph'
+export * from './graph/cfg'
+export * from './Config'
+export * from './graph/drawGraph'
 export * from './util/HashSet'
 export * from './util/logger'
 export * from './util/prng'
