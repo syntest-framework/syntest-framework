@@ -51,7 +51,7 @@ export * from './testbuilding/Stringifier'
 
 // Util
 export * from './graph/cfgUtils'
-export * from './Config'
+export * from './config'
 export * from './graph/drawGraph'
 export * from './util/HashSet'
 export * from './util/logger'

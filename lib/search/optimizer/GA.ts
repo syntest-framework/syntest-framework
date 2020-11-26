@@ -2,7 +2,7 @@ import {Fitness} from "../..";
 import {GeneOptionManager} from "../..";
 import {Sampler} from "../..";
 import {Individual} from "../..";
-import {getSetting} from "../..";
+import {getProperty} from "../..";
 import {getLogger} from "../..";
 import {Objective} from "../..";
 
@@ -69,7 +69,7 @@ export abstract class GA {
         this._fitness = fitness
         this._geneOptions = geneOptions
         this._sampler = sampler
-        this._popsize = getSetting('population_size')
+        this._popsize = getProperty('population_size')
         this._population = []
         this._archive = []
         this.startTime = Date.now()

@@ -3,7 +3,7 @@ import {ActionGene} from "../ActionGene";
 
 import {prng} from '../../..'
 import {Sampler} from "../../sampling/Sampler";
-import {getSetting} from "../../..";
+import {getProperty} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
@@ -28,7 +28,7 @@ export class Constructor extends ActionGene {
     }
 
     mutate(sampler: Sampler, depth: number) {
-        if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
+        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
             // resample the gene
             return sampler.sampleGene(depth, this.getType(), 'constructor')
         } else if (!this.args.length) {

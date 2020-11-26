@@ -2,7 +2,7 @@ import {PrimitiveGene} from '../PrimitiveGene'
 
 import {prng} from '../../..'
 import {Sampler} from "../../..";
-import {getSetting} from "../../..";
+import {getProperty} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
@@ -17,11 +17,11 @@ export class Ufixed extends PrimitiveGene<number> {
     }
 
     mutate(sampler: Sampler, depth: number) {
-        if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
+        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
             return sampler.sampleGene(depth, this.getType())
         }
 
-        if (prng.nextBoolean(getSetting("delta_mutation_chance"))) {
+        if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {
             return this.deltaMutation()
         }
 
@@ -52,7 +52,7 @@ export class Ufixed extends PrimitiveGene<number> {
         return new Ufixed(this.getId(), this.value, this.bits, this.decimals)
     }
 
-    static getRandom (bits=getSetting("ufixed_bits"), decimals=getSetting('ufixed_decimals')) {
+    static getRandom (bits=getProperty("ufixed_bits"), decimals=getProperty('ufixed_decimals')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = -(Math.pow(2, bits) - 1)

@@ -1,5 +1,5 @@
 import {drawGraph} from './drawGraph'
-import {getSetting} from "../Config";
+import {getProperty} from "../config";
 
 /**
  * @author Dimitri Stallenberg
@@ -102,7 +102,7 @@ export function finalizeCFG (cfg: any) {
     connectNonFinalNodes(cfg)
     createLoops(cfg)
 
-    if (getSetting('draw_cfg')) {
+    if (getProperty('draw_cfg')) {
         drawGraph(cfg)
     }
     return cfg
