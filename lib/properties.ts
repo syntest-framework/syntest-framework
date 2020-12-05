@@ -34,6 +34,12 @@ export const properties = {
         default: 0.5
     },
 
+    "crossover_chance": {
+        description: 'Chance crossover happens at a certain branch point.',
+        type: 'number',
+        default: 0.3
+    },
+
     "algorithm": {
         description: 'Algorithm to be used by the tool',
         type: 'string',

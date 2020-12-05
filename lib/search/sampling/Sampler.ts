@@ -29,5 +29,6 @@ export abstract class Sampler {
      * @param geneType  the type of the gene
      * @return          a sampled gene
      */
+    // @ts-ignore
     abstract sampleGene (depth: number, type: string, geneType='primitive'): any
 }
