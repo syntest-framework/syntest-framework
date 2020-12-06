@@ -1,5 +1,17 @@
 import {Gene, getProperty, Individual, prng} from "../../..";
 
+/**
+ * Creates 2 children which are each other's complement with respect to their parents.
+ * i.e. given parents 000000 and 111111 a possible pair of children would be 001111 and 110000.
+ * However, it is not as simple because the actual mutation works with trees.
+ *
+ * @param parentA the first parent individual
+ * @param parentB the second parent individual
+ *
+ * @return a tuple of 2 children
+ *
+ * @author Dimitri Stallenberg
+ */
 export function TreeCrossover (parentA: Individual, parentB: Individual) {
     let rootA = parentA.root.copy()
     let rootB = parentB.root.copy()
@@ -54,6 +66,14 @@ export function TreeCrossover (parentA: Individual, parentB: Individual) {
     return [new Individual(rootA), new Individual(rootB)]
 }
 
+/**
+ * Finds a subtree in the given tree which matches the wanted gene.
+ *
+ * @param wanted the gene to match the subtree with
+ * @param tree the tree to search in
+ *
+ * @author Dimitri Stallenberg
+ */
 function findSimilarSubtree(wanted: Gene, tree: Gene) {
     let queue: any = []
     let similar = []
