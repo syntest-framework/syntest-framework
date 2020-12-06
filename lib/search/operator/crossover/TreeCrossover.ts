@@ -1,4 +1,4 @@
-import {Gene, getLogger, getProperty, Individual, prng} from "../../..";
+import {Gene, getProperty, Individual, prng} from "../../..";
 
 export function TreeCrossover (parentA: Individual, parentB: Individual) {
     let rootA = parentA.root.copy()
@@ -13,6 +13,8 @@ export function TreeCrossover (parentA: Individual, parentB: Individual) {
             child: rootA.getChildren()[i]
         })
     }
+
+    let crossoverOptions = []
 
     while (queueA.length) {
         let pair = queueA.shift()
@@ -29,16 +31,24 @@ export function TreeCrossover (parentA: Individual, parentB: Individual) {
 
         if (prng.nextBoolean(getProperty("crossover_chance"))) {
             // crossover
-            let donorSubtree = findSimilarSubtree(pair.child, rootB)
+            let donorSubtrees = findSimilarSubtree(pair.child, rootB)
 
-            if (donorSubtree === null) {
-                // skip
-                continue
+            for (let donorTree of donorSubtrees) {
+                crossoverOptions.push({
+                    p1: pair,
+                    p2: donorTree
+                })
             }
-        
-            pair.parent.setChild(pair.childIndex, donorSubtree.child.copy())
-            donorSubtree.parent.setChild(donorSubtree.childIndex, pair.child.copy())
         }
+    }
+
+    if (crossoverOptions.length) {
+        let crossoverChoice = prng.pickOne(crossoverOptions)
+        let pair = crossoverChoice.p1
+        let donorTree= crossoverChoice.p2
+
+        pair.parent.setChild(pair.childIndex, donorTree.child.copy())
+        donorTree.parent.setChild(donorTree.childIndex, pair.child.copy())
     }
 
     return [new Individual(rootA), new Individual(rootB)]
@@ -74,10 +84,5 @@ function findSimilarSubtree(wanted: Gene, tree: Gene) {
         }
     }
 
-    if (!similar.length) {
-        // no similar options
-        return null
-    }
-
-    return prng.pickOne(similar)
+    return similar
 }
