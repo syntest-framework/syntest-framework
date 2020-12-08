@@ -5,15 +5,12 @@ import {Sampler} from "../..";
  * @author Dimitri Stallenberg
  */
 export abstract class PrimitiveGene<T> extends Gene {
-    set value(value: T) {
-        this._value = value;
-    }
     get value(): T {
         return this._value;
     }
     private _value: any;
 
-    protected constructor(name: string, type: string, uniqueId: string, value: T) {
+    constructor(name: string, type: string, uniqueId: string, value: T) {
         super(name, type, uniqueId)
         this._value = value
     }
@@ -32,10 +29,6 @@ export abstract class PrimitiveGene<T> extends Gene {
 
     static getRandom (): Gene {
         throw new Error('Unimplemented function!')
-    }
-
-    getValue () {
-        return this._value
     }
 }
 

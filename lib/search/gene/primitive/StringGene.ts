@@ -21,20 +21,31 @@ export class StringGene extends PrimitiveGene<string> {
             return sampler.sampleVariable(depth, this.getType())
         }
 
-        let options = []
+        if (this.value.length > 0 && this.value.length < this.maxlength) {
+            let value = prng.nextInt(0, 3)
 
-        if (this.value.length < this.maxlength) {
-            options.push(this.addMutation)
+            if (value === 0) {
+                return this.addMutation()
+            } else if (value === 1) {
+                return this.removeMutation()
+            } else if (value === 2) {
+                return this.replaceMutation()
+            } else {
+                return this.deltaMutation()
+            }
+        } else if (this.value.length > 0) {
+            let value = prng.nextInt(0, 2)
+
+            if (value === 0) {
+                return this.removeMutation()
+            } else if (value === 1) {
+                return this.replaceMutation()
+            } else {
+                return this.deltaMutation()
+            }
+        } else {
+            return this.addMutation()
         }
-
-        if (this.value.length > 0) {
-            options.push(this.replaceMutation)
-            options.push(this.deltaMutation)
-            options.push(this.removeMutation)
-        }
-
-        let choice = prng.pickOne(options)
-        return choice()
     }
 
     addMutation(): StringGene {
