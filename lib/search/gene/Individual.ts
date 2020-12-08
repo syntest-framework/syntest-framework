@@ -3,6 +3,8 @@ import {ActionGene} from "./ActionGene";
 import {Sampler} from "../sampling/Sampler";
 import {logger} from "../..";
 import {Stringifier} from "../..";
+import {Objective} from "../..";
+import {Evaluation} from "../objective/Evaluation";
 
 /**
  * Individual class
@@ -16,7 +18,7 @@ export class Individual {
 
     private _root: ActionGene;
 
-    private evaluation: any;
+    private evaluation: Evaluation;
     private crowdingDistance: number;
     private rank: number;
     private id: string;
@@ -28,7 +30,7 @@ export class Individual {
     constructor(root: ActionGene) {
         this._root = root
 
-        this.evaluation = null
+        this.evaluation = new Evaluation()
         this.crowdingDistance = 0
         this.rank = 0
         this.id = prng.uniqueId(20)
@@ -55,7 +57,7 @@ export class Individual {
         this.evaluation = evaluation
     }
 
-    getEvaluation () {
+    getEvaluation (): Evaluation {
         return this.evaluation
     }
 

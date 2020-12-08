@@ -10,6 +10,7 @@
     "strictNullChecks": true,
     "declaration": true,
     "outDir": "./dist",
+    "downlevelIteration": true,
     "lib": [
       "dom",
       "es7",

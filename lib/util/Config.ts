@@ -10,7 +10,7 @@ let config: any = {
     "delta_mutation_chance": 0.8,
     "sample_func_as_arg": 0.5,
 
-    "algorithm": "NSGA2",
+    "algorithm": "MOSA",
     "stopping_criteria": [
         {
             "criterion": "generation_limit",
@@ -43,9 +43,9 @@ let config: any = {
 }
 
 
-export function setConfig(configFromFile: any) {
-    for (let key of Object.keys(configFromFile['search'])) {
-        config[key] = configFromFile['search'][key]
+export function setConfig(configFromFile: { [characterName: string]: any}) {
+    for (let key of Object.keys(configFromFile)) {
+        config[key] = configFromFile[key]
     }
 }
 

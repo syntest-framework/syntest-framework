@@ -24,5 +24,5 @@ export abstract class Runner {
         this._suiteBuilder = suiteBuilder
     }
 
-    abstract async runTest(individual: Individual): Promise<Datapoint[]>
+    abstract runTest(individual: Individual): Promise<Datapoint[]>
 }
