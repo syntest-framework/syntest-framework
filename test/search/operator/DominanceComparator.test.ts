@@ -1,3 +1,8 @@
+import * as sinon from 'sinon'
+import * as chai from 'chai'
+
+let expect = chai.expect
+
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
 import {Objective} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
@@ -7,7 +12,7 @@ import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
  */
 describe('Dominance comparator', function () {
 
-    test('Fist individual dominates', () => {
+    it('Fist individual dominates', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -22,10 +27,10 @@ describe('Dominance comparator', function () {
         set.add(objective2)
         let value = DominanceComparator.compare(ind1, ind2, set)
 
-        expect(value).toEqual(-1)
+        expect(value).to.equal(-1)
     })
 
-    test('Second individual dominates', () => {
+    it('Second individual dominates', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -40,10 +45,10 @@ describe('Dominance comparator', function () {
         set.add(objective2)
         let value = DominanceComparator.compare(ind1, ind2, set)
 
-        expect(value).toEqual(1)
+        expect(value).to.equal(1)
     })
 
-    test('None dominates with two objectives', () => {
+    it('None dominates with two objectives', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
 
@@ -59,10 +64,10 @@ describe('Dominance comparator', function () {
 
         let value = DominanceComparator.compare(ind1, ind2, set)
 
-        expect(value).toEqual(0)
+        expect(value).to.equal(0)
     })
 
-    test('None dominates with three objective', () => {
+    it('None dominates with three objective', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
         let objective2: Objective = {line: 1, locationIdx: 2};
         let objective3: Objective = {line: 1, locationIdx: 3};
@@ -79,7 +84,7 @@ describe('Dominance comparator', function () {
         set.add(objective3)
 
         let value = DominanceComparator.compare(ind1, ind2, set)
-        expect(value).toEqual(0)
+        expect(value).to.equal(0)
     })
 
 })
