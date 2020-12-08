@@ -43,9 +43,11 @@ let config: any = {
 }
 
 
-export function setConfig(configFromFile: any) {
-    for (let key of Object.keys(configFromFile['search'])) {
-        config[key] = configFromFile['search'][key]
+export function setConfig(configFromFile: { [characterName: string]: any}) {
+    console.log(configFromFile)
+    console.log(typeof configFromFile);
+    for (let key of Object.keys(configFromFile)) {
+        config[key] = configFromFile[key]
     }
 }
 
