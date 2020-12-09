@@ -4,7 +4,7 @@ import {GeneOptionManager} from "../gene/GeneOptionManager";
 import {Sampler} from "../sampling/Sampler";
 import {Individual} from "../gene/Individual";
 
-import {fastNonDomSorting} from '../operator/FastNonDomSorting'
+import {fastNonDomSorting} from '../operator/sorting/FastNonDomSorting'
 
 /**
  * Simple Genetic Algorithm BaseClass

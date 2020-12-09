@@ -1,8 +1,8 @@
-import {getSetting} from "../../util/Config";
+import {getProperty} from "../../config";
 
 
 export function createCriterionFromConfig() {
-    const stoppingCriteria = getSetting("stopping_criteria")
+    const stoppingCriteria = getProperty("stopping_criteria")
 
     let stringCriteria: string[] = []
 

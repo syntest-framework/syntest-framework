@@ -1,14 +1,17 @@
-import {getSetting} from "../../util/Config";
-import {NSGA2} from "../optimizer/NSGA2";
-import {SimpleGA} from "../optimizer/SimpleGA";
+import {getProperty} from "../../config";
+import {NSGA2} from "../..";
+import {SimpleGA} from "../..";
 import {MOSA} from "../optimizer/MOSA";
-import {Fitness} from "../objective/Fitness";
-import {GeneOptionManager} from "../gene/GeneOptionManager";
-import {Sampler} from "../sampling/Sampler";
+import {Fitness} from "../..";
+import {GeneOptionManager} from "../..";
+import {Sampler} from "../..";
 
-
+/**
+ *
+ * @author Dimitri Stallenberg
+ */
 export function createAlgorithmFromConfig(FitnessObject: Fitness, GeneOptionsObject: GeneOptionManager, Sampler: Sampler) {
-    const algorithm = getSetting("algorithm")
+    const algorithm = getProperty("algorithm")
 
     if (algorithm === 'SimpleGA') {
         return new SimpleGA(FitnessObject, GeneOptionsObject, Sampler)

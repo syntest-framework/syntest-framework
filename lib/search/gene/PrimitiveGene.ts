@@ -27,7 +27,7 @@ export abstract class PrimitiveGene<T> extends Gene {
         return []
     }
 
-    static getRandom (): Gene {
+    static getRandom (): PrimitiveGene<any> {
         throw new Error('Unimplemented function!')
     }
 }

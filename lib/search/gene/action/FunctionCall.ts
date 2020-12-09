@@ -3,7 +3,7 @@ import {ActionGene} from "../ActionGene";
 import {Constructor} from "./Constructor"
 import {prng} from '../../..'
 import {Sampler} from "../../sampling/Sampler";
-import {getSetting} from "../../..";
+import {getProperty} from "../../..";
 
 /**
  * @author Dimitri Stallenberg
@@ -44,22 +44,22 @@ export class FunctionCall extends ActionGene {
     mutate(sampler: Sampler, depth: number) {
         // TODO maybe mutate the instance?
 
-        if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
+        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
             // resample the gene
-            return sampler.sampleFunctionCall(depth, this.getType())
+            return sampler.sampleGene(depth, this.type, 'functionCall')
         } else if (!this.args.length) {
             return this.copy()
         } else {            // randomly pick one of the args
             let args = [...this.args.map((a: Gene) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
-            return new FunctionCall(this._instance, this._functionName, this.getType(), this.getId(), args)
+            return new FunctionCall(this._instance, this._functionName, this.type, this.id, args)
         }
     }
 
     copy() {
         let deepCopyArgs = [...this.args.map((a: Gene) => a.copy())]
-        return new FunctionCall(this._instance.copy(), this._functionName, this.getType(), this.getId(), deepCopyArgs)
+        return new FunctionCall(this._instance.copy(), this._functionName, this.type, this.id, deepCopyArgs)
     }
 
     hasChildren (): boolean {

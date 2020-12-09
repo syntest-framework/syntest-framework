@@ -2,8 +2,8 @@ import {Fitness} from "../..";
 import {GeneOptionManager} from "../..";
 import {Sampler} from "../..";
 import {Individual} from "../..";
-import {getSetting} from "../..";
-import {logger} from "../..";
+import {getProperty} from "../..";
+import {getLogger} from "../..";
 import {Objective} from "../..";
 
 /**
@@ -69,7 +69,7 @@ export abstract class GA {
         this._fitness = fitness
         this._geneOptions = geneOptions
         this._sampler = sampler
-        this._popsize = getSetting('population_size')
+        this._popsize = getProperty('population_size')
         this._population = []
         this._archive = []
         this.startTime = Date.now()
@@ -103,29 +103,30 @@ export abstract class GA {
      */
     async search (terminationCriteriaMet: (algorithmInstance: GA) => boolean) {
         this._population = this.createInitialPopulation()
-        logger.info('Initial population created')
+        getLogger().info('Initial population created')
 
         await this._fitness.evaluateMany(this._population, this.objectives)
 
         this._currentGeneration = 0
         this.startTime = Date.now()
 
-        logger.info(`Search process started at ${(new Date(this.startTime)).toLocaleTimeString()}`)
+        getLogger().info(`Search process started at ${(new Date(this.startTime)).toLocaleTimeString()}`)
 
         while (!terminationCriteriaMet(this)) {
             this._population = await this.generation(this._population)
             this._currentGeneration += 1
             this._timePast = Date.now() - this.startTime
             this._currentCoverage = this.getCurrentCoverage()
-            logger.info(`Generation: ${this._currentGeneration} done after ${this._timePast / 1000} seconds, current coverage: ${this._currentCoverage}`)
+            getLogger().info(`Generation: ${this._currentGeneration} done after ${this._timePast / 1000} seconds, current coverage: ${this._currentCoverage}`)
         }
 
-        logger.info(`The termination criteria have been satisfied.`)
-        logger.info(`Ending the search process at ${(new Date(Date.now())).toLocaleTimeString()}`)
+        getLogger().info(`The termination criteria have been satisfied.`)
+        getLogger().info(`Ending the search process at ${(new Date(Date.now())).toLocaleTimeString()}`)
         return this.getFinalTestSuite()
     }
 
-    /** List of test cases that will for the final test suite
+    /**
+     * List of test cases that will for the final test suite
      * @protected
      */
     protected getFinalTestSuite(): Individual[]{

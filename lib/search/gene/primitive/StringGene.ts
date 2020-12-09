@@ -1,6 +1,6 @@
 import {PrimitiveGene} from '../PrimitiveGene'
 
-import {getSetting, prng} from '../../..'
+import {getProperty, prng} from '../../..'
 import {Sampler} from "../../..";
 
 /**
@@ -17,8 +17,8 @@ export class StringGene extends PrimitiveGene<string> {
     }
 
     mutate(sampler: Sampler, depth: number): StringGene {
-        if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
-            return sampler.sampleVariable(depth, this.getType())
+        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
+            return sampler.sampleGene(depth, this.type, 'primitive')
         }
 
         if (this.value.length > 0 && this.value.length < this.maxlength) {
@@ -63,7 +63,7 @@ export class StringGene extends PrimitiveGene<string> {
             }
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     removeMutation(): StringGene {
@@ -78,7 +78,7 @@ export class StringGene extends PrimitiveGene<string> {
             newValue += this.value[i]
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     replaceMutation(): StringGene {
@@ -95,7 +95,7 @@ export class StringGene extends PrimitiveGene<string> {
             }
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     deltaMutation(): StringGene {
@@ -115,14 +115,14 @@ export class StringGene extends PrimitiveGene<string> {
             }
         }
 
-        return new StringGene(this.getId(), newValue, this.alphabet, this.maxlength)
+        return new StringGene(this.id, newValue, this.alphabet, this.maxlength)
     }
 
     copy () {
-        return new StringGene(this.getId(), this.value, this.alphabet, this.maxlength)
+        return new StringGene(this.id, this.value, this.alphabet, this.maxlength)
     }
 
-    static getRandom (alphabet = getSetting('string_alphabet'), maxlength=getSetting('string_maxlength')) {
+    static getRandom (alphabet = getProperty('string_alphabet'), maxlength=getProperty('string_maxlength')) {
         let valueLength = prng.nextInt(0, maxlength - 1)
         let value = ''
 

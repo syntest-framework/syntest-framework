@@ -1,7 +1,7 @@
 import {PrimitiveGene} from '../PrimitiveGene'
 import {prng} from '../../..'
 import {Sampler} from "../../..";
-import {getSetting} from "../../..";
+import {getProperty} from "../../..";
 import get = Reflect.get;
 
 /**
@@ -15,11 +15,11 @@ export class Uint extends PrimitiveGene<number> {
     }
 
     mutate(sampler: Sampler, depth: number) {
-        if (prng.nextBoolean(getSetting("resample_gene_chance"))) {
-            return sampler.sampleVariable(depth, this.getType())
+        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
+            return sampler.sampleGene(depth, this.type, 'primitive')
         }
 
-        if (prng.nextBoolean(getSetting("delta_mutation_chance"))) {
+        if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {
             return this.deltaMutation()
         }
 
@@ -28,7 +28,7 @@ export class Uint extends PrimitiveGene<number> {
         let min = 0
         let max = (Math.pow(2, bits) - 1)
 
-        return new Uint(this.getId(), prng.nextInt(min, max), this.bits)
+        return new Uint(this.id, prng.nextInt(min, max), this.bits)
     }
 
     deltaMutation() {
@@ -42,14 +42,14 @@ export class Uint extends PrimitiveGene<number> {
         let min = 0
         let max = (Math.pow(2, this.bits) - 1)
 
-        return new Uint(this.getId(), Math.min(max, Math.max(min, this.value + change)), this.bits)
+        return new Uint(this.id, Math.min(max, Math.max(min, this.value + change)), this.bits)
     }
 
     copy () {
-        return new Uint(this.getId(), this.value, this.bits)
+        return new Uint(this.id, this.value, this.bits)
     }
 
-    static getRandom (bits=getSetting('uint_bits')) {
+    static getRandom (bits=getProperty('uint_bits')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = 0

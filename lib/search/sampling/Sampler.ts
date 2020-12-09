@@ -10,15 +10,24 @@ export abstract class Sampler {
     protected geneOptionsObject: GeneOptionManager;
     /**
      * Constructor
+     * @param geneOptionsObject     the gene option manager
      */
     protected constructor(geneOptionsObject: GeneOptionManager) {
         this.geneOptionsObject = geneOptionsObject
     }
 
+    /**
+     * Should sample an individual
+     * @return  a sampled individual
+     */
     abstract sampleIndividual (): Individual
 
-    abstract sampleArgument (depth: number, type: string): any
-    abstract sampleConstructor (depth: number): any
-    abstract sampleVariable (depth: number, type: string): any
-    abstract sampleFunctionCall (depth: number, type: string): any
+    /**
+     * Should sample any gene based on the type
+     * @param depth     the current depth of the gene tree
+     * @param type      the return type of the gene to sample
+     * @param geneType  the type of the gene
+     * @return          a sampled gene
+     */
+    abstract sampleGene (depth: number, type: string, geneType: string): any
 }

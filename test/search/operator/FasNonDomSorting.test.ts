@@ -5,7 +5,7 @@ let expect = chai.expect
 
 import {Objective, tournamentSelection} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
-import {fastNonDomSorting} from "../../../lib/search/operator/FastNonDomSorting";
+import {fastNonDomSorting} from "../../../lib/search/operator/sorting/FastNonDomSorting";
 
 /**
  * @author Annibale Panichella

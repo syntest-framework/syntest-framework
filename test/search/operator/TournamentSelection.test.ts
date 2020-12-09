@@ -5,7 +5,7 @@ let expect = chai.expect
 
 import {Objective} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
-import {tournamentSelection} from "../../../lib/search/operator/TournamentSelection";
+import {tournamentSelection} from "../../../lib/search/operator/selection/TournamentSelection";
 
 const mockMath = Object.create(global.Math);
 mockMath.random = () => 0.5;
@@ -29,7 +29,7 @@ describe('Tournament selection', function () {
         //fit('Null my value throws', () => {
         expect(() => {
             tournamentSelection([ind1, ind2], 1)
-        }).throw('The tournament size  should be greater than 1 ');
+        }).throws('The tournament size should be greater than 1 ');
         // });
     })
 

@@ -1,11 +1,11 @@
 import {Individual} from "../..";
-import {logger} from "../..";
+import {getLogger} from "../..";
 import {Datapoint, Runner} from "../..";
 import {Objective} from "./Objective";
 import {Evaluation} from "./Evaluation";
-import {Node} from "../../util/Node";
-import {Edge} from "../../util/Edge";
-import {CfgObject} from "../../util/CfgObject";
+import {Node} from "../../graph/Node";
+import {Edge} from "../../graph/Edge";
+import {CFG} from "../../graph/CFG";
 
 const { Graph, alg } = require('@dagrejs/graphlib')
 
@@ -15,14 +15,14 @@ const { Graph, alg } = require('@dagrejs/graphlib')
  * @author Dimitri Stallenberg
  */
 export class Fitness {
-    private cfg: CfgObject;
+    private cfg: CFG;
     private runner: Runner
     private paths: any;
 
     /**
      * Constructor
      */
-    constructor(cfg: CfgObject, runner: Runner) {
+    constructor(cfg: CFG, runner: Runner) {
         this.cfg = cfg
         this.runner = runner
 
@@ -36,7 +36,7 @@ export class Fitness {
                 return String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
             })
             if (!edge) {
-                logger.error(`Edge not found during dijkstra operation.`)
+                getLogger().error(`Edge not found during dijkstra operation.`)
                 process.exit(1)
             }
 
@@ -74,7 +74,7 @@ export class Fitness {
      * @param objectives the objectives to evaluate
      */
     async evaluateOne (individual: Individual, objectives: Objective[]) {
-        logger.debug(`Evaluating individual ${individual.getId()}`)
+        getLogger().debug(`Evaluating individual ${individual.id}`)
 
         let dataPoints = await this.runner.runTest(individual)
 
@@ -188,7 +188,7 @@ export class Fitness {
                 })
 
             if (!branchNode) {
-                logger.error('Branch node not found!')
+                getLogger().error('Branch node not found!')
                 process.exit(1)
             }
 
@@ -206,7 +206,7 @@ export class Fitness {
 
         // loop over current objectives
         for (let objective of objectives) {
-            // find the node in the CfgObject object that corresponds to the objective
+            // find the node in the CFG object that corresponds to the objective
             let node = nodes.find((n) => {
                 return objective.locationIdx === n.locationIdx && objective.line === n.line
             })
@@ -237,7 +237,7 @@ export class Fitness {
             }
 
             if (!closestHitNode) {
-                logger.error('Closest hit node not found!')
+                getLogger().error('Closest hit node not found!')
                 process.exit(1)
             }
 

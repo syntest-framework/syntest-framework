@@ -1,4 +1,4 @@
-import {getSetting} from "./Config";
+import {getProperty} from "../config";
 
 import { createLogger, LoggerOptions, format, transports } from 'winston';
 
@@ -107,14 +107,23 @@ const settings: any = {
     },
 }
 
-let options: LoggerOptions = <LoggerOptions> {
-    transports: [
-        new transports.Console(settings[getSetting("console_log_level")]),
-        ...getSetting("log_to_file").map((logLevel: string) => new transports.File(settings[logLevel]))
-    ],
-    exitOnError: false // do not exit on handled exceptions
-}
-
+let logger: any = null
 
 // instantiate a new Winston Logger with the settings defined above
-export const logger = createLogger(options)
+export function getLogger () {
+    if (!logger) {
+        throw new Error('You have to call setupLogger before the program can start')
+    }
+    return logger
+}
+
+export function setupLogger() {
+    let options: LoggerOptions = <LoggerOptions> {
+        transports: [
+            new transports.Console(settings[getProperty("console_log_level")]),
+            ...getProperty("log_to_file").map((logLevel: string) => new transports.File(settings[logLevel]))
+        ],
+        exitOnError: false // do not exit on handled exceptions
+    }
+    logger = createLogger(options)
+}
