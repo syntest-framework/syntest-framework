@@ -18,7 +18,7 @@ export class StringGene extends PrimitiveGene<string> {
 
     mutate(sampler: Sampler, depth: number): StringGene {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.type)
+            return sampler.sampleGene(depth, this.type, 'primitive')
         }
 
         if (this.value.length > 0 && this.value.length < this.maxlength) {

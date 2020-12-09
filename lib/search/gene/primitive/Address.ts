@@ -13,7 +13,7 @@ export class Address extends PrimitiveGene<string> {
 
     mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.type)
+            return sampler.sampleGene(depth, this.type, 'primitive')
         }
         // TODO
         return new Address(this.id, this.value)

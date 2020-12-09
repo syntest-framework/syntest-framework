@@ -16,7 +16,7 @@ export class Uint extends PrimitiveGene<number> {
 
     mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.type)
+            return sampler.sampleGene(depth, this.type, 'primitive')
         }
 
         if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {

@@ -29,5 +29,5 @@ export abstract class Sampler {
      * @param geneType  the type of the gene
      * @return          a sampled gene
      */
-    abstract sampleGene (depth: number, type: string, geneType='primitive'): any
+    abstract sampleGene (depth: number, type: string, geneType: string): any
 }
