@@ -42,7 +42,6 @@ export class FunctionCall extends ActionGene {
             let args = [...this.args.map((a: Gene) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
-
             let instance = args.shift() as Constructor
             return new FunctionCall(instance, this._functionName, this.type, this.id, args)
         }

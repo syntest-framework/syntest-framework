@@ -31,5 +31,4 @@ describe('Fast non-dominated sorting', function () {
         expect(F[1].length).to.equal(1)
         expect(F[1]).to.contain(ind2)
     })
-
 })

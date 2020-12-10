@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "tsc": "tsc --declaration",
     "tsc:w": "tsc -w --declaration",
     "lint": "eslint --ext .ts src test/unit --fix",
     "test": "mocha -r ts-node/register test/**/*.test.ts",

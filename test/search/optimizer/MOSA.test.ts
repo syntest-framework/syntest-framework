@@ -182,5 +182,4 @@ describe('Test MOSA', function () {
         expect(newPopulation).contain(ind3)
         expect(newPopulation).contain(ind4)
     })
-
 })

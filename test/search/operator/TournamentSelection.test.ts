@@ -29,7 +29,7 @@ describe('Tournament selection', function () {
         //fit('Null my value throws', () => {
         expect(() => {
             tournamentSelection([ind1, ind2], 1)
-        }).throws('The tournament size  should be greater than 1 ');
+        }).throws('The tournament size should be greater than 1 ');
         // });
     })
 
@@ -93,5 +93,5 @@ describe('Tournament selection', function () {
         expect(winner.getEvaluation().get(objective2)).to.equal(1)
         expect(winner.getCrowdingDistance()).to.equal(10)
     })
-
 })
+
