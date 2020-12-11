@@ -4,13 +4,17 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
-import {Objective} from "../../../lib";
+import {Objective, processConfig, setupLogger} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 
 /**
  * @author Annibale Panichella
  */
 describe('Dominance comparator', function () {
+    before(async () => {
+        await processConfig({}, '')
+        await setupLogger()
+    })
 
     it('Fist individual dominates', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};

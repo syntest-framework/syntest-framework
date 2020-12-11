@@ -1,10 +1,10 @@
 import {GA} from './GA'
-import {Fitness} from "../objective/Fitness";
-import {GeneOptionManager} from "../gene/GeneOptionManager";
-import {Sampler} from "../sampling/Sampler";
-import {Individual} from "../gene/Individual";
+import {Fitness} from "../..";
+import {GeneOptionManager} from "../..";
+import {Sampler} from "../..";
+import {Individual} from "../..";
 
-import {fastNonDomSorting} from '../operator/sorting/FastNonDomSorting'
+import {fastNonDomSorting} from '../..'
 
 /**
  * Simple Genetic Algorithm BaseClass

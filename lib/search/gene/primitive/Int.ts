@@ -3,7 +3,6 @@ import {PrimitiveGene} from '../PrimitiveGene'
 import {prng} from '../../..'
 import {Sampler} from "../../..";
 import {getProperty} from "../../..";
-import get = Reflect.get;
 
 /**
  * @author Dimitri Stallenberg
@@ -18,11 +17,7 @@ export class Int extends PrimitiveGene<number> {
 
     mutate(sampler: Sampler, depth: number): Int {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-<<<<<<< HEAD
-            return sampler.sampleGene(depth, this.type)
-=======
             return sampler.sampleGene(depth, this.type, 'primitive')
->>>>>>> main
         }
 
         if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {

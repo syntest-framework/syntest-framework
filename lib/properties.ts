@@ -45,6 +45,12 @@ export const properties = {
         type: 'string',
         default: "MOSA"
     },
+    "subAlgorithm": {
+        description: 'Algorithm to be used as sub algorithm when using a MultiGA',
+        type: 'string',
+        default: "SimpleGA"
+    },
+
     "stopping_criteria": {
         description: 'Stopping criteria',
         type: 'array',

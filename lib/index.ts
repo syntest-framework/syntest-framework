@@ -41,6 +41,9 @@ export * from './search/operator/selection/TournamentSelection'
 export * from './search/optimizer/GA'
 export * from './search/optimizer/NSGA2'
 export * from './search/optimizer/SimpleGA'
+export * from './search/optimizer/MOSA'
+export * from './search/optimizer/MultiGA'
+export * from './search/optimizer/COMIX'
 
 // Sampling
 export * from './search/sampling/Sampler'

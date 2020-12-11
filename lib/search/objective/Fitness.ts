@@ -237,7 +237,9 @@ export class Fitness {
             }
 
             if (!closestHitNode) {
+                // throw new Error("closest hit node not found!")
                 getLogger().error('Closest hit node not found!')
+                getLogger().error(`${JSON.stringify(objective, null, 2)}`)
                 process.exit(1)
             }
 
