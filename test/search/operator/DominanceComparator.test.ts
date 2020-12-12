@@ -1,7 +1,7 @@
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 
-let expect = chai.expect
+const expect = chai.expect
 
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
 import {Objective} from "../../../lib";

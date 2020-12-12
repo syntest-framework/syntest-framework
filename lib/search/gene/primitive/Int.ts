@@ -3,7 +3,6 @@ import {PrimitiveGene} from '../PrimitiveGene'
 import {prng} from '../../..'
 import {Sampler} from "../../..";
 import {getProperty} from "../../..";
-import get = Reflect.get;
 
 /**
  * @author Dimitri Stallenberg

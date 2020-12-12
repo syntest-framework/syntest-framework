@@ -31,4 +31,3 @@ export abstract class PrimitiveGene<T> extends Gene {
         throw new Error('Unimplemented function!')
     }
 }
-

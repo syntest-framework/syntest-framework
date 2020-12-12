@@ -1,5 +1,5 @@
-import {Individual} from "../../../index";
-import {prng} from '../../../index';
+import {Individual} from "../../..";
+import {prng} from '../../..';
 
 /**
  * This function selects the individual for reproduction using tournament selection

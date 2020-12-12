@@ -3,6 +3,7 @@ import { Individual } from '../gene/Individual'
 import {Fitness} from "../objective/Fitness";
 import {GeneOptionManager} from "../gene/GeneOptionManager";
 import {Sampler} from "../sampling/Sampler";
+import {TreeCrossover} from "../operator/crossover/TreeCrossover";
 
 const {fastNonDomSorting} = require('../operator/sorting/FastNonDomSorting')
 const {crowdingDistance} = require('../operator/CrowdingDistance')
@@ -87,11 +88,14 @@ export class NSGA2 extends GA {
      */
     generateOffspring(population: Individual[]) {
         let offspring = []
-        // TODO crossover
 
         for (let index=0; index < this.popsize; index++) {
-            let individual = tournamentSelection(population, 2)
-            offspring.push(individual.mutate(this.sampler))
+            let parentA = tournamentSelection(population, 2)
+            let parentB = tournamentSelection(population, 2)
+            let [childA, childB] = TreeCrossover(parentA, parentB)
+
+            offspring.push(childA.mutate(this.sampler))
+            offspring.push(childB.mutate(this.sampler))
         }
 
         return offspring

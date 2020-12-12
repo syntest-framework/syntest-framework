@@ -16,6 +16,7 @@ export abstract class Gene {
     public get name(): string {
         return this._name;
     }
+
     private _name: string;
     private _varName: string
     private _type: string;

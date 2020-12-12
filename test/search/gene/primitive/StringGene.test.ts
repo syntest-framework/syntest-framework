@@ -1,8 +1,10 @@
 import * as sinon from 'sinon'
 import * as chai from 'chai'
+
+const expect = chai.expect
+
 import {Sampler, StringGene} from "../../../../lib";
 
-let expect = chai.expect
 
 it('Add mutation increases gene length by one', () => {
     let gene = StringGene.getRandom()

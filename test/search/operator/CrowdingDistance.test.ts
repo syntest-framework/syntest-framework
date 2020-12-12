@@ -1,7 +1,7 @@
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 
-let expect = chai.expect
+const expect = chai.expect
 
 import {logger, Objective} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";

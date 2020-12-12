@@ -1,7 +1,7 @@
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 
-let expect = chai.expect
+const expect = chai.expect
 
 import {Objective, tournamentSelection} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
@@ -31,5 +31,4 @@ describe('Fast non-dominated sorting', function () {
         expect(F[1].length).to.equal(1)
         expect(F[1]).to.contain(ind2)
     })
-
 })

@@ -1,7 +1,7 @@
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 
-let expect = chai.expect
+const expect = chai.expect
 
 import {Fitness, FunctionCall, GeneOptionManager, Objective, Runner, Sampler} from "../../../lib";
 import {MOSA} from "../../../lib/search/optimizer/MOSA";
@@ -135,7 +135,7 @@ describe('Test MOSA', function () {
         let mockedSampler = <Sampler>{} as any;
 
         mockedSampler.sampleFunctionCall = sinon.stub().returns(<FunctionCall>{} as any)
-        
+
         // @ts-ignore
         let fitness: Fitness = new DummyFitness({ nodes: [], edges: [] }, mockedRunner, [objective1, objective2])
 

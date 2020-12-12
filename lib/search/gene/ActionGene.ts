@@ -30,5 +30,9 @@ export abstract class ActionGene extends Gene {
     getChildren (): Gene[] {
         return [...this._args]
     }
+
+    setChild(index: number, child: Gene) {
+        this._args[index] = child
+    }
 }
 

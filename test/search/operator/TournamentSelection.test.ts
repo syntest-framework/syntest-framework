@@ -1,7 +1,7 @@
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 
-let expect = chai.expect
+const expect = chai.expect
 
 import {Objective} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
@@ -93,5 +93,5 @@ describe('Tournament selection', function () {
         expect(winner.getEvaluation().get(objective2)).to.equal(1)
         expect(winner.getCrowdingDistance()).to.equal(10)
     })
-
 })
+
