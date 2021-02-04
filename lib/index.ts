@@ -12,6 +12,8 @@ export * from './search/factories/StoppingCriterionFactory'
 // Action
 export * from './search/gene/action/Constructor'
 export * from './search/gene/action/FunctionCall'
+export * from './search/gene/action/ObjectFunctionCall'
+
 // Primitive
 export * from './search/gene/primitive/Address'
 export * from './search/gene/primitive/Bool'

@@ -1,5 +1,6 @@
 import {Gene} from "../Gene";
 import {ActionGene} from "../ActionGene";
+import {Constructor} from "./Constructor"
 import {prng} from '../../..'
 import {Sampler} from "../../..";
 import {getProperty} from "../../..";
@@ -7,7 +8,7 @@ import {getProperty} from "../../..";
 /**
  * @author Dimitri Stallenberg
  */
-export class FunctionCall extends ActionGene {
+export class ObjectFunctionCall extends ActionGene {
     get functionName(): string {
         return this._functionName;
     }
@@ -26,8 +27,8 @@ export class FunctionCall extends ActionGene {
      * @param args the arguments of the function
      * @param uniqueId optional argument
      */
-    constructor(functionName: string, type: string, uniqueId: string, args: Gene[]) {
-        super('functionCall', type, uniqueId, [...args])
+    constructor(instance: Constructor, functionName: string, type: string, uniqueId: string, args: Gene[]) {
+        super('functionCall', type, uniqueId, [instance, ...args])
         this._functionName = functionName
     }
 
@@ -41,15 +42,16 @@ export class FunctionCall extends ActionGene {
             let args = [...this.args.map((a: Gene) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
-
-            return new FunctionCall(this._functionName, this.type, this.id, args)
+            let instance = args.shift() as Constructor
+            return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, args)
         }
     }
 
     copy() {
         let deepCopyArgs = [...this.args.map((a: Gene) => a.copy())]
+        let instance = deepCopyArgs.shift() as Constructor
 
-        return new FunctionCall(this._functionName, this.type, this.id, deepCopyArgs)
+        return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, deepCopyArgs)
     }
 
     hasChildren (): boolean {

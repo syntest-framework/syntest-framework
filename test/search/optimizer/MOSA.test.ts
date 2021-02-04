@@ -5,7 +5,7 @@ const expect = chai.expect
 
 import {
     Fitness,
-    FunctionCall,
+    ObjectFunctionCall,
     GeneOptionManager,
     Objective,
     processConfig,
@@ -147,7 +147,7 @@ describe('Test MOSA', function () {
         let mockedGeneOptions = <GeneOptionManager>{} as any;
         let mockedSampler = <Sampler>{} as any;
 
-        mockedSampler.sampleFunctionCall = sinon.stub().returns(<FunctionCall>{} as any)
+        mockedSampler.sampleFunctionCall = sinon.stub().returns(<ObjectFunctionCall>{} as any)
 
         // @ts-ignore
         let fitness: Fitness = new DummyFitness({ nodes: [], edges: [] }, mockedRunner, [objective1, objective2])
