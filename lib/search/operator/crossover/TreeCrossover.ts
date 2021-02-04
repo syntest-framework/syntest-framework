@@ -35,7 +35,7 @@ export function TreeCrossover (parentA: Individual, parentB: Individual) {
                 // skip
                 continue
             }
-        
+
             pair.parent.setChild(pair.childIndex, donorSubtree.child.copy())
             donorSubtree.parent.setChild(donorSubtree.childIndex, pair.child.copy())
         }
