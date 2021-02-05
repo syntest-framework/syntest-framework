@@ -28,7 +28,7 @@ export class ObjectFunctionCall extends ActionGene {
      * @param uniqueId optional argument
      */
     constructor(instance: Constructor, functionName: string, type: string, uniqueId: string, args: Gene[]) {
-        super('functionCall', type, uniqueId, [instance, ...args])
+        super(functionName, type, uniqueId, [instance, ...args])
         this._functionName = functionName
     }
 

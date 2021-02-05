@@ -170,7 +170,6 @@ export class Fitness {
             if (point.type !== 'branch' || point.hits === 0) {
                 continue
             }
-
             // Check if the branch in question is currently an objective
             let objective = this.getPossibleObjectives().find((o) => {
                 return o.locationIdx === point.locationIdx && o.line === point.line

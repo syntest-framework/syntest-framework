@@ -196,5 +196,5 @@ export function drawGraph (cfg: any) {
         ticked()
     }
 
-    fs.writeFileSync('cfg.svg', body.html())
+    fs.writeFileSync('./coverage/cfg.svg', body.html())
 }

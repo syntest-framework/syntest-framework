@@ -7,7 +7,7 @@ import { createLogger, LoggerOptions, format, transports } from 'winston';
 const settings: any = {
     error: {
         level: 'error',
-        filename: `./logs/error.log`,
+        filename: `./coverage/logs/error.log`,
         handleExceptions: true,
         json: false,
         maxsize: 5242880, // 5MB
@@ -22,7 +22,7 @@ const settings: any = {
     },
     warn: {
         level: 'warn',
-        filename: `./logs/warn.log`,
+        filename: `./coverage/logs/warn.log`,
         handleExceptions: true,
         json: false,
         maxsize: 5242880, // 5MB
@@ -37,7 +37,7 @@ const settings: any = {
     },
     info: {
         level: 'info',
-        filename: `./logs/info.log`,
+        filename: `./coverage/logs/info.log`,
         json: false,
         maxsize: 5242880, // 5MB
         maxFiles: 1,
@@ -51,7 +51,7 @@ const settings: any = {
     },
     http: {
         level: 'http',
-        filename: `./logs/http.log`,
+        filename: `./coverage/logs/http.log`,
         json: false,
         maxsize: 5242880, // 5MB
         maxFiles: 1,
@@ -65,7 +65,7 @@ const settings: any = {
     },
     verbose: {
         level: 'verbose',
-        filename: `./logs/verbose.log`,
+        filename: `./coverage/logs/verbose.log`,
         json: false,
         maxsize: 5242880, // 5MB
         maxFiles: 1,
@@ -79,7 +79,7 @@ const settings: any = {
     },
     debug: {
         level: 'debug',
-        filename: `./logs/debug.log`,
+        filename: `./coverage/logs/debug.log`,
         json: false,
         maxsize: 5242880, // 5MB
         maxFiles: 1,
@@ -93,7 +93,7 @@ const settings: any = {
     },
     silly: {
         level: 'silly',
-        filename: `./logs/silly.log`,
+        filename: `./coverage/logs/silly.log`,
         json: false,
         maxsize: 5242880, // 5MB
         maxFiles: 1,
