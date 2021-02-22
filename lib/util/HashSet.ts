@@ -1,5 +1,5 @@
-import {Individual} from "../search/gene/Individual";
-import {Stringifier} from "../testbuilding/Stringifier";
+import {Individual} from "..";
+import {Stringifier} from "..";
 
 
 export class HashSet<T extends Individual> extends Set<T> {

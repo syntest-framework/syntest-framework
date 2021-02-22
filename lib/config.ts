@@ -58,6 +58,14 @@ export function setupOptions (program: string, additionalOptions: any) {
             option.type = 'string'
         }
 
+        if (name === 'src_directory') {
+            option.default = path.join(cwd, '/src')
+        }
+
+        if (name === 'test_directory') {
+            option.default = path.join(cwd, '/temp_test')
+        }
+
         const optionName = decamelize(name, '-')
         yargs.option(optionName, option)
     }
@@ -126,7 +134,6 @@ export function processConfig(config: any = {}, args: any = {}) {
         .wrap(yargs.terminalWidth())
         .parse(args)
 }
-
 
 export function getProperty(setting: string): any {
     if (!argv) {

@@ -5,6 +5,7 @@ import {Individual} from "../..";
 import {getProperty} from "../..";
 import {getLogger} from "../..";
 import {Objective} from "../..";
+import {endOverTimeWriterIfExists, startOverTimeWriter, writeData} from "../../util/resultWriter";
 
 /**
  * Genetic Algorithm BaseClass
@@ -20,11 +21,11 @@ export abstract class GA {
         this._population = value;
     }
 
-    get archive(): Individual[] {
+    get archive(): Map<Objective, Individual> {
         return this._archive;
     }
 
-    set archive(value: Individual[]) {
+    set archive(value: Map<Objective, Individual>) {
         this._archive = value;
     }
 
@@ -90,7 +91,8 @@ export abstract class GA {
     private readonly _popsize: number;
 
     private _population: Individual[];
-    private _archive: Individual[];
+    private _archive: Map<Objective, Individual>;
+    // private _proxy: Map<Objective, Individual>;
 
     private _startTime: number;
     private _currentGeneration: number;
@@ -111,7 +113,6 @@ export abstract class GA {
         this._sampler = sampler
         this._popsize = getProperty('population_size')
         this._population = []
-        this._archive = []
         this._startTime = Date.now()
 
         this._currentGeneration = 0
@@ -119,6 +120,24 @@ export abstract class GA {
         this._currentCoverage = 0
 
         this._objectives = fitness.getPossibleObjectives()
+
+
+        this.setupArchive()
+    }
+
+    /**
+     * Creates a Map
+     */
+    private setupArchive () {
+        const ga = this
+        class MyMap extends Map<Objective, Individual> {
+            set(key: Objective, value: Individual) {
+                writeData(ga, key)
+                return super.set(key, value);
+            }
+        }
+
+        this._archive = new MyMap()
     }
 
     /**
@@ -144,7 +163,7 @@ export abstract class GA {
     async search (terminationCriteriaMet: (algorithmInstance: GA) => boolean) {
         this._population = this.createInitialPopulation()
         getLogger().info('Initial population created')
-
+        startOverTimeWriter(this)
         await this._fitness.evaluateMany(this._population, this.objectives)
 
         this._currentGeneration = 0
@@ -160,17 +179,18 @@ export abstract class GA {
             getLogger().info(`Generation: ${this._currentGeneration} done after ${this._timePast / 1000} seconds, current coverage: ${this._currentCoverage}`)
         }
 
+        endOverTimeWriterIfExists()
         getLogger().info(`The termination criteria have been satisfied.`)
         getLogger().info(`Ending the search process at ${(new Date(Date.now())).toLocaleTimeString()}`)
-        return this.getFinalTestSuite()
+        return this.getFinalTestSuite().values()
     }
 
     /**
      * List of test cases that will for the final test suite
      * @protected
      */
-    protected getFinalTestSuite(): Individual[]{
-        return this._population
+    protected getFinalTestSuite(): Map<Objective, Individual>{
+        return this._archive
     }
 
     /**

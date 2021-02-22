@@ -1,4 +1,27 @@
 export const properties = {
+    // Files
+    "src_directory": {
+        description: 'Path to the directory under test',
+        type: 'string',
+        default: './src/',
+        alias: 'srcDirectory'
+    },
+
+    "test_directory": {
+        description: 'Path to the temporary test directory',
+        type: 'string',
+        default: './temp_test/',
+        alias: 'testDirectory'
+    },
+    "exclude": {
+        description: 'files to exclude',
+        items: {
+            type: 'string'
+        },
+        default: [],
+    },
+
+
     "seed": {
         description: 'Seed to be used by the pseudo random number generator.',
         type: 'string',
@@ -132,6 +155,22 @@ export const properties = {
         description: 'Number of bits used by the uint gene.',
         type: 'number',
         default: 256
+    },
+
+    // csv output
+    "csv_output": {
+        description: 'The path where the csv should be saved',
+        type: 'string',
+        default: './coverage'
+    },
+
+    "csv_output_values": {
+        description: 'The values that should be written to csv',
+        type: 'array',
+        items: {
+            type: 'string'
+        },
+        default: ["targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
     },
 }
 
