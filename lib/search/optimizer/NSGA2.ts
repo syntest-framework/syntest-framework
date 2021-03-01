@@ -1,8 +1,5 @@
 import {GA} from './GA'
 import { Individual } from '../gene/Individual'
-import {Fitness} from "../objective/Fitness";
-import {GeneOptionManager} from "../gene/GeneOptionManager";
-import {Sampler} from "../sampling/Sampler";
 import {TreeCrossover} from "../operator/crossover/TreeCrossover";
 
 const {fastNonDomSorting} = require('../operator/sorting/FastNonDomSorting')
@@ -15,9 +12,6 @@ const {tournamentSelection} = require('../operator/selection/TournamentSelection
  * @author Dimitri Stallenberg and Annibale Panichella
  */
 export class NSGA2 extends GA {
-    constructor(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
-        super(fitness, geneOptions, sampler);
-    }
 
     async generation (population: Individual[]) {
         // create offspring population

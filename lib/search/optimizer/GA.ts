@@ -1,11 +1,11 @@
 import {Fitness} from "../..";
-import {GeneOptionManager} from "../..";
 import {Sampler} from "../..";
 import {Individual} from "../..";
 import {getProperty} from "../..";
 import {getLogger} from "../..";
 import {Objective} from "../..";
-import {endOverTimeWriterIfExists, startOverTimeWriter, writeData} from "../../util/resultWriter";
+import {endOverTimeWriterIfExists, startOverTimeWriter, writeData, writeSummary} from "../../util/resultWriter";
+import {Target} from "../objective/Target";
 
 /**
  * Genetic Algorithm BaseClass
@@ -73,10 +73,6 @@ export abstract class GA {
         return this._fitness;
     }
 
-    get geneOptions(): GeneOptionManager {
-        return this._geneOptions;
-    }
-
     get sampler(): Sampler {
         return this._sampler;
     }
@@ -85,31 +81,39 @@ export abstract class GA {
         return this._popsize;
     }
 
+
+    get target(): Target {
+        return this._target;
+    }
+
+    set target(value: Target) {
+        this._target = value;
+    }
+
     private readonly _fitness: Fitness;
-    private readonly _geneOptions: GeneOptionManager;
     private readonly _sampler: Sampler;
     private readonly _popsize: number;
 
     private _population: Individual[];
     private _archive: Map<Objective, Individual>;
-    // private _proxy: Map<Objective, Individual>;
 
     private _startTime: number;
     private _currentGeneration: number;
     private _timePast: number;
     private _currentCoverage: number;
 
+    private _target: Target
     private _objectives: Objective[]
 
     /**
      * Constructor
+     * @param target
      * @param fitness the fitness object
-     * @param geneOptions the gene options object
      * @param sampler the sampler object
      */
-    constructor (fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
+    constructor (target: Target, fitness: Fitness, sampler: Sampler) {
+        this._target = target
         this._fitness = fitness
-        this._geneOptions = geneOptions
         this._sampler = sampler
         this._popsize = getProperty('population_size')
         this._population = []
@@ -119,7 +123,7 @@ export abstract class GA {
         this._timePast = 0
         this._currentCoverage = 0
 
-        this._objectives = fitness.getPossibleObjectives()
+        this._objectives = target.getObjectives()
 
 
         this.setupArchive()
@@ -180,16 +184,17 @@ export abstract class GA {
         }
 
         endOverTimeWriterIfExists()
+        writeSummary(this)
         getLogger().info(`The termination criteria have been satisfied.`)
         getLogger().info(`Ending the search process at ${(new Date(Date.now())).toLocaleTimeString()}`)
-        return this.getFinalTestSuite().values()
+        return this.getFinalTestSuite()
     }
 
     /**
      * List of test cases that will for the final test suite
      * @protected
      */
-    protected getFinalTestSuite(): Map<Objective, Individual>{
+    public getFinalTestSuite(): Map<Objective, Individual>{
         return this._archive
     }
 

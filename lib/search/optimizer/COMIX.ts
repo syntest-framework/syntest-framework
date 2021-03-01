@@ -1,18 +1,13 @@
 import {GA} from "./GA";
-import {Fitness, GeneOptionManager, Individual, Sampler} from "../..";
+import {Individual} from "../..";
 import {MultiGA} from "./MultiGA";
 
 export class COMIX<T extends GA> extends MultiGA<T> {
-
-    constructor (fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler, GAtype: { new(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler): GA }) {
-        super(fitness, geneOptions, sampler, GAtype)
-    }
 
     async multiGeneration(): Promise<void> {
         // pick champions
         let champions: Individual[] = []
         for (let algorithm of this.subAlgorithms) {
-            console.log(algorithm.population)
             champions.push(algorithm.population[0])
         }
 

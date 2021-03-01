@@ -1,4 +1,4 @@
-import {GeneOptionManager} from "../..";
+import {Target} from "../..";
 import {Individual} from "../..";
 
 /**
@@ -7,13 +7,22 @@ import {Individual} from "../..";
  * @author Dimitri Stallenberg
  */
 export abstract class Sampler {
-    protected geneOptionsObject: GeneOptionManager;
+
+    get target(): Target {
+        return this._target;
+    }
+
+    set target(value: Target) {
+        this._target = value;
+    }
+
+    private _target: Target;
     /**
      * Constructor
-     * @param geneOptionsObject     the gene option manager
+     * @param target     the target
      */
-    protected constructor(geneOptionsObject: GeneOptionManager) {
-        this.geneOptionsObject = geneOptionsObject
+    protected constructor(target: Target) {
+        this._target = target
     }
 
     /**

@@ -1,9 +1,8 @@
 import {getProperty} from "../../config";
-import {GA, NSGA2} from "../..";
+import {GA, NSGA2, Target} from "../..";
 import {SimpleGA} from "../..";
 import {MOSA} from "../..";
 import {Fitness} from "../..";
-import {GeneOptionManager} from "../..";
 import {Sampler} from "../..";
 import {MultiGA} from "../..";
 import {COMIX} from "../..";
@@ -12,7 +11,7 @@ import {COMIX} from "../..";
  *
  * @author Dimitri Stallenberg
  */
-export function createAlgorithmFromConfig(fitnessObject: Fitness, geneOptionsObject: GeneOptionManager, sampler: Sampler) {
+export function createAlgorithmFromConfig(target: Target | Target[], fitnessObject: Fitness, sampler: Sampler) {
     const singleAlgoritms: {[key: string]: { new(...args: any[]): GA }} = {
         SimpleGA: SimpleGA,
         NSGA2: NSGA2,
@@ -26,14 +25,22 @@ export function createAlgorithmFromConfig(fitnessObject: Fitness, geneOptionsObj
     const algorithm = getProperty("algorithm")
 
     if (algorithm in singleAlgoritms) {
-        return new singleAlgoritms[algorithm](fitnessObject, geneOptionsObject, sampler)
+        if (target instanceof Array) {
+            throw new Error(`Cannot use multiple target for the single target algorithms.`)
+        }
+
+        return new singleAlgoritms[algorithm](target, fitnessObject, sampler)
     } else if (algorithm in multiAlgorithms){
+        if (target instanceof Target) {
+            throw new Error(`Cannot use single target for the multi target algorithms.`)
+        }
+
         const subAlgorithm = getProperty("subAlgorithm")
         if (!(subAlgorithm in singleAlgoritms)) {
             throw new Error(`${subAlgorithm} is not a valid sub-algorithm. (Multi-algorithms cannot use other multi-algorithms as sub-algorithms)`)
         }
 
-        return new multiAlgorithms[algorithm](fitnessObject, geneOptionsObject, sampler, singleAlgoritms[subAlgorithm])
+        return new multiAlgorithms[algorithm](target, fitnessObject, sampler, singleAlgoritms[subAlgorithm])
     } else {
         throw new Error(`${algorithm} is not a valid algorithm.`)
 

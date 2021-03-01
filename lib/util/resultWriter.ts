@@ -1,18 +1,22 @@
 import {getProperty} from "../config";
 import {GA, Individual, Objective} from "..";
-import { appendFileSync, existsSync } from 'fs';
+import {appendFileSync, existsSync, mkdirSync} from 'fs';
 import Timeout = NodeJS.Timeout;
 
 
 let overTimeWriter: Timeout
+let time: number = Date.now()
+
 
 export function startOverTimeWriter(algo: GA) {
-    const file = `${getProperty("csv_output")}/cov_over_time_.csv`
+    const file = `${getProperty("output_directory")}/cov_over_time_.csv`
     overTimeWriter = setInterval(() => {
-        let data = `${Date.now()}, ${gatherOutputValues(getProperty("csv_output_values"), algo)}\n`
+        time = Date.now()
+
+        let data = `${gatherOutputValues(getProperty("output_properties"), algo)}\n`
 
         if (!existsSync(file)) {
-            writeToFile(file, `timestamp, ${gatherHeaderOutputValues(getProperty("csv_output_values"), algo)}\n`)
+            writeToFile(file, `${gatherHeaderOutputValues(getProperty("output_properties"), algo)}\n`)
         }
 
         // Write timestamp, no. covered branches
@@ -27,22 +31,43 @@ export function endOverTimeWriterIfExists() {
 }
 
 export function writeData(algo: GA, objective: Objective) {
-    const file = `${getProperty("csv_output")}/results.csv`
 
-    // "targetName", "coveredBranches", "totalBranches", "branchCoverage"
-    let data = `${Date.now()}, ${gatherOutputValues(getProperty("csv_output_values"), algo, objective)}\n`
+    const file = `${getProperty("output_directory")}/results.csv`
+
+    time = Date.now()
+
+    let data = `${gatherOutputValues(getProperty("output_properties"), algo, objective)}\n`
 
     if (!existsSync(file)) {
-        writeToFile(file, `timestamp, ${gatherHeaderOutputValues(getProperty("csv_output_values"), algo, objective)}\n`)
+        writeToFile(file, `${gatherHeaderOutputValues(getProperty("output_properties"), algo, objective)}\n`)
     }
 
     writeToFile(file, data)
 }
 
+export function writeSummary(algo: GA) {
+    const file = `${getProperty("output_directory")}/summary.csv`
+
+    time = Date.now()
+
+    let data = `${gatherOutputValues(getProperty("output_properties"), algo)}\n`
+
+    if (!existsSync(file)) {
+        writeToFile(file, `${gatherHeaderOutputValues(getProperty("output_properties"), algo)}\n`)
+    }
+
+    writeToFile(file, data)
+
+}
+
 function gatherHeaderOutputValues(outputValues: string[], algo: GA, objective: Objective | null = null) {
     let output = []
 
-    if (outputValues.includes("targetName") && objective) {
+    if (outputValues.includes("timestamp")) {
+        output.push(`timestamp`)
+    }
+
+    if (outputValues.includes("targetName")) {
         output.push(`target`)
     }
 
@@ -58,14 +83,23 @@ function gatherHeaderOutputValues(outputValues: string[], algo: GA, objective: O
         output.push(`total`)
     }
 
+    if (outputValues.includes("fitnessEvaluations")) {
+        output.push(`fitnessEvaluations`)
+    }
+
     return output.join(", ")
 }
 
 function gatherOutputValues(outputValues: string[], algo: GA, objective: Objective | null = null) {
     let output = []
 
-    if (outputValues.includes("targetName") && objective) {
-        output.push(`${objective.target}`)
+    if (outputValues.includes("timestamp")) {
+        output.push(`${time}`)
+    }
+
+
+    if (outputValues.includes("targetName")) {
+        output.push(`${algo.target.name}`)
     }
 
     if (outputValues.includes("branch") && objective) {
@@ -77,12 +111,19 @@ function gatherOutputValues(outputValues: string[], algo: GA, objective: Objecti
     }
 
     if (outputValues.includes("totalBranches")) {
-        output.push(`${algo.fitness.getPossibleObjectives().length}`)
+        output.push(`${algo.objectives.length}`)
+    }
+
+    if (outputValues.includes("fitnessEvaluations")) {
+        output.push(`${algo.fitness.evaluations}`)
     }
 
     return output.join(", ")
 }
 
+
 async function writeToFile(file: string, data: string) {
+    await mkdirSync(`${getProperty("output_directory")}`, { recursive: true })
+
     await appendFileSync(file, data)
 }

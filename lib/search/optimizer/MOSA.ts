@@ -1,9 +1,8 @@
 import {NSGA2} from './NSGA2'
-import { Individual } from '../gene/Individual'
-import {Fitness} from "../objective/Fitness";
-import {GeneOptionManager} from "../gene/GeneOptionManager";
-import {Sampler} from "../sampling/Sampler";
-import {getLogger, Objective} from "../..";
+import { Individual } from '../..'
+import {Fitness} from "../..";
+import {Sampler} from "../..";
+import {getLogger, Objective, Target} from "../..";
 import {DominanceComparator} from "../operator/DominanceComparator";
 
 const {crowdingDistance} = require('../operator/CrowdingDistance')
@@ -17,8 +16,8 @@ const {compare} = require('../operator/DominanceComparator')
 export class MOSA extends NSGA2 {
     private uncoveredObjectives: Objective[]
 
-    constructor(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
-        super(fitness, geneOptions, sampler);
+    constructor(target: Target, fitness: Fitness, sampler: Sampler) {
+        super(target, fitness, sampler);
         this.uncoveredObjectives = []
 
         this.objectives.forEach((objective) => {

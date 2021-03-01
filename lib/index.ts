@@ -26,13 +26,13 @@ export * from './search/gene/primitive/Uint'
 
 export * from './search/gene/ActionGene'
 export * from './search/gene/Gene'
-export * from './search/gene/GeneOptionManager'
 export * from './search/gene/Individual'
 export * from './search/gene/PrimitiveGene'
 
 // Objective
 export * from './search/objective/Fitness'
 export * from './search/objective/Objective'
+export * from './search/objective/Target'
 
 // Operator
 export * from './search/operator/CrowdingDistance'
@@ -54,10 +54,16 @@ export * from './search/sampling/Sampler'
 export * from './testbuilding/SuiteBuilder'
 export * from './testbuilding/Stringifier'
 
-// Util
+// Instrumentation
+export * from './graph/CFG'
+export * from './graph/Node'
+export * from './graph/Edge'
 export * from './graph/cfgUtils'
-export * from './config'
 export * from './graph/drawGraph'
+
+
+// Util
+export * from './config'
 export * from './util/HashSet'
 export * from './util/logger'
 export * from './util/prng'

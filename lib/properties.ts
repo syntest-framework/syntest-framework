@@ -158,19 +158,25 @@ export const properties = {
     },
 
     // csv output
-    "csv_output": {
+    "output_directory": {
         description: 'The path where the csv should be saved',
         type: 'string',
-        default: './coverage'
+        default: './syntest/statistics'
     },
 
-    "csv_output_values": {
+    // TODO logs dir
+    // TODO other outputs dir (maybe separate test dir)
+
+    "output_properties": {
         description: 'The values that should be written to csv',
         type: 'array',
         items: {
             type: 'string'
         },
-        default: ["targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
+        default: ["timestamp", "targetName", "coveredBranches", "totalBranches", "fitnessEvaluations"],
+        // default: ["timestamp", "targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
     },
+
+    // specify file instead of source
 }
 

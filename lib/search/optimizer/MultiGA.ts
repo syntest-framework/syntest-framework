@@ -1,8 +1,8 @@
-import {Fitness, GA} from "../..";
-import {GeneOptionManager} from "../..";
+import {Fitness, GA, Objective} from "../..";
 import {Sampler} from "../..";
 import {Individual} from "../..";
 import {getLogger} from "../..";
+import {Target} from "../objective/Target";
 
 /**
  * Genetic Algorithm BaseClass
@@ -22,21 +22,18 @@ export abstract class MultiGA<T extends GA> extends GA {
 
     /**
      * Constructor
+     * @param targets
      * @param fitness the fitness object
-     * @param geneOptions the gene options object
      * @param sampler the sampler object
      * @param GAtype the class of the sub algorithms to run (cannot be a MultiGA)
      */
-    constructor (fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler, GAtype: { new(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler): GA }) {
-        super(fitness, geneOptions, sampler)
+    constructor (targets: Target[], fitness: Fitness, sampler: Sampler, GAtype: { new(target: Target, fitness: Fitness, sampler: Sampler): GA }) {
+        super(targets[0], fitness, sampler)
 
         this._subAlgorithms = []
 
-        for (let objective of this.objectives) {
-            let ga: GA = new GAtype(fitness, geneOptions, sampler)
-
-            // TODO maybe more objectives per ga
-            ga.objectives = [objective]
+        for (let target of targets) {
+            let ga: GA = new GAtype(target, fitness, sampler)
 
             this._subAlgorithms.push(ga)
         }
@@ -80,10 +77,12 @@ export abstract class MultiGA<T extends GA> extends GA {
      * List of test cases that will for the final test suite
      * @protected
      */
-    protected getFinalTestSuite(): Individual[]{
-        let champions: Individual[] = []
+    public getFinalTestSuite(): Map<Objective, Individual>{
+        let champions: Map<Objective, Individual> = new Map<Objective, Individual>();
         for (let algorithm of this._subAlgorithms) {
-            champions.push(algorithm.population[0])
+            for (let key of algorithm.getFinalTestSuite().keys()) {
+                champions.set(key, <Individual>algorithm.getFinalTestSuite().get(key))
+            }
         }
         return champions
     }

@@ -1,5 +1,6 @@
 import {Individual} from "../search/gene/Individual";
 import {Stringifier} from "./Stringifier";
+import {Objective, Target} from "..";
 
 const fs = require('fs')
 const path = require('path')
@@ -28,17 +29,18 @@ export abstract class SuiteBuilder {
      * Writes a test file using an individual
      * @param filePath              the filepath to write the test to
      * @param individual            the individual to write a test for
+     * @param targetName
      * @param addLogs               whether to add log statements to the individual
      * @param additionalAssertions  a dictionary of additional assertions to put in the individual
      */
     // @ts-ignore
-    abstract async writeTest (filePath: string, individual: Individual, addLogs = false, additionalAssertions: { [key: string]: string } = {}): Promise<void>
+    abstract async writeTest (filePath: string, individual: Individual, targetName: string, addLogs = false, additionalAssertions?: Map<Individual, { [p: string]: string }>): Promise<void>
 
     /**
      * Writes tests for all individuals in the given population
      * @param population    the population of individuals to write tests for
      */
-    abstract createTests (population: Individual[]): Promise<void>
+    abstract createSuite (population: Map<Objective, Individual>): Promise<void>
 
     /**
      * Deletes a certain file
