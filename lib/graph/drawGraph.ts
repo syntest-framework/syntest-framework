@@ -5,7 +5,7 @@ const { JSDOM } = require('jsdom');
 /**
  * @author Dimitri Stallenberg
  */
-export function drawGraph (cfg: any) {
+export function drawGraph (cfg: any, path: string) {
     let graph = {
         nodes: [...cfg.nodes.map((n: any) => {
             let name = `(${n.line})`
@@ -196,5 +196,5 @@ export function drawGraph (cfg: any) {
         ticked()
     }
 
-    fs.writeFileSync('cfg.svg', body.html())
+    fs.writeFileSync(path, body.html())
 }

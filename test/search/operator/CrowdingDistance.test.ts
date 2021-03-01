@@ -3,15 +3,19 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {logger, Objective} from "../../../lib";
+import {Objective, processConfig, setupLogger} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
-import {crowdingDistance} from "../../../lib/search/operator/CrowdingDistance";
+import {crowdingDistance} from "../../../lib";
 
 /**
  * @author Annibale Panichella
  */
 
 describe('Crowding distance', function () {
+    before(async () => {
+        await processConfig({}, '')
+        await setupLogger()
+    })
 
     it('empty front', () => {
         crowdingDistance([])

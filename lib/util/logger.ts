@@ -4,107 +4,109 @@ import { createLogger, LoggerOptions, format, transports } from 'winston';
 
 
 // define the custom settings for each transport (file, console)
-const settings: any = {
-    error: {
-        level: 'error',
-        filename: `./logs/error.log`,
-        handleExceptions: true,
-        json: false,
-        maxsize: 5242880, // 5MB
-        maxFiles: 1,
-        colorize: false,
-        format: format.combine(
-            format.splat(),
-            format.errors({ stack: true }),
-            format.timestamp(),
-            format.simple(),
-        ),
-    },
-    warn: {
-        level: 'warn',
-        filename: `./logs/warn.log`,
-        handleExceptions: true,
-        json: false,
-        maxsize: 5242880, // 5MB
-        maxFiles: 1,
-        colorize: false,
-        format: format.combine(
-            format.splat(),
-            format.errors({ stack: true }),
-            format.timestamp(),
-            format.simple(),
-        ),
-    },
-    info: {
-        level: 'info',
-        filename: `./logs/info.log`,
-        json: false,
-        maxsize: 5242880, // 5MB
-        maxFiles: 1,
-        colorize: false,
-        format: format.combine(
-            format.splat(),
-            format.errors({ stack: true }),
-            format.timestamp(),
-            format.simple(),
-        ),
-    },
-    http: {
-        level: 'http',
-        filename: `./logs/http.log`,
-        json: false,
-        maxsize: 5242880, // 5MB
-        maxFiles: 1,
-        colorize: false,
-        format: format.combine(
-            format.splat(),
-            format.errors({ stack: true }),
-            format.timestamp(),
-            format.simple(),
-        ),
-    },
-    verbose: {
-        level: 'verbose',
-        filename: `./logs/verbose.log`,
-        json: false,
-        maxsize: 5242880, // 5MB
-        maxFiles: 1,
-        colorize: false,
-        format: format.combine(
-            format.splat(),
-            format.errors({ stack: true }),
-            format.timestamp(),
-            format.simple(),
-        ),
-    },
-    debug: {
-        level: 'debug',
-        filename: `./logs/debug.log`,
-        json: false,
-        maxsize: 5242880, // 5MB
-        maxFiles: 1,
-        colorize: false,
-        format: format.combine(
-            format.splat(),
-            format.errors({ stack: true }),
-            format.timestamp(),
-            format.simple(),
-        )
-    },
-    silly: {
-        level: 'silly',
-        filename: `./logs/silly.log`,
-        json: false,
-        maxsize: 5242880, // 5MB
-        maxFiles: 1,
-        colorize: false,
-        format: format.combine(
-            format.splat(),
-            format.errors({ stack: true }),
-            format.simple(),
-            format.timestamp(),
-        ),
-    },
+function getLoggerSettings (logDirectory: string): any {
+    return {
+        error: {
+            level: 'error',
+                filename: `${logDirectory}/error.log`,
+                handleExceptions: true,
+                json: false,
+                maxsize: 5242880, // 5MB
+                maxFiles: 1,
+                colorize: false,
+                format: format.combine(
+                format.splat(),
+                format.errors({ stack: true }),
+                format.timestamp(),
+                format.simple(),
+            ),
+        },
+        warn: {
+            level: 'warn',
+                filename: `${logDirectory}/warn.log`,
+                handleExceptions: true,
+                json: false,
+                maxsize: 5242880, // 5MB
+                maxFiles: 1,
+                colorize: false,
+                format: format.combine(
+                format.splat(),
+                format.errors({ stack: true }),
+                format.timestamp(),
+                format.simple(),
+            ),
+        },
+        info: {
+            level: 'info',
+                filename: `${logDirectory}/info.log`,
+                json: false,
+                maxsize: 5242880, // 5MB
+                maxFiles: 1,
+                colorize: false,
+                format: format.combine(
+                format.splat(),
+                format.errors({ stack: true }),
+                format.timestamp(),
+                format.simple(),
+            ),
+        },
+        http: {
+            level: 'http',
+                filename: `${logDirectory}/http.log`,
+                json: false,
+                maxsize: 5242880, // 5MB
+                maxFiles: 1,
+                colorize: false,
+                format: format.combine(
+                format.splat(),
+                format.errors({ stack: true }),
+                format.timestamp(),
+                format.simple(),
+            ),
+        },
+        verbose: {
+            level: 'verbose',
+                filename: `${logDirectory}/verbose.log`,
+                json: false,
+                maxsize: 5242880, // 5MB
+                maxFiles: 1,
+                colorize: false,
+                format: format.combine(
+                format.splat(),
+                format.errors({ stack: true }),
+                format.timestamp(),
+                format.simple(),
+            ),
+        },
+        debug: {
+            level: 'debug',
+                filename: `${logDirectory}/debug.log`,
+                json: false,
+                maxsize: 5242880, // 5MB
+                maxFiles: 1,
+                colorize: false,
+                format: format.combine(
+                format.splat(),
+                format.errors({ stack: true }),
+                format.timestamp(),
+                format.simple(),
+            )
+        },
+        silly: {
+            level: 'silly',
+                filename: `${logDirectory}/silly.log`,
+                json: false,
+                maxsize: 5242880, // 5MB
+                maxFiles: 1,
+                colorize: false,
+                format: format.combine(
+                format.splat(),
+                format.errors({ stack: true }),
+                format.simple(),
+                format.timestamp(),
+            ),
+        },
+    }
 }
 
 let logger: any = null
@@ -118,7 +120,9 @@ export function getLogger () {
 }
 
 export function setupLogger() {
-    let options: LoggerOptions = <LoggerOptions> {
+    const settings = getLoggerSettings(getProperty("log_directory"))
+
+    const options: LoggerOptions = <LoggerOptions> {
         transports: [
             new transports.Console(settings[getProperty("console_log_level")]),
             ...getProperty("log_to_file").map((logLevel: string) => new transports.File(settings[logLevel]))

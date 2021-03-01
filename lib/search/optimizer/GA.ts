@@ -1,10 +1,11 @@
 import {Fitness} from "../..";
-import {GeneOptionManager} from "../..";
 import {Sampler} from "../..";
 import {Individual} from "../..";
 import {getProperty} from "../..";
 import {getLogger} from "../..";
 import {Objective} from "../..";
+import {endOverTimeWriterIfExists, startOverTimeWriter, writeData, writeSummary} from "../../util/resultWriter";
+import {Target} from "../objective/Target";
 
 /**
  * Genetic Algorithm BaseClass
@@ -12,73 +13,135 @@ import {Objective} from "../..";
  * @author Dimitri Stallenberg
  */
 export abstract class GA {
-    get popsize(): number {
-        return this._popsize;
-    }
-
     get population(): Individual[] {
         return this._population;
     }
-    get sampler(): Sampler {
-        return this._sampler;
+
+    set population(value: Individual[]) {
+        this._population = value;
     }
-    get geneOptions(): GeneOptionManager {
-        return this._geneOptions;
+
+    get archive(): Map<Objective, Individual> {
+        return this._archive;
     }
-    get fitness(): Fitness {
-        return this._fitness;
+
+    set archive(value: Map<Objective, Individual>) {
+        this._archive = value;
     }
-    get objectives(): Objective[] {
-        return this._objectives;
+
+    get startTime(): number {
+        return this._startTime;
     }
-    set objectives(value: Objective[]) {
-        this._objectives = value;
+
+    set startTime(value: number) {
+        this._startTime = value;
     }
-    get currentCoverage(): number {
-        return this._currentCoverage;
-    }
-    get timePast(): number {
-        return this._timePast;
-    }
+
     get currentGeneration(): number {
         return this._currentGeneration;
     }
 
+    set currentGeneration(value: number) {
+        this._currentGeneration = value;
+    }
+
+    get timePast(): number {
+        return this._timePast;
+    }
+
+    set timePast(value: number) {
+        this._timePast = value;
+    }
+
+    get currentCoverage(): number {
+        return this._currentCoverage;
+    }
+
+    set currentCoverage(value: number) {
+        this._currentCoverage = value;
+    }
+
+    get objectives(): Objective[] {
+        return this._objectives;
+    }
+
+    set objectives(value: Objective[]) {
+        this._objectives = value;
+    }
+
+    get fitness(): Fitness {
+        return this._fitness;
+    }
+
+    get sampler(): Sampler {
+        return this._sampler;
+    }
+
+    get popsize(): number {
+        return this._popsize;
+    }
+
+
+    get target(): Target {
+        return this._target;
+    }
+
+    set target(value: Target) {
+        this._target = value;
+    }
+
     private readonly _fitness: Fitness;
-    private readonly _geneOptions: GeneOptionManager;
     private readonly _sampler: Sampler;
     private readonly _popsize: number;
 
     private _population: Individual[];
-    private _archive: Individual[];
+    private _archive: Map<Objective, Individual>;
 
-    private startTime: number;
+    private _startTime: number;
     private _currentGeneration: number;
     private _timePast: number;
     private _currentCoverage: number;
 
+    private _target: Target
     private _objectives: Objective[]
 
     /**
      * Constructor
+     * @param target
      * @param fitness the fitness object
-     * @param geneOptions the gene options object
      * @param sampler the sampler object
      */
-    constructor (fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
+    constructor (target: Target, fitness: Fitness, sampler: Sampler) {
+        this._target = target
         this._fitness = fitness
-        this._geneOptions = geneOptions
         this._sampler = sampler
         this._popsize = getProperty('population_size')
         this._population = []
-        this._archive = []
-        this.startTime = Date.now()
+        this._startTime = Date.now()
 
         this._currentGeneration = 0
         this._timePast = 0
         this._currentCoverage = 0
 
-        this._objectives = fitness.getPossibleObjectives()
+        this._objectives = target.getObjectives()
+
+
+        this.setupArchive()
+    }
+
+    /**
+     * Creates a Map
+     */
+    private setupArchive () {
+        const ga = this
+        class MyMap extends Map<Objective, Individual> {
+            set(key: Objective, value: Individual) {
+                writeData(ga, key)
+                return super.set(key, value);
+            }
+        }
+
+        this._archive = new MyMap()
     }
 
     /**
@@ -104,22 +167,24 @@ export abstract class GA {
     async search (terminationCriteriaMet: (algorithmInstance: GA) => boolean) {
         this._population = this.createInitialPopulation()
         getLogger().info('Initial population created')
-
+        startOverTimeWriter(this)
         await this._fitness.evaluateMany(this._population, this.objectives)
 
         this._currentGeneration = 0
-        this.startTime = Date.now()
+        this._startTime = Date.now()
 
-        getLogger().info(`Search process started at ${(new Date(this.startTime)).toLocaleTimeString()}`)
+        getLogger().info(`Search process started at ${(new Date(this._startTime)).toLocaleTimeString()}`)
 
         while (!terminationCriteriaMet(this)) {
             this._population = await this.generation(this._population)
             this._currentGeneration += 1
-            this._timePast = Date.now() - this.startTime
+            this._timePast = Date.now() - this._startTime
             this._currentCoverage = this.getCurrentCoverage()
             getLogger().info(`Generation: ${this._currentGeneration} done after ${this._timePast / 1000} seconds, current coverage: ${this._currentCoverage}`)
         }
 
+        endOverTimeWriterIfExists()
+        writeSummary(this)
         getLogger().info(`The termination criteria have been satisfied.`)
         getLogger().info(`Ending the search process at ${(new Date(Date.now())).toLocaleTimeString()}`)
         return this.getFinalTestSuite()
@@ -129,17 +194,18 @@ export abstract class GA {
      * List of test cases that will for the final test suite
      * @protected
      */
-    protected getFinalTestSuite(): Individual[]{
-        return this._population
+    public getFinalTestSuite(): Map<Objective, Individual>{
+        return this._archive
     }
 
     /**
-     * The function to implement in child classes
+     * The function to implement in child classes.
+     * Should return the sorted population of the next generation.
      *
      * @param population the current population
-     * @returns {[]} the population of the next generation
+     * @returns {[]} the sorted population of the next generation
      */
-    abstract generation (population: Individual[]): Promise<Individual[]>
+    abstract async generation (population: Individual[]): Promise<Individual[]>
 
     abstract getCurrentCoverage (): number
 }

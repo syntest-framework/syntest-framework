@@ -1,9 +1,8 @@
 import {NSGA2} from './NSGA2'
-import { Individual } from '../gene/Individual'
-import {Fitness} from "../objective/Fitness";
-import {GeneOptionManager} from "../gene/GeneOptionManager";
-import {Sampler} from "../sampling/Sampler";
-import {getLogger, Objective} from "../..";
+import { Individual } from '../..'
+import {Fitness} from "../..";
+import {Sampler} from "../..";
+import {getLogger, Objective, Target} from "../..";
 import {DominanceComparator} from "../operator/DominanceComparator";
 
 const {crowdingDistance} = require('../operator/CrowdingDistance')
@@ -17,18 +16,13 @@ const {compare} = require('../operator/DominanceComparator')
 export class MOSA extends NSGA2 {
     private uncoveredObjectives: Objective[]
 
-    private archive2: Map<Objective, Individual>
-
-    constructor(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
-        super(fitness, geneOptions, sampler);
+    constructor(target: Target, fitness: Fitness, sampler: Sampler) {
+        super(target, fitness, sampler);
         this.uncoveredObjectives = []
 
         this.objectives.forEach((objective) => {
             this.uncoveredObjectives.push(objective)
         })
-
-        // let's initialize the archive
-        this.archive2 = new Map<Objective, Individual>()
     }
 
     async generation (population: Individual[]) {
@@ -60,7 +54,6 @@ export class MOSA extends NSGA2 {
         // non-dominated sorting
         getLogger().debug("Number of objectives = "+ this.uncoveredObjectives.length)
         let F = this.preferenceSortingAlgorithm(pool, this.uncoveredObjectives)
-        console.log(F)
 
         // select new population
         let newPopulation = []
@@ -123,8 +116,8 @@ export class MOSA extends NSGA2 {
             for(let test of offspring){
                 if (test.getEvaluation().get(objective) == 0.0 && !covered.includes(objective)){
                     covered.push(objective)
-                    if (! this.archive2.has(objective)){
-                        this.archive2.set(objective, test)
+                    if (! this.archive.has(objective)){
+                        this.archive.set(objective, test)
                     }
                 }
             }
@@ -265,14 +258,5 @@ export class MOSA extends NSGA2 {
                 frontZero.push(chosen)
         }
         return frontZero
-    }
-
-    protected getFinalTestSuite(): Individual[]{
-        let suite: Individual[] = []
-        for (let ind of this.archive2.values()){
-            if (! suite.includes(ind))
-                suite.push(ind)
-        }
-        return suite
     }
 }

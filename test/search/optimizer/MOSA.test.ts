@@ -3,7 +3,16 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {Fitness, FunctionCall, GeneOptionManager, Objective, Runner, Sampler} from "../../../lib";
+import {
+    Fitness,
+    ObjectFunctionCall,
+    GeneOptionManager,
+    Objective,
+    processConfig,
+    Runner,
+    Sampler,
+    setupLogger
+} from "../../../lib";
 import {MOSA} from "../../../lib/search/optimizer/MOSA";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
@@ -12,6 +21,10 @@ import {DummyFitness} from "../../mocks/DummyFitness.mock";
  * @author Annibale Panichella
  */
 describe('Test MOSA', function () {
+    before(async () => {
+        await processConfig({}, '')
+        await setupLogger()
+    })
 
     it('Test Preference criterion', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};
@@ -134,7 +147,7 @@ describe('Test MOSA', function () {
         let mockedGeneOptions = <GeneOptionManager>{} as any;
         let mockedSampler = <Sampler>{} as any;
 
-        mockedSampler.sampleFunctionCall = sinon.stub().returns(<FunctionCall>{} as any)
+        mockedSampler.sampleFunctionCall = sinon.stub().returns(<ObjectFunctionCall>{} as any)
 
         // @ts-ignore
         let fitness: Fitness = new DummyFitness({ nodes: [], edges: [] }, mockedRunner, [objective1, objective2])

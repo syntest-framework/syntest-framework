@@ -1,5 +1,5 @@
 import {Fitness, Individual, Objective, Runner} from "../../lib";
-import {CFG} from "../../lib/graph/CfgObject";
+import {CFG} from "../../lib/graph/CFG";
 import {Evaluation} from "../../lib/search/objective/Evaluation";
 
 export class DummyFitness extends Fitness {

@@ -1,25 +1,48 @@
 import {getProperty} from "../../config";
-import {NSGA2} from "../..";
+import {GA, NSGA2, Target} from "../..";
 import {SimpleGA} from "../..";
-import {MOSA} from "../optimizer/MOSA";
+import {MOSA} from "../..";
 import {Fitness} from "../..";
-import {GeneOptionManager} from "../..";
 import {Sampler} from "../..";
+import {MultiGA} from "../..";
+import {COMIX} from "../..";
 
 /**
  *
  * @author Dimitri Stallenberg
  */
-export function createAlgorithmFromConfig(FitnessObject: Fitness, GeneOptionsObject: GeneOptionManager, Sampler: Sampler) {
-    const algorithm = getProperty("algorithm")
-
-    if (algorithm === 'SimpleGA') {
-        return new SimpleGA(FitnessObject, GeneOptionsObject, Sampler)
-    } else if (algorithm === 'NSGA2') {
-        return new NSGA2(FitnessObject, GeneOptionsObject, Sampler)
-    } else if (algorithm === 'MOSA') {
-        return new MOSA(FitnessObject, GeneOptionsObject, Sampler)
+export function createAlgorithmFromConfig(target: Target | Target[], fitnessObject: Fitness, sampler: Sampler) {
+    const singleAlgoritms: {[key: string]: { new(...args: any[]): GA }} = {
+        SimpleGA: SimpleGA,
+        NSGA2: NSGA2,
+        MOSA: MOSA
     }
 
-    throw new Error(`${algorithm} is not a valid algorithm.`)
+    const multiAlgorithms: {[key: string]: { new(...args: any[]): MultiGA<any> }} = {
+        COMIX: COMIX
+    }
+
+    const algorithm = getProperty("algorithm")
+
+    if (algorithm in singleAlgoritms) {
+        if (target instanceof Array) {
+            throw new Error(`Cannot use multiple target for the single target algorithms.`)
+        }
+
+        return new singleAlgoritms[algorithm](target, fitnessObject, sampler)
+    } else if (algorithm in multiAlgorithms){
+        if (target instanceof Target) {
+            throw new Error(`Cannot use single target for the multi target algorithms.`)
+        }
+
+        const subAlgorithm = getProperty("subAlgorithm")
+        if (!(subAlgorithm in singleAlgoritms)) {
+            throw new Error(`${subAlgorithm} is not a valid sub-algorithm. (Multi-algorithms cannot use other multi-algorithms as sub-algorithms)`)
+        }
+
+        return new multiAlgorithms[algorithm](target, fitnessObject, sampler, singleAlgoritms[subAlgorithm])
+    } else {
+        throw new Error(`${algorithm} is not a valid algorithm.`)
+
+    }
 }

@@ -1,10 +1,7 @@
 import {GA} from './GA'
-import {Fitness} from "../objective/Fitness";
-import {GeneOptionManager} from "../gene/GeneOptionManager";
-import {Sampler} from "../sampling/Sampler";
-import {Individual} from "../gene/Individual";
+import {Individual} from "../..";
 
-import {fastNonDomSorting} from '../operator/sorting/FastNonDomSorting'
+import {fastNonDomSorting} from '../..'
 
 /**
  * Simple Genetic Algorithm BaseClass
@@ -12,10 +9,6 @@ import {fastNonDomSorting} from '../operator/sorting/FastNonDomSorting'
  * @author Dimitri Stallenberg
  */
 export class SimpleGA extends GA {
-    constructor(fitness: Fitness, geneOptions: GeneOptionManager, sampler: Sampler) {
-        super(fitness, geneOptions, sampler);
-    }
-
     async generation (population: Individual[]) {
         // create offspring population
         let offspring = this.generateOffspring(population)

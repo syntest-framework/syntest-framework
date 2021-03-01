@@ -1,4 +1,4 @@
-import {Individual} from "../..";
+import {Individual, Target} from "../..";
 import {getLogger} from "../..";
 import {Datapoint, Runner} from "../..";
 import {Objective} from "./Objective";
@@ -15,20 +15,36 @@ const { Graph, alg } = require('@dagrejs/graphlib')
  * @author Dimitri Stallenberg
  */
 export class Fitness {
-    private cfg: CFG;
     private runner: Runner
+    private target: Target;
     private paths: any;
+
+    private _evaluations: number
 
     /**
      * Constructor
      */
-    constructor(cfg: CFG, runner: Runner) {
-        this.cfg = cfg
+    constructor(runner: Runner, target: Target) {
         this.runner = runner
+        this.target = target
+        this._evaluations = 0
+        this.extractPaths(target.cfg)
+    }
 
-        let cfgObject = this.getCFGObject()
-        this.paths = alg.dijkstraAll(cfgObject, (e: any) => {
-            let edge = this.cfg.edges.find((edge: Edge) => {
+    extractPaths (cfg: CFG) {
+        let g = new Graph();
+
+        for (let node of cfg.nodes) {
+            g.setNode(node.id)
+        }
+
+        for (let edge of cfg.edges) {
+            g.setEdge(edge.from, edge.to)
+            g.setEdge(edge.to, edge.from)
+        }
+
+        this.paths = alg.dijkstraAll(g, (e: any) => {
+            let edge = cfg.edges.find((edge: Edge) => {
                 if (String(edge.from) === String(e.v) && String(edge.to) === String(e.w)) {
                     return true
                 }
@@ -45,29 +61,6 @@ export class Fitness {
     }
 
     /**
-     * Creates a Graph object from the cfg that is usable by the dagre-js library.
-     * @returns {Graph}
-     */
-    getCFGObject () {
-        let g = new Graph();
-
-        for (let node of this.cfg.nodes) {
-            g.setNode(node.id)
-        }
-
-        for (let edge of this.cfg.edges) {
-            g.setEdge(edge.from, edge.to)
-            g.setEdge(edge.to, edge.from)
-        }
-
-        return g
-    }
-
-    getPossibleObjectives (): Objective[] {
-        return this.cfg.nodes.filter((n: any) => !n.absoluteRoot)
-    }
-
-    /**
      * This function evaluates an individual.
      *
      * @param individual the individual to evaluate
@@ -79,6 +72,7 @@ export class Fitness {
         let dataPoints = await this.runner.runTest(individual)
 
         individual.setEvaluation(this.calculateDistance(dataPoints, objectives))
+        this._evaluations += 1
     }
 
     /**
@@ -101,7 +95,7 @@ export class Fitness {
      * @param left the left value of the comparison
      * @param right the right value of the comparison
      */
-    calcBranchDistance (opcode: string, left: number, right: number) {
+    private calcBranchDistance (opcode: string, left: number, right: number) {
         let trueBranch = 0
         let falseBranch = 0
         let difference = Math.log10(Math.abs(left - right) + 1)
@@ -162,7 +156,7 @@ export class Fitness {
      * @param dataPoints the cover information
      * @param objectives the objectives/targets we want to calculate the distance to
      */
-    calculateDistance (dataPoints: Datapoint[], objectives: Objective[]) {
+    private calculateDistance (dataPoints: Datapoint[], objectives: Objective[]) {
         let hitNodes = []
 
         for (let point of dataPoints) {
@@ -170,9 +164,8 @@ export class Fitness {
             if (point.type !== 'branch' || point.hits === 0) {
                 continue
             }
-
             // Check if the branch in question is currently an objective
-            let objective = this.getPossibleObjectives().find((o) => {
+            let objective = this.target.getObjectives().find((o) => {
                 return o.locationIdx === point.locationIdx && o.line === point.line
             })
 
@@ -181,7 +174,7 @@ export class Fitness {
             }
 
             // find the corresponding branch node inside the cfg
-            let branchNode = this.cfg.nodes
+            let branchNode = this.target.cfg.nodes
                 .filter((n: Node) => !n.absoluteRoot)
                 .find((n: Node) => {
                     return n.locationIdx === point.locationIdx && n.line === point.line
@@ -199,7 +192,7 @@ export class Fitness {
             })
         }
 
-        let nodes = this.cfg.nodes.filter((n: Node) => !n.absoluteRoot && !n.root)
+        let nodes = this.target.cfg.nodes.filter((n: Node) => !n.absoluteRoot && !n.root)
 
         // find fitness per objective
         let fitness = new Evaluation()
@@ -237,8 +230,11 @@ export class Fitness {
             }
 
             if (!closestHitNode) {
-                getLogger().error('Closest hit node not found!')
-                process.exit(1)
+                // This is now possible since there can be multiple functions within a class that do not interact
+                continue
+                // getLogger().error('Closest hit node not found!')
+                // getLogger().error(`${JSON.stringify(objective, null, 2)}`)
+                // process.exit(1)
             }
 
             // the approach distance is equal to the path length between the closest covered branch and the objective branch
@@ -254,4 +250,10 @@ export class Fitness {
 
         return fitness
     }
+
+
+    get evaluations(): number {
+        return this._evaluations;
+    }
+
 }

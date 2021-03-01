@@ -28,6 +28,7 @@ export class Individual {
     /**
      * Constructor
      * @param root the root of the tree chromosome of the individual
+     * @param evaluation
      */
     constructor(root: ActionGene) {
         this._root = root

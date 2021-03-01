@@ -3,7 +3,7 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {Objective} from "../../../lib";
+import {Objective, processConfig, setupLogger} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {tournamentSelection} from "../../../lib/search/operator/selection/TournamentSelection";
 
@@ -15,6 +15,10 @@ global.Math = mockMath;
  * @author Annibale Panichella
  */
 describe('Tournament selection', function () {
+    before(async () => {
+        await processConfig({}, '')
+        await setupLogger()
+    })
 
     it('Small Tournament size', () => {
         let objective1: Objective = {line: 1, locationIdx: 1};

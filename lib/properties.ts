@@ -1,4 +1,27 @@
 export const properties = {
+    // Files
+    "src_directory": {
+        description: 'Path to the directory under test',
+        type: 'string',
+        default: './src/',
+        alias: 'srcDirectory'
+    },
+
+    "src_file": {
+        description: 'Path to the contract under test',
+        type: 'string',
+        default: './src/'
+    },
+
+    "exclude": {
+        description: 'files to exclude',
+        items: {
+            type: 'string'
+        },
+        default: [],
+    },
+
+
     "seed": {
         description: 'Seed to be used by the pseudo random number generator.',
         type: 'string',
@@ -45,6 +68,12 @@ export const properties = {
         type: 'string',
         default: "MOSA"
     },
+    "subAlgorithm": {
+        description: 'Algorithm to be used as sub algorithm when using a MultiGA',
+        type: 'string',
+        default: "SimpleGA"
+    },
+
     "stopping_criteria": {
         description: 'Stopping criteria',
         type: 'array',
@@ -127,5 +156,55 @@ export const properties = {
         type: 'number',
         default: 256
     },
+
+    // csv output
+    "output_properties": {
+        description: 'The values that should be written to csv',
+        type: 'array',
+        items: {
+            type: 'string'
+        },
+        default: ["timestamp", "targetName", "coveredBranches", "totalBranches", "fitnessEvaluations"],
+        // default: ["timestamp", "targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
+    },
+
+    // directories
+    "statistics_directory": {
+        description: 'The path where the csv should be saved',
+        type: 'string',
+        default: 'syntest/statistics'
+    },
+
+    "log_directory": {
+        description: 'The path where the logs should be saved',
+        type: 'string',
+        default: 'syntest/logs'
+    },
+
+    "final_suite_directory": {
+        description: 'The path where the csv should be saved',
+        type: 'string',
+        default: 'syntest/tests'
+    },
+
+    "cfg_directory": {
+        description: 'The path where the csv should be saved',
+        type: 'string',
+        default: 'syntest/cfg'
+    },
+
+    "temp_test_directory": {
+        description: 'Path to the temporary test directory',
+        type: 'string',
+        default: '.syntest/tests',
+    },
+
+    "temp_log_directory": {
+        description: 'Path to the temporary log directory',
+        type: 'string',
+        default: '.syntest/logs',
+    },
+
+    // specify file instead of source
 }
 

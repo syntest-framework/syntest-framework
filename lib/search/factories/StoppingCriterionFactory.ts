@@ -1,6 +1,5 @@
 import {getProperty} from "../../config";
 
-
 export function createCriterionFromConfig() {
     const stoppingCriteria = getProperty("stopping_criteria")
 
@@ -18,7 +17,10 @@ export function createCriterionFromConfig() {
         }
     }
 
-    let functionString = `function (GA) { return ${stringCriteria.join(" || ")}; }`
+    let functionString = `function (GA) { 
+    console.log(GA.currentGeneration)
+    console.log(GA.timePast)
+    return ${stringCriteria.join(" || ")}; }`
 
     return new Function("return " + functionString)();
 }

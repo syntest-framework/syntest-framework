@@ -11,7 +11,7 @@ import {prng} from '../../..';
  */
 export function tournamentSelection (population: Individual[], tournamentSize: number) {
     if (tournamentSize < 2)
-        throw new Error('The tournament size  should be greater than 1 ')
+        throw new Error('The tournament size should be greater than 1 ')
 
     let winner = prng.pickOne(population)
 
