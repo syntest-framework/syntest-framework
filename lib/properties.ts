@@ -7,12 +7,12 @@ export const properties = {
         alias: 'srcDirectory'
     },
 
-    "test_directory": {
-        description: 'Path to the temporary test directory',
+    "src_file": {
+        description: 'Path to the contract under test',
         type: 'string',
-        default: './temp_test/',
-        alias: 'testDirectory'
+        default: './src/'
     },
+
     "exclude": {
         description: 'files to exclude',
         items: {
@@ -158,15 +158,6 @@ export const properties = {
     },
 
     // csv output
-    "output_directory": {
-        description: 'The path where the csv should be saved',
-        type: 'string',
-        default: './syntest/statistics'
-    },
-
-    // TODO logs dir
-    // TODO other outputs dir (maybe separate test dir)
-
     "output_properties": {
         description: 'The values that should be written to csv',
         type: 'array',
@@ -175,6 +166,43 @@ export const properties = {
         },
         default: ["timestamp", "targetName", "coveredBranches", "totalBranches", "fitnessEvaluations"],
         // default: ["timestamp", "targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
+    },
+
+    // directories
+    "statistics_directory": {
+        description: 'The path where the csv should be saved',
+        type: 'string',
+        default: 'syntest/statistics'
+    },
+
+    "log_directory": {
+        description: 'The path where the logs should be saved',
+        type: 'string',
+        default: 'syntest/logs'
+    },
+
+    "final_suite_directory": {
+        description: 'The path where the csv should be saved',
+        type: 'string',
+        default: 'syntest/tests'
+    },
+
+    "cfg_directory": {
+        description: 'The path where the csv should be saved',
+        type: 'string',
+        default: 'syntest/cfg'
+    },
+
+    "temp_test_directory": {
+        description: 'Path to the temporary test directory',
+        type: 'string',
+        default: '.syntest/tests',
+    },
+
+    "temp_log_directory": {
+        description: 'Path to the temporary log directory',
+        type: 'string',
+        default: '.syntest/logs',
     },
 
     // specify file instead of source

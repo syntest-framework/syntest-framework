@@ -116,7 +116,6 @@ export function loadConfig(args: any = {}, baseConfig: any = {}): any {
     return finalConfig;
 }
 
-
 export function processConfig(config: any = {}, args: any = {}) {
     if (!cwd || !yargs) {
         throw new Error('Please call loadConfig before calling processConfig')

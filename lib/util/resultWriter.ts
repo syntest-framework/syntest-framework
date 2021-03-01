@@ -9,7 +9,7 @@ let time: number = Date.now()
 
 
 export function startOverTimeWriter(algo: GA) {
-    const file = `${getProperty("output_directory")}/cov_over_time_.csv`
+    const file = `${getProperty("statistics_directory")}/cov_over_time_.csv`
     overTimeWriter = setInterval(() => {
         time = Date.now()
 
@@ -32,7 +32,7 @@ export function endOverTimeWriterIfExists() {
 
 export function writeData(algo: GA, objective: Objective) {
 
-    const file = `${getProperty("output_directory")}/results.csv`
+    const file = `${getProperty("statistics_directory")}/results.csv`
 
     time = Date.now()
 
@@ -46,7 +46,7 @@ export function writeData(algo: GA, objective: Objective) {
 }
 
 export function writeSummary(algo: GA) {
-    const file = `${getProperty("output_directory")}/summary.csv`
+    const file = `${getProperty("statistics_directory")}/summary.csv`
 
     time = Date.now()
 
@@ -123,7 +123,5 @@ function gatherOutputValues(outputValues: string[], algo: GA, objective: Objecti
 
 
 async function writeToFile(file: string, data: string) {
-    await mkdirSync(`${getProperty("output_directory")}`, { recursive: true })
-
     await appendFileSync(file, data)
 }
