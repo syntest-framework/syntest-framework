@@ -1,5 +1,7 @@
 # syntest-framework
+
 ![](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml/badge.svg)
+
 Common core of the SynTest Framework
 
 # Prerequisites
