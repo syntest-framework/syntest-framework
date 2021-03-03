@@ -3,10 +3,13 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {processConfig, Sampler, setupLogger, StringGene} from "../../../../lib";
+import {guessCWD, loadConfig, processConfig, Sampler, setupLogger, setupOptions, StringGene} from "../../../../lib";
 
 describe('StringGene', () => {
     before(async () => {
+        await guessCWD(null)
+        await setupOptions("","")
+        await loadConfig()
         await processConfig({}, '')
         await setupLogger()
     })

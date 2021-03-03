@@ -4,7 +4,7 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
-import {Objective, processConfig, setupLogger} from "../../../lib";
+import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 
 /**
@@ -12,13 +12,16 @@ import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
  */
 describe('Dominance comparator', function () {
     before(async () => {
+        await guessCWD(null)
+        await setupOptions("","")
+        await loadConfig()
         await processConfig({}, '')
         await setupLogger()
     })
 
     it('Fist individual dominates', () => {
-        let objective1: Objective = {line: 1, locationIdx: 1};
-        let objective2: Objective = {line: 1, locationIdx: 2};
+        let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
+        let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
 
         let ind1 = new DummyIndividual();
         ind1.setDummyEvaluation([objective1, objective2], [0, 1])
@@ -35,8 +38,8 @@ describe('Dominance comparator', function () {
     })
 
     it('Second individual dominates', () => {
-        let objective1: Objective = {line: 1, locationIdx: 1};
-        let objective2: Objective = {line: 1, locationIdx: 2};
+        let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
+        let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
 
         let ind1 = new DummyIndividual();
         ind1.setDummyEvaluation([objective1, objective2], [1, 1])
@@ -53,8 +56,8 @@ describe('Dominance comparator', function () {
     })
 
     it('None dominates with two objectives', () => {
-        let objective1: Objective = {line: 1, locationIdx: 1};
-        let objective2: Objective = {line: 1, locationIdx: 2};
+        let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
+        let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
 
         let ind1 = new DummyIndividual();
         ind1.setDummyEvaluation([objective1, objective2], [1, 1])
@@ -72,9 +75,9 @@ describe('Dominance comparator', function () {
     })
 
     it('None dominates with three objective', () => {
-        let objective1: Objective = {line: 1, locationIdx: 1};
-        let objective2: Objective = {line: 1, locationIdx: 2};
-        let objective3: Objective = {line: 1, locationIdx: 3};
+        let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
+        let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
+        let objective3: Objective = {target: "mock", line: 1, locationIdx: 3};
 
         let ind1 = new DummyIndividual();
         ind1.setDummyEvaluation([objective1, objective2, objective3], [1, 0, 1])

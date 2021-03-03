@@ -3,7 +3,7 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {Objective, processConfig, setupLogger} from "../../../lib";
+import {guessCWD, setupOptions, loadConfig, Objective, processConfig, setupLogger} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {crowdingDistance} from "../../../lib";
 
@@ -12,7 +12,10 @@ import {crowdingDistance} from "../../../lib";
  */
 
 describe('Crowding distance', function () {
-    before(async () => {
+    beforeEach(async () => {
+        await guessCWD(null)
+        await setupOptions("","")
+        await loadConfig()
         await processConfig({}, '')
         await setupLogger()
     })
@@ -38,8 +41,8 @@ describe('Crowding distance', function () {
     })
 
     it('Front with more than two solutions', () => {
-        let objective1: Objective = {line: 1, locationIdx: 1};
-        let objective2: Objective = {line: 1, locationIdx: 2};
+        let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
+        let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
 
         let ind1 = new DummyIndividual();
         ind1.setDummyEvaluation([objective1, objective2], [0, 2])
@@ -58,7 +61,7 @@ describe('Crowding distance', function () {
     })
 
     it('Corner case with same obj values for all individual', () => {
-        let objective: Objective = {line: 1, locationIdx: 1};
+        let objective: Objective = {target: "mock", line: 1, locationIdx: 1};
 
         let ind1 = new DummyIndividual();
         ind1.setDummyEvaluation([objective], [1])

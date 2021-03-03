@@ -3,7 +3,15 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {Objective, processConfig, setupLogger, tournamentSelection} from "../../../lib";
+import {
+    guessCWD,
+    loadConfig,
+    Objective,
+    processConfig,
+    setupLogger,
+    setupOptions,
+    tournamentSelection
+} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {fastNonDomSorting} from "../../../lib/search/operator/sorting/FastNonDomSorting";
 
@@ -12,13 +20,16 @@ import {fastNonDomSorting} from "../../../lib/search/operator/sorting/FastNonDom
  */
 describe('Fast non-dominated sorting', function () {
     before(async () => {
+        await guessCWD(null)
+        await setupOptions("","")
+        await loadConfig()
         await processConfig({}, '')
         await setupLogger()
     })
 
     it('Sort three solutions', () => {
-        let objective1: Objective = {line: 1, locationIdx: 1};
-        let objective2: Objective = {line: 1, locationIdx: 2};
+        let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
+        let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
 
         let ind1 = new DummyIndividual();
         ind1.setDummyEvaluation([objective1, objective2], [0, 1])

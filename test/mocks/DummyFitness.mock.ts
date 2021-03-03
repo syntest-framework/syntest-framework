@@ -1,4 +1,4 @@
-import {Fitness, Individual, Objective, Runner} from "../../lib";
+import {Fitness, Individual, Objective, Runner, Target} from "../../lib";
 import {CFG} from "../../lib/graph/CFG";
 import {Evaluation} from "../../lib/search/objective/Evaluation";
 
@@ -6,13 +6,11 @@ export class DummyFitness extends Fitness {
 
     private objectives: Objective[]
 
-    constructor(cfg: CFG, runner: Runner, objectives: Objective[]) {
-        super(cfg, runner);
-        this.objectives = objectives
-    }
+    constructor(runner: Runner, objectives: Objective[]) {
+        let mockedTarget = <Target>{} as any; // mocking
 
-    getPossibleObjectives (): Objective[] {
-        return this.objectives
+        super(runner, mockedTarget);
+        this.objectives = objectives
     }
 
     async evaluateMany (population: Individual[], objectives: Objective[]) {
@@ -24,5 +22,9 @@ export class DummyFitness extends Fitness {
 
             individual.setEvaluation(evaluation)
         }
+    }
+
+    extractPaths(cfg: CFG){
+
     }
 }
