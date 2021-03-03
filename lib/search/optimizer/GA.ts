@@ -205,7 +205,7 @@ export abstract class GA {
      * @param population the current population
      * @returns {[]} the sorted population of the next generation
      */
-    abstract async generation (population: Individual[]): Promise<Individual[]>
+    abstract generation (population: Individual[]): Promise<Individual[]>
 
     abstract getCurrentCoverage (): number
 }

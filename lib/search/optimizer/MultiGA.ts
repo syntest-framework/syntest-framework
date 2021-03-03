@@ -97,5 +97,5 @@ export abstract class MultiGA<T extends GA> extends GA {
          throw new Error("MultiGA's cannot use the generation function, use multiGeneration instead")
     }
 
-    abstract async multiGeneration (): Promise<void>
+    abstract multiGeneration (): Promise<void>
 }
