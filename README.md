@@ -1,6 +1,6 @@
 # syntest-framework
 
-![](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml/badge.svg)
+[![](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml)
 
 Common core of the SynTest Framework
 
