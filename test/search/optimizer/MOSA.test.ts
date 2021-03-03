@@ -120,33 +120,6 @@ describe('Test MOSA', function () {
         expect(front[2]).to.contain(ind1)
     })
 
-    it('Generation population size', async () => {
-        let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
-        let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
-
-        let ind1 = new DummyIndividual();
-        ind1.setDummyEvaluation([objective1, objective2], [2, 3])
-
-        let ind2 = new DummyIndividual();
-        ind2.setDummyEvaluation([objective1, objective2], [0, 2])
-
-        let ind3 = new DummyIndividual();
-        ind3.setDummyEvaluation([objective1, objective2], [2, 0])
-
-        let ind4 = new DummyIndividual();
-        ind4.setDummyEvaluation([objective1, objective2], [1, 1])
-
-        let mockedRunner = <Runner>{} as any;
-        let mockedSampler = <Sampler>{} as any;
-        let mockedTarget = new DummyTarget([objective1, objective2]);
-        let fitness: Fitness = new DummyFitness(mockedRunner, [objective1, objective2]);
-
-        const mosa = new MOSA(mockedTarget, fitness, mockedSampler)
-        const newPopulation = await mosa.generation([ind1, ind2, ind3, ind4])
-
-        expect(newPopulation.length).to.equal(4)
-    })
-
     it('Environmental Selection', async () => {
         let objective1: Objective = {target: "mock", line: 1, locationIdx: 1};
         let objective2: Objective = {target: "mock", line: 1, locationIdx: 2};
