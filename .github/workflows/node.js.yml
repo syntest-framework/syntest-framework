@@ -1,7 +1,4 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
+name: SynTest CI
 
 on:
   push:
@@ -16,17 +13,22 @@ jobs:
 
     strategy:
       matrix:
+        # Run the pipeline on all the currently supported LTS versions and the latest version
         node-version: [10.x, 12.x, 14.x, 15.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    # Cloning
     - uses: actions/checkout@v2
       with:
         path: syntest-framework
+        
+    # Setup
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    
+    # Caching
     - name: Cache Node.js modules
       uses: actions/cache@v2
       with:
@@ -35,9 +37,18 @@ jobs:
        restore-keys: |
          ${{ runner.OS }}-node-
          ${{ runner.OS }}-
+         
+    # Dependencies
     - name: Framework - Install Dependencies
       run: npm install
       working-directory: syntest-framework
+    
+    # Building
     - name: Framework - Compile Typescript
       run: npm run tsc
+      working-directory: syntest-framework
+      
+    # Testing
+    - name: Framework - Run Tests
+      run: npm test
       working-directory: syntest-framework
