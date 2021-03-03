@@ -102,9 +102,6 @@ export function finalizeCFG (cfg: any) {
     connectNonFinalNodes(cfg)
     createLoops(cfg)
 
-    if (getProperty('draw_cfg')) {
-        drawGraph(cfg)
-    }
     return cfg
 }
 

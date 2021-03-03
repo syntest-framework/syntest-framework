@@ -46,7 +46,7 @@ export class Individual {
     }
 
     hashCode (stringifier: Stringifier): number {
-        let string = stringifier.stringifyIndividual(this)
+        let string = stringifier.stringifyIndividual(this, `${this.id}`)
         let hash = 0;
         for (let i = 0; i < string.length; i++) {
             let character = string.charCodeAt(i);
