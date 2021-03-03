@@ -21,10 +21,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: syntest-framework
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run tsc
-   # - run: npm test
+    - name: Cache Node.js modules
+      uses: actions/cache@v2
+      with:
+       path: ~/.npm
+       key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+       restore-keys: |
+         ${{ runner.OS }}-node-
+         ${{ runner.OS }}-
+    - name: Framework - Install Dependencies
+      run: npm install
+      working-directory: syntest-framework
+    - name: Framework - Compile Typescript
+      run: npm run tsc
+      working-directory: syntest-framework
