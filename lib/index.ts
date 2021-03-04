@@ -39,13 +39,13 @@ export * from './search/operator/CrowdingDistance'
 export * from './search/operator/sorting/FastNonDomSorting'
 export * from './search/operator/selection/TournamentSelection'
 
-// Optimizer
-export * from './search/optimizer/GA'
-export * from './search/optimizer/NSGA2'
-export * from './search/optimizer/SimpleGA'
-export * from './search/optimizer/MOSA'
-export * from './search/optimizer/MultiGA'
-export * from './search/optimizer/COMIX'
+// Metaheuristics
+export * from './search/metaheuristics/GA'
+export * from './search/metaheuristics/NSGA2'
+export * from './search/metaheuristics/SimpleGA'
+export * from './search/metaheuristics/MOSA'
+export * from './search/metaheuristics/MultiGA'
+export * from './search/metaheuristics/COMIX'
 
 // Sampling
 export * from './search/sampling/Sampler'

@@ -11,7 +11,7 @@ import {
     Sampler,
     setupLogger, setupOptions, Target
 } from "../../../lib";
-import {MOSA} from "../../../lib/search/optimizer/MOSA";
+import {MOSA} from "../../../lib/search/metaheuristics/MOSA";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
 import {DummyTarget} from "../../mocks/DummyTarget.mock";
