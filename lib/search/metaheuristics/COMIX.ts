@@ -1,8 +1,8 @@
-import {GA} from "./GA";
+import {GeneticAlgorithm} from "./GeneticAlgorithm";
 import {Individual} from "../..";
 import {MultiGA} from "./MultiGA";
 
-export class COMIX<T extends GA> extends MultiGA<T> {
+export class COMIX<T extends GeneticAlgorithm> extends MultiGA<T> {
 
     async multiGeneration(): Promise<void> {
         // pick champions

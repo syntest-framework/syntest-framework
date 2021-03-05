@@ -1,5 +1,5 @@
 import {getProperty} from "../config";
-import {GA, Individual, Objective} from "..";
+import {GeneticAlgorithm, Individual, Objective} from "..";
 import {appendFileSync, existsSync, mkdirSync} from 'fs';
 import Timeout = NodeJS.Timeout;
 
@@ -8,7 +8,7 @@ let overTimeWriter: Timeout
 let time: number = Date.now()
 
 
-export function startOverTimeWriter(algo: GA) {
+export function startOverTimeWriter(algo: GeneticAlgorithm) {
     const file = `${getProperty("statistics_directory")}/cov_over_time_.csv`
     overTimeWriter = setInterval(() => {
         time = Date.now()
@@ -30,7 +30,7 @@ export function endOverTimeWriterIfExists() {
     }
 }
 
-export function writeData(algo: GA, objective: Objective) {
+export function writeData(algo: GeneticAlgorithm, objective: Objective) {
 
     const file = `${getProperty("statistics_directory")}/results.csv`
 
@@ -45,7 +45,7 @@ export function writeData(algo: GA, objective: Objective) {
     writeToFile(file, data)
 }
 
-export function writeSummary(algo: GA) {
+export function writeSummary(algo: GeneticAlgorithm) {
     const file = `${getProperty("statistics_directory")}/summary.csv`
 
     time = Date.now()
@@ -60,7 +60,7 @@ export function writeSummary(algo: GA) {
 
 }
 
-function gatherHeaderOutputValues(outputValues: string[], algo: GA, objective: Objective | null = null) {
+function gatherHeaderOutputValues(outputValues: string[], algo: GeneticAlgorithm, objective: Objective | null = null) {
     let output = []
 
     if (outputValues.includes("timestamp")) {
@@ -90,7 +90,7 @@ function gatherHeaderOutputValues(outputValues: string[], algo: GA, objective: O
     return output.join(", ")
 }
 
-function gatherOutputValues(outputValues: string[], algo: GA, objective: Objective | null = null) {
+function gatherOutputValues(outputValues: string[], algo: GeneticAlgorithm, objective: Objective | null = null) {
     let output = []
 
     if (outputValues.includes("timestamp")) {

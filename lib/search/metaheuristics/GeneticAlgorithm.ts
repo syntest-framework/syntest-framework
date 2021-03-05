@@ -12,7 +12,7 @@ import {Target} from "../objective/Target";
  *
  * @author Dimitri Stallenberg
  */
-export abstract class GA {
+export abstract class GeneticAlgorithm {
     get population(): Individual[] {
         return this._population;
     }
@@ -162,9 +162,9 @@ export abstract class GA {
     /**
      * The main search function which performs a certain amount of generations and writes the resulting test-suite to the folder.
      *
-     * @param terminationCriteriaMet the function that decides whether the GA is done or not
+     * @param terminationCriteriaMet the function that decides whether the genetic algorithm is done or not
      */
-    async search (terminationCriteriaMet: (algorithmInstance: GA) => boolean) {
+    async search (terminationCriteriaMet: (algorithmInstance: GeneticAlgorithm) => boolean) {
         this._population = this.createInitialPopulation()
         getLogger().info('Initial population created')
         startOverTimeWriter(this)

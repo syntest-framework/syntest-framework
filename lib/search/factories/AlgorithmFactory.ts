@@ -1,5 +1,5 @@
 import {getProperty} from "../../config";
-import {GA, NSGA2, Target} from "../..";
+import {GeneticAlgorithm, NSGA2, Target} from "../..";
 import {SimpleGA} from "../..";
 import {MOSA} from "../..";
 import {Fitness} from "../..";
@@ -12,7 +12,7 @@ import {COMIX} from "../..";
  * @author Dimitri Stallenberg
  */
 export function createAlgorithmFromConfig(target: Target | Target[], fitnessObject: Fitness, sampler: Sampler) {
-    const singleAlgoritms: {[key: string]: { new(...args: any[]): GA }} = {
+    const singleAlgoritms: {[key: string]: { new(...args: any[]): GeneticAlgorithm }} = {
         SimpleGA: SimpleGA,
         NSGA2: NSGA2,
         MOSA: MOSA

@@ -1,4 +1,4 @@
-import {Fitness, GA, Objective} from "../..";
+import {Fitness, GeneticAlgorithm, Objective} from "../..";
 import {Sampler} from "../..";
 import {Individual} from "../..";
 import {getLogger} from "../..";
@@ -9,16 +9,16 @@ import {Target} from "../objective/Target";
  *
  * @author Dimitri Stallenberg
  */
-export abstract class MultiGA<T extends GA> extends GA {
-    get subAlgorithms(): GA[] {
+export abstract class MultiGA<T extends GeneticAlgorithm> extends GeneticAlgorithm {
+    get subAlgorithms(): GeneticAlgorithm[] {
         return this._subAlgorithms;
     }
 
-    set subAlgorithms(value: GA[]) {
+    set subAlgorithms(value: GeneticAlgorithm[]) {
         this._subAlgorithms = value;
     }
 
-    private _subAlgorithms: GA[]
+    private _subAlgorithms: GeneticAlgorithm[]
 
     /**
      * Constructor
@@ -27,13 +27,13 @@ export abstract class MultiGA<T extends GA> extends GA {
      * @param sampler the sampler object
      * @param GAtype the class of the sub algorithms to run (cannot be a MultiGA)
      */
-    constructor (targets: Target[], fitness: Fitness, sampler: Sampler, GAtype: { new(target: Target, fitness: Fitness, sampler: Sampler): GA }) {
+    constructor (targets: Target[], fitness: Fitness, sampler: Sampler, GAtype: { new(target: Target, fitness: Fitness, sampler: Sampler): GeneticAlgorithm }) {
         super(targets[0], fitness, sampler)
 
         this._subAlgorithms = []
 
         for (let target of targets) {
-            let ga: GA = new GAtype(target, fitness, sampler)
+            let ga: GeneticAlgorithm = new GAtype(target, fitness, sampler)
 
             this._subAlgorithms.push(ga)
         }
@@ -42,9 +42,9 @@ export abstract class MultiGA<T extends GA> extends GA {
     /**
      * The main search function which performs a certain amount of generations and writes the resulting test-suite to the folder.
      *
-     * @param terminationCriteriaMet the function that decides whether the GA is done or not
+     * @param terminationCriteriaMet the function that decides whether the genetic algorithm is done or not
      */
-    async search (terminationCriteriaMet: (algorithmInstance: GA) => boolean) {
+    async search (terminationCriteriaMet: (algorithmInstance: GeneticAlgorithm) => boolean) {
         for (let algorithm of this.subAlgorithms) {
             algorithm.population = algorithm.createInitialPopulation()
         }

@@ -1,4 +1,4 @@
-import {GA} from './GA'
+import {GeneticAlgorithm} from './GeneticAlgorithm'
 import { Individual } from '../gene/Individual'
 import {TreeCrossover} from "../operator/crossover/TreeCrossover";
 
@@ -11,7 +11,7 @@ const {tournamentSelection} = require('../operator/selection/TournamentSelection
  *
  * @author Dimitri Stallenberg and Annibale Panichella
  */
-export class NSGA2 extends GA {
+export class NSGA2 extends GeneticAlgorithm {
 
     async generation (population: Individual[]) {
         // create offspring population

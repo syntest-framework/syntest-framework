@@ -40,7 +40,7 @@ export * from './search/operator/sorting/FastNonDomSorting'
 export * from './search/operator/selection/TournamentSelection'
 
 // Metaheuristics
-export * from './search/metaheuristics/GA'
+export * from './search/metaheuristics/GeneticAlgorithm'
 export * from './search/metaheuristics/NSGA2'
 export * from './search/metaheuristics/SimpleGA'
 export * from './search/metaheuristics/MOSA'

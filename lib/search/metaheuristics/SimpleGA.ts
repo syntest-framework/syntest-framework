@@ -1,4 +1,4 @@
-import {GA} from './GA'
+import {GeneticAlgorithm} from './GeneticAlgorithm'
 import {Individual} from "../..";
 
 import {fastNonDomSorting} from '../..'
@@ -8,7 +8,7 @@ import {fastNonDomSorting} from '../..'
  *
  * @author Dimitri Stallenberg
  */
-export class SimpleGA extends GA {
+export class SimpleGA extends GeneticAlgorithm {
     async generation (population: Individual[]) {
         // create offspring population
         let offspring = this.generateOffspring(population)
