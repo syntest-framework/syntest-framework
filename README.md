@@ -1,53 +1,76 @@
-# syntest-framework
+# SynTest Framework - Common Core
 
 [![](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml)
 
-Common core of the SynTest Framework
+The common core of the [SynTest Framework](https://www.syntest.org).
 
-# Prerequisites
-* install Node.js v. 12.18.3 LTL
-* install truffle (`npm install -g truffle`)
+### What is SynTest?
 
-# How to use
-Since there is no npm package yet:
-* Clone this project
+SynTest is a framework for automating the generation of test cases based on JavaScript. This library is not meant to be used directly. To make use of the framework, please use one of the specific implementation for the different supported languages (e.g., Solidity and JavaScript/Typescript). These implementations can be found in the [SynTest Framework organization](https://github.com/syntest-framework).
 
-`git clone git@github.com:syntest-framework/syntest-framework.git`
+### Overview
+
+The common core contains the common interfaces for the code control-flow representation, test case structure, genes, and the implementation for the meta-heuristic search algorithms.
+
+## Installation
+
+When the project reaches a stable state, a NPM package will be released. Until this happens, the library can be used by cloning the project, installing its dependencies, compiling the TypeScript, and requiring it in your project:
+
+* Clone the project
+
+```bash
+$ git clone git@github.com:syntest-framework/syntest-framework.git
+```
 
 * Install dependencies
 
-`npm install`
-* Compile to javascript
+```bash
+$ npm install
+```
 
-`npm run tsc:w`
-* Install as npm module in you project
+* Compile to JavaScript
 
-`npm install /path/to/syntest-framework`
+```bash
+$ npm run tsc
+```
+* Install as npm module in your project
 
-# Features
-- [x] Create and Draw a Control Flow Graph of the code.
-- [x] Compute approach level distance using the Control Flow Graph.
-- [x] Compute branch distance for:
-	- [x] integer comparisons
-	- [x] float comparisons
-	- [ ] boolean evaluations
-	- [ ] strings comparisons
-- [x] Find test-cases that cover certain branches.
-- [x] Add assertions to the generated test cases.
-- [x] Allow the user to configure the algorithm's parameters and other settings
-	- [x] set the seed of the randomness object
-	- [x] choose the search algorithm and parameters like population_size
-	- [x] select stopping criteria
-	- [x] choose mutation probabilities
-	- [x] configure the log level
-	
-# Documentation
+```bash
+$ npm install /path/to/syntest-framework
+```
 
-* [Control flow graph explanation](docs/ControlFlowGraph.md)
+## Support
 
+For questions and help with how to use this library, please see [SUPPORT.md](SUPPORT.md).
 
-# Contributors
+## Roadmap
 
-- Dimitri Stallenberg
-- Mitchell Olsthoorn
-- Annibale Panichella
+* [x] Create and Draw a Control Flow Graph of the code.
+* [x] Compute approach level distance using the Control Flow Graph.
+* [x] Compute branch distance for:
+	* [x] integer comparisons
+	* [x] float comparisons
+	* [ ] boolean evaluations
+	* [ ] strings comparisons
+* [x] Find test-cases that cover certain branches.
+* [x] Add assertions to the generated test cases.
+* [x] Allow the user to configure the algorithm's parameters and other settings
+	* [x] set the seed of the randomness object
+	* [x] choose the search algorithm and parameters like population_size
+	* [x] select stopping criteria
+	* [x] choose mutation probabilities
+	* [x] configure the log level
+
+## Contributing
+
+Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change. For more information, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Authors and acknowledgment
+
+- Annibale Panichella (PI)
+- Mitchell Olsthoorn (Project Lead)
+- Dimitri Stallenberg (Developer)
+
+## License
+
+The content of this project itself is licensed under the [MIT license](LICENSE.md).
