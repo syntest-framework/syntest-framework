@@ -35,8 +35,8 @@ export * from './search/objective/Objective'
 export * from './search/objective/Target'
 
 // Operator
-export * from './search/operator/CrowdingDistance'
-export * from './search/operator/sorting/FastNonDomSorting'
+export * from './search/operator/ranking/CrowdingDistance'
+export * from './search/operator/ranking/FastNonDomSorting'
 export * from './search/operator/selection/TournamentSelection'
 
 // Metaheuristics

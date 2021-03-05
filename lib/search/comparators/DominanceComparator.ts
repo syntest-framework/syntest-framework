@@ -1,8 +1,8 @@
 import { Individual } from '../gene/Individual'
-import {Objective} from "../..";
-const {fastNonDomSorting} = require('./sorting/FastNonDomSorting')
-const {crowdingDistance} = require('./CrowdingDistance')
-const {tournamentSelection} = require('./selection/TournamentSelection')
+import {Objective} from "../../index";
+const {fastNonDomSorting} = require('../operator/ranking/FastNonDomSorting')
+const {crowdingDistance} = require('../operator/ranking/CrowdingDistance')
+const {tournamentSelection} = require('../operator/selection/TournamentSelection')
 
 export class DominanceComparator {
     /**

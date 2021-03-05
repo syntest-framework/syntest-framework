@@ -2,8 +2,8 @@ import {GeneticAlgorithm} from './GeneticAlgorithm'
 import { Individual } from '../gene/Individual'
 import {TreeCrossover} from "../operator/crossover/TreeCrossover";
 
-const {fastNonDomSorting} = require('../operator/sorting/FastNonDomSorting')
-const {crowdingDistance} = require('../operator/CrowdingDistance')
+const {fastNonDomSorting} = require('../operator/ranking/FastNonDomSorting')
+const {crowdingDistance} = require('../operator/ranking/CrowdingDistance')
 const {tournamentSelection} = require('../operator/selection/TournamentSelection')
 
 /**

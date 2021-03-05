@@ -3,10 +3,10 @@ import { Individual } from '../..'
 import {Fitness} from "../..";
 import {Sampler} from "../..";
 import {getLogger, Objective, Target} from "../..";
-import {DominanceComparator} from "../operator/DominanceComparator";
+import {DominanceComparator} from "../comparators/DominanceComparator";
 
-const {crowdingDistance} = require('../operator/CrowdingDistance')
-const {compare} = require('../operator/DominanceComparator')
+const {crowdingDistance} = require('../operator/ranking/CrowdingDistance')
+const {compare} = require('../comparators/DominanceComparator')
 
 /**
  * Many-objective Sorting Algorithm (MOSA)

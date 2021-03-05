@@ -3,7 +3,7 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {DominanceComparator} from "../../../lib/search/operator/DominanceComparator";
+import {DominanceComparator} from "../../../lib/search/comparators/DominanceComparator";
 import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
 

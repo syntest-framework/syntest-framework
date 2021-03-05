@@ -1,4 +1,4 @@
-import {Individual} from "../gene/Individual";
+import {Individual} from "../../gene/Individual";
 
 /**
  * Compute the crowding distance for all individual int the front
