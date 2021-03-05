@@ -96,6 +96,9 @@ export class NSGA2 extends GA {
     }
 
     getCurrentCoverage(): number {
-        return 0; // TODO
+        if (this.objectives.length == 0)
+            return 100
+
+        return this.archive.size / this.objectives.length * 100
     }
 }
