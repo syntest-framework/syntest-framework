@@ -1,10 +1,10 @@
 import {GeneticAlgorithm} from './GeneticAlgorithm'
 import { Individual } from '../gene/Individual'
-import {TreeCrossover} from "../operator/crossover/TreeCrossover";
+import {TreeCrossover} from "../operators/crossover/TreeCrossover";
 
-const {fastNonDomSorting} = require('../operator/ranking/FastNonDomSorting')
-const {crowdingDistance} = require('../operator/ranking/CrowdingDistance')
-const {tournamentSelection} = require('../operator/selection/TournamentSelection')
+const {fastNonDomSorting} = require('../operators/ranking/FastNonDomSorting')
+const {crowdingDistance} = require('../operators/ranking/CrowdingDistance')
+const {tournamentSelection} = require('../operators/selection/TournamentSelection')
 
 /**
  * Fast Elist Non-dominated Sorting Genetic Algorithm (NSGA-II)

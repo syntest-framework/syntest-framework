@@ -5,7 +5,7 @@ const expect = chai.expect
 
 import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
-import {tournamentSelection} from "../../../lib/search/operator/selection/TournamentSelection";
+import {tournamentSelection} from "../../../lib/search/operators/selection/TournamentSelection";
 
 const mockMath = Object.create(global.Math);
 mockMath.random = () => 0.5;

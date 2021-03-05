@@ -13,7 +13,7 @@ import {
     tournamentSelection
 } from "../../../lib";
 import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
-import {fastNonDomSorting} from "../../../lib/search/operator/ranking/FastNonDomSorting";
+import {fastNonDomSorting} from "../../../lib/search/operators/ranking/FastNonDomSorting";
 
 /**
  * @author Annibale Panichella

@@ -5,7 +5,7 @@ import {Sampler} from "../..";
 import {getLogger, Objective, Target} from "../..";
 import {DominanceComparator} from "../comparators/DominanceComparator";
 
-const {crowdingDistance} = require('../operator/ranking/CrowdingDistance')
+const {crowdingDistance} = require('../operators/ranking/CrowdingDistance')
 const {compare} = require('../comparators/DominanceComparator')
 
 /**
