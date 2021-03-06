@@ -1,4 +1,4 @@
-import {TestCaseChromosome} from "../../../testcase/TestCaseChromosome";
+import {TestCase} from "../../../testcase/TestCase";
 import {getLogger} from "../../../index";
 
 /**
@@ -8,16 +8,16 @@ import {getLogger} from "../../../index";
  *
  * @author Dimitri Stallenberg and Annibale Panichella
  */
-export function fastNonDomSorting(population: TestCaseChromosome[]) {
-    let S: { [id: string]: TestCaseChromosome[] } = {}
-    let F: TestCaseChromosome[][] = [[]]
+export function fastNonDomSorting(population: TestCase[]) {
+    let S: { [id: string]: TestCase[] } = {}
+    let F: TestCase[][] = [[]]
     let n: { [id: string]: number } = {}
     let indices: { [id: string]: number } = {}
 
     for (let index = 0; index < population.length; index++) {
         let p = population[index]
         indices[p.id] = index
-        let Sp: TestCaseChromosome[] = []
+        let Sp: TestCase[] = []
         S[index] = Sp
         n[index] = 0
         for (let q of population) {

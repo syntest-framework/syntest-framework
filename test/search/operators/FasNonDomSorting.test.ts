@@ -12,7 +12,7 @@ import {
     setupOptions,
     tournamentSelection
 } from "../../../src";
-import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
+import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 import {fastNonDomSorting} from "../../../src/search/operators/ranking/FastNonDomSorting";
 
 /**

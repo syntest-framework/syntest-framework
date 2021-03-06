@@ -1,5 +1,5 @@
 import {SuiteBuilder} from "../testbuilding/SuiteBuilder";
-import {TestCaseChromosome} from "../testcase/TestCaseChromosome";
+import {TestCase} from "../testcase/TestCase";
 
 export interface Datapoint {
     type: string
@@ -24,5 +24,5 @@ export abstract class Runner {
         this._suiteBuilder = suiteBuilder
     }
 
-    abstract runTest(individual: TestCaseChromosome): Promise<Datapoint[]>
+    abstract runTest(individual: TestCase): Promise<Datapoint[]>
 }

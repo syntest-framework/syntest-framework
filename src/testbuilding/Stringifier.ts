@@ -1,5 +1,5 @@
 import {Statement} from "..";
-import {TestCaseChromosome} from "..";
+import {TestCase} from "..";
 
 /**
  * Stringifier interface
@@ -17,7 +17,7 @@ export interface Stringifier {
      * @return                      the stringified individual
      */
     // @ts-ignore
-    stringifyIndividual(individual: TestCaseChromosome | TestCaseChromosome[], targetName: string, addLogs?: boolean, additionalAssertions?: Map<TestCaseChromosome, { [p: string]: string }>): string
+    stringifyIndividual(individual: TestCase | TestCase[], targetName: string, addLogs?: boolean, additionalAssertions?: Map<TestCase, { [p: string]: string }>): string
 
     /**
      * Creates a string version of any type of gene

@@ -4,7 +4,7 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../src";
-import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
+import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 import {tournamentSelection} from "../../../src/search/operators/selection/TournamentSelection";
 
 const mockMath = Object.create(global.Math);
@@ -101,4 +101,3 @@ describe('Tournament selection', function () {
         expect(winner.getCrowdingDistance()).to.equal(10)
     })
 })
-

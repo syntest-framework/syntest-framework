@@ -1,8 +1,8 @@
 import {Evaluation} from "../../src/search/objective/Evaluation";
-import {TestCaseChromosome} from "../../src/testcase/TestCaseChromosome";
+import {TestCase} from "../../src/testcase/TestCase";
 import {Constructor, Objective} from "../../src";
 
-export class DummyIndividual extends TestCaseChromosome {
+export class DummyIndividual extends TestCase {
 
     private static counter: number = 0;
 

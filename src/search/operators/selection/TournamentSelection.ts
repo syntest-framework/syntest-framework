@@ -1,15 +1,15 @@
-import {TestCaseChromosome} from "../../..";
+import {TestCase} from "../../..";
 import {prng} from '../../..';
 
 /**
  * This function selects the individual for reproduction using tournament selection
  * @param population the population from which to select a parent
  * @param tournamentSize size of the tournament (minimum 2)
- * @returns TestCaseChromosome selected individual
+ * @returns TestCase selected individual
  *
  * @author Annibale Panichella
  */
-export function tournamentSelection (population: TestCaseChromosome[], tournamentSize: number) {
+export function tournamentSelection (population: TestCase[], tournamentSize: number) {
     if (tournamentSize < 2)
         throw new Error('The tournament size should be greater than 1 ')
 

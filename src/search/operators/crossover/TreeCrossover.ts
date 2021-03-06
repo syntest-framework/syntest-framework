@@ -1,4 +1,4 @@
-import {Statement, getProperty, TestCaseChromosome, prng} from "../../..";
+import {Statement, getProperty, TestCase, prng} from "../../..";
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.
@@ -12,7 +12,7 @@ import {Statement, getProperty, TestCaseChromosome, prng} from "../../..";
  *
  * @author Dimitri Stallenberg
  */
-export function TreeCrossover (parentA: TestCaseChromosome, parentB: TestCaseChromosome) {
+export function TreeCrossover (parentA: TestCase, parentB: TestCase) {
     let rootA = parentA.root.copy()
     let rootB = parentB.root.copy()
 
@@ -63,7 +63,7 @@ export function TreeCrossover (parentA: TestCaseChromosome, parentB: TestCaseChr
         donorTree.parent.setChild(donorTree.childIndex, pair.child.copy())
     }
 
-    return [new TestCaseChromosome(rootA), new TestCaseChromosome(rootB)]
+    return [new TestCase(rootA), new TestCase(rootB)]
 }
 
 /**

@@ -5,7 +5,7 @@ const expect = chai.expect
 
 import {DominanceComparator} from "../../../src/search/comparators/DominanceComparator";
 import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../src";
-import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
+import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 
 /**
  * @author Annibale Panichella

@@ -1,6 +1,6 @@
 import {Fitness, GeneticAlgorithm, Objective} from "../..";
 import {Sampler} from "../..";
-import {TestCaseChromosome} from "../..";
+import {TestCase} from "../..";
 import {getLogger} from "../..";
 import {Target} from "../objective/Target";
 
@@ -77,11 +77,11 @@ export abstract class MultiGA<T extends GeneticAlgorithm> extends GeneticAlgorit
      * List of test cases that will for the final test suite
      * @protected
      */
-    public getFinalTestSuite(): Map<Objective, TestCaseChromosome>{
-        let champions: Map<Objective, TestCaseChromosome> = new Map<Objective, TestCaseChromosome>();
+    public getFinalTestSuite(): Map<Objective, TestCase>{
+        let champions: Map<Objective, TestCase> = new Map<Objective, TestCase>();
         for (let algorithm of this._subAlgorithms) {
             for (let key of algorithm.getFinalTestSuite().keys()) {
-                champions.set(key, <TestCaseChromosome>algorithm.getFinalTestSuite().get(key))
+                champions.set(key, <TestCase>algorithm.getFinalTestSuite().get(key))
             }
         }
         return champions
@@ -93,7 +93,7 @@ export abstract class MultiGA<T extends GeneticAlgorithm> extends GeneticAlgorit
      * @param population the current population
      * @returns {[]} the population of the next generation
      */
-     async generation (population: TestCaseChromosome[]): Promise<TestCaseChromosome[]> {
+     async generation (population: TestCase[]): Promise<TestCase[]> {
          throw new Error("MultiGA's cannot use the generation function, use multiGeneration instead")
     }
 

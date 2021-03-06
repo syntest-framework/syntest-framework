@@ -6,11 +6,11 @@ import {Stringifier} from "../index";
 import {Evaluation} from "../search/objective/Evaluation";
 
 /**
- * TestCaseChromosome class
+ * TestCase class
  *
  * @author Dimitri Stallenberg
  */
-export class TestCaseChromosome {
+export class TestCase {
     get id(): string {
         return this._id;
     }
@@ -42,7 +42,7 @@ export class TestCaseChromosome {
 
     mutate (sampler: Sampler) {
         getLogger().debug(`Mutating individual: ${this._id}`)
-        return new TestCaseChromosome(this._root.mutate(sampler, 0))
+        return new TestCase(this._root.mutate(sampler, 0))
     }
 
     hashCode (stringifier: Stringifier): number {

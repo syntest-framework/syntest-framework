@@ -1,5 +1,5 @@
 import {GeneticAlgorithm} from './GeneticAlgorithm'
-import { TestCaseChromosome } from '../../testcase/TestCaseChromosome'
+import { TestCase } from '../../testcase/TestCase'
 import {TreeCrossover} from "../operators/crossover/TreeCrossover";
 
 const {fastNonDomSorting} = require('../operators/ranking/FastNonDomSorting')
@@ -13,7 +13,7 @@ const {tournamentSelection} = require('../operators/selection/TournamentSelectio
  */
 export class NSGA2 extends GeneticAlgorithm {
 
-    async generation (population: TestCaseChromosome[]) {
+    async generation (population: TestCase[]) {
         // create offspring population
         let offspring = this.generateOffspring(population)
 
@@ -59,7 +59,7 @@ export class NSGA2 extends GeneticAlgorithm {
         if (remain > 0 && currentFront.length>0) { // front contains individuals to insert
             crowdingDistance(currentFront)
 
-            currentFront.sort(function(a: TestCaseChromosome, b: TestCaseChromosome) { // sort in descending order of crowding distance
+            currentFront.sort(function(a: TestCase, b: TestCase) { // sort in descending order of crowding distance
                 return b.getCrowdingDistance() - a.getCrowdingDistance()
             })
             let counter = 0
@@ -80,7 +80,7 @@ export class NSGA2 extends GeneticAlgorithm {
      * @param population the population to generate offspring from
      * @returns {[]} the offspring population
      */
-    generateOffspring(population: TestCaseChromosome[]) {
+    generateOffspring(population: TestCase[]) {
         let offspring = []
 
         for (let index=0; index < this.popsize; index++) {

@@ -1,5 +1,5 @@
 import {getProperty} from "../config";
-import {GeneticAlgorithm, TestCaseChromosome, Objective} from "..";
+import {GeneticAlgorithm, TestCase, Objective} from "..";
 import {appendFileSync, existsSync, mkdirSync} from 'fs';
 import Timeout = NodeJS.Timeout;
 

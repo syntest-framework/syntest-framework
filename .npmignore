@@ -1,6 +1,5 @@
-lib/
+src/
 test/
 docs/
-
 
 tsconfig.json

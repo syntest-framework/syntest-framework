@@ -4,7 +4,7 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {guessCWD, setupOptions, loadConfig, Objective, processConfig, setupLogger} from "../../../src";
-import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
+import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 import {crowdingDistance} from "../../../src";
 
 /**

@@ -2,6 +2,9 @@
 export * from './runner/Runner'
 /// <reference path="../dist/index.d.ts" />
 
+// Test case
+export * from './testcase/TestCase'
+
 // Statements
 // Action
 export * from './testcase/statements/action/Constructor'
@@ -14,13 +17,12 @@ export * from './testcase/statements/primitive/Bool'
 export * from './testcase/statements/primitive/Fixed'
 // export * from './chromosome/testcase/statements/primitive/Hash'
 export * from './testcase/statements/primitive/Int'
-export * from './testcase/statements/primitive/StringGene'
+export * from './testcase/statements/primitive/String'
 export * from './testcase/statements/primitive/Ufixed'
 export * from './testcase/statements/primitive/Uint'
 
 export * from './testcase/statements/ActionStatement'
 export * from './testcase/statements/Statement'
-export * from './testcase/TestCaseChromosome'
 export * from './testcase/statements/PrimitiveStatement'
 
 // Search

@@ -1,4 +1,4 @@
-import { TestCaseChromosome } from '../../testcase/TestCaseChromosome'
+import { TestCase } from '../../testcase/TestCase'
 import {Objective} from "../../index";
 const {fastNonDomSorting} = require('../operators/ranking/FastNonDomSorting')
 const {crowdingDistance} = require('../operators/ranking/CrowdingDistance')
@@ -10,7 +10,7 @@ export class DominanceComparator {
      * "Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic
      *  Selection of the Targets"
      */
-    static compare(individual1: TestCaseChromosome, individual2: TestCaseChromosome, targets: Set<Objective>): Number {
+    static compare(individual1: TestCase, individual2: TestCase, targets: Set<Objective>): Number {
         let dominatesX = false
         let dominatesY = false
 
