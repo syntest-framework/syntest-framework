@@ -1,9 +1,4 @@
-import {Fitness} from "../..";
-import {Sampler} from "../..";
-import {TestCase} from "../..";
-import {getProperty} from "../..";
-import {getLogger} from "../..";
-import {Objective} from "../..";
+import {Fitness, getLogger, getProperty, Objective, Sampler, TestCase} from "../..";
 import {endOverTimeWriterIfExists, startOverTimeWriter, writeData, writeSummary} from "../../util/resultWriter";
 import {Target} from "../objective/Target";
 
@@ -111,7 +106,7 @@ export abstract class GeneticAlgorithm {
      * @param fitness the fitness object
      * @param sampler the sampler object
      */
-    constructor (target: Target, fitness: Fitness, sampler: Sampler) {
+    constructor(target: Target, fitness: Fitness, sampler: Sampler) {
         this._target = target
         this._fitness = fitness
         this._sampler = sampler
@@ -132,8 +127,9 @@ export abstract class GeneticAlgorithm {
     /**
      * Creates a Map
      */
-    private setupArchive () {
+    private setupArchive() {
         const ga = this
+
         class MyMap extends Map<Objective, TestCase> {
             set(key: Objective, value: TestCase) {
                 writeData(ga, key)
@@ -149,7 +145,7 @@ export abstract class GeneticAlgorithm {
      *
      * @returns {[]} the create population
      */
-    createInitialPopulation (): TestCase[] {
+    createInitialPopulation(): TestCase[] {
         let population: TestCase[] = []
 
         for (let i = 0; i < this._popsize; i++) {
@@ -164,7 +160,7 @@ export abstract class GeneticAlgorithm {
      *
      * @param terminationCriteriaMet the function that decides whether the genetic algorithm is done or not
      */
-    async search (terminationCriteriaMet: (algorithmInstance: GeneticAlgorithm) => boolean) {
+    async search(terminationCriteriaMet: (algorithmInstance: GeneticAlgorithm) => boolean) {
         this._population = this.createInitialPopulation()
         getLogger().info('Initial population created')
         startOverTimeWriter(this)
@@ -194,7 +190,7 @@ export abstract class GeneticAlgorithm {
      * List of test cases that will for the final test suite
      * @protected
      */
-    public getFinalTestSuite(): Map<Objective, TestCase>{
+    public getFinalTestSuite(): Map<Objective, TestCase> {
         return this._archive
     }
 
@@ -205,7 +201,7 @@ export abstract class GeneticAlgorithm {
      * @param population the current population
      * @returns {[]} the sorted population of the next generation
      */
-    abstract generation (population: TestCase[]): Promise<TestCase[]>
+    abstract generation(population: TestCase[]): Promise<TestCase[]>
 
-    abstract getCurrentCoverage (): number
+    abstract getCurrentCoverage(): number
 }

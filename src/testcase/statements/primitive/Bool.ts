@@ -1,7 +1,6 @@
 import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {getProperty, prng} from '../../../index'
-import {Sampler} from "../../../index";
+import {getProperty, prng, Sampler} from '../../../index'
 
 /**
  * @author Dimitri Stallenberg
@@ -18,11 +17,11 @@ export class Bool extends PrimitiveStatement<boolean> {
         return new Bool(this.id, !this.value)
     }
 
-    copy () {
+    copy() {
         return new Bool(this.id, this.value)
     }
 
-    static getRandom () {
+    static getRandom() {
         return new Bool(prng.uniqueId(), prng.nextBoolean())
     }
 }

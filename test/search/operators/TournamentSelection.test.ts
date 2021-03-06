@@ -1,11 +1,9 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
-
-const expect = chai.expect
-
 import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../src";
 import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 import {tournamentSelection} from "../../../src/search/operators/selection/TournamentSelection";
+
+const expect = chai.expect
 
 const mockMath = Object.create(global.Math);
 mockMath.random = () => 0.5;
@@ -17,7 +15,7 @@ global.Math = mockMath;
 describe('Tournament selection', function () {
     before(async () => {
         await guessCWD(null)
-        await setupOptions("","")
+        await setupOptions("", "")
         await loadConfig()
         await processConfig({}, '')
         await setupLogger()

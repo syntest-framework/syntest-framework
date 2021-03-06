@@ -5,7 +5,7 @@ import {Objective} from "./Objective";
  *
  * @author Dimitri Stallenberg
  */
-export class Evaluation  {
+export class Evaluation {
 
     objectives: Map<Objective, number>
 

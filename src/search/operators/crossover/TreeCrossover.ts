@@ -1,4 +1,4 @@
-import {Statement, getProperty, TestCase, prng} from "../../..";
+import {getProperty, prng, Statement, TestCase} from "../../..";
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.
@@ -12,7 +12,7 @@ import {Statement, getProperty, TestCase, prng} from "../../..";
  *
  * @author Dimitri Stallenberg
  */
-export function TreeCrossover (parentA: TestCase, parentB: TestCase) {
+export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
     let rootA = parentA.root.copy()
     let rootB = parentB.root.copy()
 
@@ -57,7 +57,7 @@ export function TreeCrossover (parentA: TestCase, parentB: TestCase) {
     if (crossoverOptions.length) {
         let crossoverChoice = prng.pickOne(crossoverOptions)
         let pair = crossoverChoice.p1
-        let donorTree= crossoverChoice.p2
+        let donorTree = crossoverChoice.p2
 
         pair.parent.setChild(pair.childIndex, donorTree.child.copy())
         donorTree.parent.setChild(donorTree.childIndex, pair.child.copy())

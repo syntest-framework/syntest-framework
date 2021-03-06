@@ -1,8 +1,5 @@
 import {NSGA2} from './NSGA2'
-import { TestCase } from '../..'
-import {Fitness} from "../..";
-import {Sampler} from "../..";
-import {getLogger, Objective, Target} from "../..";
+import {Fitness, getLogger, Objective, Sampler, Target, TestCase} from '../..'
 import {DominanceComparator} from "../comparators/DominanceComparator";
 
 const {crowdingDistance} = require('../operators/ranking/CrowdingDistance')
@@ -25,7 +22,7 @@ export class MOSA extends NSGA2 {
         })
     }
 
-    async generation (population: TestCase[]) {
+    async generation(population: TestCase[]) {
         getLogger().debug("MOSA generation")
         if (!this.uncoveredObjectives.length) {
             getLogger().debug("No more objectives left all objectives are covered")
@@ -50,9 +47,9 @@ export class MOSA extends NSGA2 {
         return this.environmentalSelection(population, this.popsize)
     }
 
-    public environmentalSelection(pool: TestCase[], size: number): TestCase[]{
+    public environmentalSelection(pool: TestCase[], size: number): TestCase[] {
         // non-dominated sorting
-        getLogger().debug("Number of objectives = "+ this.uncoveredObjectives.length)
+        getLogger().debug("Number of objectives = " + this.uncoveredObjectives.length)
         let F = this.preferenceSortingAlgorithm(pool, this.uncoveredObjectives)
 
         // select new population
@@ -60,7 +57,7 @@ export class MOSA extends NSGA2 {
         let remain = size;
         let index = 0;
 
-        getLogger().debug("First front size = "+ F[0].length)
+        getLogger().debug("First front size = " + F[0].length)
 
         // Obtain the next front
         let currentFront: TestCase[] = F[index];
@@ -82,10 +79,10 @@ export class MOSA extends NSGA2 {
         }
 
         // Remain is less than front(index).size, insert only the best one
-        if (remain > 0 && currentFront.length>0) { // front contains individuals to insert
+        if (remain > 0 && currentFront.length > 0) { // front contains individuals to insert
             crowdingDistance(currentFront)
 
-            currentFront = currentFront.sort(function(a: TestCase, b: TestCase) { // sort in descending order of crowding distance
+            currentFront = currentFront.sort(function (a: TestCase, b: TestCase) { // sort in descending order of crowding distance
                 return b.getCrowdingDistance() - a.getCrowdingDistance()
             })
 
@@ -104,25 +101,25 @@ export class MOSA extends NSGA2 {
         return newPopulation
     }
 
-    async calculateFitness (offspring: TestCase[]) {
-        let uObj : Objective[] = []
-        for (let obj of this.uncoveredObjectives){
+    async calculateFitness(offspring: TestCase[]) {
+        let uObj: Objective[] = []
+        for (let obj of this.uncoveredObjectives) {
             uObj.push(obj)
         }
         await this.fitness.evaluateMany(offspring, uObj)
 
         let covered: Objective[] = []
-        for(let objective of this.uncoveredObjectives){
-            for(let test of offspring){
-                if (test.getEvaluation().get(objective) == 0.0 && !covered.includes(objective)){
+        for (let objective of this.uncoveredObjectives) {
+            for (let test of offspring) {
+                if (test.getEvaluation().get(objective) == 0.0 && !covered.includes(objective)) {
                     covered.push(objective)
-                    if (! this.archive.has(objective)){
+                    if (!this.archive.has(objective)) {
                         this.archive.set(objective, test)
                     }
                 }
             }
         }
-        for (let index of covered){
+        for (let index of covered) {
             let element = this.uncoveredObjectives.indexOf(index)
             this.uncoveredObjectives.splice(element, 1)
         }
@@ -131,10 +128,10 @@ export class MOSA extends NSGA2 {
     /*
      See: Preference sorting as discussed in the TSE paper for DynaMOSA
    */
-    public preferenceSortingAlgorithm(population: TestCase[], objectives: Objective[]): TestCase[][]{
+    public preferenceSortingAlgorithm(population: TestCase[], objectives: Objective[]): TestCase[][] {
         let fronts: TestCase[][] = [[]]
 
-        if (objectives === null){
+        if (objectives === null) {
             getLogger().debug("It looks like a bug in MOSA: the set of objectives cannot be null")
             return fronts
         }
@@ -147,7 +144,7 @@ export class MOSA extends NSGA2 {
         // compute the first front using the Preference Criteria
         let frontZero = this.preferenceCriterion(population, objectives)
 
-        for (let individual of frontZero){
+        for (let individual of frontZero) {
             fronts[0].push(individual)
             individual.setRank(0)
         }
@@ -158,7 +155,7 @@ export class MOSA extends NSGA2 {
 
         // compute the remaining non-dominated Fronts
         let remainingSolutions: TestCase[] = population
-        for (let selected of frontZero){
+        for (let selected of frontZero) {
             let index = remainingSolutions.indexOf(selected)
             remainingSolutions.splice(index, 1)
         }
@@ -166,14 +163,14 @@ export class MOSA extends NSGA2 {
         let selectedSolutions = frontZero.length
         let frontIndex = 1
 
-        while (selectedSolutions < this.popsize && remainingSolutions.length != 0){
+        while (selectedSolutions < this.popsize && remainingSolutions.length != 0) {
             let front: TestCase[] = this.getNonDominatedFront(objectives, remainingSolutions)
             fronts[frontIndex] = front
-            for (let solution of front){
+            for (let solution of front) {
                 solution.setRank(frontIndex)
             }
 
-            for (let selected of front){
+            for (let selected of front) {
                 let index = remainingSolutions.indexOf(selected)
                 remainingSolutions.splice(index, 1)
             }
@@ -186,15 +183,15 @@ export class MOSA extends NSGA2 {
         getLogger().debug("Number of fronts :" + fronts.length)
         getLogger().debug("Front zero size :" + fronts[0].length)
         //getLogger().debug("Front one size :" + fronts[1].length)
-        getLogger().debug("# selected solutions :" +selectedSolutions)
-        getLogger().debug("Pop size :" +this.popsize)
+        getLogger().debug("# selected solutions :" + selectedSolutions)
+        getLogger().debug("Pop size :" + this.popsize)
         return fronts
     }
 
     /**
      * It retrieves the front of non-dominated solutions from a list
      */
-    public getNonDominatedFront(notCovered: Objective[], remainingSolutions: TestCase[]): TestCase[]{
+    public getNonDominatedFront(notCovered: Objective[], remainingSolutions: TestCase[]): TestCase[] {
         const targets = new Set<Objective>(notCovered)
 
         let front: TestCase[] = []
@@ -216,7 +213,7 @@ export class MOSA extends NSGA2 {
             if (isDominated)
                 continue
 
-            for (let dominated of dominatedSolutions){
+            for (let dominated of dominatedSolutions) {
                 let index = front.indexOf(dominated)
                 front.splice(index, 1)
             }
@@ -231,21 +228,21 @@ export class MOSA extends NSGA2 {
      * @param objectives list of objective to consider
      * @protected
      */
-    public preferenceCriterion(population: TestCase[], objectives: Objective[]): TestCase[]{
+    public preferenceCriterion(population: TestCase[], objectives: Objective[]): TestCase[] {
         let frontZero: TestCase[] = []
-        for (let objective of objectives){
+        for (let objective of objectives) {
             let chosen = population[0]
 
-            for (let index = 1; index<population.length ; index++){
+            for (let index = 1; index < population.length; index++) {
                 if (population[index].getEvaluation().get(objective) < chosen.getEvaluation().get(objective))
                     // if lower fitness, than it is better
                     chosen = population[index]
-                else if (population[index].getEvaluation().get(objective) == chosen.getEvaluation().get(objective)){
+                else if (population[index].getEvaluation().get(objective) == chosen.getEvaluation().get(objective)) {
                     // at the same level of fitness, we look at test case size
                     if ((population[index].root.getChildren().length < chosen.root.getChildren().length &&
                         population[index].root.getChildren().length > 1) ||
                         (population[index].root.getChildren().length == chosen.root.getChildren().length &&
-                            Math.random()<0.50)) {
+                            Math.random() < 0.50)) {
                         // Secondary criterion based on tests lengths
                         chosen = population[index]
                     }

@@ -1,7 +1,5 @@
 import {GeneticAlgorithm} from './GeneticAlgorithm'
-import {TestCase} from "../..";
-
-import {fastNonDomSorting} from '../..'
+import {fastNonDomSorting, TestCase} from "../..";
 
 /**
  * Simple Genetic Algorithm BaseClass
@@ -9,7 +7,7 @@ import {fastNonDomSorting} from '../..'
  * @author Dimitri Stallenberg
  */
 export class SimpleGA extends GeneticAlgorithm {
-    async generation (population: TestCase[]) {
+    async generation(population: TestCase[]) {
         // create offspring population
         let offspring = this.generateOffspring(population)
 

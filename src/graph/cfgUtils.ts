@@ -1,10 +1,7 @@
-import {drawGraph} from './drawGraph'
-import {getProperty} from "../config";
-
 /**
  * @author Dimitri Stallenberg
  */
-export function createLoops (cfg: any) {
+export function createLoops(cfg: any) {
     let nonFinals: any[] = []
     let loopNode: any[] = []
     for (let node of cfg.nodes) {
@@ -48,7 +45,7 @@ export function createLoops (cfg: any) {
     }
 }
 
-export function connectNonFinalNodes (cfg: any) {
+export function connectNonFinalNodes(cfg: any) {
     let nonFinals = []
     for (let node of cfg.nodes) {
         if (node.absoluteRoot) {
@@ -96,7 +93,7 @@ export function connectNonFinalNodes (cfg: any) {
     cfg.nodes[cfg.nodes.length - 1].final = true
 }
 
-export function finalizeCFG (cfg: any) {
+export function finalizeCFG(cfg: any) {
     cfg.nodes.sort((a: any, b: any) => a.line - b.line)
 
     connectNonFinalNodes(cfg)

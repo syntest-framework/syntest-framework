@@ -1,19 +1,9 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
-
-const expect = chai.expect
-
-import {
-    guessCWD,
-    loadConfig,
-    Objective,
-    processConfig,
-    setupLogger,
-    setupOptions,
-    tournamentSelection
-} from "../../../src";
+import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../src";
 import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 import {fastNonDomSorting} from "../../../src/search/operators/ranking/FastNonDomSorting";
+
+const expect = chai.expect
 
 /**
  * @author Annibale Panichella
@@ -21,7 +11,7 @@ import {fastNonDomSorting} from "../../../src/search/operators/ranking/FastNonDo
 describe('Fast non-dominated sorting', function () {
     before(async () => {
         await guessCWD(null)
-        await setupOptions("","")
+        await setupOptions("", "")
         await loadConfig()
         await processConfig({}, '')
         await setupLogger()

@@ -1,6 +1,6 @@
 import {getProperty} from "../config";
-import {GeneticAlgorithm, TestCase, Objective} from "..";
-import {appendFileSync, existsSync, mkdirSync} from 'fs';
+import {GeneticAlgorithm, Objective} from "..";
+import {appendFileSync, existsSync} from 'fs';
 import Timeout = NodeJS.Timeout;
 
 

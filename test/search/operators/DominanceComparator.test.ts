@@ -1,11 +1,9 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
-
-const expect = chai.expect
-
 import {DominanceComparator} from "../../../src/search/comparators/DominanceComparator";
 import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../src";
 import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
+
+const expect = chai.expect
 
 /**
  * @author Annibale Panichella
@@ -13,7 +11,7 @@ import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 describe('Dominance comparator', function () {
     before(async () => {
         await guessCWD(null)
-        await setupOptions("","")
+        await setupOptions("", "")
         await loadConfig()
         await processConfig({}, '')
         await setupLogger()

@@ -10,6 +10,7 @@ import {getProperty} from "../../../index";
 export class Ufixed extends PrimitiveStatement<number> {
     private bits: number;
     private decimals: number;
+
     constructor(uniqueId: string, value: number, bits: number, decimals: number) {
         super('unsignedFixed', `ufixed${bits}x${decimals}`, uniqueId, value)
         this.bits = bits
@@ -48,11 +49,11 @@ export class Ufixed extends PrimitiveStatement<number> {
         return new Ufixed(this.id, parseFloat(Math.min(max, Math.max(min, this.value + change)).toFixed(this.decimals)), this.bits, this.decimals)
     }
 
-    copy () {
+    copy() {
         return new Ufixed(this.id, this.value, this.bits, this.decimals)
     }
 
-    static getRandom (bits=getProperty("ufixed_bits"), decimals=getProperty('ufixed_decimals')) {
+    static getRandom(bits = getProperty("ufixed_bits"), decimals = getProperty('ufixed_decimals')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = -(Math.pow(2, bits) - 1)

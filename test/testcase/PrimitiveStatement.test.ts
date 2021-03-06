@@ -1,9 +1,7 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
+import {guessCWD, loadConfig, PrimitiveStatement, processConfig, Sampler, setupLogger, setupOptions} from "../../src";
 
 const expect = chai.expect
-
-import {guessCWD, loadConfig, PrimitiveStatement, processConfig, Sampler, setupLogger, setupOptions} from "../../src";
 
 class dummyPrimitiveStatement extends PrimitiveStatement<string> {
     copy(): PrimitiveStatement<string> {

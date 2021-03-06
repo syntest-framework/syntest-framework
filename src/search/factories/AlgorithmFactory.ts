@@ -1,24 +1,18 @@
 import {getProperty} from "../../config";
-import {GeneticAlgorithm, NSGA2, Target} from "../..";
-import {SimpleGA} from "../..";
-import {MOSA} from "../..";
-import {Fitness} from "../..";
-import {Sampler} from "../..";
-import {MultiGA} from "../..";
-import {COMIX} from "../..";
+import {COMIX, Fitness, GeneticAlgorithm, MOSA, MultiGA, NSGA2, Sampler, SimpleGA, Target} from "../..";
 
 /**
  *
  * @author Dimitri Stallenberg
  */
 export function createAlgorithmFromConfig(target: Target | Target[], fitnessObject: Fitness, sampler: Sampler) {
-    const singleAlgoritms: {[key: string]: { new(...args: any[]): GeneticAlgorithm }} = {
+    const singleAlgoritms: { [key: string]: { new(...args: any[]): GeneticAlgorithm } } = {
         SimpleGA: SimpleGA,
         NSGA2: NSGA2,
         MOSA: MOSA
     }
 
-    const multiAlgorithms: {[key: string]: { new(...args: any[]): MultiGA<any> }} = {
+    const multiAlgorithms: { [key: string]: { new(...args: any[]): MultiGA<any> } } = {
         COMIX: COMIX
     }
 
@@ -30,7 +24,7 @@ export function createAlgorithmFromConfig(target: Target | Target[], fitnessObje
         }
 
         return new singleAlgoritms[algorithm](target, fitnessObject, sampler)
-    } else if (algorithm in multiAlgorithms){
+    } else if (algorithm in multiAlgorithms) {
         if (target instanceof Target) {
             throw new Error(`Cannot use single target for the multi target algorithms.`)
         }

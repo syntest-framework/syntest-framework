@@ -1,7 +1,6 @@
 import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {getProperty, prng} from '../../../index'
-import {Sampler} from "../../../index";
+import {getProperty, prng, Sampler} from '../../../index'
 
 /**
  * @author Dimitri Stallenberg
@@ -118,11 +117,11 @@ export class String extends PrimitiveStatement<string> {
         return new String(this.id, newValue, this.alphabet, this.maxlength)
     }
 
-    copy () {
+    copy() {
         return new String(this.id, this.value, this.alphabet, this.maxlength)
     }
 
-    static getRandom (alphabet = getProperty('string_alphabet'), maxlength=getProperty('string_maxlength')) {
+    static getRandom(alphabet = getProperty('string_alphabet'), maxlength = getProperty('string_maxlength')) {
         let valueLength = prng.nextInt(0, maxlength - 1)
         let value = ''
 

@@ -1,13 +1,11 @@
-import {TestCase, Target} from "../..";
-import {getLogger} from "../..";
-import {Datapoint, Runner} from "../..";
+import {Datapoint, getLogger, Runner, Target, TestCase} from "../..";
 import {Objective} from "./Objective";
 import {Evaluation} from "./Evaluation";
 import {Node} from "../../graph/Node";
 import {Edge} from "../../graph/Edge";
 import {CFG} from "../../graph/CFG";
 
-const { Graph, alg } = require('@dagrejs/graphlib')
+const {Graph, alg} = require('@dagrejs/graphlib')
 
 /**
  * Class for evaluating individuals or entire populations.
@@ -31,7 +29,7 @@ export class Fitness {
         this.extractPaths(target.cfg)
     }
 
-    extractPaths (cfg: CFG) {
+    extractPaths(cfg: CFG) {
         let g = new Graph();
 
         for (let node of cfg.nodes) {
@@ -66,7 +64,7 @@ export class Fitness {
      * @param individual the individual to evaluate
      * @param objectives the objectives to evaluate
      */
-    async evaluateOne (individual: TestCase, objectives: Objective[]) {
+    async evaluateOne(individual: TestCase, objectives: Objective[]) {
         getLogger().debug(`Evaluating individual ${individual.id}`)
 
         let dataPoints = await this.runner.runTest(individual)
@@ -81,7 +79,7 @@ export class Fitness {
      * @param population the population to evaluate
      * @param objectives the objectives to evaluate the population on
      */
-    async evaluateMany (population: TestCase[], objectives: Objective[]) {
+    async evaluateMany(population: TestCase[], objectives: Objective[]) {
         // TODO This should be done in parallel somehow
         for (let individual of population) {
             await this.evaluateOne(individual, objectives)
@@ -95,7 +93,7 @@ export class Fitness {
      * @param left the left value of the comparison
      * @param right the right value of the comparison
      */
-    private calcBranchDistance (opcode: string, left: number, right: number) {
+    private calcBranchDistance(opcode: string, left: number, right: number) {
         let trueBranch = 0
         let falseBranch = 0
         let difference = Math.log10(Math.abs(left - right) + 1)
@@ -156,7 +154,7 @@ export class Fitness {
      * @param dataPoints the cover information
      * @param objectives the objectives/targets we want to calculate the distance to
      */
-    private calculateDistance (dataPoints: Datapoint[], objectives: Objective[]) {
+    private calculateDistance(dataPoints: Datapoint[], objectives: Objective[]) {
         let hitNodes = []
 
         for (let point of dataPoints) {

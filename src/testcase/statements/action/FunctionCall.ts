@@ -1,8 +1,6 @@
 import {Statement} from "../Statement";
 import {ActionStatement} from "../ActionStatement";
-import {prng} from '../../../index'
-import {Sampler} from "../../../index";
-import {getProperty} from "../../../index";
+import {getProperty, prng, Sampler} from '../../../index'
 
 /**
  * @author Dimitri Stallenberg
@@ -52,11 +50,11 @@ export class FunctionCall extends ActionStatement {
         return new FunctionCall(this._functionName, this.type, this.id, deepCopyArgs)
     }
 
-    hasChildren (): boolean {
+    hasChildren(): boolean {
         return true
     }
 
-    getChildren (): Statement[] {
+    getChildren(): Statement[] {
         return [...this.args]
     }
 }

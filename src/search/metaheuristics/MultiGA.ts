@@ -1,7 +1,4 @@
-import {Fitness, GeneticAlgorithm, Objective} from "../..";
-import {Sampler} from "../..";
-import {TestCase} from "../..";
-import {getLogger} from "../..";
+import {Fitness, GeneticAlgorithm, getLogger, Objective, Sampler, TestCase} from "../..";
 import {Target} from "../objective/Target";
 
 /**
@@ -27,7 +24,7 @@ export abstract class MultiGA<T extends GeneticAlgorithm> extends GeneticAlgorit
      * @param sampler the sampler object
      * @param GAtype the class of the sub algorithms to run (cannot be a MultiGA)
      */
-    constructor (targets: Target[], fitness: Fitness, sampler: Sampler, GAtype: { new(target: Target, fitness: Fitness, sampler: Sampler): GeneticAlgorithm }) {
+    constructor(targets: Target[], fitness: Fitness, sampler: Sampler, GAtype: { new(target: Target, fitness: Fitness, sampler: Sampler): GeneticAlgorithm }) {
         super(targets[0], fitness, sampler)
 
         this._subAlgorithms = []
@@ -44,14 +41,14 @@ export abstract class MultiGA<T extends GeneticAlgorithm> extends GeneticAlgorit
      *
      * @param terminationCriteriaMet the function that decides whether the genetic algorithm is done or not
      */
-    async search (terminationCriteriaMet: (algorithmInstance: GeneticAlgorithm) => boolean) {
+    async search(terminationCriteriaMet: (algorithmInstance: GeneticAlgorithm) => boolean) {
         for (let algorithm of this.subAlgorithms) {
             algorithm.population = algorithm.createInitialPopulation()
         }
         getLogger().info('Initial population created')
 
         for (let algorithm of this.subAlgorithms) {
-           await algorithm.fitness.evaluateMany(algorithm.population, algorithm.objectives)
+            await algorithm.fitness.evaluateMany(algorithm.population, algorithm.objectives)
         }
 
         this.currentGeneration = 0
@@ -77,7 +74,7 @@ export abstract class MultiGA<T extends GeneticAlgorithm> extends GeneticAlgorit
      * List of test cases that will for the final test suite
      * @protected
      */
-    public getFinalTestSuite(): Map<Objective, TestCase>{
+    public getFinalTestSuite(): Map<Objective, TestCase> {
         let champions: Map<Objective, TestCase> = new Map<Objective, TestCase>();
         for (let algorithm of this._subAlgorithms) {
             for (let key of algorithm.getFinalTestSuite().keys()) {
@@ -93,9 +90,9 @@ export abstract class MultiGA<T extends GeneticAlgorithm> extends GeneticAlgorit
      * @param population the current population
      * @returns {[]} the population of the next generation
      */
-     async generation (population: TestCase[]): Promise<TestCase[]> {
-         throw new Error("MultiGA's cannot use the generation function, use multiGeneration instead")
+    async generation(population: TestCase[]): Promise<TestCase[]> {
+        throw new Error("MultiGA's cannot use the generation function, use multiGeneration instead")
     }
 
-    abstract multiGeneration (): Promise<void>
+    abstract multiGeneration(): Promise<void>
 }

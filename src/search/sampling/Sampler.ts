@@ -1,5 +1,4 @@
-import {Target} from "../..";
-import {TestCase} from "../..";
+import {Target, TestCase} from "../..";
 
 /**
  * Sampler class
@@ -17,6 +16,7 @@ export abstract class Sampler {
     }
 
     private _target: Target;
+
     /**
      * Constructor
      * @param target     the target
@@ -29,7 +29,7 @@ export abstract class Sampler {
      * Should sample an individual
      * @return  a sampled individual
      */
-    abstract sampleIndividual (): TestCase
+    abstract sampleIndividual(): TestCase
 
     /**
      * Should sample any gene based on the type
@@ -38,5 +38,5 @@ export abstract class Sampler {
      * @param geneType  the type of the gene
      * @return          a sampled gene
      */
-    abstract sampleGene (depth: number, type: string, geneType: string): any
+    abstract sampleGene(depth: number, type: string, geneType: string): any
 }

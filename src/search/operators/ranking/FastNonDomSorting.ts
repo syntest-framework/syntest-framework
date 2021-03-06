@@ -1,5 +1,4 @@
 import {TestCase} from "../../../testcase/TestCase";
-import {getLogger} from "../../../index";
 
 /**
  * Sort the population using fast non-dominated sorting
@@ -68,14 +67,14 @@ export function fastNonDomSorting(population: TestCase[]) {
 
             }
         }
-        i  += 1
+        i += 1
         F.push(H)
     }
 
     // let's save the ranks
     var index = 0
-    for( let front of F){
-        for (let p of front){
+    for (let front of F) {
+        for (let p of front) {
             p.setRank(index)
         }
         index++

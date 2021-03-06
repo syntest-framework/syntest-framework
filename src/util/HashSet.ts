@@ -1,5 +1,4 @@
-import {TestCase} from "..";
-import {Stringifier} from "..";
+import {Stringifier, TestCase} from "..";
 
 
 export class HashSet<T extends TestCase> extends Set<T> {

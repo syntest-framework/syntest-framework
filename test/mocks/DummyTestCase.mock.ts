@@ -8,7 +8,7 @@ export class DummyIndividual extends TestCase {
 
     constructor() {
         DummyIndividual.counter++
-        let actionGene = new Constructor("dummy", "dummy", "dummy"+DummyIndividual.counter, [])
+        let actionGene = new Constructor("dummy", "dummy", "dummy" + DummyIndividual.counter, [])
         super(actionGene)
     }
 
@@ -19,7 +19,7 @@ export class DummyIndividual extends TestCase {
         if (objective.length != values.length)
             throw new Error('Something bad happened');
 
-        for (let i=0; i<objective.length; i++){
+        for (let i = 0; i < objective.length; i++) {
             evaluation.set(objective[i], values[i])
         }
 

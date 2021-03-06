@@ -1,9 +1,7 @@
 import {Statement} from "../Statement";
 import {ActionStatement} from "../ActionStatement";
 import {Constructor} from "./Constructor"
-import {prng} from '../../../index'
-import {Sampler} from "../../../index";
-import {getProperty} from "../../../index";
+import {getProperty, prng, Sampler} from '../../../index'
 
 /**
  * @author Dimitri Stallenberg
@@ -54,11 +52,11 @@ export class ObjectFunctionCall extends ActionStatement {
         return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, deepCopyArgs)
     }
 
-    hasChildren (): boolean {
+    hasChildren(): boolean {
         return true
     }
 
-    getChildren (): Statement[] {
+    getChildren(): Statement[] {
         return [...this.args]
     }
 }

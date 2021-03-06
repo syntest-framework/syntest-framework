@@ -1,8 +1,6 @@
 import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {prng} from '../../../index'
-import {Sampler} from "../../../index";
-import {getProperty} from "../../../index";
+import {getProperty, prng, Sampler} from '../../../index'
 
 /**
  * @author Dimitri Stallenberg
@@ -46,11 +44,11 @@ export class Int extends PrimitiveStatement<number> {
         return new Int(this.id, Math.min(max, Math.max(min, this.value + change)), this.bits)
     }
 
-    copy () {
+    copy() {
         return new Int(this.id, this.value, this.bits)
     }
 
-    static getRandom (bits=getProperty('int_bits')) {
+    static getRandom(bits = getProperty('int_bits')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = -(Math.pow(2, bits) - 1)

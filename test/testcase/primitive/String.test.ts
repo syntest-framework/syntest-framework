@@ -1,14 +1,12 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
+import {guessCWD, loadConfig, processConfig, Sampler, setupLogger, setupOptions, String} from "../../../src";
 
 const expect = chai.expect
-
-import {guessCWD, loadConfig, processConfig, Sampler, setupLogger, setupOptions, String} from "../../../src";
 
 describe('String', () => {
     before(async () => {
         await guessCWD(null)
-        await setupOptions("","")
+        await setupOptions("", "")
         await loadConfig()
         await processConfig({}, '')
         await setupLogger()

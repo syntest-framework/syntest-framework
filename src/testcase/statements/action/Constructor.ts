@@ -1,9 +1,7 @@
 import {Statement} from "../Statement";
 import {ActionStatement} from "../ActionStatement";
 
-import {prng} from '../../../index'
-import {Sampler} from "../../../index";
-import {getProperty} from "../../../index";
+import {getProperty, prng, Sampler} from '../../../index'
 
 /**
  * @author Dimitri Stallenberg

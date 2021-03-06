@@ -1,14 +1,12 @@
 import {PrimitiveStatement} from '../PrimitiveStatement'
-import {prng} from '../../../index'
-import {Sampler} from "../../../index";
-import {getProperty} from "../../../index";
-import get = Reflect.get;
+import {getProperty, prng, Sampler} from '../../../index'
 
 /**
  * @author Dimitri Stallenberg
  */
 export class Uint extends PrimitiveStatement<number> {
     private bits: number;
+
     constructor(uniqueId = prng.uniqueId(), value: number, bits: number) {
         super('unsignedInteger', `uint${bits}`, uniqueId, value)
         this.bits = bits
@@ -45,11 +43,11 @@ export class Uint extends PrimitiveStatement<number> {
         return new Uint(this.id, Math.min(max, Math.max(min, this.value + change)), this.bits)
     }
 
-    copy () {
+    copy() {
         return new Uint(this.id, this.value, this.bits)
     }
 
-    static getRandom (bits=getProperty('uint_bits')) {
+    static getRandom(bits = getProperty('uint_bits')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = 0

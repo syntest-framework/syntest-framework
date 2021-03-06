@@ -1,20 +1,21 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
-
-const expect = chai.expect
-
 import {
-    Fitness, guessCWD, loadConfig,
+    Fitness,
+    guessCWD,
+    loadConfig,
     Objective,
     processConfig,
     Runner,
     Sampler,
-    setupLogger, setupOptions, Target
+    setupLogger,
+    setupOptions
 } from "../../../src";
 import {MOSA} from "../../../src/search/metaheuristics/MOSA";
 import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
 import {DummyTarget} from "../../mocks/DummyTarget.mock";
+
+const expect = chai.expect
 
 /**
  * @author Annibale Panichella
@@ -22,7 +23,7 @@ import {DummyTarget} from "../../mocks/DummyTarget.mock";
 describe('Test MOSA', function () {
     before(async () => {
         await guessCWD(null)
-        await setupOptions("","")
+        await setupOptions("", "")
         await loadConfig()
         await processConfig({}, '')
         await setupLogger()
@@ -79,7 +80,7 @@ describe('Test MOSA', function () {
         let fitness: Fitness = new DummyFitness(mockedRunner, [objective1, objective2]);
 
         const mosa = new MOSA(mockedTarget, fitness, mockedSampler)
-        const front = mosa.getNonDominatedFront([objective1, objective2],[ind1, ind2, ind3, ind4, ind5])
+        const front = mosa.getNonDominatedFront([objective1, objective2], [ind1, ind2, ind3, ind4, ind5])
 
         expect(front.length).to.equal(3)
         expect(front).to.contain(ind2)

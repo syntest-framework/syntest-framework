@@ -1,11 +1,16 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
+import {
+    crowdingDistance,
+    guessCWD,
+    loadConfig,
+    Objective,
+    processConfig,
+    setupLogger,
+    setupOptions
+} from "../../../src";
+import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 
 const expect = chai.expect
-
-import {guessCWD, setupOptions, loadConfig, Objective, processConfig, setupLogger} from "../../../src";
-import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
-import {crowdingDistance} from "../../../src";
 
 /**
  * @author Annibale Panichella
@@ -14,7 +19,7 @@ import {crowdingDistance} from "../../../src";
 describe('Crowding distance', function () {
     beforeEach(async () => {
         await guessCWD(null)
-        await setupOptions("","")
+        await setupOptions("", "")
         await loadConfig()
         await processConfig({}, '')
         await setupLogger()

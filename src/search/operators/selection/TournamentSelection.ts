@@ -1,5 +1,4 @@
-import {TestCase} from "../../..";
-import {prng} from '../../..';
+import {prng, TestCase} from "../../..";
 
 /**
  * This function selects the individual for reproduction using tournament selection
@@ -9,13 +8,13 @@ import {prng} from '../../..';
  *
  * @author Annibale Panichella
  */
-export function tournamentSelection (population: TestCase[], tournamentSize: number) {
+export function tournamentSelection(population: TestCase[], tournamentSize: number) {
     if (tournamentSize < 2)
         throw new Error('The tournament size should be greater than 1 ')
 
     let winner = prng.pickOne(population)
 
-    for (let tournament=0; tournament<tournamentSize-1; tournament++){
+    for (let tournament = 0; tournament < tournamentSize - 1; tournament++) {
         let solution = prng.pickOne(population)
 
         // the winner is the solution with the best (smaller) non-dominance rank

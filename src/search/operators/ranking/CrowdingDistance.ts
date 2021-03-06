@@ -22,15 +22,15 @@ export function crowdingDistance(front: TestCase[]) {
         return;
     }
 
-    for (let index=0; index < front.length; index++){
+    for (let index = 0; index < front.length; index++) {
         front[index].setCrowdingDistance(0.0);
     }
 
     //throw new Error('Front = '+ front + ' size = ' + size)
 
-    for (let objective of front[0].getEvaluation().keys()){
+    for (let objective of front[0].getEvaluation().keys()) {
         // sort the front in ascending order of fitness value
-        let orderedFront = front.sort(function(a,b) {
+        let orderedFront = front.sort(function (a, b) {
             return a.getEvaluation().get(objective) - b.getEvaluation().get(objective)
         })
 

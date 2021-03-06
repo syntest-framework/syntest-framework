@@ -13,12 +13,12 @@ export abstract class Target {
         this._functionMap = functionMap
     }
 
-    getObjectives (): Objective[] {
+    getObjectives(): Objective[] {
         return this._cfg.nodes.filter((n: any) => !n.absoluteRoot)
     }
 
     // TODO rename this
-    abstract getPossibleActions (type?: string, returnType?: string): ActionDescription[]
+    abstract getPossibleActions(type?: string, returnType?: string): ActionDescription[]
 
     get name(): string {
         return this._name;

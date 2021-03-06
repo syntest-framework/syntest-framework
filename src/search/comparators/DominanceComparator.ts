@@ -1,5 +1,6 @@
-import { TestCase } from '../../testcase/TestCase'
+import {TestCase} from '../../testcase/TestCase'
 import {Objective} from "../../index";
+
 const {fastNonDomSorting} = require('../operators/ranking/FastNonDomSorting')
 const {crowdingDistance} = require('../operators/ranking/CrowdingDistance')
 const {tournamentSelection} = require('../operators/selection/TournamentSelection')

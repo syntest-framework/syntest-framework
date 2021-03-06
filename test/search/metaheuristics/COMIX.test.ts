@@ -1,21 +1,21 @@
-import * as sinon from 'sinon'
 import * as chai from 'chai'
-
-const expect = chai.expect
-
 import {
-    Fitness, guessCWD, loadConfig, MOSA,
-    NSGA2, Objective,
+    Fitness,
+    guessCWD,
+    loadConfig,
+    NSGA2,
+    Objective,
     processConfig,
     Runner,
     Sampler,
-    setupLogger, setupOptions, Target
+    setupLogger,
+    setupOptions
 } from "../../../src";
-
-import {COMIX} from "../../../src";
 import {DummyTarget} from "../../mocks/DummyTarget.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
 import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
+
+const expect = chai.expect
 
 /**
  * @author Dimitri Stallenberg
@@ -23,7 +23,7 @@ import {DummyIndividual} from "../../mocks/DummyTestCase.mock";
 describe('Test COMIX', function () {
     before(async () => {
         await guessCWD(null)
-        await setupOptions("","")
+        await setupOptions("", "")
         await loadConfig()
         await processConfig({}, '')
         await setupLogger()

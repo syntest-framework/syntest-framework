@@ -1,11 +1,11 @@
 const d3 = require('d3');
 const fs = require('fs');
-const { JSDOM } = require('jsdom');
+const {JSDOM} = require('jsdom');
 
 /**
  * @author Dimitri Stallenberg
  */
-export function drawGraph (cfg: any, path: string) {
+export function drawGraph(cfg: any, path: string) {
     let graph = {
         nodes: [...cfg.nodes.map((n: any) => {
             let name = `(${n.line})`
@@ -27,7 +27,7 @@ export function drawGraph (cfg: any, path: string) {
         })],
         links: [...cfg.edges.map((e: any) => {
             return {
-                id: e.from + '-' +e.to,
+                id: e.from + '-' + e.to,
                 source: e.from,
                 target: e.to,
                 type: e.type
@@ -55,13 +55,15 @@ export function drawGraph (cfg: any, path: string) {
         .append('svg:path')
         .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
         .attr('fill', '#555')
-        .attr('stroke','#555');
+        .attr('stroke', '#555');
 
     var color = d3.scaleOrdinal().range(d3.schemeCategory20);
 
     var simulation = d3.forceSimulation()
         .force("charge", d3.forceManyBody().strength(-400).distanceMin(50).distanceMax(400))
-        .force("link", d3.forceLink().id(function(d: any) { return d.id; }))
+        .force("link", d3.forceLink().id(function (d: any) {
+            return d.id;
+        }))
         .force("center", d3.forceCenter(250, 250))
         .force("y", d3.forceY(0.001))
         .force("x", d3.forceX(0.001))
@@ -88,7 +90,7 @@ export function drawGraph (cfg: any, path: string) {
             return '#555'
         })
         .attr("fill", 'none')
-        .attr('marker-end','url(#marker)')
+        .attr('marker-end', 'url(#marker)')
 
 
     var node = svg.append("g")
@@ -111,7 +113,9 @@ export function drawGraph (cfg: any, path: string) {
 
     var circles2 = node.append("circle")
         .attr("r", 5)
-        .attr("fill", function(d: any) { return color(d.id); })
+        .attr("fill", function (d: any) {
+            return color(d.id);
+        })
         .style('stroke', '#000')
         .style('stroke-width', '1.5px')
         .style('stroke-dasharray', (d: any) => {
@@ -122,7 +126,7 @@ export function drawGraph (cfg: any, path: string) {
         })
 
     var lables = node.append("text")
-        .text(function(d: any) {
+        .text(function (d: any) {
             return d.name;
         })
         .attr('x', 6)
@@ -131,8 +135,9 @@ export function drawGraph (cfg: any, path: string) {
         .style('font-size', '10px')
 
     node.append("title")
-        .text(function(d: any) { return d.id; });
-
+        .text(function (d: any) {
+            return d.id;
+        });
 
 
     function ticked() {
@@ -142,7 +147,7 @@ export function drawGraph (cfg: any, path: string) {
         //     .attr("x2", function(d) { return d.target.x; })
         //     .attr("y2", function(d) { return d.target.y; });
 
-        link.attr("d", function(d: any) {
+        link.attr("d", function (d: any) {
             var x1 = d.source.x,
                 y1 = d.source.y,
                 x2 = d.target.x,
@@ -184,7 +189,7 @@ export function drawGraph (cfg: any, path: string) {
         });
 
         node
-            .attr("transform", function(d: any) {
+            .attr("transform", function (d: any) {
                 return "translate(" + d.x + "," + d.y + ")";
             })
     }
