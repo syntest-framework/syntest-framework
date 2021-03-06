@@ -1,6 +1,6 @@
 import {Fitness} from "../..";
 import {Sampler} from "../..";
-import {Individual} from "../..";
+import {TestCaseChromosome} from "../..";
 import {getProperty} from "../..";
 import {getLogger} from "../..";
 import {Objective} from "../..";
@@ -13,19 +13,19 @@ import {Target} from "../objective/Target";
  * @author Dimitri Stallenberg
  */
 export abstract class GeneticAlgorithm {
-    get population(): Individual[] {
+    get population(): TestCaseChromosome[] {
         return this._population;
     }
 
-    set population(value: Individual[]) {
+    set population(value: TestCaseChromosome[]) {
         this._population = value;
     }
 
-    get archive(): Map<Objective, Individual> {
+    get archive(): Map<Objective, TestCaseChromosome> {
         return this._archive;
     }
 
-    set archive(value: Map<Objective, Individual>) {
+    set archive(value: Map<Objective, TestCaseChromosome>) {
         this._archive = value;
     }
 
@@ -94,8 +94,8 @@ export abstract class GeneticAlgorithm {
     private readonly _sampler: Sampler;
     private readonly _popsize: number;
 
-    private _population: Individual[];
-    private _archive: Map<Objective, Individual>;
+    private _population: TestCaseChromosome[];
+    private _archive: Map<Objective, TestCaseChromosome>;
 
     private _startTime: number;
     private _currentGeneration: number;
@@ -134,8 +134,8 @@ export abstract class GeneticAlgorithm {
      */
     private setupArchive () {
         const ga = this
-        class MyMap extends Map<Objective, Individual> {
-            set(key: Objective, value: Individual) {
+        class MyMap extends Map<Objective, TestCaseChromosome> {
+            set(key: Objective, value: TestCaseChromosome) {
                 writeData(ga, key)
                 return super.set(key, value);
             }
@@ -149,8 +149,8 @@ export abstract class GeneticAlgorithm {
      *
      * @returns {[]} the create population
      */
-    createInitialPopulation (): Individual[] {
-        let population: Individual[] = []
+    createInitialPopulation (): TestCaseChromosome[] {
+        let population: TestCaseChromosome[] = []
 
         for (let i = 0; i < this._popsize; i++) {
             population.push(this._sampler.sampleIndividual())
@@ -194,7 +194,7 @@ export abstract class GeneticAlgorithm {
      * List of test cases that will for the final test suite
      * @protected
      */
-    public getFinalTestSuite(): Map<Objective, Individual>{
+    public getFinalTestSuite(): Map<Objective, TestCaseChromosome>{
         return this._archive
     }
 
@@ -205,7 +205,7 @@ export abstract class GeneticAlgorithm {
      * @param population the current population
      * @returns {[]} the sorted population of the next generation
      */
-    abstract generation (population: Individual[]): Promise<Individual[]>
+    abstract generation (population: TestCaseChromosome[]): Promise<TestCaseChromosome[]>
 
     abstract getCurrentCoverage (): number
 }

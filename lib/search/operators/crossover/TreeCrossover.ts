@@ -1,4 +1,4 @@
-import {Gene, getProperty, Individual, prng} from "../../..";
+import {Statement, getProperty, TestCaseChromosome, prng} from "../../..";
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.
@@ -12,7 +12,7 @@ import {Gene, getProperty, Individual, prng} from "../../..";
  *
  * @author Dimitri Stallenberg
  */
-export function TreeCrossover (parentA: Individual, parentB: Individual) {
+export function TreeCrossover (parentA: TestCaseChromosome, parentB: TestCaseChromosome) {
     let rootA = parentA.root.copy()
     let rootB = parentB.root.copy()
 
@@ -32,7 +32,7 @@ export function TreeCrossover (parentA: Individual, parentB: Individual) {
         let pair = queueA.shift()
 
         if (pair.child.hasChildren()) {
-            pair.child.getChildren().forEach((child: Gene, index: number) => {
+            pair.child.getChildren().forEach((child: Statement, index: number) => {
                 queueA.push({
                     parent: pair.child,
                     childIndex: index,
@@ -63,7 +63,7 @@ export function TreeCrossover (parentA: Individual, parentB: Individual) {
         donorTree.parent.setChild(donorTree.childIndex, pair.child.copy())
     }
 
-    return [new Individual(rootA), new Individual(rootB)]
+    return [new TestCaseChromosome(rootA), new TestCaseChromosome(rootB)]
 }
 
 /**
@@ -74,7 +74,7 @@ export function TreeCrossover (parentA: Individual, parentB: Individual) {
  *
  * @author Dimitri Stallenberg
  */
-function findSimilarSubtree(wanted: Gene, tree: Gene) {
+function findSimilarSubtree(wanted: Statement, tree: Statement) {
     let queue: any = []
     let similar = []
 
@@ -90,7 +90,7 @@ function findSimilarSubtree(wanted: Gene, tree: Gene) {
         let pair = queue.shift()
 
         if (pair.child.hasChildren()) {
-            pair.child.getChildren().forEach((child: Gene, index: number) => {
+            pair.child.getChildren().forEach((child: Statement, index: number) => {
                 queue.push({
                     parent: pair.child,
                     childIndex: index,

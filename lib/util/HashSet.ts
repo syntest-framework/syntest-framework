@@ -1,8 +1,8 @@
-import {Individual} from "..";
+import {TestCaseChromosome} from "..";
 import {Stringifier} from "..";
 
 
-export class HashSet<T extends Individual> extends Set<T> {
+export class HashSet<T extends TestCaseChromosome> extends Set<T> {
 
     private stringifier: Stringifier
 

@@ -1,12 +1,12 @@
-import {PrimitiveGene} from '../PrimitiveGene'
+import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {getProperty, prng} from '../../..'
-import {Sampler} from "../../..";
+import {getProperty, prng} from '../../../../index'
+import {Sampler} from "../../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class StringGene extends PrimitiveGene<string> {
+export class StringGene extends PrimitiveStatement<string> {
     private readonly alphabet: string
     private readonly maxlength: number
 

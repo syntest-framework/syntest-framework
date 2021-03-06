@@ -1,4 +1,4 @@
-import {Individual} from "../../gene/Individual";
+import {TestCaseChromosome} from "../../../chromosome/testcase/TestCaseChromosome";
 
 /**
  * Compute the crowding distance for all individual int the front
@@ -6,7 +6,7 @@ import {Individual} from "../../gene/Individual";
  *
  * @author Annibale Panichella
  */
-export function crowdingDistance(front: Individual[]) {
+export function crowdingDistance(front: TestCaseChromosome[]) {
     let size = front.length
 
     if (size == 0)

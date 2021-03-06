@@ -1,9 +1,9 @@
-import {Sampler} from "../..";
+import {Sampler} from "../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export abstract class Gene {
+export abstract class Statement {
     public get varName(): string {
         return this._varName;
     }
@@ -41,13 +41,13 @@ export abstract class Gene {
      * @param depth     the depth of the gene in the gene tree
      * @return          the mutated copy of the gene
      */
-    abstract mutate(sampler: Sampler, depth: number): Gene
+    abstract mutate(sampler: Sampler, depth: number): Statement
 
     /**
      * Creates an exact copy of the current gene
      * @return  the copy of the gene
      */
-    abstract copy (): Gene
+    abstract copy (): Statement
 
     /**
      * Checks whether the gene has children
@@ -59,6 +59,6 @@ export abstract class Gene {
      * Gets all children of the gene
      * @return  The set of children of this gene
      */
-    abstract getChildren (): Gene[]
+    abstract getChildren (): Statement[]
 }
 

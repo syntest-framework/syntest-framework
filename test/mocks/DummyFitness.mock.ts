@@ -1,4 +1,4 @@
-import {Fitness, Individual, Objective, Runner, Target} from "../../lib";
+import {Fitness, TestCaseChromosome, Objective, Runner, Target} from "../../lib";
 import {CFG} from "../../lib/graph/CFG";
 import {Evaluation} from "../../lib/search/objective/Evaluation";
 
@@ -13,7 +13,7 @@ export class DummyFitness extends Fitness {
         this.objectives = objectives
     }
 
-    async evaluateMany (population: Individual[], objectives: Objective[]) {
+    async evaluateMany (population: TestCaseChromosome[], objectives: Objective[]) {
         for (let individual of population) {
             let evaluation = new Evaluation()
             for (let i = 0; i < objectives.length; i++) {

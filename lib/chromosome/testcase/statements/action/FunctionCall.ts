@@ -1,14 +1,13 @@
-import {Gene} from "../Gene";
-import {ActionGene} from "../ActionGene";
-import {Constructor} from "./Constructor"
-import {prng} from '../../..'
-import {Sampler} from "../../..";
-import {getProperty} from "../../..";
+import {Statement} from "../Statement";
+import {ActionStatement} from "../ActionStatement";
+import {prng} from '../../../../index'
+import {Sampler} from "../../../../index";
+import {getProperty} from "../../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class ObjectFunctionCall extends ActionGene {
+export class FunctionCall extends ActionStatement {
     get functionName(): string {
         return this._functionName;
     }
@@ -27,8 +26,8 @@ export class ObjectFunctionCall extends ActionGene {
      * @param args the arguments of the function
      * @param uniqueId optional argument
      */
-    constructor(instance: Constructor, functionName: string, type: string, uniqueId: string, args: Gene[]) {
-        super(functionName, type, uniqueId, [instance, ...args])
+    constructor(functionName: string, type: string, uniqueId: string, args: Statement[]) {
+        super('functionCall', type, uniqueId, [...args])
         this._functionName = functionName
     }
 
@@ -39,26 +38,25 @@ export class ObjectFunctionCall extends ActionGene {
         } else if (!this.args.length) {
             return this.copy()
         } else {            // randomly pick one of the args
-            let args = [...this.args.map((a: Gene) => a.copy())]
+            let args = [...this.args.map((a: Statement) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
-            let instance = args.shift() as Constructor
-            return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, args)
+
+            return new FunctionCall(this._functionName, this.type, this.id, args)
         }
     }
 
     copy() {
-        let deepCopyArgs = [...this.args.map((a: Gene) => a.copy())]
-        let instance = deepCopyArgs.shift() as Constructor
+        let deepCopyArgs = [...this.args.map((a: Statement) => a.copy())]
 
-        return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, deepCopyArgs)
+        return new FunctionCall(this._functionName, this.type, this.id, deepCopyArgs)
     }
 
     hasChildren (): boolean {
         return true
     }
 
-    getChildren (): Gene[] {
+    getChildren (): Statement[] {
         return [...this.args]
     }
 }

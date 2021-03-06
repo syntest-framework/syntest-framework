@@ -1,33 +1,32 @@
-
 // Runner
 export * from './runner/Runner'
 /// <reference path="../dist/index.d.ts" />
+
+// Statement
+// Action
+export * from './chromosome/testcase/statements/action/Constructor'
+export * from './chromosome/testcase/statements/action/FunctionCall'
+export * from './chromosome/testcase/statements/action/ObjectFunctionCall'
+
+// Primitive
+export * from './chromosome/testcase/statements/primitive/Address'
+export * from './chromosome/testcase/statements/primitive/Bool'
+export * from './chromosome/testcase/statements/primitive/Fixed'
+// export * from './chromosome/testcase/statements/primitive/Hash'
+export * from './chromosome/testcase/statements/primitive/Int'
+export * from './chromosome/testcase/statements/primitive/StringGene'
+export * from './chromosome/testcase/statements/primitive/Ufixed'
+export * from './chromosome/testcase/statements/primitive/Uint'
+
+export * from './chromosome/testcase/statements/ActionStatement'
+export * from './chromosome/testcase/statements/Statement'
+export * from './chromosome/testcase/TestCaseChromosome'
+export * from './chromosome/testcase/statements/PrimitiveStatement'
 
 // Search
 // Factories
 export * from './search/factories/AlgorithmFactory'
 export * from './search/factories/StoppingCriterionFactory'
-
-// Gene
-// Action
-export * from './search/gene/action/Constructor'
-export * from './search/gene/action/FunctionCall'
-export * from './search/gene/action/ObjectFunctionCall'
-
-// Primitive
-export * from './search/gene/primitive/Address'
-export * from './search/gene/primitive/Bool'
-export * from './search/gene/primitive/Fixed'
-// export * from './search/gene/primitive/Hash'
-export * from './search/gene/primitive/Int'
-export * from './search/gene/primitive/StringGene'
-export * from './search/gene/primitive/Ufixed'
-export * from './search/gene/primitive/Uint'
-
-export * from './search/gene/ActionGene'
-export * from './search/gene/Gene'
-export * from './search/gene/Individual'
-export * from './search/gene/PrimitiveGene'
 
 // Objective
 export * from './search/objective/Fitness'
@@ -60,7 +59,6 @@ export * from './graph/Node'
 export * from './graph/Edge'
 export * from './graph/cfgUtils'
 export * from './graph/drawGraph'
-
 
 // Util
 export * from './config'

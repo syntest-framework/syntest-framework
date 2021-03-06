@@ -1,10 +1,10 @@
-import {Gene} from "./Gene";
-import {Sampler} from "../..";
+import {Statement} from "./Statement";
+import {Sampler} from "../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export abstract class PrimitiveGene<T> extends Gene {
+export abstract class PrimitiveStatement<T> extends Statement {
     get value(): T {
         return this._value;
     }
@@ -15,19 +15,19 @@ export abstract class PrimitiveGene<T> extends Gene {
         this._value = value
     }
 
-    abstract mutate(sampler: Sampler, depth: number): PrimitiveGene<T>
+    abstract mutate(sampler: Sampler, depth: number): PrimitiveStatement<T>
 
-    abstract copy (): PrimitiveGene<T>
+    abstract copy (): PrimitiveStatement<T>
 
     hasChildren (): boolean {
         return false
     }
 
-    getChildren (): Gene[] {
+    getChildren (): Statement[] {
         return []
     }
 
-    static getRandom (): PrimitiveGene<any> {
+    static getRandom (): PrimitiveStatement<any> {
         throw new Error('Unimplemented function!')
     }
 }

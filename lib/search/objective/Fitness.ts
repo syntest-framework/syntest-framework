@@ -1,4 +1,4 @@
-import {Individual, Target} from "../..";
+import {TestCaseChromosome, Target} from "../..";
 import {getLogger} from "../..";
 import {Datapoint, Runner} from "../..";
 import {Objective} from "./Objective";
@@ -66,7 +66,7 @@ export class Fitness {
      * @param individual the individual to evaluate
      * @param objectives the objectives to evaluate
      */
-    async evaluateOne (individual: Individual, objectives: Objective[]) {
+    async evaluateOne (individual: TestCaseChromosome, objectives: Objective[]) {
         getLogger().debug(`Evaluating individual ${individual.id}`)
 
         let dataPoints = await this.runner.runTest(individual)
@@ -81,7 +81,7 @@ export class Fitness {
      * @param population the population to evaluate
      * @param objectives the objectives to evaluate the population on
      */
-    async evaluateMany (population: Individual[], objectives: Objective[]) {
+    async evaluateMany (population: TestCaseChromosome[], objectives: Objective[]) {
         // TODO This should be done in parallel somehow
         for (let individual of population) {
             await this.evaluateOne(individual, objectives)

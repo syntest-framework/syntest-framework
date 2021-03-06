@@ -4,7 +4,7 @@ import * as chai from 'chai'
 const expect = chai.expect
 
 import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../lib";
-import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
+import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
 import {tournamentSelection} from "../../../lib/search/operators/selection/TournamentSelection";
 
 const mockMath = Object.create(global.Math);

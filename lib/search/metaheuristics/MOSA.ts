@@ -1,5 +1,5 @@
 import {NSGA2} from './NSGA2'
-import { Individual } from '../..'
+import { TestCaseChromosome } from '../..'
 import {Fitness} from "../..";
 import {Sampler} from "../..";
 import {getLogger, Objective, Target} from "../..";
@@ -25,7 +25,7 @@ export class MOSA extends NSGA2 {
         })
     }
 
-    async generation (population: Individual[]) {
+    async generation (population: TestCaseChromosome[]) {
         getLogger().debug("MOSA generation")
         if (!this.uncoveredObjectives.length) {
             getLogger().debug("No more objectives left all objectives are covered")
@@ -50,7 +50,7 @@ export class MOSA extends NSGA2 {
         return this.environmentalSelection(population, this.popsize)
     }
 
-    public environmentalSelection(pool: Individual[], size: number): Individual[]{
+    public environmentalSelection(pool: TestCaseChromosome[], size: number): TestCaseChromosome[]{
         // non-dominated sorting
         getLogger().debug("Number of objectives = "+ this.uncoveredObjectives.length)
         let F = this.preferenceSortingAlgorithm(pool, this.uncoveredObjectives)
@@ -63,7 +63,7 @@ export class MOSA extends NSGA2 {
         getLogger().debug("First front size = "+ F[0].length)
 
         // Obtain the next front
-        let currentFront: Individual[] = F[index];
+        let currentFront: TestCaseChromosome[] = F[index];
 
         while ((remain > 0) && (remain >= currentFront.length)) {
             // Assign crowding distance to individuals
@@ -85,7 +85,7 @@ export class MOSA extends NSGA2 {
         if (remain > 0 && currentFront.length>0) { // front contains individuals to insert
             crowdingDistance(currentFront)
 
-            currentFront = currentFront.sort(function(a: Individual, b: Individual) { // sort in descending order of crowding distance
+            currentFront = currentFront.sort(function(a: TestCaseChromosome, b: TestCaseChromosome) { // sort in descending order of crowding distance
                 return b.getCrowdingDistance() - a.getCrowdingDistance()
             })
 
@@ -104,7 +104,7 @@ export class MOSA extends NSGA2 {
         return newPopulation
     }
 
-    async calculateFitness (offspring: Individual[]) {
+    async calculateFitness (offspring: TestCaseChromosome[]) {
         let uObj : Objective[] = []
         for (let obj of this.uncoveredObjectives){
             uObj.push(obj)
@@ -131,8 +131,8 @@ export class MOSA extends NSGA2 {
     /*
      See: Preference sorting as discussed in the TSE paper for DynaMOSA
    */
-    public preferenceSortingAlgorithm(population: Individual[], objectives: Objective[]): Individual[][]{
-        let fronts: Individual[][] = [[]]
+    public preferenceSortingAlgorithm(population: TestCaseChromosome[], objectives: Objective[]): TestCaseChromosome[][]{
+        let fronts: TestCaseChromosome[][] = [[]]
 
         if (objectives === null){
             getLogger().debug("It looks like a bug in MOSA: the set of objectives cannot be null")
@@ -157,7 +157,7 @@ export class MOSA extends NSGA2 {
         getLogger().debug("Pop + Off size :" + population.length)
 
         // compute the remaining non-dominated Fronts
-        let remainingSolutions: Individual[] = population
+        let remainingSolutions: TestCaseChromosome[] = population
         for (let selected of frontZero){
             let index = remainingSolutions.indexOf(selected)
             remainingSolutions.splice(index, 1)
@@ -167,7 +167,7 @@ export class MOSA extends NSGA2 {
         let frontIndex = 1
 
         while (selectedSolutions < this.popsize && remainingSolutions.length != 0){
-            let front: Individual[] = this.getNonDominatedFront(objectives, remainingSolutions)
+            let front: TestCaseChromosome[] = this.getNonDominatedFront(objectives, remainingSolutions)
             fronts[frontIndex] = front
             for (let solution of front){
                 solution.setRank(frontIndex)
@@ -194,15 +194,15 @@ export class MOSA extends NSGA2 {
     /**
      * It retrieves the front of non-dominated solutions from a list
      */
-    public getNonDominatedFront(notCovered: Objective[], remainingSolutions: Individual[]): Individual[]{
+    public getNonDominatedFront(notCovered: Objective[], remainingSolutions: TestCaseChromosome[]): TestCaseChromosome[]{
         const targets = new Set<Objective>(notCovered)
 
-        let front: Individual[] = []
+        let front: TestCaseChromosome[] = []
         let isDominated: Boolean
 
         for (let current of remainingSolutions) {
             isDominated = false
-            let dominatedSolutions: Individual[] = []
+            let dominatedSolutions: TestCaseChromosome[] = []
             for (let best of front) {
                 let flag = DominanceComparator.compare(current, best, targets)
                 if (flag == -1) {
@@ -231,8 +231,8 @@ export class MOSA extends NSGA2 {
      * @param objectives list of objective to consider
      * @protected
      */
-    public preferenceCriterion(population: Individual[], objectives: Objective[]): Individual[]{
-        let frontZero: Individual[] = []
+    public preferenceCriterion(population: TestCaseChromosome[], objectives: Objective[]): TestCaseChromosome[]{
+        let frontZero: TestCaseChromosome[] = []
         for (let objective of objectives){
             let chosen = population[0]
 

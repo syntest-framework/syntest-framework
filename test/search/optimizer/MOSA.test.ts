@@ -12,7 +12,7 @@ import {
     setupLogger, setupOptions, Target
 } from "../../../lib";
 import {MOSA} from "../../../lib/search/metaheuristics/MOSA";
-import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
+import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
 import {DummyTarget} from "../../mocks/DummyTarget.mock";
 

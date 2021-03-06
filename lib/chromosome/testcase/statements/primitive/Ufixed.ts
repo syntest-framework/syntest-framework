@@ -1,23 +1,22 @@
-import {PrimitiveGene} from '../PrimitiveGene'
+import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {prng} from '../../..'
-import {getProperty} from "../../..";
-import {Sampler} from "../../..";
+import {prng} from '../../../../index'
+import {Sampler} from "../../../../index";
+import {getProperty} from "../../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Fixed extends PrimitiveGene<number> {
+export class Ufixed extends PrimitiveStatement<number> {
     private bits: number;
     private decimals: number;
-
     constructor(uniqueId: string, value: number, bits: number, decimals: number) {
-        super('unsignedFixed', `fixed${bits}x${decimals}`, uniqueId, value)
+        super('unsignedFixed', `ufixed${bits}x${decimals}`, uniqueId, value)
         this.bits = bits
         this.decimals = decimals
     }
 
-    mutate(sampler: Sampler, depth: number): Fixed {
+    mutate(sampler: Sampler, depth: number) {
         if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
             return sampler.sampleGene(depth, this.type, 'primitive')
         }
@@ -28,10 +27,11 @@ export class Fixed extends PrimitiveGene<number> {
 
         let bits = Math.min(this.bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
-        let min = -(Math.pow(2, bits) - 1)
+        let min = 0
         let max = (Math.pow(2, bits) - 1)
 
-        return new Fixed(this.id, parseFloat(prng.nextDouble(min, max).toFixed(this.decimals)), this.bits, this.decimals)
+        return new Ufixed(this.id, parseFloat(prng.nextDouble(min, max).toFixed(this.decimals)), this.bits, this.decimals)
+
     }
 
     deltaMutation() {
@@ -42,22 +42,22 @@ export class Fixed extends PrimitiveGene<number> {
         let maxChange = (Math.pow(2, bits) - 1)
         let change = prng.nextDouble(minChange, maxChange)
 
-        let min = -(Math.pow(2, this.bits) - 1)
+        let min = 0
         let max = (Math.pow(2, this.bits) - 1)
 
-        return new Fixed(this.id, parseFloat(Math.min(max, Math.max(min, this.value + change)).toFixed(this.decimals)), this.bits, this.decimals)
+        return new Ufixed(this.id, parseFloat(Math.min(max, Math.max(min, this.value + change)).toFixed(this.decimals)), this.bits, this.decimals)
     }
 
     copy () {
-        return new Fixed(this.id, this.value, this.bits, this.decimals)
+        return new Ufixed(this.id, this.value, this.bits, this.decimals)
     }
 
-    static getRandom (bits=getProperty('fixed_bits'), decimals=getProperty('fixed_decimals')) {
+    static getRandom (bits=getProperty("ufixed_bits"), decimals=getProperty('ufixed_decimals')) {
         bits = Math.min(bits, 16) // TODO fix this (something is wrong with the ints and uints as javascript does not support such large numbers (putting stuff in quotes would help maybe)
 
         let min = -(Math.pow(2, bits) - 1)
         let max = (Math.pow(2, bits) - 1)
 
-        return new Fixed(prng.uniqueId(), parseFloat(prng.nextDouble(min, max).toFixed(decimals)), bits, decimals)
+        return new Ufixed(prng.uniqueId(), parseFloat(prng.nextDouble(min, max).toFixed(decimals)), bits, decimals)
     }
 }

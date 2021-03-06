@@ -1,5 +1,5 @@
 import {GeneticAlgorithm} from './GeneticAlgorithm'
-import {Individual} from "../..";
+import {TestCaseChromosome} from "../..";
 
 import {fastNonDomSorting} from '../..'
 
@@ -9,7 +9,7 @@ import {fastNonDomSorting} from '../..'
  * @author Dimitri Stallenberg
  */
 export class SimpleGA extends GeneticAlgorithm {
-    async generation (population: Individual[]) {
+    async generation (population: TestCaseChromosome[]) {
         // create offspring population
         let offspring = this.generateOffspring(population)
 
@@ -40,7 +40,7 @@ export class SimpleGA extends GeneticAlgorithm {
      * @param population the population to generate offspring from
      * @returns {[]} the offspring population
      */
-    generateOffspring(population: Individual[]) {
+    generateOffspring(population: TestCaseChromosome[]) {
         let offspring = []
         // TODO crossover
 

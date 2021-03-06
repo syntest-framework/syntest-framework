@@ -14,28 +14,28 @@ describe('StringGene', () => {
         await setupLogger()
     })
 
-    it('Add mutation increases gene length by one', () => {
+    it('Add mutation increases chromosome length by one', () => {
         let gene = StringGene.getRandom()
         let mutated = gene.addMutation()
 
         expect(gene.value.length + 1 === mutated.value.length)
     })
 
-    it('Remove mutation decreases gene length by one', () => {
+    it('Remove mutation decreases chromosome length by one', () => {
         let gene = StringGene.getRandom()
         let mutated = gene.removeMutation()
 
         expect(gene.value.length - 1 === mutated.value.length)
     })
 
-    it('Replace mutation doesnt affect gene length', () => {
+    it('Replace mutation doesnt affect chromosome length', () => {
         let gene = StringGene.getRandom()
         let mutated = gene.replaceMutation()
 
         expect(gene.value.length === mutated.value.length)
     })
 
-    it('Delta mutation doesnt affect gene length', () => {
+    it('Delta mutation doesnt affect chromosome length', () => {
         let gene = StringGene.getRandom()
         let mutated = gene.deltaMutation()
 

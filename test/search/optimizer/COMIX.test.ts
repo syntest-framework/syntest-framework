@@ -15,7 +15,7 @@ import {
 import {COMIX} from "../../../lib";
 import {DummyTarget} from "../../mocks/DummyTarget.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
-import {DummyIndividual} from "../../mocks/DummyIndividual.mock";
+import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
 
 /**
  * @author Dimitri Stallenberg

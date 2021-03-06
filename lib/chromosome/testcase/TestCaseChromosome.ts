@@ -1,24 +1,24 @@
-import {prng} from '../..'
-import {ActionGene} from "./ActionGene";
-import {Sampler} from "../..";
-import {getLogger} from "../..";
-import {Stringifier} from "../..";
-import {Evaluation} from "../objective/Evaluation";
+import {prng} from '../../index'
+import {ActionStatement} from "./statements/ActionStatement";
+import {Sampler} from "../../index";
+import {getLogger} from "../../index";
+import {Stringifier} from "../../index";
+import {Evaluation} from "../../search/objective/Evaluation";
 
 /**
- * Individual class
+ * TestCaseChromosome class
  *
  * @author Dimitri Stallenberg
  */
-export class Individual {
+export class TestCaseChromosome {
     get id(): string {
         return this._id;
     }
-    get root(): ActionGene {
+    get root(): ActionStatement {
         return this._root;
     }
 
-    private _root: ActionGene;
+    private _root: ActionStatement;
 
     private evaluation: Evaluation;
     private crowdingDistance: number;
@@ -30,7 +30,7 @@ export class Individual {
      * @param root the root of the tree chromosome of the individual
      * @param evaluation
      */
-    constructor(root: ActionGene) {
+    constructor(root: ActionStatement) {
         this._root = root
 
         this.evaluation = new Evaluation()
@@ -42,7 +42,7 @@ export class Individual {
 
     mutate (sampler: Sampler) {
         getLogger().debug(`Mutating individual: ${this._id}`)
-        return new Individual(this._root.mutate(sampler, 0))
+        return new TestCaseChromosome(this._root.mutate(sampler, 0))
     }
 
     hashCode (stringifier: Stringifier): number {

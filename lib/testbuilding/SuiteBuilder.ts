@@ -1,4 +1,4 @@
-import {Individual} from "../search/gene/Individual";
+import {TestCaseChromosome} from "../chromosome/testcase/TestCaseChromosome";
 import {Stringifier} from "./Stringifier";
 import {Objective, Target} from "..";
 
@@ -34,13 +34,13 @@ export abstract class SuiteBuilder {
      * @param additionalAssertions  a dictionary of additional assertions to put in the individual
      */
     // @ts-ignore
-    abstract async writeTest (filePath: string, individual: Individual, targetName: string, addLogs = false, additionalAssertions?: Map<Individual, { [p: string]: string }>): Promise<void>
+    abstract async writeTest (filePath: string, individual: TestCaseChromosome, targetName: string, addLogs = false, additionalAssertions?: Map<TestCaseChromosome, { [p: string]: string }>): Promise<void>
 
     /**
      * Writes tests for all individuals in the given population
      * @param population    the population of individuals to write tests for
      */
-    abstract createSuite (population: Map<Objective, Individual>): Promise<void>
+    abstract createSuite (population: Map<Objective, TestCaseChromosome>): Promise<void>
 
     /**
      * Deletes a certain file

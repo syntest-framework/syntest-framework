@@ -1,12 +1,12 @@
-import {PrimitiveGene} from '../PrimitiveGene'
+import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {getProperty, prng} from '../../..'
-import {Sampler} from "../../..";
+import {getProperty, prng} from '../../../../index'
+import {Sampler} from "../../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Address extends PrimitiveGene<string> {
+export class Address extends PrimitiveStatement<string> {
     constructor(uniqueId: string, value: string) {
         super('address', 'address', uniqueId, value)
     }

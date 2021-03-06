@@ -1,12 +1,12 @@
 import {GeneticAlgorithm} from "./GeneticAlgorithm";
-import {Individual} from "../..";
+import {TestCaseChromosome} from "../..";
 import {MultiGA} from "./MultiGA";
 
 export class COMIX<T extends GeneticAlgorithm> extends MultiGA<T> {
 
     async multiGeneration(): Promise<void> {
         // pick champions
-        let champions: Individual[] = []
+        let champions: TestCaseChromosome[] = []
         for (let algorithm of this.subAlgorithms) {
             champions.push(algorithm.population[0])
         }

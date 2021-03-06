@@ -1,12 +1,12 @@
-import {PrimitiveGene} from '../PrimitiveGene'
+import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {getProperty, prng} from '../../..'
-import {Sampler} from "../../..";
+import {getProperty, prng} from '../../../../index'
+import {Sampler} from "../../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Bool extends PrimitiveGene<boolean> {
+export class Bool extends PrimitiveStatement<boolean> {
     constructor(uniqueId: string, value: boolean) {
         super('boolean', 'bool', uniqueId, value)
     }

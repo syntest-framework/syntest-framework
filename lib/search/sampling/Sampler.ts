@@ -1,5 +1,5 @@
 import {Target} from "../..";
-import {Individual} from "../..";
+import {TestCaseChromosome} from "../..";
 
 /**
  * Sampler class
@@ -29,7 +29,7 @@ export abstract class Sampler {
      * Should sample an individual
      * @return  a sampled individual
      */
-    abstract sampleIndividual (): Individual
+    abstract sampleIndividual (): TestCaseChromosome
 
     /**
      * Should sample any gene based on the type

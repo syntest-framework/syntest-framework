@@ -1,8 +1,8 @@
 import {Evaluation} from "../../lib/search/objective/Evaluation";
-import {Individual} from "../../lib/search/gene/Individual";
+import {TestCaseChromosome} from "../../lib/chromosome/testcase/TestCaseChromosome";
 import {Constructor, Objective} from "../../lib";
 
-export class DummyIndividual extends Individual {
+export class DummyIndividual extends TestCaseChromosome {
 
     private static counter: number = 0;
 
