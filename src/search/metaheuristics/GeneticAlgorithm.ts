@@ -176,7 +176,7 @@ export abstract class GeneticAlgorithm {
             this._currentGeneration += 1
             this._timePast = Date.now() - this._startTime
             this._currentCoverage = this.getCurrentCoverage()
-            getLogger().info(`Generation: ${this._currentGeneration} done after ${this._timePast / 1000} seconds, current coverage: ${this._currentCoverage}`)
+            getLogger().info(`Generation: ${this._currentGeneration} done after ${this._timePast / 1000} seconds, current coverage: ${this._currentCoverage.toFixed(2)} \%`)
         }
 
         endOverTimeWriterIfExists()
