@@ -1,5 +1,5 @@
 import {SuiteBuilder} from "../testbuilding/SuiteBuilder";
-import {TestCaseChromosome} from "../chromosome/testcase/TestCaseChromosome";
+import {TestCaseChromosome} from "../testcase/TestCaseChromosome";
 
 export interface Datapoint {
     type: string

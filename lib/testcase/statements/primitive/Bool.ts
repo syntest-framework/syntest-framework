@@ -1,7 +1,7 @@
 import {PrimitiveStatement} from '../PrimitiveStatement'
 
-import {getProperty, prng} from '../../../../index'
-import {Sampler} from "../../../../index";
+import {getProperty, prng} from '../../../index'
+import {Sampler} from "../../../index";
 
 /**
  * @author Dimitri Stallenberg

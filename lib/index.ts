@@ -2,26 +2,26 @@
 export * from './runner/Runner'
 /// <reference path="../dist/index.d.ts" />
 
-// Statement
+// Statements
 // Action
-export * from './chromosome/testcase/statements/action/Constructor'
-export * from './chromosome/testcase/statements/action/FunctionCall'
-export * from './chromosome/testcase/statements/action/ObjectFunctionCall'
+export * from './testcase/statements/action/Constructor'
+export * from './testcase/statements/action/FunctionCall'
+export * from './testcase/statements/action/ObjectFunctionCall'
 
 // Primitive
-export * from './chromosome/testcase/statements/primitive/Address'
-export * from './chromosome/testcase/statements/primitive/Bool'
-export * from './chromosome/testcase/statements/primitive/Fixed'
+export * from './testcase/statements/primitive/Address'
+export * from './testcase/statements/primitive/Bool'
+export * from './testcase/statements/primitive/Fixed'
 // export * from './chromosome/testcase/statements/primitive/Hash'
-export * from './chromosome/testcase/statements/primitive/Int'
-export * from './chromosome/testcase/statements/primitive/StringGene'
-export * from './chromosome/testcase/statements/primitive/Ufixed'
-export * from './chromosome/testcase/statements/primitive/Uint'
+export * from './testcase/statements/primitive/Int'
+export * from './testcase/statements/primitive/StringGene'
+export * from './testcase/statements/primitive/Ufixed'
+export * from './testcase/statements/primitive/Uint'
 
-export * from './chromosome/testcase/statements/ActionStatement'
-export * from './chromosome/testcase/statements/Statement'
-export * from './chromosome/testcase/TestCaseChromosome'
-export * from './chromosome/testcase/statements/PrimitiveStatement'
+export * from './testcase/statements/ActionStatement'
+export * from './testcase/statements/Statement'
+export * from './testcase/TestCaseChromosome'
+export * from './testcase/statements/PrimitiveStatement'
 
 // Search
 // Factories

@@ -1,6 +1,6 @@
 import * as chai from 'chai'
 
-import {PrimitiveStatement, Sampler} from "../../../lib";
+import {PrimitiveStatement, Sampler} from "../../lib";
 
 const expect = chai.expect
 

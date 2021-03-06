@@ -1,5 +1,5 @@
 import {Statement} from "./Statement";
-import {Sampler} from "../../../search/sampling/Sampler";
+import {Sampler} from "../../search/sampling/Sampler";
 
 /**
  * @author Dimitri Stallenberg

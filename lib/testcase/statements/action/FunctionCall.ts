@@ -1,14 +1,13 @@
 import {Statement} from "../Statement";
 import {ActionStatement} from "../ActionStatement";
-import {Constructor} from "./Constructor"
-import {prng} from '../../../../index'
-import {Sampler} from "../../../../index";
-import {getProperty} from "../../../../index";
+import {prng} from '../../../index'
+import {Sampler} from "../../../index";
+import {getProperty} from "../../../index";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class ObjectFunctionCall extends ActionStatement {
+export class FunctionCall extends ActionStatement {
     get functionName(): string {
         return this._functionName;
     }
@@ -27,8 +26,8 @@ export class ObjectFunctionCall extends ActionStatement {
      * @param args the arguments of the function
      * @param uniqueId optional argument
      */
-    constructor(instance: Constructor, functionName: string, type: string, uniqueId: string, args: Statement[]) {
-        super(functionName, type, uniqueId, [instance, ...args])
+    constructor(functionName: string, type: string, uniqueId: string, args: Statement[]) {
+        super('functionCall', type, uniqueId, [...args])
         this._functionName = functionName
     }
 
@@ -42,16 +41,15 @@ export class ObjectFunctionCall extends ActionStatement {
             let args = [...this.args.map((a: Statement) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
-            let instance = args.shift() as Constructor
-            return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, args)
+
+            return new FunctionCall(this._functionName, this.type, this.id, args)
         }
     }
 
     copy() {
         let deepCopyArgs = [...this.args.map((a: Statement) => a.copy())]
-        let instance = deepCopyArgs.shift() as Constructor
 
-        return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, deepCopyArgs)
+        return new FunctionCall(this._functionName, this.type, this.id, deepCopyArgs)
     }
 
     hasChildren (): boolean {

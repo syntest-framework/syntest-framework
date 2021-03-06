@@ -1,4 +1,4 @@
-import {Sampler} from "../../../index";
+import {Sampler} from "../../index";
 
 /**
  * @author Dimitri Stallenberg

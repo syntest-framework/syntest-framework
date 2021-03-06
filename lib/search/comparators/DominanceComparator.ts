@@ -1,4 +1,4 @@
-import { TestCaseChromosome } from '../../chromosome/testcase/TestCaseChromosome'
+import { TestCaseChromosome } from '../../testcase/TestCaseChromosome'
 import {Objective} from "../../index";
 const {fastNonDomSorting} = require('../operators/ranking/FastNonDomSorting')
 const {crowdingDistance} = require('../operators/ranking/CrowdingDistance')

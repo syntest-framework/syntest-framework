@@ -1,5 +1,5 @@
 import {GeneticAlgorithm} from './GeneticAlgorithm'
-import { TestCaseChromosome } from '../../chromosome/testcase/TestCaseChromosome'
+import { TestCaseChromosome } from '../../testcase/TestCaseChromosome'
 import {TreeCrossover} from "../operators/crossover/TreeCrossover";
 
 const {fastNonDomSorting} = require('../operators/ranking/FastNonDomSorting')

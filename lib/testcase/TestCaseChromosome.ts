@@ -1,9 +1,9 @@
-import {prng} from '../../index'
+import {prng} from '../index'
 import {ActionStatement} from "./statements/ActionStatement";
-import {Sampler} from "../../index";
-import {getLogger} from "../../index";
-import {Stringifier} from "../../index";
-import {Evaluation} from "../../search/objective/Evaluation";
+import {Sampler} from "../index";
+import {getLogger} from "../index";
+import {Stringifier} from "../index";
+import {Evaluation} from "../search/objective/Evaluation";
 
 /**
  * TestCaseChromosome class

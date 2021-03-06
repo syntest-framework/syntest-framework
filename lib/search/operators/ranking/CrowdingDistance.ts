@@ -1,4 +1,4 @@
-import {TestCaseChromosome} from "../../../chromosome/testcase/TestCaseChromosome";
+import {TestCaseChromosome} from "../../../testcase/TestCaseChromosome";
 
 /**
  * Compute the crowding distance for all individual int the front

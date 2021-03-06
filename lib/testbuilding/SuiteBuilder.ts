@@ -1,4 +1,4 @@
-import {TestCaseChromosome} from "../chromosome/testcase/TestCaseChromosome";
+import {TestCaseChromosome} from "../testcase/TestCaseChromosome";
 import {Stringifier} from "./Stringifier";
 import {Objective, Target} from "..";
 
