@@ -1,6 +1,6 @@
-import {Fitness, TestCaseChromosome, Objective, Runner, Target} from "../../lib";
-import {CFG} from "../../lib/graph/CFG";
-import {Evaluation} from "../../lib/search/objective/Evaluation";
+import {Fitness, TestCaseChromosome, Objective, Runner, Target} from "../../src";
+import {CFG} from "../../src/graph/CFG";
+import {Evaluation} from "../../src/search/objective/Evaluation";
 
 export class DummyFitness extends Fitness {
 

@@ -3,8 +3,8 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {DominanceComparator} from "../../../lib/search/comparators/DominanceComparator";
-import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../lib";
+import {DominanceComparator} from "../../../src/search/comparators/DominanceComparator";
+import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../src";
 import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
 
 /**

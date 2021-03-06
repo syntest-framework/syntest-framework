@@ -1,4 +1,4 @@
-import {ActionDescription, Fitness, Objective, Target} from "../../lib";
+import {ActionDescription, Fitness, Objective, Target} from "../../src";
 import {DummyCFG} from "./DummyCFG.mock";
 
 export class DummyTarget extends Target {

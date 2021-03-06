@@ -1,6 +1,6 @@
-import {Evaluation} from "../../lib/search/objective/Evaluation";
-import {TestCaseChromosome} from "../../lib/testcase/TestCaseChromosome";
-import {Constructor, Objective} from "../../lib";
+import {Evaluation} from "../../src/search/objective/Evaluation";
+import {TestCaseChromosome} from "../../src/testcase/TestCaseChromosome";
+import {Constructor, Objective} from "../../src";
 
 export class DummyIndividual extends TestCaseChromosome {
 

@@ -3,7 +3,7 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {guessCWD, loadConfig, processConfig, Sampler, setupLogger, setupOptions, StringGene} from "../../../lib";
+import {guessCWD, loadConfig, processConfig, Sampler, setupLogger, setupOptions, StringGene} from "../../../src";
 
 describe('StringGene', () => {
     before(async () => {

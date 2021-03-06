@@ -10,8 +10,8 @@ import {
     Runner,
     Sampler,
     setupLogger, setupOptions, Target
-} from "../../../lib";
-import {MOSA} from "../../../lib/search/metaheuristics/MOSA";
+} from "../../../src";
+import {MOSA} from "../../../src/search/metaheuristics/MOSA";
 import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
 import {DummyTarget} from "../../mocks/DummyTarget.mock";

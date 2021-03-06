@@ -18,7 +18,9 @@
       "es2015.collection"
     ]
   },
-  "include": ["lib/**/*"],
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules/**/*"
   ]

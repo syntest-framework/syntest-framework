@@ -3,9 +3,9 @@ import * as chai from 'chai'
 
 const expect = chai.expect
 
-import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../lib";
+import {guessCWD, loadConfig, Objective, processConfig, setupLogger, setupOptions} from "../../../src";
 import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
-import {tournamentSelection} from "../../../lib/search/operators/selection/TournamentSelection";
+import {tournamentSelection} from "../../../src/search/operators/selection/TournamentSelection";
 
 const mockMath = Object.create(global.Math);
 mockMath.random = () => 0.5;

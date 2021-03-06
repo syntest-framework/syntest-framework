@@ -10,9 +10,9 @@ import {
     Runner,
     Sampler,
     setupLogger, setupOptions, Target
-} from "../../../lib";
+} from "../../../src";
 
-import {COMIX} from "../../../lib";
+import {COMIX} from "../../../src";
 import {DummyTarget} from "../../mocks/DummyTarget.mock";
 import {DummyFitness} from "../../mocks/DummyFitness.mock";
 import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";

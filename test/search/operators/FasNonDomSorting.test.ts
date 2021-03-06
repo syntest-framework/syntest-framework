@@ -11,9 +11,9 @@ import {
     setupLogger,
     setupOptions,
     tournamentSelection
-} from "../../../lib";
+} from "../../../src";
 import {DummyIndividual} from "../../mocks/DummyTestCaseChromosome.mock";
-import {fastNonDomSorting} from "../../../lib/search/operators/ranking/FastNonDomSorting";
+import {fastNonDomSorting} from "../../../src/search/operators/ranking/FastNonDomSorting";
 
 /**
  * @author Annibale Panichella
