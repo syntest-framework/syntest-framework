@@ -45,7 +45,7 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
     deltaMutation() {
         // small mutation
         let change = prng.nextGaussian(0, 3)
-        
+
         let newValue = this.value.plus(change)
 
         // If illegal values are not allowed we make sure the value does not exceed the specified bounds

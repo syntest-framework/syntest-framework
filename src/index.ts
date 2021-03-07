@@ -12,14 +12,9 @@ export * from './testcase/statements/action/FunctionCall'
 export * from './testcase/statements/action/ObjectFunctionCall'
 
 // Primitive
-export * from './testcase/statements/primitive/Address'
 export * from './testcase/statements/primitive/Bool'
-export * from './testcase/statements/primitive/Fixed'
-// export * from './chromosome/testcase/statements/primitive/Hash'
-export * from './testcase/statements/primitive/Int'
+export * from './testcase/statements/primitive/Numeric'
 export * from './testcase/statements/primitive/String'
-export * from './testcase/statements/primitive/Ufixed'
-export * from './testcase/statements/primitive/Uint'
 
 export * from './testcase/statements/ActionStatement'
 export * from './testcase/statements/Statement'
