@@ -31,7 +31,7 @@ export class ObjectFunctionCall extends ActionStatement {
     }
 
     mutate(sampler: Sampler, depth: number) {
-        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
+        if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
             // resample the gene
             return sampler.sampleGene(depth, this.type, 'functionCall')
         } else if (!this.args.length) {

@@ -10,8 +10,8 @@ export abstract class PrimitiveStatement<T> extends Statement {
     }
     private _value: any;
 
-    constructor(name: string, type: string, uniqueId: string, value: T) {
-        super(name, type, uniqueId)
+    constructor(type: string, uniqueId: string, value: T) {
+        super(type, uniqueId)
         this._value = value
     }
 

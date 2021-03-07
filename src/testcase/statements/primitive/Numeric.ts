@@ -18,19 +18,19 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
     private max_value: number;
     private signed: boolean;
 
-    constructor(uniqueId: string, value: BigNumber, decimals: number = 0, max_value: number = Number.MAX_SAFE_INTEGER, signed: boolean = true) {
-        super('numeric', '', uniqueId, value)
+    constructor(type: string, uniqueId: string, value: BigNumber, decimals: number = 0, max_value: number = Number.MAX_SAFE_INTEGER, signed: boolean = true) {
+        super(type, uniqueId, value)
         this.decimals = decimals
         this.max_value = max_value
         this.signed = signed
     }
 
     mutate(sampler: Sampler, depth: number): Numeric {
-        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
+        if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
             return sampler.sampleGene(depth, this.type, 'primitive')
         }
 
-        if (prng.nextBoolean(getProperty("delta_mutation_chance"))) {
+        if (prng.nextBoolean(getProperty("delta_mutation_probability"))) {
             return this.deltaMutation()
         }
 
@@ -39,7 +39,13 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
 
         let newValue = prng.nextDouble(min, max)
 
-        return new Numeric(this.id, new BigNumber(newValue), this.decimals, this.max_value, this.signed)
+        return new Numeric(
+            this.type,
+            this.id,
+            new BigNumber(newValue),
+            this.decimals,
+            this.max_value,
+            this.signed)
     }
 
     deltaMutation() {
@@ -60,18 +66,40 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
             }
         }
 
-        return new Numeric(this.id, newValue, this.decimals, this.max_value, this.signed)
+        return new Numeric(
+            this.type,
+            this.id,
+            newValue,
+            this.decimals,
+            this.max_value,
+            this.signed)
     }
 
     copy() {
-        return new Numeric(this.id, this.value, this.decimals, this.max_value, this.signed)
+        return new Numeric(
+            this.type,
+            this.id,
+            new BigNumber(this.value),
+            this.decimals,
+            this.max_value,
+            this.signed)
     }
 
-    static getRandom(decimals = 64, max_value = Number.MAX_SAFE_INTEGER, signed = true) {
+    static getRandom(type = 'number',
+                     decimals = getProperty('numeric_decimals'),
+                     max_value = getProperty('numeric_max_value'),
+                     signed = getProperty('numeric_signed')) {
+
         let max = max_value
         let min = signed ? -max : 0
 
-        return new Numeric(prng.uniqueId(), new BigNumber(prng.nextDouble(min, max)), decimals, max_value, signed)
+        return new Numeric(
+            type,
+            prng.uniqueId(),
+            new BigNumber(prng.nextDouble(min, max)),
+            decimals,
+            max_value,
+            signed)
     }
 
     /**
