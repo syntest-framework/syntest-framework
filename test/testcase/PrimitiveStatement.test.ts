@@ -23,25 +23,25 @@ describe('PrimitiveStatement', () => {
     })
 
     it('Primitive statements have no children', () => {
-        let gene = new dummyPrimitiveStatement('dummy', 'dummyGene', 'randomid', 'randomvalue')
+        let gene = new dummyPrimitiveStatement('dummyGene', 'randomid', 'randomvalue')
 
         expect(!gene.hasChildren())
     })
 
     it('Primitive statements return empty children array', () => {
-        let gene = new dummyPrimitiveStatement('dummy', 'dummyGene', 'randomid', 'randomvalue')
+        let gene = new dummyPrimitiveStatement('dummyGene', 'randomid', 'randomvalue')
 
         expect(gene.getChildren().length).to.equal(0)
     })
 
     it('Primitive statement gives correct value', () => {
         let value = 'randomvalue'
-        let gene = new dummyPrimitiveStatement('dummy', 'dummyGene', 'randomid', value)
+        let gene = new dummyPrimitiveStatement('dummyGene', 'randomid', value)
 
         expect(gene.value).to.equal(value)
     })
 
-    it('Primitive statement gives error for getrandom function', () => {
+    it('Primitive statement gives error for getRandom function', () => {
         expect(dummyPrimitiveStatement.getRandom).throws()
     })
 })
