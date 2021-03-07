@@ -1,6 +1,6 @@
-import {Fitness, Individual, Objective, Runner, Target} from "../../lib";
-import {CFG} from "../../lib/graph/CFG";
-import {Evaluation} from "../../lib/search/objective/Evaluation";
+import {Fitness, Objective, Runner, Target, TestCase} from "../../src";
+import {CFG} from "../../src/graph/CFG";
+import {Evaluation} from "../../src/search/objective/Evaluation";
 
 export class DummyFitness extends Fitness {
 
@@ -13,7 +13,7 @@ export class DummyFitness extends Fitness {
         this.objectives = objectives
     }
 
-    async evaluateMany (population: Individual[], objectives: Objective[]) {
+    async evaluateMany(population: TestCase[], objectives: Objective[]) {
         for (let individual of population) {
             let evaluation = new Evaluation()
             for (let i = 0; i < objectives.length; i++) {
@@ -24,7 +24,7 @@ export class DummyFitness extends Fitness {
         }
     }
 
-    extractPaths(cfg: CFG){
+    extractPaths(cfg: CFG) {
 
     }
 }

@@ -1,4 +1,4 @@
-import {CFG, Edge, Node} from "../../lib";
+import {CFG, Edge, Node} from "../../src";
 
 export class DummyCFG implements CFG {
     edges: Edge[];

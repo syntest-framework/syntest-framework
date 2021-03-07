@@ -1,4 +1,4 @@
-import {ActionDescription, Fitness, Objective, Target} from "../../lib";
+import {ActionDescription, Objective, Target} from "../../src";
 import {DummyCFG} from "./DummyCFG.mock";
 
 export class DummyTarget extends Target {
@@ -6,7 +6,7 @@ export class DummyTarget extends Target {
     private objectives: Objective[]
 
     constructor(objectives: Objective[]) {
-        super('', new DummyCFG(),  null);
+        super('', new DummyCFG(), null);
         this.objectives = objectives
     }
 
@@ -14,7 +14,7 @@ export class DummyTarget extends Target {
         return [];
     }
 
-    getObjectives (): Objective[] {
+    getObjectives(): Objective[] {
         return this.objectives;
     }
 
