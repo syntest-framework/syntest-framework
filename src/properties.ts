@@ -110,6 +110,7 @@ export const properties = {
         default: false
     },
 
+    // TODO move the gene properties to the solidity framework
     // gene defaults
     "string_alphabet": {
         description: 'The alphabet to be used by the string gene.',
@@ -155,6 +156,12 @@ export const properties = {
         description: 'Number of bits used by the uint gene.',
         type: 'number',
         default: 256
+    },
+
+    "explore_illegal_values": {
+        description: 'Allow primitives to become values outside of the specified bounds.',
+        type: 'boolean',
+        default: false
     },
 
     // csv output
