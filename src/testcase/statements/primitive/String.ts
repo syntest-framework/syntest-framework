@@ -62,7 +62,8 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(this.type,
+        return new String(
+            this.type,
             this.id,
             newValue,
             this.alphabet,
@@ -102,7 +103,8 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(this.type,
+        return new String(
+            this.type,
             this.id,
             newValue,
             this.alphabet,
@@ -126,7 +128,8 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(this.type,
+        return new String(
+            this.type,
             this.id,
             newValue,
             this.alphabet,
@@ -134,7 +137,8 @@ export class String extends PrimitiveStatement<string> {
     }
 
     copy() {
-        return new String(this.type,
+        return new String(
+            this.type,
             this.id,
             this.value,
             this.alphabet,
@@ -149,7 +153,8 @@ export class String extends PrimitiveStatement<string> {
             value += prng.pickOne(alphabet)
         }
 
-        return new String(type,
+        return new String(
+            type,
             prng.uniqueId(),
             value,
             alphabet,
