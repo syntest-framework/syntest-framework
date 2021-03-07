@@ -8,8 +8,8 @@
     "tsc": "tsc --declaration",
     "tsc:w": "tsc -w --declaration",
     "lint": "eslint --ext .ts src test/unit --fix",
-    "test": "mocha -r ts-node/register test/**/*.test.ts",
-    "test:c": "nyc mocha -r ts-node/register test/**/*.test.ts"
+    "test": "mocha -r ts-node/register",
+    "test:c": "nyc mocha -r ts-node/register"
   },
   "homepage": "https://github.com/syntest-framework/syntest-framework",
   "repository": {
