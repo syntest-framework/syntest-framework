@@ -11,22 +11,18 @@ export class ObjectFunctionCall extends ActionStatement {
         return this._functionName;
     }
 
-    set functionName(value: string) {
-        this._functionName = value;
-    }
-
     private _functionName: string;
 
     /**
      * Constructor
+     * @param type the return type of the function
+     * @param uniqueId id of the gene
      * @param instance the object to call the function on
      * @param functionName the name of the function
-     * @param type the return type of the function
      * @param args the arguments of the function
-     * @param uniqueId optional argument
      */
-    constructor(instance: Constructor, functionName: string, type: string, uniqueId: string, args: Statement[]) {
-        super(functionName, type, uniqueId, [instance, ...args])
+    constructor(type: string, uniqueId: string, instance: Constructor, functionName: string, args: Statement[]) {
+        super(type, uniqueId, [instance, ...args])
         this._functionName = functionName
     }
 
@@ -36,12 +32,13 @@ export class ObjectFunctionCall extends ActionStatement {
             return sampler.sampleGene(depth, this.type, 'functionCall')
         } else if (!this.args.length) {
             return this.copy()
-        } else {            // randomly pick one of the args
+        } else {
+            // randomly mutate one of the args (including the instance)
             let args = [...this.args.map((a: Statement) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
             let instance = args.shift() as Constructor
-            return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, args)
+            return new ObjectFunctionCall(this.type, this.id, instance, this.functionName, args)
         }
     }
 
@@ -49,10 +46,11 @@ export class ObjectFunctionCall extends ActionStatement {
         let deepCopyArgs = [...this.args.map((a: Statement) => a.copy())]
         let instance = deepCopyArgs.shift() as Constructor
 
-        return new ObjectFunctionCall(instance, this._functionName, this.type, this.id, deepCopyArgs)
+        return new ObjectFunctionCall(this.type, this.id, instance, this.functionName, deepCopyArgs)
     }
 
     hasChildren(): boolean {
+        // since every object function call has an instance there must be atleast one child
         return true
     }
 
