@@ -106,6 +106,6 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
      * Make sure that whenever the value is used it is the wanted precision.
      */
     get value(): BigNumber {
-        return this.value.decimalPlaces(this.decimals);
+        return super.value.decimalPlaces(this.decimals);
     }
 }
