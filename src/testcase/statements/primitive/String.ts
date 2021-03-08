@@ -17,7 +17,7 @@ export class String extends PrimitiveStatement<string> {
 
     mutate(sampler: Sampler, depth: number): String {
         if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
-            return sampler.sampleGene(depth, this.type, 'primitive')
+            return String.getRandom()
         }
 
         if (this.value.length > 0 && this.value.length < this.maxlength) {

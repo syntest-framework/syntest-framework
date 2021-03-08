@@ -27,7 +27,8 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
 
     mutate(sampler: Sampler, depth: number): Numeric {
         if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
-            return sampler.sampleGene(depth, this.type, 'primitive')
+            // let's generate a random number with the same characteristics (upper an
+            return Numeric.getRandom(this.type, this.decimals, this.max_value, this.signed)
         }
 
         if (prng.nextBoolean(getProperty("delta_mutation_probability"))) {
@@ -37,6 +38,7 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
         let max = this.max_value
         let min = this.signed ? -max : 0
 
+        // TODO: Maybe we need to generate small numbers
         let newValue = prng.nextDouble(min, max)
 
         return new Numeric(
@@ -90,7 +92,8 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
                      max_value = getProperty('numeric_max_value'),
                      signed = getProperty('numeric_signed')) {
 
-        let max = max_value
+        // by default we create small numbers (do we need very large numbers?)
+        let max = Math.min(max_value, Math.pow(2, 11)-1)
         let min = signed ? -max : 0
 
         return new Numeric(
