@@ -14,11 +14,15 @@ export * from './testcase/statements/action/ObjectFunctionCall'
 // Primitive
 export * from './testcase/statements/primitive/Bool'
 export * from './testcase/statements/primitive/Numeric'
-export * from './testcase/statements/primitive/String'
+export * from './testcase/statements/primitive/StringGene'
 
-export * from './testcase/statements/ActionStatement'
+export * from './testcase/statements/reference/ArrayGene'
+export * from './testcase/statements/reference/ObjectGene'
+
 export * from './testcase/statements/Statement'
+export * from './testcase/statements/ActionStatement'
 export * from './testcase/statements/PrimitiveStatement'
+export * from './testcase/statements/ReferenceStatement'
 
 // Search
 // Factories

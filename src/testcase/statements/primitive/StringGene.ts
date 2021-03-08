@@ -5,7 +5,7 @@ import {getProperty, prng, Sampler} from '../../../index'
 /**
  * @author Dimitri Stallenberg
  */
-export class String extends PrimitiveStatement<string> {
+export class StringGene extends PrimitiveStatement<string> {
     private readonly alphabet: string
     private readonly maxlength: number
 
@@ -15,7 +15,7 @@ export class String extends PrimitiveStatement<string> {
         this.maxlength = maxlength;
     }
 
-    mutate(sampler: Sampler, depth: number): String {
+    mutate(sampler: Sampler, depth: number): StringGene {
         if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
             return sampler.sampleGene(depth, this.type, 'primitive')
         }
@@ -47,7 +47,7 @@ export class String extends PrimitiveStatement<string> {
         }
     }
 
-    addMutation(): String {
+    addMutation(): StringGene {
         let position = prng.nextInt(0, this.value.length - 1)
         let addedChar = prng.pickOne(this.alphabet)
 
@@ -62,7 +62,7 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(
+        return new StringGene(
             this.type,
             this.id,
             newValue,
@@ -70,7 +70,7 @@ export class String extends PrimitiveStatement<string> {
             this.maxlength)
     }
 
-    removeMutation(): String {
+    removeMutation(): StringGene {
         let position = prng.nextInt(0, this.value.length - 1)
 
         let newValue = ''
@@ -82,14 +82,14 @@ export class String extends PrimitiveStatement<string> {
             newValue += this.value[i]
         }
 
-        return new String(this.type,
+        return new StringGene(this.type,
             this.id,
             newValue,
             this.alphabet,
             this.maxlength)
     }
 
-    replaceMutation(): String {
+    replaceMutation(): StringGene {
         let position = prng.nextInt(0, this.value.length - 1)
         let newChar = prng.pickOne(this.alphabet)
 
@@ -103,7 +103,7 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(
+        return new StringGene(
             this.type,
             this.id,
             newValue,
@@ -111,7 +111,7 @@ export class String extends PrimitiveStatement<string> {
             this.maxlength)
     }
 
-    deltaMutation(): String {
+    deltaMutation(): StringGene {
         let position = prng.nextInt(0, this.value.length - 1)
         let oldChar = this.value[position]
         let indexOldChar = this.alphabet.indexOf(oldChar)
@@ -128,7 +128,7 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(
+        return new StringGene(
             this.type,
             this.id,
             newValue,
@@ -137,7 +137,7 @@ export class String extends PrimitiveStatement<string> {
     }
 
     copy() {
-        return new String(
+        return new StringGene(
             this.type,
             this.id,
             this.value,
@@ -153,7 +153,7 @@ export class String extends PrimitiveStatement<string> {
             value += prng.pickOne(alphabet)
         }
 
-        return new String(
+        return new StringGene(
             type,
             prng.uniqueId(),
             value,
