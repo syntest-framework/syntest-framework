@@ -1,38 +1,37 @@
-import {Statement} from "./Statement";
-import {Sampler} from "../../search/sampling/Sampler";
+import { Statement } from "./Statement";
+import { Sampler } from "../../search/sampling/Sampler";
 
 /**
  * @author Dimitri Stallenberg
  */
 export abstract class ActionStatement extends Statement {
-    get args(): Statement[] {
-        return this._args;
-    }
+  get args(): Statement[] {
+    return this._args;
+  }
 
-    set args(value: Statement[]) {
-        this._args = value;
-    }
-    private _args: Statement[];
+  set args(value: Statement[]) {
+    this._args = value;
+  }
+  private _args: Statement[];
 
-    protected constructor(type: string, uniqueId: string, args: Statement[]) {
-        super(type, uniqueId)
-        this._args = args
-    }
+  protected constructor(type: string, uniqueId: string, args: Statement[]) {
+    super(type, uniqueId);
+    this._args = args;
+  }
 
-    abstract mutate(sampler: Sampler, depth: number): ActionStatement
+  abstract mutate(sampler: Sampler, depth: number): ActionStatement;
 
-    abstract copy (): ActionStatement
+  abstract copy(): ActionStatement;
 
-    hasChildren (): boolean {
-        return !!this._args.length
-    }
+  hasChildren(): boolean {
+    return !!this._args.length;
+  }
 
-    getChildren (): Statement[] {
-        return [...this._args]
-    }
+  getChildren(): Statement[] {
+    return [...this._args];
+  }
 
-    setChild(index: number, child: Statement) {
-        this._args[index] = child
-    }
+  setChild(index: number, child: Statement) {
+    this._args[index] = child;
+  }
 }
-

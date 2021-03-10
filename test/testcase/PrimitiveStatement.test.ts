@@ -1,47 +1,63 @@
-import * as chai from 'chai'
-import {guessCWD, loadConfig, PrimitiveStatement, processConfig, Sampler, setupLogger, setupOptions} from "../../src";
+import * as chai from "chai";
+import {
+  guessCWD,
+  loadConfig,
+  PrimitiveStatement,
+  processConfig,
+  Sampler,
+  setupLogger,
+  setupOptions,
+} from "../../src";
 
-const expect = chai.expect
+const expect = chai.expect;
 
 class dummyPrimitiveStatement extends PrimitiveStatement<string> {
-    copy(): PrimitiveStatement<string> {
-        return this
-    }
+  copy(): PrimitiveStatement<string> {
+    return this;
+  }
 
-    mutate(sampler: Sampler, depth: number): PrimitiveStatement<string> {
-        return this
-    }
+  mutate(sampler: Sampler, depth: number): PrimitiveStatement<string> {
+    return this;
+  }
 }
 
-describe('PrimitiveStatement', () => {
-    before(async () => {
-        await guessCWD(null)
-        await setupOptions("", "")
-        await loadConfig()
-        await processConfig({}, '')
-        await setupLogger()
-    })
+describe("PrimitiveStatement", () => {
+  before(async () => {
+    await guessCWD(null);
+    await setupOptions("", "");
+    await loadConfig();
+    await processConfig({}, "");
+    await setupLogger();
+  });
 
-    it('Primitive statements have no children', () => {
-        let gene = new dummyPrimitiveStatement('dummyGene', 'randomid', 'randomvalue')
+  it("Primitive statements have no children", () => {
+    let gene = new dummyPrimitiveStatement(
+      "dummyGene",
+      "randomid",
+      "randomvalue"
+    );
 
-        expect(!gene.hasChildren())
-    })
+    expect(!gene.hasChildren());
+  });
 
-    it('Primitive statements return empty children array', () => {
-        let gene = new dummyPrimitiveStatement('dummyGene', 'randomid', 'randomvalue')
+  it("Primitive statements return empty children array", () => {
+    let gene = new dummyPrimitiveStatement(
+      "dummyGene",
+      "randomid",
+      "randomvalue"
+    );
 
-        expect(gene.getChildren().length).to.equal(0)
-    })
+    expect(gene.getChildren().length).to.equal(0);
+  });
 
-    it('Primitive statement gives correct value', () => {
-        let value = 'randomvalue'
-        let gene = new dummyPrimitiveStatement('dummyGene', 'randomid', value)
+  it("Primitive statement gives correct value", () => {
+    let value = "randomvalue";
+    let gene = new dummyPrimitiveStatement("dummyGene", "randomid", value);
 
-        expect(gene.value).to.equal(value)
-    })
+    expect(gene.value).to.equal(value);
+  });
 
-    it('Primitive statement gives error for getRandom function', () => {
-        expect(dummyPrimitiveStatement.getRandom).throws()
-    })
-})
+  it("Primitive statement gives error for getRandom function", () => {
+    expect(dummyPrimitiveStatement.getRandom).throws();
+  });
+});

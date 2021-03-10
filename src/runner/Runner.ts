@@ -1,28 +1,28 @@
-import {SuiteBuilder} from "../testbuilding/SuiteBuilder";
-import {TestCase} from "../testcase/TestCase";
+import { SuiteBuilder } from "../testbuilding/SuiteBuilder";
+import { TestCase } from "../testcase/TestCase";
 
 export interface Datapoint {
-    type: string
-    locationIdx: number
-    line: number
+  type: string;
+  locationIdx: number;
+  line: number;
 
-    hits: number
+  hits: number;
 
-    opcode: string
-    left: number
-    right: number
+  opcode: string;
+  left: number;
+  right: number;
 }
 
 export abstract class Runner {
-    get suiteBuilder(): SuiteBuilder {
-        return this._suiteBuilder;
-    }
+  get suiteBuilder(): SuiteBuilder {
+    return this._suiteBuilder;
+  }
 
-    private _suiteBuilder: SuiteBuilder
+  private _suiteBuilder: SuiteBuilder;
 
-    constructor(suiteBuilder: SuiteBuilder) {
-        this._suiteBuilder = suiteBuilder
-    }
+  constructor(suiteBuilder: SuiteBuilder) {
+    this._suiteBuilder = suiteBuilder;
+  }
 
-    abstract runTest(individual: TestCase): Promise<Datapoint[]>
+  abstract runTest(individual: TestCase): Promise<Datapoint[]>;
 }
