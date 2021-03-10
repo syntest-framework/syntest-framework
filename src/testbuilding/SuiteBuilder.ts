@@ -33,12 +33,11 @@ export abstract class SuiteBuilder {
    * @param addLogs               whether to add log statements to the individual
    * @param additionalAssertions  a dictionary of additional assertions to put in the individual
    */
-  // @ts-ignore
-  abstract async writeTest(
+  abstract writeTest(
     filePath: string,
     individual: TestCase,
     targetName: string,
-    addLogs = false,
+    addLog: boolean,
     additionalAssertions?: Map<TestCase, { [p: string]: string }>
   ): Promise<void>;
 
