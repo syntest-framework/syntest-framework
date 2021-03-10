@@ -1,8 +1,5 @@
-import { prng } from "../index";
+import { getLogger, prng, Sampler, Stringifier } from "../index";
 import { ActionStatement } from "./statements/ActionStatement";
-import { Sampler } from "../index";
-import { getLogger } from "../index";
-import { Stringifier } from "../index";
 import { Evaluation } from "../search/objective/Evaluation";
 
 /**

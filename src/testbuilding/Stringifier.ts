@@ -1,5 +1,4 @@
-import { Statement } from "..";
-import { TestCase } from "..";
+import { Statement, TestCase } from "..";
 
 /**
  * Stringifier interface

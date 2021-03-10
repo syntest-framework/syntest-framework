@@ -1,6 +1,6 @@
 import { TestCase } from "../testcase/TestCase";
 import { Stringifier } from "./Stringifier";
-import { Objective, Target } from "..";
+import { Objective } from "..";
 
 const fs = require("fs");
 const path = require("path");
