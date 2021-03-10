@@ -25,7 +25,7 @@ function generator() {
  */
 export const prng = {
     nextBoolean: (trueChance = 0.5) => {
-        return generator() < trueChance
+        return generator() <= trueChance
     },
     nextInt: (min = 0, max = Number.MAX_VALUE) => {
         let value = generator()
@@ -36,6 +36,21 @@ export const prng = {
         let value = generator()
 
         return value * (max - min) + min
+    },
+    /**
+     * Uses the Box-Muller transform to get a gaussian random variable.
+     *
+     * Based on:
+     * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+     */
+    nextGaussian: (mu: number = 0, sigma: number = 1) => {
+        let u1 = generator()
+        let u2 = generator()
+
+        let mag = sigma * Math.sqrt(-2 * Math.log(u1))
+        let z0 = mag * Math.cos(2 * Math.PI * u2) + mu
+
+        return z0
     },
     pickOne: (options: any[] | string) => {
         if (!options.length) {

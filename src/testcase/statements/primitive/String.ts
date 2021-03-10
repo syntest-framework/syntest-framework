@@ -9,15 +9,15 @@ export class String extends PrimitiveStatement<string> {
     private readonly alphabet: string
     private readonly maxlength: number
 
-    constructor(uniqueId: string, value: string, alphabet: string, maxlength: number) {
-        super('string', 'string', uniqueId, value)
+    constructor(type: string, uniqueId: string, value: string, alphabet: string, maxlength: number) {
+        super(type, uniqueId, value)
         this.alphabet = alphabet;
         this.maxlength = maxlength;
     }
 
     mutate(sampler: Sampler, depth: number): String {
-        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
-            return sampler.sampleGene(depth, this.type, 'primitive')
+        if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
+            return String.getRandom()
         }
 
         if (this.value.length > 0 && this.value.length < this.maxlength) {
@@ -62,7 +62,12 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(this.id, newValue, this.alphabet, this.maxlength)
+        return new String(
+            this.type,
+            this.id,
+            newValue,
+            this.alphabet,
+            this.maxlength)
     }
 
     removeMutation(): String {
@@ -77,7 +82,11 @@ export class String extends PrimitiveStatement<string> {
             newValue += this.value[i]
         }
 
-        return new String(this.id, newValue, this.alphabet, this.maxlength)
+        return new String(this.type,
+            this.id,
+            newValue,
+            this.alphabet,
+            this.maxlength)
     }
 
     replaceMutation(): String {
@@ -94,7 +103,12 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(this.id, newValue, this.alphabet, this.maxlength)
+        return new String(
+            this.type,
+            this.id,
+            newValue,
+            this.alphabet,
+            this.maxlength)
     }
 
     deltaMutation(): String {
@@ -114,14 +128,24 @@ export class String extends PrimitiveStatement<string> {
             }
         }
 
-        return new String(this.id, newValue, this.alphabet, this.maxlength)
+        return new String(
+            this.type,
+            this.id,
+            newValue,
+            this.alphabet,
+            this.maxlength)
     }
 
     copy() {
-        return new String(this.id, this.value, this.alphabet, this.maxlength)
+        return new String(
+            this.type,
+            this.id,
+            this.value,
+            this.alphabet,
+            this.maxlength)
     }
 
-    static getRandom(alphabet = getProperty('string_alphabet'), maxlength = getProperty('string_maxlength')) {
+    static getRandom(type='string', alphabet = getProperty('string_alphabet'), maxlength = getProperty('string_maxlength')) {
         let valueLength = prng.nextInt(0, maxlength - 1)
         let value = ''
 
@@ -129,6 +153,11 @@ export class String extends PrimitiveStatement<string> {
             value += prng.pickOne(alphabet)
         }
 
-        return new String(prng.uniqueId(), value, alphabet, maxlength)
+        return new String(
+            type,
+            prng.uniqueId(),
+            value,
+            alphabet,
+            maxlength)
     }
 }

@@ -41,7 +41,7 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
             })
         }
 
-        if (prng.nextBoolean(getProperty("crossover_chance"))) {
+        if (prng.nextBoolean(getProperty("crossover_probability"))) {
             // crossover
             let donorSubtrees = findSimilarSubtree(pair.child, rootB)
 
