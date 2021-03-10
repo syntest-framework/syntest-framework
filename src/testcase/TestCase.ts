@@ -1,6 +1,10 @@
-import { getLogger, prng, Sampler, Stringifier } from "../index";
+import { prng } from "../index";
 import { ActionStatement } from "./statements/ActionStatement";
+import { Sampler } from "../index";
+import { getLogger } from "../index";
+import { Stringifier } from "../index";
 import { Evaluation } from "../search/objective/Evaluation";
+import { ConstructorCall } from "./statements/action/ConstructorCall";
 
 /**
  * TestCase class
@@ -8,15 +12,7 @@ import { Evaluation } from "../search/objective/Evaluation";
  * @author Dimitri Stallenberg
  */
 export class TestCase {
-  get id(): string {
-    return this._id;
-  }
-  get root(): ActionStatement {
-    return this._root;
-  }
-
-  private _root: ActionStatement;
-
+  private _root: ConstructorCall;
   private evaluation: Evaluation;
   private crowdingDistance: number;
   private rank: number;
@@ -27,7 +23,7 @@ export class TestCase {
    * @param root the root of the tree chromosome of the individual
    * @param evaluation
    */
-  constructor(root: ActionStatement) {
+  constructor(root: ConstructorCall) {
     this._root = root;
 
     this.evaluation = new Evaluation();
@@ -75,5 +71,21 @@ export class TestCase {
 
   getRank() {
     return this.rank;
+  }
+
+  get id(): string {
+    return this._id;
+  }
+  get root(): ConstructorCall {
+    return this._root;
+  }
+
+  copy(): TestCase {
+    const copy = this.root.copy();
+    for (let index = 0; index < this.root.getChildren().length; index++) {
+      copy.setChild(index, this.root.getChildren()[index].copy());
+    }
+
+    return new TestCase(copy);
   }
 }

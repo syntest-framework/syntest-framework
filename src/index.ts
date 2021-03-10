@@ -7,7 +7,7 @@ export * from "./testcase/TestCase";
 
 // Statements
 // Action
-export * from "./testcase/statements/action/Constructor";
+export * from "./testcase/statements/action/ConstructorCall";
 export * from "./testcase/statements/action/FunctionCall";
 export * from "./testcase/statements/action/ObjectFunctionCall";
 

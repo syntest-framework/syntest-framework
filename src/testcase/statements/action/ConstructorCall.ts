@@ -6,7 +6,7 @@ import { getProperty, prng, Sampler } from "../../../index";
 /**
  * @author Dimitri Stallenberg
  */
-export class Constructor extends ActionStatement {
+export class ConstructorCall extends ActionStatement {
   get constructorName(): string {
     return this._constructorName;
   }
@@ -31,23 +31,27 @@ export class Constructor extends ActionStatement {
   }
 
   mutate(sampler: Sampler, depth: number) {
-    if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
-      // resample the gene
-      return sampler.sampleGene(depth, this.type, "constructor");
-    } else if (!this.args.length) {
-      return this.copy();
-    } else {
-      // randomly mutate one of the args
+    //if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
+    // resample the gene
+    //    return sampler.sampleGene(depth, this.type, 'constructor')
+    //} else {
+    // randomly mutate one of the args
+    if (this.args.length > 0) {
       const args = [...this.args.map((a: Statement) => a.copy())];
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
-      return new Constructor(this.type, this.id, this.constructorName, args);
     }
+    // mutate one of its offspring
+    const children = [...this.getChildren().map((a: Statement) => a.copy())];
+    const index = prng.nextInt(0, children.length - 1);
+    this.setChild(index, children[index].mutate(sampler, depth + 1));
+    return this;
+    //}
   }
 
   copy() {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
-    return new Constructor(
+    return new ConstructorCall(
       this.type,
       this.id,
       this.constructorName,

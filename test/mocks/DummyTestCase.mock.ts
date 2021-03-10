@@ -1,13 +1,13 @@
 import { Evaluation } from "../../src/search/objective/Evaluation";
 import { TestCase } from "../../src/testcase/TestCase";
-import { Constructor, Objective } from "../../src";
+import { ConstructorCall, Objective } from "../../src";
 
 export class DummyIndividual extends TestCase {
   private static counter = 0;
 
   constructor() {
     DummyIndividual.counter++;
-    const actionGene = new Constructor(
+    const actionGene = new ConstructorCall(
       "dummy",
       "dummy",
       "dummy" + DummyIndividual.counter,
