@@ -12,9 +12,9 @@ export * from "./testcase/statements/action/FunctionCall";
 export * from "./testcase/statements/action/ObjectFunctionCall";
 
 // Primitive
-export * from "./testcase/statements/primitive/Bool";
-export * from "./testcase/statements/primitive/Numeric";
-export * from "./testcase/statements/primitive/String";
+export * from "./testcase/statements/primitive/BoolStatement";
+export * from "./testcase/statements/primitive/NumericStatement";
+export * from "./testcase/statements/primitive/StringStatement";
 
 export * from "./testcase/statements/ActionStatement";
 export * from "./testcase/statements/Statement";

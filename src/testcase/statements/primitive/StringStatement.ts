@@ -5,7 +5,7 @@ import { getProperty, prng, Sampler } from "../../../index";
 /**
  * @author Dimitri Stallenberg
  */
-export class String extends PrimitiveStatement<string> {
+export class StringStatement extends PrimitiveStatement<string> {
   private readonly alphabet: string;
   private readonly maxlength: number;
 
@@ -21,9 +21,9 @@ export class String extends PrimitiveStatement<string> {
     this.maxlength = maxlength;
   }
 
-  mutate(sampler: Sampler, depth: number): string {
+  mutate(sampler: Sampler, depth: number): StringStatement {
     if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
-      return String.getRandom();
+      return StringStatement.getRandom();
     }
 
     if (this.value.length > 0 && this.value.length < this.maxlength) {
@@ -53,7 +53,7 @@ export class String extends PrimitiveStatement<string> {
     }
   }
 
-  addMutation(): string {
+  addMutation(): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
     const addedChar = prng.pickOne(this.alphabet);
 
@@ -68,7 +68,7 @@ export class String extends PrimitiveStatement<string> {
       }
     }
 
-    return new String(
+    return new StringStatement(
       this.type,
       this.id,
       newValue,
@@ -77,7 +77,7 @@ export class String extends PrimitiveStatement<string> {
     );
   }
 
-  removeMutation(): string {
+  removeMutation(): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
 
     let newValue = "";
@@ -89,7 +89,7 @@ export class String extends PrimitiveStatement<string> {
       newValue += this.value[i];
     }
 
-    return new String(
+    return new StringStatement(
       this.type,
       this.id,
       newValue,
@@ -98,7 +98,7 @@ export class String extends PrimitiveStatement<string> {
     );
   }
 
-  replaceMutation(): string {
+  replaceMutation(): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
     const newChar = prng.pickOne(this.alphabet);
 
@@ -112,7 +112,7 @@ export class String extends PrimitiveStatement<string> {
       }
     }
 
-    return new String(
+    return new StringStatement(
       this.type,
       this.id,
       newValue,
@@ -121,7 +121,7 @@ export class String extends PrimitiveStatement<string> {
     );
   }
 
-  deltaMutation(): string {
+  deltaMutation(): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
     const oldChar = this.value[position];
     const indexOldChar = this.alphabet.indexOf(oldChar);
@@ -140,7 +140,7 @@ export class String extends PrimitiveStatement<string> {
       }
     }
 
-    return new String(
+    return new StringStatement(
       this.type,
       this.id,
       newValue,
@@ -149,8 +149,8 @@ export class String extends PrimitiveStatement<string> {
     );
   }
 
-  copy() {
-    return new String(
+  copy(): StringStatement {
+    return new StringStatement(
       this.type,
       this.id,
       this.value,
@@ -163,7 +163,7 @@ export class String extends PrimitiveStatement<string> {
     type = "string",
     alphabet = getProperty("string_alphabet"),
     maxlength = getProperty("string_maxlength")
-  ) {
+  ): StringStatement {
     const valueLength = prng.nextInt(0, maxlength - 1);
     let value = "";
 
@@ -171,6 +171,12 @@ export class String extends PrimitiveStatement<string> {
       value += prng.pickOne(alphabet);
     }
 
-    return new String(type, prng.uniqueId(), value, alphabet, maxlength);
+    return new StringStatement(
+      type,
+      prng.uniqueId(),
+      value,
+      alphabet,
+      maxlength
+    );
   }
 }

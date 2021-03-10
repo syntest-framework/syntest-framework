@@ -37,7 +37,7 @@ export abstract class SuiteBuilder {
     filePath: string,
     individual: TestCase,
     targetName: string,
-    addLog: boolean,
+    addLogs?: boolean,
     additionalAssertions?: Map<TestCase, { [p: string]: string }>
   ): Promise<void>;
 

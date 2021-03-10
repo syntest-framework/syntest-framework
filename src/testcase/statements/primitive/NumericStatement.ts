@@ -13,7 +13,7 @@ import BigNumber from "bignumber.js";
  *
  * @author Dimitri Stallenberg
  */
-export class Numeric extends PrimitiveStatement<BigNumber> {
+export class NumericStatement extends PrimitiveStatement<BigNumber> {
   private decimals: number;
   private max_value: number;
   private signed: boolean;
@@ -32,10 +32,10 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
     this.signed = signed;
   }
 
-  mutate(sampler: Sampler, depth: number): Numeric {
+  mutate(sampler: Sampler, depth: number): NumericStatement {
     if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
       // let's generate a random number with the same characteristics (upper an
-      return Numeric.getRandom(
+      return NumericStatement.getRandom(
         this.type,
         this.decimals,
         this.max_value,
@@ -53,7 +53,7 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
     // TODO: Maybe we need to generate small numbers
     const newValue = prng.nextDouble(min, max);
 
-    return new Numeric(
+    return new NumericStatement(
       this.type,
       this.id,
       new BigNumber(newValue),
@@ -81,7 +81,7 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
       }
     }
 
-    return new Numeric(
+    return new NumericStatement(
       this.type,
       this.id,
       newValue,
@@ -92,7 +92,7 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
   }
 
   copy() {
-    return new Numeric(
+    return new NumericStatement(
       this.type,
       this.id,
       new BigNumber(this.value),
@@ -112,7 +112,7 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
     const max = Math.min(max_value, Math.pow(2, 11) - 1);
     const min = signed ? -max : 0;
 
-    return new Numeric(
+    return new NumericStatement(
       type,
       prng.uniqueId(),
       new BigNumber(prng.nextDouble(min, max)),
