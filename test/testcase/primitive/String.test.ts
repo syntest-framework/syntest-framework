@@ -21,44 +21,44 @@ describe("String", () => {
   });
 
   it("Add mutation increases statement's length by one", () => {
-    let statement = String.getRandom();
-    let mutated = statement.addMutation();
+    const statement = String.getRandom();
+    const mutated = statement.addMutation();
 
     expect(statement.value.length + 1 === mutated.value.length);
   });
 
   it("Remove mutation decreases statement's length by one", () => {
-    let statement = String.getRandom();
-    let mutated = statement.removeMutation();
+    const statement = String.getRandom();
+    const mutated = statement.removeMutation();
 
     expect(statement.value.length - 1 === mutated.value.length);
   });
 
   it("Replace mutation doesnt affect statement's length", () => {
-    let statement = String.getRandom();
-    let mutated = statement.replaceMutation();
+    const statement = String.getRandom();
+    const mutated = statement.replaceMutation();
 
     expect(statement.value.length === mutated.value.length);
   });
 
   it("Delta mutation doesnt affect statement's length", () => {
-    let statement = String.getRandom();
-    let mutated = statement.deltaMutation();
+    const statement = String.getRandom();
+    const mutated = statement.deltaMutation();
 
     expect(statement.value.length - 1 === mutated.value.length);
   });
 
   it("Copy gives exact same value", () => {
-    let statement = String.getRandom();
-    let copy = statement.copy();
+    const statement = String.getRandom();
+    const copy = statement.copy();
 
     expect(statement.value).to.equal(copy.value);
   });
 
   it("Mutate gives exact other value", () => {
-    let mockedSampler = <Sampler>{};
-    let statement = String.getRandom();
-    let mutation = statement.mutate(mockedSampler as Sampler, 0);
+    const mockedSampler = <Sampler>{};
+    const statement = String.getRandom();
+    const mutation = statement.mutate(mockedSampler as Sampler, 0);
 
     expect(statement.value != mutation.value);
   });

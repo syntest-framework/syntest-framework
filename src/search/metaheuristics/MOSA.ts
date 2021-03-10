@@ -37,7 +37,7 @@ export class MOSA extends NSGA2 {
     }
 
     // create offspring population
-    let offspring = this.generateOffspring(population);
+    const offspring = this.generateOffspring(population);
 
     // evaluate
     await this.calculateFitness(offspring);
@@ -58,10 +58,10 @@ export class MOSA extends NSGA2 {
     getLogger().debug(
       "Number of objectives = " + this.uncoveredObjectives.length
     );
-    let F = this.preferenceSortingAlgorithm(pool, this.uncoveredObjectives);
+    const F = this.preferenceSortingAlgorithm(pool, this.uncoveredObjectives);
 
     // select new population
-    let newPopulation = [];
+    const newPopulation = [];
     let remain = size;
     let index = 0;
 
@@ -96,7 +96,7 @@ export class MOSA extends NSGA2 {
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });
 
-      for (let individual of currentFront) {
+      for (const individual of currentFront) {
         if (remain == 0) break;
 
         newPopulation.push(individual);
@@ -113,15 +113,15 @@ export class MOSA extends NSGA2 {
   }
 
   async calculateFitness(offspring: TestCase[]) {
-    let uObj: Objective[] = [];
-    for (let obj of this.uncoveredObjectives) {
+    const uObj: Objective[] = [];
+    for (const obj of this.uncoveredObjectives) {
       uObj.push(obj);
     }
     await this.fitness.evaluateMany(offspring, uObj);
 
-    let covered: Objective[] = [];
-    for (let objective of this.uncoveredObjectives) {
-      for (let test of offspring) {
+    const covered: Objective[] = [];
+    for (const objective of this.uncoveredObjectives) {
+      for (const test of offspring) {
         if (
           test.getEvaluation().get(objective) == 0.0 &&
           !covered.includes(objective)
@@ -133,8 +133,8 @@ export class MOSA extends NSGA2 {
         }
       }
     }
-    for (let index of covered) {
-      let element = this.uncoveredObjectives.indexOf(index);
+    for (const index of covered) {
+      const element = this.uncoveredObjectives.indexOf(index);
       this.uncoveredObjectives.splice(element, 1);
     }
   }
@@ -146,7 +146,7 @@ export class MOSA extends NSGA2 {
     population: TestCase[],
     objectives: Objective[]
   ): TestCase[][] {
-    let fronts: TestCase[][] = [[]];
+    const fronts: TestCase[][] = [[]];
 
     if (objectives === null) {
       getLogger().debug(
@@ -161,9 +161,9 @@ export class MOSA extends NSGA2 {
     }
 
     // compute the first front using the Preference Criteria
-    let frontZero = this.preferenceCriterion(population, objectives);
+    const frontZero = this.preferenceCriterion(population, objectives);
 
-    for (let individual of frontZero) {
+    for (const individual of frontZero) {
       fronts[0].push(individual);
       individual.setRank(0);
     }
@@ -173,9 +173,9 @@ export class MOSA extends NSGA2 {
     getLogger().debug("Pop + Off size :" + population.length);
 
     // compute the remaining non-dominated Fronts
-    let remainingSolutions: TestCase[] = population;
-    for (let selected of frontZero) {
-      let index = remainingSolutions.indexOf(selected);
+    const remainingSolutions: TestCase[] = population;
+    for (const selected of frontZero) {
+      const index = remainingSolutions.indexOf(selected);
       remainingSolutions.splice(index, 1);
     }
 
@@ -183,17 +183,17 @@ export class MOSA extends NSGA2 {
     let frontIndex = 1;
 
     while (selectedSolutions < this.popsize && remainingSolutions.length != 0) {
-      let front: TestCase[] = this.getNonDominatedFront(
+      const front: TestCase[] = this.getNonDominatedFront(
         objectives,
         remainingSolutions
       );
       fronts[frontIndex] = front;
-      for (let solution of front) {
+      for (const solution of front) {
         solution.setRank(frontIndex);
       }
 
-      for (let selected of front) {
-        let index = remainingSolutions.indexOf(selected);
+      for (const selected of front) {
+        const index = remainingSolutions.indexOf(selected);
         remainingSolutions.splice(index, 1);
       }
 
@@ -219,14 +219,14 @@ export class MOSA extends NSGA2 {
   ): TestCase[] {
     const targets = new Set<Objective>(notCovered);
 
-    let front: TestCase[] = [];
-    let isDominated: Boolean;
+    const front: TestCase[] = [];
+    let isDominated: boolean;
 
-    for (let current of remainingSolutions) {
+    for (const current of remainingSolutions) {
       isDominated = false;
-      let dominatedSolutions: TestCase[] = [];
-      for (let best of front) {
-        let flag = DominanceComparator.compare(current, best, targets);
+      const dominatedSolutions: TestCase[] = [];
+      for (const best of front) {
+        const flag = DominanceComparator.compare(current, best, targets);
         if (flag == -1) {
           dominatedSolutions.push(best);
         }
@@ -237,8 +237,8 @@ export class MOSA extends NSGA2 {
 
       if (isDominated) continue;
 
-      for (let dominated of dominatedSolutions) {
-        let index = front.indexOf(dominated);
+      for (const dominated of dominatedSolutions) {
+        const index = front.indexOf(dominated);
         front.splice(index, 1);
       }
 
@@ -256,8 +256,8 @@ export class MOSA extends NSGA2 {
     population: TestCase[],
     objectives: Objective[]
   ): TestCase[] {
-    let frontZero: TestCase[] = [];
-    for (let objective of objectives) {
+    const frontZero: TestCase[] = [];
+    for (const objective of objectives) {
       let chosen = population[0];
 
       for (let index = 1; index < population.length; index++) {

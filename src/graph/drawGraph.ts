@@ -6,7 +6,7 @@ const { JSDOM } = require("jsdom");
  * @author Dimitri Stallenberg
  */
 export function drawGraph(cfg: any, path: string) {
-  let graph = {
+  const graph = {
     nodes: [
       ...cfg.nodes.map((n: any) => {
         let name = `(${n.line})`;
@@ -41,8 +41,8 @@ export function drawGraph(cfg: any, path: string) {
 
   const dom = new JSDOM(`<!DOCTYPE html><body></body>`);
 
-  let body = d3.select(dom.window.document.querySelector("body"));
-  let svg = body
+  const body = d3.select(dom.window.document.querySelector("body"));
+  const svg = body
     .append("svg")
     .attr("xmlns", "http://www.w3.org/2000/svg")
     .attr("width", 500)
@@ -63,9 +63,9 @@ export function drawGraph(cfg: any, path: string) {
     .attr("fill", "#555")
     .attr("stroke", "#555");
 
-  var color = d3.scaleOrdinal().range(d3.schemeCategory20);
+  const color = d3.scaleOrdinal().range(d3.schemeCategory20);
 
-  var simulation = d3
+  const simulation = d3
     .forceSimulation()
     .force(
       "charge",
@@ -85,7 +85,7 @@ export function drawGraph(cfg: any, path: string) {
 
   simulation.force("link").links(graph.links);
 
-  var link = svg
+  const link = svg
     .append("g")
     .attr("class", "links")
     .selectAll("path")
@@ -104,7 +104,7 @@ export function drawGraph(cfg: any, path: string) {
     .attr("fill", "none")
     .attr("marker-end", "url(#marker)");
 
-  var node = svg
+  const node = svg
     .append("g")
     .attr("class", "nodes")
     .selectAll("g")
@@ -112,7 +112,7 @@ export function drawGraph(cfg: any, path: string) {
     .enter()
     .append("g");
 
-  var circles1 = node
+  const circles1 = node
     .append("circle")
     .attr("r", (d: any) => {
       if (d.final) {
@@ -125,7 +125,7 @@ export function drawGraph(cfg: any, path: string) {
     .style("stroke-width", "1.5px")
     .attr("fill", "#fff");
 
-  var circles2 = node
+  const circles2 = node
     .append("circle")
     .attr("r", 5)
     .attr("fill", function (d: any) {
@@ -140,7 +140,7 @@ export function drawGraph(cfg: any, path: string) {
       return null;
     });
 
-  var lables = node
+  const lables = node
     .append("text")
     .text(function (d: any) {
       return d.name;
@@ -162,7 +162,7 @@ export function drawGraph(cfg: any, path: string) {
     //     .attr("y2", function(d) { return d.target.y; });
 
     link.attr("d", function (d: any) {
-      var x1 = d.source.x,
+      let x1 = d.source.x,
         y1 = d.source.y,
         x2 = d.target.x,
         y2 = d.target.y,

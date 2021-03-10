@@ -30,7 +30,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "lint:fix": "eslint .",
+    "lint:fix": "eslint . --fix",
     "prepare": "npm run build",
     "test": "mocha",
     "test:coverage": "nyc mocha",

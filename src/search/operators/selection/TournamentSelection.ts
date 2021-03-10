@@ -18,7 +18,7 @@ export function tournamentSelection(
   let winner = prng.pickOne(population);
 
   for (let tournament = 0; tournament < tournamentSize - 1; tournament++) {
-    let solution = prng.pickOne(population);
+    const solution = prng.pickOne(population);
 
     // the winner is the solution with the best (smaller) non-dominance rank
     if (solution.getRank() < winner.getRank()) winner = solution;

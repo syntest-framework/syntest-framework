@@ -24,12 +24,12 @@ describe("PRNG", () => {
     const mu = 5;
     const sigma = 2;
 
-    let values = [];
+    const values = [];
     let mean = 0;
     let std = 0;
 
     for (let i = 0; i < samples; i++) {
-      let value = prng.nextGaussian(mu, sigma);
+      const value = prng.nextGaussian(mu, sigma);
       mean += value;
       values.push(value);
     }
@@ -37,7 +37,7 @@ describe("PRNG", () => {
     mean /= samples;
 
     for (let i = 0; i < samples; i++) {
-      let value = values[i];
+      const value = values[i];
       std += Math.pow(value - mean, 2);
     }
 

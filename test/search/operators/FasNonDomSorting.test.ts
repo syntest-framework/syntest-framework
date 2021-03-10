@@ -25,16 +25,16 @@ describe("Fast non-dominated sorting", function () {
   });
 
   it("Sort three solutions", () => {
-    let objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    let objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
+    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
+    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
 
-    let ind1 = new DummyIndividual();
+    const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
 
-    let ind2 = new DummyIndividual();
+    const ind2 = new DummyIndividual();
     ind2.setDummyEvaluation([objective1, objective2], [3, 3]);
 
-    let ind3 = new DummyIndividual();
+    const ind3 = new DummyIndividual();
     ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
 
     const F = fastNonDomSorting([ind1, ind2, ind3]);

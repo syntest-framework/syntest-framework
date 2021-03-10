@@ -49,8 +49,8 @@ export abstract class MultiGA<
 
     this._subAlgorithms = [];
 
-    for (let target of targets) {
-      let ga: GeneticAlgorithm = new GAtype(target, fitness, sampler);
+    for (const target of targets) {
+      const ga: GeneticAlgorithm = new GAtype(target, fitness, sampler);
 
       this._subAlgorithms.push(ga);
     }
@@ -64,12 +64,12 @@ export abstract class MultiGA<
   async search(
     terminationCriteriaMet: (algorithmInstance: GeneticAlgorithm) => boolean
   ) {
-    for (let algorithm of this.subAlgorithms) {
+    for (const algorithm of this.subAlgorithms) {
       algorithm.population = algorithm.createInitialPopulation();
     }
     getLogger().info("Initial population created");
 
-    for (let algorithm of this.subAlgorithms) {
+    for (const algorithm of this.subAlgorithms) {
       await algorithm.fitness.evaluateMany(
         algorithm.population,
         algorithm.objectives
@@ -112,9 +112,9 @@ export abstract class MultiGA<
    * @protected
    */
   public getFinalTestSuite(): Map<Objective, TestCase> {
-    let champions: Map<Objective, TestCase> = new Map<Objective, TestCase>();
-    for (let algorithm of this._subAlgorithms) {
-      for (let key of algorithm.getFinalTestSuite().keys()) {
+    const champions: Map<Objective, TestCase> = new Map<Objective, TestCase>();
+    for (const algorithm of this._subAlgorithms) {
+      for (const key of algorithm.getFinalTestSuite().keys()) {
         champions.set(key, <TestCase>algorithm.getFinalTestSuite().get(key));
       }
     }

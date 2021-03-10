@@ -40,10 +40,10 @@ export class ObjectFunctionCall extends ActionStatement {
       return this.copy();
     } else {
       // randomly mutate one of the args (including the instance)
-      let args = [...this.args.map((a: Statement) => a.copy())];
-      let index = prng.nextInt(0, args.length - 1);
+      const args = [...this.args.map((a: Statement) => a.copy())];
+      const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
-      let instance = args.shift() as Constructor;
+      const instance = args.shift() as Constructor;
       return new ObjectFunctionCall(
         this.type,
         this.id,
@@ -55,8 +55,8 @@ export class ObjectFunctionCall extends ActionStatement {
   }
 
   copy() {
-    let deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
-    let instance = deepCopyArgs.shift() as Constructor;
+    const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
+    const instance = deepCopyArgs.shift() as Constructor;
 
     return new ObjectFunctionCall(
       this.type,

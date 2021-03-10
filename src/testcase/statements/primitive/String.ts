@@ -21,13 +21,13 @@ export class String extends PrimitiveStatement<string> {
     this.maxlength = maxlength;
   }
 
-  mutate(sampler: Sampler, depth: number): String {
+  mutate(sampler: Sampler, depth: number): string {
     if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
       return String.getRandom();
     }
 
     if (this.value.length > 0 && this.value.length < this.maxlength) {
-      let value = prng.nextInt(0, 3);
+      const value = prng.nextInt(0, 3);
 
       if (value === 0) {
         return this.addMutation();
@@ -39,7 +39,7 @@ export class String extends PrimitiveStatement<string> {
         return this.deltaMutation();
       }
     } else if (this.value.length > 0) {
-      let value = prng.nextInt(0, 2);
+      const value = prng.nextInt(0, 2);
 
       if (value === 0) {
         return this.removeMutation();
@@ -53,9 +53,9 @@ export class String extends PrimitiveStatement<string> {
     }
   }
 
-  addMutation(): String {
-    let position = prng.nextInt(0, this.value.length - 1);
-    let addedChar = prng.pickOne(this.alphabet);
+  addMutation(): string {
+    const position = prng.nextInt(0, this.value.length - 1);
+    const addedChar = prng.pickOne(this.alphabet);
 
     let newValue = "";
 
@@ -77,8 +77,8 @@ export class String extends PrimitiveStatement<string> {
     );
   }
 
-  removeMutation(): String {
-    let position = prng.nextInt(0, this.value.length - 1);
+  removeMutation(): string {
+    const position = prng.nextInt(0, this.value.length - 1);
 
     let newValue = "";
 
@@ -98,9 +98,9 @@ export class String extends PrimitiveStatement<string> {
     );
   }
 
-  replaceMutation(): String {
-    let position = prng.nextInt(0, this.value.length - 1);
-    let newChar = prng.pickOne(this.alphabet);
+  replaceMutation(): string {
+    const position = prng.nextInt(0, this.value.length - 1);
+    const newChar = prng.pickOne(this.alphabet);
 
     let newValue = "";
 
@@ -121,12 +121,14 @@ export class String extends PrimitiveStatement<string> {
     );
   }
 
-  deltaMutation(): String {
-    let position = prng.nextInt(0, this.value.length - 1);
-    let oldChar = this.value[position];
-    let indexOldChar = this.alphabet.indexOf(oldChar);
-    let delta = prng.pickOne([-2, -1, 1, -2]);
-    let newChar = this.alphabet[(indexOldChar + delta) % this.alphabet.length];
+  deltaMutation(): string {
+    const position = prng.nextInt(0, this.value.length - 1);
+    const oldChar = this.value[position];
+    const indexOldChar = this.alphabet.indexOf(oldChar);
+    const delta = prng.pickOne([-2, -1, 1, -2]);
+    const newChar = this.alphabet[
+      (indexOldChar + delta) % this.alphabet.length
+    ];
 
     let newValue = "";
 
@@ -162,7 +164,7 @@ export class String extends PrimitiveStatement<string> {
     alphabet = getProperty("string_alphabet"),
     maxlength = getProperty("string_maxlength")
   ) {
-    let valueLength = prng.nextInt(0, maxlength - 1);
+    const valueLength = prng.nextInt(0, maxlength - 1);
     let value = "";
 
     for (let i = 0; i < valueLength; i++) {

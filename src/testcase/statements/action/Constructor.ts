@@ -38,15 +38,15 @@ export class Constructor extends ActionStatement {
       return this.copy();
     } else {
       // randomly mutate one of the args
-      let args = [...this.args.map((a: Statement) => a.copy())];
-      let index = prng.nextInt(0, args.length - 1);
+      const args = [...this.args.map((a: Statement) => a.copy())];
+      const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
       return new Constructor(this.type, this.id, this.constructorName, args);
     }
   }
 
   copy() {
-    let deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
+    const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
     return new Constructor(
       this.type,
       this.id,

@@ -33,7 +33,7 @@ export class Evaluation {
 
   get(key: Objective): number {
     if (this.objectives.has(key)) {
-      return this.objectives.get(key)!!;
+      return this.objectives.get(key)!;
     }
     return Number.MAX_VALUE - 1;
   }

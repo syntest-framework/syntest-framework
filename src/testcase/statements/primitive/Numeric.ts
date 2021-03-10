@@ -22,9 +22,9 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
     type: string,
     uniqueId: string,
     value: BigNumber,
-    decimals: number = 0,
+    decimals = 0,
     max_value: number = Number.MAX_SAFE_INTEGER,
-    signed: boolean = true
+    signed = true
   ) {
     super(type, uniqueId, value);
     this.decimals = decimals;
@@ -47,11 +47,11 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
       return this.deltaMutation();
     }
 
-    let max = this.max_value;
-    let min = this.signed ? -max : 0;
+    const max = this.max_value;
+    const min = this.signed ? -max : 0;
 
     // TODO: Maybe we need to generate small numbers
-    let newValue = prng.nextDouble(min, max);
+    const newValue = prng.nextDouble(min, max);
 
     return new Numeric(
       this.type,
@@ -65,14 +65,14 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
 
   deltaMutation() {
     // small mutation
-    let change = prng.nextGaussian(0, 3);
+    const change = prng.nextGaussian(0, 3);
 
     let newValue = this.value.plus(change);
 
     // If illegal values are not allowed we make sure the value does not exceed the specified bounds
     if (!getProperty("explore_illegal_values")) {
-      let max = this.max_value;
-      let min = this.signed ? -max : 0;
+      const max = this.max_value;
+      const min = this.signed ? -max : 0;
 
       if (newValue.isGreaterThan(max)) {
         newValue = new BigNumber(max);
@@ -109,8 +109,8 @@ export class Numeric extends PrimitiveStatement<BigNumber> {
     signed = getProperty("numeric_signed")
   ) {
     // by default we create small numbers (do we need very large numbers?)
-    let max = Math.min(max_value, Math.pow(2, 11) - 1);
-    let min = signed ? -max : 0;
+    const max = Math.min(max_value, Math.pow(2, 11) - 1);
+    const min = signed ? -max : 0;
 
     return new Numeric(
       type,

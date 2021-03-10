@@ -9,7 +9,7 @@ import { fastNonDomSorting, TestCase } from "../..";
 export class SimpleGA extends GeneticAlgorithm {
   async generation(population: TestCase[]) {
     // create offspring population
-    let offspring = this.generateOffspring(population);
+    const offspring = this.generateOffspring(population);
 
     // evaluate
     await this.fitness.evaluateMany(offspring, this.objectives);
@@ -18,12 +18,12 @@ export class SimpleGA extends GeneticAlgorithm {
     population.push(...offspring);
 
     // non-dominated sorting
-    let F = fastNonDomSorting(population);
+    const F = fastNonDomSorting(population);
 
     // select new population
-    let newPopulation = [];
-    for (let front of F) {
-      for (let individual of front) {
+    const newPopulation = [];
+    for (const front of F) {
+      for (const individual of front) {
         if (newPopulation.length < this.popsize) {
           newPopulation.push(individual);
         }
@@ -39,10 +39,10 @@ export class SimpleGA extends GeneticAlgorithm {
    * @returns {[]} the offspring population
    */
   generateOffspring(population: TestCase[]) {
-    let offspring = [];
+    const offspring = [];
     // TODO crossover
 
-    for (let individual of population) {
+    for (const individual of population) {
       offspring.push(individual.mutate(this.sampler));
     }
 

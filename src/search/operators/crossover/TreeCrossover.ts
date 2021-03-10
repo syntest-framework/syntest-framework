@@ -13,10 +13,10 @@ import { getProperty, prng, Statement, TestCase } from "../../..";
  * @author Dimitri Stallenberg
  */
 export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
-  let rootA = parentA.root.copy();
-  let rootB = parentB.root.copy();
+  const rootA = parentA.root.copy();
+  const rootB = parentB.root.copy();
 
-  let queueA: any = [];
+  const queueA: any = [];
 
   for (let i = 0; i < rootA.getChildren().length; i++) {
     queueA.push({
@@ -26,10 +26,10 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
     });
   }
 
-  let crossoverOptions = [];
+  const crossoverOptions = [];
 
   while (queueA.length) {
-    let pair = queueA.shift();
+    const pair = queueA.shift();
 
     if (pair.child.hasChildren()) {
       pair.child.getChildren().forEach((child: Statement, index: number) => {
@@ -43,9 +43,9 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
 
     if (prng.nextBoolean(getProperty("crossover_probability"))) {
       // crossover
-      let donorSubtrees = findSimilarSubtree(pair.child, rootB);
+      const donorSubtrees = findSimilarSubtree(pair.child, rootB);
 
-      for (let donorTree of donorSubtrees) {
+      for (const donorTree of donorSubtrees) {
         crossoverOptions.push({
           p1: pair,
           p2: donorTree,
@@ -55,9 +55,9 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
   }
 
   if (crossoverOptions.length) {
-    let crossoverChoice = prng.pickOne(crossoverOptions);
-    let pair = crossoverChoice.p1;
-    let donorTree = crossoverChoice.p2;
+    const crossoverChoice = prng.pickOne(crossoverOptions);
+    const pair = crossoverChoice.p1;
+    const donorTree = crossoverChoice.p2;
 
     pair.parent.setChild(pair.childIndex, donorTree.child.copy());
     donorTree.parent.setChild(donorTree.childIndex, pair.child.copy());
@@ -75,8 +75,8 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
  * @author Dimitri Stallenberg
  */
 function findSimilarSubtree(wanted: Statement, tree: Statement) {
-  let queue: any = [];
-  let similar = [];
+  const queue: any = [];
+  const similar = [];
 
   for (let i = 0; i < tree.getChildren().length; i++) {
     queue.push({
@@ -87,7 +87,7 @@ function findSimilarSubtree(wanted: Statement, tree: Statement) {
   }
 
   while (queue.length) {
-    let pair = queue.shift();
+    const pair = queue.shift();
 
     if (pair.child.hasChildren()) {
       pair.child.getChildren().forEach((child: Statement, index: number) => {

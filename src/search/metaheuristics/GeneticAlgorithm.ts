@@ -156,7 +156,7 @@ export abstract class GeneticAlgorithm {
    * @returns {[]} the create population
    */
   createInitialPopulation(): TestCase[] {
-    let population: TestCase[] = [];
+    const population: TestCase[] = [];
 
     for (let i = 0; i < this._popsize; i++) {
       population.push(this._sampler.sampleIndividual());

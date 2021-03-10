@@ -11,7 +11,7 @@ export function startOverTimeWriter(algo: GeneticAlgorithm) {
   overTimeWriter = setInterval(() => {
     time = Date.now();
 
-    let data = `${gatherOutputValues(
+    const data = `${gatherOutputValues(
       getProperty("output_properties"),
       algo
     )}\n`;
@@ -39,7 +39,7 @@ export function writeData(algo: GeneticAlgorithm, objective: Objective) {
 
   time = Date.now();
 
-  let data = `${gatherOutputValues(
+  const data = `${gatherOutputValues(
     getProperty("output_properties"),
     algo,
     objective
@@ -64,7 +64,10 @@ export function writeSummary(algo: GeneticAlgorithm) {
 
   time = Date.now();
 
-  let data = `${gatherOutputValues(getProperty("output_properties"), algo)}\n`;
+  const data = `${gatherOutputValues(
+    getProperty("output_properties"),
+    algo
+  )}\n`;
 
   if (!existsSync(file)) {
     writeToFile(
@@ -81,7 +84,7 @@ function gatherHeaderOutputValues(
   algo: GeneticAlgorithm,
   objective: Objective | null = null
 ) {
-  let output = [];
+  const output = [];
 
   if (outputValues.includes("timestamp")) {
     output.push(`timestamp`);
@@ -115,7 +118,7 @@ function gatherOutputValues(
   algo: GeneticAlgorithm,
   objective: Objective | null = null
 ) {
-  let output = [];
+  const output = [];
 
   if (outputValues.includes("timestamp")) {
     output.push(`${time}`);

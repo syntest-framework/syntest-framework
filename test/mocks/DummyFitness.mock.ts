@@ -6,15 +6,15 @@ export class DummyFitness extends Fitness {
   private objectives: Objective[];
 
   constructor(runner: Runner, objectives: Objective[]) {
-    let mockedTarget = (<Target>{}) as any; // mocking
+    const mockedTarget = (<Target>{}) as any; // mocking
 
     super(runner, mockedTarget);
     this.objectives = objectives;
   }
 
   async evaluateMany(population: TestCase[], objectives: Objective[]) {
-    for (let individual of population) {
-      let evaluation = new Evaluation();
+    for (const individual of population) {
+      const evaluation = new Evaluation();
       for (let i = 0; i < objectives.length; i++) {
         evaluation.set(objectives[i], 0);
       }

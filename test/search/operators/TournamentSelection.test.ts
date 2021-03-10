@@ -29,13 +29,13 @@ describe("Tournament selection", function () {
   });
 
   it("Small Tournament size", () => {
-    let objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    let objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
+    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
+    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
 
-    let ind1 = new DummyIndividual();
+    const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
 
-    let ind2 = new DummyIndividual();
+    const ind2 = new DummyIndividual();
     ind2.setDummyEvaluation([objective1, objective2], [1, 1]);
 
     //fit('Null my value throws', () => {
@@ -46,30 +46,30 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by rank", () => {
-    let objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    let objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
+    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
+    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
 
-    let ind1 = new DummyIndividual();
+    const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
     ind1.setRank(0);
     ind1.setCrowdingDistance(10);
 
-    let ind2 = new DummyIndividual();
+    const ind2 = new DummyIndividual();
     ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind2.setRank(1);
     ind2.setCrowdingDistance(2);
 
-    let ind3 = new DummyIndividual();
+    const ind3 = new DummyIndividual();
     ind3.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind3.setRank(2);
     ind3.setCrowdingDistance(1);
 
-    let ind4 = new DummyIndividual();
+    const ind4 = new DummyIndividual();
     ind4.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind4.setRank(1);
     ind4.setCrowdingDistance(4);
 
-    let winner: DummyIndividual = tournamentSelection(
+    const winner: DummyIndividual = tournamentSelection(
       [ind2, ind1, ind3, ind4],
       20
     );
@@ -79,30 +79,30 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by crowding distance", () => {
-    let objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    let objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
+    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
+    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
 
-    let ind1 = new DummyIndividual();
+    const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
     ind1.setRank(0);
     ind1.setCrowdingDistance(10);
 
-    let ind2 = new DummyIndividual();
+    const ind2 = new DummyIndividual();
     ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind2.setRank(0);
     ind2.setCrowdingDistance(2);
 
-    let ind3 = new DummyIndividual();
+    const ind3 = new DummyIndividual();
     ind3.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind3.setRank(0);
     ind3.setCrowdingDistance(1);
 
-    let ind4 = new DummyIndividual();
+    const ind4 = new DummyIndividual();
     ind4.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind4.setRank(0);
     ind4.setCrowdingDistance(4);
 
-    let winner: DummyIndividual = tournamentSelection(
+    const winner: DummyIndividual = tournamentSelection(
       [ind2, ind1, ind3, ind4],
       20
     );

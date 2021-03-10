@@ -46,10 +46,10 @@ export class TestCase {
   }
 
   hashCode(stringifier: Stringifier): number {
-    let string = stringifier.stringifyIndividual(this, `${this.id}`);
+    const string = stringifier.stringifyIndividual(this, `${this.id}`);
     let hash = 0;
     for (let i = 0; i < string.length; i++) {
-      let character = string.charCodeAt(i);
+      const character = string.charCodeAt(i);
       hash = (hash << 5) - hash + character;
       hash = hash & hash; // Convert to 32bit integer
     }

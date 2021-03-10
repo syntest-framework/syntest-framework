@@ -28,12 +28,12 @@ export const prng = {
     return generator() <= trueChance;
   },
   nextInt: (min = 0, max = Number.MAX_VALUE) => {
-    let value = generator();
+    const value = generator();
 
     return Math.round(value * (max - min)) + min;
   },
   nextDouble: (min = 0, max = Number.MAX_VALUE) => {
-    let value = generator();
+    const value = generator();
 
     return value * (max - min) + min;
   },
@@ -43,12 +43,12 @@ export const prng = {
    * Based on:
    * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
    */
-  nextGaussian: (mu: number = 0, sigma: number = 1) => {
-    let u1 = generator();
-    let u2 = generator();
+  nextGaussian: (mu = 0, sigma = 1) => {
+    const u1 = generator();
+    const u2 = generator();
 
-    let mag = sigma * Math.sqrt(-2 * Math.log(u1));
-    let z0 = mag * Math.cos(2 * Math.PI * u2) + mu;
+    const mag = sigma * Math.sqrt(-2 * Math.log(u1));
+    const z0 = mag * Math.cos(2 * Math.PI * u2) + mu;
 
     return z0;
   },
@@ -57,16 +57,16 @@ export const prng = {
       throw new Error("Cannot pick one of an empty array!!!");
     }
 
-    let value = generator();
+    const value = generator();
 
-    let index = Math.round(value * (options.length - 1));
+    const index = Math.round(value * (options.length - 1));
     return options[index];
   },
   uniqueId: (length = 7) => {
     let result = "";
-    let characters =
+    const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let charactersLength = characters.length;
+    const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(generator() * charactersLength));
     }

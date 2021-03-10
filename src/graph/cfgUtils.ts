@@ -2,9 +2,9 @@
  * @author Dimitri Stallenberg
  */
 export function createLoops(cfg: any) {
-  let nonFinals: any[] = [];
-  let loopNode: any[] = [];
-  for (let node of cfg.nodes) {
+  const nonFinals: any[] = [];
+  const loopNode: any[] = [];
+  for (const node of cfg.nodes) {
     if (node.loop) {
       loopNode.push(node);
       nonFinals.push([]);
@@ -17,10 +17,10 @@ export function createLoops(cfg: any) {
         // Should not be possible!
         throw new Error();
       }
-      let startOfLoop = loopNode.pop();
-      let nonFinalNodes = nonFinals.pop();
+      const startOfLoop = loopNode.pop();
+      const nonFinalNodes = nonFinals.pop();
 
-      for (let nonFinalNode of nonFinalNodes) {
+      for (const nonFinalNode of nonFinalNodes) {
         cfg.edges.push({
           from: nonFinalNode.id,
           to: startOfLoop.id,
@@ -46,11 +46,11 @@ export function createLoops(cfg: any) {
 }
 
 export function connectNonFinalNodes(cfg: any) {
-  let nonFinals = [];
-  for (let node of cfg.nodes) {
+  const nonFinals = [];
+  for (const node of cfg.nodes) {
     if (node.absoluteRoot) {
       // new function definition so break and make the loose nodes final
-      for (let nonFinalNode of nonFinals) {
+      for (const nonFinalNode of nonFinals) {
         nonFinalNode.final = true;
       }
       nonFinals.length = 0;
@@ -60,7 +60,7 @@ export function connectNonFinalNodes(cfg: any) {
 
     if (node.root) {
       // connect all nonFinals to this root
-      for (let nonFinalNode of nonFinals) {
+      for (const nonFinalNode of nonFinals) {
         cfg.edges.push({
           from: nonFinalNode.id,
           to: node.id,

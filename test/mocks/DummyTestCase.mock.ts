@@ -3,11 +3,11 @@ import { TestCase } from "../../src/testcase/TestCase";
 import { Constructor, Objective } from "../../src";
 
 export class DummyIndividual extends TestCase {
-  private static counter: number = 0;
+  private static counter = 0;
 
   constructor() {
     DummyIndividual.counter++;
-    let actionGene = new Constructor(
+    const actionGene = new Constructor(
       "dummy",
       "dummy",
       "dummy" + DummyIndividual.counter,
@@ -17,7 +17,7 @@ export class DummyIndividual extends TestCase {
   }
 
   public setDummyEvaluation(objective: Objective[], values: number[]) {
-    let evaluation = new Evaluation();
+    const evaluation = new Evaluation();
 
     if (objective.length != values.length)
       throw new Error("Something bad happened");

@@ -30,19 +30,19 @@ export class Fitness {
   }
 
   extractPaths(cfg: CFG) {
-    let g = new Graph();
+    const g = new Graph();
 
-    for (let node of cfg.nodes) {
+    for (const node of cfg.nodes) {
       g.setNode(node.id);
     }
 
-    for (let edge of cfg.edges) {
+    for (const edge of cfg.edges) {
       g.setEdge(edge.from, edge.to);
       g.setEdge(edge.to, edge.from);
     }
 
     this.paths = alg.dijkstraAll(g, (e: any) => {
-      let edge = cfg.edges.find((edge: Edge) => {
+      const edge = cfg.edges.find((edge: Edge) => {
         if (
           String(edge.from) === String(e.v) &&
           String(edge.to) === String(e.w)
@@ -72,7 +72,7 @@ export class Fitness {
   async evaluateOne(individual: TestCase, objectives: Objective[]) {
     getLogger().debug(`Evaluating individual ${individual.id}`);
 
-    let dataPoints = await this.runner.runTest(individual);
+    const dataPoints = await this.runner.runTest(individual);
 
     individual.setEvaluation(this.calculateDistance(dataPoints, objectives));
     this._evaluations += 1;
@@ -86,7 +86,7 @@ export class Fitness {
    */
   async evaluateMany(population: TestCase[], objectives: Objective[]) {
     // TODO This should be done in parallel somehow
-    for (let individual of population) {
+    for (const individual of population) {
       await this.evaluateOne(individual, objectives);
     }
   }
@@ -160,15 +160,15 @@ export class Fitness {
    * @param objectives the objectives/targets we want to calculate the distance to
    */
   private calculateDistance(dataPoints: Datapoint[], objectives: Objective[]) {
-    let hitNodes = [];
+    const hitNodes = [];
 
-    for (let point of dataPoints) {
+    for (const point of dataPoints) {
       // Check if it is a branch node and has been hit
       if (point.type !== "branch" || point.hits === 0) {
         continue;
       }
       // Check if the branch in question is currently an objective
-      let objective = this.target.getObjectives().find((o) => {
+      const objective = this.target.getObjectives().find((o) => {
         return o.locationIdx === point.locationIdx && o.line === point.line;
       });
 
@@ -177,7 +177,7 @@ export class Fitness {
       }
 
       // find the corresponding branch node inside the cfg
-      let branchNode = this.target.cfg.nodes
+      const branchNode = this.target.cfg.nodes
         .filter((n: Node) => !n.absoluteRoot)
         .find((n: Node) => {
           return n.locationIdx === point.locationIdx && n.line === point.line;
@@ -195,17 +195,17 @@ export class Fitness {
       });
     }
 
-    let nodes = this.target.cfg.nodes.filter(
+    const nodes = this.target.cfg.nodes.filter(
       (n: Node) => !n.absoluteRoot && !n.root
     );
 
     // find fitness per objective
-    let fitness = new Evaluation();
+    const fitness = new Evaluation();
 
     // loop over current objectives
-    for (let objective of objectives) {
+    for (const objective of objectives) {
       // find the node in the CFG object that corresponds to the objective
-      let node = nodes.find((n) => {
+      const node = nodes.find((n) => {
         return (
           objective.locationIdx === n.locationIdx && objective.line === n.line
         );
@@ -218,7 +218,7 @@ export class Fitness {
       }
 
       // find if the branch was covered
-      let hitNode = hitNodes.find((h: any) => h.node === node);
+      const hitNode = hitNodes.find((h: any) => h.node === node);
 
       // if it is covered the distance is 0
       if (hitNode) {
@@ -229,7 +229,7 @@ export class Fitness {
       // find the closest covered branch to the objective branch
       let closestHitNode = null;
       let smallestDistance = Number.MAX_VALUE;
-      for (let n of hitNodes) {
+      for (const n of hitNodes) {
         if (smallestDistance > this.paths[node.id][n.node.id].distance) {
           smallestDistance = this.paths[node.id][n.node.id].distance;
           closestHitNode = n;
@@ -245,17 +245,17 @@ export class Fitness {
       }
 
       // the approach distance is equal to the path length between the closest covered branch and the objective branch
-      let approachDistance = Math.max(smallestDistance - 1, 0);
+      const approachDistance = Math.max(smallestDistance - 1, 0);
       // calculate the branch distance between: covering the branch needed to get a closer approach distance and the currently covered branch
       // always between 0 and 1
-      let branchDistance = this.calcBranchDistance(
+      const branchDistance = this.calcBranchDistance(
         closestHitNode.point.opcode,
         closestHitNode.point.left,
         closestHitNode.point.right
       );
 
       // add the distances
-      let distance = approachDistance + branchDistance;
+      const distance = approachDistance + branchDistance;
       fitness.set(objective, Math.min(distance, fitness.get(objective)));
     }
 

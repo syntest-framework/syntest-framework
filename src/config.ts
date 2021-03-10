@@ -34,7 +34,7 @@ export function setupOptions(program: string, additionalOptions: any) {
     .help(false)
     .version(false);
 
-  let loadArg = ([name, setup]: [string, any]) => {
+  const loadArg = ([name, setup]: [string, any]) => {
     const option = {
       // @ts-ignore
       description: setup.description,

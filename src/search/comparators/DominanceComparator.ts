@@ -17,11 +17,11 @@ export class DominanceComparator {
     individual1: TestCase,
     individual2: TestCase,
     targets: Set<Objective>
-  ): Number {
+  ): number {
     let dominatesX = false;
     let dominatesY = false;
 
-    for (let objective of targets) {
+    for (const objective of targets) {
       if (
         individual1.getEvaluation().get(objective) <
         individual2.getEvaluation().get(objective)

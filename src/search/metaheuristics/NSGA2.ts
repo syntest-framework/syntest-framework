@@ -16,7 +16,7 @@ const {
 export class NSGA2 extends GeneticAlgorithm {
   async generation(population: TestCase[]) {
     // create offspring population
-    let offspring = this.generateOffspring(population);
+    const offspring = this.generateOffspring(population);
 
     // evaluate
     await this.fitness.evaluateMany(offspring, this.objectives);
@@ -25,10 +25,10 @@ export class NSGA2 extends GeneticAlgorithm {
     population.push(...offspring);
 
     // non-dominated sorting
-    let F = fastNonDomSorting(population);
+    const F = fastNonDomSorting(population);
 
     // select new population
-    let newPopulation = [];
+    const newPopulation = [];
     let remain = this.popsize;
     let index = 0;
 
@@ -44,7 +44,7 @@ export class NSGA2 extends GeneticAlgorithm {
       crowdingDistance(currentFront);
 
       // Add the individuals of this front
-      for (let individual of currentFront) {
+      for (const individual of currentFront) {
         if (newPopulation.length < this.popsize) {
           newPopulation.push(individual);
         }
@@ -70,7 +70,7 @@ export class NSGA2 extends GeneticAlgorithm {
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });
       let counter = 0;
-      for (let individual of currentFront) {
+      for (const individual of currentFront) {
         if (counter > remain) break;
 
         newPopulation.push(individual);
@@ -87,12 +87,12 @@ export class NSGA2 extends GeneticAlgorithm {
    * @returns {[]} the offspring population
    */
   generateOffspring(population: TestCase[]) {
-    let offspring = [];
+    const offspring = [];
 
     for (let index = 0; index < this.popsize; index++) {
-      let parentA = tournamentSelection(population, 2);
-      let parentB = tournamentSelection(population, 2);
-      let [childA, childB] = TreeCrossover(parentA, parentB);
+      const parentA = tournamentSelection(population, 2);
+      const parentB = tournamentSelection(population, 2);
+      const [childA, childB] = TreeCrossover(parentA, parentB);
 
       offspring.push(childA.mutate(this.sampler));
       offspring.push(childB.mutate(this.sampler));
