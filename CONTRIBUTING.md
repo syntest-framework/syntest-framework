@@ -2,7 +2,7 @@
 
 First off all, thank you for taking the time to contribute to this project!
 
-This document outlines a set of guidelines for contributing to the SynTest Framework, which is hosted in the [SynTest Framework Organization](syntest-org) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+This document outlines a set of guidelines for contributing to the SynTest Framework, which is hosted in the [SynTest Framework Organization](https://github.com/syntest-framework) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 #### Table Of Contents
 
@@ -20,9 +20,7 @@ You can help this project by submitting report of bugs you have encountered or b
 
 ### Your First Code Contribution
 
-If you don't now where to begin? You can start by looking through issues with the tags `beginner` and `help-wanted`.
+If you don't know where to begin? You can start by looking through issues with the tags `beginner` and `help-wanted`.
 
 - **beginner**: Issues which should only require a few lines of code, and a test or two.
 - **help-wanted**: Issues which should be a bit more involved than `beginner` issues.
-
-[syntest-org]: https://github.com/syntest-framework

@@ -15,33 +15,33 @@ export class Constructor extends ActionStatement {
 
     /**
      * Constructor
-     * @param constructorName the name of the function
      * @param type the return type of the function
-     * @param args the arguments of the function
      * @param uniqueId optional argument
+     * @param constructorName the name of the function
+     * @param args the arguments of the function
      */
-    constructor(constructorName: string, type: string, uniqueId: string, args: Statement[]) {
-        super('constructor', type, uniqueId, args)
+    constructor(type: string, uniqueId: string, constructorName: string, args: Statement[]) {
+        super(type, uniqueId, args)
         this._constructorName = constructorName
     }
 
     mutate(sampler: Sampler, depth: number) {
-        if (prng.nextBoolean(getProperty("resample_gene_chance"))) {
+        if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
             // resample the gene
             return sampler.sampleGene(depth, this.type, 'constructor')
         } else if (!this.args.length) {
             return this.copy()
         } else {
-            // randomly pick one of the args
+            // randomly mutate one of the args
             let args = [...this.args.map((a: Statement) => a.copy())]
             let index = prng.nextInt(0, args.length - 1)
             args[index] = args[index].mutate(sampler, depth + 1)
-            return new Constructor(this._constructorName, this.type, this.id, args)
+            return new Constructor(this.type, this.id, this.constructorName, args)
         }
     }
 
     copy() {
         let deepCopyArgs = [...this.args.map((a: Statement) => a.copy())]
-        return new Constructor(this._constructorName, this.type, this.id, deepCopyArgs)
+        return new Constructor(this.type, this.id, this.constructorName, deepCopyArgs)
     }
 }

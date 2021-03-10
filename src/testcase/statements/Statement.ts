@@ -13,23 +13,17 @@ export abstract class Statement {
     public get type(): string {
         return this._type;
     }
-    public get name(): string {
-        return this._name;
-    }
 
-    private _name: string;
     private _varName: string
     private _type: string;
     private _uniqueId: string;
 
     /**
      * Constructor
-     * @param name
      * @param type
      * @param uniqueId
      */
-    protected constructor(name: string, type: string, uniqueId: string) {
-        this._name = name
+    protected constructor(type: string, uniqueId: string) {
         this._type = type
         this._uniqueId = uniqueId
         this._varName = type + uniqueId

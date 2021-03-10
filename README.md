@@ -16,25 +16,25 @@ The common core contains the common interfaces for the code control-flow represe
 
 When the project reaches a stable state, a NPM package will be released. Until this happens, the library can be used by cloning the project, installing its dependencies, compiling the TypeScript, and requiring it in your project:
 
-* Clone the project
+- Clone the project
 
 ```bash
 $ git clone git@github.com:syntest-framework/syntest-framework.git
 ```
 
-* Install dependencies
+- Install dependencies
 
 ```bash
 $ npm install
 ```
 
-* Build the framework
+- Build the framework
 
 ```bash
 $ npm run build
 ```
 
-* Install as npm module in your project
+- Install as npm module in your project
 
 ```bash
 $ npm install /path/to/syntest-framework
@@ -46,21 +46,21 @@ For questions and help with how to use this library, please see [SUPPORT.md](SUP
 
 ## Roadmap
 
-* [x] Create and Draw a Control Flow Graph of the code.
-* [x] Compute approach level distance using the Control Flow Graph.
-* [x] Compute branch distance for:
-	* [x] integer comparisons
-	* [x] float comparisons
-	* [ ] boolean evaluations
-	* [ ] strings comparisons
-* [x] Find test-cases that cover certain branches.
-* [x] Add assertions to the generated test cases.
-* [x] Allow the user to configure the algorithm's parameters and other settings
-	* [x] set the seed of the randomness object
-	* [x] choose the search algorithm and parameters like population_size
-	* [x] select stopping criteria
-	* [x] choose mutation probabilities
-	* [x] configure the log level
+- [x] Create and Draw a Control Flow Graph of the code.
+- [x] Compute approach level distance using the Control Flow Graph.
+- [x] Compute branch distance for:
+	- [x] integer comparisons
+	- [x] float comparisons
+	- [ ] boolean evaluations
+	- [ ] strings comparisons
+- [x] Find test-cases that cover certain branches.
+- [x] Add assertions to the generated test cases.
+- [x] Allow the user to configure the algorithm's parameters and other settings
+	- [x] set the seed of the randomness object
+	- [x] choose the search algorithm and parameters like population_size
+	- [x] select stopping criteria
+	- [x] choose mutation probabilities
+	- [x] configure the log level
 
 ## Contributing
 

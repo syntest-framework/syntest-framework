@@ -14,8 +14,8 @@ export abstract class ActionStatement extends Statement {
     }
     private _args: Statement[];
 
-    protected constructor(name: string, type: string, uniqueId: string, args: Statement[]) {
-        super(name, type, uniqueId)
+    protected constructor(type: string, uniqueId: string, args: Statement[]) {
+        super(type, uniqueId)
         this._args = args
     }
 
