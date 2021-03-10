@@ -40,12 +40,12 @@ jobs:
          
     # Dependencies
     - name: Framework - Install Dependencies
-      run: npm install
+      run: npm ci
       working-directory: syntest-framework
     
     # Building
-    - name: Framework - Compile Typescript
-      run: npm run tsc
+    - name: Framework - Build
+      run: npm run build
       working-directory: syntest-framework
       
     # Testing

@@ -1,7 +1,10 @@
-/target/
-/logs/
-/node_modules/
-/coverage/
-/.nyc_output/
-/dist/
-/docs/
+.github
+.nyc_output/
+dist/
+docs/
+logs/
+node_modules/
+syntest/
+.*
+*.json
+*.md
