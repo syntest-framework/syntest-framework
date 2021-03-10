@@ -28,11 +28,12 @@ $ git clone git@github.com:syntest-framework/syntest-framework.git
 $ npm install
 ```
 
-- Compile to JavaScript
+- Build the framework
 
 ```bash
-$ npm run tsc
+$ npm run build
 ```
+
 - Install as npm module in your project
 
 ```bash

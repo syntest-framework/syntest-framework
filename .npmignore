@@ -1,5 +1,8 @@
+.nyc_output/
+docs/
+node_modules/
 src/
 test/
-docs/
-
-tsconfig.json
+*.json
+!package.json
+!package-lock.json
