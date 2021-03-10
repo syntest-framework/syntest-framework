@@ -25,13 +25,13 @@
   "scripts": {
     "build": "npm run build:compile",
     "build:compile": "tsc --build",
-    "build:watch": "tsc --watch",
+    "build:watch": "tsc --build --watch",
     "clean": "rm -rf .nyc_output dist node_modules",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "lint:fix": "eslint .",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "mocha",
     "test:coverage": "nyc mocha",
     "test:watch": "mocha --watch"
