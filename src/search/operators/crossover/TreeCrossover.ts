@@ -1,4 +1,13 @@
-import { getProperty, prng, Statement, TestCase } from "../../..";
+import {
+  FunctionCall,
+  getProperty,
+  ObjectFunctionCall,
+  prng,
+  Statement,
+  TestCase,
+  ActionStatement,
+  NumericStatement,
+} from "../../..";
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.
@@ -16,54 +25,53 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
   const rootA = parentA.copy().root;
   const rootB = parentB.copy().root;
 
-  /*
-  let queueA: any = []
+  let queueA: any = [];
 
   for (let i = 0; i < rootA.getChildren().length; i++) {
-      queueA.push({
-          parent: rootA,
-          childIndex: i,
-          child: rootA.getChildren()[i]
-      })
+    queueA.push({
+      parent: rootA,
+      childIndex: i,
+      child: rootA.getChildren()[i],
+    });
   }
 
-  let crossoverOptions = []
+  let crossoverOptions = [];
 
   while (queueA.length) {
-      let pair = queueA.shift()
+    let pair = queueA.shift();
 
-      if (pair.child.hasChildren()) {
-          pair.child.getChildren().forEach((child: Statement, index: number) => {
-              queueA.push({
-                  parent: pair.child,
-                  childIndex: index,
-                  child: child
-              })
-          })
+    if (pair.child.hasChildren()) {
+      pair.child.getChildren().forEach((child: Statement, index: number) => {
+        queueA.push({
+          parent: pair.child,
+          childIndex: index,
+          child: child,
+        });
+      });
+    }
+
+    if (prng.nextBoolean(getProperty("crossover_probability"))) {
+      // crossover
+      let donorSubtrees = findSimilarSubtree(pair.child, rootB);
+
+      for (let donorTree of donorSubtrees) {
+        crossoverOptions.push({
+          p1: pair,
+          p2: donorTree,
+        });
       }
-
-      if (prng.nextBoolean(getProperty("crossover_probability"))) {
-          // crossover
-          let donorSubtrees = findSimilarSubtree(pair.child, rootB)
-
-          for (let donorTree of donorSubtrees) {
-              crossoverOptions.push({
-                  p1: pair,
-                  p2: donorTree
-              })
-          }
-      }
+    }
   }
 
   if (crossoverOptions.length) {
-      let crossoverChoice = prng.pickOne(crossoverOptions)
-      let pair = crossoverChoice.p1
-      let donorTree = crossoverChoice.p2
+    let crossoverChoice = prng.pickOne(crossoverOptions);
+    let pair = crossoverChoice.p1;
+    let donorTree = crossoverChoice.p2;
 
-      pair.parent.setChild(pair.childIndex, donorTree.child.copy())
-      donorTree.parent.setChild(donorTree.childIndex, pair.child.copy())
+    pair.parent.setChild(pair.childIndex, donorTree.child.copy());
+    donorTree.parent.setChild(donorTree.childIndex, pair.child.copy());
   }
-  */
+
   return [new TestCase(rootA), new TestCase(rootB)];
 }
 
@@ -101,7 +109,16 @@ function findSimilarSubtree(wanted: Statement, tree: Statement) {
     }
 
     if (wanted.type === pair.child.type) {
-      similar.push(pair);
+      if (wanted instanceof NumericStatement) {
+        if (
+          wanted.upper_bound == (pair.child as NumericStatement).upper_bound &&
+          wanted.lower_bound == (pair.child as NumericStatement).lower_bound
+        ) {
+          similar.push(pair);
+        }
+      } else {
+        similar.push(pair);
+      }
     }
   }
 
