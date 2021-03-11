@@ -82,7 +82,12 @@ export const prng = {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
+
+    // first character should not be a digit
+    result += characters.charAt(
+      Math.floor(generator() * charactersLength - 10)
+    );
+    for (let i = 1; i < length; i++) {
       result += characters.charAt(Math.floor(generator() * charactersLength));
     }
     return result;
