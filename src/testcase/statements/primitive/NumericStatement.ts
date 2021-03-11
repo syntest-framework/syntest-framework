@@ -14,22 +14,28 @@ import BigNumber from "bignumber.js";
  * @author Dimitri Stallenberg
  */
 export class NumericStatement extends PrimitiveStatement<BigNumber> {
-  private decimals: number;
-  private max_value: number;
-  private signed: boolean;
+  private static  _max_value: number = Number.MAX_SAFE_INTEGER;
+  private static _zero = new BigNumber(0)
+
+  private _decimals: number;
+  private _signed: boolean;
+  private _upper_bound : BigNumber
+  private _lower_bound : BigNumber
 
   constructor(
     type: string,
     uniqueId: string,
     value: BigNumber,
     decimals = 0,
-    max_value: number = Number.MAX_SAFE_INTEGER,
-    signed = true
+    signed = true,
+    upper_bound = new BigNumber(Number.MAX_SAFE_INTEGER),
+    lower_bound = new BigNumber(-Number.MAX_SAFE_INTEGER),
   ) {
     super(type, uniqueId, value);
-    this.decimals = decimals;
-    this.max_value = max_value;
-    this.signed = signed;
+    this._decimals = decimals;
+    this._signed = signed;
+    this._upper_bound = upper_bound;
+    this._lower_bound = lower_bound;
   }
 
   mutate(sampler: Sampler, depth: number): NumericStatement {
@@ -37,9 +43,10 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
       // let's generate a random number with the same characteristics (upper an
       return NumericStatement.getRandom(
         this.type,
-        this.decimals,
-        this.max_value,
-        this.signed
+        this._decimals,
+        this._signed,
+        this._upper_bound,
+        this._lower_bound
       );
     }
 
@@ -47,19 +54,20 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
       return this.deltaMutation();
     }
 
-    const max = this.max_value;
-    const min = this.signed ? -max : 0;
+    const max = this._upper_bound;
+    const min = this._signed ? max.negated() : NumericStatement._zero;
 
     // TODO: Maybe we need to generate small numbers
-    const newValue = prng.nextDouble(min, max);
+    const newValue = prng.nextBigDouble(min, max);
 
     return new NumericStatement(
       this.type,
       this.id,
       new BigNumber(newValue),
-      this.decimals,
-      this.max_value,
-      this.signed
+      this._decimals,
+      this._signed,
+      this._upper_bound,
+      this._lower_bound
     );
   }
 
@@ -71,8 +79,8 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
 
     // If illegal values are not allowed we make sure the value does not exceed the specified bounds
     if (!getProperty("explore_illegal_values")) {
-      const max = this.max_value;
-      const min = this.signed ? -max : 0;
+      const max = NumericStatement._max_value;
+      const min = this._signed ? -max : NumericStatement._zero;
 
       if (newValue.isGreaterThan(max)) {
         newValue = new BigNumber(max);
@@ -85,9 +93,10 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
       this.type,
       this.id,
       newValue,
-      this.decimals,
-      this.max_value,
-      this.signed
+      this._decimals,
+      this._signed,
+      this._upper_bound,
+      this._lower_bound
     );
   }
 
@@ -96,28 +105,29 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
       this.type,
       this.id,
       new BigNumber(this.value),
-      this.decimals,
-      this.max_value,
-      this.signed
+      this._decimals,
+      this._signed,
+      this._upper_bound,
+      this._lower_bound
     );
   }
 
   static getRandom(
     type = "number",
     decimals = getProperty("numeric_decimals"),
-    max_value = getProperty("numeric_max_value"),
-    signed = getProperty("numeric_signed")
+    signed = getProperty("numeric_signed"),
+    upper_bound = new BigNumber(Number.MAX_SAFE_INTEGER),
+    lower_bound = new BigNumber(Number.MAX_SAFE_INTEGER)
   ) {
     // by default we create small numbers (do we need very large numbers?)
-    const max = Math.min(max_value, Math.pow(2, 11) - 1);
-    const min = signed ? -max : 0;
+    const max = BigNumber.min(upper_bound, new BigNumber(Math.pow(2, 11) - 1))
+    const min: BigNumber = signed ? max.negated() : this._zero;
 
     return new NumericStatement(
       type,
       prng.uniqueId(),
-      new BigNumber(prng.nextDouble(min, max)),
+      prng.nextBigDouble(min, max),
       decimals,
-      max_value,
       signed
     );
   }
@@ -126,6 +136,14 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
    * Make sure that whenever the value is used it is the wanted precision.
    */
   get value(): BigNumber {
-    return super.value.decimalPlaces(this.decimals);
+    return super.value.decimalPlaces(this._decimals);
+  }
+
+  get decimals(): number {
+    return this._decimals;
+  }
+
+  get signed(): boolean {
+    return this._signed;
   }
 }
