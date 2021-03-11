@@ -14,13 +14,13 @@ import BigNumber from "bignumber.js";
  * @author Dimitri Stallenberg
  */
 export class NumericStatement extends PrimitiveStatement<BigNumber> {
-  private static  _max_value: number = Number.MAX_SAFE_INTEGER;
-  private static _zero = new BigNumber(0)
+  private static _max_value: number = Number.MAX_SAFE_INTEGER;
+  private static _zero = new BigNumber(0);
 
   private _decimals: number;
   private _signed: boolean;
-  private _upper_bound : BigNumber
-  private _lower_bound : BigNumber
+  private _upper_bound: BigNumber;
+  private _lower_bound: BigNumber;
 
   constructor(
     type: string,
@@ -29,7 +29,7 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
     decimals = 0,
     signed = true,
     upper_bound = new BigNumber(Number.MAX_SAFE_INTEGER),
-    lower_bound = new BigNumber(-Number.MAX_SAFE_INTEGER),
+    lower_bound = new BigNumber(-Number.MAX_SAFE_INTEGER)
   ) {
     super(type, uniqueId, value);
     this._decimals = decimals;
@@ -103,7 +103,7 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
   copy() {
     return new NumericStatement(
       this.type,
-      this.id,
+      prng.uniqueId(),
       new BigNumber(this.value),
       this._decimals,
       this._signed,
@@ -120,7 +120,7 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
     lower_bound = new BigNumber(Number.MAX_SAFE_INTEGER)
   ) {
     // by default we create small numbers (do we need very large numbers?)
-    const max = BigNumber.min(upper_bound, new BigNumber(Math.pow(2, 11) - 1))
+    const max = BigNumber.min(upper_bound, new BigNumber(Math.pow(2, 11) - 1));
     const min: BigNumber = signed ? max.negated() : this._zero;
 
     return new NumericStatement(
@@ -128,7 +128,9 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
       prng.uniqueId(),
       prng.nextBigDouble(min, max),
       decimals,
-      signed
+      signed,
+      upper_bound,
+      lower_bound
     );
   }
 
@@ -145,5 +147,13 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
 
   get signed(): boolean {
     return this._signed;
+  }
+
+  get upper_bound(): BigNumber {
+    return this._upper_bound;
+  }
+
+  get lower_bound(): BigNumber {
+    return this._lower_bound;
   }
 }

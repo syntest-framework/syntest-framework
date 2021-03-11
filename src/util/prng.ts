@@ -33,8 +33,11 @@ export const prng = {
 
     return Math.round(value * (max - min)) + min;
   },
-  nextBigInt: (min: BigNumber = new BigNumber(0), max = new BigNumber(Number.MAX_VALUE)) => {
-    const value =  new BigNumber(generator());
+  nextBigInt: (
+    min: BigNumber = new BigNumber(0),
+    max = new BigNumber(Number.MAX_VALUE)
+  ) => {
+    const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min).integerValue();
   },
   nextDouble: (min = 0, max = Number.MAX_VALUE) => {
@@ -42,7 +45,10 @@ export const prng = {
 
     return value * (max - min) + min;
   },
-  nextBigDouble: (min: BigNumber = new BigNumber(0), max = new BigNumber(Number.MAX_VALUE)) => {
+  nextBigDouble: (
+    min: BigNumber = new BigNumber(0),
+    max = new BigNumber(Number.MAX_VALUE)
+  ) => {
     const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min);
   },
