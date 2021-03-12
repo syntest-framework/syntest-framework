@@ -1,7 +1,7 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
-import { TestCaseSampler } from "../../TestCaseSampler";
+import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { getProperty } from "../../../config";
 

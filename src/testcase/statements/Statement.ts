@@ -1,4 +1,4 @@
-import { TestCaseSampler } from "../TestCaseSampler";
+import { TestCaseSampler } from "../sampling/TestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg

@@ -1,6 +1,6 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
-import { TestCaseSampler } from "../../TestCaseSampler";
+import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { TestCase } from "../../TestCase";
 

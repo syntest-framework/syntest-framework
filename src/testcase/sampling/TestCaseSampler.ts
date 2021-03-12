@@ -1,4 +1,4 @@
-import { Target, TestCase } from "../index";
+import { Target, TestCase } from "../../index";
 
 /**
  * TestCaseSampler class

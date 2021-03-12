@@ -1,5 +1,5 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
-import { TestCaseSampler } from "../../TestCaseSampler";
+import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { getProperty } from "../../../config";
 

@@ -2,7 +2,7 @@ import { Evaluation } from "../search/objective/Evaluation";
 import { ConstructorCall } from "./statements/action/ConstructorCall";
 import { prng } from "../util/prng";
 import { getLogger } from "../util/logger";
-import { TestCaseSampler } from "./TestCaseSampler";
+import { TestCaseSampler } from "./sampling/TestCaseSampler";
 import { Stringifier } from "../testbuilding/Stringifier";
 
 /**

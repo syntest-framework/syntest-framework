@@ -1,6 +1,6 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
 import BigNumber from "bignumber.js";
-import { TestCaseSampler } from "../../TestCaseSampler";
+import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { getProperty } from "../../../config";
 
