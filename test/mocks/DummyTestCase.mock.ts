@@ -11,6 +11,7 @@ export class DummyIndividual extends TestCase {
       "dummy",
       "dummy",
       "dummy" + DummyIndividual.counter,
+      [],
       []
     );
     super(actionGene);
