@@ -27,11 +27,11 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
 
   let queueA: any = [];
 
-  for (let i = 0; i < rootA.getChildren().length; i++) {
+  for (let i = 0; i < rootA.getMethodCalls().length; i++) {
     queueA.push({
       parent: rootA,
       childIndex: i,
-      child: rootA.getChildren()[i],
+      child: rootA.getMethodCalls()[i],
     });
   }
 

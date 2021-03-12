@@ -5,6 +5,7 @@ import { getProperty, prng, Sampler } from "../../../index";
 
 /**
  * @author Dimitri Stallenberg
+ * @author Annibale Panichella
  */
 export class ConstructorCall extends ActionStatement {
   get constructorName(): string {
@@ -12,6 +13,7 @@ export class ConstructorCall extends ActionStatement {
   }
 
   private _constructorName: string;
+  private _calls: ActionStatement[];
 
   /**
    * Constructor
@@ -24,10 +26,12 @@ export class ConstructorCall extends ActionStatement {
     type: string,
     uniqueId: string,
     constructorName: string,
-    args: Statement[]
+    args: Statement[],
+    calls: ActionStatement[]
   ) {
     super(type, uniqueId, args);
     this._constructorName = constructorName;
+    this._calls = calls;
   }
 
   mutate(sampler: Sampler, depth: number) {
@@ -42,20 +46,38 @@ export class ConstructorCall extends ActionStatement {
       args[index] = args[index].mutate(sampler, depth + 1);
     }
     // mutate one of its offspring
-    const children = [...this.getChildren().map((a: Statement) => a.copy())];
-    const index = prng.nextInt(0, children.length - 1);
-    this.setChild(index, children[index].mutate(sampler, depth + 1));
+    if (this.hasMethodCalls()) {
+      const calls = this.getMethodCalls();
+      const index = prng.nextInt(0, calls.length - 1);
+      this.setMethodCall(index, calls[index].mutate(sampler, depth + 1));
+    }
     return this;
     //}
   }
 
   copy() {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
+    const deepCopyCalls = [
+      ...this._calls.map((a: ActionStatement) => a.copy()),
+    ];
     return new ConstructorCall(
       this.type,
       this.id,
       this.constructorName,
-      deepCopyArgs
+      deepCopyArgs,
+      deepCopyCalls
     );
+  }
+
+  getMethodCalls(): ActionStatement[] {
+    return [...this._calls];
+  }
+
+  setMethodCall(index: number, call: ActionStatement) {
+    this._calls[index] = call;
+  }
+
+  hasMethodCalls(): boolean {
+    return !!this._calls.length;
   }
 }
