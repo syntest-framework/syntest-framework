@@ -17,10 +17,11 @@ export class ConstructorCall extends ActionStatement {
 
   /**
    * Constructor
-   * @param type the return type of the function
+   * @param type the return type of the constructor
    * @param uniqueId optional argument
-   * @param constructorName the name of the function
-   * @param args the arguments of the function
+   * @param constructorName the name of the constructor
+   * @param args the arguments of the constructor
+   * @param calls the methods calls of the constructor
    */
   constructor(
     type: string,
