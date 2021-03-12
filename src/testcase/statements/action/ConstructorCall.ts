@@ -1,7 +1,7 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
 
-import { getProperty, prng, Sampler } from "../../../index";
+import { getProperty, prng, Sampler, TestCase } from "../../../index";
 
 /**
  * @author Dimitri Stallenberg
@@ -64,10 +64,12 @@ export class ConstructorCall extends ActionStatement {
   protected addMethodCall(depth: number, sampler: Sampler) {
     const calls = this.getMethodCalls();
     const index = prng.nextInt(0, calls.length);
-    this.setMethodCall(
-      index,
-      sampler.sampleGene(depth, this.type, "functionCall")
-    );
+
+    // get a random test case and we extract one of its method call
+    // ugly solution for now. But we have to fix with proper refactoring
+    const randomTest: TestCase = sampler.sampleIndividual();
+
+    this.setMethodCall(index, randomTest.root.getMethodCalls()[0]);
   }
 
   protected replaceMethodCall(depth: number, sampler: Sampler) {
