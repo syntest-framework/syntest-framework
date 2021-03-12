@@ -1,5 +1,5 @@
-import { SuiteBuilder } from "../testbuilding/SuiteBuilder";
-import { TestCase } from "../testcase/TestCase";
+import { SuiteBuilder } from "../../testbuilding/SuiteBuilder";
+import { TestCase } from "../TestCase";
 
 export interface Datapoint {
   type: string;
@@ -13,7 +13,7 @@ export interface Datapoint {
   right: number;
 }
 
-export abstract class Runner {
+export abstract class TestCaseRunner {
   get suiteBuilder(): SuiteBuilder {
     return this._suiteBuilder;
   }

@@ -1,4 +1,4 @@
-import { Datapoint, getLogger, Runner, Target, TestCase } from "../..";
+import { Datapoint, getLogger, TestCaseRunner, Target, TestCase } from "../..";
 import { Objective } from "./Objective";
 import { Evaluation } from "./Evaluation";
 import { Node } from "../../graph/Node";
@@ -13,7 +13,7 @@ const { Graph, alg } = require("@dagrejs/graphlib");
  * @author Dimitri Stallenberg
  */
 export class Fitness {
-  private runner: Runner;
+  private runner: TestCaseRunner;
   private target: Target;
   private paths: any;
 
@@ -22,7 +22,7 @@ export class Fitness {
   /**
    * Constructor
    */
-  constructor(runner: Runner, target: Target) {
+  constructor(runner: TestCaseRunner, target: Target) {
     this.runner = runner;
     this.target = target;
     this._evaluations = 0;

@@ -1,24 +1,23 @@
-// Runner
-export * from "./runner/Runner";
-/// <reference path="../dist/index.d.ts" />
-
 // Test case
 export * from "./testcase/TestCase";
 
+// Runner
+export * from "./testcase/execution/TestCaseRunner";
+
 // Statements
-// Action
+export * from "./testcase/statements/ActionStatement";
+export * from "./testcase/statements/Statement";
+export * from "./testcase/statements/PrimitiveStatement";
+
+// Action statement
 export * from "./testcase/statements/action/ConstructorCall";
 export * from "./testcase/statements/action/FunctionCall";
 export * from "./testcase/statements/action/ObjectFunctionCall";
 
-// Primitive
+// Primitive statement
 export * from "./testcase/statements/primitive/BoolStatement";
 export * from "./testcase/statements/primitive/NumericStatement";
 export * from "./testcase/statements/primitive/StringStatement";
-
-export * from "./testcase/statements/ActionStatement";
-export * from "./testcase/statements/Statement";
-export * from "./testcase/statements/PrimitiveStatement";
 
 // Search
 // Factories
