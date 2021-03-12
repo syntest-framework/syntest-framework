@@ -4,7 +4,7 @@ import {
   loadConfig,
   PrimitiveStatement,
   processConfig,
-  Sampler,
+  TestCaseSampler,
   setupLogger,
   setupOptions,
 } from "../../src";
@@ -16,7 +16,7 @@ class dummyPrimitiveStatement extends PrimitiveStatement<string> {
     return this;
   }
 
-  mutate(sampler: Sampler, depth: number): PrimitiveStatement<string> {
+  mutate(sampler: TestCaseSampler, depth: number): PrimitiveStatement<string> {
     return this;
   }
 }

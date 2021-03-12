@@ -3,7 +3,7 @@ import {
   Fitness,
   getLogger,
   Objective,
-  Sampler,
+  TestCaseSampler,
   Target,
   TestCase,
 } from "../..";
@@ -20,7 +20,7 @@ const { compare } = require("../comparators/DominanceComparator");
 export class MOSA extends NSGA2 {
   private uncoveredObjectives: Objective[];
 
-  constructor(target: Target, fitness: Fitness, sampler: Sampler) {
+  constructor(target: Target, fitness: Fitness, sampler: TestCaseSampler) {
     super(target, fitness, sampler);
     this.uncoveredObjectives = [];
 

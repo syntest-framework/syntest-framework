@@ -3,7 +3,7 @@ import {
   guessCWD,
   loadConfig,
   processConfig,
-  Sampler,
+  TestCaseSampler,
   setupLogger,
   setupOptions,
   StringStatement,
@@ -56,9 +56,9 @@ describe("StringStatement", () => {
   });
 
   it("Mutate gives exact other value", () => {
-    const mockedSampler = <Sampler>{};
+    const mockedSampler = <TestCaseSampler>{};
     const statement = StringStatement.getRandom();
-    const mutation = statement.mutate(mockedSampler as Sampler, 0);
+    const mutation = statement.mutate(mockedSampler as TestCaseSampler, 0);
 
     expect(statement.value != mutation.value);
   });

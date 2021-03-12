@@ -1,5 +1,5 @@
 import { Statement } from "./Statement";
-import { Sampler } from "../../search/sampling/Sampler";
+import { TestCaseSampler } from "../TestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -19,7 +19,7 @@ export abstract class ActionStatement extends Statement {
     this._args = args;
   }
 
-  abstract mutate(sampler: Sampler, depth: number): ActionStatement;
+  abstract mutate(sampler: TestCaseSampler, depth: number): ActionStatement;
 
   abstract copy(): ActionStatement;
 

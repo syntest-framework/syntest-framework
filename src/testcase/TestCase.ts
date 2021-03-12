@@ -2,7 +2,7 @@ import { Evaluation } from "../search/objective/Evaluation";
 import { ConstructorCall } from "./statements/action/ConstructorCall";
 import { prng } from "../util/prng";
 import { getLogger } from "../util/logger";
-import { Sampler } from "../search/sampling/Sampler";
+import { TestCaseSampler } from "./TestCaseSampler";
 import { Stringifier } from "../testbuilding/Stringifier";
 
 /**
@@ -32,7 +32,7 @@ export class TestCase {
     getLogger().debug(`Created individual: ${this._id}`);
   }
 
-  mutate(sampler: Sampler) {
+  mutate(sampler: TestCaseSampler) {
     getLogger().debug(`Mutating individual: ${this._id}`);
     return new TestCase(this._root.mutate(sampler, 0));
   }

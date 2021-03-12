@@ -1,5 +1,5 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
-import { Sampler } from "../../../search/sampling/Sampler";
+import { TestCaseSampler } from "../../TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { getProperty } from "../../../config";
 
@@ -22,7 +22,7 @@ export class StringStatement extends PrimitiveStatement<string> {
     this.maxlength = maxlength;
   }
 
-  mutate(sampler: Sampler, depth: number): StringStatement {
+  mutate(sampler: TestCaseSampler, depth: number): StringStatement {
     if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
       return StringStatement.getRandom();
     }

@@ -1,6 +1,6 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
 import BigNumber from "bignumber.js";
-import { Sampler } from "../../../search/sampling/Sampler";
+import { TestCaseSampler } from "../../TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { getProperty } from "../../../config";
 
@@ -39,7 +39,7 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
     this._lower_bound = lower_bound;
   }
 
-  mutate(sampler: Sampler, depth: number): NumericStatement {
+  mutate(sampler: TestCaseSampler, depth: number): NumericStatement {
     if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
       // let's generate a random number with the same characteristics (upper an
       return NumericStatement.getRandom(

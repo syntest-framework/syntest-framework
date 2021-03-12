@@ -1,4 +1,4 @@
-import { Sampler } from "../../search/sampling/Sampler";
+import { TestCaseSampler } from "../TestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -35,7 +35,7 @@ export abstract class Statement {
    * @param depth     the depth of the gene in the gene tree
    * @return          the mutated copy of the gene
    */
-  abstract mutate(sampler: Sampler, depth: number): Statement;
+  abstract mutate(sampler: TestCaseSampler, depth: number): Statement;
 
   /**
    * Creates an exact copy of the current gene

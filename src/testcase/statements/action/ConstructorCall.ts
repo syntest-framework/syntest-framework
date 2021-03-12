@@ -1,6 +1,6 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
-import { Sampler } from "../../../search/sampling/Sampler";
+import { TestCaseSampler } from "../../TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { TestCase } from "../../TestCase";
 
@@ -36,7 +36,7 @@ export class ConstructorCall extends ActionStatement {
     this._calls = calls;
   }
 
-  mutate(sampler: Sampler, depth: number) {
+  mutate(sampler: TestCaseSampler, depth: number) {
     //if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
     // resample the gene
     //    return sampler.sampleGene(depth, this.type, 'constructor')
@@ -63,7 +63,7 @@ export class ConstructorCall extends ActionStatement {
     //}
   }
 
-  protected addMethodCall(depth: number, sampler: Sampler) {
+  protected addMethodCall(depth: number, sampler: TestCaseSampler) {
     const calls = this.getMethodCalls();
     const index = prng.nextInt(0, calls.length);
 
@@ -74,7 +74,7 @@ export class ConstructorCall extends ActionStatement {
     this.setMethodCall(index, randomTest.root.getMethodCalls()[0]);
   }
 
-  protected replaceMethodCall(depth: number, sampler: Sampler) {
+  protected replaceMethodCall(depth: number, sampler: TestCaseSampler) {
     if (this.hasMethodCalls()) {
       const calls = this.getMethodCalls();
       const index = prng.nextInt(0, calls.length - 1);
@@ -82,7 +82,7 @@ export class ConstructorCall extends ActionStatement {
     }
   }
 
-  protected deleteMethodCall(depth: number, sampler: Sampler) {
+  protected deleteMethodCall(depth: number, sampler: TestCaseSampler) {
     if (this.hasMethodCalls()) {
       const calls = this.getMethodCalls();
       const index = prng.nextInt(0, calls.length - 1);

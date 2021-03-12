@@ -3,7 +3,7 @@ import {
   getLogger,
   getProperty,
   Objective,
-  Sampler,
+  TestCaseSampler,
   TestCase,
 } from "../..";
 import {
@@ -80,7 +80,7 @@ export abstract class GeneticAlgorithm {
     return this._fitness;
   }
 
-  get sampler(): Sampler {
+  get sampler(): TestCaseSampler {
     return this._sampler;
   }
 
@@ -97,7 +97,7 @@ export abstract class GeneticAlgorithm {
   }
 
   private readonly _fitness: Fitness;
-  private readonly _sampler: Sampler;
+  private readonly _sampler: TestCaseSampler;
   private readonly _popsize: number;
 
   private _population: TestCase[];
@@ -117,7 +117,7 @@ export abstract class GeneticAlgorithm {
    * @param fitness the fitness object
    * @param sampler the sampler object
    */
-  constructor(target: Target, fitness: Fitness, sampler: Sampler) {
+  constructor(target: Target, fitness: Fitness, sampler: TestCaseSampler) {
     this._target = target;
     this._fitness = fitness;
     this._sampler = sampler;

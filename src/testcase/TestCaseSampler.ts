@@ -1,11 +1,11 @@
-import { Target, TestCase } from "../..";
+import { Target, TestCase } from "../index";
 
 /**
- * Sampler class
+ * TestCaseSampler class
  *
  * @author Dimitri Stallenberg
  */
-export abstract class Sampler {
+export abstract class TestCaseSampler {
   get target(): Target {
     return this._target;
   }

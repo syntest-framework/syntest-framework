@@ -43,7 +43,7 @@ export * from "./search/metaheuristics/MultiGA";
 export * from "./search/metaheuristics/COMIX";
 
 // Sampling
-export * from "./search/sampling/Sampler";
+export * from "./testcase/TestCaseSampler";
 
 // Test building
 export * from "./testbuilding/SuiteBuilder";
