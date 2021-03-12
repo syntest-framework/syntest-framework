@@ -3,12 +3,13 @@ import { ConstructorCall } from "./statements/action/ConstructorCall";
 import { prng } from "../util/prng";
 import { getLogger } from "../util/logger";
 import { TestCaseSampler } from "./sampling/TestCaseSampler";
-import { Stringifier } from "../testbuilding/Stringifier";
+import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
 
 /**
  * TestCase class
  *
  * @author Dimitri Stallenberg
+ * @author Mitchell Olsthoorn
  */
 export class TestCase {
   private _root: ConstructorCall;
@@ -18,8 +19,9 @@ export class TestCase {
   private _id: string;
 
   /**
-   * Constructor
-   * @param root the root of the tree chromosome of the individual
+   * Constructor.
+   *
+   * @param root       the root of the tree chromosome of the test case
    * @param evaluation
    */
   constructor(root: ConstructorCall) {
@@ -29,16 +31,16 @@ export class TestCase {
     this.crowdingDistance = 0;
     this.rank = 0;
     this._id = prng.uniqueId(20);
-    getLogger().debug(`Created individual: ${this._id}`);
+    getLogger().debug(`Created test case: ${this._id}`);
   }
 
   mutate(sampler: TestCaseSampler) {
-    getLogger().debug(`Mutating individual: ${this._id}`);
+    getLogger().debug(`Mutating test case: ${this._id}`);
     return new TestCase(this._root.mutate(sampler, 0));
   }
 
-  hashCode(stringifier: Stringifier): number {
-    const string = stringifier.stringifyIndividual(this, `${this.id}`);
+  hashCode(decoder: TestCaseDecoder): number {
+    const string = decoder.decodeTestCase(this, `${this.id}`);
     let hash = 0;
     for (let i = 0; i < string.length; i++) {
       const character = string.charCodeAt(i);

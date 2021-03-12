@@ -1,19 +1,18 @@
-import { Stringifier, TestCase } from "..";
+import { TestCase } from "../testcase/TestCase";
+import { TestCaseDecoder } from "../testcase/decoder/TestCaseDecoder";
 
 export class HashSet<T extends TestCase> extends Set<T> {
-  private stringifier: Stringifier;
+  private decoder: TestCaseDecoder;
 
-  constructor(props: any, stringifier: Stringifier) {
+  constructor(props: any, decoder: TestCaseDecoder) {
     super(props);
-    this.stringifier = stringifier;
+    this.decoder = decoder;
   }
 
   add(value: T): this {
     let found = false;
     this.forEach((item) => {
-      if (
-        item.hashCode(this.stringifier) === value.hashCode(this.stringifier)
-      ) {
+      if (item.hashCode(this.decoder) === value.hashCode(this.decoder)) {
         found = true;
       }
     });

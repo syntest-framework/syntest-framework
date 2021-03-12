@@ -9,10 +9,6 @@ import { getProperty } from "../../../config";
  * @author Dimitri Stallenberg
  */
 export class ObjectFunctionCall extends ActionStatement {
-  get functionName(): string {
-    return this._functionName;
-  }
-
   private _functionName: string;
 
   private _parent: ConstructorCall;
@@ -40,7 +36,9 @@ export class ObjectFunctionCall extends ActionStatement {
   mutate(sampler: TestCaseSampler, depth: number): ObjectFunctionCall {
     if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
       // resample the gene
-      return sampler.sampleGene(depth, this.type, "functionCall");
+      return <ObjectFunctionCall>(
+        sampler.sampleStatement(depth, this.type, "functionCall")
+      );
     } else if (!this.args.length) {
       return this.copy();
     } else {
@@ -82,5 +80,9 @@ export class ObjectFunctionCall extends ActionStatement {
 
   getParent(): ConstructorCall {
     return this._parent;
+  }
+
+  get functionName(): string {
+    return this._functionName;
   }
 }

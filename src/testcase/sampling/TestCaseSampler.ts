@@ -1,19 +1,14 @@
-import { Target, TestCase } from "../../index";
+import { Target } from "../../search/objective/Target";
+import { Statement } from "../statements/Statement";
+import { TestCase } from "../TestCase";
 
 /**
  * TestCaseSampler class
  *
  * @author Dimitri Stallenberg
+ * @author Mitchell Olsthoorn
  */
 export abstract class TestCaseSampler {
-  get target(): Target {
-    return this._target;
-  }
-
-  set target(value: Target) {
-    this._target = value;
-  }
-
   private _target: Target;
 
   /**
@@ -25,17 +20,31 @@ export abstract class TestCaseSampler {
   }
 
   /**
-   * Should sample an individual
-   * @return  a sampled individual
+   * Should sample a test case.
+   *
+   * @return  a sampled test case
    */
-  abstract sampleIndividual(): TestCase;
+  abstract sampleTestCase(): TestCase;
 
   /**
-   * Should sample any gene based on the type
-   * @param depth     the current depth of the gene tree
-   * @param type      the return type of the gene to sample
-   * @param geneType  the type of the gene
-   * @return          a sampled gene
+   * Should sample any statement based on the type.
+   *
+   * @param depth     the current depth of the statement tree
+   * @param type      the return type of the statement to sample
+   * @param geneType  the type of the statement
+   * @return          a sampled statement
    */
-  abstract sampleGene(depth: number, type: string, geneType: string): any;
+  abstract sampleStatement(
+    depth: number,
+    type: string,
+    geneType: string
+  ): Statement;
+
+  get target(): Target {
+    return this._target;
+  }
+
+  set target(value: Target) {
+    this._target = value;
+  }
 }

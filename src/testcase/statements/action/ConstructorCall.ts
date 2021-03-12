@@ -69,7 +69,7 @@ export class ConstructorCall extends ActionStatement {
 
     // get a random test case and we extract one of its method call
     // ugly solution for now. But we have to fix with proper refactoring
-    const randomTest: TestCase = sampler.sampleIndividual();
+    const randomTest: TestCase = sampler.sampleTestCase();
 
     this.setMethodCall(index, randomTest.root.getMethodCalls()[0]);
   }

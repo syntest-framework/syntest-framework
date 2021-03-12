@@ -46,8 +46,8 @@ export * from "./search/metaheuristics/COMIX";
 export * from "./testcase/sampling/TestCaseSampler";
 
 // Test building
-export * from "./testbuilding/SuiteBuilder";
-export * from "./testbuilding/Stringifier";
+export * from "./testcase/decoder/SuiteBuilder";
+export * from "./testcase/decoder/TestCaseDecoder";
 
 // Instrumentation
 export * from "./graph/CFG";

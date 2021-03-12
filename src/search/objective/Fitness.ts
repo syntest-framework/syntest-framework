@@ -72,7 +72,7 @@ export class Fitness {
   async evaluateOne(individual: TestCase, objectives: Objective[]) {
     getLogger().debug(`Evaluating individual ${individual.id}`);
 
-    const dataPoints = await this.runner.runTest(individual);
+    const dataPoints = await this.runner.runTestCase(individual);
 
     individual.setEvaluation(this.calculateDistance(dataPoints, objectives));
     this._evaluations += 1;
