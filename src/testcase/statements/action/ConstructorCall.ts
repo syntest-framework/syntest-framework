@@ -45,14 +45,45 @@ export class ConstructorCall extends ActionStatement {
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
     }
-    // mutate one of its offspring
+
+    const random = prng.nextDouble(0, 1);
+    if (random <= 0.33) {
+      this.deleteMethodCall(depth, sampler);
+    } else if (prng.nextDouble() <= 0.66) {
+      this.replaceMethodCall(depth, sampler);
+    } else {
+      this.addMethodCall(depth, sampler);
+    }
+
+    if (!this.hasMethodCalls()) this.addMethodCall(depth, sampler);
+
+    return this;
+    //}
+  }
+
+  protected addMethodCall(depth: number, sampler: Sampler) {
+    const calls = this.getMethodCalls();
+    const index = prng.nextInt(0, calls.length);
+    this.setMethodCall(
+      index,
+      sampler.sampleGene(depth, this.type, "functionCall")
+    );
+  }
+
+  protected replaceMethodCall(depth: number, sampler: Sampler) {
     if (this.hasMethodCalls()) {
       const calls = this.getMethodCalls();
       const index = prng.nextInt(0, calls.length - 1);
-      this.setMethodCall(index, calls[index].mutate(sampler, depth + 1));
+      this.setMethodCall(index, calls[index].mutate(sampler, depth));
     }
-    return this;
-    //}
+  }
+
+  protected deleteMethodCall(depth: number, sampler: Sampler) {
+    if (this.hasMethodCalls()) {
+      const calls = this.getMethodCalls();
+      const index = prng.nextInt(0, calls.length - 1);
+      this.getMethodCalls().splice(index, 1);
+    }
   }
 
   copy() {
