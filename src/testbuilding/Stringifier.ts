@@ -14,7 +14,6 @@ export interface Stringifier {
    * @param targetName            the name of the target, used to create informative test cases
    * @return                      the stringified individual
    */
-  // @ts-ignore
   stringifyIndividual(
     individual: TestCase | TestCase[],
     targetName: string,
