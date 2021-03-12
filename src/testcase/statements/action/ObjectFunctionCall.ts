@@ -1,17 +1,17 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
-import { Constructor } from "./Constructor";
-import { getProperty, prng, Sampler } from "../../../index";
+import { ConstructorCall } from "./ConstructorCall";
+import { TestCaseSampler } from "../../sampling/TestCaseSampler";
+import { prng } from "../../../util/prng";
+import { getProperty } from "../../../config";
 
 /**
  * @author Dimitri Stallenberg
  */
 export class ObjectFunctionCall extends ActionStatement {
-  get functionName(): string {
-    return this._functionName;
-  }
-
   private _functionName: string;
+
+  private _parent: ConstructorCall;
 
   /**
    * Constructor
@@ -24,18 +24,21 @@ export class ObjectFunctionCall extends ActionStatement {
   constructor(
     type: string,
     uniqueId: string,
-    instance: Constructor,
+    instance: ConstructorCall,
     functionName: string,
     args: Statement[]
   ) {
-    super(type, uniqueId, [instance, ...args]);
+    super(type, uniqueId, [...args]);
+    this._parent = instance;
     this._functionName = functionName;
   }
 
-  mutate(sampler: Sampler, depth: number) {
+  mutate(sampler: TestCaseSampler, depth: number): ObjectFunctionCall {
     if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
       // resample the gene
-      return sampler.sampleGene(depth, this.type, "functionCall");
+      return <ObjectFunctionCall>(
+        sampler.sampleStatement(depth, this.type, "functionCall")
+      );
     } else if (!this.args.length) {
       return this.copy();
     } else {
@@ -43,7 +46,7 @@ export class ObjectFunctionCall extends ActionStatement {
       const args = [...this.args.map((a: Statement) => a.copy())];
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
-      const instance = args.shift() as Constructor;
+      const instance = this._parent;
       return new ObjectFunctionCall(
         this.type,
         this.id,
@@ -56,12 +59,11 @@ export class ObjectFunctionCall extends ActionStatement {
 
   copy() {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
-    const instance = deepCopyArgs.shift() as Constructor;
 
     return new ObjectFunctionCall(
       this.type,
       this.id,
-      instance,
+      this._parent,
       this.functionName,
       deepCopyArgs
     );
@@ -74,5 +76,13 @@ export class ObjectFunctionCall extends ActionStatement {
 
   getChildren(): Statement[] {
     return [...this.args];
+  }
+
+  getParent(): ConstructorCall {
+    return this._parent;
+  }
+
+  get functionName(): string {
+    return this._functionName;
   }
 }

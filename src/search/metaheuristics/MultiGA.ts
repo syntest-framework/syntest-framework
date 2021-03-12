@@ -3,7 +3,7 @@ import {
   GeneticAlgorithm,
   getLogger,
   Objective,
-  Sampler,
+  TestCaseSampler,
   TestCase,
 } from "../..";
 import { Target } from "../objective/Target";
@@ -36,12 +36,12 @@ export abstract class MultiGA<
   constructor(
     targets: Target[],
     fitness: Fitness,
-    sampler: Sampler,
+    sampler: TestCaseSampler,
     GAtype: {
       new (
         target: Target,
         fitness: Fitness,
-        sampler: Sampler
+        sampler: TestCaseSampler
       ): GeneticAlgorithm;
     }
   ) {

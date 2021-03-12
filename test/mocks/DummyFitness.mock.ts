@@ -1,11 +1,17 @@
-import { Fitness, Objective, Runner, Target, TestCase } from "../../src";
+import {
+  Fitness,
+  Objective,
+  TestCaseRunner,
+  Target,
+  TestCase,
+} from "../../src";
 import { CFG } from "../../src/graph/CFG";
 import { Evaluation } from "../../src/search/objective/Evaluation";
 
 export class DummyFitness extends Fitness {
   private objectives: Objective[];
 
-  constructor(runner: Runner, objectives: Objective[]) {
+  constructor(runner: TestCaseRunner, objectives: Objective[]) {
     const mockedTarget = (<Target>{}) as any; // mocking
 
     super(runner, mockedTarget);

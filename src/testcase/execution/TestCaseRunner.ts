@@ -1,5 +1,5 @@
-import { SuiteBuilder } from "../testbuilding/SuiteBuilder";
-import { TestCase } from "../testcase/TestCase";
+import { TestCase } from "../TestCase";
+import { SuiteBuilder } from "../decoder/SuiteBuilder";
 
 export interface Datapoint {
   type: string;
@@ -13,16 +13,16 @@ export interface Datapoint {
   right: number;
 }
 
-export abstract class Runner {
-  get suiteBuilder(): SuiteBuilder {
-    return this._suiteBuilder;
-  }
-
+export abstract class TestCaseRunner {
   private _suiteBuilder: SuiteBuilder;
 
   constructor(suiteBuilder: SuiteBuilder) {
     this._suiteBuilder = suiteBuilder;
   }
 
-  abstract runTest(individual: TestCase): Promise<Datapoint[]>;
+  abstract runTestCase(testCase: TestCase): Promise<Datapoint[]>;
+
+  get suiteBuilder(): SuiteBuilder {
+    return this._suiteBuilder;
+  }
 }

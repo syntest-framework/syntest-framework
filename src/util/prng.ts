@@ -1,4 +1,5 @@
 import { getProperty } from "../config";
+import BigNumber from "bignumber.js";
 
 const seedrandom = require("seedrandom");
 
@@ -32,10 +33,24 @@ export const prng = {
 
     return Math.round(value * (max - min)) + min;
   },
+  nextBigInt: (
+    min: BigNumber = new BigNumber(0),
+    max = new BigNumber(Number.MAX_VALUE)
+  ) => {
+    const value = new BigNumber(generator());
+    return value.multipliedBy(max.minus(min)).plus(min).integerValue();
+  },
   nextDouble: (min = 0, max = Number.MAX_VALUE) => {
     const value = generator();
 
     return value * (max - min) + min;
+  },
+  nextBigDouble: (
+    min: BigNumber = new BigNumber(0),
+    max = new BigNumber(Number.MAX_VALUE)
+  ) => {
+    const value = new BigNumber(generator());
+    return value.multipliedBy(max.minus(min)).plus(min);
   },
   /**
    * Uses the Box-Muller transform to get a gaussian random variable.
@@ -67,7 +82,12 @@ export const prng = {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
+
+    // first character should not be a digit
+    result += characters.charAt(
+      Math.floor(generator() * charactersLength - 10)
+    );
+    for (let i = 1; i < length; i++) {
       result += characters.charAt(Math.floor(generator() * charactersLength));
     }
     return result;

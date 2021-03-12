@@ -1,5 +1,5 @@
 import { Statement } from "./Statement";
-import { Sampler } from "../../index";
+import { TestCaseSampler } from "../sampling/TestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -15,7 +15,10 @@ export abstract class PrimitiveStatement<T> extends Statement {
     this._value = value;
   }
 
-  abstract mutate(sampler: Sampler, depth: number): PrimitiveStatement<T>;
+  abstract mutate(
+    sampler: TestCaseSampler,
+    depth: number
+  ): PrimitiveStatement<T>;
 
   abstract copy(): PrimitiveStatement<T>;
 

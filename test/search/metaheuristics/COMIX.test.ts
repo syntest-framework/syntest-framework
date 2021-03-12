@@ -6,8 +6,8 @@ import {
   NSGA2,
   Objective,
   processConfig,
-  Runner,
-  Sampler,
+  TestCaseRunner,
+  TestCaseSampler,
   setupLogger,
   setupOptions,
 } from "../../../src";
@@ -41,8 +41,8 @@ describe("Test COMIX", function () {
     const ind3 = new DummyIndividual();
     ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
 
-    const mockedRunner = (<Runner>{}) as any;
-    const mockedSampler = (<Sampler>{}) as any;
+    const mockedRunner = (<TestCaseRunner>{}) as any;
+    const mockedSampler = (<TestCaseSampler>{}) as any;
     const mockedTarget = new DummyTarget([objective1, objective2]);
     const fitness: Fitness = new DummyFitness(mockedRunner, [
       objective1,

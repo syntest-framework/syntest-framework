@@ -1,24 +1,23 @@
-// Runner
-export * from "./runner/Runner";
-/// <reference path="../dist/index.d.ts" />
-
 // Test case
 export * from "./testcase/TestCase";
 
+// Runner
+export * from "./testcase/execution/TestCaseRunner";
+
 // Statements
-// Action
-export * from "./testcase/statements/action/Constructor";
-export * from "./testcase/statements/action/FunctionCall";
-export * from "./testcase/statements/action/ObjectFunctionCall";
-
-// Primitive
-export * from "./testcase/statements/primitive/BoolStatement";
-export * from "./testcase/statements/primitive/NumericStatement";
-export * from "./testcase/statements/primitive/StringStatement";
-
 export * from "./testcase/statements/ActionStatement";
 export * from "./testcase/statements/Statement";
 export * from "./testcase/statements/PrimitiveStatement";
+
+// Action statement
+export * from "./testcase/statements/action/ConstructorCall";
+export * from "./testcase/statements/action/FunctionCall";
+export * from "./testcase/statements/action/ObjectFunctionCall";
+
+// Primitive statement
+export * from "./testcase/statements/primitive/BoolStatement";
+export * from "./testcase/statements/primitive/NumericStatement";
+export * from "./testcase/statements/primitive/StringStatement";
 
 // Search
 // Factories
@@ -44,11 +43,11 @@ export * from "./search/metaheuristics/MultiGA";
 export * from "./search/metaheuristics/COMIX";
 
 // Sampling
-export * from "./search/sampling/Sampler";
+export * from "./testcase/sampling/TestCaseSampler";
 
 // Test building
-export * from "./testbuilding/SuiteBuilder";
-export * from "./testbuilding/Stringifier";
+export * from "./testcase/decoder/SuiteBuilder";
+export * from "./testcase/decoder/TestCaseDecoder";
 
 // Instrumentation
 export * from "./graph/CFG";

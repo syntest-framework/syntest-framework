@@ -5,8 +5,8 @@ import {
   loadConfig,
   Objective,
   processConfig,
-  Runner,
-  Sampler,
+  TestCaseRunner,
+  TestCaseSampler,
   setupLogger,
   setupOptions,
 } from "../../../src";
@@ -42,8 +42,8 @@ describe("Test MOSA", function () {
     const ind3 = new DummyIndividual();
     ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
 
-    const mockedRunner = (<Runner>{}) as any;
-    const mockedSampler = (<Sampler>{}) as any;
+    const mockedRunner = (<TestCaseRunner>{}) as any;
+    const mockedSampler = (<TestCaseSampler>{}) as any;
     const mockedTarget = new DummyTarget([objective1, objective2]);
     const fitness: Fitness = new DummyFitness(mockedRunner, [
       objective1,
@@ -80,8 +80,8 @@ describe("Test MOSA", function () {
     const ind5 = new DummyIndividual();
     ind5.setDummyEvaluation([objective1, objective2], [5, 5]);
 
-    const mockedRunner = (<Runner>{}) as any;
-    const mockedSampler = (<Sampler>{}) as any;
+    const mockedRunner = (<TestCaseRunner>{}) as any;
+    const mockedSampler = (<TestCaseSampler>{}) as any;
     const mockedTarget = new DummyTarget([objective1, objective2]);
     const fitness: Fitness = new DummyFitness(mockedRunner, [
       objective1,
@@ -116,8 +116,8 @@ describe("Test MOSA", function () {
     const ind4 = new DummyIndividual();
     ind4.setDummyEvaluation([objective1, objective2], [1, 1]);
 
-    const mockedRunner = (<Runner>{}) as any;
-    const mockedSampler = (<Sampler>{}) as any;
+    const mockedRunner = (<TestCaseRunner>{}) as any;
+    const mockedSampler = (<TestCaseSampler>{}) as any;
     const mockedTarget = new DummyTarget([objective1, objective2]);
     const fitness: Fitness = new DummyFitness(mockedRunner, [
       objective1,
@@ -158,8 +158,8 @@ describe("Test MOSA", function () {
     const ind5 = new DummyIndividual();
     ind4.setDummyEvaluation([objective1, objective2], [3, 2]);
 
-    const mockedRunner = (<Runner>{}) as any;
-    const mockedSampler = (<Sampler>{}) as any;
+    const mockedRunner = (<TestCaseRunner>{}) as any;
+    const mockedSampler = (<TestCaseSampler>{}) as any;
     const mockedTarget = new DummyTarget([objective1, objective2]);
     const fitness: Fitness = new DummyFitness(mockedRunner, [
       objective1,

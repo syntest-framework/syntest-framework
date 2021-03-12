@@ -1,4 +1,13 @@
-import { getProperty, prng, Statement, TestCase } from "../../..";
+import {
+  FunctionCall,
+  getProperty,
+  ObjectFunctionCall,
+  prng,
+  Statement,
+  TestCase,
+  ActionStatement,
+  NumericStatement,
+} from "../../..";
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.
@@ -10,26 +19,26 @@ import { getProperty, prng, Statement, TestCase } from "../../..";
  *
  * @return a tuple of 2 children
  *
- * @author Dimitri Stallenberg
+ * @author Dimitri Stallenberg, Annibale Panichella
  */
 export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
-  const rootA = parentA.root.copy();
-  const rootB = parentB.root.copy();
+  const rootA = parentA.copy().root;
+  const rootB = parentB.copy().root;
 
-  const queueA: any = [];
+  let queueA: any = [];
 
-  for (let i = 0; i < rootA.getChildren().length; i++) {
+  for (let i = 0; i < rootA.getMethodCalls().length; i++) {
     queueA.push({
       parent: rootA,
       childIndex: i,
-      child: rootA.getChildren()[i],
+      child: rootA.getMethodCalls()[i],
     });
   }
 
-  const crossoverOptions = [];
+  let crossoverOptions = [];
 
   while (queueA.length) {
-    const pair = queueA.shift();
+    let pair = queueA.shift();
 
     if (pair.child.hasChildren()) {
       pair.child.getChildren().forEach((child: Statement, index: number) => {
@@ -43,9 +52,9 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
 
     if (prng.nextBoolean(getProperty("crossover_probability"))) {
       // crossover
-      const donorSubtrees = findSimilarSubtree(pair.child, rootB);
+      let donorSubtrees = findSimilarSubtree(pair.child, rootB);
 
-      for (const donorTree of donorSubtrees) {
+      for (let donorTree of donorSubtrees) {
         crossoverOptions.push({
           p1: pair,
           p2: donorTree,
@@ -55,9 +64,9 @@ export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
   }
 
   if (crossoverOptions.length) {
-    const crossoverChoice = prng.pickOne(crossoverOptions);
-    const pair = crossoverChoice.p1;
-    const donorTree = crossoverChoice.p2;
+    let crossoverChoice = prng.pickOne(crossoverOptions);
+    let pair = crossoverChoice.p1;
+    let donorTree = crossoverChoice.p2;
 
     pair.parent.setChild(pair.childIndex, donorTree.child.copy());
     donorTree.parent.setChild(donorTree.childIndex, pair.child.copy());
@@ -100,7 +109,16 @@ function findSimilarSubtree(wanted: Statement, tree: Statement) {
     }
 
     if (wanted.type === pair.child.type) {
-      similar.push(pair);
+      if (wanted instanceof NumericStatement) {
+        if (
+          wanted.upper_bound == (pair.child as NumericStatement).upper_bound &&
+          wanted.lower_bound == (pair.child as NumericStatement).lower_bound
+        ) {
+          similar.push(pair);
+        }
+      } else {
+        similar.push(pair);
+      }
     }
   }
 

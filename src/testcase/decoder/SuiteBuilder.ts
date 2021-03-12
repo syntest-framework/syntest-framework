@@ -1,6 +1,6 @@
-import { TestCase } from "../testcase/TestCase";
-import { Stringifier } from "./Stringifier";
-import { Objective } from "..";
+import { TestCaseDecoder } from "./TestCaseDecoder";
+import { TestCase } from "../TestCase";
+import { Objective } from "../../search/objective/Objective";
 
 const fs = require("fs");
 const path = require("path");
@@ -11,47 +11,47 @@ const path = require("path");
  * @author Dimitri Stallenberg
  */
 export abstract class SuiteBuilder {
-  get stringifier(): Stringifier {
-    return this._stringifier;
-  }
-
-  private _stringifier: Stringifier;
+  private _decoder: TestCaseDecoder;
 
   /**
-   * Constructor
-   * @param stringifier   a stringifier object
+   * Constructor.
+   *
+   * @param testCaseDecoder   a testCaseDecoder object
    */
-  constructor(stringifier: Stringifier) {
-    this._stringifier = stringifier;
+  constructor(testCaseDecoder: TestCaseDecoder) {
+    this._decoder = testCaseDecoder;
   }
 
   /**
-   * Writes a test file using an individual
-   * @param filePath              the filepath to write the test to
-   * @param individual            the individual to write a test for
+   * Writes a test file using an testCase.
+   *
+   * @param filePath             the filepath to write the test to
+   * @param testCase             the testCase to write a test for
    * @param targetName
-   * @param addLogs               whether to add log statements to the individual
-   * @param additionalAssertions  a dictionary of additional assertions to put in the individual
+   * @param addLogs              whether to add log statements to the testCase
+   * @param additionalAssertions a dictionary of additional assertions to put in the testCase
    */
-  abstract writeTest(
+  abstract writeTestCase(
     filePath: string,
-    individual: TestCase,
+    testCase: TestCase,
     targetName: string,
     addLogs?: boolean,
     additionalAssertions?: Map<TestCase, { [p: string]: string }>
   ): Promise<void>;
 
   /**
-   * Writes tests for all individuals in the given population
+   * Writes tests for all individuals in the given population.
+   *
    * @param population    the population of individuals to write tests for
    */
   abstract createSuite(population: Map<Objective, TestCase>): Promise<void>;
 
   /**
-   * Deletes a certain file
+   * Deletes a certain file.
+   *
    * @param filepath  the filepath of the file to delete
    */
-  async deleteTest(filepath: string) {
+  async deleteTestCase(filepath: string) {
     await fs.unlinkSync(filepath);
   }
 
@@ -66,5 +66,9 @@ export abstract class SuiteBuilder {
     for (const file of dirContent.filter((el: string) => el.match(match))) {
       await fs.unlinkSync(path.resolve(dirPath, file));
     }
+  }
+
+  get decoder(): TestCaseDecoder {
+    return this._decoder;
   }
 }

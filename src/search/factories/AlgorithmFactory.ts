@@ -6,7 +6,7 @@ import {
   MOSA,
   MultiGA,
   NSGA2,
-  Sampler,
+  TestCaseSampler,
   SimpleGA,
   Target,
 } from "../..";
@@ -18,7 +18,7 @@ import {
 export function createAlgorithmFromConfig(
   target: Target | Target[],
   fitnessObject: Fitness,
-  sampler: Sampler
+  sampler: TestCaseSampler
 ) {
   const singleAlgoritms: {
     [key: string]: { new (...args: any[]): GeneticAlgorithm };
