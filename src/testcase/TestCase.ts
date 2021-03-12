@@ -1,10 +1,9 @@
-import { prng } from "../index";
-import { ActionStatement } from "./statements/ActionStatement";
-import { Sampler } from "../index";
-import { getLogger } from "../index";
-import { Stringifier } from "../index";
 import { Evaluation } from "../search/objective/Evaluation";
 import { ConstructorCall } from "./statements/action/ConstructorCall";
+import { prng } from "../util/prng";
+import { getLogger } from "../util/logger";
+import { Sampler } from "../search/sampling/Sampler";
+import { Stringifier } from "../testbuilding/Stringifier";
 
 /**
  * TestCase class

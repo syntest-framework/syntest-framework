@@ -1,7 +1,8 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
-
-import { getProperty, prng, Sampler } from "../../../index";
 import BigNumber from "bignumber.js";
+import { Sampler } from "../../../search/sampling/Sampler";
+import { prng } from "../../../util/prng";
+import { getProperty } from "../../../config";
 
 /**
  * Generic number class

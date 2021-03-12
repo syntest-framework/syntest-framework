@@ -1,6 +1,8 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
-import { getProperty, prng, Sampler } from "../../../index";
+import { Sampler } from "../../../search/sampling/Sampler";
+import { getProperty } from "../../../config";
+import { prng } from "../../../util/prng";
 
 /**
  * @author Dimitri Stallenberg

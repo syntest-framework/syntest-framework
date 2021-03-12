@@ -1,7 +1,9 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
-import { getProperty, prng, Sampler } from "../../../index";
+import { Sampler } from "../../../search/sampling/Sampler";
+import { prng } from "../../../util/prng";
+import { getProperty } from "../../../config";
 
 /**
  * @author Dimitri Stallenberg

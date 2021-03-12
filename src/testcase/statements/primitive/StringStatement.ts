@@ -1,6 +1,7 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
-
-import { getProperty, prng, Sampler } from "../../../index";
+import { Sampler } from "../../../search/sampling/Sampler";
+import { prng } from "../../../util/prng";
+import { getProperty } from "../../../config";
 
 /**
  * @author Dimitri Stallenberg
