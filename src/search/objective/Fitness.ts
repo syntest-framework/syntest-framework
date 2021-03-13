@@ -11,6 +11,7 @@ const { Graph, alg } = require("@dagrejs/graphlib");
  * Class for evaluating individuals or entire populations.
  *
  * @author Dimitri Stallenberg
+ * @author Annibale Panichella
  */
 export class Fitness {
   private runner: TestCaseRunner;
@@ -163,8 +164,8 @@ export class Fitness {
     const hitNodes = [];
 
     for (const point of dataPoints) {
-      // Check if it is a branch node and has been hit
-      if (point.type !== "branch" || point.hits === 0) {
+      // Check if the  is a branch or root-branch node  and has been hit
+      if (point.type !== "branch" && point.type !== "function") {
         continue;
       }
       // Check if the branch in question is currently an objective
@@ -178,7 +179,6 @@ export class Fitness {
 
       // find the corresponding branch node inside the cfg
       const branchNode = this.target.cfg.nodes
-        .filter((n: Node) => !n.absoluteRoot)
         .find((n: Node) => {
           return n.locationIdx === point.locationIdx && n.line === point.line;
         });
@@ -196,7 +196,7 @@ export class Fitness {
     }
 
     const nodes = this.target.cfg.nodes.filter(
-      (n: Node) => !n.absoluteRoot && !n.root
+      (n: any) => n.functionDefinition || n.branchId
     );
 
     // find fitness per objective
@@ -205,9 +205,10 @@ export class Fitness {
     // loop over current objectives
     for (const objective of objectives) {
       // find the node in the CFG object that corresponds to the objective
-      const node = nodes.find((n) => {
+      const node = nodes.find((n: any) => {
         return (
-          objective.locationIdx === n.locationIdx && objective.line === n.line
+            (objective.locationIdx === n.locationIdx && objective.line === n.line) ||
+            (objective.line === n.line && (objective as any).functionDefinition === n.functionDefinition)
         );
       });
 
@@ -221,8 +222,16 @@ export class Fitness {
       const hitNode = hitNodes.find((h: any) => h.node === node);
 
       // if it is covered the distance is 0
-      if (hitNode) {
+      if (hitNode.point.hits > 0) {
         fitness.set(objective, 0);
+        continue;
+      }
+
+      // if the object is uncovered and it is a root-branch (function node)
+      // it means the corresponding function has not been covered
+      // in this case we set its distance equal to 1.0
+      if ((objective as any).functionDefinition){
+        fitness.set(objective, 1);
         continue;
       }
 
@@ -230,14 +239,19 @@ export class Fitness {
       let closestHitNode = null;
       let smallestDistance = Number.MAX_VALUE;
       for (const n of hitNodes) {
-        if (smallestDistance > this.paths[node.id][n.node.id].distance) {
-          smallestDistance = this.paths[node.id][n.node.id].distance;
+        if (n.point.hits == 0) // if the node n has not been covered, we have to skip it
+          continue;
+
+        const pathDistance = this.paths[node.id][n.node.id].distance;
+        if (smallestDistance > pathDistance) {
+          smallestDistance = pathDistance;
           closestHitNode = n;
         }
       }
 
       if (!closestHitNode) {
         // This is now possible since there can be multiple functions within a class that do not interact
+        fitness.set(objective, Number.MAX_VALUE);
         continue;
         // getLogger().error('Closest hit node not found!')
         // getLogger().error(`${JSON.stringify(objective, null, 2)}`)
