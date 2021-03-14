@@ -123,10 +123,10 @@ export class Fitness {
         break;
       case "LT":
         if (left < right) {
-          falseBranch = 1 - 1 / (difference + 1);
+          falseBranch = this.normalize(right - left);
         } else {
-          difference += 1;
-          trueBranch = 1 - 1 / (difference + 1);
+          difference = (left - right) + 1;
+          trueBranch = this.normalize(difference);
         }
         break;
       case "SLT":
@@ -139,10 +139,10 @@ export class Fitness {
         break;
       case "EQ":
         if (left === right) {
-          difference = 1;
-          falseBranch = 1 - 1 / (difference + 1);
+          falseBranch = 1;
         } else {
-          trueBranch = 1 - 1 / (difference + 1);
+          difference = Math.abs(left-right);
+          trueBranch = this.normalize(difference);
         }
         break;
     }
@@ -154,6 +154,10 @@ export class Fitness {
     }
   }
 
+  normalize(x: number): number{
+    return x/(x+1);
+  }
+
   /**
    * Calculates the distance between the branches covered and the uncovered branches.
    *
@@ -162,6 +166,8 @@ export class Fitness {
    */
   private calculateDistance(dataPoints: Datapoint[], objectives: Objective[]) {
     const hitNodes = [];
+    // find fitness per objective
+    const fitness = new Evaluation();
 
     for (const point of dataPoints) {
       // Check if the  is a branch or root-branch node  and has been hit
@@ -199,20 +205,17 @@ export class Fitness {
       (n: any) => n.functionDefinition || n.branchId
     );
 
-    // find fitness per objective
-    const fitness = new Evaluation();
-
     // loop over current objectives
     for (const objective of objectives) {
       // find the node in the CFG object that corresponds to the objective
       const node = nodes.find((n: any) => {
         return (
-            (objective.locationIdx === n.locationIdx && objective.line === n.line) ||
+            (objective.locationIdx === n.locationIdx && objective.line === n.line && (objective as any).type === n.type) ||
             (objective.line === n.line && (objective as any).functionDefinition === n.functionDefinition)
         );
       });
 
-      // No node found so the objective is uncoverable
+      // No node found so the objective cannot be covered
       if (!node) {
         fitness.set(objective, Number.MAX_VALUE - 1);
         continue;
@@ -239,10 +242,10 @@ export class Fitness {
       let closestHitNode = null;
       let smallestDistance = Number.MAX_VALUE;
       for (const n of hitNodes) {
-        if (n.point.hits == 0) // if the node n has not been covered, we have to skip it
+        if (n.point.hits == 0 || n.node.functionDefinition) // if the node n has not been covered, we have to skip it
           continue;
 
-        const pathDistance = this.paths[node.id][n.node.id].distance;
+        const pathDistance = this.approachLevel(node, n);
         if (smallestDistance > pathDistance) {
           smallestDistance = pathDistance;
           closestHitNode = n;
@@ -258,8 +261,6 @@ export class Fitness {
         // process.exit(1)
       }
 
-      // the approach distance is equal to the path length between the closest covered branch and the objective branch
-      const approachDistance = Math.max(smallestDistance - 1, 0);
       // calculate the branch distance between: covering the branch needed to get a closer approach distance and the currently covered branch
       // always between 0 and 1
       const branchDistance = this.calcBranchDistance(
@@ -269,7 +270,7 @@ export class Fitness {
       );
 
       // add the distances
-      const distance = approachDistance + branchDistance;
+      const distance = smallestDistance + branchDistance;
       fitness.set(objective, Math.min(distance, fitness.get(objective)));
     }
 
@@ -278,5 +279,19 @@ export class Fitness {
 
   get evaluations(): number {
     return this._evaluations;
+  }
+
+  approachLevel(targetNode: Node, closestNode: any): number{
+    // the approach distance is equal to the path length between the closest covered branch and the objective branch
+    // let value = this.paths[targetNode.id][closestNode.node.id].distance;
+    //  value = Math.max(smallestDistance - 1, 0);
+    if (targetNode.line == closestNode.node.line)
+      return 0
+
+    if ((targetNode as any).branchId == (closestNode.node as any).branchId)
+      return 0
+
+    return 1;
+
   }
 }
