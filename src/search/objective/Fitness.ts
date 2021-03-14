@@ -20,6 +20,8 @@ export class Fitness {
 
   private _evaluations: number;
 
+  private static map = new Map<number, boolean>();
+
   /**
    * Constructor
    */
@@ -90,6 +92,9 @@ export class Fitness {
     for (const individual of population) {
       await this.evaluateOne(individual, objectives);
     }
+    for (let entry of Fitness.map.keys()){
+      getLogger().info(entry + " " + Fitness.map.get(entry));
+    }
   }
 
   /**
@@ -102,47 +107,49 @@ export class Fitness {
   private calcBranchDistance(opcode: string, left: number, right: number) {
     let trueBranch = 0;
     let falseBranch = 0;
-    let difference = Math.log10(Math.abs(left - right) + 1);
+    let branchDistance = Number.MAX_VALUE;
 
     switch (opcode) {
       case "GT":
         if (left > right) {
-          falseBranch = 1 - 1 / (difference + 1);
+          branchDistance = left - right;
+          falseBranch = this.normalize(branchDistance);
         } else {
-          difference += 1;
-          trueBranch = 1 - 1 / (difference + 1);
+          branchDistance = right - left  + 1;
+          trueBranch = this.normalize(branchDistance);
         }
         break;
       case "SGT":
-        if (left >= right) {
-          difference += 1;
-          falseBranch = 1 - 1 / (difference + 1);
+        if (left > right) {
+          branchDistance = left - right;
+          falseBranch = this.normalize(branchDistance);
         } else {
-          trueBranch = 1 - 1 / (difference + 1);
+          branchDistance = right - left  + 1;
+          trueBranch = this.normalize(branchDistance);
         }
         break;
       case "LT":
         if (left < right) {
           falseBranch = this.normalize(right - left);
         } else {
-          difference = (left - right) + 1;
-          trueBranch = this.normalize(difference);
+          branchDistance = (left - right) + 1;
+          trueBranch = this.normalize(branchDistance);
         }
         break;
       case "SLT":
-        if (left <= right) {
-          difference += 1;
-          falseBranch = 1 - 1 / (difference + 1);
+        if (left < right) {
+          falseBranch = this.normalize(right - left);
         } else {
-          trueBranch = 1 - 1 / (difference + 1);
+          branchDistance = (left - right) + 1;
+          trueBranch = this.normalize(branchDistance);
         }
         break;
       case "EQ":
         if (left === right) {
           falseBranch = 1;
         } else {
-          difference = Math.abs(left-right);
-          trueBranch = this.normalize(difference);
+          branchDistance = Math.abs(left-right);
+          trueBranch = this.normalize(branchDistance);
         }
         break;
     }
@@ -170,6 +177,18 @@ export class Fitness {
     const fitness = new Evaluation();
 
     for (const point of dataPoints) {
+      if (point.type == "line"){
+        if (!Fitness.map.has(point.line)){
+          if (point.hits > 0)
+            Fitness.map.set(point.line, true)
+          else
+            Fitness.map.set(point.line, false)
+        } else {
+          if (point.hits > 0)
+            Fitness.map.set(point.line, true)
+        }
+      }
+
       // Check if the  is a branch or root-branch node  and has been hit
       if (point.type !== "branch" && point.type !== "function") {
         continue;
@@ -272,6 +291,10 @@ export class Fitness {
       // add the distances
       const distance = smallestDistance + branchDistance;
       fitness.set(objective, Math.min(distance, fitness.get(objective)));
+
+      if (distance == 0){
+        process.exit(1);
+      }
     }
 
     return fitness;
