@@ -1,7 +1,7 @@
 import { Evaluation } from "../search/objective/Evaluation";
 import { ConstructorCall } from "./statements/action/ConstructorCall";
-import { prng } from "../util/prng";
-import { getLogger } from "../util/logger";
+import { prng } from "..";
+import { getLogger } from "..";
 import { TestCaseSampler } from "./sampling/TestCaseSampler";
 import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
 

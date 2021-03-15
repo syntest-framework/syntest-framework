@@ -1,5 +1,5 @@
 import { Statement } from "./Statement";
-import { TestCaseSampler } from "../sampling/TestCaseSampler";
+import { TestCaseSampler } from "../..";
 
 /**
  * @author Dimitri Stallenberg

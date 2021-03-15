@@ -1,5 +1,7 @@
 import { Objective } from "./Objective";
-import { CFG } from "../../graph/CFG";
+import {CFG, drawCFG} from "../..";
+import {getProperty} from "../..";
+import * as path from "path";
 
 export abstract class Target {
   private _name: string;
@@ -10,6 +12,10 @@ export abstract class Target {
     this._name = name;
     this._cfg = cfg;
     this._functionMap = functionMap;
+
+    if (getProperty('draw_cfg')) {
+      drawCFG(this.cfg, path.join(getProperty("cfg_directory"), `${name}.svg`))
+    }
   }
 
   getObjectives(): Objective[] {

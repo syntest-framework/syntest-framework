@@ -54,11 +54,14 @@ export * from "./graph/CFG";
 export * from "./graph/Node";
 export * from "./graph/Edge";
 export * from "./graph/cfgUtils";
-export * from "./graph/drawGraph";
+
+// I/O
+export * from "./io/directories";
+export * from "./io/files";
+export * from "./io/graphics";
+export * from "./io/logger";
 
 // Util
 export * from "./config";
 export * from "./util/HashSet";
-export * from "./util/logger";
 export * from "./util/prng";
-export * from "./util/fileSystem";

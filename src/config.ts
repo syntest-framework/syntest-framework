@@ -4,8 +4,8 @@ const path = require("path");
 const findUp = require("find-up");
 const shell = require("shelljs");
 
-const { properties } = require("./properties");
-import { getLogger } from "./util/logger";
+import { properties } from "./properties"
+import { getLogger } from "./";
 
 let cwd: any = null;
 let yargs: any = null;

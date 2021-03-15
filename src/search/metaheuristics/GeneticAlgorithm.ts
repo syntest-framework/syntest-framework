@@ -11,8 +11,8 @@ import {
   startOverTimeWriter,
   writeData,
   writeSummary,
-} from "../../util/resultWriter";
-import { Target } from "../objective/Target";
+} from "../..";
+import { Target } from "../..";
 
 /**
  * Genetic Algorithm BaseClass

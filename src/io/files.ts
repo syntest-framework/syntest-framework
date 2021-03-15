@@ -3,7 +3,7 @@ import { GeneticAlgorithm, Objective } from "..";
 import { appendFileSync, existsSync } from "fs";
 import Timeout = NodeJS.Timeout;
 
-let overTimeWriter: Timeout;
+let overTimeWriter: Timeout | number;
 let time: number = Date.now();
 
 export function startOverTimeWriter(algo: GeneticAlgorithm) {
@@ -30,7 +30,7 @@ export function startOverTimeWriter(algo: GeneticAlgorithm) {
 
 export function endOverTimeWriterIfExists() {
   if (overTimeWriter) {
-    clearInterval(overTimeWriter);
+    clearInterval(<Timeout>overTimeWriter);
   }
 }
 
@@ -146,6 +146,8 @@ function gatherOutputValues(
 
   return output.join(", ");
 }
+
+
 
 async function writeToFile(file: string, data: string) {
   await appendFileSync(file, data);

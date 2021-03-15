@@ -5,7 +5,7 @@ const { JSDOM } = require("jsdom");
 /**
  * @author Dimitri Stallenberg
  */
-export function drawGraph(cfg: any, path: string) {
+export function drawCFG(cfg: any, path: string) {
   const graph = {
     nodes: [
       ...cfg.nodes.map((n: any) => {
