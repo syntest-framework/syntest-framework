@@ -20,8 +20,6 @@ export class Fitness {
 
   private _evaluations: number;
 
-  private static map = new Map<number, boolean>();
-
   /**
    * Constructor
    */
@@ -47,14 +45,14 @@ export class Fitness {
     this.paths = alg.dijkstraAll(g, (e: any) => {
       const edge = cfg.edges.find((edge: Edge) => {
         if (
-          String(edge.from) === String(e.v) &&
-          String(edge.to) === String(e.w)
+            String(edge.from) === String(e.v) &&
+            String(edge.to) === String(e.w)
         ) {
           return true;
         }
 
         return (
-          String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
+            String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
         );
       });
       if (!edge) {
@@ -91,9 +89,6 @@ export class Fitness {
     // TODO This should be done in parallel somehow
     for (const individual of population) {
       await this.evaluateOne(individual, objectives);
-    }
-    for (let entry of Fitness.map.keys()){
-      getLogger().info(entry + " " + Fitness.map.get(entry));
     }
   }
 
@@ -172,27 +167,20 @@ export class Fitness {
    * @param objectives the objectives/targets we want to calculate the distance to
    */
   private calculateDistance(dataPoints: Datapoint[], objectives: Objective[]) {
-    const hitNodes = [];
-    // find fitness per objective
     const fitness = new Evaluation();
 
-    for (const point of dataPoints) {
-      if (point.type == "line"){
-        if (!Fitness.map.has(point.line)){
-          if (point.hits > 0)
-            Fitness.map.set(point.line, true)
-          else
-            Fitness.map.set(point.line, false)
-        } else {
-          if (point.hits > 0)
-            Fitness.map.set(point.line, true)
-        }
-      }
+    // calculate coverage for function calls (root branches)
+    this.calculateFunctionCoverage(objectives, dataPoints, fitness);
 
-      // Check if the  is a branch or root-branch node  and has been hit
-      if (point.type !== "branch" && point.type !== "function") {
+    // calculate coverage for the branches
+    const hitNodes = [];
+
+    for (const point of dataPoints) {
+      // Check if it is a branch node and has been hit
+      if (point.type !== "branch" || point.hits === 0) {
         continue;
       }
+
       // Check if the branch in question is currently an objective
       const objective = this.target.getObjectives().find((o) => {
         return o.locationIdx === point.locationIdx && o.line === point.line;
@@ -227,14 +215,13 @@ export class Fitness {
     // loop over current objectives
     for (const objective of objectives) {
       // find the node in the CFG object that corresponds to the objective
-      const node = nodes.find((n: any) => {
+      const node = nodes.find((n) => {
         return (
-            (objective.locationIdx === n.locationIdx && objective.line === n.line && (objective as any).type === n.type) ||
-            (objective.line === n.line && (objective as any).functionDefinition === n.functionDefinition)
+            objective.locationIdx === n.locationIdx && objective.line === n.line
         );
       });
 
-      // No node found so the objective cannot be covered
+      // No node found so the objective is uncoverable
       if (!node) {
         fitness.set(objective, Number.MAX_VALUE - 1);
         continue;
@@ -244,16 +231,8 @@ export class Fitness {
       const hitNode = hitNodes.find((h: any) => h.node === node);
 
       // if it is covered the distance is 0
-      if (hitNode.point.hits > 0) {
+      if (hitNode) {
         fitness.set(objective, 0);
-        continue;
-      }
-
-      // if the object is uncovered and it is a root-branch (function node)
-      // it means the corresponding function has not been covered
-      // in this case we set its distance equal to 1.0
-      if ((objective as any).functionDefinition){
-        fitness.set(objective, 1);
         continue;
       }
 
@@ -261,10 +240,7 @@ export class Fitness {
       let closestHitNode = null;
       let smallestDistance = Number.MAX_VALUE;
       for (const n of hitNodes) {
-        if (n.point.hits == 0 || n.node.functionDefinition) // if the node n has not been covered, we have to skip it
-          continue;
-
-        const pathDistance = this.approachLevel(node, n);
+        const pathDistance =  this.paths[node.id][n.node.id].distance;
         if (smallestDistance > pathDistance) {
           smallestDistance = pathDistance;
           closestHitNode = n;
@@ -273,7 +249,6 @@ export class Fitness {
 
       if (!closestHitNode) {
         // This is now possible since there can be multiple functions within a class that do not interact
-        fitness.set(objective, Number.MAX_VALUE);
         continue;
         // getLogger().error('Closest hit node not found!')
         // getLogger().error(`${JSON.stringify(objective, null, 2)}`)
@@ -283,38 +258,45 @@ export class Fitness {
       // calculate the branch distance between: covering the branch needed to get a closer approach distance and the currently covered branch
       // always between 0 and 1
       const branchDistance = this.calcBranchDistance(
-        closestHitNode.point.opcode,
-        closestHitNode.point.left,
-        closestHitNode.point.right
+          closestHitNode.point.opcode,
+          closestHitNode.point.left,
+          closestHitNode.point.right
       );
 
-      // add the distances
-      const distance = smallestDistance + branchDistance;
-      fitness.set(objective, Math.min(distance, fitness.get(objective)));
+      let approachLevel = smallestDistance;
+      const lineCoverage = dataPoints.filter(
+          (n: any) => n.line == node.line && n.type =="line"
+      );
 
-      if (distance == 0){
-        process.exit(1);
-      }
+      if (lineCoverage.length>0 && lineCoverage[0].hits > 0)
+        approachLevel = 0;
+
+      // add the distances
+      const distance = approachLevel + branchDistance;
+      fitness.set(objective, Math.min(distance, fitness.get(objective)));
     }
 
     return fitness;
   }
 
-  get evaluations(): number {
-    return this._evaluations;
+  calculateFunctionCoverage(objectives: Objective[], dataPoints: Datapoint[], fitness: Evaluation){
+    for (const objective of objectives){
+      if (!(objective as any).absoluteRoot) // not a root branch
+        continue;
+
+      const point = dataPoints.find((point) => {
+        return objective.line === point.line;
+      });
+
+      if (point.hits > 0){
+        fitness.set(objective, 0);
+      } else {
+        fitness.set(objective, 1);
+      }
+    }
   }
 
-  approachLevel(targetNode: Node, closestNode: any): number{
-    // the approach distance is equal to the path length between the closest covered branch and the objective branch
-    // let value = this.paths[targetNode.id][closestNode.node.id].distance;
-    //  value = Math.max(smallestDistance - 1, 0);
-    if (targetNode.line == closestNode.node.line)
-      return 0
-
-    if ((targetNode as any).branchId == (closestNode.node as any).branchId)
-      return 0
-
-    return 1;
-
+  get evaluations(): number {
+    return this._evaluations;
   }
 }
