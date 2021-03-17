@@ -4,6 +4,7 @@ import { Evaluation } from "./Evaluation";
 import { Node } from "../../graph/Node";
 import { Edge } from "../../graph/Edge";
 import { CFG } from "../../graph/CFG";
+import {BranchDistance} from "./BranchDistance";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 
@@ -19,6 +20,7 @@ export class Fitness {
   private paths: any;
 
   private _evaluations: number;
+  private branchDistance: BranchDistance;
 
   /**
    * Constructor
@@ -27,6 +29,7 @@ export class Fitness {
     this.runner = runner;
     this.target = target;
     this._evaluations = 0;
+    this.branchDistance = new BranchDistance();
     this.extractPaths(target.cfg);
   }
 
@@ -92,73 +95,7 @@ export class Fitness {
     }
   }
 
-  /**
-   * Calculate the branch distance
-   *
-   * @param opcode the opcode (the comparison operator)
-   * @param left the left value of the comparison
-   * @param right the right value of the comparison
-   */
-  private calcBranchDistance(opcode: string, left: number, right: number) {
-    let trueBranch = 0;
-    let falseBranch = 0;
-    let branchDistance = Number.MAX_VALUE;
 
-    switch (opcode) {
-      case "GT":
-        if (left > right) {
-          branchDistance = left - right;
-          falseBranch = this.normalize(branchDistance);
-        } else {
-          branchDistance = right - left  + 1;
-          trueBranch = this.normalize(branchDistance);
-        }
-        break;
-      case "SGT":
-        if (left > right) {
-          branchDistance = left - right;
-          falseBranch = this.normalize(branchDistance);
-        } else {
-          branchDistance = right - left  + 1;
-          trueBranch = this.normalize(branchDistance);
-        }
-        break;
-      case "LT":
-        if (left < right) {
-          falseBranch = this.normalize(right - left);
-        } else {
-          branchDistance = (left - right) + 1;
-          trueBranch = this.normalize(branchDistance);
-        }
-        break;
-      case "SLT":
-        if (left < right) {
-          falseBranch = this.normalize(right - left);
-        } else {
-          branchDistance = (left - right) + 1;
-          trueBranch = this.normalize(branchDistance);
-        }
-        break;
-      case "EQ":
-        if (left === right) {
-          falseBranch = 1;
-        } else {
-          branchDistance = Math.abs(left-right);
-          trueBranch = this.normalize(branchDistance);
-        }
-        break;
-    }
-
-    if (trueBranch === 0) {
-      return falseBranch;
-    } else {
-      return trueBranch;
-    }
-  }
-
-  normalize(x: number): number{
-    return x/(x+1);
-  }
 
   /**
    * Calculates the distance between the branches covered and the uncovered branches.
@@ -240,7 +177,7 @@ export class Fitness {
       let closestHitNode = null;
       let smallestDistance = Number.MAX_VALUE;
       for (const n of hitNodes) {
-        const pathDistance =  this.paths[node.id][n.node.id].distance;
+        const pathDistance = this.paths[node.id][n.node.id].distance;
         if (smallestDistance > pathDistance) {
           smallestDistance = pathDistance;
           closestHitNode = n;
@@ -257,10 +194,11 @@ export class Fitness {
 
       // calculate the branch distance between: covering the branch needed to get a closer approach distance and the currently covered branch
       // always between 0 and 1
-      const branchDistance = this.calcBranchDistance(
+      const branchDistance = this.branchDistance.branchDistanceNumeric(
           closestHitNode.point.opcode,
           closestHitNode.point.left,
-          closestHitNode.point.right
+          closestHitNode.point.right,
+          !!objective.locationIdx
       );
 
       let approachLevel = smallestDistance;
