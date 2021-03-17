@@ -4,7 +4,7 @@ import { Evaluation } from "./Evaluation";
 import { Node } from "../../graph/Node";
 import { Edge } from "../../graph/Edge";
 import { CFG } from "../../graph/CFG";
-import {BranchDistance} from "./BranchDistance";
+import { BranchDistance } from "./BranchDistance";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 
@@ -48,14 +48,14 @@ export class Fitness {
     this.paths = alg.dijkstraAll(g, (e: any) => {
       const edge = cfg.edges.find((edge: Edge) => {
         if (
-            String(edge.from) === String(e.v) &&
-            String(edge.to) === String(e.w)
+          String(edge.from) === String(e.v) &&
+          String(edge.to) === String(e.w)
         ) {
           return true;
         }
 
         return (
-            String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
+          String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
         );
       });
       if (!edge) {
@@ -95,8 +95,6 @@ export class Fitness {
     }
   }
 
-
-
   /**
    * Calculates the distance between the branches covered and the uncovered branches.
    *
@@ -128,10 +126,9 @@ export class Fitness {
       }
 
       // find the corresponding branch node inside the cfg
-      const branchNode = this.target.cfg.nodes
-        .find((n: Node) => {
-          return n.locationIdx === point.locationIdx && n.line === point.line;
-        });
+      const branchNode = this.target.cfg.nodes.find((n: Node) => {
+        return n.locationIdx === point.locationIdx && n.line === point.line;
+      });
 
       if (!branchNode) {
         getLogger().error("Branch node not found!");
@@ -154,7 +151,7 @@ export class Fitness {
       // find the node in the CFG object that corresponds to the objective
       const node = nodes.find((n) => {
         return (
-            objective.locationIdx === n.locationIdx && objective.line === n.line
+          objective.locationIdx === n.locationIdx && objective.line === n.line
         );
       });
 
@@ -195,18 +192,18 @@ export class Fitness {
       // calculate the branch distance between: covering the branch needed to get a closer approach distance and the currently covered branch
       // always between 0 and 1
       const branchDistance = this.branchDistance.branchDistanceNumeric(
-          closestHitNode.point.opcode,
-          closestHitNode.point.left,
-          closestHitNode.point.right,
-          !!objective.locationIdx
+        closestHitNode.point.opcode,
+        closestHitNode.point.left,
+        closestHitNode.point.right,
+        !!objective.locationIdx
       );
 
       let approachLevel = smallestDistance;
       const lineCoverage = dataPoints.filter(
-          (n: any) => n.line == node.line && n.type =="line"
+        (n: any) => n.line == node.line && n.type == "line"
       );
 
-      if (lineCoverage.length>0 && lineCoverage[0].hits > 0)
+      if (lineCoverage.length > 0 && lineCoverage[0].hits > 0)
         approachLevel = 0;
 
       // add the distances
@@ -217,16 +214,21 @@ export class Fitness {
     return fitness;
   }
 
-  calculateFunctionCoverage(objectives: Objective[], dataPoints: Datapoint[], fitness: Evaluation){
-    for (const objective of objectives){
-      if (!(objective as any).absoluteRoot) // not a root branch
+  calculateFunctionCoverage(
+    objectives: Objective[],
+    dataPoints: Datapoint[],
+    fitness: Evaluation
+  ) {
+    for (const objective of objectives) {
+      if (!(objective as any).absoluteRoot)
+        // not a root branch
         continue;
 
       const point = dataPoints.find((point) => {
         return objective.line === point.line;
       });
 
-      if (point.hits > 0){
+      if (point.hits > 0) {
         fitness.set(objective, 0);
       } else {
         fitness.set(objective, 1);
