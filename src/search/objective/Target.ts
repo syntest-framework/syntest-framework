@@ -13,7 +13,11 @@ export abstract class Target {
   }
 
   getObjectives(): Objective[] {
-    return this._cfg.nodes.filter((n: any) => !n.absoluteRoot);
+    // we consider branches (nodes with 'branchId' values) but also
+    // the root branch for each method (nodes with 'functionDefinition' values)
+    return this._cfg.nodes.filter(
+      (n: any) => n.functionDefinition || n.branchId
+    );
   }
 
   // TODO rename this
