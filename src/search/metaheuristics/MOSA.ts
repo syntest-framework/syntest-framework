@@ -112,8 +112,7 @@ export class MOSA extends NSGA2 {
     return newPopulation;
   }
 
-   async calculateFitness(offspring: TestCase[]) {
-
+  async calculateFitness(offspring: TestCase[]) {
     for (const test of offspring) {
       await this.fitness.evaluateOne(test, [...this.uncoveredObjectives]);
 

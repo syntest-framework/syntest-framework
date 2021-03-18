@@ -223,7 +223,7 @@ export abstract class GeneticAlgorithm {
    * This method is very simple for simple EAs but it is overwritten by many-objective search algorithms
    * @param tests
    */
-  public async calculateFitness(tests: TestCase[]){
+  public async calculateFitness(tests: TestCase[]) {
     await this._fitness.evaluateMany(this._population, this.objectives);
   }
 
