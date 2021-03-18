@@ -130,8 +130,8 @@ export class MOSA extends NSGA2 {
       }
       // we removed newly covered targets from the set of objectives to optimize
       for (const obj of covered) {
-        //const element = this.uncoveredObjectives.indexOf(obj);
-        //this.uncoveredObjectives.splice(element, 1);
+        const element = this.uncoveredObjectives.indexOf(obj);
+        this.uncoveredObjectives.splice(element, 1);
       }
     }
   }
