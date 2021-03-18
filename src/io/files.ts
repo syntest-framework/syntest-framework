@@ -147,8 +147,6 @@ function gatherOutputValues(
   return output.join(", ");
 }
 
-
-
 async function writeToFile(file: string, data: string) {
   await appendFileSync(file, data);
 }
