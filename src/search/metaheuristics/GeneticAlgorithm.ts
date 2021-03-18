@@ -176,7 +176,7 @@ export abstract class GeneticAlgorithm {
     this._population = this.createInitialPopulation();
     getLogger().info("Initial population created");
     startOverTimeWriter(this);
-    await this._fitness.evaluateMany(this._population, this.objectives);
+    this.calculateFitness(this._population);
 
     this._currentGeneration = 0;
     this._startTime = Date.now();
@@ -216,6 +216,15 @@ export abstract class GeneticAlgorithm {
    */
   public getFinalTestSuite(): Map<Objective, TestCase> {
     return this._archive;
+  }
+
+  /**
+   * This methods calculates coverage and fitness function values for a collection of test case.
+   * This method is very simple for simple EAs but it is overwritten by many-objective search algorithms
+   * @param tests
+   */
+  public async calculateFitness(tests: TestCase[]){
+    await this._fitness.evaluateMany(this._population, this.objectives);
   }
 
   /**
