@@ -40,48 +40,29 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
   }
 
   mutate(sampler: TestCaseSampler, depth: number): NumericStatement {
-    if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
-      // let's generate a random number with the same characteristics (upper an
-      return NumericStatement.getRandom(
-        this.type,
-        this._decimals,
-        this._signed,
-        this._upper_bound,
-        this._lower_bound
-      );
-    }
-
     if (prng.nextBoolean(getProperty("delta_mutation_probability"))) {
       return this.deltaMutation();
     }
 
-    const max = this._upper_bound;
-    const min = this._signed ? max.negated() : NumericStatement._zero;
-
-    // TODO: Maybe we need to generate small numbers
-    const newValue = prng.nextBigDouble(min, max);
-
-    return new NumericStatement(
+    return NumericStatement.getRandom(
       this.type,
-      this.id,
-      new BigNumber(newValue),
-      this._decimals,
-      this._signed,
-      this._upper_bound,
-      this._lower_bound
+      this.decimals,
+      this.signed,
+      this.upper_bound,
+      this.lower_bound
     );
   }
 
   deltaMutation() {
     // small mutation
-    const change = prng.nextGaussian(0, 3);
+    const change = prng.nextGaussian(0, 20);
 
     let newValue = this.value.plus(change);
 
     // If illegal values are not allowed we make sure the value does not exceed the specified bounds
     if (!getProperty("explore_illegal_values")) {
-      const max = NumericStatement._max_value;
-      const min = this._signed ? -max : NumericStatement._zero;
+      const max = this.upper_bound;
+      const min = this._signed ? this.lower_bound : NumericStatement._zero;
 
       if (newValue.isGreaterThan(max)) {
         newValue = new BigNumber(max);

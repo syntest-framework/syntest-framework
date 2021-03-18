@@ -1,6 +1,7 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
 import { Objective } from "../../search/objective/Objective";
+import {getLogger} from "../../util/logger";
 
 const fs = require("fs");
 const path = require("path");
@@ -52,7 +53,11 @@ export abstract class SuiteBuilder {
    * @param filepath  the filepath of the file to delete
    */
   async deleteTestCase(filepath: string) {
-    await fs.unlinkSync(filepath);
+    try {
+      await fs.unlinkSync(filepath);
+    } catch (error) {
+      getLogger().debug(error);
+    }
   }
 
   /**
