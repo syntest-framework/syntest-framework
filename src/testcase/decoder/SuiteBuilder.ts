@@ -1,6 +1,7 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
 import { Objective } from "../../search/objective/Objective";
+import {getLogger} from "../../util/logger";
 
 const fs = require("fs");
 const path = require("path");
@@ -55,7 +56,7 @@ export abstract class SuiteBuilder {
     try {
       await fs.unlinkSync(filepath);
     } catch (error) {
-      //console.error(error);
+      getLogger().debug(error);
     }
   }
 
