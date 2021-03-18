@@ -52,7 +52,11 @@ export abstract class SuiteBuilder {
    * @param filepath  the filepath of the file to delete
    */
   async deleteTestCase(filepath: string) {
-    await fs.unlinkSync(filepath);
+    try {
+      await fs.unlinkSync(filepath);
+    } catch (error) {
+      //console.error(error);
+    }
   }
 
   /**
