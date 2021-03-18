@@ -51,7 +51,7 @@ export class ConstructorCall extends ActionStatement {
     const random = prng.nextDouble(0, 1);
     if (random <= 0.33) {
       this.deleteMethodCall(depth, sampler);
-    } else if (prng.nextDouble() <= 0.66) {
+    } else if (random <= 0.66) {
       this.replaceMethodCall(depth, sampler);
     } else {
       this.addMethodCall(depth, sampler);
