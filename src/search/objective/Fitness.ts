@@ -195,7 +195,7 @@ export class Fitness {
         closestHitNode.point.opcode,
         closestHitNode.point.left,
         closestHitNode.point.right,
-        !!objective.locationIdx
+        (objective as any).type === "true" ? true : false // we look at whether we are optimizing or the false or the true branch
       );
 
       let approachLevel = smallestDistance;
