@@ -16,7 +16,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected
    */
-  protected readonly _objectiveManager: ObjectiveManager<T>;
+  protected _objectiveManager: ObjectiveManager<T>;
 
   /**
    * Abstract constructor.
