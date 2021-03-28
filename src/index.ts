@@ -55,6 +55,7 @@ export * from "./graph/Node";
 export * from "./graph/Edge";
 export * from "./graph/cfgUtils";
 export * from "./graph/drawGraph";
+export * from "./graph/CFGFactory";
 
 // Util
 export * from "./config";

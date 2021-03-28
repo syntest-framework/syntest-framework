@@ -63,7 +63,7 @@ export class Fitness {
         process.exit(1);
       }
 
-      return edge.type === "-" ? 2 : 1;
+      return 1;// edge.type === "-" ? 2 : 1;
     });
   }
 
@@ -118,7 +118,7 @@ export class Fitness {
 
       // Check if the branch in question is currently an objective
       const objective = this.target.getObjectives().find((o) => {
-        return o.locationIdx === point.locationIdx && o.line === point.line;
+        return o.branchType === !!point.locationIdx && o.line === point.line;
       });
 
       if (!objective) {
@@ -127,7 +127,7 @@ export class Fitness {
 
       // find the corresponding branch node inside the cfg
       const branchNode = this.target.cfg.nodes.find((n: Node) => {
-        return n.locationIdx === point.locationIdx && n.line === point.line;
+        return n.line === point.line;//n.branchType === !!point.locationIdx &&
       });
 
       if (!branchNode) {
@@ -142,16 +142,17 @@ export class Fitness {
       });
     }
 
-    const nodes = this.target.cfg.nodes.filter(
-      (n: any) => n.functionDefinition || n.branchId
-    );
+    const nodes = this.target.cfg.nodes
+        // .filter(
+      // (n: any) => n.functionDefinition || n.branchId
+    // );
 
     // loop over current objectives
     for (const objective of objectives) {
       // find the node in the CFG object that corresponds to the objective
       const node = nodes.find((n) => {
         return (
-          objective.locationIdx === n.locationIdx && objective.line === n.line
+          objective.line === n.line //objective.branchType === n.branchType &&
         );
       });
 

@@ -1,8 +1,12 @@
 export interface Node {
-  target: string;
   id: string;
-  absoluteRoot: boolean;
-  root: boolean;
-  locationIdx: number;
   line: number;
+  branch: boolean;
+  condition?: Operation
+  description?: string;
+}
+
+export interface Operation {
+  type: string;
+  operator: string;
 }

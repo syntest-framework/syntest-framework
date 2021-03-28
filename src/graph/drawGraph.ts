@@ -16,7 +16,7 @@ export function drawGraph(cfg: any, path: string) {
         }
 
         if (n.condition) {
-          name += ` ${n.condition}`;
+          name += ` ${n.condition.operator}`;
         }
 
         return {
@@ -33,7 +33,7 @@ export function drawGraph(cfg: any, path: string) {
           id: e.from + "-" + e.to,
           source: e.from,
           target: e.to,
-          type: e.type,
+          type: e.branchType,
         };
       }),
     ],
@@ -94,9 +94,9 @@ export function drawGraph(cfg: any, path: string) {
     .append("path")
     .attr("stroke-width", "1px")
     .attr("stroke", (d: any) => {
-      if (d.type === "true") {
+      if (d.type === true) {
         return "#7CFC00";
-      } else if (d.type === "false") {
+      } else if (d.type === false) {
         return "#ff0000";
       }
       return "#555";

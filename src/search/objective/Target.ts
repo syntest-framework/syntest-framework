@@ -15,9 +15,27 @@ export abstract class Target {
   getObjectives(): Objective[] {
     // we consider branches (nodes with 'branchId' values) but also
     // the root branch for each method (nodes with 'functionDefinition' values)
-    return this._cfg.nodes.filter(
-      (n: any) => n.functionDefinition || n.branchId
-    );
+    const objectives: Objective[] = []
+
+    this._cfg.nodes.forEach((n) => {
+      objectives.push(
+          {
+            ...n,
+            target: name,
+            branchType: true
+          },
+          {
+            ...n,
+            target: name,
+            branchType: false
+          })
+    })
+
+    return objectives
+
+    //     .filter(
+    //   (n: any) => n.functionDefinition || n.branchId
+    // );
   }
 
   // TODO rename this

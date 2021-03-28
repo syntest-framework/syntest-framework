@@ -129,7 +129,7 @@ function gatherOutputValues(
   }
 
   if (outputValues.includes("branch") && objective) {
-    output.push(`${objective.line}, ${objective.locationIdx}`);
+    output.push(`${objective.line}, ${objective.branchType}`);
   }
 
   if (outputValues.includes("coveredBranches")) {
