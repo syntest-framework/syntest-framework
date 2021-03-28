@@ -1,12 +1,11 @@
-import { Evaluation } from "../search/objective/Evaluation";
 import { ConstructorCall } from "./statements/action/ConstructorCall";
 import { prng } from "../util/prng";
 import { getLogger } from "../util/logger";
-import { TestCaseSampler } from "./sampling/TestCaseSampler";
 import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
 import { Encoding } from "../search/Encoding";
 import { ExecutionResult } from "../search/ExecutionResult";
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
+import { EncodingSampler } from "../search/EncodingSampler";
 
 /**
  * TestCase class
@@ -46,7 +45,7 @@ export class TestCase implements Encoding {
     getLogger().debug(`Created test case: ${this._id}`);
   }
 
-  mutate(sampler: TestCaseSampler) {
+  mutate(sampler: EncodingSampler<TestCase>) {
     getLogger().debug(`Mutating test case: ${this._id}`);
     return new TestCase(this._root.mutate(sampler, 0));
   }

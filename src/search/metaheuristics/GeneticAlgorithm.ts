@@ -159,7 +159,7 @@ export abstract class GeneticAlgorithm {
     const population: TestCase[] = [];
 
     for (let i = 0; i < this._popsize; i++) {
-      population.push(this._sampler.sampleTestCase());
+      population.push(this._sampler.sample());
     }
 
     return population;

@@ -1,6 +1,7 @@
 import { Target } from "../../search/objective/Target";
 import { Statement } from "../statements/Statement";
 import { TestCase } from "../TestCase";
+import { EncodingSampler } from "../../search/EncodingSampler";
 
 /**
  * TestCaseSampler class
@@ -8,7 +9,7 @@ import { TestCase } from "../TestCase";
  * @author Dimitri Stallenberg
  * @author Mitchell Olsthoorn
  */
-export abstract class TestCaseSampler {
+export abstract class TestCaseSampler implements EncodingSampler<TestCase> {
   private _target: Target;
 
   /**
@@ -18,13 +19,6 @@ export abstract class TestCaseSampler {
   protected constructor(target: Target) {
     this._target = target;
   }
-
-  /**
-   * Should sample a test case.
-   *
-   * @return  a sampled test case
-   */
-  abstract sampleTestCase(): TestCase;
 
   /**
    * Should sample any statement based on the type.
@@ -47,4 +41,11 @@ export abstract class TestCaseSampler {
   set target(value: Target) {
     this._target = value;
   }
+
+  /**
+   * Should sample a test case.
+   *
+   * @return  a sampled test case
+   */
+  abstract sample(): TestCase;
 }
