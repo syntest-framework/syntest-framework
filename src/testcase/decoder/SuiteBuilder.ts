@@ -1,7 +1,7 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
-import { Objective } from "../../search/objective/Objective";
 import { getLogger } from "../../util/logger";
+import { ObjectiveFunction } from "../../search/objective/ObjectiveFunction";
 
 const fs = require("fs");
 const path = require("path");
@@ -45,7 +45,9 @@ export abstract class SuiteBuilder {
    *
    * @param population    the population of individuals to write tests for
    */
-  abstract createSuite(population: Map<Objective, TestCase>): Promise<void>;
+  abstract createSuite(
+    population: Map<ObjectiveFunction<TestCase>, TestCase>
+  ): Promise<void>;
 
   /**
    * Deletes a certain file.

@@ -7,7 +7,7 @@ export class BranchDistance {
    * @param right the right value of the comparison
    * @param target the side of the branch you want to cover
    */
-  public branchDistanceNumeric(
+  public static branchDistanceNumeric(
     opcode: string,
     left: number,
     right: number,
@@ -70,15 +70,15 @@ export class BranchDistance {
     return this.normalize(branchDistance);
   }
 
-  private normalize(x: number): number {
+  private static normalize(x: number): number {
     return x / (x + 1);
   }
 
-  private equalNumeric(left: number, right: number) {
+  private static equalNumeric(left: number, right: number) {
     return Math.abs(left - right);
   }
 
-  private notEqualNumeric(left: number, right: number) {
+  private static notEqualNumeric(left: number, right: number) {
     if (left != right) {
       return 0.0;
     } else {
@@ -86,7 +86,7 @@ export class BranchDistance {
     }
   }
 
-  private greater(left: number, right: number) {
+  private static greater(left: number, right: number) {
     if (left > right) {
       return 0.0;
     } else {
@@ -94,7 +94,7 @@ export class BranchDistance {
     }
   }
 
-  private smallerEqual(left: number, right: number) {
+  private static smallerEqual(left: number, right: number) {
     if (left <= right) {
       return 0.0;
     } else {
@@ -102,7 +102,7 @@ export class BranchDistance {
     }
   }
 
-  private greaterEqual(left: number, right: number) {
+  private static greaterEqual(left: number, right: number) {
     if (left >= right) {
       return 0.0;
     } else {
@@ -110,7 +110,7 @@ export class BranchDistance {
     }
   }
 
-  private smaller(left: number, right: number) {
+  private static smaller(left: number, right: number) {
     if (left < right) {
       return 0.0;
     } else {

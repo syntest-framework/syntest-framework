@@ -20,14 +20,19 @@ export * from "./testcase/statements/primitive/NumericStatement";
 export * from "./testcase/statements/primitive/StringStatement";
 
 // Search
+export * from "./search/SearchSubject";
+export * from "./search/EncodingSampler";
+export * from "./search/Encoding";
+export * from "./search/ExecutionResult";
+export * from "./search/Archive";
+export * from "./search/EncodingRunner";
+
 // Factories
 export * from "./search/factories/AlgorithmFactory";
 export * from "./search/factories/StoppingCriterionFactory";
 
 // Objective
-export * from "./search/objective/Fitness";
-export * from "./search/objective/Objective";
-export * from "./search/objective/Target";
+export * from "./search/objective/ObjectiveFunction";
 
 // Operator
 export * from "./search/operators/ranking/CrowdingDistance";

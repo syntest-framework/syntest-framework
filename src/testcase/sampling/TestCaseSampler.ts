@@ -1,7 +1,7 @@
-import { Target } from "../../search/objective/Target";
 import { Statement } from "../statements/Statement";
 import { TestCase } from "../TestCase";
 import { EncodingSampler } from "../../search/EncodingSampler";
+import { SearchSubject } from "../../search/SearchSubject";
 
 /**
  * TestCaseSampler class
@@ -10,14 +10,14 @@ import { EncodingSampler } from "../../search/EncodingSampler";
  * @author Mitchell Olsthoorn
  */
 export abstract class TestCaseSampler implements EncodingSampler<TestCase> {
-  private _target: Target;
+  private _subject: SearchSubject<TestCase>;
 
   /**
    * Constructor
-   * @param target     the target
+   * @param subject     the subject
    */
-  protected constructor(target: Target) {
-    this._target = target;
+  protected constructor(subject: SearchSubject<TestCase>) {
+    this._subject = subject;
   }
 
   /**
@@ -34,12 +34,12 @@ export abstract class TestCaseSampler implements EncodingSampler<TestCase> {
     geneType: string
   ): Statement;
 
-  get target(): Target {
-    return this._target;
+  get subject(): SearchSubject<TestCase> {
+    return this._subject;
   }
 
-  set target(value: Target) {
-    this._target = value;
+  set subject(value: SearchSubject<TestCase>) {
+    this._subject = value;
   }
 
   /**

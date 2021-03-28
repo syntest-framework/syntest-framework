@@ -1,6 +1,10 @@
 import { CFG } from "../graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
+import { Edge } from "../graph/Edge";
+import { getLogger } from "../util/logger";
+
+const { Graph, alg } = require("@dagrejs/graphlib");
 
 /**
  * Subject of the search process.
@@ -20,6 +24,8 @@ export abstract class SearchSubject<T extends Encoding> {
    */
   protected readonly _cfg: CFG;
 
+  protected _paths: any;
+
   /**
    * Function map of the subject.
    * @protected
@@ -38,6 +44,41 @@ export abstract class SearchSubject<T extends Encoding> {
     this._name = name;
     this._cfg = cfg;
     this._functionMap = functionMap;
+    this._extractPaths();
+  }
+
+  protected _extractPaths() {
+    const g = new Graph();
+
+    for (const node of this._cfg.nodes) {
+      g.setNode(node.id);
+    }
+
+    for (const edge of this._cfg.edges) {
+      g.setEdge(edge.from, edge.to);
+      g.setEdge(edge.to, edge.from);
+    }
+
+    this._paths = alg.dijkstraAll(g, (e: any) => {
+      const edge = this._cfg.edges.find((edge: Edge) => {
+        if (
+          String(edge.from) === String(e.v) &&
+          String(edge.to) === String(e.w)
+        ) {
+          return true;
+        }
+
+        return (
+          String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
+        );
+      });
+      if (!edge) {
+        getLogger().error(`Edge not found during dijkstra operation.`);
+        process.exit(1);
+      }
+
+      return edge.type === "-" ? 2 : 1;
+    });
   }
 
   /**
@@ -55,6 +96,10 @@ export abstract class SearchSubject<T extends Encoding> {
     type?: string,
     returnType?: string
   ): ActionDescription[];
+
+  public getPath(from: string, to: string) {
+    return this._paths[from][to].distance;
+  }
 
   get name(): string {
     return this._name;
