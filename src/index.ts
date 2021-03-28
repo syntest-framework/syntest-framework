@@ -35,12 +35,8 @@ export * from "./search/operators/ranking/FastNonDomSorting";
 export * from "./search/operators/selection/TournamentSelection";
 
 // Metaheuristics
-export * from "./search/metaheuristics/GeneticAlgorithm";
-export * from "./search/metaheuristics/NSGA2";
-export * from "./search/metaheuristics/SimpleGA";
-export * from "./search/metaheuristics/MOSA";
-export * from "./search/metaheuristics/MultiGA";
-export * from "./search/metaheuristics/COMIX";
+export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
+export * from "./search/metaheuristics/evolutionary/NSGAII";
 
 // Sampling
 export * from "./testcase/sampling/TestCaseSampler";
