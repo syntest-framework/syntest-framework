@@ -39,7 +39,10 @@ export class SimpleObjectiveManager<
 
       // Add objective to the covered objectives and update the archive
       this._coveredObjectives.add(objectiveFunction);
-      this._archive.update(objectiveFunction, encoding);
+
+      if (!this._archive.has(objectiveFunction)) {
+        this._archive.update(objectiveFunction, encoding);
+      }
     }
   }
 

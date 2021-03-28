@@ -24,6 +24,15 @@ export class Archive<T extends Encoding<T>> {
   }
 
   /**
+   * Determines if the archive already contains this objective function.
+   *
+   * @param objectiveFunction The objective function to check for
+   */
+  has(objectiveFunction: ObjectiveFunction<T>): boolean {
+    return this._map.has(objectiveFunction);
+  }
+
+  /**
    * Updates a mapping in the archive.
    *
    * @param objectiveFunction The objective to update
