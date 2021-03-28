@@ -8,7 +8,7 @@ import { EncodingRunner } from "../../EncodingRunner";
  * A simple objective manager that always evaluates an encoding on all objectives.
  */
 export class SimpleObjectiveManager<
-  T extends Encoding<T>
+  T extends Encoding
 > extends ObjectiveManager<T> {
   /**
    * Constructor.

@@ -9,7 +9,7 @@ import { EncodingRunner } from "../../EncodingRunner";
  *
  * @author Mitchell Olsthoorn
  */
-export abstract class ObjectiveManager<T extends Encoding<T>> {
+export abstract class ObjectiveManager<T extends Encoding> {
   /**
    * Archive of covered objectives with the fittest encoding for that objective.
    * @protected
@@ -80,9 +80,13 @@ export abstract class ObjectiveManager<T extends Encoding<T>> {
     // Store the execution result in the encoding
     encoding.setExecutionResult(result);
 
-    // For all current objectives, calculate the distance and update the objectives
+    // For all current objectives
     this._currentObjectives.forEach((objectiveFunction) => {
+      // Calculate and store the distance
       const distance = objectiveFunction.calculateDistance(encoding);
+      encoding.setObjective(objectiveFunction, distance);
+
+      // Update the objectives
       this._updateObjectives(objectiveFunction, encoding, distance);
     });
   }

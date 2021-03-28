@@ -7,7 +7,7 @@ import { Encoding } from "./Encoding";
  *
  * @author Mitchell Olsthoorn
  */
-export abstract class SearchSubject<T extends Encoding<T>> {
+export abstract class SearchSubject<T extends Encoding> {
   /**
    * Name of the subject.
    * @protected

@@ -10,7 +10,7 @@ import { BudgetListener } from "./BudgetListener";
  *
  * @author Mitchell Olsthoorn
  */
-export class BudgetManager<T extends Encoding<T>> implements BudgetListener<T> {
+export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   /**
    * List of currently active budgets.
    * @protected

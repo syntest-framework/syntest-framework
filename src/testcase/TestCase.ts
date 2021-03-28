@@ -4,6 +4,9 @@ import { prng } from "../util/prng";
 import { getLogger } from "../util/logger";
 import { TestCaseSampler } from "./sampling/TestCaseSampler";
 import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
+import { Encoding } from "../search/Encoding";
+import { ExecutionResult } from "../search/ExecutionResult";
+import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 
 /**
  * TestCase class
@@ -11,26 +14,35 @@ import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
  * @author Dimitri Stallenberg
  * @author Mitchell Olsthoorn
  */
-export class TestCase {
-  private _root: ConstructorCall;
-  private evaluation: Evaluation;
-  private crowdingDistance: number;
-  private rank: number;
-  private _id: string;
+export class TestCase implements Encoding {
+  protected _root: ConstructorCall;
+  protected _crowdingDistance: number;
+  protected _rank: number;
+  protected _id: string;
+
+  /**
+   * Mapping from objective to their distance values for this test case.
+   * @protected
+   */
+  protected _objectives: Map<ObjectiveFunction<TestCase>, number>;
+
+  /**
+   * The last execution result of this test case.
+   * @protected
+   */
+  protected _executionResult: ExecutionResult;
 
   /**
    * Constructor.
    *
-   * @param root       the root of the tree chromosome of the test case
-   * @param evaluation
+   * @param root The root of the tree chromosome of the test case
    */
   constructor(root: ConstructorCall) {
     this._root = root;
-
-    this.evaluation = new Evaluation();
-    this.crowdingDistance = 0;
-    this.rank = 0;
+    this._crowdingDistance = 0;
+    this._rank = 0;
     this._id = prng.uniqueId(20);
+    this._objectives = new Map<ObjectiveFunction<TestCase>, number>();
     getLogger().debug(`Created test case: ${this._id}`);
   }
 
@@ -50,28 +62,20 @@ export class TestCase {
     return hash;
   }
 
-  setEvaluation(evaluation: any) {
-    this.evaluation = evaluation;
-  }
-
-  getEvaluation(): Evaluation {
-    return this.evaluation;
-  }
-
   getCrowdingDistance() {
-    return this.crowdingDistance;
+    return this._crowdingDistance;
   }
 
   setCrowdingDistance(value: number) {
-    this.crowdingDistance = value;
+    this._crowdingDistance = value;
   }
 
   setRank(value: number) {
-    this.rank = value;
+    this._rank = value;
   }
 
   getRank() {
-    return this.rank;
+    return this._rank;
   }
 
   get id(): string {
@@ -88,5 +92,29 @@ export class TestCase {
     }
 
     return new TestCase(copy);
+  }
+
+  getExecutionResult(): ExecutionResult {
+    return this._executionResult;
+  }
+
+  setExecutionResult(executionResult: ExecutionResult) {
+    this._executionResult = executionResult;
+  }
+
+  /**
+   * Return the distance for the given objective.
+   *
+   * @param objectiveFunction The objective.
+   */
+  getObjective(objectiveFunction: ObjectiveFunction<TestCase>): number {
+    return this._objectives.get(objectiveFunction);
+  }
+
+  setObjective(
+    objectiveFunction: ObjectiveFunction<Encoding>,
+    distance: number
+  ) {
+    this._objectives.set(objectiveFunction, distance);
   }
 }

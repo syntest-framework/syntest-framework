@@ -9,7 +9,7 @@ import { EncodingRunner } from "../EncodingRunner";
  *
  * @author Mitchell Olsthoorn
  */
-export class RandomSearch<T extends Encoding<T>> extends SearchAlgorithm<T> {
+export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
   protected _encodingSampler: EncodingSampler<T>;
 
   /**

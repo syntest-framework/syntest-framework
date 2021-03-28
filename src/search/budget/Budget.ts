@@ -4,7 +4,7 @@ import { BudgetListener } from "./BudgetListener";
 /**
  * Interface for defining a budget.
  */
-export interface Budget<T extends Encoding<T>> extends BudgetListener<T> {
+export interface Budget<T extends Encoding> extends BudgetListener<T> {
   /**
    * Return the remaining budget.
    */

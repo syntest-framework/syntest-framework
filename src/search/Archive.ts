@@ -6,7 +6,7 @@ import { ObjectiveFunction } from "./objective/ObjectiveFunction";
  *
  * @author Mitchell Olsthoorn
  */
-export class Archive<T extends Encoding<T>> {
+export class Archive<T extends Encoding> {
   /**
    * Mapping of objective to encoding.
    *

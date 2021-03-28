@@ -1,11 +1,23 @@
 import { ExecutionResult } from "./ExecutionResult";
+import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 
 /**
  * Encoding of the search problem.
  *
  * @author Mitchell Olsthoorn
  */
-export interface Encoding<T extends Encoding<T>> {
+export interface Encoding {
+  /**
+   * Store the distance to an objective for this encoding.
+   *
+   * @param objectiveFunction The objective
+   * @param distance The distance
+   */
+  setObjective(
+    objectiveFunction: ObjectiveFunction<Encoding>,
+    distance: number
+  );
+
   /**
    * Return the execution result.
    */

@@ -3,7 +3,7 @@ import { Encoding } from "../Encoding";
 /**
  * Function that models the objective.
  */
-export interface ObjectiveFunction<T extends Encoding<T>> {
+export interface ObjectiveFunction<T extends Encoding> {
   /**
    * Calculate distance from the objective to an encoding.
    *

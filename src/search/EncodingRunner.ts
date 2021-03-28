@@ -4,7 +4,7 @@ import { Encoding } from "./Encoding";
 /**
  * @author Mitchell Olsthoorn
  */
-export interface EncodingRunner<T extends Encoding<T>> {
+export interface EncodingRunner<T extends Encoding> {
   /**
    * execute the encoding.
    */

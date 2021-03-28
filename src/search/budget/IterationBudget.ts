@@ -5,7 +5,7 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 /**
  * Budget for the number of iterations performed during the search process.
  */
-export class IterationBudget<T extends Encoding<T>> implements Budget<T> {
+export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * The current number of iterations.
    * @protected

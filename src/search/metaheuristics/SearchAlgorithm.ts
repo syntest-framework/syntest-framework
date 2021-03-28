@@ -11,7 +11,7 @@ import { BudgetManager } from "../budget/BudgetManager";
  *
  * @author Mitchell Olsthoorn
  */
-export abstract class SearchAlgorithm<T extends Encoding<T>> {
+export abstract class SearchAlgorithm<T extends Encoding> {
   /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected

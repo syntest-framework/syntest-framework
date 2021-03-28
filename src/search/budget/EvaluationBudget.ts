@@ -5,7 +5,7 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 /**
  * Budget for the number of evaluation performed during the search process.
  */
-export class EvaluationBudget<T extends Encoding<T>> implements Budget<T> {
+export class EvaluationBudget<T extends Encoding> implements Budget<T> {
   /**
    * The current number of evaluations.
    * @protected
