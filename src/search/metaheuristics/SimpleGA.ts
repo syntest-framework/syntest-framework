@@ -1,5 +1,5 @@
-import {GeneticAlgorithm} from './GeneticAlgorithm'
-import {fastNonDomSorting, TestCase} from "../..";
+import { GeneticAlgorithm } from "./GeneticAlgorithm";
+import { fastNonDomSorting, TestCase } from "../..";
 
 /**
  * Simple Genetic Algorithm BaseClass
@@ -7,49 +7,49 @@ import {fastNonDomSorting, TestCase} from "../..";
  * @author Dimitri Stallenberg
  */
 export class SimpleGA extends GeneticAlgorithm {
-    async generation(population: TestCase[]) {
-        // create offspring population
-        let offspring = this.generateOffspring(population)
+  async generation(population: TestCase[]) {
+    // create offspring population
+    const offspring = this.generateOffspring(population);
 
-        // evaluate
-        await this.fitness.evaluateMany(offspring, this.objectives)
+    // evaluate
+    await this.fitness.evaluateMany(offspring, this.objectives);
 
-        // add the offspring to the population
-        population.push(...offspring)
+    // add the offspring to the population
+    population.push(...offspring);
 
-        // non-dominated sorting
-        let F = fastNonDomSorting(population)
+    // non-dominated sorting
+    const F = fastNonDomSorting(population);
 
-        // select new population
-        let newPopulation = []
-        for (let front of F) {
-            for (let individual of front) {
-                if (newPopulation.length < this.popsize) {
-                    newPopulation.push(individual)
-                }
-            }
+    // select new population
+    const newPopulation = [];
+    for (const front of F) {
+      for (const individual of front) {
+        if (newPopulation.length < this.popsize) {
+          newPopulation.push(individual);
         }
-
-        return newPopulation
+      }
     }
 
-    /**
-     * Generate a population of offspring.
-     * @param population the population to generate offspring from
-     * @returns {[]} the offspring population
-     */
-    generateOffspring(population: TestCase[]) {
-        let offspring = []
-        // TODO crossover
+    return newPopulation;
+  }
 
-        for (let individual of population) {
-            offspring.push(individual.mutate(this.sampler))
-        }
+  /**
+   * Generate a population of offspring.
+   * @param population the population to generate offspring from
+   * @returns {[]} the offspring population
+   */
+  generateOffspring(population: TestCase[]) {
+    const offspring = [];
+    // TODO crossover
 
-        return offspring
+    for (const individual of population) {
+      offspring.push(individual.mutate(this.sampler));
     }
 
-    getCurrentCoverage(): number {
-        return 0; // TODO
-    }
+    return offspring;
+  }
+
+  getCurrentCoverage(): number {
+    return 0; // TODO
+  }
 }

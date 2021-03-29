@@ -1,23 +1,42 @@
 {
   "name": "syntest-framework",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.1.0",
+  "description": "The common core of the SynTest Framework",
+  "keywords": [
+    "syntest",
+    "automatic-test-generation"
+  ],
+  "homepage": "https://www.syntest.org",
+  "bugs": {
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
+  },
+  "license": "MIT",
+  "contributors": [
+    "Annibale Panichella",
+    "Mitchell Olsthoorn",
+    "Dimitri Stallenberg"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "scripts": {
-    "tsc": "tsc --declaration",
-    "tsc:w": "tsc -w --declaration",
-    "lint": "eslint --ext .ts src test/unit --fix",
-    "test": "mocha -r ts-node/register",
-    "test:c": "nyc mocha -r ts-node/register"
-  },
-  "homepage": "https://github.com/syntest-framework/syntest-framework",
   "repository": {
     "type": "git",
-    "url": "https://github.com/syntest-framework/syntest-framework"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
-  "author": "",
-  "license": "MIT",
+  "scripts": {
+    "build": "npm run clean:dist; npm run build:compile",
+    "build:compile": "tsc --build",
+    "build:watch": "tsc --build --watch",
+    "clean": "rm -rf .nyc_output dist node_modules",
+    "clean:dist": "rm -rf dist",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "npm run build",
+    "test": "mocha",
+    "test:coverage": "nyc mocha",
+    "test:watch": "mocha --watch"
+  },
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.4",
     "bignumber.js": "^9.0.1",
@@ -29,28 +48,23 @@
     "yargs": "^16.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1",
-    "@babel/preset-typescript": "^7.12.1",
-    "@types/chai": "^4.2.14",
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^14.14.9",
-    "@types/sinon": "^9.0.8",
-    "@typescript-eslint/eslint-plugin": "^4.5.0",
-    "@typescript-eslint/parser": "^4.5.0",
-    "chai": "^4.2.0",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
-    "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-node": "^5.2.0",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "mocha": "^8.2.1",
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.1",
+    "@types/node": "^14.14.32",
+    "@types/sinon": "^9.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.17.0",
+    "@typescript-eslint/parser": "^4.17.0",
+    "chai": "^4.3.3",
+    "eslint": "^7.21.0",
+    "eslint-config-prettier": "^8.1.0",
+    "mocha": "^8.3.1",
     "nyc": "^15.1.0",
-    "sinon": "^9.2.1",
+    "prettier": "^2.2.1",
+    "sinon": "^9.2.4",
     "ts-node": "^9.0.0",
-    "typescript": "^4.1.2"
+    "typescript": "^4.2.3"
+  },
+  "engines": {
+    "node": ">=10.24.0"
   }
 }

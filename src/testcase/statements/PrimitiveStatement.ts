@@ -1,33 +1,36 @@
-import {Statement} from "./Statement";
-import {Sampler} from "../../index";
+import { Statement } from "./Statement";
+import { TestCaseSampler } from "../sampling/TestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg
  */
 export abstract class PrimitiveStatement<T> extends Statement {
-    get value(): T {
-        return this._value;
-    }
-    private _value: any;
+  get value(): T {
+    return this._value;
+  }
+  private _value: any;
 
-    constructor(type: string, uniqueId: string, value: T) {
-        super(type, uniqueId)
-        this._value = value
-    }
+  constructor(type: string, uniqueId: string, value: T) {
+    super(type, uniqueId);
+    this._value = value;
+  }
 
-    abstract mutate(sampler: Sampler, depth: number): PrimitiveStatement<T>
+  abstract mutate(
+    sampler: TestCaseSampler,
+    depth: number
+  ): PrimitiveStatement<T>;
 
-    abstract copy (): PrimitiveStatement<T>
+  abstract copy(): PrimitiveStatement<T>;
 
-    hasChildren (): boolean {
-        return false
-    }
+  hasChildren(): boolean {
+    return false;
+  }
 
-    getChildren (): Statement[] {
-        return []
-    }
+  getChildren(): Statement[] {
+    return [];
+  }
 
-    static getRandom (): PrimitiveStatement<any> {
-        throw new Error('Unimplemented function!')
-    }
+  static getRandom(): PrimitiveStatement<any> {
+    throw new Error("Unimplemented function!");
+  }
 }

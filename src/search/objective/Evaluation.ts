@@ -1,4 +1,4 @@
-import {Objective} from "./Objective";
+import { Objective } from "./Objective";
 
 /**
  * Simply an extension of a map that always returns a number value instead of undefined.
@@ -6,54 +6,60 @@ import {Objective} from "./Objective";
  * @author Dimitri Stallenberg
  */
 export class Evaluation {
+  objectives: Map<Objective, number>;
 
-    objectives: Map<Objective, number>
+  constructor() {
+    this.objectives = new Map<Objective, number>();
+  }
 
-    constructor() {
-        this.objectives = new Map<Objective, number>()
+  clear(): void {
+    this.objectives.clear();
+  }
+
+  delete(key: Objective): boolean {
+    return this.objectives.delete(key);
+  }
+
+  forEach(
+    callbackfn: (
+      value: number,
+      key: Objective,
+      map: Map<Objective, number>
+    ) => void,
+    thisArg?: any
+  ): void {
+    this.objectives.forEach(callbackfn, thisArg);
+  }
+
+  get(key: Objective): number {
+    if (this.objectives.has(key)) {
+      return this.objectives.get(key)!;
     }
+    return Number.MAX_VALUE - 1;
+  }
 
-    clear(): void {
-        this.objectives.clear()
-    }
+  has(key: Objective): boolean {
+    return this.objectives.has(key);
+  }
 
-    delete(key: Objective): boolean {
-        return this.objectives.delete(key)
-    }
+  set(key: Objective, value: number): this {
+    this.objectives.set(key, value);
+    return this;
+  }
 
-    forEach(callbackfn: (value: number, key: Objective, map: Map<Objective, number>) => void, thisArg?: any): void {
-        this.objectives.forEach(callbackfn, thisArg)
-    }
+  size(): number {
+    return this.objectives.size;
+  }
 
-    get(key: Objective): number {
-        if (this.objectives.has(key)) {
-            return this.objectives.get(key)!!
-        }
-        return Number.MAX_VALUE - 1
-    }
+  keys(): IterableIterator<Objective> {
+    return this.objectives.keys();
+  }
 
-    has(key: Objective): boolean {
-        return this.objectives.has(key)
-    }
+  values(): IterableIterator<number> {
+    return this.objectives.values();
+  }
 
-    set(key: Objective, value: number): this {
-        this.objectives.set(key, value)
-        return this
-    }
-
-    size(): number {
-        return this.objectives.size
-    }
-
-    keys(): IterableIterator<Objective> {
-        return this.objectives.keys()
-    }
-
-    values(): IterableIterator<number> {
-        return this.objectives.values()
-    }
-
-    entries(): IterableIterator<[Objective, number]> {
-        return this.objectives.entries()
-    }
+  entries(): IterableIterator<[Objective, number]> {
+    return this.objectives.entries();
+  }
 }
