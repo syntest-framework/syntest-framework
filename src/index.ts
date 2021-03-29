@@ -30,11 +30,14 @@ export * from "./search/objective/Objective";
 export * from "./search/objective/Target";
 
 // Operators
+export * from './search/operators/Operator'
 // Selection
-export * from './search/operators/selection/Selection'
+export * from "./search/operators/selection/TournamentSelection";
+
+// Sorting
 export * from "./search/operators/ranking/CrowdingDistance";
 export * from "./search/operators/ranking/FastNonDomSorting";
-export * from "./search/operators/selection/TournamentSelection";
+
 
 // Metaheuristics
 export * from "./search/metaheuristics/GeneticAlgorithm";

@@ -1,6 +1,6 @@
-import { prng, TestCase, Selection } from "../../..";
+import { prng, TestCase, Operator } from "../../..";
 
-export class TournamentSelection implements Selection  {
+export class TournamentSelection implements Operator  {
   private tournamentSize: number;
 
   /**
@@ -21,7 +21,7 @@ export class TournamentSelection implements Selection  {
    *
    * @author Annibale Panichella
    */
-  select(population: TestCase[]): TestCase[] {
+  operate(population: TestCase[]): TestCase[] {
     let winner = prng.pickOne(population);
 
     for (let tournament = 0; tournament < this.tournamentSize - 1; tournament++) {
