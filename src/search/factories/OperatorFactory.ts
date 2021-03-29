@@ -24,7 +24,7 @@ export function createRanking (name: string): Ranking {
 export function createSelection (name: string): Selection {
     switch (name) {
         case 'tournament-selection':
-            return new TournamentSelection(2);
+            return new TournamentSelection();
     }
 }
 

@@ -2,18 +2,15 @@ import { prng, TestCase } from "../../..";
 import { Selection } from "./Selection";
 
 export class TournamentSelection implements Selection {
-  private tournamentSize: number;
-
-  /**
-   * Constructor
-   * @param tournamentSize size of the tournament (minimum 2)
-   */
-  constructor(tournamentSize: number) {
-    if (tournamentSize < 2)
-      throw new Error("The tournament size should be greater than 1 ");
-
-    this.tournamentSize = tournamentSize
+  get tournamentSize(): number {
+    return this._tournamentSize;
   }
+
+  set tournamentSize(value: number) {
+    this._tournamentSize = value;
+  }
+
+  private _tournamentSize: number = 4;
 
   /**
    * This function selects the test cases using tournament selection
@@ -29,7 +26,7 @@ export class TournamentSelection implements Selection {
     for (let i = 0; i < amount; i++) {
       let winner = prng.pickOne(population);
 
-      for (let tournament = 0; tournament < this.tournamentSize - 1; tournament++) {
+      for (let tournament = 0; tournament < this._tournamentSize - 1; tournament++) {
         const solution = prng.pickOne(population);
 
         // the winner is the solution with the best (smaller) non-dominance rank
