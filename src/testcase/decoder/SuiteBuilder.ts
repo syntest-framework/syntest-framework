@@ -1,7 +1,7 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
 import { Objective } from "../../search/objective/Objective";
-import {getLogger} from "../../util/logger";
+import {getLogger} from "../../io/logger";
 
 const fs = require("fs");
 const path = require("path");
