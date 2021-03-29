@@ -39,11 +39,11 @@ export class ObjectFunctionCall extends ActionStatement {
       return <ObjectFunctionCall>(
         sampler.sampleStatement(depth, this.type, "functionCall")
       );
-    } else if (!this.args.length) {
-      return this.copy();
     } else {
       // randomly mutate one of the args (including the instance)
       const args = [...this.args.map((a: Statement) => a.copy())];
+      if (args.length == 0) return this;
+
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
       const instance = this._parent;

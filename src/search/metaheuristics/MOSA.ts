@@ -113,15 +113,11 @@ export class MOSA extends NSGA2 {
   }
 
   async calculateFitness(offspring: TestCase[]) {
-    const uObj: Objective[] = [];
-    for (const obj of this.uncoveredObjectives) {
-      uObj.push(obj);
-    }
-    await this.fitness.evaluateMany(offspring, uObj);
+    for (const test of offspring) {
+      await this.fitness.evaluateOne(test, [...this.uncoveredObjectives]);
 
-    const covered: Objective[] = [];
-    for (const objective of this.uncoveredObjectives) {
-      for (const test of offspring) {
+      const covered: Objective[] = [];
+      for (const objective of this.uncoveredObjectives) {
         if (
           test.getEvaluation().get(objective) == 0.0 &&
           !covered.includes(objective)
@@ -132,10 +128,11 @@ export class MOSA extends NSGA2 {
           }
         }
       }
-    }
-    for (const index of covered) {
-      const element = this.uncoveredObjectives.indexOf(index);
-      this.uncoveredObjectives.splice(element, 1);
+      // we removed newly covered targets from the set of objectives to optimize
+      for (const obj of covered) {
+        const element = this.uncoveredObjectives.indexOf(obj);
+        this.uncoveredObjectives.splice(element, 1);
+      }
     }
   }
 

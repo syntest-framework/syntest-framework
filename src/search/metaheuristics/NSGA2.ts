@@ -89,7 +89,7 @@ export class NSGA2 extends GeneticAlgorithm {
   generateOffspring(population: TestCase[]) {
     const offspring = [];
 
-    for (let index = 0; index < this.popsize; index++) {
+    for (let index = 0; index < this.popsize / 2; index++) {
       const parentA = tournamentSelection(population, 2);
       const parentB = tournamentSelection(population, 2);
       const [childA, childB] = TreeCrossover(parentA, parentB);
