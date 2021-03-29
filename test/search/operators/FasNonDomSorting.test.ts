@@ -8,7 +8,7 @@ import {
   setupOptions,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
-import { fastNonDomSorting } from "../../../src/search/operators/ranking/FastNonDomSorting";
+import { fastNonDomSorting } from "../../../src/search/operators/sorting/FastNonDomSorting";
 
 const expect = chai.expect;
 

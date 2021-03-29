@@ -30,13 +30,22 @@ export * from "./search/objective/Objective";
 export * from "./search/objective/Target";
 
 // Operators
-export * from './search/operators/Operator'
 // Selection
+export * from './search/operators/selection/Selection'
 export * from "./search/operators/selection/TournamentSelection";
+export * from "./search/operators/selection/ElitistSelection";
+
+// Crossover
+export * from './search/operators/crossover/Crossover'
+export * from './search/operators/crossover/Crossover'
+
+// Ranking
+export * from "./search/operators/ranking/Ranking";
+export * from "./search/operators/ranking/CrowdingDistance";
 
 // Sorting
-export * from "./search/operators/ranking/CrowdingDistance";
-export * from "./search/operators/ranking/FastNonDomSorting";
+export * from "./search/operators/sorting/Sorting"
+export * from "./search/operators/sorting/FastNonDomSorting";
 
 
 // Metaheuristics

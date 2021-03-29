@@ -1,6 +1,7 @@
-import { prng, TestCase, Operator } from "../../..";
+import { prng, TestCase } from "../../..";
+import { Selection } from "./Selection";
 
-export class TournamentSelection implements Operator  {
+export class TournamentSelection implements Selection {
   private tournamentSize: number;
 
   /**
@@ -15,27 +16,34 @@ export class TournamentSelection implements Operator  {
   }
 
   /**
-   * This function selects the individual for reproduction using tournament selection
+   * This function selects the test cases using tournament selection
    * @param population the population from which to select a parent
+   * @param amount the number of testcases to select
    * @returns TestCase selected individual
    *
    * @author Annibale Panichella
    */
-  operate(population: TestCase[]): TestCase[] {
-    let winner = prng.pickOne(population);
+  select(population: TestCase[], amount: number): TestCase[] {
+    let selection = []
 
-    for (let tournament = 0; tournament < this.tournamentSize - 1; tournament++) {
-      const solution = prng.pickOne(population);
+    for (let i = 0; i < amount; i++) {
+      let winner = prng.pickOne(population);
 
-      // the winner is the solution with the best (smaller) non-dominance rank
-      if (solution.getRank() < winner.getRank()) winner = solution;
+      for (let tournament = 0; tournament < this.tournamentSize - 1; tournament++) {
+        const solution = prng.pickOne(population);
 
-      // At the same level or ranking, the winner is the solution with the best (largest)
-      // crowding distance
-      if (solution.getCrowdingDistance() > winner.getCrowdingDistance())
-        winner = solution;
+        // the winner is the solution with the best (smaller) non-dominance rank
+        if (solution.getRank() < winner.getRank()) winner = solution;
+
+        // At the same level or ranking, the winner is the solution with the best (largest)
+        // crowding distance
+        if (solution.getCrowdingDistance() > winner.getCrowdingDistance())
+          winner = solution;
+      }
+
+      selection.push(winner)
     }
 
-    return [winner];
+    return selection;
   }
 }

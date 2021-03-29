@@ -1,16 +1,13 @@
 import {
-  FunctionCall,
   getProperty,
-  ObjectFunctionCall,
   prng,
   Statement,
   TestCase,
-  ActionStatement,
   NumericStatement,
-  Operator,
 } from "../../..";
+import {Crossover} from "./Crossover";
 
-export class TreeCrossover implements Operator {
+export class TreeCrossover implements Crossover {
   /**
    * Creates 2 children which are each other's complement with respect to their parents.
    * i.e. given parents 000000 and 111111 a possible pair of children would be 001111 and 110000.
@@ -22,7 +19,7 @@ export class TreeCrossover implements Operator {
    *
    * @author Dimitri Stallenberg, Annibale Panichella
    */
-  operate(population: TestCase[]): TestCase[] {
+  crossover(population: TestCase[]): TestCase[] {
     if (population.length != 2)
       throw new Error("Can only perform crossover on 2 parents ");
 

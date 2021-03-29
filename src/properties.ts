@@ -114,6 +114,36 @@ export const properties = {
     type: "string",
     default: "SimpleGA",
   },
+
+  // operators
+  crossover: {
+    description: "Crossover operator",
+    type: "string",
+    default: "tree-crossover"
+  },
+  crossoverSelection: {
+    description: "Crossover parent selection operator",
+    type: "string",
+    default: "tournament-selection"
+  },
+  ranking: {
+    description: "Ranking operator",
+    type: "string",
+    default: "crowding-distance"
+  },
+  selection: {
+    description: "Selection operator",
+    type: "string",
+    default: "tournament-selection"
+  },
+  sorting: {
+    description: "Sorting operator",
+    type: "string",
+    default: "fast-non-dom-sorting"
+  },
+
+
+
   population_size: {
     description: "Size of the population.",
     type: "number",

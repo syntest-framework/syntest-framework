@@ -1,12 +1,6 @@
 import { TestCase } from "../../testcase/TestCase";
 import { Objective } from "../../index";
 
-const { fastNonDomSorting } = require("../operators/ranking/FastNonDomSorting");
-const { crowdingDistance } = require("../operators/ranking/CrowdingDistance");
-const {
-  tournamentSelection,
-} = require("../operators/selection/TournamentSelection");
-
 export class DominanceComparator {
   /**
    * Fast Dominance Comparator as discussed in

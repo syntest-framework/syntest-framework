@@ -13,6 +13,11 @@ import {
   writeSummary,
 } from "../../util/resultWriter";
 import { Target } from "../objective/Target";
+import {createCrossover, createRanking, createSelection, createSorting} from "../factories/OperatorFactory";
+import {Crossover} from "../operators/crossover/Crossover";
+import {Ranking} from "../operators/ranking/Ranking";
+import {Sorting} from "../operators/sorting/Sorting";
+import {Selection} from "../operators/selection/Selection";
 
 /**
  * Genetic Algorithm BaseClass
@@ -20,6 +25,41 @@ import { Target } from "../objective/Target";
  * @author Dimitri Stallenberg
  */
 export abstract class GeneticAlgorithm {
+  get selection(): Selection {
+    return this._selection;
+  }
+
+  set selection(value: Selection) {
+    this._selection = value;
+  }
+  get ranking(): Ranking {
+    return this._ranking;
+  }
+
+  set ranking(value: Ranking) {
+    this._ranking = value;
+  }
+  get sorting(): Sorting {
+    return this._sorting;
+  }
+
+  set sorting(value: Sorting) {
+    this._sorting = value;
+  }
+  get crossoverSelection(): Selection {
+    return this._crossoverSelection;
+  }
+
+  set crossoverSelection(value: Selection) {
+    this._crossoverSelection = value;
+  }
+  get crossover(): Crossover {
+    return this._crossover;
+  }
+
+  set crossover(value: Crossover) {
+    this._crossover = value;
+  }
   get population(): TestCase[] {
     return this._population;
   }
@@ -111,6 +151,12 @@ export abstract class GeneticAlgorithm {
   private _target: Target;
   private _objectives: Objective[];
 
+  private _crossover: Crossover;
+  private _crossoverSelection: Selection;
+  private _sorting: Sorting;
+  private _ranking: Ranking;
+  private _selection: Selection;
+
   /**
    * Constructor
    * @param target
@@ -119,8 +165,7 @@ export abstract class GeneticAlgorithm {
    */
   constructor(target: Target,
               fitness: Fitness,
-              sampler: TestCaseSampler,
-              ) {
+              sampler: TestCaseSampler) {
     this._target = target;
     this._fitness = fitness;
     this._sampler = sampler;
@@ -135,6 +180,12 @@ export abstract class GeneticAlgorithm {
     this._objectives = target.getObjectives();
 
     this.setupArchive();
+
+    this._crossoverSelection = createSelection(getProperty("crossoverSelection"))
+    this._crossover = createCrossover(getProperty("crossover"))
+    this._sorting = createSorting(getProperty("sorting"))
+    this._ranking = createRanking(getProperty("ranking"))
+    this._selection = createSelection(getProperty("selection"))
   }
 
   /**

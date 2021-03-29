@@ -1,12 +1,20 @@
 import { GeneticAlgorithm } from "./GeneticAlgorithm";
-import { fastNonDomSorting, TestCase } from "../..";
+import {Fitness, Target, TestCase, TestCaseSampler} from "../..";
 
 /**
- * Simple Genetic Algorithm BaseClass
+ * Simple Genetic Algorithm
  *
  * @author Dimitri Stallenberg
  */
 export class SimpleGA extends GeneticAlgorithm {
+
+  constructor(target: Target,
+              fitness: Fitness,
+              sampler: TestCaseSampler
+              ) {
+    super(target, fitness, sampler);
+  }
+
   async generation(population: TestCase[]) {
     // create offspring population
     const offspring = this.generateOffspring(population);
@@ -18,7 +26,7 @@ export class SimpleGA extends GeneticAlgorithm {
     population.push(...offspring);
 
     // non-dominated sorting
-    const F = fastNonDomSorting(population);
+    const F = this.sorting.sort(population);
 
     // select new population
     const newPopulation = [];
@@ -40,10 +48,15 @@ export class SimpleGA extends GeneticAlgorithm {
    */
   generateOffspring(population: TestCase[]) {
     const offspring = [];
-    // TODO crossover
 
-    for (const individual of population) {
-      offspring.push(individual.mutate(this.sampler));
+    for (let index = 0; index < this.popsize / 2; index++) {
+      const [parentA] = this.crossoverSelection.select(population, 1);
+      const [parentB] = this.crossoverSelection.select(population, 1);
+      const children = this.crossover.crossover([parentA, parentB]);
+
+      for (let child of children) {
+        offspring.push(child.mutate(this.sampler));
+      }
     }
 
     return offspring;
