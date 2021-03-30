@@ -1,5 +1,4 @@
 import { SearchAlgorithm } from "../SearchAlgorithm";
-import { Encoding } from "../../Encoding";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { EncodingSampler } from "../../EncodingSampler";
 import { getProperty } from "../../../config";
