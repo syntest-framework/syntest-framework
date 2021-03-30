@@ -19,7 +19,8 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
    * @param runner
    */
   constructor(encodingSampler: EncodingSampler<T>, runner: EncodingRunner<T>) {
-    super(new SimpleObjectiveManager<T>(runner));
+    const objectiveManager = new SimpleObjectiveManager<T>(runner);
+    super(objectiveManager);
   }
 
   /**
