@@ -5,6 +5,9 @@ import { getLogger } from "../util/logger";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
 
+/**
+ *
+ */
 export class BranchObjectiveFunction<T extends Encoding>
   implements ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
@@ -12,6 +15,14 @@ export class BranchObjectiveFunction<T extends Encoding>
   protected _locationIdx: number;
   protected _type: boolean;
 
+  /**
+   * Constructor.
+   *
+   * @param subject
+   * @param line
+   * @param locationIdx
+   * @param type
+   */
   constructor(
     subject: SearchSubject<T>,
     line: number,
@@ -29,9 +40,9 @@ export class BranchObjectiveFunction<T extends Encoding>
     // calculate coverage for the branches
     const hitNodes = [];
 
-    for (const point of executionResult.getTraces()) {
+    for (const trace of executionResult.getTraces()) {
       // Check if it is a branch node and has been hit
-      if (point.type !== "branch" || point.hits === 0) {
+      if (trace.type !== "branch" || trace.hits === 0) {
         continue;
       }
 
@@ -40,10 +51,10 @@ export class BranchObjectiveFunction<T extends Encoding>
         .getObjectives()
         .filter((objective) => objective instanceof BranchObjectiveFunction)
         .find((objective) => {
-          const branchObjective = (objective as unknown) as BranchObjectiveFunction<T>;
+          const branchObjective = <BranchObjectiveFunction<T>>objective;
           return (
-            branchObjective._locationIdx === point.locationIdx &&
-            branchObjective._line === point.line
+            branchObjective._locationIdx === trace.locationIdx &&
+            branchObjective._line === trace.line
           );
         });
 
@@ -53,7 +64,7 @@ export class BranchObjectiveFunction<T extends Encoding>
 
       // find the corresponding branch node inside the cfg
       const branchNode = this._subject.cfg.nodes.find((n: Node) => {
-        return n.locationIdx === point.locationIdx && n.line === point.line;
+        return n.locationIdx === trace.locationIdx && n.line === trace.line;
       });
 
       if (!branchNode) {
@@ -64,7 +75,7 @@ export class BranchObjectiveFunction<T extends Encoding>
       // record hits
       hitNodes.push({
         node: branchNode,
-        point: point,
+        point: trace,
       });
     }
 
