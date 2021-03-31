@@ -3,18 +3,27 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
 import { EncodingSampler } from "../../EncodingSampler";
-import { getProperty } from "../../../config";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
 
 /**
- * Fast Elitist Non-dominated Sorting Genetic Algorithm (NSGA-II)
+ * Non-dominated Sorting Genetic Algorithm (NSGA-II).
+ *
+ * Based on:
+ * A fast and elitist multiobjective genetic algorithm: NSGA-II
+ * K. Deb; A. Pratap; S. Agarwal; T. Meyarivan
  *
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
 export class NSGAII extends EvolutionaryAlgorithm {
+  /**
+   * Constructor.
+   *
+   * @param encodingSampler The encoding sampler
+   * @param runner The runner
+   */
   constructor(
     encodingSampler: EncodingSampler<TestCase>,
     runner: EncodingRunner<TestCase>
@@ -22,6 +31,10 @@ export class NSGAII extends EvolutionaryAlgorithm {
     super(new SimpleObjectiveManager<TestCase>(runner), encodingSampler);
   }
 
+  /**
+   * @inheritDoc
+   * @protected
+   */
   protected _environmentalSelection(population_size: number): void {
     const fronts = fastNonDomSorting(
       this._population,

@@ -9,7 +9,7 @@ import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
 import { DominanceComparator } from "../../../comparators/DominanceComparator";
 
 /**
- * Many-objective Sorting Algorithm (MOSA)
+ * Many-objective Sorting Algorithm (MOSA).
  *
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
