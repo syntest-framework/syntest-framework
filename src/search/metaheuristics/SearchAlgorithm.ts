@@ -83,9 +83,10 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       .size;
     const numberOfUncoveredObjectives = this._objectiveManager.getUncoveredObjectives()
       .size;
-    return (
+    const progress =
       numberOfCoveredObjectives /
-      (numberOfCoveredObjectives + numberOfUncoveredObjectives)
-    );
+      (numberOfCoveredObjectives + numberOfUncoveredObjectives);
+    const factor = 10 ** 2;
+    return Math.round(progress * factor) / factor;
   }
 }
