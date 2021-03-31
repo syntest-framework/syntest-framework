@@ -35,13 +35,13 @@ export class NSGAII extends EvolutionaryAlgorithm {
    * @inheritDoc
    * @protected
    */
-  protected _environmentalSelection(population_size: number): void {
+  protected _environmentalSelection(size: number): void {
     const fronts = fastNonDomSorting(
       this._population,
       this._objectiveManager.getCurrentObjectives()
     );
     const nextPopulation = [];
-    let remain = population_size;
+    let remain = size;
     let index = 0;
     let currentFront = fronts[index];
     while (
@@ -57,7 +57,7 @@ export class NSGAII extends EvolutionaryAlgorithm {
 
       // Add the individuals of this front
       for (const individual of currentFront) {
-        if (nextPopulation.length < population_size) {
+        if (nextPopulation.length < size) {
           nextPopulation.push(individual);
         }
       }
