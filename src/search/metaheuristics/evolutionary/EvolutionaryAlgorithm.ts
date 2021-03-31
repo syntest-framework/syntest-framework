@@ -21,10 +21,13 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
     this._populationSize = getProperty("population_size");
   }
 
-  protected _initialize(): void {
+  protected async _initialize(): Promise<void> {
     for (let i = 0; i < getProperty("population_size"); i++) {
       this._population.push(this._encodingSampler.sample());
     }
+
+    // Evaluate initial population before starting the search loop
+    await this._objectiveManager.evaluateMany(this._population);
   }
 
   protected async _iterate(): Promise<void> {
