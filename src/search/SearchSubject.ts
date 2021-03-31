@@ -24,13 +24,23 @@ export abstract class SearchSubject<T extends Encoding> {
    */
   protected readonly _cfg: CFG;
 
-  protected _paths: any;
-
   /**
    * Function map of the subject.
    * @protected
    */
   protected readonly _functionMap: any;
+
+  /**
+   * Mapping of objective identifier to objective function
+   * @protected
+   */
+  protected _objectives: Map<string, ObjectiveFunction<T>>;
+
+  /**
+   *
+   * @protected
+   */
+  protected _paths: any;
 
   /**
    * Constructor.
@@ -44,10 +54,21 @@ export abstract class SearchSubject<T extends Encoding> {
     this._name = name;
     this._cfg = cfg;
     this._functionMap = functionMap;
+    this._extractObjectives();
     this._extractPaths();
   }
 
-  protected _extractPaths() {
+  /**
+   * Extract objectives from the subject
+   * @protected
+   */
+  protected abstract _extractObjectives(): void;
+
+  /**
+   *
+   * @protected
+   */
+  protected _extractPaths(): void {
     const g = new Graph();
 
     for (const node of this._cfg.nodes) {
@@ -84,7 +105,9 @@ export abstract class SearchSubject<T extends Encoding> {
   /**
    * Retrieve objectives.
    */
-  public abstract getObjectives(): ObjectiveFunction<T>[];
+  public getObjectives(): ObjectiveFunction<T>[] {
+    return Array.from(this._objectives.values());
+  }
 
   /**
    * Return possible actions on this subject.
