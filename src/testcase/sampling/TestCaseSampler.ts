@@ -10,7 +10,7 @@ import { SearchSubject } from "../../search/SearchSubject";
  * @author Mitchell Olsthoorn
  */
 export abstract class TestCaseSampler implements EncodingSampler<TestCase> {
-  private _subject: SearchSubject<TestCase>;
+  protected _subject: SearchSubject<TestCase>;
 
   /**
    * Constructor
