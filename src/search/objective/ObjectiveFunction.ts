@@ -1,4 +1,5 @@
 import { Encoding } from "../Encoding";
+import {SearchSubject} from "../SearchSubject";
 
 /**
  * Function that models the objective.
@@ -15,4 +16,6 @@ export interface ObjectiveFunction<T extends Encoding> {
    * Return the identifier of the objective.
    */
   getIdentifier(): string;
+
+  getSubject(): SearchSubject<T>;
 }
