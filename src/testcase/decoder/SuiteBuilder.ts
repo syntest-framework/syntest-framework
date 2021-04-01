@@ -1,7 +1,7 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
 import { getLogger } from "../../util/logger";
-import { ObjectiveFunction } from "../../search/objective/ObjectiveFunction";
+import {Archive} from "../../search/Archive";
 
 const fs = require("fs");
 const path = require("path");
@@ -12,14 +12,14 @@ const path = require("path");
  * @author Dimitri Stallenberg
  */
 export abstract class SuiteBuilder {
-  private _decoder: TestCaseDecoder;
+  protected _decoder: TestCaseDecoder;
 
   /**
    * Constructor.
    *
    * @param testCaseDecoder   a testCaseDecoder object
    */
-  constructor(testCaseDecoder: TestCaseDecoder) {
+  protected constructor(testCaseDecoder: TestCaseDecoder) {
     this._decoder = testCaseDecoder;
   }
 
@@ -46,7 +46,7 @@ export abstract class SuiteBuilder {
    * @param population    the population of individuals to write tests for
    */
   abstract createSuite(
-    population: Map<ObjectiveFunction<TestCase>, TestCase>
+    archive: Archive<TestCase>
   ): Promise<void>;
 
   /**
