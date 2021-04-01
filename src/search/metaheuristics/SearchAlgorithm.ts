@@ -3,6 +3,7 @@ import { Archive } from "../Archive";
 import { SearchSubject } from "../SearchSubject";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { BudgetManager } from "../budget/BudgetManager";
+import {getLogger} from "../../util/logger";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -52,13 +53,16 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     subject: SearchSubject<T>,
     budgetManager: BudgetManager<T>
   ): Promise<Archive<T>> {
+    // Initialize search process
+    budgetManager.startInitialization();
+
     // Load search subject into the objective manager
     this._objectiveManager.load(subject);
 
-    // Initialize search process
-    budgetManager.startInitialization();
     await this._initialize();
     budgetManager.stopInitialization();
+
+    getLogger().info(`Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`)
 
     // Search loop that runs until the budget has expired or there are no more objectives
     budgetManager.start();
@@ -68,6 +72,8 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     ) {
       await this._iterate();
       budgetManager.iteration(this);
+
+      getLogger().info(`Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`)
     }
     budgetManager.stop();
 
@@ -85,7 +91,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       .size;
     const progress =
       numberOfCoveredObjectives /
-      (numberOfCoveredObjectives + numberOfUncoveredObjectives);
+      (numberOfCoveredObjectives + numberOfUncoveredObjectives) * 100;
     const factor = 10 ** 2;
     return Math.round(progress * factor) / factor;
   }
