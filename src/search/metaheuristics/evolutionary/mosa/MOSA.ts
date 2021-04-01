@@ -26,7 +26,7 @@ export class MOSA extends EvolutionaryAlgorithm {
     super(new UncoveredObjectiveManager<TestCase>(runner), encodingSampler);
   }
 
-  protected _environmentalSelection(population_size: number): void {
+  protected _environmentalSelection(size: number): void {
     // non-dominated sorting
     getLogger().debug(
       "Number of objectives = " +
@@ -39,7 +39,7 @@ export class MOSA extends EvolutionaryAlgorithm {
 
     // select new population
     const nextPopulation = [];
-    let remain = this._populationSize;
+    let remain = size;
     let index = 0;
 
     getLogger().debug("First front size = " + F[0].length);
