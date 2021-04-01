@@ -1,7 +1,7 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
 import { getLogger } from "../../util/logger";
-import {Archive} from "../../search/Archive";
+import { Archive } from "../../search/Archive";
 
 const fs = require("fs");
 const path = require("path");
@@ -45,9 +45,7 @@ export abstract class SuiteBuilder {
    *
    * @param population    the population of individuals to write tests for
    */
-  abstract createSuite(
-    archive: Archive<TestCase>
-  ): Promise<void>;
+  abstract createSuite(archive: Archive<TestCase>): Promise<void>;
 
   /**
    * Deletes a certain file.

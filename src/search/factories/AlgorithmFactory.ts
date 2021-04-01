@@ -6,11 +6,12 @@ import {
   NSGAII,
   TestCaseSampler,
   SearchSubject,
-  TestCase, TestCaseRunner
+  TestCase,
+  TestCaseRunner,
 } from "../../";
-import {SearchAlgorithm} from "../metaheuristics/SearchAlgorithm";
-import {RandomSearch} from "../metaheuristics/RandomSearch";
-import {DynaMOSA} from "../metaheuristics/evolutionary/mosa/DynaMOSA";
+import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+import { RandomSearch } from "../metaheuristics/RandomSearch";
+import { DynaMOSA } from "../metaheuristics/evolutionary/mosa/DynaMOSA";
 
 /**
  *
@@ -19,19 +20,17 @@ import {DynaMOSA} from "../metaheuristics/evolutionary/mosa/DynaMOSA";
 export function createAlgorithmFromConfig(
   sampler: TestCaseSampler,
   runner: TestCaseRunner
-): SearchAlgorithm<TestCase>{
-
+): SearchAlgorithm<TestCase> {
   const algorithm = getProperty("algorithm");
 
-  switch(algorithm){
+  switch (algorithm) {
     case "Random":
       return new RandomSearch(sampler, runner);
     case "NSGAII":
-      return new NSGAII(sampler,runner);
+      return new NSGAII(sampler, runner);
     case "MOSA":
       return new MOSA(sampler, runner);
     case "DynaMOSA":
       return new DynaMOSA(sampler, runner);
   }
-
 }

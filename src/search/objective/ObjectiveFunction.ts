@@ -1,5 +1,5 @@
 import { Encoding } from "../Encoding";
-import {SearchSubject} from "../SearchSubject";
+import { SearchSubject } from "../SearchSubject";
 
 /**
  * Function that models the objective.
