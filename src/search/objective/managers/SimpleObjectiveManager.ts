@@ -20,11 +20,7 @@ export class SimpleObjectiveManager<
   }
 
   /**
-   * Update the objectives.
-   *
-   * @param objectiveFunction
-   * @param encoding
-   * @param distance
+   * @inheritDoc
    * @protected
    */
   protected _updateObjectives(
@@ -34,12 +30,11 @@ export class SimpleObjectiveManager<
   ): void {
     // When objective is covered update objectives
     if (distance === 0.0) {
-      // Delete objective from the uncovered objectives
+      // Remove objective from the uncovered objectives
       this._uncoveredObjectives.delete(objectiveFunction);
 
       // Add objective to the covered objectives and update the archive
       this._coveredObjectives.add(objectiveFunction);
-
       if (!this._archive.has(objectiveFunction)) {
         this._archive.update(objectiveFunction, encoding);
       }
@@ -47,11 +42,10 @@ export class SimpleObjectiveManager<
   }
 
   /**
-   * Load the objectives from the search subject into the manager.
-   *
-   * @param subject The subject to load in
+   * @inheritDoc
    */
   public load(subject: SearchSubject<T>): void {
+    // TODO: Reset the objective manager
     const objectives = subject.getObjectives();
 
     objectives.forEach((objective) => {
