@@ -1,7 +1,7 @@
 import { TestCase } from "../TestCase";
 import { SuiteBuilder } from "../decoder/SuiteBuilder";
-import {EncodingRunner} from "../../search/EncodingRunner";
-import {ExecutionResult} from "../../search/ExecutionResult";
+import { EncodingRunner } from "../../search/EncodingRunner";
+import { ExecutionResult } from "../../search/ExecutionResult";
 
 export interface Datapoint {
   type: string;
@@ -15,7 +15,7 @@ export interface Datapoint {
   right: number;
 }
 
-export abstract class TestCaseRunner implements EncodingRunner<TestCase>{
+export abstract class TestCaseRunner implements EncodingRunner<TestCase> {
   protected _suiteBuilder: SuiteBuilder;
 
   protected constructor(suiteBuilder: SuiteBuilder) {
