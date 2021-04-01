@@ -42,4 +42,8 @@ export class FunctionObjectiveFunction<T extends Encoding>
   getIdentifier(): string {
     return this._id;
   }
+
+  getSubject(): SearchSubject<T> {
+    return this._subject;
+  }
 }
