@@ -54,6 +54,7 @@ export abstract class SearchSubject<T extends Encoding> {
     this._name = name;
     this._cfg = cfg;
     this._functionMap = functionMap;
+    this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
     this._extractPaths();
   }
