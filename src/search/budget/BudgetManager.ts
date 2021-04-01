@@ -17,6 +17,11 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    */
   protected _budgets: Budget<T>[];
 
+
+  constructor() {
+    this._budgets = [];
+  }
+
   /**
    * Return the available budget as a value from zero to one.
    *
@@ -30,7 +35,9 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
         : minBudget
     );
 
-    return budget.getAvailableBudget() / budget.getTotalBudget();
+    const value = budget.getAvailableBudget() / budget.getTotalBudget() * 100
+    const factor = 10 ** 2;
+    return Math.round(value * factor) / factor;
   }
 
   /**
