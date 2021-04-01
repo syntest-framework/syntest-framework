@@ -41,4 +41,13 @@ export class Archive<T extends Encoding> {
   update(objectiveFunction: ObjectiveFunction<T>, encoding: T): void {
     this._map.set(objectiveFunction, encoding);
   }
+
+  getObjectives(): ObjectiveFunction<T>[]{
+    return Array.from(this._map.keys());
+  }
+
+  getEncoding(objective: ObjectiveFunction<T>): Encoding {
+    return this._map.get(objective);
+  }
+
 }
