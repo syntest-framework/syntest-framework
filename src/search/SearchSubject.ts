@@ -31,10 +31,10 @@ export abstract class SearchSubject<T extends Encoding> {
   protected readonly _functionMap: any;
 
   /**
-   * Mapping of objective identifier to objective function
+   * Mapping of objectives to adjacent objectives
    * @protected
    */
-  protected _objectives: Map<string, ObjectiveFunction<T>>;
+  protected _objectives: Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>;
 
   /**
    *
@@ -106,7 +106,18 @@ export abstract class SearchSubject<T extends Encoding> {
    * Retrieve objectives.
    */
   public getObjectives(): ObjectiveFunction<T>[] {
-    return Array.from(this._objectives.values());
+    return Array.from(this._objectives.keys());
+  }
+
+  /**
+   * Retrieve child objectives.
+   *
+   * @param objective The objective to get the child objectives of
+   */
+  public getChildObjectives(
+    objective: ObjectiveFunction<T>
+  ): ObjectiveFunction<T>[] {
+    return Array.from(this._objectives.get(objective));
   }
 
   /**
