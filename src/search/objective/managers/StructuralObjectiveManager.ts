@@ -70,9 +70,13 @@ export class StructuralObjectiveManager<
     const rootObjectiveIds = rootObjectiveNodes.map(
       (objective) => objective.id
     );
-    const rootObjectives = this._subject
-      .getObjectives()
-      .filter((objective) => objective.getIdentifier() in rootObjectiveIds);
+    let rootObjectives = []
+    for (const id of rootObjectiveIds){
+      rootObjectives = rootObjectives.concat(
+          this._subject.getObjectives().filter((objective) => objective.getIdentifier() === id)
+      )
+    }
+
     rootObjectives.forEach((objective) =>
       this._currentObjectives.add(objective)
     );
