@@ -11,6 +11,7 @@ import { BranchDistance } from "../search/objective/BranchDistance";
 export class BranchObjectiveFunction<T extends Encoding>
   implements ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
+  protected _id: string;
   protected _line: number;
   protected _locationIdx: number;
   protected _type: boolean;
@@ -19,22 +20,28 @@ export class BranchObjectiveFunction<T extends Encoding>
    * Constructor.
    *
    * @param subject
+   * @param id
    * @param line
    * @param locationIdx
    * @param type
    */
   constructor(
     subject: SearchSubject<T>,
+    id: string,
     line: number,
     locationIdx: number,
     type: boolean
   ) {
     this._subject = subject;
+    this._id = id;
     this._line = line;
     this._locationIdx = locationIdx;
     this._type = type;
   }
 
+  /**
+   * @inheritDoc
+   */
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
     // calculate coverage for the branches
@@ -137,7 +144,10 @@ export class BranchObjectiveFunction<T extends Encoding>
     return distance;
   }
 
+  /**
+   * @inheritDoc
+   */
   getIdentifier(): string {
-    return "";
+    return this._id;
   }
 }
