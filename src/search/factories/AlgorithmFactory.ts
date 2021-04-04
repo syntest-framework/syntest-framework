@@ -1,11 +1,8 @@
 import { getProperty } from "../../config";
 import {
-  ObjectiveFunction,
-  EvolutionaryAlgorithm,
   MOSA,
   NSGAII,
   TestCaseSampler,
-  SearchSubject,
   TestCase,
   TestCaseRunner,
 } from "../../";
@@ -14,7 +11,10 @@ import { RandomSearch } from "../metaheuristics/RandomSearch";
 import { DynaMOSA } from "../metaheuristics/evolutionary/mosa/DynaMOSA";
 
 /**
+ * Factory for creating an instance of a specific search algorithm from the config.
  *
+ * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
 export function createAlgorithmFromConfig(
