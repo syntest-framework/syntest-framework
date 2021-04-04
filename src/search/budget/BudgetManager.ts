@@ -51,8 +51,9 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to add
    */
-  public addBudget(budget: Budget<T>) {
+  public addBudget(budget: Budget<T>): BudgetManager<T> {
     this._budgets.push(budget);
+    return this;
   }
 
   /**
@@ -60,8 +61,9 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to remove
    */
-  public removeBudget(budget: Budget<T>) {
+  public removeBudget(budget: Budget<T>): BudgetManager<T> {
     this._budgets.slice(this._budgets.indexOf(budget), 1);
+    return this;
   }
 
   /**
