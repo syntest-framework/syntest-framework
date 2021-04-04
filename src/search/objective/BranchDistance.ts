@@ -3,14 +3,14 @@ export class BranchDistance {
    * Calculate the branch distance
    *
    * @param opcode the opcode (the comparison operator)
-   * @param left the left value of the comparison
-   * @param right the right value of the comparison
+   * @param left the left values of the comparison (multiple execution traces)
+   * @param right the right values of the comparison (multiple execution traces)
    * @param target the side of the branch you want to cover
    */
   public static branchDistanceNumeric(
     opcode: string,
-    left: number,
-    right: number,
+    left: number[],
+    right: number[],
     target: boolean
   ) {
     let branchDistance: number;
@@ -74,47 +74,76 @@ export class BranchDistance {
     return x / (x + 1);
   }
 
-  private static equalNumeric(left: number, right: number) {
-    return Math.abs(left - right);
+  private static equalNumeric(left: number[], right: number[]): number {
+    let minimum = Number.MAX_VALUE;
+    for (let index = 0; index < left.length; index++){
+      minimum = Math.min(minimum, Math.abs(left[index] - right[index]))
+    }
+    return minimum;
   }
 
-  private static notEqualNumeric(left: number, right: number) {
-    if (left != right) {
-      return 0.0;
-    } else {
-      return 1.0;
+  private static notEqualNumeric(left: number[], right: number[]): number {
+    let minimum = Number.MAX_VALUE;
+
+    for (let index = 0; index < left.length; index++){
+      if (left[index] != right[index]) {
+        minimum = 0.0;
+      } else {
+        minimum = Math.min(minimum, 1.0);
+      }
     }
+    return minimum;
   }
 
-  private static greater(left: number, right: number) {
-    if (left > right) {
-      return 0.0;
-    } else {
-      return right - left + 1;
+  private static greater(left: number[], right: number[]): number {
+    let minimum = Number.MAX_VALUE;
+
+    for (let index = 0; index < left.length; index++) {
+      if (left[index] > right[index]) {
+        minimum = 0.0;
+      } else {
+        minimum = Math.min(minimum, right[index] - left[index] + 1);
+      }
     }
+    return minimum;
   }
 
-  private static smallerEqual(left: number, right: number) {
-    if (left <= right) {
-      return 0.0;
-    } else {
-      return left - right;
+  private static smallerEqual(left: number[], right: number[]): number {
+    let minimum = Number.MAX_VALUE;
+
+    for (let index = 0; index < left.length; index++) {
+      if (left[index] <= right[index]) {
+        minimum = 0.0;
+      } else {
+        minimum = Math.min(minimum, left[index] - right[index]);
+      }
     }
+    return minimum;
   }
 
-  private static greaterEqual(left: number, right: number) {
-    if (left >= right) {
-      return 0.0;
-    } else {
-      return right - left;
+  private static greaterEqual(left: number[], right: number[]): number {
+    let minimum = Number.MAX_VALUE;
+
+    for (let index = 0; index < left.length; index++) {
+      if (left[index] >= right[index]) {
+        minimum = 0.0;
+      } else {
+        minimum = Math.min(minimum, right[index] - left[index]);
+      }
     }
+    return minimum;
   }
 
-  private static smaller(left: number, right: number) {
-    if (left < right) {
-      return 0.0;
-    } else {
-      return left - right + 1;
+  private static smaller(left: number[], right: number[]): number {
+    let minimum = Number.MAX_VALUE;
+
+    for (let index = 0; index < left.length; index++) {
+      if (left[index] < right[index]) {
+        minimum = 0.0;
+      } else {
+        minimum = Math.min(minimum, left[index] - right[index] + 1);
+      }
     }
+    return minimum;
   }
 }
