@@ -5,7 +5,8 @@ import {
   loadConfig,
   processConfig,
   setupLogger,
-  setupOptions, TestCase,
+  setupOptions,
+  TestCase,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import { tournamentSelection } from "../../../src/search/operators/selection/TournamentSelection";
@@ -29,8 +30,20 @@ describe("Tournament selection", function () {
   });
 
   it("Small Tournament size", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
-    const objective2 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, false);
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
 
     const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
@@ -45,8 +58,20 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by rank", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
-    const objective2 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, false);
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
 
     const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
@@ -68,18 +93,27 @@ describe("Tournament selection", function () {
     ind4.setRank(1);
     ind4.setCrowdingDistance(4);
 
-    const winner: TestCase = tournamentSelection(
-      [ind2, ind1, ind3, ind4],
-      20
-    );
+    const winner: TestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
     expect(winner.getRank()).to.equal(0);
     expect(winner.getObjective(objective1)).to.equal(0);
     expect(winner.getObjective(objective2)).to.equal(1);
   });
 
   it("Comparison by crowding distance", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
-    const objective2 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, false);
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
 
     const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
@@ -101,10 +135,7 @@ describe("Tournament selection", function () {
     ind4.setRank(0);
     ind4.setCrowdingDistance(4);
 
-    const winner: TestCase = tournamentSelection(
-      [ind2, ind1, ind3, ind4],
-      20
-    );
+    const winner: TestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
     expect(winner.getRank()).to.equal(0);
     expect(winner.getObjective(objective1)).to.equal(0);
     expect(winner.getObjective(objective2)).to.equal(1);

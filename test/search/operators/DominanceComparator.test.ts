@@ -3,10 +3,12 @@ import { DominanceComparator } from "../../../src/search/comparators/DominanceCo
 import {
   BranchObjectiveFunction,
   guessCWD,
-  loadConfig, ObjectiveFunction,
+  loadConfig,
+  ObjectiveFunction,
   processConfig,
   setupLogger,
-  setupOptions, TestCase,
+  setupOptions,
+  TestCase,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 
@@ -26,13 +28,25 @@ describe("Dominance comparator", function () {
 
   let objectives: Set<BranchObjectiveFunction<TestCase>>;
 
-  beforeEach(function() {
-    const objective1 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
-    const objective2 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, false);
+  beforeEach(function () {
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
     objectives = new Set<BranchObjectiveFunction<TestCase>>();
     objectives.add(objective1);
-    objectives.add(objective2)
-  })
+    objectives.add(objective2);
+  });
 
   it("Fist individual dominates", () => {
     const ind1 = new DummyIndividual();
@@ -45,7 +59,6 @@ describe("Dominance comparator", function () {
 
     expect(value).to.equal(-1);
   });
-
 
   it("Second individual dominates", () => {
     const ind1 = new DummyIndividual();
@@ -72,7 +85,13 @@ describe("Dominance comparator", function () {
   });
 
   it("None dominates with three objective", () => {
-    const objective2 = new BranchObjectiveFunction<TestCase>(null, "2", 1, 1, false);
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "2",
+      1,
+      1,
+      false
+    );
     objectives.add(objective2);
 
     const ind1 = new DummyIndividual();

@@ -8,7 +8,11 @@ import {
   setupOptions,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
-import {BranchObjectiveFunction, ObjectiveFunction, TestCase} from "../../../src";
+import {
+  BranchObjectiveFunction,
+  ObjectiveFunction,
+  TestCase,
+} from "../../../src";
 
 const expect = chai.expect;
 
@@ -30,7 +34,13 @@ describe("Crowding distance", function () {
   });
 
   it("front with one solution", () => {
-    const objective = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
+    const objective = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
     const objectives = new Set<ObjectiveFunction<TestCase>>();
     objectives.add(objective);
 
@@ -40,7 +50,13 @@ describe("Crowding distance", function () {
   });
 
   it("front with two solutions", () => {
-    const objective = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
+    const objective = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
     const objectives = new Set<ObjectiveFunction<TestCase>>();
     objectives.add(objective);
 
@@ -52,10 +68,21 @@ describe("Crowding distance", function () {
     expect(ind2.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
   });
 
-
   it("Front with more than two solutions", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
-    const objective2 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, false);
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
     const objectives = new Set<ObjectiveFunction<TestCase>>();
     objectives.add(objective1);
     objectives.add(objective2);
@@ -76,7 +103,13 @@ describe("Crowding distance", function () {
   });
 
   it("Corner case with same obj values for all individual", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
     const objectives = new Set<ObjectiveFunction<TestCase>>();
     objectives.add(objective1);
 

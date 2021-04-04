@@ -7,13 +7,18 @@ import {
   TestCaseSampler,
   setupLogger,
   setupOptions,
-    Encoding
+  Encoding,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import {BranchObjectiveFunction, ObjectiveFunction, SearchSubject, TestCase} from "../../../src";
-import {MockedMOSA} from "../../mocks/MOSAAdapter";
+import {
+  BranchObjectiveFunction,
+  ObjectiveFunction,
+  SearchSubject,
+  TestCase,
+} from "../../../src";
+import { MockedMOSA } from "../../mocks/MOSAAdapter";
 
 const expect = chai.expect;
 
@@ -31,13 +36,25 @@ describe("Test MOSA", function () {
 
   let objectives: Set<BranchObjectiveFunction<TestCase>>;
 
-  beforeEach(function() {
-    const objective1 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, true);
-    const objective2 = new BranchObjectiveFunction<TestCase>(null, "1", 1, 1, false);
+  beforeEach(function () {
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
     objectives = new Set<BranchObjectiveFunction<TestCase>>();
     objectives.add(objective1);
-    objectives.add(objective2)
-  })
+    objectives.add(objective2);
+  });
 
   it("Test Preference criterion", () => {
     const ind1 = new DummyIndividual();
@@ -53,10 +70,7 @@ describe("Test MOSA", function () {
     const mockedSampler = (<TestCaseSampler>{}) as any;
 
     const mosa = new MOSA(mockedRunner, mockedSampler);
-    const frontZero = mosa.preferenceCriterion(
-      [ind1, ind2, ind3],
-        objectives
-    );
+    const frontZero = mosa.preferenceCriterion([ind1, ind2, ind3], objectives);
 
     expect(frontZero.length).to.equal(2);
     expect(frontZero).to.contain(ind2);
@@ -83,17 +97,19 @@ describe("Test MOSA", function () {
     const mockedSampler = (<TestCaseSampler>{}) as any;
 
     const mosa = new MOSA(mockedSampler, mockedRunner);
-    const front = mosa.getNonDominatedFront(
-      objectives,
-      [ind1, ind2, ind3, ind4, ind5]
-    );
+    const front = mosa.getNonDominatedFront(objectives, [
+      ind1,
+      ind2,
+      ind3,
+      ind4,
+      ind5,
+    ]);
 
     expect(front.length).to.equal(3);
     expect(front).to.contain(ind2);
     expect(front).to.contain(ind3);
     expect(front).to.contain(ind4);
   });
-
 
   it("Test Preference Sorting", () => {
     const ind1 = new DummyIndividual();
@@ -114,7 +130,7 @@ describe("Test MOSA", function () {
     const mosa = new MOSA(mockedSampler, mockedRunner);
     const front = mosa.preferenceSortingAlgorithm(
       [ind1, ind2, ind3, ind4],
-        objectives
+      objectives
     );
 
     expect(front[0].length).to.equal(2);
@@ -149,7 +165,7 @@ describe("Test MOSA", function () {
 
     const mosa = new MockedMOSA(mockedSampler, mockedRunner);
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
-    mosa.updateObjectives(searchSubject)
+    mosa.updateObjectives(searchSubject);
     await mosa.environmentalSelection(4);
 
     expect(mosa.getPopulation().length).to.equal(4);

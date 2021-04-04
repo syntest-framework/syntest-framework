@@ -116,14 +116,17 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
     if (this._tracking) {
       const currentTime = Date.now() / 1000;
 
-      if (this._currentSearchTime + currentTime - this._counterTime > this._maxSearchTime) {
+      if (
+        this._currentSearchTime + currentTime - this._counterTime >
+        this._maxSearchTime
+      ) {
         this._currentSearchTime = this._maxSearchTime;
       } else {
-        this._currentSearchTime += (currentTime - this._counterTime);
+        this._currentSearchTime += currentTime - this._counterTime;
       }
 
       this._counterTime = 0;
-      this._tracking = false
+      this._tracking = false;
     }
   }
 
@@ -134,14 +137,17 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
     if (this._tracking) {
       const currentTime = Date.now() / 1000;
 
-      if (this._currentSearchTime + currentTime - this._counterTime > this._maxSearchTime) {
+      if (
+        this._currentSearchTime + currentTime - this._counterTime >
+        this._maxSearchTime
+      ) {
         this._currentSearchTime = this._maxSearchTime;
       } else {
-        this._currentSearchTime += (currentTime - this._counterTime);
+        this._currentSearchTime += currentTime - this._counterTime;
       }
 
       this._counterTime = 0;
-      this._tracking = false
+      this._tracking = false;
     }
   }
 }

@@ -47,8 +47,11 @@ export class StructuralObjectiveManager<
       this._subject
         .getChildObjectives(objectiveFunction)
         .forEach((objective) => {
-            if (!this._coveredObjectives.has(objective) && !this._currentObjectives.has(objective))
-                this._currentObjectives.add(objective);
+          if (
+            !this._coveredObjectives.has(objective) &&
+            !this._currentObjectives.has(objective)
+          )
+            this._currentObjectives.add(objective);
         });
     }
   }
@@ -73,11 +76,13 @@ export class StructuralObjectiveManager<
     const rootObjectiveIds = rootObjectiveNodes.map(
       (objective) => objective.id
     );
-    let rootObjectives = []
-    for (const id of rootObjectiveIds){
+    let rootObjectives = [];
+    for (const id of rootObjectiveIds) {
       rootObjectives = rootObjectives.concat(
-          this._subject.getObjectives().filter((objective) => objective.getIdentifier() === id)
-      )
+        this._subject
+          .getObjectives()
+          .filter((objective) => objective.getIdentifier() === id)
+      );
     }
 
     rootObjectives.forEach((objective) =>

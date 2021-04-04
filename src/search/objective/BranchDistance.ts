@@ -76,8 +76,8 @@ export class BranchDistance {
 
   private static equalNumeric(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
-    for (let index = 0; index < left.length; index++){
-      minimum = Math.min(minimum, Math.abs(left[index] - right[index]))
+    for (let index = 0; index < left.length; index++) {
+      minimum = Math.min(minimum, Math.abs(left[index] - right[index]));
     }
     return minimum;
   }
@@ -85,7 +85,7 @@ export class BranchDistance {
   private static notEqualNumeric(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
-    for (let index = 0; index < left.length; index++){
+    for (let index = 0; index < left.length; index++) {
       if (left[index] != right[index]) {
         minimum = 0.0;
       } else {
