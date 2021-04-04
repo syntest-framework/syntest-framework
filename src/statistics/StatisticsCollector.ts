@@ -1,15 +1,13 @@
 import { RuntimeVariable } from "./RuntimeVariable";
 import { TotalTimeBudget } from "../search/budget/TotalTimeBudget";
 import { Encoding } from "../search/Encoding";
-import { SearchListener } from "../search/SearchListener";
 
 /**
  * Collector for runtime statistics.
  *
  * @author Mitchell Olsthoorn
  */
-export class StatisticsCollector<T extends Encoding>
-  implements SearchListener<T> {
+export class StatisticsCollector<T extends Encoding> {
   /**
    * Mapping from runtime variable to value.
    * @protected
