@@ -39,7 +39,7 @@ jobs:
 
       # Dependencies
       - name: Framework - Install Dependencies
-        run: npm ci
+        run: npm install
         working-directory: syntest-framework
 
       # Building
