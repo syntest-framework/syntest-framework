@@ -46,7 +46,10 @@ export class StructuralObjectiveManager<
       // Add the child objectives to the current objectives
       this._subject
         .getChildObjectives(objectiveFunction)
-        .forEach((objective) => this._currentObjectives.add(objective));
+        .forEach((objective) => {
+            if (!this._coveredObjectives.has(objective) && !this._currentObjectives.has(objective))
+                this._currentObjectives.add(objective);
+        });
     }
   }
 
