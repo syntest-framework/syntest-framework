@@ -38,6 +38,7 @@ export * from "./search/factories/StoppingCriterionFactory";
 
 // Objective
 export * from "./search/objective/ObjectiveFunction";
+export * from "./search/objective/BranchDistance";
 export * from "./criterion/BranchObjectiveFunction";
 export * from "./criterion/FunctionObjectiveFunction";
 
