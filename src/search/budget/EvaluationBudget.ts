@@ -13,7 +13,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
   protected _currentEvaluations: number;
 
   /**
-   * The maximum number of evaluations.
+   * The maximum number of evaluations allowed.
    * @protected
    */
   protected readonly _maxEvaluations: number;
@@ -29,48 +29,82 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxEvaluations The maximum number of evaluations of this budget
    */
-  constructor(maxEvaluations: number) {
+  public constructor(maxEvaluations: number) {
     this._currentEvaluations = 0;
     this._maxEvaluations = maxEvaluations;
+    this._tracking = false;
   }
 
-  evaluation(encoding: T): void {
-    if (this._tracking && this._currentEvaluations <= this._maxEvaluations) {
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public evaluation(encoding: T): void {
+    if (this._tracking && this._currentEvaluations < this._maxEvaluations) {
       this._currentEvaluations++;
     }
   }
 
-  getAvailableBudget(): number {
+  /**
+   * @inheritDoc
+   */
+  public getAvailableBudget(): number {
     return this._maxEvaluations - this._currentEvaluations;
   }
 
-  getCurrentBudget(): number {
+  /**
+   * @inheritDoc
+   */
+  public getCurrentBudget(): number {
     return this._currentEvaluations;
   }
 
-  getTotalBudget(): number {
+  /**
+   * @inheritDoc
+   */
+  public getTotalBudget(): number {
     return this._maxEvaluations;
   }
 
-  iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
 
-  reset(): void {
+  /**
+   * @inheritDoc
+   */
+  public reset(): void {
     this._currentEvaluations = 0;
-  }
-
-  start(): void {
-    this._tracking = true;
-  }
-
-  startInitialization(): void {
-    this._tracking = true;
-  }
-
-  stop(): void {
     this._tracking = false;
   }
 
-  stopInitialization(): void {
+  /**
+   * @inheritDoc
+   */
+  public start(): void {
+    this._tracking = true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public startInitialization(): void {
+    this._tracking = true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public stop(): void {
+    this._tracking = false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public stopInitialization(): void {
     this._tracking = false;
   }
 }

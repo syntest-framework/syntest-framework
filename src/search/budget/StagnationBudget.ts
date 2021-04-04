@@ -1,22 +1,28 @@
-import { Budget } from "./Budget";
 import { Encoding } from "../Encoding";
+import { Budget } from "./Budget";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 /**
- * Budget for the number of iterations performed during the search process.
+ * Budget for the number of iteration performed without progress during the search process.
  */
-export class IterationBudget<T extends Encoding> implements Budget<T> {
+export class StagnationBudget<T extends Encoding> implements Budget<T> {
   /**
-   * The current number of iterations.
+   * The current number of iterations without progress.
    * @protected
    */
   protected _currentIterations: number;
 
   /**
-   * The maximum number of iterations allowed.
+   * The maximum number of evaluations allowed without progress.
    * @protected
    */
   protected readonly _maxIterations: number;
+
+  /**
+   * The best progress seen so far.
+   * @protected
+   */
+  protected _bestProgress: number;
 
   /**
    * If the budget is tracking progress
@@ -27,11 +33,12 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * Constructor.
    *
-   * @param maxIterations The maximum number of iterations of this budget
+   * @param maxIterations The maximum number of iterations without progress of this budget
    */
   public constructor(maxIterations: number) {
     this._currentIterations = 0;
     this._maxIterations = maxIterations;
+    this._bestProgress = 0;
     this._tracking = false;
   }
 
@@ -65,10 +72,11 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public iteration(searchAlgorithm: SearchAlgorithm<T>): void {
     if (this._tracking && this._currentIterations < this._maxIterations) {
-      this._currentIterations++;
+      if (searchAlgorithm.getProgress() > this._bestProgress) {
+        this._currentIterations++;
+      }
     }
   }
 
@@ -77,6 +85,7 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
    */
   public reset(): void {
     this._currentIterations = 0;
+    this._bestProgress = 0;
     this._tracking = false;
   }
 

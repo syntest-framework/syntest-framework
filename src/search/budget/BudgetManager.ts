@@ -65,46 +65,42 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   }
 
   /**
-   * Signal evaluation happened.
-   *
-   * @param encoding The encoding that was evaluated
+   * @inheritDoc
    */
   public evaluation(encoding: T): void {
     this._budgets.forEach((budget) => budget.evaluation(encoding));
   }
 
   /**
-   * Signal iteration happened.
-   *
-   * @param searchAlgorithm The search algorithm
+   * @inheritDoc
    */
   public iteration(searchAlgorithm: SearchAlgorithm<T>): void {
     this._budgets.forEach((budget) => budget.iteration(searchAlgorithm));
   }
 
   /**
-   * Start budget tracking.
+   * @inheritDoc
    */
   public start(): void {
     this._budgets.forEach((budget) => budget.start());
   }
 
   /**
-   * Start initialization budget tracking.
+   * @inheritDoc
    */
   public startInitialization(): void {
     this._budgets.forEach((budget) => budget.startInitialization());
   }
 
   /**
-   * Stop budget tracking.
+   * @inheritDoc
    */
   public stop(): void {
     this._budgets.forEach((budget) => budget.stop());
   }
 
   /**
-   * Stop initialization budget tracking.
+   * @inheritDoc
    */
   public stopInitialization(): void {
     this._budgets.forEach((budget) => budget.stopInitialization());
