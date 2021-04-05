@@ -31,6 +31,13 @@ export * from "./search/EncodingRunner";
 export * from "./search/budget/BudgetManager";
 export * from "./search/budget/EvaluationBudget";
 export * from "./search/budget/IterationBudget";
+export * from "./search/budget/SearchTimeBudget";
+
+// Statistics
+export * from "./statistics/StatisticsCollector";
+export * from "./statistics/SummaryWriter";
+export * from "./statistics/RuntimeVariable";
+export * from "./statistics/CoverageWriter";
 
 // Factories
 export * from "./search/factories/AlgorithmFactory";
