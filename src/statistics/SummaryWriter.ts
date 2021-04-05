@@ -14,6 +14,12 @@ export class SummaryWriter<T extends Encoding> {
     RuntimeVariable.SUBJECT,
     RuntimeVariable.SEED,
     RuntimeVariable.COVERAGE,
+    RuntimeVariable.COVERED_BRANCHES,
+    RuntimeVariable.TOTAL_BRANCHES,
+    RuntimeVariable.COVERED_FUNCTIONS,
+    RuntimeVariable.TOTAL_FUNCTIONS,
+    RuntimeVariable.SEARCH_TIME,
+    RuntimeVariable.ITERATIONS,
   ];
 
   /**
@@ -35,6 +41,9 @@ export class SummaryWriter<T extends Encoding> {
     const ws = fs.createWriteStream(filePath, { flags: "a" });
 
     // Write the data to the stream and add headers when the file does not exist
-    csv.writeToStream(ws, [data], { headers: !fs.existsSync(filePath) });
+    csv.writeToStream(ws, [data], {
+      headers: !fs.existsSync(filePath),
+      includeEndRowDelimiter: true,
+    });
   }
 }
