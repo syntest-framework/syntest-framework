@@ -32,6 +32,7 @@ export * from "./search/budget/BudgetManager";
 export * from "./search/budget/EvaluationBudget";
 export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
+export * from "./search/budget/TotalTimeBudget";
 
 // Statistics
 export * from "./statistics/StatisticsCollector";
