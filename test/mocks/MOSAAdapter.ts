@@ -1,8 +1,5 @@
 import { MOSA } from "../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { TestCase } from "../../src/testcase/TestCase";
-import { UncoveredObjectiveManager } from "../../dist/search/objective/managers/UncoveredObjectiveManager";
-import { SearchSubject, TestCaseRunner } from "../../dist";
-import { EncodingRunner } from "../../src";
 import { DummySearchSubject } from "./DummySubject.mock";
 
 export class MockedMOSA extends MOSA {

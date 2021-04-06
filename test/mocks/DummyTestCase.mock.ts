@@ -1,4 +1,3 @@
-import { ExecutionResult } from "../../src/search/ExecutionResult";
 import { TestCase } from "../../src/testcase/TestCase";
 import { ConstructorCall, Encoding } from "../../src";
 import { BranchObjectiveFunction } from "../../src";

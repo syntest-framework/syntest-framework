@@ -1,6 +1,5 @@
 import { ActionDescription, ObjectiveFunction, SearchSubject } from "../../src";
 import { DummyCFG } from "./DummyCFG.mock";
-import { TestCase } from "../../dist";
 
 export class DummySearchSubject extends SearchSubject<any> {
   protected objectives: ObjectiveFunction<any>[];

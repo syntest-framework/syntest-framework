@@ -4,7 +4,6 @@ import {
   BranchObjectiveFunction,
   guessCWD,
   loadConfig,
-  ObjectiveFunction,
   processConfig,
   setupLogger,
   setupOptions,

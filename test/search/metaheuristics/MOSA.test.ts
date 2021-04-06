@@ -7,15 +7,12 @@ import {
   TestCaseSampler,
   setupLogger,
   setupOptions,
-  Encoding,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import {
   BranchObjectiveFunction,
-  ObjectiveFunction,
-  SearchSubject,
   TestCase,
 } from "../../../src";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
