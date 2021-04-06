@@ -4,6 +4,8 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 /**
  * Budget for the number of iteration performed without progress during the search process.
+ *
+ * @author Mitchell Olsthoorn
  */
 export class StagnationBudget<T extends Encoding> implements Budget<T> {
   /**

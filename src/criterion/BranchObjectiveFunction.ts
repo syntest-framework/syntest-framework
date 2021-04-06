@@ -6,7 +6,11 @@ import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
 
 /**
+ * Objective function for the branch criterion.
  *
+ * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
+ * @author Dimitri Stallenberg
  */
 export class BranchObjectiveFunction<T extends Encoding>
   implements ObjectiveFunction<T> {

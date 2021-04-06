@@ -3,6 +3,8 @@ import { SearchSubject } from "../SearchSubject";
 
 /**
  * Function that models the objective.
+ *
+ * @author Mitchell Olsthoorn
  */
 export interface ObjectiveFunction<T extends Encoding> {
   /**

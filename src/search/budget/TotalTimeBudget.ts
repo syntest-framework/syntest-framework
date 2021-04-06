@@ -4,6 +4,8 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 /**
  * Budget for the total time of the search process.
+ *
+ * @author Mitchell Olsthoorn
  */
 export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**

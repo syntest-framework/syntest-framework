@@ -16,7 +16,8 @@ import {
  *
  * @return a tuple of 2 children
  *
- * @author Dimitri Stallenberg, Annibale Panichella
+ * @author Annibale Panichella
+ * @author Dimitri Stallenberg
  */
 export function TreeCrossover(
   parentA: TestCase,

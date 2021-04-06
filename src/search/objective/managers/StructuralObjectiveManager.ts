@@ -6,6 +6,8 @@ import { EncodingRunner } from "../../EncodingRunner";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.
+ *
+ * @author Mitchell Olsthoorn
  */
 export class StructuralObjectiveManager<
   T extends Encoding
