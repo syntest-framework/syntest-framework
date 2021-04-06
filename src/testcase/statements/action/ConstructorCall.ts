@@ -1,8 +1,8 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
-import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
 import { TestCase } from "../../TestCase";
+import { EncodingSampler } from "../../../search/EncodingSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -36,7 +36,7 @@ export class ConstructorCall extends ActionStatement {
     this._calls = calls;
   }
 
-  mutate(sampler: TestCaseSampler, depth: number) {
+  mutate(sampler: EncodingSampler<TestCase>, depth: number) {
     //if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
     // resample the gene
     //    return sampler.sampleGene(depth, this.type, 'constructor')
@@ -63,18 +63,21 @@ export class ConstructorCall extends ActionStatement {
     //}
   }
 
-  protected addMethodCall(depth: number, sampler: TestCaseSampler) {
+  protected addMethodCall(depth: number, sampler: EncodingSampler<TestCase>) {
     const calls = this.getMethodCalls();
     const index = prng.nextInt(0, calls.length);
 
     // get a random test case and we extract one of its method call
     // ugly solution for now. But we have to fix with proper refactoring
-    const randomTest: TestCase = sampler.sampleTestCase();
+    const randomTest: TestCase = sampler.sample();
 
     this.setMethodCall(index, randomTest.root.getMethodCalls()[0]);
   }
 
-  protected replaceMethodCall(depth: number, sampler: TestCaseSampler) {
+  protected replaceMethodCall(
+    depth: number,
+    sampler: EncodingSampler<TestCase>
+  ) {
     if (this.hasMethodCalls()) {
       const calls = this.getMethodCalls();
       const index = prng.nextInt(0, calls.length - 1);
@@ -82,7 +85,10 @@ export class ConstructorCall extends ActionStatement {
     }
   }
 
-  protected deleteMethodCall(depth: number, sampler: TestCaseSampler) {
+  protected deleteMethodCall(
+    depth: number,
+    sampler: EncodingSampler<TestCase>
+  ) {
     if (this.hasMethodCalls()) {
       const calls = this.getMethodCalls();
       const index = prng.nextInt(0, calls.length - 1);

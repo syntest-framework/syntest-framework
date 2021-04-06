@@ -1,13 +1,20 @@
 import { TestCase } from "../../../testcase/TestCase";
+import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 
 /**
- * Sort the population using fast non-dominated sorting
+ * Sort the population using fast non-dominated sorting.
+ *
  * @param population the population to sort
+ * @param objectiveFunctions The objectives to consider
  * @returns {[]} the newly sorted population
  *
- * @author Dimitri Stallenberg and Annibale Panichella
+ * @author Annibale Panichella
+ * @author Dimitri Stallenberg
  */
-export function fastNonDomSorting(population: TestCase[]) {
+export function fastNonDomSorting(
+  population: TestCase[],
+  objectiveFunctions: Set<ObjectiveFunction<TestCase>>
+) {
   const S: { [id: string]: TestCase[] } = {};
   const F: TestCase[][] = [[]];
   const n: { [id: string]: number } = {};
@@ -22,25 +29,15 @@ export function fastNonDomSorting(population: TestCase[]) {
     for (const q of population) {
       let pDominatesQ = true;
       let qDominatesP = true;
-      for (const key of p.getEvaluation().keys()) {
-        // TODO maybe add this
-        // if (!q.getEvaluation().has(key)) {
-        //     getLogger().debug("You cannot use fast non dominated sorting on individuals that have different objectives")
-        //     process.exit(1)
-        //     continue
-        // }
-
-        if (
-          p.getEvaluation().get(key)! === 0 &&
-          q.getEvaluation().get(key)! === 0
-        ) {
+      for (const key of objectiveFunctions) {
+        if (p.getObjective(key)! === 0 && q.getObjective(key)! === 0) {
           continue;
         }
-        if (p.getEvaluation().get(key)! >= q.getEvaluation().get(key)!) {
+        if (p.getObjective(key)! >= q.getObjective(key)!) {
           pDominatesQ = false;
         }
 
-        if (p.getEvaluation().get(key)! <= q.getEvaluation().get(key)!) {
+        if (p.getObjective(key)! <= q.getObjective(key)!) {
           qDominatesP = false;
         }
       }

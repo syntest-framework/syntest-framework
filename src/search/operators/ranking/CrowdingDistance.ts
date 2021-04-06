@@ -1,12 +1,18 @@
 import { TestCase } from "../../../testcase/TestCase";
+import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 
 /**
- * Compute the crowding distance for all individual int the front
+ * Compute the crowding distance for all individual int the front.
+ *
  * @param front set of individual to consider for the crowding distance
+ * @param objectiveFunctions The objectives to consider
  *
  * @author Annibale Panichella
  */
-export function crowdingDistance(front: TestCase[]) {
+export function crowdingDistance(
+  front: TestCase[],
+  objectiveFunctions: Set<ObjectiveFunction<TestCase>>
+) {
   const size = front.length;
 
   if (size == 0) return;
@@ -25,18 +31,14 @@ export function crowdingDistance(front: TestCase[]) {
     front[index].setCrowdingDistance(0.0);
   }
 
-  //throw new Error('Front = '+ front + ' size = ' + size)
-
-  for (const objective of front[0].getEvaluation().keys()) {
+  for (const objective of objectiveFunctions) {
     // sort the front in ascending order of fitness value
     const orderedFront = front.sort(function (a, b) {
-      return (
-        a.getEvaluation().get(objective) - b.getEvaluation().get(objective)
-      );
+      return a.getObjective(objective) - b.getObjective(objective);
     });
 
-    const objectiveMin = orderedFront[0].getEvaluation().get(objective);
-    const objectiveMax = orderedFront[size - 1].getEvaluation().get(objective);
+    const objectiveMin = orderedFront[0].getObjective(objective);
+    const objectiveMax = orderedFront[size - 1].getObjective(objective);
 
     if (objectiveMin == objectiveMax) continue;
 
@@ -47,8 +49,8 @@ export function crowdingDistance(front: TestCase[]) {
     // set crowding distance for all other points
     for (let j = 1; j < size - 1; j++) {
       let distance =
-        orderedFront[j + 1].getEvaluation().get(objective) -
-        orderedFront[j - 1].getEvaluation().get(objective);
+        orderedFront[j + 1].getObjective(objective) -
+        orderedFront[j - 1].getObjective(objective);
       const denominator = Math.abs(objectiveMin - objectiveMax);
       distance = distance / denominator;
       distance += orderedFront[j].getCrowdingDistance();

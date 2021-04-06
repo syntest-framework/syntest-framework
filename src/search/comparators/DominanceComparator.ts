@@ -1,11 +1,5 @@
 import { TestCase } from "../../testcase/TestCase";
-import { Objective } from "../../index";
-
-const { fastNonDomSorting } = require("../operators/ranking/FastNonDomSorting");
-const { crowdingDistance } = require("../operators/ranking/CrowdingDistance");
-const {
-  tournamentSelection,
-} = require("../operators/selection/TournamentSelection");
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 
 export class DominanceComparator {
   /**
@@ -16,25 +10,25 @@ export class DominanceComparator {
   static compare(
     individual1: TestCase,
     individual2: TestCase,
-    targets: Set<Objective>
+    objectives: Set<ObjectiveFunction<TestCase>>
   ): number {
     let dominatesX = false;
     let dominatesY = false;
 
-    for (const objective of targets) {
+    for (const objective of objectives) {
       if (
-        individual1.getEvaluation().get(objective) <
-        individual2.getEvaluation().get(objective)
+        individual1.getObjective(objective) <
+        individual2.getObjective(objective)
       )
         dominatesX = true;
       if (
-        individual1.getEvaluation().get(objective) >
-        individual2.getEvaluation().get(objective)
+        individual1.getObjective(objective) >
+        individual2.getObjective(objective)
       )
         dominatesY = true;
 
       // if the both do not dominates each other, we don't
-      // need to iterate over all the other targets
+      // need to iterate over all the other objectives
       if (dominatesX && dominatesY) return 0;
     }
 
