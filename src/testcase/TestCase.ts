@@ -107,7 +107,16 @@ export class TestCase implements Encoding {
    * @param objectiveFunction The objective.
    */
   getObjective(objectiveFunction: ObjectiveFunction<TestCase>): number {
-    return this._objectives.get(objectiveFunction);
+    if (this._objectives.has(objectiveFunction))
+        return this._objectives.get(objectiveFunction);
+    else {
+      // this part is needed for DynaMOSA
+      // it may happen that the test was created when the objective in input was not part of the search yet
+      // with this code, we keep the objective values up to date
+      const distance = objectiveFunction.calculateDistance(this);
+      this._objectives.set(objectiveFunction, distance);
+      return distance;
+    }
   }
 
   setObjective(
