@@ -78,7 +78,7 @@ export abstract class SearchSubject<T extends Encoding> {
 
     for (const edge of this._cfg.edges) {
       g.setEdge(edge.from, edge.to);
-      g.setEdge(edge.to, edge.from);
+      // g.setEdge(edge.to, edge.from);
     }
 
     this._paths = alg.dijkstraAll(g, (e: any) => {
