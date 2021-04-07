@@ -238,14 +238,7 @@ export class MOSA extends EvolutionaryAlgorithm {
           chosen.getObjective(objective)
         ) {
           // at the same level of fitness, we look at test case size
-          if (
-            (population[index].root.getChildren().length <
-              chosen.root.getChildren().length &&
-              population[index].root.getChildren().length > 1) ||
-            (population[index].root.getChildren().length ==
-              chosen.root.getChildren().length &&
-              Math.random() < 0.5)
-          ) {
+          if (population[index].getLength() < chosen.getLength()) {
             // Secondary criterion based on tests lengths
             chosen = population[index];
           }

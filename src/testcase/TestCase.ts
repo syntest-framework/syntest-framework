@@ -125,4 +125,8 @@ export class TestCase implements Encoding {
   ) {
     this._objectives.set(objectiveFunction, distance);
   }
+
+  getLength(): number{
+    return this.root.getMethodCalls().length;
+  }
 }
