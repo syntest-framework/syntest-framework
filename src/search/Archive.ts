@@ -46,7 +46,7 @@ export class Archive<T extends Encoding> {
     return Array.from(this._map.keys());
   }
 
-  getEncoding(objective: ObjectiveFunction<T>): Encoding {
+  getEncoding(objective: ObjectiveFunction<T>): T {
     return this._map.get(objective);
   }
 }
