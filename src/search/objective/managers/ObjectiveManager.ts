@@ -71,9 +71,9 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * @protected
    */
   protected abstract _updateObjectives(
-      objectiveFunction: ObjectiveFunction<T>,
-      encoding: T,
-      distance: number
+    objectiveFunction: ObjectiveFunction<T>,
+    encoding: T,
+    distance: number
   ): void;
 
   /**
