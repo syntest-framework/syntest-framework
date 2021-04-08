@@ -49,6 +49,9 @@ export class UncoveredObjectiveManager<
    * @inheritDoc
    */
   public load(subject: SearchSubject<T>): void {
+    // Set the subject
+    this._subject = subject;
+
     // TODO: Reset the objective manager
     const objectives = subject.getObjectives();
 

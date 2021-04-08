@@ -12,8 +12,6 @@ import { EncodingRunner } from "../../EncodingRunner";
 export class StructuralObjectiveManager<
   T extends Encoding
 > extends ObjectiveManager<T> {
-  protected _subject: SearchSubject<T>;
-
   /**
    * Constructor.
    *
@@ -62,14 +60,14 @@ export class StructuralObjectiveManager<
    * @inheritDoc
    */
   load(subject: SearchSubject<T>): void {
+    // Set the subject
+    this._subject = subject;
+
     // TODO: Reset the objective manager
     const objectives = subject.getObjectives();
 
     // Add all objectives to the uncovered objectives
     objectives.forEach((objective) => this._uncoveredObjectives.add(objective));
-
-    // Set the subject
-    this._subject = subject;
 
     // Set the current objectives
     const rootObjectiveNodes = this._subject.cfg.nodes.filter(
