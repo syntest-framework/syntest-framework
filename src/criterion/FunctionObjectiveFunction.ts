@@ -30,7 +30,6 @@ export class FunctionObjectiveFunction<T extends Encoding>
 
   /**
    * @inheritDoc
-   * @param encoding
    */
   calculateDistance(encoding: T): number {
     if (encoding.getExecutionResult().coversLine(this._line)) {
@@ -47,6 +46,9 @@ export class FunctionObjectiveFunction<T extends Encoding>
     return this._id;
   }
 
+  /**
+   * @inheritDoc
+   */
   getSubject(): SearchSubject<T> {
     return this._subject;
   }

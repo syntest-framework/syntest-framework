@@ -155,6 +155,9 @@ export class BranchObjectiveFunction<T extends Encoding>
     return this._id;
   }
 
+  /**
+   * @inheritDoc
+   */
   getSubject(): SearchSubject<T> {
     return this._subject;
   }
