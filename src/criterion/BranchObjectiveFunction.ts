@@ -1,11 +1,8 @@
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 import { Encoding } from "../search/Encoding";
 import { Node } from "../graph/Node";
-import { getLogger } from "../util/logger";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
-import {FunctionObjectiveFunction} from "./FunctionObjectiveFunction";
-import {ProbeObjectiveFunction} from "./ProbeObjectiveFunction";
 
 /**
  * Objective function for the branch criterion.
@@ -110,7 +107,7 @@ export class BranchObjectiveFunction<T extends Encoding>
       closestHitNode.opcode,
       closestHitNode.left,
       closestHitNode.right,
-      closestHitNode.locationIdx == 1 ? false : true // we have to revert/negate the condition for the closest covered node
+      this._type // we have to revert/negate the condition for the closest covered node
     );
 
     // add the distances
