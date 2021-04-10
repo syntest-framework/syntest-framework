@@ -3,6 +3,7 @@ import { Encoding } from "../search/Encoding";
 import { Node } from "../graph/Node";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
+import { Datapoint } from "../testcase/execution/TestCaseRunner";
 
 /**
  * Objective function for the branch criterion.
@@ -47,28 +48,34 @@ export class BranchObjectiveFunction<T extends Encoding>
    */
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
-    // let's check if the line is covered
-    if (executionResult.coversLine(this._line)){
-      const branchTrace = executionResult.getTraces().find((trace) =>
-          trace.type === "branch" &&
-          trace.line === this._line &&
-          trace.locationIdx === this._locationIdx
-      )
 
-      if (branchTrace.hits > 0){
+    // let's check if the line is covered
+    if (executionResult.coversLine(this._line)) {
+      const branchTrace = executionResult
+        .getTraces()
+        .find(
+          (trace) =>
+            trace.type === "branch" &&
+            trace.line === this._line &&
+            trace.locationIdx === this._locationIdx
+        );
+
+      if (branchTrace.hits > 0) {
         return 0;
       } else {
-        const oppositeBranch = executionResult.getTraces().find((trace) =>
+        const oppositeBranch = executionResult.getTraces().find(
+          (trace) =>
             trace.type === "branch" &&
-            trace.id === branchTrace.id &&   // same branch id
-            trace.locationIdx !== this._locationIdx  // different location (0 = false, 1 = true)
-        )
+            trace.id === branchTrace.id && // same branch id
+            trace.locationIdx !== this._locationIdx // different location (0 = false, 1 = true)
+        );
 
         return BranchDistance.branchDistanceNumeric(
-            oppositeBranch.opcode,
-            oppositeBranch.left,
-            oppositeBranch.right,
-            this._type);
+          oppositeBranch.opcode,
+          oppositeBranch.left,
+          oppositeBranch.right,
+          this._type
+        );
       }
     }
 
@@ -77,17 +84,22 @@ export class BranchObjectiveFunction<T extends Encoding>
       return n.locationIdx === this._locationIdx && n.line === this._line;
     });
 
-
     // find the closest covered branch to the objective branch
     let closestHitNode = null;
     let approachLevel = Number.MAX_VALUE;
     for (const n of this._subject.cfg.nodes) {
-      const traces = executionResult.getTraces().filter((trace) =>
-          trace.line === n.line &&
-          (trace.type === "branch" || trace.type === "probePre" || trace.type === "probePost") &&
-          trace.hits > 0
-      )
-      for (const trace of traces){
+      const traces = executionResult
+        .getTraces()
+        .filter(
+          (trace) =>
+            trace.line === n.line &&
+            (trace.type === "branch" ||
+              trace.type === "probePre" ||
+              trace.type === "probePost" ||
+              trace.type === "function") &&
+            trace.hits > 0
+        );
+      for (const trace of traces) {
         const pathDistance = this._subject.getPath(n.id, branchNode.id);
         if (approachLevel > pathDistance) {
           approachLevel = pathDistance;
@@ -97,22 +109,42 @@ export class BranchObjectiveFunction<T extends Encoding>
     }
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
-    if (!closestHitNode){
+    if (!closestHitNode) {
       return Number.MAX_VALUE;
     }
 
-    // calculate the branch distance between: covering the branch needed to get a closer approach distance and the currently covered branch
-    // always between 0 and 1
-    const branchDistance = BranchDistance.branchDistanceNumeric(
-      closestHitNode.opcode,
-      closestHitNode.left,
-      closestHitNode.right,
-      this._type // we have to revert/negate the condition for the closest covered node
-    );
+    let branchDistance: number;
+
+    if (closestHitNode.type === "function") branchDistance = 1;
+    else branchDistance = this.computeBranchDistance(closestHitNode);
 
     // add the distances
     const distance = approachLevel + branchDistance;
     return distance;
+  }
+
+  /**
+   *  Calculate the branch distance between: covering the branch needed to get a closer approach distance
+   *  and the currently covered branch always between 0 and 1
+   * @param node
+   * @protected
+   */
+  protected computeBranchDistance(node: Datapoint): number {
+    const trueBranch = BranchDistance.branchDistanceNumeric(
+      node.opcode,
+      node.left,
+      node.right,
+      true
+    );
+
+    const falseBranch = BranchDistance.branchDistanceNumeric(
+      node.opcode,
+      node.left,
+      node.right,
+      false
+    );
+
+    return Math.max(trueBranch, falseBranch);
   }
 
   /**
