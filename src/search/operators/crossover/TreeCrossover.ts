@@ -1,11 +1,8 @@
 import {
-  FunctionCall,
   getProperty,
-  ObjectFunctionCall,
   prng,
   Statement,
   TestCase,
-  ActionStatement,
   NumericStatement,
 } from "../../..";
 
@@ -19,9 +16,13 @@ import {
  *
  * @return a tuple of 2 children
  *
- * @author Dimitri Stallenberg, Annibale Panichella
+ * @author Annibale Panichella
+ * @author Dimitri Stallenberg
  */
-export function TreeCrossover(parentA: TestCase, parentB: TestCase) {
+export function TreeCrossover(
+  parentA: TestCase,
+  parentB: TestCase
+): TestCase[] {
   const rootA = parentA.copy().root;
   const rootB = parentB.copy().root;
 

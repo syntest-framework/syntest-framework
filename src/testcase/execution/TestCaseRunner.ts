@@ -1,5 +1,7 @@
 import { TestCase } from "../TestCase";
 import { SuiteBuilder } from "../decoder/SuiteBuilder";
+import { EncodingRunner } from "../../search/EncodingRunner";
+import { ExecutionResult } from "../../search/ExecutionResult";
 
 export interface Datapoint {
   type: string;
@@ -13,16 +15,16 @@ export interface Datapoint {
   right: number;
 }
 
-export abstract class TestCaseRunner {
-  private _suiteBuilder: SuiteBuilder;
+export abstract class TestCaseRunner implements EncodingRunner<TestCase> {
+  protected _suiteBuilder: SuiteBuilder;
 
-  constructor(suiteBuilder: SuiteBuilder) {
+  protected constructor(suiteBuilder: SuiteBuilder) {
     this._suiteBuilder = suiteBuilder;
   }
-
-  abstract runTestCase(testCase: TestCase): Promise<Datapoint[]>;
 
   get suiteBuilder(): SuiteBuilder {
     return this._suiteBuilder;
   }
+
+  public abstract execute(encoding: TestCase): Promise<ExecutionResult>;
 }

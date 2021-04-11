@@ -20,14 +20,35 @@ export * from "./testcase/statements/primitive/NumericStatement";
 export * from "./testcase/statements/primitive/StringStatement";
 
 // Search
+export * from "./search/SearchSubject";
+export * from "./search/EncodingSampler";
+export * from "./search/Encoding";
+export * from "./search/ExecutionResult";
+export * from "./search/Archive";
+export * from "./search/EncodingRunner";
+
+// Budget
+export * from "./search/budget/BudgetManager";
+export * from "./search/budget/EvaluationBudget";
+export * from "./search/budget/IterationBudget";
+export * from "./search/budget/SearchTimeBudget";
+export * from "./search/budget/TotalTimeBudget";
+
+// Statistics
+export * from "./statistics/StatisticsCollector";
+export * from "./statistics/SummaryWriter";
+export * from "./statistics/RuntimeVariable";
+export * from "./statistics/CoverageWriter";
+
 // Factories
 export * from "./search/factories/AlgorithmFactory";
 export * from "./search/factories/StoppingCriterionFactory";
 
 // Objective
-export * from "./search/objective/Fitness";
-export * from "./search/objective/Objective";
-export * from "./search/objective/Target";
+export * from "./search/objective/ObjectiveFunction";
+export * from "./search/objective/BranchDistance";
+export * from "./criterion/BranchObjectiveFunction";
+export * from "./criterion/FunctionObjectiveFunction";
 
 // Operator
 export * from "./search/operators/ranking/CrowdingDistance";
@@ -35,12 +56,9 @@ export * from "./search/operators/ranking/FastNonDomSorting";
 export * from "./search/operators/selection/TournamentSelection";
 
 // Metaheuristics
-export * from "./search/metaheuristics/GeneticAlgorithm";
-export * from "./search/metaheuristics/NSGA2";
-export * from "./search/metaheuristics/SimpleGA";
-export * from "./search/metaheuristics/MOSA";
-export * from "./search/metaheuristics/MultiGA";
-export * from "./search/metaheuristics/COMIX";
+export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
+export * from "./search/metaheuristics/evolutionary/NSGAII";
+export * from "./search/metaheuristics/evolutionary/mosa/MOSA";
 
 // Sampling
 export * from "./testcase/sampling/TestCaseSampler";

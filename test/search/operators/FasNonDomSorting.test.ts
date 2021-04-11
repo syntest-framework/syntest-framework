@@ -1,11 +1,12 @@
 import * as chai from "chai";
 import {
+  BranchObjectiveFunction,
   guessCWD,
   loadConfig,
-  Objective,
   processConfig,
   setupLogger,
   setupOptions,
+  TestCase,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import { fastNonDomSorting } from "../../../src/search/operators/ranking/FastNonDomSorting";
@@ -25,8 +26,23 @@ describe("Fast non-dominated sorting", function () {
   });
 
   it("Sort three solutions", () => {
-    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
+    const objectives = new Set<BranchObjectiveFunction<TestCase>>();
+    objectives.add(objective1);
+    objectives.add(objective2);
 
     const ind1 = new DummyIndividual();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
@@ -37,7 +53,7 @@ describe("Fast non-dominated sorting", function () {
     const ind3 = new DummyIndividual();
     ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
 
-    const F = fastNonDomSorting([ind1, ind2, ind3]);
+    const F = fastNonDomSorting([ind1, ind2, ind3], objectives);
     expect(F[0].length).to.equal(2);
     expect(F[0]).to.contain(ind1);
     expect(F[0]).to.contain(ind3);

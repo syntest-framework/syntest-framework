@@ -1,4 +1,5 @@
-import { prng, TestCase } from "../../..";
+import { prng } from "../../../util/prng";
+import { TestCase } from "../../../testcase/TestCase";
 
 /**
  * This function selects the individual for reproduction using tournament selection
@@ -11,7 +12,7 @@ import { prng, TestCase } from "../../..";
 export function tournamentSelection(
   population: TestCase[],
   tournamentSize: number
-) {
+): TestCase {
   if (tournamentSize < 2)
     throw new Error("The tournament size should be greater than 1 ");
 

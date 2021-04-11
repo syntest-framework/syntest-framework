@@ -1,19 +1,21 @@
 import * as chai from "chai";
 import {
-  Fitness,
   guessCWD,
   loadConfig,
-  Objective,
   processConfig,
   TestCaseRunner,
   TestCaseSampler,
   setupLogger,
   setupOptions,
 } from "../../../src";
-import { MOSA } from "../../../src/search/metaheuristics/MOSA";
+import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
-import { DummyFitness } from "../../mocks/DummyFitness.mock";
-import { DummyTarget } from "../../mocks/DummyTarget.mock";
+import { DummySearchSubject } from "../../mocks/DummySubject.mock";
+import {
+  BranchObjectiveFunction,
+  TestCase,
+} from "../../../src";
+import { MockedMOSA } from "../../mocks/MOSAAdapter";
 
 const expect = chai.expect;
 
@@ -29,32 +31,43 @@ describe("Test MOSA", function () {
     await setupLogger();
   });
 
-  it("Test Preference criterion", () => {
-    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
+  let objectives: Set<BranchObjectiveFunction<TestCase>>;
 
+  beforeEach(function () {
+    const objective1 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      true
+    );
+    const objective2 = new BranchObjectiveFunction<TestCase>(
+      null,
+      "1",
+      1,
+      1,
+      false
+    );
+    objectives = new Set<BranchObjectiveFunction<TestCase>>();
+    objectives.add(objective1);
+    objectives.add(objective2);
+  });
+
+  it("Test Preference criterion", () => {
     const ind1 = new DummyIndividual();
-    ind1.setDummyEvaluation([objective1, objective2], [2, 3]);
+    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
     const ind2 = new DummyIndividual();
-    ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
+    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
     const ind3 = new DummyIndividual();
-    ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
+    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
-    const mockedTarget = new DummyTarget([objective1, objective2]);
-    const fitness: Fitness = new DummyFitness(mockedRunner, [
-      objective1,
-      objective2,
-    ]);
 
-    const mosa = new MOSA(mockedTarget, fitness, mockedSampler);
-    const frontZero = mosa.preferenceCriterion(
-      [ind1, ind2, ind3],
-      [objective1, objective2]
-    );
+    const mosa = new MOSA(mockedRunner, mockedSampler);
+    const frontZero = mosa.preferenceCriterion([ind1, ind2, ind3], objectives);
 
     expect(frontZero.length).to.equal(2);
     expect(frontZero).to.contain(ind2);
@@ -62,37 +75,32 @@ describe("Test MOSA", function () {
   });
 
   it("Test Non Dominated front", () => {
-    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
-
     const ind1 = new DummyIndividual();
-    ind1.setDummyEvaluation([objective1, objective2], [2, 3]);
+    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
     const ind2 = new DummyIndividual();
-    ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
+    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
     const ind3 = new DummyIndividual();
-    ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
+    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
     const ind4 = new DummyIndividual();
-    ind4.setDummyEvaluation([objective1, objective2], [1, 1]);
+    ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
     const ind5 = new DummyIndividual();
-    ind5.setDummyEvaluation([objective1, objective2], [5, 5]);
+    ind5.setDummyEvaluation(Array.from(objectives), [5, 5]);
 
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
-    const mockedTarget = new DummyTarget([objective1, objective2]);
-    const fitness: Fitness = new DummyFitness(mockedRunner, [
-      objective1,
-      objective2,
-    ]);
 
-    const mosa = new MOSA(mockedTarget, fitness, mockedSampler);
-    const front = mosa.getNonDominatedFront(
-      [objective1, objective2],
-      [ind1, ind2, ind3, ind4, ind5]
-    );
+    const mosa = new MOSA(mockedSampler, mockedRunner);
+    const front = mosa.getNonDominatedFront(objectives, [
+      ind1,
+      ind2,
+      ind3,
+      ind4,
+      ind5,
+    ]);
 
     expect(front.length).to.equal(3);
     expect(front).to.contain(ind2);
@@ -101,33 +109,25 @@ describe("Test MOSA", function () {
   });
 
   it("Test Preference Sorting", () => {
-    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
-
     const ind1 = new DummyIndividual();
-    ind1.setDummyEvaluation([objective1, objective2], [2, 3]);
+    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
     const ind2 = new DummyIndividual();
-    ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
+    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
     const ind3 = new DummyIndividual();
-    ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
+    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
     const ind4 = new DummyIndividual();
-    ind4.setDummyEvaluation([objective1, objective2], [1, 1]);
+    ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
-    const mockedTarget = new DummyTarget([objective1, objective2]);
-    const fitness: Fitness = new DummyFitness(mockedRunner, [
-      objective1,
-      objective2,
-    ]);
 
-    const mosa = new MOSA(mockedTarget, fitness, mockedSampler);
+    const mosa = new MOSA(mockedSampler, mockedRunner);
     const front = mosa.preferenceSortingAlgorithm(
       [ind1, ind2, ind3, ind4],
-      [objective1, objective2]
+      objectives
     );
 
     expect(front[0].length).to.equal(2);
@@ -140,42 +140,35 @@ describe("Test MOSA", function () {
   });
 
   it("Environmental Selection", async () => {
-    const objective1: Objective = { target: "mock", line: 1, locationIdx: 1 };
-    const objective2: Objective = { target: "mock", line: 1, locationIdx: 2 };
-
     const ind1 = new DummyIndividual();
-    ind1.setDummyEvaluation([objective1, objective2], [2, 3]);
+    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
     const ind2 = new DummyIndividual();
-    ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
+    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
     const ind3 = new DummyIndividual();
-    ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
+    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
     const ind4 = new DummyIndividual();
-    ind4.setDummyEvaluation([objective1, objective2], [1, 1]);
+    ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
     const ind5 = new DummyIndividual();
-    ind4.setDummyEvaluation([objective1, objective2], [3, 2]);
+    ind4.setDummyEvaluation(Array.from(objectives), [3, 2]);
+
+    const searchSubject = new DummySearchSubject(Array.from(objectives));
 
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
-    const mockedTarget = new DummyTarget([objective1, objective2]);
-    const fitness: Fitness = new DummyFitness(mockedRunner, [
-      objective1,
-      objective2,
-    ]);
 
-    const mosa = new MOSA(mockedTarget, fitness, mockedSampler);
-    const newPopulation = await mosa.environmentalSelection(
-      [ind1, ind2, ind3, ind4, ind5],
-      4
-    );
+    const mosa = new MockedMOSA(mockedSampler, mockedRunner);
+    mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
+    mosa.updateObjectives(searchSubject);
+    await mosa.environmentalSelection(4);
 
-    expect(newPopulation.length).to.equal(4);
-    expect(newPopulation).contain(ind1);
-    expect(newPopulation).contain(ind2);
-    expect(newPopulation).contain(ind3);
-    expect(newPopulation).contain(ind4);
+    expect(mosa.getPopulation().length).to.equal(4);
+    expect(mosa.getPopulation()).contain(ind1);
+    expect(mosa.getPopulation()).contain(ind2);
+    expect(mosa.getPopulation()).contain(ind3);
+    expect(mosa.getPopulation()).contain(ind4);
   });
 });
