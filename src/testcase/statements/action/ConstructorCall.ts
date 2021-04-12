@@ -70,7 +70,7 @@ export class ConstructorCall extends ActionStatement {
     // get a random test case and we extract one of its method call
     // ugly solution for now. But we have to fix with proper refactoring
     const randomTest: TestCase = sampler.sample();
-    this._calls.splice(index, 0, randomTest.root.getMethodCalls()[0])
+    this._calls.splice(index, 0, randomTest.root.getMethodCalls()[0]);
   }
 
   protected replaceMethodCall(
