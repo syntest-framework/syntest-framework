@@ -17,7 +17,6 @@ export class BranchObjectiveFunction<T extends Encoding>
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _line: number;
-  protected _locationIdx: number;
   protected _type: boolean;
 
   /**
@@ -26,20 +25,17 @@ export class BranchObjectiveFunction<T extends Encoding>
    * @param subject
    * @param id
    * @param line
-   * @param locationIdx
    * @param type
    */
   constructor(
     subject: SearchSubject<T>,
     id: string,
     line: number,
-    locationIdx: number,
     type: boolean
   ) {
     this._subject = subject;
     this._id = id;
     this._line = line;
-    this._locationIdx = locationIdx;
     this._type = type;
   }
 
@@ -64,7 +60,6 @@ export class BranchObjectiveFunction<T extends Encoding>
         .find((objective) => {
           const branchObjective = <BranchObjectiveFunction<T>>objective;
           return (
-            branchObjective._locationIdx === trace.locationIdx &&
             branchObjective._line === trace.line
           );
         });
@@ -75,7 +70,7 @@ export class BranchObjectiveFunction<T extends Encoding>
 
       // find the corresponding branch node inside the cfg
       const branchNode = this._subject.cfg.nodes.find((n: Node) => {
-        return n.locationIdx === trace.locationIdx && n.line === trace.line;
+        return n.line === trace.line;
       });
 
       if (!branchNode) {
@@ -96,7 +91,7 @@ export class BranchObjectiveFunction<T extends Encoding>
 
     // find the node in the CFG object that corresponds to the objective
     const node = nodes.find((n) => {
-      return this._locationIdx === n.locationIdx && this._line === n.line;
+      return this._line === n.line;
     });
 
     // No node found so the objective is uncoverable

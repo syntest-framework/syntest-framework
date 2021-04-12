@@ -99,7 +99,7 @@ export abstract class SearchSubject<T extends Encoding> {
         process.exit(1);
       }
 
-      return edge.type === "-" ? 2 : 1;
+      return edge.branchType === undefined ? 2 : 1;
     });
   }
 
