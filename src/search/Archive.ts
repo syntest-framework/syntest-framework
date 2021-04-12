@@ -54,7 +54,7 @@ export class Archive<T extends Encoding> {
    *
    * @param objective The objective to use.
    */
-  getEncoding(objective: ObjectiveFunction<T>): Encoding {
+  getEncoding(objective: ObjectiveFunction<T>): T {
     return this._map.get(objective);
   }
 }

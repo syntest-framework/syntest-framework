@@ -3,6 +3,8 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
 import { Archive } from "../../Archive";
 import { SearchSubject } from "../../SearchSubject";
 import { EncodingRunner } from "../../EncodingRunner";
+import { ExceptionObjectiveFunction } from "../../../criterion/ExceptionObjectiveFunction";
+import * as crypto from "crypto";
 
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.
@@ -41,6 +43,12 @@ export abstract class ObjectiveManager<T extends Encoding> {
   protected _runner: EncodingRunner<T>;
 
   /**
+   * The subject of the search.
+   * @protected
+   */
+  protected _subject: SearchSubject<T>;
+
+  /**
    * Constructor.
    *
    * @param runner Encoding runner
@@ -69,6 +77,17 @@ export abstract class ObjectiveManager<T extends Encoding> {
   ): void;
 
   /**
+   * Evaluate multiple encodings on the current objectives.
+   *
+   * @param encodings The encoding to evaluate
+   */
+  public async evaluateMany(encodings: T[]): Promise<void> {
+    for (const encoding of encodings) {
+      await this.evaluateOne(encoding);
+    }
+  }
+
+  /**
    * Evaluate one encoding on the current objectives.
    *
    * @param encoding The encoding to evaluate
@@ -89,16 +108,28 @@ export abstract class ObjectiveManager<T extends Encoding> {
       // Update the objectives
       this._updateObjectives(objectiveFunction, encoding, distance);
     });
-  }
 
-  /**
-   * Evaluate multiple encodings on the current objectives.
-   *
-   * @param encodings The encoding to evaluate
-   */
-  public async evaluateMany(encodings: T[]): Promise<void> {
-    for (const encoding of encodings) {
-      await this.evaluateOne(encoding);
+    // Create separate exception objective when an exception occurred in the execution
+    if (result.hasExceptions()) {
+      const hash = crypto
+        .createHash("md5")
+        .update(result.getExceptions())
+        .digest("hex");
+
+      const numOfExceptions = this._archive
+        .getObjectives()
+        .filter((objective) => objective instanceof ExceptionObjectiveFunction)
+        .filter((objective) => objective.getIdentifier() === hash).length;
+      if (numOfExceptions === 0) {
+        this._archive.update(
+          new ExceptionObjectiveFunction(
+            this._subject,
+            hash,
+            result.getExceptions()
+          ),
+          encoding
+        );
+      }
     }
   }
 

@@ -50,6 +50,7 @@ export * from "./search/objective/BranchDistance";
 export * from "./criterion/BranchObjectiveFunction";
 export * from "./criterion/FunctionObjectiveFunction";
 export * from "./criterion/ProbeObjectiveFunction";
+export * from "./criterion/ExceptionObjectiveFunction";
 
 // Operator
 export * from "./search/operators/ranking/CrowdingDistance";
