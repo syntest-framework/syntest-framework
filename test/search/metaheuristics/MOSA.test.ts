@@ -11,10 +11,7 @@ import {
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import {
-  BranchObjectiveFunction,
-  TestCase,
-} from "../../../src";
+import { BranchObjectiveFunction, TestCase } from "../../../src";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 
 const expect = chai.expect;
