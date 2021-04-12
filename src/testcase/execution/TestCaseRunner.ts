@@ -4,15 +4,14 @@ import { EncodingRunner } from "../../search/EncodingRunner";
 import { ExecutionResult } from "../../search/ExecutionResult";
 
 export interface Datapoint {
+  id: string;
   type: string;
   locationIdx: number;
   line: number;
-
   hits: number;
-
   opcode: string;
-  left: number;
-  right: number;
+  left: number[];
+  right: number[];
 }
 
 export abstract class TestCaseRunner implements EncodingRunner<TestCase> {

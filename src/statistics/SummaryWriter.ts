@@ -16,8 +16,12 @@ export class SummaryWriter<T extends Encoding> {
     RuntimeVariable.COVERAGE,
     RuntimeVariable.COVERED_BRANCHES,
     RuntimeVariable.TOTAL_BRANCHES,
+    RuntimeVariable.COVERED_LINES,
+    RuntimeVariable.TOTAL_LINES,
     RuntimeVariable.COVERED_FUNCTIONS,
     RuntimeVariable.TOTAL_FUNCTIONS,
+    RuntimeVariable.COVERED_PROBES,
+    RuntimeVariable.TOTAL_PROBES,
     RuntimeVariable.SEARCH_TIME,
     RuntimeVariable.ITERATIONS,
   ];
