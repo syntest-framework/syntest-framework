@@ -114,7 +114,8 @@ export abstract class ObjectiveManager<T extends Encoding> {
       this._archive.update(
         new ExceptionObjectiveFunction(
           this._subject,
-          crypto.createHash("md5").update(result.getExceptions()).digest("hex")
+          crypto.createHash("md5").update(result.getExceptions()).digest("hex"),
+          result.getExceptions()
         ),
         encoding
       );

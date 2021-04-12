@@ -14,6 +14,7 @@ export class ExceptionObjectiveFunction<T extends Encoding>
   implements ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
+  protected _message: string;
 
   /**
    * Constructor.
@@ -21,9 +22,10 @@ export class ExceptionObjectiveFunction<T extends Encoding>
    * @param subject
    * @param id
    */
-  constructor(subject: SearchSubject<T>, id: string) {
+  constructor(subject: SearchSubject<T>, id: string, message: string) {
     this._subject = subject;
     this._id = id;
+    this._message = message;
   }
 
   /**
