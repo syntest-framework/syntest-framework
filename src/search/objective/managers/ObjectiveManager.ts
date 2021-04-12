@@ -111,14 +111,25 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // Create separate exception objective when an exception occurred in the execution
     if (result.hasExceptions()) {
-      this._archive.update(
-        new ExceptionObjectiveFunction(
-          this._subject,
-          crypto.createHash("md5").update(result.getExceptions()).digest("hex"),
-          result.getExceptions()
-        ),
-        encoding
-      );
+      const hash = crypto
+        .createHash("md5")
+        .update(result.getExceptions())
+        .digest("hex");
+
+      const numOfExceptions = this._archive
+        .getObjectives()
+        .filter((objective) => objective instanceof ExceptionObjectiveFunction)
+        .filter((objective) => objective.getIdentifier() === hash).length;
+      if (numOfExceptions === 0) {
+        this._archive.update(
+          new ExceptionObjectiveFunction(
+            this._subject,
+            hash,
+            result.getExceptions()
+          ),
+          encoding
+        );
+      }
     }
   }
 
