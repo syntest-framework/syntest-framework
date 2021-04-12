@@ -29,4 +29,9 @@ export interface Encoding {
    * @param executionResult The execution result to store
    */
   setExecutionResult(executionResult: ExecutionResult);
+
+  /**
+   * Return the length of the encoding/chromosome
+   */
+  getLength(): number;
 }

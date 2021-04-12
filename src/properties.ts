@@ -135,6 +135,12 @@ export const properties = {
     ],
   },
 
+  probe_objective: {
+    description: "Enable the probe objectives",
+    type: "boolean",
+    default: false,
+  },
+
   // logging
   console_log_level: {
     description: "Log level of the tool",

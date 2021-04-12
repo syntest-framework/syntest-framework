@@ -40,7 +40,10 @@ export class UncoveredObjectiveManager<
       if (!this._archive.has(objectiveFunction)) {
         this._archive.update(objectiveFunction, encoding);
       } else {
-        // TODO: Add secondary objectives
+        // If the objective is already in the archive we save the shortest encoding
+        const currentEncoding = this._archive.getEncoding(objectiveFunction);
+        if (currentEncoding.getLength() > encoding.getLength())
+          this._archive.update(objectiveFunction, encoding);
       }
     }
   }

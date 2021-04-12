@@ -150,7 +150,7 @@ describe("Test MOSA", function () {
     ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
     const ind5 = new DummyIndividual();
-    ind4.setDummyEvaluation(Array.from(objectives), [3, 2]);
+    ind5.setDummyEvaluation(Array.from(objectives), [3, 2]);
 
     const searchSubject = new DummySearchSubject(Array.from(objectives));
 
