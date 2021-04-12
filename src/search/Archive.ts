@@ -39,14 +39,7 @@ export class Archive<T extends Encoding> {
    * @param encoding The corresponding encoding
    */
   update(objectiveFunction: ObjectiveFunction<T>, encoding: T): void {
-    if (this._map.has(objectiveFunction)){
-       // if the objective is in the archive we save the shortest test
-      const oldTest = this._map.get(objectiveFunction);
-      if (oldTest.getLength() > encoding.getLength())
-        this._map.set(objectiveFunction, encoding);
-    } else {
-      this._map.set(objectiveFunction, encoding);
-    }
+    this._map.set(objectiveFunction, encoding);
   }
 
   /**
