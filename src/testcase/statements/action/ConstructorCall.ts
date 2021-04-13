@@ -37,30 +37,26 @@ export class ConstructorCall extends ActionStatement {
   }
 
   mutate(sampler: EncodingSampler<TestCase>, depth: number) {
-    //if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
-    // resample the gene
-    //    return sampler.sampleGene(depth, this.type, 'constructor')
-    //} else {
-    // randomly mutate one of the args
     if (this.args.length > 0) {
       const args = [...this.args.map((a: Statement) => a.copy())];
       const index = prng.nextInt(0, args.length - 1);
-      args[index] = args[index].mutate(sampler, depth + 1);
+      if (args[index] !== undefined)
+        args[index] = args[index].mutate(sampler, depth + 1);
     }
 
-    const random = prng.nextDouble(0, 1);
-    if (random <= 0.33) {
+    if (prng.nextDouble(0, 1) <= 0.33) {
       this.deleteMethodCall();
-    } else if (random <= 0.66) {
+    }
+    if (prng.nextDouble(0, 1) <= 0.33) {
       this.replaceMethodCall(depth, sampler);
-    } else {
+    }
+    if (prng.nextDouble(0, 1) <= 0.33) {
       this.addMethodCall(depth, sampler);
     }
 
     if (!this.hasMethodCalls()) this.addMethodCall(depth, sampler);
 
     return this;
-    //}
   }
 
   protected addMethodCall(depth: number, sampler: EncodingSampler<TestCase>) {
