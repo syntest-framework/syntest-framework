@@ -39,7 +39,7 @@ export class MOSA extends EvolutionaryAlgorithm {
 
     // select new population
     const nextPopulation = [];
-    let remain = size;
+    let remain = Math.max(size, F[0].length);
     let index = 0;
 
     getLogger().debug("First front size = " + F[0].length);
