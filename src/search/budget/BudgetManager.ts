@@ -43,7 +43,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * Return whether the budget manager has any budget left.
    */
   public hasBudgetLeft(): boolean {
-    return this._budgets.every((budget) => budget.getAvailableBudget() > 0);
+    return this._budgets.every((budget) => budget.getAvailableBudget() > 0.0);
   }
 
   /**
