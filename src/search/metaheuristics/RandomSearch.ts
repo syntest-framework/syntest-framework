@@ -21,6 +21,7 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
   constructor(encodingSampler: EncodingSampler<T>, runner: EncodingRunner<T>) {
     const objectiveManager = new SimpleObjectiveManager<T>(runner);
     super(objectiveManager);
+    this._encodingSampler = encodingSampler;
   }
 
   /**
