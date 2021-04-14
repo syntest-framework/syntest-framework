@@ -12,7 +12,10 @@ import * as fs from "fs";
 export class SummaryWriter<T extends Encoding> {
   protected VARIABLES: RuntimeVariable[] = [
     RuntimeVariable.SUBJECT,
+    RuntimeVariable.CONFIGURATION,
     RuntimeVariable.SEED,
+    RuntimeVariable.ALGORITHM,
+    RuntimeVariable.PROBE_ENABLED,
     RuntimeVariable.COVERAGE,
     RuntimeVariable.COVERED_BRANCHES,
     RuntimeVariable.TOTAL_BRANCHES,
