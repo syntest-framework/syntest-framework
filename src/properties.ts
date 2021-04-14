@@ -215,6 +215,11 @@ export const properties = {
     ],
     // default: ["timestamp", "targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
   },
+  configuration: {
+    description: "The name of the configuration.",
+    type: "string",
+    default: "",
+  },
 
   // misc output settings
   draw_cfg: {

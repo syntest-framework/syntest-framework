@@ -5,14 +5,17 @@ export enum RuntimeVariable {
   /**
    * General
    */
+  CONFIGURATION,
   SEED,
   SUBJECT,
 
   /**
    * Search
    */
+  ALGORITHM,
   EVALUATIONS,
   ITERATIONS,
+  PROBE_ENABLED,
 
   /**
    * Objectives
