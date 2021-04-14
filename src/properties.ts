@@ -100,7 +100,7 @@ export const properties = {
   crossover_probability: {
     description: "Probability crossover happens at a certain branch point.",
     type: "number",
-    default: 0.3,
+    default: 0.8,
   },
 
   // algorithm settings
