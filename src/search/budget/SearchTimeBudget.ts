@@ -63,7 +63,9 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   public getCurrentBudget(): number {
     const currentTime = Date.now() / 1000;
     if (this._tracking) {
-      return this._currentSearchTime + (currentTime - this._counterTime);
+      const searchTime =
+        this._currentSearchTime + (currentTime - this._counterTime);
+      return Math.min(searchTime, this._maxSearchTime);
     } else {
       return this._currentSearchTime;
     }
