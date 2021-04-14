@@ -134,6 +134,21 @@ export const properties = {
       },
     ],
   },
+  search_time: {
+    description: "Search time budget",
+    type: "number",
+    default: 3600,
+  },
+  total_time: {
+    description: "Total time budget",
+    type: "number",
+    default: 3600,
+  },
+  iteration_budget: {
+    description: "Iteration budget",
+    type: "number",
+    default: 1000,
+  },
 
   probe_objective: {
     description: "Enable the probe objectives",
