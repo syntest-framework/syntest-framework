@@ -44,13 +44,13 @@ export class ConstructorCall extends ActionStatement {
         args[index] = args[index].mutate(sampler, depth + 1);
     }
 
-    if (prng.nextDouble(0, 1) <= 0.33) {
+    if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
       this.deleteMethodCall();
     }
-    if (prng.nextDouble(0, 1) <= 0.33) {
+    if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
       this.replaceMethodCall(depth, sampler);
     }
-    if (prng.nextDouble(0, 1) <= 0.33) {
+    if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
       this.addMethodCall(depth, sampler);
     }
 
@@ -61,12 +61,16 @@ export class ConstructorCall extends ActionStatement {
 
   protected addMethodCall(depth: number, sampler: EncodingSampler<TestCase>) {
     const calls = this.getMethodCalls();
-    const index = prng.nextInt(0, calls.length);
+    let count = 0;
+    while (prng.nextDouble(0, 1) <= Math.pow(0.5, count) && count < 10) {
+      const index = prng.nextInt(0, calls.length);
 
-    // get a random test case and we extract one of its method call
-    // ugly solution for now. But we have to fix with proper refactoring
-    const randomTest: TestCase = sampler.sample();
-    this._calls.splice(index, 0, randomTest.root.getMethodCalls()[0]);
+      // get a random test case and we extract one of its method call
+      // ugly solution for now. But we have to fix with proper refactoring
+      const randomTest: TestCase = sampler.sample();
+      this._calls.splice(index, 0, randomTest.root.getMethodCalls()[0]);
+      count++;
+    }
   }
 
   protected replaceMethodCall(
