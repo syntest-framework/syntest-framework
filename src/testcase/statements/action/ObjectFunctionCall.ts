@@ -41,13 +41,11 @@ export class ObjectFunctionCall extends ActionStatement {
       );
     } else {
       const args = [...this.args.map((a: Statement) => a.copy())];
+      if (args.length === 0)
+        return this;
 
-      const prob = 1.0 / args.length;
-      for (let index = 0; index < args.length; index++) {
-        if (prng.nextDouble(0, 1) <= prob) {
-          args[index].mutate(sampler, depth);
-        }
-      }
+      const index = prng.nextInt(0, args.length-1);
+      args[index] = args[index].mutate(sampler, depth+1);
 
       const instance = this._parent;
       return new ObjectFunctionCall(
