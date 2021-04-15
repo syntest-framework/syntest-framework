@@ -87,12 +87,6 @@ export class MOSA extends EvolutionaryAlgorithm {
       }
     }
 
-    if (nextPopulation.length !== this._populationSize) {
-      throw new Error(
-        `Population sizes do not match ${nextPopulation.length} != ${this._populationSize}`
-      );
-    }
-
     this._population = nextPopulation;
   }
 
