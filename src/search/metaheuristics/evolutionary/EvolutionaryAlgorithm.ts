@@ -93,9 +93,11 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
   protected _generateOffspring(): TestCase[] {
     const offspring = [];
 
+    const rounds = Math.max(2, Math.round(this._populationSize / 5));
+
     while (offspring.length < this._populationSize) {
-      const parentA = tournamentSelection(this._population, 4);
-      const parentB = tournamentSelection(this._population, 4);
+      const parentA = tournamentSelection(this._population, rounds);
+      const parentB = tournamentSelection(this._population, rounds);
 
       if (prng.nextDouble(0, 1) <= getProperty("crossover_probability")) {
         const [childA, childB] = TreeCrossover(parentA, parentB);
