@@ -44,17 +44,29 @@ export class ConstructorCall extends ActionStatement {
         args[index] = args[index].mutate(sampler, depth + 1);
     }
 
-    if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
+    let changed = false;
+    if (prng.nextDouble(0, 1) <= 1.0 / 3.0 && this.getMethodCalls().length > 1) {
       this.deleteMethodCall();
+      changed = true;
     }
     if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
       this.replaceMethodCall(depth, sampler);
+      changed = true;
     }
     if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
       this.addMethodCall(depth, sampler);
+      changed = true;
     }
 
-    if (!this.hasMethodCalls()) this.addMethodCall(depth, sampler);
+    if (!this.hasMethodCalls()) {
+      this.addMethodCall(depth, sampler);
+      changed = true;
+    }
+
+    if (!changed) {
+      this.replaceMethodCall(depth, sampler);
+      this.addMethodCall(depth, sampler);
+    }
 
     return this;
   }
@@ -115,6 +127,6 @@ export class ConstructorCall extends ActionStatement {
   }
 
   hasMethodCalls(): boolean {
-    return !!this._calls.length;
+    return this._calls.length > 0;
   }
 }
