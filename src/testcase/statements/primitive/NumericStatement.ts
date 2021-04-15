@@ -59,7 +59,8 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
 
     if (this.type.includes("int")) {
       change = Math.round(change);
-      if (change == 0) change = prng.nextBoolean() ? -1 : 1;
+      if (change == 0)
+        change = prng.nextBoolean() ? -1 : 1;
     }
 
     let newValue = this.value.plus(change);
