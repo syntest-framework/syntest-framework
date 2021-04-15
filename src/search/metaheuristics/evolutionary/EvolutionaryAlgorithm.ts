@@ -8,6 +8,8 @@ import { TestCase } from "../../../testcase/TestCase";
 import { getLogger } from "../../../util/logger";
 import { prng } from "../../../util/prng";
 
+import { PrimitiveStatement } from "../../../testcase/statements/PrimitiveStatement";
+
 /**
  * Base class for Evolutionary Algorithms (EA).
  * Uses the TestCase encoding.
@@ -60,6 +62,9 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
 
     // Evaluate initial population before starting the search loop
     await this._objectiveManager.evaluateMany(this._population);
+
+    // compute ranking and crowding distance
+    this._environmentalSelection(this._populationSize);
   }
 
   /**
@@ -89,19 +94,22 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
     const offspring = [];
 
     while (offspring.length < this._populationSize) {
-      const parentA = tournamentSelection(this._population, 2);
-      const parentB = tournamentSelection(this._population, 2);
+      const parentA = tournamentSelection(this._population, 4);
+      const parentB = tournamentSelection(this._population, 4);
 
       if (prng.nextDouble(0, 1) <= getProperty("crossover_probability")) {
         const [childA, childB] = TreeCrossover(parentA, parentB);
-        offspring.push(childA.mutate(this._encodingSampler));
-        offspring.push(childB.mutate(this._encodingSampler));
+
+        const testCase1 = childA.copy().mutate(this._encodingSampler);
+        offspring.push(testCase1);
+
+        const testCase2 = childB.copy().mutate(this._encodingSampler);
+        offspring.push(testCase2);
       } else {
         offspring.push(parentA.copy().mutate(this._encodingSampler));
         offspring.push(parentB.copy().mutate(this._encodingSampler));
       }
     }
-
     offspring.push(this._encodingSampler.sample());
     return offspring;
   }
