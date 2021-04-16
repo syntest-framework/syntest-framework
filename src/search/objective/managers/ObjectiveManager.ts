@@ -5,6 +5,7 @@ import { SearchSubject } from "../../SearchSubject";
 import { EncodingRunner } from "../../EncodingRunner";
 import { ExceptionObjectiveFunction } from "../../../criterion/ExceptionObjectiveFunction";
 import * as crypto from "crypto";
+import { BudgetManager } from "../../budget/BudgetManager";
 
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.
@@ -80,10 +81,17 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * Evaluate multiple encodings on the current objectives.
    *
    * @param encodings The encoding to evaluate
+   * @param budgetManager The budget manager to track the remaining budget
    */
-  public async evaluateMany(encodings: T[]): Promise<void> {
+  public async evaluateMany(
+    encodings: T[],
+    budgetManager: BudgetManager<T>
+  ): Promise<void> {
     for (const encoding of encodings) {
-      await this.evaluateOne(encoding);
+      // If there is no budget left, stop evaluating
+      if (!budgetManager.hasBudgetLeft()) break;
+
+      await this.evaluateOne(encoding, budgetManager);
     }
   }
 
@@ -91,10 +99,15 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * Evaluate one encoding on the current objectives.
    *
    * @param encoding The encoding to evaluate
+   * @param budgetManager The budget manager to track evaluation
    */
-  public async evaluateOne(encoding: T): Promise<void> {
+  public async evaluateOne(
+    encoding: T,
+    budgetManager: BudgetManager<T>
+  ): Promise<void> {
     // Execute the encoding
     const result = await this._runner.execute(encoding);
+    budgetManager.evaluation(encoding);
 
     // Store the execution result in the encoding
     encoding.setExecutionResult(result);

@@ -22,7 +22,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   /**
    * Abstract constructor.
    *
-   * @param objectiveManager Objective manager
+   * @param objectiveManager The Objective manager
    * @protected
    */
   protected constructor(objectiveManager: ObjectiveManager<T>) {
@@ -33,21 +33,23 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * Initialization phase of the search process.
    *
    * @protected
+   * @param budgetManager The budget manager to track budget progress
    */
-  protected abstract _initialize(): void;
+  protected abstract _initialize(budgetManager: BudgetManager<T>): void;
 
   /**
    * Iteration phase of the search process.
    *
    * @protected
+   * @param budgetManager The budget manager to track budget progress
    */
-  protected abstract _iterate(): void;
+  protected abstract _iterate(budgetManager: BudgetManager<T>): void;
 
   /**
    * Search the search space for an optimal solution until one of the termination conditions are met.
    *
-   * @param subject
-   * @param budgetManager
+   * @param subject The subject of the search
+   * @param budgetManager The budget manager to track budget progress
    */
   public async search(
     subject: SearchSubject<T>,
@@ -59,7 +61,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     // Load search subject into the objective manager
     this._objectiveManager.load(subject);
 
-    await this._initialize();
+    await this._initialize(budgetManager);
     budgetManager.stopInitialization();
 
     getLogger().info(
@@ -72,7 +74,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       this._objectiveManager.hasObjectives() &&
       budgetManager.hasBudgetLeft()
     ) {
-      await this._iterate();
+      await this._iterate(budgetManager);
       budgetManager.iteration(this);
 
       getLogger().info(

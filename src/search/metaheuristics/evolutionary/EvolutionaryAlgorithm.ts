@@ -5,10 +5,8 @@ import { getProperty } from "../../../config";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
 import { TreeCrossover } from "../../operators/crossover/TreeCrossover";
 import { TestCase } from "../../../testcase/TestCase";
-import { getLogger } from "../../../util/logger";
 import { prng } from "../../../util/prng";
-
-import { PrimitiveStatement } from "../../../testcase/statements/PrimitiveStatement";
+import { BudgetManager } from "../../budget/BudgetManager";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -55,13 +53,15 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    * @inheritDoc
    * @protected
    */
-  protected async _initialize(): Promise<void> {
+  protected async _initialize(
+    budgetManager: BudgetManager<TestCase>
+  ): Promise<void> {
     for (let i = 0; i < getProperty("population_size"); i++) {
       this._population.push(this._encodingSampler.sample());
     }
 
     // Evaluate initial population before starting the search loop
-    await this._objectiveManager.evaluateMany(this._population);
+    await this._objectiveManager.evaluateMany(this._population, budgetManager);
 
     // compute ranking and crowding distance
     this._environmentalSelection(this._populationSize);
@@ -71,9 +71,11 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    * @inheritDoc
    * @protected
    */
-  protected async _iterate(): Promise<void> {
+  protected async _iterate(
+    bugetManager: BudgetManager<TestCase>
+  ): Promise<void> {
     const offspring = this._generateOffspring();
-    await this._objectiveManager.evaluateMany(offspring);
+    await this._objectiveManager.evaluateMany(offspring, bugetManager);
 
     // If all objectives are covered, we don't need to rank the population anymore
     // The final test cases are in the archive, rather than the population

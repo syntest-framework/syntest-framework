@@ -3,6 +3,7 @@ import { Encoding } from "../Encoding";
 import { EncodingSampler } from "../EncodingSampler";
 import { SimpleObjectiveManager } from "../objective/managers/SimpleObjectiveManager";
 import { EncodingRunner } from "../EncodingRunner";
+import { BudgetManager } from "../budget/BudgetManager";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
@@ -25,22 +26,21 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
   }
 
   /**
-   * Initialization phase of the search process.
-   *
+   * @inheritDoc
    * @protected
    */
-  protected _initialize(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _initialize(budgetManager: BudgetManager<T>): void {}
 
   /**
-   * Iteration phase of the search process.
-   *
+   * @inheritDoc
    * @protected
    */
-  protected async _iterate(): Promise<void> {
+  protected async _iterate(budgetManager: BudgetManager<T>): Promise<void> {
     // Sample a new random encoding
     const randomEncoding: T = this._encodingSampler.sample();
 
     // Evaluate the new encoding
-    await this._objectiveManager.evaluateOne(randomEncoding);
+    await this._objectiveManager.evaluateOne(randomEncoding, budgetManager);
   }
 }

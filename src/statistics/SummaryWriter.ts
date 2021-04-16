@@ -31,6 +31,7 @@ export class SummaryWriter<T extends Encoding> {
     RuntimeVariable.PROBE_COVERAGE,
     RuntimeVariable.SEARCH_TIME,
     RuntimeVariable.ITERATIONS,
+    RuntimeVariable.EVALUATIONS,
   ];
 
   /**

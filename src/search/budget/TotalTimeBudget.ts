@@ -37,7 +37,7 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxSearchTime The maximum allowed time in seconds this budget should use
    */
-  public constructor(maxSearchTime: number) {
+  public constructor(maxSearchTime = Number.MAX_SAFE_INTEGER) {
     this._currentSearchTime = 0;
     this._maxSearchTime = maxSearchTime;
     this._counterTime = 0;

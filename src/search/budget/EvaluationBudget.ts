@@ -31,7 +31,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxEvaluations The maximum number of evaluations of this budget
    */
-  public constructor(maxEvaluations: number) {
+  public constructor(maxEvaluations = Number.MAX_SAFE_INTEGER) {
     this._currentEvaluations = 0;
     this._maxEvaluations = maxEvaluations;
     this._tracking = false;
