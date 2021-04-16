@@ -45,7 +45,10 @@ export class ConstructorCall extends ActionStatement {
     }
 
     let changed = false;
-    if (prng.nextDouble(0, 1) <= 1.0 / 3.0 && this.getMethodCalls().length > 1) {
+    if (
+      prng.nextDouble(0, 1) <= 1.0 / 3.0 &&
+      this.getMethodCalls().length > 1
+    ) {
       this.deleteMethodCall();
       changed = true;
     }
@@ -72,10 +75,9 @@ export class ConstructorCall extends ActionStatement {
   }
 
   protected addMethodCall(depth: number, sampler: EncodingSampler<TestCase>) {
-    const calls = this.getMethodCalls();
     let count = 0;
     while (prng.nextDouble(0, 1) <= Math.pow(0.5, count) && count < 10) {
-      const index = prng.nextInt(0, calls.length);
+      const index = prng.nextInt(0, this._calls.length);
 
       // get a random test case and we extract one of its method call
       // ugly solution for now. But we have to fix with proper refactoring
