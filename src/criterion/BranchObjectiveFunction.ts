@@ -49,6 +49,10 @@ export class BranchObjectiveFunction<T extends Encoding>
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
 
+    if (executionResult === undefined){
+      return Number.MAX_VALUE;
+    }
+
     // let's check if the line is covered
     if (executionResult.coversLine(this._line)) {
       const branchTrace = executionResult
