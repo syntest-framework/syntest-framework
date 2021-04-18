@@ -18,12 +18,12 @@ export function crowdingDistance(
   if (size == 0) return;
 
   if (size == 1) {
-    front[0].setCrowdingDistance(Number.POSITIVE_INFINITY);
+    front[0].setCrowdingDistance(1.0);
     return;
   }
   if (size == 2) {
-    front[0].setCrowdingDistance(Number.POSITIVE_INFINITY);
-    front[1].setCrowdingDistance(Number.POSITIVE_INFINITY);
+    front[0].setCrowdingDistance(1.0);
+    front[1].setCrowdingDistance(1.0);
     return;
   }
 
@@ -43,8 +43,8 @@ export function crowdingDistance(
     if (objectiveMin == objectiveMax) continue;
 
     // set crowding distance for extreme points
-    orderedFront[0].setCrowdingDistance(Number.POSITIVE_INFINITY);
-    orderedFront[size - 1].setCrowdingDistance(Number.POSITIVE_INFINITY);
+    orderedFront[0].setCrowdingDistance(orderedFront[0].getCrowdingDistance() + 1);
+    orderedFront[size - 1].setCrowdingDistance(orderedFront[size - 1].getCrowdingDistance() + 1);
 
     // set crowding distance for all other points
     for (let j = 1; j < size - 1; j++) {
@@ -52,9 +52,11 @@ export function crowdingDistance(
         orderedFront[j + 1].getObjective(objective) -
         orderedFront[j - 1].getObjective(objective);
       const denominator = Math.abs(objectiveMin - objectiveMax);
-      distance = distance / denominator;
-      distance += orderedFront[j].getCrowdingDistance();
-      orderedFront[j].setCrowdingDistance(distance);
+      if (denominator != 0) {
+        distance = distance / denominator;
+        distance += orderedFront[j].getCrowdingDistance();
+        orderedFront[j].setCrowdingDistance(distance);
+      }
     }
   }
 }
