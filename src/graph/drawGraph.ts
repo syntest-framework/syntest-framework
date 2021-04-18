@@ -6,15 +6,19 @@ const { JSDOM } = require("jsdom");
  * @author Dimitri Stallenberg
  */
 export function drawGraph(cfg: any, path: string) {
-  const width = 1000
-  const height = 1000
-  const offset = 100
+  const width = 2000
+  const height = 2000
+  const offset = 200
 
   let count = 0
   const graph = {
     nodes: [
       ...cfg.nodes.map((n: any) => {
         let name = `(${n.line})`;
+
+        if (n.description && n.description.length) {
+          name = `(${n.line}: ${n.description})`;
+        }
 
         if (n.root) {
           name += ` ${n.contractName} ${n.functionName}`;
@@ -34,8 +38,8 @@ export function drawGraph(cfg: any, path: string) {
         };
 
         if (node.root) {
-          node.fx = 200 + (count + 1) * offset
-          node.fy = 200 + (count + 1) * offset
+          node.fx = 50 + (count + 1) * offset
+          node.fy = 20
           count += 1
         }
 
@@ -84,17 +88,17 @@ export function drawGraph(cfg: any, path: string) {
     .forceSimulation()
     .force(
       "charge",
-      d3.forceManyBody().strength(-400).distanceMin(20).distanceMax(200)
+      d3.forceManyBody().strength(-100).distanceMin(10).distanceMax(100)
     )
     .force(
       "link",
       d3.forceLink().id(function (d: any) {
         return d.id;
-      })
+      }).distance(30)//.strength(-2)
     )
     // .force("center", d3.forceCenter(250, 250))
-    .force('x', d3.forceX(width).strength(0.013))
-      // .force('x', d3.forceX(width / 2).strength(0))
+    .force('y', d3.forceY(height).strength(0.01))
+    .force('x', d3.forceX(width / 2).strength(0.023))
     // .force('y',  d3.forceY(height / 2).strength(0.25))
 
   simulation.nodes(graph.nodes);
