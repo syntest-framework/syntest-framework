@@ -8,6 +8,7 @@ export enum RuntimeVariable {
   CONFIGURATION,
   SEED,
   SUBJECT,
+  VERSION,
 
   /**
    * Search

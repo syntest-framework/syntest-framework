@@ -32,6 +32,7 @@ export class SummaryWriter<T extends Encoding> {
     RuntimeVariable.SEARCH_TIME,
     RuntimeVariable.ITERATIONS,
     RuntimeVariable.EVALUATIONS,
+    RuntimeVariable.VERSION,
   ];
 
   /**
