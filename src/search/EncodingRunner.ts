@@ -1,6 +1,6 @@
 import { ExecutionResult } from "./ExecutionResult";
 import { Encoding } from "./Encoding";
-import {SearchSubject} from "./SearchSubject";
+import { SearchSubject } from "./SearchSubject";
 
 /**
  * @author Mitchell Olsthoorn

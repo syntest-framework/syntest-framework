@@ -32,7 +32,7 @@ export class FunctionObjectiveFunction<T extends Encoding>
    * @inheritDoc
    */
   calculateDistance(encoding: T): number {
-    if (encoding.getExecutionResult() === undefined){
+    if (encoding.getExecutionResult() === undefined) {
       return Number.MAX_VALUE;
     }
 

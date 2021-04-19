@@ -43,8 +43,12 @@ export function crowdingDistance(
     if (objectiveMin == objectiveMax) continue;
 
     // set crowding distance for extreme points
-    orderedFront[0].setCrowdingDistance(orderedFront[0].getCrowdingDistance() + 1);
-    orderedFront[size - 1].setCrowdingDistance(orderedFront[size - 1].getCrowdingDistance() + 1);
+    orderedFront[0].setCrowdingDistance(
+      orderedFront[0].getCrowdingDistance() + 1
+    );
+    orderedFront[size - 1].setCrowdingDistance(
+      orderedFront[size - 1].getCrowdingDistance() + 1
+    );
 
     // set crowding distance for all other points
     for (let j = 1; j < size - 1; j++) {

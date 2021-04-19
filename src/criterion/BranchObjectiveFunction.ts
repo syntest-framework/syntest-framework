@@ -49,7 +49,7 @@ export class BranchObjectiveFunction<T extends Encoding>
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
 
-    if (executionResult === undefined){
+    if (executionResult === undefined) {
       return Number.MAX_VALUE;
     }
 

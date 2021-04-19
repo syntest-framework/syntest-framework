@@ -2,7 +2,7 @@ import { TestCase } from "../TestCase";
 import { SuiteBuilder } from "../decoder/SuiteBuilder";
 import { EncodingRunner } from "../../search/EncodingRunner";
 import { ExecutionResult } from "../../search/ExecutionResult";
-import {SearchSubject} from "../../search/SearchSubject";
+import { SearchSubject } from "../../search/SearchSubject";
 
 export interface Datapoint {
   id: string;
@@ -26,5 +26,8 @@ export abstract class TestCaseRunner implements EncodingRunner<TestCase> {
     return this._suiteBuilder;
   }
 
-  public abstract execute(subject: SearchSubject<TestCase>, encoding: TestCase): Promise<ExecutionResult>;
+  public abstract execute(
+    subject: SearchSubject<TestCase>,
+    encoding: TestCase
+  ): Promise<ExecutionResult>;
 }
