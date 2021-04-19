@@ -34,11 +34,11 @@ export function crowdingDistance(
   for (const objective of objectiveFunctions) {
     // sort the front in ascending order of fitness value
     const orderedFront = front.sort(function (a, b) {
-      return a.getObjective(objective) - b.getObjective(objective);
+      return a.getDistance(objective) - b.getDistance(objective);
     });
 
-    const objectiveMin = orderedFront[0].getObjective(objective);
-    const objectiveMax = orderedFront[size - 1].getObjective(objective);
+    const objectiveMin = orderedFront[0].getDistance(objective);
+    const objectiveMax = orderedFront[size - 1].getDistance(objective);
 
     if (objectiveMin == objectiveMax) continue;
 
@@ -53,8 +53,8 @@ export function crowdingDistance(
     // set crowding distance for all other points
     for (let j = 1; j < size - 1; j++) {
       let distance =
-        orderedFront[j + 1].getObjective(objective) -
-        orderedFront[j - 1].getObjective(objective);
+        orderedFront[j + 1].getDistance(objective) -
+        orderedFront[j - 1].getDistance(objective);
       const denominator = Math.abs(objectiveMin - objectiveMax);
       if (denominator != 0) {
         distance = distance / denominator;

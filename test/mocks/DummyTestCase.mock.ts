@@ -25,7 +25,7 @@ export class DummyIndividual extends TestCase {
       throw new Error("Something bad happened");
 
     for (let i = 0; i < objective.length; i++) {
-      this.setObjective(objective[i], values[i]);
+      this.setDistance(objective[i], values[i]);
     }
   }
 }

@@ -61,20 +61,20 @@ export class TestCase implements Encoding {
     return hash;
   }
 
-  getCrowdingDistance() {
+  getCrowdingDistance(): number {
     return this._crowdingDistance;
   }
 
-  setCrowdingDistance(value: number) {
+  setCrowdingDistance(value: number): void {
     this._crowdingDistance = value;
   }
 
-  setRank(value: number) {
-    this._rank = value;
+  getRank(): number {
+    return this._rank;
   }
 
-  getRank() {
-    return this._rank;
+  setRank(value: number): void {
+    this._rank = value;
   }
 
   get id(): string {
@@ -97,7 +97,7 @@ export class TestCase implements Encoding {
     return this._executionResult;
   }
 
-  setExecutionResult(executionResult: ExecutionResult) {
+  setExecutionResult(executionResult: ExecutionResult): void {
     this._executionResult = executionResult;
   }
 
@@ -106,7 +106,7 @@ export class TestCase implements Encoding {
    *
    * @param objectiveFunction The objective.
    */
-  getObjective(objectiveFunction: ObjectiveFunction<TestCase>): number {
+  getDistance(objectiveFunction: ObjectiveFunction<TestCase>): number {
     if (this._objectives.has(objectiveFunction))
       return this._objectives.get(objectiveFunction);
     else {
@@ -119,10 +119,10 @@ export class TestCase implements Encoding {
     }
   }
 
-  setObjective(
+  setDistance(
     objectiveFunction: ObjectiveFunction<Encoding>,
     distance: number
-  ) {
+  ): void {
     this._objectives.set(objectiveFunction, distance);
   }
 

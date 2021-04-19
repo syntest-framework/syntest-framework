@@ -116,7 +116,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     this._currentObjectives.forEach((objectiveFunction) => {
       // Calculate and store the distance
       const distance = objectiveFunction.calculateDistance(encoding);
-      encoding.setObjective(objectiveFunction, distance);
+      encoding.setDistance(objectiveFunction, distance);
 
       // Update the objectives
       this._updateObjectives(objectiveFunction, encoding, distance);

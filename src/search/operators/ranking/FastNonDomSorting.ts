@@ -30,14 +30,14 @@ export function fastNonDomSorting(
       let pDominatesQ = true;
       let qDominatesP = true;
       for (const key of objectiveFunctions) {
-        if (p.getObjective(key)! === 0 && q.getObjective(key)! === 0) {
+        if (p.getDistance(key)! === 0 && q.getDistance(key)! === 0) {
           continue;
         }
-        if (p.getObjective(key)! >= q.getObjective(key)!) {
+        if (p.getDistance(key)! >= q.getDistance(key)!) {
           pDominatesQ = false;
         }
 
-        if (p.getObjective(key)! <= q.getObjective(key)!) {
+        if (p.getDistance(key)! <= q.getDistance(key)!) {
           qDominatesP = false;
         }
       }

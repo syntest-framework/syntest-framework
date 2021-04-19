@@ -236,14 +236,14 @@ export class MOSA extends EvolutionaryAlgorithm {
 
       for (let index = 1; index < population.length; index++) {
         if (
-          population[index].getObjective(objective) <
-          chosen.getObjective(objective)
+          population[index].getDistance(objective) <
+          chosen.getDistance(objective)
         )
           // if lower fitness, than it is better
           chosen = population[index];
         else if (
-          population[index].getObjective(objective) ==
-          chosen.getObjective(objective)
+          population[index].getDistance(objective) ==
+          chosen.getDistance(objective)
         ) {
           // at the same level of fitness, we look at test case size
           if (population[index].getLength() < chosen.getLength()) {

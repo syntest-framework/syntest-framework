@@ -13,10 +13,10 @@ export interface Encoding {
    * @param objectiveFunction The objective
    * @param distance The distance
    */
-  setObjective(
+  setDistance(
     objectiveFunction: ObjectiveFunction<Encoding>,
     distance: number
-  );
+  ): void;
 
   /**
    * Return the execution result.
