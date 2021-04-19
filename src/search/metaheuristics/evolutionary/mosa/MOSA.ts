@@ -27,6 +27,18 @@ export class MOSA extends EvolutionaryAlgorithm {
   }
 
   protected _environmentalSelection(size: number): void {
+    if (
+        this._objectiveManager.getCurrentObjectives().size == 0 &&
+        this._objectiveManager.getUncoveredObjectives().size != 0
+    )
+      throw Error("This should never happen. There is a likely bug in the objective manager");
+
+    if (
+        this._objectiveManager.getCurrentObjectives().size == 0 &&
+        this._objectiveManager.getUncoveredObjectives().size == 0
+    )
+      return; // the search should end
+
     // non-dominated sorting
     getLogger().debug(
       "Number of objectives = " +
