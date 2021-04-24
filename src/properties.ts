@@ -1,20 +1,17 @@
 export const properties = {
   // Files
-  src_directory: {
-    description: "Path to the directory under test",
-    type: "string",
-    default: "./src/",
-    alias: "srcDirectory",
-  },
-
-  src_file: {
-    description: "Path to the contract under test",
-    type: "string",
-    default: "./src/",
+  include: {
+    description: "Files/Directories to include",
+    items: {
+      type: "string"
+    },
+    default: [
+      "./src/**/*.*"
+    ]
   },
 
   exclude: {
-    description: "files to exclude",
+    description: "Files/Directories to exclude",
     items: {
       type: "string",
     },

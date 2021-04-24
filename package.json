@@ -43,6 +43,7 @@
     "bignumber.js": "^9.0.1",
     "d3": "^4.13.0",
     "fast-csv": "^4.3.6",
+    "globby": "^11.0.3",
     "jsdom": "^16.4.0",
     "seedrandom": "^3.0.5",
     "shelljs": "^0.8.4",

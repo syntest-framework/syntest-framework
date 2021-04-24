@@ -1,5 +1,7 @@
-import { mkdirSync, rmdirSync } from "fs";
+import {mkdirSync, readFileSync, rmdirSync} from "fs";
 import { getProperty } from "../config";
+const globby = require('globby')
+import * as path from 'path'
 
 export async function createDirectoryStructure() {
   // outputs
@@ -22,4 +24,51 @@ export async function deleteTempDirectories() {
   await rmdirSync(`${getProperty("temp_log_directory")}`);
 
   await rmdirSync(`.syntest`);
+}
+
+export async function loadTargetFiles(): Promise<{ [key: string]: TargetFile[] }> {
+  const includes = getProperty("include")
+  const excludes = getProperty("exclude")
+
+  const includePaths = globby.sync(includes)
+  const excludePaths = globby.sync(excludes)
+
+  let includedTargets: TargetFile[] = []
+  let excludedTargets: TargetFile[] = []
+
+  const promises = []
+
+  includePaths.forEach((_path) => {
+    promises.push(new Promise(async (resolve) => {
+      includedTargets.push({
+        canonicalPath: path.resolve(_path),
+        relativePath: path.basename(_path),
+        source: await readFileSync(_path).toString()
+      })
+      resolve(null)
+    }))
+  })
+
+  excludePaths.forEach((_path) => {
+    promises.push(new Promise(async (resolve) => {
+      excludedTargets.push({
+        canonicalPath: path.resolve(_path),
+        relativePath: path.basename(_path),
+        source: await readFileSync(_path).toString()
+      })
+      resolve(null)
+    }))
+  })
+
+  await Promise.all(promises)
+
+  includedTargets = includedTargets.filter((a) => !excludedTargets.find((b) => a.canonicalPath === b.canonicalPath))
+
+  return { included: includedTargets, excluded: excludedTargets }
+}
+
+export interface TargetFile {
+  canonicalPath: string
+  relativePath: string
+  source: string
 }
