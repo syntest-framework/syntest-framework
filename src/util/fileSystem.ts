@@ -29,7 +29,7 @@ export async function deleteTempDirectories() {
 export async function loadTargetFiles(): Promise<{ [key: string]: TargetFile[] }> {
   let includes = getProperty("include")
   const excludes = getProperty("exclude")
-  
+
   if (typeof includes === "string") {
     includes = [includes]
   }
