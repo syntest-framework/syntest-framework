@@ -2,6 +2,7 @@ export const properties = {
   // Files
   include: {
     description: "Files/Directories to include",
+    type: 'array',
     items: {
       type: "string"
     },

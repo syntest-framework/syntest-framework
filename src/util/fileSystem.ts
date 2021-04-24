@@ -27,8 +27,12 @@ export async function deleteTempDirectories() {
 }
 
 export async function loadTargetFiles(): Promise<{ [key: string]: TargetFile[] }> {
-  const includes = getProperty("include")
+  let includes = getProperty("include")
   const excludes = getProperty("exclude")
+  
+  if (typeof includes === "string") {
+    includes = [includes]
+  }
 
   const includePaths = globby.sync(includes)
   const excludePaths = globby.sync(excludes)

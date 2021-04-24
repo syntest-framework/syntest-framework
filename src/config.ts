@@ -42,6 +42,7 @@ export function setupOptions(program: string, additionalOptions: any) {
       default: setup.default,
       // @ts-ignore
       type: setup.type,
+      items: setup.items,
       // @ts-ignore
       alias: setup.alias,
       global: false,
