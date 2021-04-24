@@ -98,7 +98,7 @@ export function drawGraph(cfg: any, path: string) {
     )
     // .force("center", d3.forceCenter(250, 250))
     .force('y', d3.forceY(height).strength(0.01))
-    .force('x', d3.forceX(width / 2).strength(0.023))
+    .force('x', d3.forceX(width).strength(0.01))
     // .force('y',  d3.forceY(height / 2).strength(0.25))
 
   simulation.nodes(graph.nodes);
