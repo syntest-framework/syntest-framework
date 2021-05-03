@@ -13,17 +13,22 @@ export async function createDirectoryStructure() {
     recursive: true,
   });
   await mkdirSync(`${getProperty("cfg_directory")}`, { recursive: true });
+}
 
+export async function createTempDirectoryStructure() {
   // temp
   await mkdirSync(`${getProperty("temp_test_directory")}`, { recursive: true });
   await mkdirSync(`${getProperty("temp_log_directory")}`, { recursive: true });
+  await mkdirSync(`${getProperty("temp_coverage_directory")}`, { recursive: true });
+
 }
 
 export async function deleteTempDirectories() {
-  await rmdirSync(`${getProperty("temp_test_directory")}`);
-  await rmdirSync(`${getProperty("temp_log_directory")}`);
+  await rmdirSync(`${getProperty("temp_test_directory")}`, { recursive: true });
+  await rmdirSync(`${getProperty("temp_log_directory")}`, { recursive: true });
+  await rmdirSync(`${getProperty("temp_coverage_directory")}`, { recursive: true });
 
-  await rmdirSync(`.syntest`);
+  await rmdirSync(`.syntest`, { recursive: true });
 }
 
 export async function loadTargetFiles(): Promise<{ [key: string]: TargetFile[] }> {

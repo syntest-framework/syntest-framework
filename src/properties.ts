@@ -56,6 +56,12 @@ export const properties = {
     default: ".syntest/logs",
   },
 
+  temp_coverage_directory: {
+    description: "Path to the temporary test directory",
+    type: "string",
+    default: ".syntest/coverage",
+  },
+
   // random generator settings
   seed: {
     description: "Seed to be used by the pseudo random number generator.",
