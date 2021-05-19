@@ -1,5 +1,5 @@
-import { getProperty } from "../config";
 import BigNumber from "bignumber.js";
+import {Properties} from "../properties";
 
 const seedrandom = require("seedrandom");
 
@@ -7,7 +7,7 @@ let random: any = null;
 
 function generator() {
   if (!random) {
-    const seed = getProperty("seed");
+    const seed = Properties.seed;
 
     random = seedrandom();
 

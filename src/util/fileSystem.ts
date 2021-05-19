@@ -1,36 +1,36 @@
 import {mkdirSync, readFileSync, rmdirSync} from "fs";
-import { getProperty } from "../config";
 const globby = require('globby')
 import * as path from 'path'
+import {Properties} from "../properties";
 
 export async function createDirectoryStructure() {
   // outputs
-  await mkdirSync(`${getProperty("statistics_directory")}`, {
+  await mkdirSync(Properties.statistics_directory, {
     recursive: true,
   });
-  await mkdirSync(`${getProperty("log_directory")}`, { recursive: true });
-  await mkdirSync(`${getProperty("final_suite_directory")}`, {
+  await mkdirSync(Properties.log_directory, { recursive: true });
+  await mkdirSync(Properties.final_suite_directory, {
     recursive: true,
   });
-  await mkdirSync(`${getProperty("cfg_directory")}`, { recursive: true });
+  await mkdirSync(Properties.cfg_directory, { recursive: true });
 }
 
 export async function createTempDirectoryStructure() {
   // temp
-  await mkdirSync(`${getProperty("temp_test_directory")}`, { recursive: true });
-  await mkdirSync(`${getProperty("temp_log_directory")}`, { recursive: true });
+  await mkdirSync(Properties.temp_test_directory, { recursive: true });
+  await mkdirSync(Properties.temp_log_directory, { recursive: true });
 }
 
 export async function deleteTempDirectories() {
-  await rmdirSync(`${getProperty("temp_test_directory")}`, { recursive: true });
-  await rmdirSync(`${getProperty("temp_log_directory")}`, { recursive: true });
+  await rmdirSync(Properties.temp_test_directory, { recursive: true });
+  await rmdirSync(Properties.temp_log_directory, { recursive: true });
 
   await rmdirSync(`.syntest`, { recursive: true });
 }
 
 export async function loadTargetFiles(): Promise<{ [key: string]: TargetFile[] }> {
-  let includes = getProperty("include")
-  const excludes = getProperty("exclude")
+  let includes = Properties.include
+  const excludes = Properties.exclude
 
   if (typeof includes === "string") {
     includes = [includes]

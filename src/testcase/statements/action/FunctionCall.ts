@@ -1,8 +1,8 @@
 import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
 import { TestCaseSampler } from "../../sampling/TestCaseSampler";
-import { getProperty } from "../../../config";
 import { prng } from "../../../util/prng";
+import {Properties} from "../../../properties";
 
 /**
  * @author Dimitri Stallenberg
@@ -32,7 +32,7 @@ export class FunctionCall extends ActionStatement {
   }
 
   mutate(sampler: TestCaseSampler, depth: number) {
-    if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
+    if (prng.nextBoolean(Properties.resample_gene_probability)) {
       // resample the gene
       return sampler.sampleStatement(depth, this.type, "functionCall");
     } else if (!this.args.length) {
