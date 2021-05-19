@@ -1,6 +1,5 @@
-import { getProperty } from "../config";
-
 import { createLogger, format, LoggerOptions, transports } from "winston";
+import {Properties} from "../properties";
 
 // define the custom settings for each transport (file, console)
 function getLoggerSettings(logDirectory: string): any {
@@ -121,12 +120,12 @@ export function getLogger() {
 }
 
 export function setupLogger() {
-  const settings = getLoggerSettings(getProperty("log_directory"));
+  const settings = getLoggerSettings(Properties.log_directory);
 
   const options: LoggerOptions = <LoggerOptions>{
     transports: [
-      new transports.Console(settings[getProperty("console_log_level")]),
-      ...getProperty("log_to_file").map(
+      new transports.Console(settings[Properties.console_log_level]),
+      ...Properties.log_to_file.map(
         (logLevel: string) => new transports.File(settings[logLevel])
       ),
     ],

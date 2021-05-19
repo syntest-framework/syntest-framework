@@ -2,7 +2,7 @@ import { PrimitiveStatement } from "../PrimitiveStatement";
 import BigNumber from "bignumber.js";
 import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
-import { getProperty } from "../../../config";
+import {Properties} from "../../../properties";
 
 /**
  * Generic number class
@@ -40,7 +40,7 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
   }
 
   mutate(sampler: TestCaseSampler, depth: number): NumericStatement {
-    if (prng.nextBoolean(getProperty("delta_mutation_probability"))) {
+    if (prng.nextBoolean(Properties.delta_mutation_probability)) {
       return this.deltaMutation();
     }
 
@@ -65,7 +65,7 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
     let newValue = this.value.plus(change);
 
     // If illegal values are not allowed we make sure the value does not exceed the specified bounds
-    if (!getProperty("explore_illegal_values")) {
+    if (!Properties.explore_illegal_values) {
       const max = this.upper_bound;
       const min = this._signed ? this.lower_bound : NumericStatement._zero;
 
@@ -101,8 +101,8 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
 
   static getRandom(
     type = "number",
-    decimals = getProperty("numeric_decimals"),
-    signed = getProperty("numeric_signed"),
+    decimals = Properties.numeric_decimals,
+    signed = Properties.numeric_signed,
     upper_bound = new BigNumber(Number.MAX_SAFE_INTEGER),
     lower_bound = new BigNumber(Number.MAX_SAFE_INTEGER)
   ) {

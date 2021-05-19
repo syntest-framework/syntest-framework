@@ -1,4 +1,3 @@
-import { getProperty } from "../../config";
 import {
   MOSA,
   NSGAII,
@@ -9,6 +8,7 @@ import {
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";
 import { DynaMOSA } from "../metaheuristics/evolutionary/mosa/DynaMOSA";
+import {Properties} from "../../properties";
 
 /**
  * Factory for creating an instance of a specific search algorithm from the config.
@@ -21,7 +21,7 @@ export function createAlgorithmFromConfig(
   sampler: TestCaseSampler,
   runner: TestCaseRunner
 ): SearchAlgorithm<TestCase> {
-  const algorithm = getProperty("algorithm");
+  const algorithm = Properties.algorithm
 
   switch (algorithm) {
     case "Random":

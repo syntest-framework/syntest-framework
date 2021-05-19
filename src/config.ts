@@ -1,3 +1,5 @@
+import {Properties} from "./properties";
+
 const Yargs = require("yargs/yargs");
 const decamelize = require("decamelize");
 const path = require("path");
@@ -126,64 +128,8 @@ export function processConfig(config: any = {}, args: any = {}) {
     .version();
 
   argv = yargs.wrap(yargs.terminalWidth()).parse(args);
-}
 
-export function getStringProperty(setting: string): string {
-  if (!argv) {
-    getLogger().error(
-      `First initiate the properties by calling processConfig.`
-    );
-    process.exit(1);
+  for (let setting of Object.keys(argv)) {
+    Properties[setting] = argv[setting]
   }
-  if (!(setting in argv)) {
-    getLogger().error(`Setting: ${setting} is not a property.`);
-    process.exit(1);
-  }
-
-  if (typeof argv[setting] != 'string') {
-    getLogger().error(`Setting: ${setting} is not a string property.`);
-    process.exit(1);
-  }
-
-  return argv[setting];
-}
-
-export function getNumberProperty(setting: string): number {
-  if (!argv) {
-    getLogger().error(
-        `First initiate the properties by calling processConfig.`
-    );
-    process.exit(1);
-  }
-  if (!(setting in argv)) {
-    getLogger().error(`Setting: ${setting} is not a property.`);
-    process.exit(1);
-  }
-
-  if (typeof argv[setting] != 'number') {
-    getLogger().error(`Setting: ${setting} is not a number property.`);
-    process.exit(1);
-  }
-
-  return argv[setting];
-}
-
-export function getBooleanProperty(setting: string): boolean {
-  if (!argv) {
-    getLogger().error(
-        `First initiate the properties by calling processConfig.`
-    );
-    process.exit(1);
-  }
-  if (!(setting in argv)) {
-    getLogger().error(`Setting: ${setting} is not a property.`);
-    process.exit(1);
-  }
-
-  if (typeof argv[setting] != 'boolean') {
-    getLogger().error(`Setting: ${setting} is not a boolean property.`);
-    process.exit(1);
-  }
-
-  return argv[setting];
 }
