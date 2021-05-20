@@ -15,10 +15,10 @@ let argv: any = null;
 
 export async function guessCWD(givenCwd: any) {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
-  const pkgPath = await findUp("package.json", { cwd });
-  if (pkgPath) {
-    cwd = path.dirname(pkgPath);
-  }
+  // const pkgPath = await findUp("package.json", { cwd });
+  // if (pkgPath) {
+  //   cwd = path.dirname(pkgPath);
+  // }
 }
 
 export function setupOptions(program: string, additionalOptions: any) {
