@@ -7,7 +7,6 @@ const findUp = require("find-up");
 const shell = require("shelljs");
 
 const { properties } = require("./properties");
-import { getLogger } from "./util/logger";
 
 let cwd: any = null;
 let yargs: any = null;
