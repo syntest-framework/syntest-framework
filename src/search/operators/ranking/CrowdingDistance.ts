@@ -50,12 +50,13 @@ export function crowdingDistance(
       orderedFront[size - 1].getCrowdingDistance() + 1
     );
 
+    const denominator = Math.abs(objectiveMin - objectiveMax);
+
     // set crowding distance for all other points
     for (let j = 1; j < size - 1; j++) {
       let distance =
         orderedFront[j + 1].getDistance(objective) -
         orderedFront[j - 1].getDistance(objective);
-      const denominator = Math.abs(objectiveMin - objectiveMax);
       if (denominator != 0) {
         distance = distance / denominator;
         distance += orderedFront[j].getCrowdingDistance();
