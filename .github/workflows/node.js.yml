@@ -7,47 +7,66 @@ on:
     branches: [main]
 
 jobs:
-  build:
+#  build:
+#    runs-on: ubuntu-latest
+#
+#    strategy:
+#      matrix:
+#        # Run the pipeline on all the currently supported LTS versions and the latest version
+#        node-version: [10.x, 12.x, 14.x, 15.x]
+#
+#    steps:
+#      # Cloning
+#      - uses: actions/checkout@v2
+#        with:
+#          path: syntest-framework
+#
+#      # Setup
+#      - name: Use Node.js ${{ matrix.node-version }}
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#
+#      # Caching
+#      - name: Cache Node.js modules
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.npm
+#          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+#          restore-keys: |
+#            ${{ runner.OS }}-node-
+#            ${{ runner.OS }}-
+#
+#      # Dependencies
+#      - name: Framework - Install Dependencies
+#        run: npm install
+#        working-directory: syntest-framework
+#
+#      # Building
+#      - name: Framework - Build
+#        run: npm run build
+#        working-directory: syntest-framework
+#
+#      # Testing
+#      - name: Framework - Run Tests
+#        run: npm test
+#        working-directory: syntest-framework
+
+  publish:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        # Run the pipeline on all the currently supported LTS versions and the latest version
-        node-version: [10.x, 12.x, 14.x, 15.x]
-
     steps:
-      # Cloning
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
         with:
-          path: syntest-framework
-
-      # Setup
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+          node-version: 10
+          registry-url: https://npm.pkg.github.com
+#      - uses: jgierer12/npm-auth-gpr@v1
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm install
+      - uses: JS-DevTools/npm-publish@v1
         with:
-          node-version: ${{ matrix.node-version }}
-
-      # Caching
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-
-      # Dependencies
-      - name: Framework - Install Dependencies
-        run: npm install
-        working-directory: syntest-framework
-
-      # Building
-      - name: Framework - Build
-        run: npm run build
-        working-directory: syntest-framework
-
-      # Testing
-      - name: Framework - Run Tests
-        run: npm test
-        working-directory: syntest-framework
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registery: https://npm.pkg.github.com
+          access: "restricted"
+          check-version: false
