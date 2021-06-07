@@ -1,6 +1,6 @@
 {
   "name": "@syntest-framework/syntest-framework",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -23,7 +23,7 @@
     "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "build": "npm run build:compile",
