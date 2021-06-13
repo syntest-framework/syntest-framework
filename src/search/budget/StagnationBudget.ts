@@ -37,7 +37,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxIterations The maximum number of iterations without progress of this budget
    */
-  public constructor(maxIterations: number) {
+  public constructor(maxIterations = Number.MAX_SAFE_INTEGER) {
     this._currentIterations = 0;
     this._maxIterations = maxIterations;
     this._bestProgress = 0;

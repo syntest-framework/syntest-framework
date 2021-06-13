@@ -55,7 +55,12 @@ export class NumericStatement extends PrimitiveStatement<BigNumber> {
 
   deltaMutation() {
     // small mutation
-    const change = prng.nextGaussian(0, 20);
+    let change = prng.nextGaussian(0, 20);
+
+    if (this.type.includes("int")) {
+      change = Math.round(change);
+      if (change == 0) change = prng.nextBoolean() ? -1 : 1;
+    }
 
     let newValue = this.value.plus(change);
 

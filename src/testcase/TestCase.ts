@@ -61,20 +61,20 @@ export class TestCase implements Encoding {
     return hash;
   }
 
-  getCrowdingDistance() {
+  getCrowdingDistance(): number {
     return this._crowdingDistance;
   }
 
-  setCrowdingDistance(value: number) {
+  setCrowdingDistance(value: number): void {
     this._crowdingDistance = value;
   }
 
-  setRank(value: number) {
-    this._rank = value;
+  getRank(): number {
+    return this._rank;
   }
 
-  getRank() {
-    return this._rank;
+  setRank(value: number): void {
+    this._rank = value;
   }
 
   get id(): string {
@@ -97,7 +97,7 @@ export class TestCase implements Encoding {
     return this._executionResult;
   }
 
-  setExecutionResult(executionResult: ExecutionResult) {
+  setExecutionResult(executionResult: ExecutionResult): void {
     this._executionResult = executionResult;
   }
 
@@ -106,14 +106,27 @@ export class TestCase implements Encoding {
    *
    * @param objectiveFunction The objective.
    */
-  getObjective(objectiveFunction: ObjectiveFunction<TestCase>): number {
-    return this._objectives.get(objectiveFunction);
+  getDistance(objectiveFunction: ObjectiveFunction<TestCase>): number {
+    if (this._objectives.has(objectiveFunction))
+      return this._objectives.get(objectiveFunction);
+    else {
+      // this part is needed for DynaMOSA
+      // it may happen that the test was created when the objective in input was not part of the search yet
+      // with this code, we keep the objective values up to date
+      const distance = objectiveFunction.calculateDistance(this);
+      this._objectives.set(objectiveFunction, distance);
+      return distance;
+    }
   }
 
-  setObjective(
+  setDistance(
     objectiveFunction: ObjectiveFunction<Encoding>,
     distance: number
-  ) {
+  ): void {
     this._objectives.set(objectiveFunction, distance);
+  }
+
+  getLength(): number {
+    return this.root.getMethodCalls().length;
   }
 }

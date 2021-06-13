@@ -17,13 +17,11 @@ export class DominanceComparator {
 
     for (const objective of objectives) {
       if (
-        individual1.getObjective(objective) <
-        individual2.getObjective(objective)
+        individual1.getDistance(objective) < individual2.getDistance(objective)
       )
         dominatesX = true;
       if (
-        individual1.getObjective(objective) >
-        individual2.getObjective(objective)
+        individual1.getDistance(objective) > individual2.getDistance(objective)
       )
         dominatesY = true;
 

@@ -1,5 +1,5 @@
-import {CFG} from "./CFG";
+import { CFG } from "./CFG";
 
 export interface CFGFactory {
-    convertAST(AST: any): CFG
+  convertAST(AST: any): CFG;
 }

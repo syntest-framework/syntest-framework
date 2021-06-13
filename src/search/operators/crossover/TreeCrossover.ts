@@ -73,6 +73,8 @@ export function TreeCrossover(
     donorTree.parent.setChild(donorTree.childIndex, pair.child.copy());
   }
 
+  rootA.args = [...parentA.root.args];
+  rootB.args = [...parentB.root.args];
   return [new TestCase(rootA), new TestCase(rootB)];
 }
 

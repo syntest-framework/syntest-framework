@@ -27,6 +27,20 @@ export class MOSA extends EvolutionaryAlgorithm {
   }
 
   protected _environmentalSelection(size: number): void {
+    if (
+      this._objectiveManager.getCurrentObjectives().size == 0 &&
+      this._objectiveManager.getUncoveredObjectives().size != 0
+    )
+      throw Error(
+        "This should never happen. There is a likely bug in the objective manager"
+      );
+
+    if (
+      this._objectiveManager.getCurrentObjectives().size == 0 &&
+      this._objectiveManager.getUncoveredObjectives().size == 0
+    )
+      return; // the search should end
+
     // non-dominated sorting
     getLogger().debug(
       "Number of objectives = " +
@@ -39,7 +53,7 @@ export class MOSA extends EvolutionaryAlgorithm {
 
     // select new population
     const nextPopulation = [];
-    let remain = size;
+    let remain = Math.max(size, F[0].length);
     let index = 0;
 
     getLogger().debug("First front size = " + F[0].length);
@@ -85,12 +99,6 @@ export class MOSA extends EvolutionaryAlgorithm {
         nextPopulation.push(individual);
         remain--;
       }
-    }
-
-    if (nextPopulation.length !== this._populationSize) {
-      throw new Error(
-        `Population sizes do not match ${nextPopulation.length} != ${this._populationSize}`
-      );
     }
 
     this._population = nextPopulation;
@@ -228,24 +236,17 @@ export class MOSA extends EvolutionaryAlgorithm {
 
       for (let index = 1; index < population.length; index++) {
         if (
-          population[index].getObjective(objective) <
-          chosen.getObjective(objective)
+          population[index].getDistance(objective) <
+          chosen.getDistance(objective)
         )
           // if lower fitness, than it is better
           chosen = population[index];
         else if (
-          population[index].getObjective(objective) ==
-          chosen.getObjective(objective)
+          population[index].getDistance(objective) ==
+          chosen.getDistance(objective)
         ) {
           // at the same level of fitness, we look at test case size
-          if (
-            (population[index].root.getChildren().length <
-              chosen.root.getChildren().length &&
-              population[index].root.getChildren().length > 1) ||
-            (population[index].root.getChildren().length ==
-              chosen.root.getChildren().length &&
-              Math.random() < 0.5)
-          ) {
+          if (population[index].getLength() < chosen.getLength()) {
             // Secondary criterion based on tests lengths
             chosen = population[index];
           }

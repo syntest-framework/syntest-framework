@@ -42,13 +42,14 @@ export * from "./statistics/CoverageWriter";
 
 // Factories
 export * from "./search/factories/AlgorithmFactory";
-export * from "./search/factories/StoppingCriterionFactory";
 
 // Objective
 export * from "./search/objective/ObjectiveFunction";
 export * from "./search/objective/BranchDistance";
 export * from "./criterion/BranchObjectiveFunction";
 export * from "./criterion/FunctionObjectiveFunction";
+export * from "./criterion/ProbeObjectiveFunction";
+export * from "./criterion/ExceptionObjectiveFunction";
 
 // Operator
 export * from "./search/operators/ranking/CrowdingDistance";

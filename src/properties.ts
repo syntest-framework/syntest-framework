@@ -100,7 +100,7 @@ export const properties = {
   crossover_probability: {
     description: "Probability crossover happens at a certain branch point.",
     type: "number",
-    default: 0.3,
+    default: 0.8,
   },
 
   // algorithm settings
@@ -133,6 +133,27 @@ export const properties = {
         limit: 100,
       },
     ],
+  },
+  search_time: {
+    description: "Search time budget",
+    type: "number",
+    default: 3600,
+  },
+  total_time: {
+    description: "Total time budget",
+    type: "number",
+    default: 3600,
+  },
+  iteration_budget: {
+    description: "Iteration budget",
+    type: "number",
+    default: 1000,
+  },
+
+  probe_objective: {
+    description: "Enable the probe objectives",
+    type: "boolean",
+    default: false,
   },
 
   // logging
@@ -193,6 +214,11 @@ export const properties = {
       "fitnessEvaluations",
     ],
     // default: ["timestamp", "targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
+  },
+  configuration: {
+    description: "The name of the configuration.",
+    type: "string",
+    default: "",
   },
 
   // misc output settings

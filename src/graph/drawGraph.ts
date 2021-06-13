@@ -6,18 +6,18 @@ const { JSDOM } = require("jsdom");
  * @author Dimitri Stallenberg
  */
 export function drawGraph(cfg: any, path: string) {
-  const width = 2000
-  const height = 2000
-  const offset = 200
+  const width = 2000;
+  const height = 2000;
+  const offset = 200;
 
-  let count = 0
+  let count = 0;
   const graph = {
     nodes: [
       ...cfg.nodes.map((n: any) => {
-        let name = `(${n.line})`;
+        let name = `(${n.lines[0]})`;
 
         if (n.description && n.description.length) {
-          name = `(${n.line}: ${n.description})`;
+          name = `(${n.lines[0]}: ${n.description})`;
         }
 
         if (n.root) {
@@ -28,7 +28,7 @@ export function drawGraph(cfg: any, path: string) {
           name += ` ${n.condition.operator}`;
         }
 
-        let node =  {
+        const node = {
           id: n.id,
           name: name,
           fixed: n.root,
@@ -38,12 +38,12 @@ export function drawGraph(cfg: any, path: string) {
         };
 
         if (node.root) {
-          node.fx = 50 + (count + 1) * offset
-          node.fy = 20
-          count += 1
+          node.fx = 50 + (count + 1) * offset;
+          node.fy = 20;
+          count += 1;
         }
 
-        return node
+        return node;
       }),
     ],
     links: [
@@ -92,14 +92,17 @@ export function drawGraph(cfg: any, path: string) {
     )
     .force(
       "link",
-      d3.forceLink().id(function (d: any) {
-        return d.id;
-      }).distance(30)//.strength(-2)
+      d3
+        .forceLink()
+        .id(function (d: any) {
+          return d.id;
+        })
+        .distance(30) //.strength(-2)
     )
     // .force("center", d3.forceCenter(250, 250))
-    .force('y', d3.forceY(height).strength(0.01))
-    .force('x', d3.forceX(width).strength(0.01))
-    // .force('y',  d3.forceY(height / 2).strength(0.25))
+    .force("y", d3.forceY(height).strength(0.01))
+    .force("x", d3.forceX(width).strength(0.01));
+  // .force('y',  d3.forceY(height / 2).strength(0.25))
 
   simulation.nodes(graph.nodes);
 

@@ -5,14 +5,18 @@ export enum RuntimeVariable {
   /**
    * General
    */
+  CONFIGURATION,
   SEED,
   SUBJECT,
+  VERSION,
 
   /**
    * Search
    */
+  ALGORITHM,
   EVALUATIONS,
   ITERATIONS,
+  PROBE_ENABLED,
 
   /**
    * Objectives
@@ -25,13 +29,19 @@ export enum RuntimeVariable {
    * Coverage
    */
   BRANCH_COVERAGE,
+  FUNCTION_COVERAGE,
+  LINE_COVERAGE,
+  PROBE_COVERAGE,
   COVERAGE,
   COVERED_BRANCHES,
+  COVERED_EXCEPTIONS,
   COVERED_FUNCTIONS,
   COVERED_LINES,
+  COVERED_PROBES,
   TOTAL_BRANCHES,
   TOTAL_FUNCTIONS,
   TOTAL_LINES,
+  TOTAL_PROBES,
 
   /**
    * Time

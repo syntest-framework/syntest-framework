@@ -46,7 +46,7 @@ describe("Crowding distance", function () {
 
     const ind = new DummyIndividual();
     crowdingDistance([ind], objectives);
-    expect(ind.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
+    expect(ind.getCrowdingDistance()).to.equal(2.0);
   });
 
   it("front with two solutions", () => {
@@ -64,8 +64,8 @@ describe("Crowding distance", function () {
     const ind2 = new DummyIndividual();
 
     crowdingDistance([ind1, ind2], objectives);
-    expect(ind1.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
-    expect(ind2.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
+    expect(ind1.getCrowdingDistance()).to.equal(2.0);
+    expect(ind2.getCrowdingDistance()).to.equal(2.0);
   });
 
   it("Front with more than two solutions", () => {
@@ -97,8 +97,8 @@ describe("Crowding distance", function () {
     ind3.setDummyEvaluation([objective1, objective2], [1, 1]);
 
     crowdingDistance([ind1, ind2, ind3], objectives);
-    expect(ind1.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
-    expect(ind2.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
+    expect(ind1.getCrowdingDistance()).to.equal(4.0);
+    expect(ind2.getCrowdingDistance()).to.equal(4.0);
     expect(ind3.getCrowdingDistance()).to.equal(2);
   });
 

@@ -12,8 +12,6 @@ import { EncodingRunner } from "../../EncodingRunner";
 export class StructuralObjectiveManager<
   T extends Encoding
 > extends ObjectiveManager<T> {
-  protected _subject: SearchSubject<T>;
-
   /**
    * Constructor.
    *
@@ -42,7 +40,10 @@ export class StructuralObjectiveManager<
       if (!this._archive.has(objectiveFunction)) {
         this._archive.update(objectiveFunction, encoding);
       } else {
-        // TODO: Add secondary objectives
+        // If the objective is already in the archive we save the shortest encoding
+        const currentEncoding = this._archive.getEncoding(objectiveFunction);
+        if (currentEncoding.getLength() > encoding.getLength())
+          this._archive.update(objectiveFunction, encoding);
       }
 
       // Add the child objectives to the current objectives
@@ -62,14 +63,14 @@ export class StructuralObjectiveManager<
    * @inheritDoc
    */
   load(subject: SearchSubject<T>): void {
+    // Set the subject
+    this._subject = subject;
+
     // TODO: Reset the objective manager
     const objectives = subject.getObjectives();
 
     // Add all objectives to the uncovered objectives
     objectives.forEach((objective) => this._uncoveredObjectives.add(objective));
-
-    // Set the subject
-    this._subject = subject;
 
     // Set the current objectives
     const rootObjectiveNodes = this._subject.cfg.nodes.filter(

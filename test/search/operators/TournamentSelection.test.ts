@@ -95,8 +95,8 @@ describe("Tournament selection", function () {
 
     const winner: TestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
     expect(winner.getRank()).to.equal(0);
-    expect(winner.getObjective(objective1)).to.equal(0);
-    expect(winner.getObjective(objective2)).to.equal(1);
+    expect(winner.getDistance(objective1)).to.equal(0);
+    expect(winner.getDistance(objective2)).to.equal(1);
   });
 
   it("Comparison by crowding distance", () => {
@@ -137,8 +137,8 @@ describe("Tournament selection", function () {
 
     const winner: TestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
     expect(winner.getRank()).to.equal(0);
-    expect(winner.getObjective(objective1)).to.equal(0);
-    expect(winner.getObjective(objective2)).to.equal(1);
+    expect(winner.getDistance(objective1)).to.equal(0);
+    expect(winner.getDistance(objective2)).to.equal(1);
     expect(winner.getCrowdingDistance()).to.equal(10);
   });
 });

@@ -37,41 +37,54 @@ export class ConstructorCall extends ActionStatement {
   }
 
   mutate(sampler: EncodingSampler<TestCase>, depth: number) {
-    //if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
-    // resample the gene
-    //    return sampler.sampleGene(depth, this.type, 'constructor')
-    //} else {
-    // randomly mutate one of the args
     if (this.args.length > 0) {
       const args = [...this.args.map((a: Statement) => a.copy())];
       const index = prng.nextInt(0, args.length - 1);
-      args[index] = args[index].mutate(sampler, depth + 1);
+      if (args[index] !== undefined)
+        args[index] = args[index].mutate(sampler, depth + 1);
     }
 
-    const random = prng.nextDouble(0, 1);
-    if (random <= 0.33) {
-      this.deleteMethodCall(depth, sampler);
-    } else if (random <= 0.66) {
+    let changed = false;
+    if (
+      prng.nextDouble(0, 1) <= 1.0 / 3.0 &&
+      this.getMethodCalls().length > 1
+    ) {
+      this.deleteMethodCall();
+      changed = true;
+    }
+    if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
       this.replaceMethodCall(depth, sampler);
-    } else {
+      changed = true;
+    }
+    if (prng.nextDouble(0, 1) <= 1.0 / 3.0) {
+      this.addMethodCall(depth, sampler);
+      changed = true;
+    }
+
+    if (!this.hasMethodCalls()) {
+      this.addMethodCall(depth, sampler);
+      changed = true;
+    }
+
+    if (!changed) {
+      this.replaceMethodCall(depth, sampler);
       this.addMethodCall(depth, sampler);
     }
 
-    if (!this.hasMethodCalls()) this.addMethodCall(depth, sampler);
-
     return this;
-    //}
   }
 
   protected addMethodCall(depth: number, sampler: EncodingSampler<TestCase>) {
-    const calls = this.getMethodCalls();
-    const index = prng.nextInt(0, calls.length);
+    let count = 0;
+    while (prng.nextDouble(0, 1) <= Math.pow(0.5, count) && count < 10) {
+      const index = prng.nextInt(0, this._calls.length);
 
-    // get a random test case and we extract one of its method call
-    // ugly solution for now. But we have to fix with proper refactoring
-    const randomTest: TestCase = sampler.sample();
-
-    this.setMethodCall(index, randomTest.root.getMethodCalls()[0]);
+      // get a random test case and we extract one of its method call
+      // ugly solution for now. But we have to fix with proper refactoring
+      const randomTest: TestCase = sampler.sample();
+      this._calls.splice(index, 0, randomTest.root.getMethodCalls()[0]);
+      count++;
+    }
   }
 
   protected replaceMethodCall(
@@ -85,14 +98,11 @@ export class ConstructorCall extends ActionStatement {
     }
   }
 
-  protected deleteMethodCall(
-    depth: number,
-    sampler: EncodingSampler<TestCase>
-  ) {
+  protected deleteMethodCall() {
     if (this.hasMethodCalls()) {
       const calls = this.getMethodCalls();
       const index = prng.nextInt(0, calls.length - 1);
-      this.getMethodCalls().splice(index, 1);
+      this._calls.splice(index, 1);
     }
   }
 
@@ -119,6 +129,6 @@ export class ConstructorCall extends ActionStatement {
   }
 
   hasMethodCalls(): boolean {
-    return !!this._calls.length;
+    return this._calls.length > 0;
   }
 }
