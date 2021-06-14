@@ -82,3 +82,5 @@ export * from "./util/HashSet";
 export * from "./util/logger";
 export * from "./util/prng";
 export * from "./util/fileSystem";
+
+export * from "./properties"

@@ -1,12 +1,12 @@
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { EncodingSampler } from "../../EncodingSampler";
-import { getProperty } from "../../../config";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
 import { TreeCrossover } from "../../operators/crossover/TreeCrossover";
 import { TestCase } from "../../../testcase/TestCase";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
+import {Properties} from "../../../properties";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -46,7 +46,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
     this._population = [];
-    this._populationSize = getProperty("population_size");
+    this._populationSize = Properties.population_size
   }
 
   /**
@@ -56,7 +56,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
   protected async _initialize(
     budgetManager: BudgetManager<TestCase>
   ): Promise<void> {
-    for (let i = 0; i < getProperty("population_size"); i++) {
+    for (let i = 0; i < Properties.population_size; i++) {
       this._population.push(this._encodingSampler.sample());
     }
 
@@ -101,7 +101,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
       const parentA = tournamentSelection(this._population, rounds);
       const parentB = tournamentSelection(this._population, rounds);
 
-      if (prng.nextDouble(0, 1) <= getProperty("crossover_probability")) {
+      if (prng.nextDouble(0, 1) <= Properties.crossover_probability) {
         const [childA, childB] = TreeCrossover(parentA, parentB);
 
         const testCase1 = childA.copy().mutate(this._encodingSampler);

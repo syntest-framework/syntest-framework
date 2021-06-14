@@ -66,6 +66,9 @@ export abstract class SuiteBuilder {
    * @param match     the regex to which the files must match
    */
   async clearDirectory(dirPath: string, match = /.*\.(js)/g) {
+    console.log(dirPath)
+    console.log(process.cwd())
+    console.log(path.resolve(dirPath))
     const dirContent = await fs.readdirSync(dirPath);
 
     for (const file of dirContent.filter((el: string) => el.match(match))) {
