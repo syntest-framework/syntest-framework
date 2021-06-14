@@ -15,7 +15,7 @@ export interface Node {
   lines: number[];
   statements: string[];
 
-  placeholder?: boolean
+  placeholder?: boolean;
   description?: string;
 }
 
