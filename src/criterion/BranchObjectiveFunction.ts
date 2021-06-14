@@ -48,17 +48,23 @@ export class BranchObjectiveFunction<T extends Encoding>
 
     // let's check if the line is covered
     if (executionResult.coversLine(this._line)) {
-      const branchTrace = executionResult.getTraces().find(
-        (trace) => trace.type === "branch" && trace.line === this._line
-          && !!trace.locationIdx === this._type
-      );
+      const branchTrace = executionResult
+        .getTraces()
+        .find(
+          (trace) =>
+            trace.type === "branch" &&
+            trace.line === this._line &&
+            trace.branchType === this._type
+        );
 
       if (branchTrace.hits > 0) {
         return 0;
       } else {
         const oppositeBranch = executionResult.getTraces().find(
-          (trace) => trace.type === "branch" && trace.id === branchTrace.id // same branch id
-            && !!trace.locationIdx !== this._type // different location (0 = false, 1 = true)
+          (trace) =>
+            trace.type === "branch" &&
+            trace.id === branchTrace.id && // Same branch id
+            trace.branchType !== this._type // The opposite branch type
         );
 
         return BranchDistance.branchDistanceNumeric(
@@ -76,27 +82,24 @@ export class BranchObjectiveFunction<T extends Encoding>
     });
     const childEdge = this._subject.cfg.edges.find((edge) => {
       return edge.from === branchNode.id && edge.branchType === this._type;
-    })
+    });
     const childNode = this._subject.cfg.nodes.find((node) => {
       return node.id === childEdge.to;
-    })
+    });
 
     // find the closest covered branch to the objective branch
     let closestHitNode = null;
     let approachLevel = Number.MAX_VALUE;
     for (const n of this._subject.cfg.nodes) {
-      const traces = executionResult
-        .getTraces()
-        .filter(
-          (trace) =>
-            n.lines.includes(trace.line) &&
-            (trace.type === "branch" ||
-              // TODO: Should the pre be in here?
-              trace.type === "probePre" ||
-              trace.type === "probePost" ||
-              trace.type === "function") &&
-            trace.hits > 0
-        );
+      const traces = executionResult.getTraces().filter(
+        (trace) =>
+          n.lines.includes(trace.line) &&
+          (trace.type === "branch" ||
+            trace.type === "probePre" ||
+            trace.type === "probePost" ||
+            trace.type === "function") &&
+          trace.hits > 0
+      );
       for (const trace of traces) {
         const pathDistance = this._subject.getPath(n.id, childNode.id);
         if (approachLevel > pathDistance) {
