@@ -34,29 +34,17 @@ describe("Crowding distance", function () {
   });
 
   it("front with one solution", () => {
-    const objective = new BranchObjectiveFunction<TestCase>(
-      null,
-      "1",
-      1,
-      1,
-      true
-    );
+    const objective = new BranchObjectiveFunction<TestCase>(null, "1", 1, true);
     const objectives = new Set<ObjectiveFunction<TestCase>>();
     objectives.add(objective);
 
     const ind = new DummyIndividual();
     crowdingDistance([ind], objectives);
-    expect(ind.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
+    expect(ind.getCrowdingDistance()).to.equal(2.0);
   });
 
   it("front with two solutions", () => {
-    const objective = new BranchObjectiveFunction<TestCase>(
-      null,
-      "1",
-      1,
-      1,
-      true
-    );
+    const objective = new BranchObjectiveFunction<TestCase>(null, "1", 1, true);
     const objectives = new Set<ObjectiveFunction<TestCase>>();
     objectives.add(objective);
 
@@ -64,8 +52,8 @@ describe("Crowding distance", function () {
     const ind2 = new DummyIndividual();
 
     crowdingDistance([ind1, ind2], objectives);
-    expect(ind1.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
-    expect(ind2.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
+    expect(ind1.getCrowdingDistance()).to.equal(2.0);
+    expect(ind2.getCrowdingDistance()).to.equal(2.0);
   });
 
   it("Front with more than two solutions", () => {
@@ -73,13 +61,11 @@ describe("Crowding distance", function () {
       null,
       "1",
       1,
-      1,
       true
     );
     const objective2 = new BranchObjectiveFunction<TestCase>(
       null,
       "1",
-      1,
       1,
       false
     );
@@ -97,8 +83,8 @@ describe("Crowding distance", function () {
     ind3.setDummyEvaluation([objective1, objective2], [1, 1]);
 
     crowdingDistance([ind1, ind2, ind3], objectives);
-    expect(ind1.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
-    expect(ind2.getCrowdingDistance()).to.equal(Number.POSITIVE_INFINITY);
+    expect(ind1.getCrowdingDistance()).to.equal(4.0);
+    expect(ind2.getCrowdingDistance()).to.equal(4.0);
     expect(ind3.getCrowdingDistance()).to.equal(2);
   });
 
@@ -106,7 +92,6 @@ describe("Crowding distance", function () {
     const objective1 = new BranchObjectiveFunction<TestCase>(
       null,
       "1",
-      1,
       1,
       true
     );
