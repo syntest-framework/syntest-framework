@@ -6,7 +6,7 @@ import { TreeCrossover } from "../../operators/crossover/TreeCrossover";
 import { TestCase } from "../../../testcase/TestCase";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
-import {Properties} from "../../../properties";
+import { Properties } from "../../../properties";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -46,7 +46,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
     this._population = [];
-    this._populationSize = Properties.population_size
+    this._populationSize = Properties.population_size;
   }
 
   /**

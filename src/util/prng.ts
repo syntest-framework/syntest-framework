@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import {Properties} from "../properties";
+import { Properties } from "../properties";
 
 const seedrandom = require("seedrandom");
 

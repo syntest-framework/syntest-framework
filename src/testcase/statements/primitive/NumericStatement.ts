@@ -2,7 +2,7 @@ import { PrimitiveStatement } from "../PrimitiveStatement";
 import BigNumber from "bignumber.js";
 import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
-import {Properties} from "../../../properties";
+import { Properties } from "../../../properties";
 
 /**
  * Generic number class

@@ -1,7 +1,7 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
 import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
-import {Properties} from "../../../properties";
+import { Properties } from "../../../properties";
 
 /**
  * @author Dimitri Stallenberg

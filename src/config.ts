@@ -1,4 +1,4 @@
-import {Properties} from "./properties";
+import { Properties } from "./properties";
 
 const Yargs = require("yargs/yargs");
 const decamelize = require("decamelize");
@@ -129,6 +129,6 @@ export function processConfig(config: any = {}, args: any = {}) {
   argv = yargs.wrap(yargs.terminalWidth()).parse(args);
 
   for (let setting of Object.keys(argv)) {
-    Properties[setting] = argv[setting]
+    Properties[setting] = argv[setting];
   }
 }

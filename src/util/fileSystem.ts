@@ -1,7 +1,7 @@
-import {mkdirSync, readFileSync, rmdirSync} from "fs";
-const globby = require('globby')
-import * as path from 'path'
-import {Properties} from "../properties";
+import { mkdirSync, readFileSync, rmdirSync } from "fs";
+const globby = require("globby");
+import * as path from "path";
+import { Properties } from "../properties";
 
 export async function createDirectoryStructure() {
   // outputs
@@ -28,53 +28,61 @@ export async function deleteTempDirectories() {
   await rmdirSync(`.syntest`, { recursive: true });
 }
 
-export async function loadTargetFiles(): Promise<{ [key: string]: TargetFile[] }> {
-  let includes = Properties.include
-  const excludes = Properties.exclude
+export async function loadTargetFiles(): Promise<{
+  [key: string]: TargetFile[];
+}> {
+  let includes = Properties.include;
+  const excludes = Properties.exclude;
 
   if (typeof includes === "string") {
-    includes = [includes]
+    includes = [includes];
   }
 
-  const includePaths = globby.sync(includes)
-  const excludePaths = globby.sync(excludes)
+  const includePaths = globby.sync(includes);
+  const excludePaths = globby.sync(excludes);
 
-  let includedTargets: TargetFile[] = []
-  let excludedTargets: TargetFile[] = []
+  let includedTargets: TargetFile[] = [];
+  let excludedTargets: TargetFile[] = [];
 
-  const promises = []
+  const promises = [];
 
   includePaths.forEach((_path) => {
-    promises.push(new Promise(async (resolve) => {
-      includedTargets.push({
-        canonicalPath: path.resolve(_path),
-        relativePath: path.basename(_path),
-        source: await readFileSync(_path).toString()
+    promises.push(
+      new Promise(async (resolve) => {
+        includedTargets.push({
+          canonicalPath: path.resolve(_path),
+          relativePath: path.basename(_path),
+          source: await readFileSync(_path).toString(),
+        });
+        resolve(null);
       })
-      resolve(null)
-    }))
-  })
+    );
+  });
 
   excludePaths.forEach((_path) => {
-    promises.push(new Promise(async (resolve) => {
-      excludedTargets.push({
-        canonicalPath: path.resolve(_path),
-        relativePath: path.basename(_path),
-        source: await readFileSync(_path).toString()
+    promises.push(
+      new Promise(async (resolve) => {
+        excludedTargets.push({
+          canonicalPath: path.resolve(_path),
+          relativePath: path.basename(_path),
+          source: await readFileSync(_path).toString(),
+        });
+        resolve(null);
       })
-      resolve(null)
-    }))
-  })
+    );
+  });
 
-  await Promise.all(promises)
+  await Promise.all(promises);
 
-  includedTargets = includedTargets.filter((a) => !excludedTargets.find((b) => a.canonicalPath === b.canonicalPath))
+  includedTargets = includedTargets.filter(
+    (a) => !excludedTargets.find((b) => a.canonicalPath === b.canonicalPath)
+  );
 
-  return { included: includedTargets, excluded: excludedTargets }
+  return { included: includedTargets, excluded: excludedTargets };
 }
 
 export interface TargetFile {
-  canonicalPath: string
-  relativePath: string
-  source: string
+  canonicalPath: string;
+  relativePath: string;
+  source: string;
 }
