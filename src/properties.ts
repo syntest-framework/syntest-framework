@@ -1,51 +1,50 @@
 export class Properties {
-  public static include: string[]
-  public static exclude: string[]
+  public static include: string[];
+  public static exclude: string[];
 
-  public static statistics_directory: string
-  public static log_directory: string
-  public static final_suite_directory: string
-  public static cfg_directory: string
+  public static statistics_directory: string;
+  public static log_directory: string;
+  public static final_suite_directory: string;
+  public static cfg_directory: string;
 
-  public static temp_test_directory: string
-  public static temp_log_directory: string
+  public static temp_test_directory: string;
+  public static temp_log_directory: string;
 
-  public static seed: string | null
-  public static max_depth: number
-  public static explore_illegal_values: boolean
+  public static seed: string | null;
+  public static max_depth: number;
+  public static explore_illegal_values: boolean;
 
-  public static resample_gene_probability: number
-  public static delta_mutation_probability: number
-  public static sample_existing_value_probability: number
-  public static crossover_probability: number
-  public static sample_func_as_arg: number
+  public static resample_gene_probability: number;
+  public static delta_mutation_probability: number;
+  public static sample_existing_value_probability: number;
+  public static crossover_probability: number;
+  public static sample_func_as_arg: number;
 
-  public static algorithm: string
-  public static sub_algorithm: string
-  public static population_size: number
+  public static algorithm: string;
+  public static sub_algorithm: string;
+  public static population_size: number;
 
-  public static stopping_criteria: {}[]
-  public static search_time: number
-  public static total_time: number
-  public static iteration_budget: number
+  public static stopping_criteria: {}[];
+  public static search_time: number;
+  public static total_time: number;
+  public static iteration_budget: number;
 
-  public static probe_objective: boolean
-  public static console_log_level: string
-  public static log_to_file: string[]
-  public static string_alphabet: string
-  public static string_maxlength: number
-  public static numeric_decimals: number
-  public static numeric_max_value: number
-  public static numeric_signed: boolean
+  public static probe_objective: boolean;
+  public static console_log_level: string;
+  public static log_to_file: string[];
+  public static string_alphabet: string;
+  public static string_maxlength: number;
+  public static numeric_decimals: number;
+  public static numeric_max_value: number;
+  public static numeric_signed: boolean;
 
-  public static output_properties: string[]
-  public static configuration: string
+  public static output_properties: string[];
+  public static configuration: string;
 
-
-  public static draw_cfg: boolean
+  public static draw_cfg: boolean;
 
   public static getDescription(property: string): string {
-    return properties[property].description
+    return properties[property].description;
   }
 }
 
@@ -53,13 +52,11 @@ export const properties = {
   // Files
   include: {
     description: "Files/Directories to include",
-    type: 'array',
+    type: "array",
     items: {
-      type: "string"
+      type: "string",
     },
-    default: [
-      "./src/**/*.*"
-    ]
+    default: ["./src/**/*.*"],
   },
 
   exclude: {
@@ -281,6 +278,6 @@ export const properties = {
   sample_func_as_arg: {
     description: "TODO",
     type: "number",
-    default: 0.5
-  }
+    default: 0.5,
+  },
 };

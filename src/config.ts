@@ -1,4 +1,4 @@
-import {Properties} from "./properties";
+import { Properties } from "./properties";
 
 const Yargs = require("yargs/yargs");
 const decamelize = require("decamelize");
@@ -7,7 +7,6 @@ const findUp = require("find-up");
 const shell = require("shelljs");
 
 const { properties } = require("./properties");
-import { getLogger } from "./util/logger";
 
 let cwd: any = null;
 let yargs: any = null;
@@ -15,10 +14,10 @@ let argv: any = null;
 
 export async function guessCWD(givenCwd: any) {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
-  const pkgPath = await findUp("package.json", { cwd });
-  if (pkgPath) {
-    cwd = path.dirname(pkgPath);
-  }
+  // const pkgPath = await findUp("package.json", { cwd });
+  // if (pkgPath) {
+  //   cwd = path.dirname(pkgPath);
+  // }
 }
 
 export function setupOptions(program: string, additionalOptions: any) {
@@ -130,6 +129,6 @@ export function processConfig(config: any = {}, args: any = {}) {
   argv = yargs.wrap(yargs.terminalWidth()).parse(args);
 
   for (let setting of Object.keys(argv)) {
-    Properties[setting] = argv[setting]
+    Properties[setting] = argv[setting];
   }
 }

@@ -2,7 +2,7 @@ import { Statement } from "../Statement";
 import { ActionStatement } from "../ActionStatement";
 import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
-import {Properties} from "../../../properties";
+import { Properties } from "../../../properties";
 
 /**
  * @author Dimitri Stallenberg

@@ -83,4 +83,4 @@ export * from "./util/logger";
 export * from "./util/prng";
 export * from "./util/fileSystem";
 
-export * from "./properties"
+export * from "./properties";

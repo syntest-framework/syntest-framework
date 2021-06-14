@@ -3,7 +3,7 @@ import { ActionStatement } from "../ActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
 import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
-import {Properties} from "../../../properties";
+import { Properties } from "../../../properties";
 
 /**
  * @author Dimitri Stallenberg

@@ -1,10 +1,5 @@
-import {
-  prng,
-  Statement,
-  TestCase,
-  NumericStatement,
-} from "../../..";
-import {Properties} from "../../../properties";
+import { prng, Statement, TestCase, NumericStatement } from "../../..";
+import { Properties } from "../../../properties";
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.

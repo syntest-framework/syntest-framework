@@ -1,5 +1,5 @@
 import { createLogger, format, LoggerOptions, transports } from "winston";
-import {Properties} from "../properties";
+import { Properties } from "../properties";
 
 // define the custom settings for each transport (file, console)
 function getLoggerSettings(logDirectory: string): any {
