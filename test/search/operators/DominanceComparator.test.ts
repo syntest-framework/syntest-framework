@@ -32,13 +32,11 @@ describe("Dominance comparator", function () {
       null,
       "1",
       1,
-      1,
       true
     );
     const objective2 = new BranchObjectiveFunction<TestCase>(
       null,
       "1",
-      1,
       1,
       false
     );
@@ -87,7 +85,6 @@ describe("Dominance comparator", function () {
     const objective2 = new BranchObjectiveFunction<TestCase>(
       null,
       "2",
-      1,
       1,
       false
     );

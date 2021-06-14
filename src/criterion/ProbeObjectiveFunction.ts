@@ -12,10 +12,9 @@ export abstract class ProbeObjectiveFunction<
     subject: SearchSubject<T>,
     id: string,
     line: number,
-    locationIdx: number,
     type: boolean
   ) {
-    super(subject, id, line, locationIdx, type);
+    super(subject, id, line, type);
   }
 
   abstract calculateDistance(encoding: T): number;

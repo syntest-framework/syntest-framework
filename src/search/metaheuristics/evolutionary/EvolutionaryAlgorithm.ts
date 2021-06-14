@@ -72,10 +72,10 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    * @protected
    */
   protected async _iterate(
-    bugetManager: BudgetManager<TestCase>
+    budgetManager: BudgetManager<TestCase>
   ): Promise<void> {
     const offspring = this._generateOffspring();
-    await this._objectiveManager.evaluateMany(offspring, bugetManager);
+    await this._objectiveManager.evaluateMany(offspring, budgetManager);
 
     // If all objectives are covered, we don't need to rank the population anymore
     // The final test cases are in the archive, rather than the population
