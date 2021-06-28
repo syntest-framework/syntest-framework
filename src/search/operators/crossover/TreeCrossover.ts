@@ -1,10 +1,5 @@
-import {
-  getProperty,
-  prng,
-  Statement,
-  TestCase,
-  NumericStatement,
-} from "../../..";
+import { prng, Statement, TestCase, NumericStatement } from "../../..";
+import { Properties } from "../../../properties";
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.
@@ -51,7 +46,7 @@ export function TreeCrossover(
       });
     }
 
-    if (prng.nextBoolean(getProperty("crossover_probability"))) {
+    if (prng.nextBoolean(Properties.crossover_probability)) {
       // crossover
       let donorSubtrees = findSimilarSubtree(pair.child, rootB);
 

@@ -1,8 +1,25 @@
 export interface Node {
-  target: string;
   id: string;
-  absoluteRoot: boolean;
+
   root: boolean;
-  locationIdx: number;
-  line: number;
+  // if it is a root node
+  contractName?: string;
+  functionName?: string;
+  isConstructor?: boolean;
+
+  branch: boolean;
+  probe: boolean;
+  // if it is a branch or probe node
+  condition?: Operation;
+
+  lines: number[];
+  statements: string[];
+
+  placeholder?: boolean;
+  description?: string;
+}
+
+export interface Operation {
+  type: string;
+  operator: string;
 }

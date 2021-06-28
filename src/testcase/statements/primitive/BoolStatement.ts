@@ -1,7 +1,7 @@
 import { PrimitiveStatement } from "../PrimitiveStatement";
 import { TestCaseSampler } from "../../sampling/TestCaseSampler";
 import { prng } from "../../../util/prng";
-import { getProperty } from "../../../config";
+import { Properties } from "../../../properties";
 
 /**
  * @author Dimitri Stallenberg
@@ -12,7 +12,7 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
   }
 
   mutate(sampler: TestCaseSampler, depth: number) {
-    if (prng.nextBoolean(getProperty("resample_gene_probability"))) {
+    if (prng.nextBoolean(Properties.resample_gene_probability)) {
       return BoolStatement.getRandom();
     }
 

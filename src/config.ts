@@ -1,3 +1,5 @@
+import { Properties } from "./properties";
+
 const Yargs = require("yargs/yargs");
 const decamelize = require("decamelize");
 const path = require("path");
@@ -5,7 +7,6 @@ const findUp = require("find-up");
 const shell = require("shelljs");
 
 const { properties } = require("./properties");
-import { getLogger } from "./util/logger";
 
 let cwd: any = null;
 let yargs: any = null;
@@ -13,10 +14,10 @@ let argv: any = null;
 
 export async function guessCWD(givenCwd: any) {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
-  const pkgPath = await findUp("package.json", { cwd });
-  if (pkgPath) {
-    cwd = path.dirname(pkgPath);
-  }
+  // const pkgPath = await findUp("package.json", { cwd });
+  // if (pkgPath) {
+  //   cwd = path.dirname(pkgPath);
+  // }
 }
 
 export function setupOptions(program: string, additionalOptions: any) {
@@ -42,6 +43,7 @@ export function setupOptions(program: string, additionalOptions: any) {
       default: setup.default,
       // @ts-ignore
       type: setup.type,
+      items: setup.items,
       // @ts-ignore
       alias: setup.alias,
       global: false,
@@ -125,18 +127,8 @@ export function processConfig(config: any = {}, args: any = {}) {
     .version();
 
   argv = yargs.wrap(yargs.terminalWidth()).parse(args);
-}
 
-export function getProperty(setting: string): any {
-  if (!argv) {
-    getLogger().error(
-      `First initiate the properties by calling processConfig.`
-    );
-    process.exit(1);
+  for (let setting of Object.keys(argv)) {
+    Properties[setting] = argv[setting];
   }
-  if (!(setting in argv)) {
-    getLogger().error(`Setting: ${setting} is not a property.`);
-    process.exit(1);
-  }
-  return argv[setting];
 }

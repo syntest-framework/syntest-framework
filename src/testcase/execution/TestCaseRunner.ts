@@ -8,6 +8,7 @@ export interface Datapoint {
   id: string;
   type: string;
   locationIdx: number;
+  branchType: boolean;
   line: number;
   hits: number;
   opcode: string;

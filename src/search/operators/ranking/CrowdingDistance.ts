@@ -2,7 +2,10 @@ import { TestCase } from "../../../testcase/TestCase";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 
 /**
- * Compute the crowding distance for all individual int the front.
+ * Compute the crowding distance for all individual int the front. This is a
+ * variant to the classic crowding distance for many-objective problems, where
+ * the extreme of the fronts receive a crowding distance equal to 2.0 while
+ * the other solutions have a distance in [0;1]
  *
  * @param front set of individual to consider for the crowding distance
  * @param objectiveFunctions The objectives to consider
@@ -18,12 +21,12 @@ export function crowdingDistance(
   if (size == 0) return;
 
   if (size == 1) {
-    front[0].setCrowdingDistance(1.0);
+    front[0].setCrowdingDistance(2.0);
     return;
   }
   if (size == 2) {
-    front[0].setCrowdingDistance(1.0);
-    front[1].setCrowdingDistance(1.0);
+    front[0].setCrowdingDistance(2.0);
+    front[1].setCrowdingDistance(2.0);
     return;
   }
 
@@ -44,10 +47,10 @@ export function crowdingDistance(
 
     // set crowding distance for extreme points
     orderedFront[0].setCrowdingDistance(
-      orderedFront[0].getCrowdingDistance() + 1
+      orderedFront[0].getCrowdingDistance() + 2
     );
     orderedFront[size - 1].setCrowdingDistance(
-      orderedFront[size - 1].getCrowdingDistance() + 1
+      orderedFront[size - 1].getCrowdingDistance() + 2
     );
 
     const denominator = Math.abs(objectiveMin - objectiveMax);
@@ -57,6 +60,7 @@ export function crowdingDistance(
       let distance =
         orderedFront[j + 1].getDistance(objective) -
         orderedFront[j - 1].getDistance(objective);
+
       if (denominator != 0) {
         distance = distance / denominator;
         distance += orderedFront[j].getCrowdingDistance();
