@@ -29,7 +29,9 @@ export class Properties {
   public static total_time: number;
   public static iteration_budget: number;
 
+  public static enhanced_cfg: boolean;
   public static probe_objective: boolean;
+  public static modifier_extraction: boolean;
   public static console_log_level: string;
   public static log_to_file: string[];
   public static string_alphabet: string;
@@ -196,8 +198,18 @@ export const properties = {
     default: 1000,
   },
 
+  enhanced_cfg: {
+    description: "Enable enhanced CFG creation",
+    type: "boolean",
+    default: false,
+  },
   probe_objective: {
     description: "Enable the probe objectives",
+    type: "boolean",
+    default: false,
+  },
+  modifier_extraction: {
+    description: "Enable modifier extraction",
     type: "boolean",
     default: false,
   },
