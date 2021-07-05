@@ -1,0 +1,21 @@
+name: SynTest CI
+
+on:
+  push:
+    branches: [main, setup-github-npm-repositories]
+  pull_request:
+    branches: [main]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - uses: jgierer12/npm-auth-gpr@v1
+        with:
+          token: ${{ secrets.SYNTEST_CI }}
+      - run: npm install
+      - run: npm publish
