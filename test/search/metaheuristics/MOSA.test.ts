@@ -35,13 +35,11 @@ describe("Test MOSA", function () {
       null,
       "1",
       1,
-      1,
       true
     );
     const objective2 = new BranchObjectiveFunction<TestCase>(
       null,
       "1",
-      1,
       1,
       false
     );
