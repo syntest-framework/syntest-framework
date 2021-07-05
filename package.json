@@ -1,6 +1,6 @@
 {
   "name": "@syntest-framework/syntest-framework",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
