@@ -1,12 +1,10 @@
-import { Properties } from "./properties";
+import { Properties, properties } from "./properties";
 
 const Yargs = require("yargs/yargs");
 const decamelize = require("decamelize");
 const path = require("path");
 const findUp = require("find-up");
 const shell = require("shelljs");
-
-const { properties } = require("./properties");
 
 let cwd: any = null;
 let yargs: any = null;
