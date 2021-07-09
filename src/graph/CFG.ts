@@ -1,4 +1,4 @@
-import { Node } from "./Node";
+import { Node } from "./nodes/Node";
 import { Edge } from "./Edge";
 
 export interface CFG {

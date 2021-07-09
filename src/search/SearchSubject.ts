@@ -3,6 +3,7 @@ import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { Edge } from "../graph/Edge";
 import { getLogger } from "../util/logger";
+import {ActionDescription} from "../graph/parsing/ActionDescription";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 
@@ -28,7 +29,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Function map of the subject.
    * @protected
    */
-  protected readonly _functionMap: any;
+  protected readonly _functionMap: ActionDescription[];
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -50,7 +51,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param functionMap Function map of the subject
    * @protected
    */
-  protected constructor(name: string, cfg: CFG, functionMap: any) {
+  protected constructor(name: string, cfg: CFG, functionMap: ActionDescription[]) {
     this._name = name;
     this._cfg = cfg;
     this._functionMap = functionMap;
@@ -148,8 +149,9 @@ export abstract class SearchSubject<T extends Encoding> {
   }
 }
 
-export interface ActionDescription {
-  name: string;
-  type: string;
-  visibility: string;
-}
+
+
+
+
+
+

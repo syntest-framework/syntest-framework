@@ -74,7 +74,7 @@ export class StructuralObjectiveManager<
 
     // Set the current objectives
     const rootObjectiveNodes = this._subject.cfg.nodes.filter(
-      (node) => node.root === true
+      (node) => node.type === 'root'
     );
     const rootObjectiveIds = rootObjectiveNodes.map(
       (objective) => objective.id
