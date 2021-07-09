@@ -76,6 +76,7 @@ export class BranchObjectiveFunction<T extends Encoding>
       }
     }
 
+
     // find the corresponding branch node inside the cfg
     const branchNode = this._subject.cfg.nodes.find((n: Node) => {
       return n.type === 'branch' && n.lines.includes(this._line);

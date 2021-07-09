@@ -43,6 +43,17 @@ export class Archive<T extends Encoding> {
   }
 
   /**
+   * Merges the given archive into this archive.
+   *
+   * @param other the other archive
+   */
+  merge(other: Archive<T>): void {
+    for (const key of other.getObjectives()) {
+      this.update(key, other.getEncoding(key));
+    }
+  }
+
+  /**
    * Return the objective functions associated with the stored encodings.
    */
   getObjectives(): ObjectiveFunction<T>[] {

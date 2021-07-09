@@ -20,19 +20,19 @@ export function drawGraph(cfg: any, path: string) {
           name = `(${n.lines[0]}: ${n.description})`;
         }
 
-        if (n.root) {
+        if (n.type === 'root') {
           name += ` ${n.contractName} ${n.functionName}`;
         }
 
-        if (n.branch) {
+        if (n.type === 'branch') {
           name += ` ${n.condition.operator}`;
         }
 
         const node = {
           id: n.id,
           name: name,
-          fixed: n.root,
-          root: n.root,
+          fixed: n.type === 'root',
+          root: n.type === 'root',
           fx: undefined,
           fy: undefined,
         };
