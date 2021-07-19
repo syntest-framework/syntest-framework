@@ -64,9 +64,12 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     await this._initialize(budgetManager);
     budgetManager.stopInitialization();
 
-    getLogger().info(
-      `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
-    );
+    getLogger().progressBar.start(100, 0)
+    getLogger().progressBar.update(100 - budgetManager.getBudget())
+
+    // getLogger().info(
+    //   `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
+    // );
 
     // Search loop that runs until the budget has expired or there are no more objectives
     budgetManager.start();
@@ -77,11 +80,13 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       await this._iterate(budgetManager);
       budgetManager.iteration(this);
 
-      getLogger().info(
-        `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
-      );
+      getLogger().progressBar.update(100 - budgetManager.getBudget())
+      // getLogger().info(
+      //   `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
+      // );
     }
     budgetManager.stop();
+    getLogger().progressBar.stop()
 
     // Return the archive of covered objectives
     return this._objectiveManager.getArchive();

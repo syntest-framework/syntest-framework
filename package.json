@@ -41,6 +41,7 @@
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.4",
     "bignumber.js": "^9.0.1",
+    "cli-progress": "^3.9.0",
     "d3": "^4.13.0",
     "fast-csv": "^4.3.6",
     "globby": "^11.0.3",
