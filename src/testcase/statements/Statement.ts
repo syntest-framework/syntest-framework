@@ -27,7 +27,7 @@ export abstract class Statement {
   protected constructor(type: string, uniqueId: string) {
     this._type = type;
     this._uniqueId = uniqueId;
-    this._varName = type + uniqueId;
+    this._varName = type.replace("[]", "array") + uniqueId;
   }
 
   /**
