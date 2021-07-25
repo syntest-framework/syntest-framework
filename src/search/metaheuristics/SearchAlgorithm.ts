@@ -65,7 +65,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     budgetManager.stopInitialization();
 
     getLogger().info(
-      `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
+      `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getAvailableBudget()}%`
     );
 
     // Search loop that runs until the budget has expired or there are no more objectives
@@ -78,7 +78,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       budgetManager.iteration(this);
 
       getLogger().info(
-        `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
+        `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getAvailableBudget()}%`
       );
     }
     budgetManager.stop();

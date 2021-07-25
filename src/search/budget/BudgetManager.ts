@@ -26,7 +26,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * Loops over all active budgets to find the one with the lowest budget.
    */
-  public getBudget(): number {
+  public getAvailableBudget(): number {
     const budget = this._budgets.reduce((minBudget, budget) =>
       budget.getAvailableBudget() / budget.getTotalBudget() <
       minBudget.getAvailableBudget() / minBudget.getTotalBudget()
