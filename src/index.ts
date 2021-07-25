@@ -46,6 +46,7 @@ export * from "./statistics/CoverageWriter";
 
 // Factories
 export * from "./search/factories/AlgorithmFactory";
+export * from "./search/factories/TerminationFactory";
 
 // Objective
 export * from "./search/objective/ObjectiveFunction";
