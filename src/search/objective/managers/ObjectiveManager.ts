@@ -6,6 +6,7 @@ import { EncodingRunner } from "../../EncodingRunner";
 import { ExceptionObjectiveFunction } from "../../../criterion/ExceptionObjectiveFunction";
 import * as crypto from "crypto";
 import { BudgetManager } from "../../budget/BudgetManager";
+import { TerminationManager } from "../../termination/TerminationManager";
 
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.
@@ -82,16 +83,19 @@ export abstract class ObjectiveManager<T extends Encoding> {
    *
    * @param encodings The encoding to evaluate
    * @param budgetManager The budget manager to track the remaining budget
+   * @param terminationManager The termination trigger manager
    */
   public async evaluateMany(
     encodings: T[],
-    budgetManager: BudgetManager<T>
+    budgetManager: BudgetManager<T>,
+    terminationManager: TerminationManager
   ): Promise<void> {
     for (const encoding of encodings) {
-      // If there is no budget left, stop evaluating
-      if (!budgetManager.hasBudgetLeft()) break;
+      // If there is no budget left or a termination trigger has been triggered, stop evaluating
+      if (!budgetManager.hasBudgetLeft() || terminationManager.isTriggered())
+        break;
 
-      await this.evaluateOne(encoding, budgetManager);
+      await this.evaluateOne(encoding, budgetManager, terminationManager);
     }
   }
 
@@ -100,10 +104,13 @@ export abstract class ObjectiveManager<T extends Encoding> {
    *
    * @param encoding The encoding to evaluate
    * @param budgetManager The budget manager to track evaluation
+   * @param terminationManager The termination trigger manager
    */
   public async evaluateOne(
     encoding: T,
-    budgetManager: BudgetManager<T>
+    budgetManager: BudgetManager<T>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    terminationManager: TerminationManager
   ): Promise<void> {
     // Execute the encoding
     const result = await this._runner.execute(this._subject, encoding);
