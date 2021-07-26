@@ -1,6 +1,5 @@
 import { createLogger, format, LoggerOptions, transports } from "winston";
 import { Properties } from "../properties";
-import * as cliProgress from 'cli-progress';
 
 // define the custom settings for each transport (file, console)
 function getLoggerSettings(logDirectory: string): any {
@@ -133,11 +132,4 @@ export function setupLogger() {
     exitOnError: false, // do not exit on handled exceptions
   };
   logger = createLogger(options);
-
-  logger.progressBar = new cliProgress.SingleBar({
-    format: 'Budget used | {bar} | {percentage}% || Elapsed: {duration}s',
-    barCompleteChar: '\u2588',
-    barIncompleteChar: '\u2591',
-    hideCursor: true
-  })
 }

@@ -4,6 +4,7 @@ import { SearchSubject } from "../SearchSubject";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { BudgetManager } from "../budget/BudgetManager";
 import { getLogger } from "../../util/logger";
+import {getUserInterface} from "../../ui/UserInterface";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -64,8 +65,8 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     await this._initialize(budgetManager);
     budgetManager.stopInitialization();
 
-    getLogger().progressBar.start(100, 0)
-    getLogger().progressBar.update(100 - budgetManager.getBudget())
+    getUserInterface().getProgressBar().start(100, 0)
+    getUserInterface().getProgressBar().update(100 - budgetManager.getBudget())
 
     // getLogger().info(
     //   `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
@@ -80,13 +81,13 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       await this._iterate(budgetManager);
       budgetManager.iteration(this);
 
-      getLogger().progressBar.update(100 - budgetManager.getBudget())
+      getUserInterface().getProgressBar().update(100 - budgetManager.getBudget())
       // getLogger().info(
       //   `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getBudget()}%`
       // );
     }
     budgetManager.stop();
-    getLogger().progressBar.stop()
+    getUserInterface().getProgressBar().stop()
 
     // Return the archive of covered objectives
     return this._objectiveManager.getArchive();
