@@ -4,7 +4,7 @@ import { SearchSubject } from "../SearchSubject";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { BudgetManager } from "../budget/BudgetManager";
 import { getLogger } from "../../util/logger";
-import {getUserInterface} from "../../ui/UserInterface";
+import { getUserInterface } from "../../ui/UserInterface";
 import { TerminationManager } from "../termination/TerminationManager";
 
 /**
@@ -76,8 +76,10 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     await this._initialize(budgetManager, terminationManager);
     budgetManager.stopInitialization();
 
-    getUserInterface().getProgressBar().start(100, 0)
-    getUserInterface().getProgressBar().update(100 - budgetManager.getBudget())
+    getUserInterface().getProgressBar().start(100, 0);
+    getUserInterface()
+      .getProgressBar()
+      .update(100 - budgetManager.getBudget());
 
     // Search loop that runs until the budget has expired, a termination trigger has been triggered, or there are no more objectives
     budgetManager.start();
@@ -89,10 +91,12 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       await this._iterate(budgetManager, terminationManager);
       budgetManager.iteration(this);
 
-      getUserInterface().getProgressBar().update(100 - budgetManager.getBudget())
+      getUserInterface()
+        .getProgressBar()
+        .update(100 - budgetManager.getBudget());
     }
     budgetManager.stop();
-    getUserInterface().getProgressBar().stop()
+    getUserInterface().getProgressBar().stop();
 
     // Return the archive of covered objectives
     return this._objectiveManager.getArchive();

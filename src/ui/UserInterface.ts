@@ -1,44 +1,41 @@
-
-
 export abstract class UserInterface {
-    get silent(): boolean {
-        return this._silent;
-    }
+  get silent(): boolean {
+    return this._silent;
+  }
 
-    set silent(value: boolean) {
-        this._silent = value;
-    }
-    get verbose(): boolean {
-        return this._verbose;
-    }
+  set silent(value: boolean) {
+    this._silent = value;
+  }
+  get verbose(): boolean {
+    return this._verbose;
+  }
 
-    set verbose(value: boolean) {
-        this._verbose = value;
-    }
-    private _silent: boolean;
-    private _verbose: boolean;
+  set verbose(value: boolean) {
+    this._verbose = value;
+  }
+  private _silent: boolean;
+  private _verbose: boolean;
 
-    constructor(silent = false, verbose = false) {
-        this._silent = silent;
-        this._verbose = verbose;
-    }
+  constructor(silent = false, verbose = false) {
+    this._silent = silent;
+    this._verbose = verbose;
+  }
 
-    abstract report(text: string, args: any[]): void
+  abstract report(text: string, args: any[]): void;
 
-    abstract getProgressBar()
-
+  abstract getProgressBar();
 }
 
-let userInterface: UserInterface
+let userInterface: UserInterface;
 
 export function getUserInterface(): UserInterface {
-    if (!userInterface) {
-        throw new Error('The UserInterface has not been set yet!')
-    }
+  if (!userInterface) {
+    throw new Error("The UserInterface has not been set yet!");
+  }
 
-    return userInterface
+  return userInterface;
 }
 
 export function setUserInterface(ui: UserInterface) {
-    userInterface = ui
+  userInterface = ui;
 }
