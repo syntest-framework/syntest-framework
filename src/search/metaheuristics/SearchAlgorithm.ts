@@ -103,9 +103,16 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   }
 
   /**
-   * Return the progress of the search process.
+   * The objective manager.
    */
-  public getProgress(): number {
+  public get objectiveManager(): ObjectiveManager<T> {
+    return this._objectiveManager;
+  }
+
+  /**
+   * The progress of the search process.
+   */
+  public get progress(): number {
     const numberOfCoveredObjectives = this._objectiveManager.getCoveredObjectives()
       .size;
     const numberOfUncoveredObjectives = this._objectiveManager.getUncoveredObjectives()
