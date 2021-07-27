@@ -69,7 +69,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
       terminationManager
     );
 
-    // compute ranking and crowding distance
+    // Compute ranking and crowding distance
     this._environmentalSelection(this._populationSize);
   }
 

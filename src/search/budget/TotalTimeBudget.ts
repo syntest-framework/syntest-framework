@@ -47,12 +47,6 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {}
-
-  /**
-   * @inheritDoc
-   */
   public getAvailableBudget(): number {
     return this._maxSearchTime - this.getCurrentBudget();
   }
@@ -81,12 +75,6 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
-
-  /**
-   * @inheritDoc
-   */
   public reset(): void {
     this._currentSearchTime = 0;
     this._counterTime = 0;
@@ -96,7 +84,7 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public start(): void {
+  public initializationStarted(): void {
     if (!this._tracking) {
       this._counterTime = Date.now() / 1000;
       this._tracking = true;
@@ -106,17 +94,7 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public startInitialization(): void {
-    if (!this._tracking) {
-      this._counterTime = Date.now() / 1000;
-      this._tracking = true;
-    }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public stop(): void {
+  public initializationStopped(): void {
     if (this._tracking) {
       const currentTime = Date.now() / 1000;
 
@@ -137,7 +115,17 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public stopInitialization(): void {
+  public searchStarted(): void {
+    if (!this._tracking) {
+      this._counterTime = Date.now() / 1000;
+      this._tracking = true;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public searchStopped(): void {
     if (this._tracking) {
       const currentTime = Date.now() / 1000;
 
@@ -154,4 +142,16 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
       this._tracking = false;
     }
   }
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public evaluation(encoding: T): void {}
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
 }

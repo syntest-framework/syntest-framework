@@ -69,8 +69,29 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   /**
    * @inheritDoc
    */
-  public evaluation(encoding: T): void {
-    this._budgets.forEach((budget) => budget.evaluation(encoding));
+  public initializationStarted(): void {
+    this._budgets.forEach((budget) => budget.initializationStarted());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public initializationStopped(): void {
+    this._budgets.forEach((budget) => budget.initializationStopped());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public searchStarted(): void {
+    this._budgets.forEach((budget) => budget.searchStarted());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public searchStopped(): void {
+    this._budgets.forEach((budget) => budget.searchStopped());
   }
 
   /**
@@ -83,28 +104,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   /**
    * @inheritDoc
    */
-  public start(): void {
-    this._budgets.forEach((budget) => budget.start());
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public startInitialization(): void {
-    this._budgets.forEach((budget) => budget.startInitialization());
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public stop(): void {
-    this._budgets.forEach((budget) => budget.stop());
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public stopInitialization(): void {
-    this._budgets.forEach((budget) => budget.stopInitialization());
+  public evaluation(encoding: T): void {
+    this._budgets.forEach((budget) => budget.evaluation(encoding));
   }
 }
