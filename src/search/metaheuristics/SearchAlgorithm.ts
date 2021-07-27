@@ -4,6 +4,7 @@ import { SearchSubject } from "../SearchSubject";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { BudgetManager } from "../budget/BudgetManager";
 import { getLogger } from "../../util/logger";
+import { TerminationManager } from "../termination/TerminationManager";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -22,7 +23,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   /**
    * Abstract constructor.
    *
-   * @param objectiveManager The Objective manager
+   * @param objectiveManager The objective manager
    * @protected
    */
   protected constructor(objectiveManager: ObjectiveManager<T>) {
@@ -34,26 +35,36 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    *
    * @protected
    * @param budgetManager The budget manager to track budget progress
+   * @param terminationManager The termination trigger manager
    */
-  protected abstract _initialize(budgetManager: BudgetManager<T>): void;
+  protected abstract _initialize(
+    budgetManager: BudgetManager<T>,
+    terminationManager: TerminationManager
+  ): void;
 
   /**
    * Iteration phase of the search process.
    *
    * @protected
    * @param budgetManager The budget manager to track budget progress
+   * @param terminationManager The termination trigger manager
    */
-  protected abstract _iterate(budgetManager: BudgetManager<T>): void;
+  protected abstract _iterate(
+    budgetManager: BudgetManager<T>,
+    terminationManager: TerminationManager
+  ): void;
 
   /**
    * Search the search space for an optimal solution until one of the termination conditions are met.
    *
    * @param subject The subject of the search
    * @param budgetManager The budget manager to track budget progress
+   * @param terminationManager The termination trigger manager
    */
   public async search(
     subject: SearchSubject<T>,
-    budgetManager: BudgetManager<T>
+    budgetManager: BudgetManager<T>,
+    terminationManager: TerminationManager
   ): Promise<Archive<T>> {
     // Initialize search process
     budgetManager.startInitialization();
@@ -61,20 +72,21 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     // Load search subject into the objective manager
     this._objectiveManager.load(subject);
 
-    await this._initialize(budgetManager);
+    await this._initialize(budgetManager, terminationManager);
     budgetManager.stopInitialization();
 
     getLogger().info(
       `Coverage ${this.getProgress()}%, Remaining Budget ${budgetManager.getAvailableBudget()}%`
     );
 
-    // Search loop that runs until the budget has expired or there are no more objectives
+    // Search loop that runs until the budget has expired, a termination trigger has been triggered, or there are no more objectives
     budgetManager.start();
     while (
       this._objectiveManager.hasObjectives() &&
-      budgetManager.hasBudgetLeft()
+      budgetManager.hasBudgetLeft() &&
+      !terminationManager.isTriggered()
     ) {
-      await this._iterate(budgetManager);
+      await this._iterate(budgetManager, terminationManager);
       budgetManager.iteration(this);
 
       getLogger().info(

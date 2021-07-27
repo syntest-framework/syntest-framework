@@ -7,6 +7,7 @@ import { TestCase } from "../../../testcase/TestCase";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { Properties } from "../../../properties";
+import { TerminationManager } from "../../termination/TerminationManager";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -54,14 +55,19 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    * @protected
    */
   protected async _initialize(
-    budgetManager: BudgetManager<TestCase>
+    budgetManager: BudgetManager<TestCase>,
+    terminationManager: TerminationManager
   ): Promise<void> {
     for (let i = 0; i < Properties.population_size; i++) {
       this._population.push(this._encodingSampler.sample());
     }
 
     // Evaluate initial population before starting the search loop
-    await this._objectiveManager.evaluateMany(this._population, budgetManager);
+    await this._objectiveManager.evaluateMany(
+      this._population,
+      budgetManager,
+      terminationManager
+    );
 
     // compute ranking and crowding distance
     this._environmentalSelection(this._populationSize);
@@ -72,10 +78,15 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    * @protected
    */
   protected async _iterate(
-    budgetManager: BudgetManager<TestCase>
+    budgetManager: BudgetManager<TestCase>,
+    terminationManager: TerminationManager
   ): Promise<void> {
     const offspring = this._generateOffspring();
-    await this._objectiveManager.evaluateMany(offspring, budgetManager);
+    await this._objectiveManager.evaluateMany(
+      offspring,
+      budgetManager,
+      terminationManager
+    );
 
     // If all objectives are covered, we don't need to rank the population anymore
     // The final test cases are in the archive, rather than the population

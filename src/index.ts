@@ -34,6 +34,10 @@ export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
 export * from "./search/budget/TotalTimeBudget";
 
+// Termination
+export * from "./search/termination/TerminationManager";
+export * from "./search/termination/SignalTerminationTrigger";
+
 // Statistics
 export * from "./statistics/StatisticsCollector";
 export * from "./statistics/SummaryWriter";
@@ -42,6 +46,7 @@ export * from "./statistics/CoverageWriter";
 
 // Factories
 export * from "./search/factories/AlgorithmFactory";
+export * from "./search/factories/TerminationFactory";
 
 // Objective
 export * from "./search/objective/ObjectiveFunction";
