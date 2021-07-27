@@ -3,6 +3,7 @@ import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { Edge } from "../graph/Edge";
 import { getLogger } from "../util/logger";
+import {getUserInterface} from "../ui/UserInterface";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 
@@ -94,7 +95,7 @@ export abstract class SearchSubject<T extends Encoding> {
         );
       });
       if (!edge) {
-        getLogger().error(`Edge not found during dijkstra operation.`);
+        getUserInterface().error(`Edge not found during dijkstra operation.`);
         process.exit(1);
       }
 

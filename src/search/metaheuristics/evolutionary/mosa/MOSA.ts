@@ -3,10 +3,10 @@ import { TestCase } from "../../../../testcase/TestCase";
 import { EncodingSampler } from "../../../EncodingSampler";
 import { EncodingRunner } from "../../../EncodingRunner";
 import { UncoveredObjectiveManager } from "../../../objective/managers/UncoveredObjectiveManager";
-import { getLogger } from "../../../../util/logger";
 import { ObjectiveFunction } from "../../../objective/ObjectiveFunction";
 import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
 import { DominanceComparator } from "../../../comparators/DominanceComparator";
+import {getUserInterface} from "../../../../ui/UserInterface";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -42,10 +42,10 @@ export class MOSA extends EvolutionaryAlgorithm {
       return; // the search should end
 
     // non-dominated sorting
-    getLogger().debug(
-      "Number of objectives = " +
-        this._objectiveManager.getCurrentObjectives().size
-    );
+    getUserInterface().debug(
+        "Number of objectives = " +
+        this._objectiveManager.getCurrentObjectives().size)
+
     const F = this.preferenceSortingAlgorithm(
       this._population,
       this._objectiveManager.getCurrentObjectives()
@@ -56,7 +56,7 @@ export class MOSA extends EvolutionaryAlgorithm {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    getLogger().debug("First front size = " + F[0].length);
+    getUserInterface().debug("First front size = " + F[0].length);
 
     // Obtain the next front
     let currentFront: TestCase[] = F[index];
@@ -117,14 +117,14 @@ export class MOSA extends EvolutionaryAlgorithm {
     const fronts: TestCase[][] = [[]];
 
     if (objectiveFunctions === null) {
-      getLogger().debug(
+      getUserInterface().debug(
         "It looks like a bug in MOSA: the set of objectives cannot be null"
       );
       return fronts;
     }
 
     if (objectiveFunctions.size === 0) {
-      getLogger().debug("Trivial case: no objectives for the sorting");
+      getUserInterface().debug("Trivial case: no objectives for the sorting");
       return fronts;
     }
 
@@ -136,9 +136,9 @@ export class MOSA extends EvolutionaryAlgorithm {
       individual.setRank(0);
     }
 
-    getLogger().debug("First front size :" + frontZero.length);
-    getLogger().debug("Pop size :" + this._populationSize);
-    getLogger().debug("Pop + Off size :" + population.length);
+    getUserInterface().debug("First front size :" + frontZero.length);
+    getUserInterface().debug("Pop size :" + this._populationSize);
+    getUserInterface().debug("Pop + Off size :" + population.length);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: TestCase[] = population;
@@ -173,10 +173,10 @@ export class MOSA extends EvolutionaryAlgorithm {
       frontIndex += 1;
     }
 
-    getLogger().debug("Number of fronts :" + fronts.length);
-    getLogger().debug("Front zero size :" + fronts[0].length);
-    getLogger().debug("# selected solutions :" + selectedSolutions);
-    getLogger().debug("Pop size :" + this._populationSize);
+    getUserInterface().debug("Number of fronts :" + fronts.length);
+    getUserInterface().debug("Front zero size :" + fronts[0].length);
+    getUserInterface().debug("# selected solutions :" + selectedSolutions);
+    getUserInterface().debug("Pop size :" + this._populationSize);
     return fronts;
   }
 

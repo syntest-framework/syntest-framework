@@ -1,4 +1,28 @@
 export abstract class UserInterface {
+  private _silent: boolean;
+  private _verbose: boolean;
+
+  constructor(silent = false, verbose = false) {
+    this._silent = silent;
+    this._verbose = verbose;
+  }
+
+  abstract report(text: string, args: any[]): void;
+
+  abstract log(type: string, text: string)
+
+  abstract debug(text: string)
+
+  abstract info(text: string)
+
+  abstract error(text: string)
+
+  abstract startProgressBar();
+
+  abstract updateProgressBar(value: number);
+
+  abstract stopProgressBar();
+
   get silent(): boolean {
     return this._silent;
   }
@@ -13,23 +37,6 @@ export abstract class UserInterface {
   set verbose(value: boolean) {
     this._verbose = value;
   }
-  private _silent: boolean;
-  private _verbose: boolean;
-
-  constructor(silent = false, verbose = false) {
-    this._silent = silent;
-    this._verbose = verbose;
-  }
-
-  abstract report(text: string, args: any[]): void;
-
-  abstract log(type: string, text: string)
-
-  abstract startProgressBar();
-
-  abstract updateProgressBar(value: number);
-
-  abstract stopProgressBar();
 }
 
 let userInterface: UserInterface;

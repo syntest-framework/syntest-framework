@@ -2,6 +2,7 @@ import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
 import { getLogger } from "../../util/logger";
 import { Archive } from "../../search/Archive";
+import {getUserInterface} from "../../ui/UserInterface";
 
 const fs = require("fs");
 const path = require("path");
@@ -56,7 +57,7 @@ export abstract class SuiteBuilder {
     try {
       await fs.unlinkSync(filepath);
     } catch (error) {
-      getLogger().debug(error);
+      getUserInterface().debug(error);
     }
   }
 

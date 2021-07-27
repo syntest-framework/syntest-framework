@@ -35,6 +35,18 @@ export abstract class CommandLineInterface extends UserInterface {
     getLogger()[type](text)
   }
 
+  debug(text: string) {
+    this.log('debug', text)
+  }
+
+  info(text: string) {
+    this.log('info', text)
+  }
+
+  error(text: string) {
+    this.log('error', text)
+  }
+
   get showProgressBar(): boolean {
     return this._showProgressBar;
   }
