@@ -31,7 +31,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxEvaluations The maximum number of evaluations of this budget
    */
-  public constructor(maxEvaluations = Number.MAX_SAFE_INTEGER) {
+  constructor(maxEvaluations = Number.MAX_SAFE_INTEGER) {
     this._currentEvaluations = 0;
     this._maxEvaluations = maxEvaluations;
     this._tracking = false;
@@ -40,28 +40,28 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public getAvailableBudget(): number {
+  getRemainingBudget(): number {
     return this._maxEvaluations - this._currentEvaluations;
   }
 
   /**
    * @inheritDoc
    */
-  public getCurrentBudget(): number {
+  getUsedBudget(): number {
     return this._currentEvaluations;
   }
 
   /**
    * @inheritDoc
    */
-  public getTotalBudget(): number {
+  getTotalBudget(): number {
     return this._maxEvaluations;
   }
 
   /**
    * @inheritDoc
    */
-  public reset(): void {
+  reset(): void {
     this._currentEvaluations = 0;
     this._tracking = false;
   }
@@ -69,28 +69,28 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public initializationStarted(): void {
+  initializationStarted(): void {
     this._tracking = true;
   }
 
   /**
    * @inheritDoc
    */
-  public initializationStopped(): void {
+  initializationStopped(): void {
     this._tracking = false;
   }
 
   /**
    * @inheritDoc
    */
-  public searchStarted(): void {
+  searchStarted(): void {
     this._tracking = true;
   }
 
   /**
    * @inheritDoc
    */
-  public searchStopped(): void {
+  searchStopped(): void {
     this._tracking = false;
   }
 
@@ -98,13 +98,13 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+  iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
 
   /**
    * @inheritDoc
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {
+  evaluation(encoding: T): void {
     if (this._tracking && this._currentEvaluations < this._maxEvaluations) {
       this._currentEvaluations++;
     }

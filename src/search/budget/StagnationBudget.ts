@@ -37,7 +37,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxIterations The maximum number of iterations without progress of this budget
    */
-  public constructor(maxIterations = Number.MAX_SAFE_INTEGER) {
+  constructor(maxIterations = Number.MAX_SAFE_INTEGER) {
     this._currentIterations = 0;
     this._maxIterations = maxIterations;
     this._bestProgress = 0;
@@ -47,28 +47,28 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public getAvailableBudget(): number {
+  getRemainingBudget(): number {
     return this._maxIterations - this._currentIterations;
   }
 
   /**
    * @inheritDoc
    */
-  public getCurrentBudget(): number {
+  getUsedBudget(): number {
     return this._currentIterations;
   }
 
   /**
    * @inheritDoc
    */
-  public getTotalBudget(): number {
+  getTotalBudget(): number {
     return this._maxIterations;
   }
 
   /**
    * @inheritDoc
    */
-  public reset(): void {
+  reset(): void {
     this._currentIterations = 0;
     this._bestProgress = 0;
     this._tracking = false;
@@ -78,32 +78,32 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public initializationStarted(): void {}
+  initializationStarted(): void {}
 
   /**
    * @inheritDoc
    */
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public initializationStopped(): void {}
+  initializationStopped(): void {}
 
   /**
    * @inheritDoc
    */
-  public searchStarted(): void {
+  searchStarted(): void {
     this._tracking = true;
   }
 
   /**
    * @inheritDoc
    */
-  public searchStopped(): void {
+  searchStopped(): void {
     this._tracking = false;
   }
 
   /**
    * @inheritDoc
    */
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {
+  iteration(searchAlgorithm: SearchAlgorithm<T>): void {
     if (this._tracking && this._currentIterations < this._maxIterations) {
       if (searchAlgorithm.progress > this._bestProgress) {
         this._currentIterations = 0;
@@ -117,5 +117,5 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {}
+  evaluation(encoding: T): void {}
 }

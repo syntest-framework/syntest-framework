@@ -37,7 +37,7 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxSearchTime The maximum allowed time in seconds this budget should use
    */
-  public constructor(maxSearchTime = Number.MAX_SAFE_INTEGER) {
+  constructor(maxSearchTime = Number.MAX_SAFE_INTEGER) {
     this._currentSearchTime = 0;
     this._maxSearchTime = maxSearchTime;
     this._counterTime = 0;
@@ -47,16 +47,16 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public getAvailableBudget(): number {
-    return this._maxSearchTime - this.getCurrentBudget();
+  getRemainingBudget(): number {
+    return Math.max(this._maxSearchTime - this.getUsedBudget(), 0);
   }
 
   /**
    * @inheritDoc
    */
-  public getCurrentBudget(): number {
-    const currentTime = Date.now() / 1000;
+  getUsedBudget(): number {
     if (this._tracking) {
+      const currentTime = Date.now() / 1000;
       const totalTime =
         this._currentSearchTime + (currentTime - this._counterTime);
       return Math.min(totalTime, this._maxSearchTime);
@@ -68,14 +68,14 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public getTotalBudget(): number {
+  getTotalBudget(): number {
     return this._maxSearchTime;
   }
 
   /**
    * @inheritDoc
    */
-  public reset(): void {
+  reset(): void {
     this._currentSearchTime = 0;
     this._counterTime = 0;
     this._tracking = false;
@@ -84,7 +84,21 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public initializationStarted(): void {
+  initializationStarted(): void {
+    this.searchStarted();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  initializationStopped(): void {
+    this.searchStopped();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  searchStarted(): void {
     if (!this._tracking) {
       this._counterTime = Date.now() / 1000;
       this._tracking = true;
@@ -94,50 +108,9 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public initializationStopped(): void {
+  searchStopped(): void {
     if (this._tracking) {
-      const currentTime = Date.now() / 1000;
-
-      if (
-        this._currentSearchTime + currentTime - this._counterTime >
-        this._maxSearchTime
-      ) {
-        this._currentSearchTime = this._maxSearchTime;
-      } else {
-        this._currentSearchTime += currentTime - this._counterTime;
-      }
-
-      this._counterTime = 0;
-      this._tracking = false;
-    }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public searchStarted(): void {
-    if (!this._tracking) {
-      this._counterTime = Date.now() / 1000;
-      this._tracking = true;
-    }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public searchStopped(): void {
-    if (this._tracking) {
-      const currentTime = Date.now() / 1000;
-
-      if (
-        this._currentSearchTime + currentTime - this._counterTime >
-        this._maxSearchTime
-      ) {
-        this._currentSearchTime = this._maxSearchTime;
-      } else {
-        this._currentSearchTime += currentTime - this._counterTime;
-      }
-
+      this._currentSearchTime = this.getUsedBudget();
       this._counterTime = 0;
       this._tracking = false;
     }
@@ -147,11 +120,11 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {}
+  evaluation(encoding: T): void {}
 
   /**
    * @inheritDoc
    */
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+  iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
 }

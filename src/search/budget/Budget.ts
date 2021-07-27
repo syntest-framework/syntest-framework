@@ -10,12 +10,12 @@ export interface Budget<T extends Encoding> extends BudgetListener<T> {
   /**
    * Return the remaining budget.
    */
-  getAvailableBudget(): number;
+  getRemainingBudget(): number;
 
   /**
    * Return the used up budget.
    */
-  getCurrentBudget(): number;
+  getUsedBudget(): number;
 
   /**
    * Return the total originally available budget.
