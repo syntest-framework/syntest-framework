@@ -38,6 +38,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    */
   protected constructor(objectiveManager: ObjectiveManager<T>) {
     this._objectiveManager = objectiveManager;
+    this._listeners = [];
   }
 
   /**
