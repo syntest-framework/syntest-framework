@@ -40,16 +40,6 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {
-    if (this._tracking && this._currentEvaluations < this._maxEvaluations) {
-      this._currentEvaluations++;
-    }
-  }
-
-  /**
-   * @inheritDoc
-   */
   public getAvailableBudget(): number {
     return this._maxEvaluations - this._currentEvaluations;
   }
@@ -71,12 +61,6 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
-
-  /**
-   * @inheritDoc
-   */
   public reset(): void {
     this._currentEvaluations = 0;
     this._tracking = false;
@@ -85,28 +69,44 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public start(): void {
+  public initializationStarted(): void {
     this._tracking = true;
   }
 
   /**
    * @inheritDoc
    */
-  public startInitialization(): void {
+  public initializationStopped(): void {
+    this._tracking = false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public searchStarted(): void {
     this._tracking = true;
   }
 
   /**
    * @inheritDoc
    */
-  public stop(): void {
+  public searchStopped(): void {
     this._tracking = false;
   }
 
   /**
    * @inheritDoc
    */
-  public stopInitialization(): void {
-    this._tracking = false;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public evaluation(encoding: T): void {
+    if (this._tracking && this._currentEvaluations < this._maxEvaluations) {
+      this._currentEvaluations++;
+    }
   }
 }

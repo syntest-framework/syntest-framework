@@ -40,12 +40,6 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {}
-
-  /**
-   * @inheritDoc
-   */
   public getAvailableBudget(): number {
     return this._maxIterations - this._currentIterations;
   }
@@ -67,6 +61,40 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
+  public reset(): void {
+    this._currentIterations = 0;
+    this._tracking = false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public initializationStarted(): void {}
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public initializationStopped(): void {}
+
+  /**
+   * @inheritDoc
+   */
+  public searchStarted(): void {
+    this._tracking = true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public searchStopped(): void {
+    this._tracking = false;
+  }
+
+  /**
+   * @inheritDoc
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public iteration(searchAlgorithm: SearchAlgorithm<T>): void {
     if (this._tracking && this._currentIterations < this._maxIterations) {
@@ -77,34 +105,6 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public reset(): void {
-    this._currentIterations = 0;
-    this._tracking = false;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public start(): void {
-    this._tracking = true;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public startInitialization(): void {}
-
-  /**
-   * @inheritDoc
-   */
-  public stop(): void {
-    this._tracking = false;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public stopInitialization(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public evaluation(encoding: T): void {}
 }

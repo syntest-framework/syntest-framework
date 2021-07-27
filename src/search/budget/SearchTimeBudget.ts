@@ -47,12 +47,6 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {}
-
-  /**
-   * @inheritDoc
-   */
   public getAvailableBudget(): number {
     return this._maxSearchTime - this.getCurrentBudget();
   }
@@ -81,12 +75,6 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
-
-  /**
-   * @inheritDoc
-   */
   public reset(): void {
     this._currentSearchTime = 0;
     this._counterTime = 0;
@@ -96,7 +84,19 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public start(): void {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public initializationStarted(): void {}
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public initializationStopped(): void {}
+
+  /**
+   * @inheritDoc
+   */
+  public searchStarted(): void {
     if (!this._tracking) {
       this._counterTime = Date.now() / 1000;
       this._tracking = true;
@@ -106,13 +106,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public startInitialization(): void {}
-
-  /**
-   * @inheritDoc
-   */
-  public stop(): void {
+  public searchStopped(): void {
     if (this._tracking) {
       const currentTime = Date.now() / 1000;
 
@@ -133,6 +127,12 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public stopInitialization(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public evaluation(encoding: T): void {}
 }

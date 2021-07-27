@@ -81,6 +81,10 @@ export * from "./graph/cfgUtils";
 export * from "./graph/drawGraph";
 export * from "./graph/CFGFactory";
 
+// UI
+export * from "./ui/UserInterface";
+export * from "./ui/CommandLineInterface";
+
 // Util
 export * from "./config";
 export * from "./util/HashSet";

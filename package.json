@@ -41,6 +41,7 @@
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.4",
     "bignumber.js": "^9.0.1",
+    "cli-progress": "^3.9.0",
     "d3": "^4.13.0",
     "fast-csv": "^4.3.6",
     "globby": "^11.0.3",
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.15",
+    "@types/cli-progress": "^3.9.2",
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.37",
     "@types/sinon": "^9.0.11",
