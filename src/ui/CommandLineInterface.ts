@@ -1,23 +1,53 @@
 import { UserInterface } from "./UserInterface";
-import * as cliProgress from "cli-progress";
+import {getLogger} from "../util/logger";
+
+const chalk = require("chalk");
+const figlet = require("figlet");
+
 
 export abstract class CommandLineInterface extends UserInterface {
-  private progressBar;
+  private _showProgressBar: boolean;
+  private _progressValue: number
 
   constructor(silent = false, verbose = false) {
     super(silent, verbose);
   }
 
-  getProgressBar() {
-    if (!this.progressBar) {
-      this.progressBar = new cliProgress.SingleBar({
-        format: "Budget used | {bar} | {percentage}% || Elapsed: {duration}s",
-        barCompleteChar: "\u2588",
-        barIncompleteChar: "\u2591",
-        hideCursor: true,
-      });
-    }
+  asciiArt (text: string): string {
+    return chalk.yellow(
+        figlet.textSync(text, { horizontalLayout: 'full' })
+    )
+  }
 
-    return this.progressBar;
+  startProgressBar() {
+    this._showProgressBar = true
+  }
+
+  updateProgressBar(value: number) {
+    this._progressValue = value
+  }
+
+  stopProgressBar() {
+    this._showProgressBar = false
+  }
+
+  log(type: string, text: string) {
+    getLogger()[type](text)
+  }
+
+  get showProgressBar(): boolean {
+    return this._showProgressBar;
+  }
+
+  set showProgressBar(value: boolean) {
+    this._showProgressBar = value;
+  }
+
+  get progressValue(): number {
+    return this._progressValue;
+  }
+
+  set progressValue(value: number) {
+    this._progressValue = value;
   }
 }

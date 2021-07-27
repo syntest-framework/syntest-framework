@@ -9,8 +9,10 @@ const shell = require("shelljs");
 const { properties } = require("./properties");
 
 let cwd: any = null;
-let yargs: any = null;
+// let yargs: any = null;
 let argv: any = null;
+
+export let yargs: any = null;
 
 export async function guessCWD(givenCwd: any) {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
@@ -120,15 +122,10 @@ export function processConfig(config: any = {}, args: any = {}) {
 
   yargs
     .config(config)
-    .help("h")
-    .alias("h", "help")
-    .version("v")
-    .alias("v", "version")
-    .version();
 
   argv = yargs.wrap(yargs.terminalWidth()).parse(args);
 
-  for (let setting of Object.keys(argv)) {
+  for (const setting of Object.keys(argv)) {
     Properties[setting] = argv[setting];
   }
 }

@@ -23,7 +23,13 @@ export abstract class UserInterface {
 
   abstract report(text: string, args: any[]): void;
 
-  abstract getProgressBar();
+  abstract log(type: string, text: string)
+
+  abstract startProgressBar();
+
+  abstract updateProgressBar(value: number);
+
+  abstract stopProgressBar();
 }
 
 let userInterface: UserInterface;
