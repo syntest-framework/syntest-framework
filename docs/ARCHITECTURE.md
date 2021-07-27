@@ -25,12 +25,20 @@ Below is a brief view of SynTest's structure:
 - `src/util`: several util files, which include helper classes and the logger.
 
 ## Understanding internals
-To get a better idea of how the Syntest Framework operates, let's take a look at the flow of generating a test case and executing it. This process can be seperated into the following steps:
+To get a better idea of how the Syntest Framework operates, let's take a look at the flow of generating a test case and executing it. When testing for a specific target, this can be separated into the following steps:
 
-(This subsection will likely discuss some concrete example)
-
-1. TODO
-2. TODO
+1. The search algorithm with objective manager is initialized with the user supplied configuration.
+2. The budget mangers are initialized responsible for iterations, evaluations etc.
+3. The algorithm searches given the budgets.
+4. Statistics are collected regarding the budgets and coverage.
+5. Finally, the statistics are logged and the execution terminates. 
 
 ## Search algorithms
-TODO
+There are several search algorithms available, each relying on a different objective manager. These are shown in the table below.
+
+| Search algorithm                                                 | Objective Manager          |
+|------------------------------------------------------------------|----------------------------|
+| RandomSearch                                                     | SimpleObjectiveManager     |
+| NSGAII [[1]](https://ieeexplore.ieee.org/document/996017)        | SimpleObjectiveManager     |
+| MOSA [[2]](https://ieeexplore.ieee.org/document/7102604)         | UncoveredObjectiveManager  |
+| DynaMOSA [[3]](https://ieeexplore.ieee.org/document/7840029)     | StructuralObjectiveManager |
