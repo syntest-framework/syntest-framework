@@ -22,14 +22,16 @@ export abstract class MonitorCommandLineInterface extends CommandLineInterface {
 
       if (this.showProgressBar) {
         const bar = new cliProgress.SingleBar({
-          format: "Budget used | {bar} | {percentage}%",
+          format: "Coverage: {bar} {percentage}% | Remaining budget: {budget}%",
           barCompleteChar: "\u2588",
           barIncompleteChar: "\u2591",
           hideCursor: true,
           synchronousUpdate: false
         });
 
-        bar.start(200, this.progressValue)
+        bar.start(200, this.progressValue, {
+          budget: `${this.budgetValue}`
+        })
 
         bar.render()
         // bar.update(self.progressValue)
@@ -66,8 +68,9 @@ export abstract class MonitorCommandLineInterface extends CommandLineInterface {
     this.render()
   }
 
-  updateProgressBar(value: number) {
+  updateProgressBar(value: number, budget: number) {
     this.progressValue = value
+    this.budgetValue = budget
     this.render()
   }
 

@@ -19,7 +19,7 @@ export abstract class UserInterface {
 
   abstract startProgressBar();
 
-  abstract updateProgressBar(value: number);
+  abstract updateProgressBar(value: number, budget: number);
 
   abstract stopProgressBar();
 

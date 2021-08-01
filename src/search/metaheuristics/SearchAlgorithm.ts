@@ -77,7 +77,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     budgetManager.stopInitialization();
 
     getUserInterface().startProgressBar()
-    getUserInterface().updateProgressBar(100 - budgetManager.getBudget())
+    getUserInterface().updateProgressBar(this.getProgress(), budgetManager.getBudget())
 
     // Search loop that runs until the budget has expired, a termination trigger has been triggered, or there are no more objectives
     budgetManager.start();
@@ -89,7 +89,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       await this._iterate(budgetManager, terminationManager);
       budgetManager.iteration(this);
 
-      getUserInterface().updateProgressBar(100 - budgetManager.getBudget())
+      getUserInterface().updateProgressBar(this.getProgress(), budgetManager.getBudget())
     }
     budgetManager.stop();
     getUserInterface().stopProgressBar()
