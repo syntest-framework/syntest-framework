@@ -29,6 +29,7 @@ export abstract class MonitorCommandLineInterface extends CommandLineInterface {
           synchronousUpdate: false
         });
 
+
         bar.start(200, this.progressValue, {
           budget: `${this.budgetValue}`
         })
@@ -65,6 +66,8 @@ export abstract class MonitorCommandLineInterface extends CommandLineInterface {
 
   startProgressBar() {
     this.showProgressBar = true
+    this.progressValue = 0
+    this.budgetValue = 100
     this.render()
   }
 
