@@ -40,9 +40,7 @@ export abstract class MonitorCommandLineInterface extends CommandLineInterface {
     }
 
     console.log("====================== LOGS ======================");
-    console.log(
-      this.logs.slice(Math.max(this.logs.length - 10, 0)).join("\n")
-    );
+    console.log(this.logs.slice(Math.max(this.logs.length - 10, 0)).join("\n"));
   }
 
   log(type: string, text: string) {
