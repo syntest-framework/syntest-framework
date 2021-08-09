@@ -48,7 +48,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   getRemainingBudget(): number {
-    return Math.max(this._maxSearchTime - this.getUsedBudget(), 0);
+    return this._maxSearchTime - this.getUsedBudget();
   }
 
   /**
