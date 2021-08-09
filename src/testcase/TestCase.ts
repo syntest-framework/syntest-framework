@@ -1,6 +1,5 @@
 import { ConstructorCall } from "./statements/action/ConstructorCall";
 import { prng } from "../util/prng";
-import { getLogger } from "../util/logger";
 import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
 import { Encoding } from "../search/Encoding";
 import { ExecutionResult } from "../search/ExecutionResult";

@@ -124,7 +124,6 @@ export function setupLogger() {
 
   const options: LoggerOptions = <LoggerOptions>{
     transports: [
-      // new transports.Console(settings[Properties.console_log_level]),
       ...Properties.log_to_file.map(
         (logLevel: string) => new transports.File(settings[logLevel])
       ),

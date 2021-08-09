@@ -2,7 +2,6 @@ import { CFG } from "../graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { Edge } from "../graph/Edge";
-import { getLogger } from "../util/logger";
 import { getUserInterface } from "../ui/UserInterface";
 
 const { Graph, alg } = require("@dagrejs/graphlib");

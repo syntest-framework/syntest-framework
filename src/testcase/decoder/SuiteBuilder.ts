@@ -1,6 +1,5 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
-import { getLogger } from "../../util/logger";
 import { Archive } from "../../search/Archive";
 import { getUserInterface } from "../../ui/UserInterface";
 
