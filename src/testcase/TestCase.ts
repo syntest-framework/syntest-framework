@@ -6,7 +6,7 @@ import { Encoding } from "../search/Encoding";
 import { ExecutionResult } from "../search/ExecutionResult";
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 import { EncodingSampler } from "../search/EncodingSampler";
-import {getUserInterface} from "../ui/UserInterface";
+import { getUserInterface } from "../ui/UserInterface";
 
 /**
  * TestCase class

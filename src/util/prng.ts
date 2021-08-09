@@ -3,23 +3,23 @@ import { Properties } from "../properties";
 
 const seedrandom = require("seedrandom");
 
-let seed: any = null
+let seed: any = null;
 let random: any = null;
 
 export function getSeed() {
   if (!seed) {
-    seed = Properties.seed
+    seed = Properties.seed;
 
     if (!seed) {
-      seed = `${seedrandom()()}`
+      seed = `${seedrandom()()}`;
     }
   }
-  return seed
+  return seed;
 }
 
 function generator() {
   if (!random) {
-    random = seedrandom(getSeed())
+    random = seedrandom(getSeed());
   }
 
   return random();

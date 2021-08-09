@@ -6,7 +6,7 @@ import { UncoveredObjectiveManager } from "../../../objective/managers/Uncovered
 import { ObjectiveFunction } from "../../../objective/ObjectiveFunction";
 import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
 import { DominanceComparator } from "../../../comparators/DominanceComparator";
-import {getUserInterface} from "../../../../ui/UserInterface";
+import { getUserInterface } from "../../../../ui/UserInterface";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -43,8 +43,9 @@ export class MOSA extends EvolutionaryAlgorithm {
 
     // non-dominated sorting
     getUserInterface().debug(
-        "Number of objectives = " +
-        this._objectiveManager.getCurrentObjectives().size)
+      "Number of objectives = " +
+        this._objectiveManager.getCurrentObjectives().size
+    );
 
     const F = this.preferenceSortingAlgorithm(
       this._population,

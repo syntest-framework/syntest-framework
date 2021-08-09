@@ -2,7 +2,7 @@ import { TestCaseDecoder } from "./TestCaseDecoder";
 import { TestCase } from "../TestCase";
 import { getLogger } from "../../util/logger";
 import { Archive } from "../../search/Archive";
-import {getUserInterface} from "../../ui/UserInterface";
+import { getUserInterface } from "../../ui/UserInterface";
 
 const fs = require("fs");
 const path = require("path");
