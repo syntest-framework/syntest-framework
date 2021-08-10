@@ -26,15 +26,15 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * Loops over all active budgets to find the one with the lowest budget.
    */
-  public getBudget(): number {
+  getBudget(): number {
     const budget = this._budgets.reduce((minBudget, budget) =>
-      budget.getAvailableBudget() / budget.getTotalBudget() <
-      minBudget.getAvailableBudget() / minBudget.getTotalBudget()
+      budget.getRemainingBudget() / budget.getTotalBudget() <
+      minBudget.getRemainingBudget() / minBudget.getTotalBudget()
         ? budget
         : minBudget
     );
 
-    const value = (budget.getAvailableBudget() / budget.getTotalBudget()) * 100;
+    const value = (budget.getRemainingBudget() / budget.getTotalBudget()) * 100;
     const factor = 10 ** 2;
     return Math.round(value * factor) / factor;
   }
@@ -42,8 +42,8 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   /**
    * Return whether the budget manager has any budget left.
    */
-  public hasBudgetLeft(): boolean {
-    return this._budgets.every((budget) => budget.getAvailableBudget() > 0.0);
+  hasBudgetLeft(): boolean {
+    return this._budgets.every((budget) => budget.getRemainingBudget() > 0.0);
   }
 
   /**
@@ -51,7 +51,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to add
    */
-  public addBudget(budget: Budget<T>): BudgetManager<T> {
+  addBudget(budget: Budget<T>): BudgetManager<T> {
     this._budgets.push(budget);
     return this;
   }
@@ -61,7 +61,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to remove
    */
-  public removeBudget(budget: Budget<T>): BudgetManager<T> {
+  removeBudget(budget: Budget<T>): BudgetManager<T> {
     this._budgets.slice(this._budgets.indexOf(budget), 1);
     return this;
   }
@@ -69,42 +69,42 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   /**
    * @inheritDoc
    */
-  public initializationStarted(): void {
+  initializationStarted(): void {
     this._budgets.forEach((budget) => budget.initializationStarted());
   }
 
   /**
    * @inheritDoc
    */
-  public initializationStopped(): void {
+  initializationStopped(): void {
     this._budgets.forEach((budget) => budget.initializationStopped());
   }
 
   /**
    * @inheritDoc
    */
-  public searchStarted(): void {
+  searchStarted(): void {
     this._budgets.forEach((budget) => budget.searchStarted());
   }
 
   /**
    * @inheritDoc
    */
-  public searchStopped(): void {
+  searchStopped(): void {
     this._budgets.forEach((budget) => budget.searchStopped());
   }
 
   /**
    * @inheritDoc
    */
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {
+  iteration(searchAlgorithm: SearchAlgorithm<T>): void {
     this._budgets.forEach((budget) => budget.iteration(searchAlgorithm));
   }
 
   /**
    * @inheritDoc
    */
-  public evaluation(encoding: T): void {
+  evaluation(encoding: T): void {
     this._budgets.forEach((budget) => budget.evaluation(encoding));
   }
 }

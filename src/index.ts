@@ -1,4 +1,6 @@
 // Test case
+import exp = require("constants");
+
 export * from "./testcase/TestCase";
 
 // Runner
@@ -39,10 +41,11 @@ export * from "./search/termination/TerminationManager";
 export * from "./search/termination/SignalTerminationTrigger";
 
 // Statistics
-export * from "./statistics/StatisticsCollector";
-export * from "./statistics/SummaryWriter";
-export * from "./statistics/RuntimeVariable";
 export * from "./statistics/CoverageWriter";
+export * from "./statistics/RuntimeVariable";
+export * from "./statistics/StatisticsCollector";
+export * from "./statistics/StatisticsSearchListener";
+export * from "./statistics/SummaryWriter";
 
 // Factories
 export * from "./search/factories/AlgorithmFactory";

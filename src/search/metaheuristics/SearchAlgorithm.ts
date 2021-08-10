@@ -77,17 +77,17 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<Archive<T>> {
+    // Load search subject into the objective manager
+    this._objectiveManager.load(subject);
+
+    // Start initialization budget tracking
+    budgetManager.initializationStarted();
+
     // Inform listeners that the search started
     this._listeners.forEach((listener) => {
       listener.searchStarted(this, budgetManager, terminationManager);
     });
     getUserInterface().getProgressBar().start(100, 0);
-
-    // Start initialization budget tracking
-    budgetManager.initializationStarted();
-
-    // Load search subject into the objective manager
-    this._objectiveManager.load(subject);
 
     // Initialize search process
     await this._initialize(budgetManager, terminationManager);

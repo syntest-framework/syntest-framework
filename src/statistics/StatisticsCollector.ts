@@ -18,7 +18,7 @@ export class StatisticsCollector<T extends Encoding> {
    * Mapping from total search time to another mapping from runtime variable to value.
    * @protected
    */
-  protected _eventVariables: Map<number, Map<number, any>>;
+  protected _eventVariables: Map<number, Map<RuntimeVariable, any>>;
 
   /**
    * Total search time budget from the search process.
@@ -63,7 +63,7 @@ export class StatisticsCollector<T extends Encoding> {
     variable: RuntimeVariable,
     value: any
   ): StatisticsCollector<T> {
-    const eventTime = this._timeBudget.getCurrentBudget();
+    const eventTime = Math.round(this._timeBudget.getUsedBudget());
 
     // If other events already exist on this event time add it, otherwise create a new one
     if (this._eventVariables.has(eventTime)) {
@@ -71,7 +71,7 @@ export class StatisticsCollector<T extends Encoding> {
     } else {
       this._eventVariables.set(
         eventTime,
-        new Map<number, any>().set(variable, value)
+        new Map<RuntimeVariable, any>().set(variable, value)
       );
     }
 
@@ -88,7 +88,7 @@ export class StatisticsCollector<T extends Encoding> {
   /**
    * Return the dynamic variables stored in the collector
    */
-  public getEventVariables(): Map<number, Map<number, any>> {
+  public getEventVariables(): Map<number, Map<RuntimeVariable, any>> {
     return this._eventVariables;
   }
 }
