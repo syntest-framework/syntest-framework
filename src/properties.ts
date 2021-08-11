@@ -35,6 +35,8 @@ export class Properties {
   public static modifier_extraction: boolean;
   public static console_log_level: string;
   public static log_to_file: string[];
+  public static user_interface: string;
+
   public static string_alphabet: string;
   public static string_maxlength: number;
   public static numeric_decimals: number;
@@ -81,6 +83,12 @@ export const properties = {
     description: "The path where the logs should be saved",
     type: "string",
     default: "syntest/logs",
+  },
+
+  user_interface: {
+    description: "The user interface you use",
+    type: "string",
+    default: "regular",
   },
 
   final_suite_directory: {
