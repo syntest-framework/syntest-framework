@@ -6,7 +6,10 @@ import {
   TestCaseRunner,
   TestCaseSampler,
   setupLogger,
-  setupOptions, setUserInterface, CommandLineInterface, Properties,
+  setupOptions,
+  setUserInterface,
+  CommandLineInterface,
+  Properties,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
@@ -27,11 +30,12 @@ describe("Test MOSA", function () {
     await processConfig({}, "");
     await setupLogger();
 
-    setUserInterface(new CommandLineInterface(
-        Properties.console_log_level === 'silent',
-        Properties.console_log_level === 'verbose'
-        )
-    )
+    setUserInterface(
+      new CommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose"
+      )
+    );
   });
 
   let objectives: Set<BranchObjectiveFunction<TestCase>>;

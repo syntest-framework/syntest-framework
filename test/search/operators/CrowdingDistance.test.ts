@@ -4,9 +4,11 @@ import {
   crowdingDistance,
   guessCWD,
   loadConfig,
-  processConfig, Properties,
+  processConfig,
+  Properties,
   setupLogger,
-  setupOptions, setUserInterface,
+  setupOptions,
+  setUserInterface,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import {
@@ -29,11 +31,12 @@ describe("Crowding distance", function () {
     await processConfig({}, "");
     await setupLogger();
 
-    setUserInterface(new CommandLineInterface(
-        Properties.console_log_level === 'silent',
-        Properties.console_log_level === 'verbose'
-        )
-    )
+    setUserInterface(
+      new CommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose"
+      )
+    );
   });
 
   it("empty front", () => {

@@ -14,8 +14,6 @@ The common core contains the common interfaces for the code control-flow represe
 
 For more in-depth information about the architecture we refer to: [Architecture](doc/ARCHITECTURE.md).
 
-
-
 ## Installation
 
 When the project reaches a stable state, a NPM package will be released. Until this happens, the library can be used by cloning the project, installing its dependencies, compiling the TypeScript, and requiring it in your project:
