@@ -28,12 +28,15 @@ export class Properties {
   public static search_time: number;
   public static total_time: number;
   public static iteration_budget: number;
+  public static evaluation_budget: number;
 
   public static enhanced_cfg: boolean;
   public static probe_objective: boolean;
   public static modifier_extraction: boolean;
   public static console_log_level: string;
   public static log_to_file: string[];
+  public static user_interface: string;
+
   public static string_alphabet: string;
   public static string_maxlength: number;
   public static numeric_decimals: number;
@@ -80,6 +83,12 @@ export const properties = {
     description: "The path where the logs should be saved",
     type: "string",
     default: "syntest/logs",
+  },
+
+  user_interface: {
+    description: "The user interface you use",
+    type: "string",
+    default: "regular",
   },
 
   final_suite_directory: {
@@ -195,7 +204,12 @@ export const properties = {
   iteration_budget: {
     description: "Iteration budget",
     type: "number",
-    default: 1000,
+    default: Number.MAX_SAFE_INTEGER,
+  },
+  evaluation_budget: {
+    description: "Evaluation budget",
+    type: "number",
+    default: Number.MAX_SAFE_INTEGER,
   },
 
   enhanced_cfg: {

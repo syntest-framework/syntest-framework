@@ -1,11 +1,11 @@
 import { ConstructorCall } from "./statements/action/ConstructorCall";
 import { prng } from "../util/prng";
-import { getLogger } from "../util/logger";
 import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
 import { Encoding } from "../search/Encoding";
 import { ExecutionResult } from "../search/ExecutionResult";
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 import { EncodingSampler } from "../search/EncodingSampler";
+import { getUserInterface } from "../ui/UserInterface";
 
 /**
  * TestCase class
@@ -42,11 +42,11 @@ export class TestCase implements Encoding {
     this._rank = 0;
     this._id = prng.uniqueId(20);
     this._objectives = new Map<ObjectiveFunction<TestCase>, number>();
-    getLogger().debug(`Created test case: ${this._id}`);
+    getUserInterface().debug(`Created test case: ${this._id}`);
   }
 
   mutate(sampler: EncodingSampler<TestCase>) {
-    getLogger().debug(`Mutating test case: ${this._id}`);
+    getUserInterface().debug(`Mutating test case: ${this._id}`);
     return new TestCase(this._root.mutate(sampler, 0));
   }
 

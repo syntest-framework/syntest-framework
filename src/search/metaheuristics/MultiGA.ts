@@ -67,7 +67,7 @@
 //     for (const algorithm of this.subAlgorithms) {
 //       algorithm.population = algorithm.createInitialPopulation();
 //     }
-//     getLogger().info("Initial population created");
+//     getUserInterface().info("Initial population created");
 //
 //     for (const algorithm of this.subAlgorithms) {
 //       await algorithm.fitness.evaluateMany(
@@ -79,7 +79,7 @@
 //     this.currentGeneration = 0;
 //     this.startTime = Date.now();
 //
-//     getLogger().info(
+//     getUserInterface().info(
 //       `Search process started at ${new Date(
 //         this.startTime
 //       ).toLocaleTimeString()}`
@@ -91,15 +91,15 @@
 //       this.currentGeneration += 1;
 //       this.timePast = Date.now() - this.startTime;
 //       this.currentCoverage = this.getCurrentCoverage();
-//       getLogger().info(
+//       getUserInterface().info(
 //         `Generation: ${this.currentGeneration} done after ${
 //           this.timePast / 1000
 //         } seconds, current coverage: ${this.currentCoverage}`
 //       );
 //     }
 //
-//     getLogger().info(`The termination criteria have been satisfied.`);
-//     getLogger().info(
+//     getUserInterface().info(`The termination criteria have been satisfied.`);
+//     getUserInterface().info(
 //       `Ending the search process at ${new Date(
 //         Date.now()
 //       ).toLocaleTimeString()}`
