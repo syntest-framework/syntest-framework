@@ -10,10 +10,9 @@ import * as fs from "fs";
  * @author Mitchell Olsthoorn
  */
 export class CoverageWriter<T extends Encoding> {
-  protected VARIABLES: RuntimeVariable[] = [
-    RuntimeVariable.SUBJECT,
-    RuntimeVariable.COVERAGE,
-  ];
+  protected VARIABLES: RuntimeVariable[] = [RuntimeVariable.SUBJECT];
+
+  protected EVENT_VARIABLES: RuntimeVariable[] = [RuntimeVariable.COVERAGE];
 
   /**
    * Write the coverage statistics to file.
@@ -22,38 +21,46 @@ export class CoverageWriter<T extends Encoding> {
    * @param filePath The file path to write to
    */
   write(collector: StatisticsCollector<T>, filePath: string) {
-    const variables = collector.getEventVariables();
+    const staticVariables = collector.getVariables();
+    const events = collector.getEventVariables();
 
     const data = [];
-
-    const variableCounter = {};
-
-    // Initialize counters
-    this.VARIABLES.forEach((variable) => {
-      variableCounter[variable] = 0;
-    });
+    const lastVariableValues = new Map<RuntimeVariable, any>();
 
     // Loop over all recorded times
-    for (const time of variables.keys()) {
+    for (const time of events.keys()) {
+      const event = events.get(time);
+
       const row = {};
 
       // Add time
       row["TIME"] = time;
 
-      // For each enabled statistic, copy the data from the collector over
-      const eventVariable = variables.get(time);
+      // For each enabled static statistic, copy the data from the collector over
       this.VARIABLES.forEach((variable) => {
+        row[RuntimeVariable[variable]] = staticVariables.get(variable);
+      });
+
+      // For each enabled event statistic, copy the data from the collector over
+      this.EVENT_VARIABLES.forEach((variable) => {
         // If the variable exists in the collector use it, otherwise get the last value
-        if (eventVariable.has(variable)) {
-          const value = eventVariable.get(variable);
+        if (event.has(variable)) {
+          const value = event.get(variable);
           row[RuntimeVariable[variable]] = value;
 
           // Update last values
-          if (value != variableCounter[variable]) {
-            variableCounter[variable] = value;
+          if (
+            !lastVariableValues.has(variable) ||
+            value != lastVariableValues.get(variable)
+          ) {
+            lastVariableValues.set(variable, value);
           }
         } else {
-          row[RuntimeVariable[variable]] = variableCounter[variable];
+          if (lastVariableValues.has(variable)) {
+            row[RuntimeVariable[variable]] = lastVariableValues.get(variable);
+          } else {
+            row[RuntimeVariable[variable]] = null;
+          }
         }
       });
 
@@ -64,6 +71,9 @@ export class CoverageWriter<T extends Encoding> {
     const ws = fs.createWriteStream(filePath, { flags: "a" });
 
     // Write the data to the stream and add headers when the file does not exist
-    csv.writeToStream(ws, data, { headers: !fs.existsSync(filePath) });
+    csv.writeToStream(ws, data, {
+      headers: !fs.existsSync(filePath),
+      includeEndRowDelimiter: true,
+    });
   }
 }
