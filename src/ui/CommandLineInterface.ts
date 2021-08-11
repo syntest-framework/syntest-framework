@@ -5,7 +5,7 @@ import * as cliProgress from "cli-progress";
 const chalk = require("chalk");
 const figlet = require("figlet");
 
-export abstract class CommandLineInterface extends UserInterface {
+export class CommandLineInterface extends UserInterface {
   protected showProgressBar: boolean;
   protected progressValue: number;
   protected budgetValue: number;
@@ -63,5 +63,9 @@ export abstract class CommandLineInterface extends UserInterface {
 
   error(text: string) {
     this.log("error", text);
+  }
+
+  report(text: string, args: any[]): void {
+    this.info(`${text}: ${args.join(', ')}`)
   }
 }
