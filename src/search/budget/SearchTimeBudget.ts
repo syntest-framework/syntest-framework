@@ -48,15 +48,18 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   getRemainingBudget(): number {
-    if (this._maxSearchTime < this.getUsedBudget()) {
+    if (this.getUsedBudget() > this._maxSearchTime) {
       console.log(
-        "Consumed " +
-          (this.getUsedBudget() - this._maxSearchTime) +
-          "s over the allocated search time"
+        `Consumed ${
+          this.getUsedBudget() - this._maxSearchTime
+        }s over the allocated search time`
       );
     }
 
-    return this._maxSearchTime - this.getUsedBudget();
+    return Math.max(
+      this._maxSearchTime - this.getUsedBudget(),
+      this._maxSearchTime
+    );
   }
 
   /**
@@ -65,9 +68,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   getUsedBudget(): number {
     if (this._tracking) {
       const currentTime = Date.now() / 1000;
-      const searchTime =
-        this._currentSearchTime + (currentTime - this._counterTime);
-      return Math.min(searchTime, this._maxSearchTime);
+      return this._currentSearchTime + (currentTime - this._counterTime);
     } else {
       return this._currentSearchTime;
     }
