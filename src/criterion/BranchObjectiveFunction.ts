@@ -17,7 +17,6 @@ export class BranchObjectiveFunction<T extends Encoding>
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _line: number;
-  protected _locationIdx: number;
   protected _type: boolean;
 
   /**
@@ -26,26 +25,20 @@ export class BranchObjectiveFunction<T extends Encoding>
    * @param subject
    * @param id
    * @param line
-   * @param locationIdx
    * @param type
    */
   constructor(
     subject: SearchSubject<T>,
     id: string,
     line: number,
-    locationIdx: number,
     type: boolean
   ) {
     this._subject = subject;
     this._id = id;
     this._line = line;
-    this._locationIdx = locationIdx;
     this._type = type;
   }
 
-  /**
-   * @inheritDoc
-   */
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
 
@@ -61,7 +54,7 @@ export class BranchObjectiveFunction<T extends Encoding>
           (trace) =>
             trace.type === "branch" &&
             trace.line === this._line &&
-            trace.locationIdx === this._locationIdx
+            trace.branchType === this._type
         );
 
       if (branchTrace.hits > 0) {
@@ -70,8 +63,8 @@ export class BranchObjectiveFunction<T extends Encoding>
         const oppositeBranch = executionResult.getTraces().find(
           (trace) =>
             trace.type === "branch" &&
-            trace.id === branchTrace.id && // same branch id
-            trace.locationIdx !== this._locationIdx // different location (0 = false, 1 = true)
+            trace.id === branchTrace.id && // Same branch id
+            trace.branchType !== this._type // The opposite branch type
         );
 
         return BranchDistance.branchDistanceNumeric(
@@ -85,7 +78,13 @@ export class BranchObjectiveFunction<T extends Encoding>
 
     // find the corresponding branch node inside the cfg
     const branchNode = this._subject.cfg.nodes.find((n: Node) => {
-      return n.locationIdx === this._locationIdx && n.line === this._line;
+      return n.branch && n.lines.includes(this._line);
+    });
+    const childEdge = this._subject.cfg.edges.find((edge) => {
+      return edge.from === branchNode.id && edge.branchType === this._type;
+    });
+    const childNode = this._subject.cfg.nodes.find((node) => {
+      return node.id === childEdge.to;
     });
 
     // find the closest covered branch to the objective branch
@@ -96,7 +95,7 @@ export class BranchObjectiveFunction<T extends Encoding>
         .getTraces()
         .filter(
           (trace) =>
-            trace.line === n.line &&
+            n.lines.includes(trace.line) &&
             (trace.type === "branch" ||
               trace.type === "probePre" ||
               trace.type === "probePost" ||
@@ -104,7 +103,7 @@ export class BranchObjectiveFunction<T extends Encoding>
             trace.hits > 0
         );
       for (const trace of traces) {
-        const pathDistance = this._subject.getPath(n.id, branchNode.id);
+        const pathDistance = this._subject.getPath(n.id, childNode.id);
         if (approachLevel > pathDistance) {
           approachLevel = pathDistance;
           closestHitNode = trace;

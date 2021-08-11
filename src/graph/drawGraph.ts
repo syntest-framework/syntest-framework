@@ -6,25 +6,44 @@ const { JSDOM } = require("jsdom");
  * @author Dimitri Stallenberg
  */
 export function drawGraph(cfg: any, path: string) {
+  const width = 2000;
+  const height = 2000;
+  const offset = 200;
+
+  let count = 0;
   const graph = {
     nodes: [
       ...cfg.nodes.map((n: any) => {
-        let name = `(${n.line})`;
+        let name = `(${n.lines[0]})`;
 
-        if (n.functionDefinition) {
-          name += ` ${n.functionDefinition}`;
+        if (n.description && n.description.length) {
+          name = `(${n.lines[0]}: ${n.description})`;
         }
 
-        if (n.condition) {
-          name += ` ${n.condition}`;
+        if (n.root) {
+          name += ` ${n.contractName} ${n.functionName}`;
         }
 
-        return {
+        if (n.branch) {
+          name += ` ${n.condition.operator}`;
+        }
+
+        const node = {
           id: n.id,
           name: name,
-          final: n.final,
+          fixed: n.root,
           root: n.root,
+          fx: undefined,
+          fy: undefined,
         };
+
+        if (node.root) {
+          node.fx = 50 + (count + 1) * offset;
+          node.fy = 20;
+          count += 1;
+        }
+
+        return node;
       }),
     ],
     links: [
@@ -33,7 +52,7 @@ export function drawGraph(cfg: any, path: string) {
           id: e.from + "-" + e.to,
           source: e.from,
           target: e.to,
-          type: e.type,
+          type: e.branchType,
         };
       }),
     ],
@@ -45,8 +64,8 @@ export function drawGraph(cfg: any, path: string) {
   const svg = body
     .append("svg")
     .attr("xmlns", "http://www.w3.org/2000/svg")
-    .attr("width", 500)
-    .attr("height", 500);
+    .attr("width", width)
+    .attr("height", height);
 
   svg
     .append("defs")
@@ -69,17 +88,21 @@ export function drawGraph(cfg: any, path: string) {
     .forceSimulation()
     .force(
       "charge",
-      d3.forceManyBody().strength(-400).distanceMin(50).distanceMax(400)
+      d3.forceManyBody().strength(-100).distanceMin(10).distanceMax(100)
     )
     .force(
       "link",
-      d3.forceLink().id(function (d: any) {
-        return d.id;
-      })
+      d3
+        .forceLink()
+        .id(function (d: any) {
+          return d.id;
+        })
+        .distance(30) //.strength(-2)
     )
-    .force("center", d3.forceCenter(250, 250))
-    .force("y", d3.forceY(0.001))
-    .force("x", d3.forceX(0.001));
+    // .force("center", d3.forceCenter(250, 250))
+    .force("y", d3.forceY(height).strength(0.01))
+    .force("x", d3.forceX(width).strength(0.01));
+  // .force('y',  d3.forceY(height / 2).strength(0.25))
 
   simulation.nodes(graph.nodes);
 
@@ -94,9 +117,9 @@ export function drawGraph(cfg: any, path: string) {
     .append("path")
     .attr("stroke-width", "1px")
     .attr("stroke", (d: any) => {
-      if (d.type === "true") {
+      if (d.type === true) {
         return "#7CFC00";
-      } else if (d.type === "false") {
+      } else if (d.type === false) {
         return "#ff0000";
       }
       return "#555";
