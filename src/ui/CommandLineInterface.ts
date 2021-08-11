@@ -66,6 +66,6 @@ export class CommandLineInterface extends UserInterface {
   }
 
   report(text: string, args: any[]): void {
-    this.info(`${text}: ${args.join(', ')}`)
+    this.info(`${text}: ${args.join(", ")}`);
   }
 }

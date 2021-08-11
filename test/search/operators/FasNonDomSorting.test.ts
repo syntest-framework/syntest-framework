@@ -1,11 +1,14 @@
 import * as chai from "chai";
 import {
-  BranchObjectiveFunction, CommandLineInterface,
+  BranchObjectiveFunction,
+  CommandLineInterface,
   guessCWD,
   loadConfig,
-  processConfig, Properties,
+  processConfig,
+  Properties,
   setupLogger,
-  setupOptions, setUserInterface,
+  setupOptions,
+  setUserInterface,
   TestCase,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
@@ -24,11 +27,12 @@ describe("Fast non-dominated sorting", function () {
     await processConfig({}, "");
     await setupLogger();
 
-    setUserInterface(new CommandLineInterface(
-        Properties.console_log_level === 'silent',
-        Properties.console_log_level === 'verbose'
-        )
-    )
+    setUserInterface(
+      new CommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose"
+      )
+    );
   });
 
   it("Sort three solutions", () => {
