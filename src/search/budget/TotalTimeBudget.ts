@@ -56,10 +56,7 @@ export class TotalTimeBudget<T extends Encoding> implements Budget<T> {
       );
     }
 
-    return Math.max(
-      this._maxSearchTime - this.getUsedBudget(),
-      this._maxSearchTime
-    );
+    return Math.max(this._maxSearchTime - this.getUsedBudget(), 0);
   }
 
   /**
