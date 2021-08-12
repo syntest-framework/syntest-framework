@@ -2,11 +2,14 @@ import * as chai from "chai";
 import { DominanceComparator } from "../../../src/search/comparators/DominanceComparator";
 import {
   BranchObjectiveFunction,
+  CommandLineInterface,
   guessCWD,
   loadConfig,
   processConfig,
+  Properties,
   setupLogger,
   setupOptions,
+  setUserInterface,
   TestCase,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
@@ -23,6 +26,13 @@ describe("Dominance comparator", function () {
     await loadConfig();
     await processConfig({}, "");
     await setupLogger();
+
+    setUserInterface(
+      new CommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose"
+      )
+    );
   });
 
   let objectives: Set<BranchObjectiveFunction<TestCase>>;

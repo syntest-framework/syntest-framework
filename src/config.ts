@@ -3,19 +3,15 @@ import { Properties, properties } from "./properties";
 const Yargs = require("yargs/yargs");
 const decamelize = require("decamelize");
 const path = require("path");
-const findUp = require("find-up");
 const shell = require("shelljs");
 
 let cwd: any = null;
-let yargs: any = null;
 let argv: any = null;
+
+export let yargs: any = null;
 
 export async function guessCWD(givenCwd: any) {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
-  // const pkgPath = await findUp("package.json", { cwd });
-  // if (pkgPath) {
-  //   cwd = path.dirname(pkgPath);
-  // }
 }
 
 export function setupOptions(program: string, additionalOptions: any) {
@@ -116,17 +112,11 @@ export function processConfig(config: any = {}, args: any = {}) {
     throw new Error("Please call loadConfig before calling processConfig");
   }
 
-  yargs
-    .config(config)
-    .help("h")
-    .alias("h", "help")
-    .version("v")
-    .alias("v", "version")
-    .version();
+  yargs.config(config);
 
   argv = yargs.wrap(yargs.terminalWidth()).parse(args);
 
-  for (let setting of Object.keys(argv)) {
+  for (const setting of Object.keys(argv)) {
     Properties[setting] = argv[setting];
   }
 }

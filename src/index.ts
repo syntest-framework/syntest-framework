@@ -1,4 +1,6 @@
 // Test case
+import exp = require("constants");
+
 export * from "./testcase/TestCase";
 
 // Runner
@@ -34,14 +36,20 @@ export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
 export * from "./search/budget/TotalTimeBudget";
 
+// Termination
+export * from "./search/termination/TerminationManager";
+export * from "./search/termination/SignalTerminationTrigger";
+
 // Statistics
-export * from "./statistics/StatisticsCollector";
-export * from "./statistics/SummaryWriter";
-export * from "./statistics/RuntimeVariable";
 export * from "./statistics/CoverageWriter";
+export * from "./statistics/RuntimeVariable";
+export * from "./statistics/StatisticsCollector";
+export * from "./statistics/StatisticsSearchListener";
+export * from "./statistics/SummaryWriter";
 
 // Factories
 export * from "./search/factories/AlgorithmFactory";
+export * from "./search/factories/TerminationFactory";
 
 // Objective
 export * from "./search/objective/ObjectiveFunction";
@@ -85,6 +93,11 @@ export * from "./graph/parsing/ConstructorDescription";
 export * from "./graph/parsing/FunctionDescription";
 export * from "./graph/parsing/Parameter";
 export * from "./graph/parsing/Visibility";
+
+// UI
+export * from "./ui/UserInterface";
+export * from "./ui/CommandLineInterface";
+export * from "./ui/MonitorCommandLineInterface";
 
 // Util
 export * from "./config";

@@ -24,6 +24,13 @@ export class Archive<T extends Encoding> {
   }
 
   /**
+   * The size of the archive.
+   */
+  get size(): number {
+    return this._map.size;
+  }
+
+  /**
    * Determines if the archive already contains this objective function.
    *
    * @param objectiveFunction The objective function to check for

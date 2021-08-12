@@ -1,11 +1,14 @@
 import * as chai from "chai";
 import {
+  CommandLineInterface,
   crowdingDistance,
   guessCWD,
   loadConfig,
   processConfig,
+  Properties,
   setupLogger,
   setupOptions,
+  setUserInterface,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import {
@@ -27,6 +30,13 @@ describe("Crowding distance", function () {
     await loadConfig();
     await processConfig({}, "");
     await setupLogger();
+
+    setUserInterface(
+      new CommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose"
+      )
+    );
   });
 
   it("empty front", () => {

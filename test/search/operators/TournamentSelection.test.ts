@@ -7,6 +7,9 @@ import {
   setupLogger,
   setupOptions,
   TestCase,
+  CommandLineInterface,
+  Properties,
+  setUserInterface,
 } from "../../../src";
 import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
 import { tournamentSelection } from "../../../src/search/operators/selection/TournamentSelection";
@@ -27,6 +30,13 @@ describe("Tournament selection", function () {
     await loadConfig();
     await processConfig({}, "");
     await setupLogger();
+
+    setUserInterface(
+      new CommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose"
+      )
+    );
   });
 
   it("Small Tournament size", () => {
