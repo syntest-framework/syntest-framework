@@ -1,7 +1,7 @@
 // Test case
 import exp = require("constants");
 
-export * from "./testcase/TestCase";
+export * from "./testcase/AbstractTestCase";
 
 // Runner
 export * from "./testcase/execution/TestCaseRunner";
@@ -12,14 +12,10 @@ export * from "./testcase/statements/Statement";
 export * from "./testcase/statements/PrimitiveStatement";
 
 // Action statement
-export * from "./testcase/statements/action/ConstructorCall";
-export * from "./testcase/statements/action/FunctionCall";
-export * from "./testcase/statements/action/ObjectFunctionCall";
+export * from "./testcase/statements/ActionStatement";
 
 // Primitive statement
-export * from "./testcase/statements/primitive/BoolStatement";
-export * from "./testcase/statements/primitive/NumericStatement";
-export * from "./testcase/statements/primitive/StringStatement";
+export * from "./testcase/statements/PrimitiveStatement";
 
 // Search
 export * from "./search/SearchSubject";
@@ -63,6 +59,7 @@ export * from "./criterion/ExceptionObjectiveFunction";
 export * from "./search/operators/ranking/CrowdingDistance";
 export * from "./search/operators/ranking/FastNonDomSorting";
 export * from "./search/operators/selection/TournamentSelection";
+export * from "./search/operators/crossover/AbstractTreeCrossover"
 
 // Metaheuristics
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";

@@ -2,8 +2,8 @@ import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { EncodingSampler } from "../../EncodingSampler";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
-import { TreeCrossover } from "../../operators/crossover/TreeCrossover";
-import { TestCase } from "../../../testcase/TestCase";
+import { AbstractTreeCrossover } from "../../operators/crossover/AbstractTreeCrossover";
+import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { Properties } from "../../../properties";
@@ -11,21 +11,21 @@ import { TerminationManager } from "../../termination/TerminationManager";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
- * Uses the TestCase encoding.
+ * Uses the AbstractTestCase encoding.
  */
-export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
+export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTestCase> {
   /**
    * The sampler used to sample new encodings.
    * @protected
    */
-  protected _encodingSampler: EncodingSampler<TestCase>;
+  protected _encodingSampler: EncodingSampler<AbstractTestCase>;
 
   /**
    * The population of the EA.
    * This population is evolved over time and becomes more optimized.
    * @protected
    */
-  protected _population: TestCase[];
+  protected _population: AbstractTestCase[];
 
   /**
    * The size of the population.
@@ -33,21 +33,26 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    */
   protected _populationSize: number;
 
+  protected _crossover: AbstractTreeCrossover;
+
   /**
    * Constructor.
    *
    * @param objectiveManager The objective manager used by the specific algorithm
    * @param encodingSampler The encoding sampler used by the specific algorithm
+   * @param crossover The crossover operator to apply
    * @protected
    */
   protected constructor(
-    objectiveManager: ObjectiveManager<TestCase>,
-    encodingSampler: EncodingSampler<TestCase>
+    objectiveManager: ObjectiveManager<AbstractTestCase>,
+    encodingSampler: EncodingSampler<AbstractTestCase>,
+    crossover: AbstractTreeCrossover
   ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
     this._population = [];
     this._populationSize = Properties.population_size;
+    this._crossover = crossover
   }
 
   /**
@@ -55,7 +60,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    * @protected
    */
   protected async _initialize(
-    budgetManager: BudgetManager<TestCase>,
+    budgetManager: BudgetManager<AbstractTestCase>,
     terminationManager: TerminationManager
   ): Promise<void> {
     for (let i = 0; i < Properties.population_size; i++) {
@@ -78,7 +83,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    * @protected
    */
   protected async _iterate(
-    budgetManager: BudgetManager<TestCase>,
+    budgetManager: BudgetManager<AbstractTestCase>,
     terminationManager: TerminationManager
   ): Promise<void> {
     const offspring = this._generateOffspring();
@@ -103,7 +108,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
    *
    * @protected
    */
-  protected _generateOffspring(): TestCase[] {
+  protected _generateOffspring(): AbstractTestCase[] {
     const offspring = [];
 
     const rounds = Math.max(2, Math.round(this._populationSize / 5));
@@ -113,7 +118,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<TestCase> {
       const parentB = tournamentSelection(this._population, rounds);
 
       if (prng.nextDouble(0, 1) <= Properties.crossover_probability) {
-        const [childA, childB] = TreeCrossover(parentA, parentB);
+        const [childA, childB] = this._crossover.crossOver(parentA, parentB);
 
         const testCase1 = childA.copy().mutate(this._encodingSampler);
         offspring.push(testCase1);

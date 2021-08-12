@@ -1,10 +1,11 @@
-import { TestCase } from "../../../testcase/TestCase";
+import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
 import { EncodingSampler } from "../../EncodingSampler";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
+import { AbstractTreeCrossover } from "../../operators/crossover/AbstractTreeCrossover";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -25,10 +26,11 @@ export class NSGAII extends EvolutionaryAlgorithm {
    * @param runner The runner
    */
   constructor(
-    encodingSampler: EncodingSampler<TestCase>,
-    runner: EncodingRunner<TestCase>
+    encodingSampler: EncodingSampler<AbstractTestCase>,
+    runner: EncodingRunner<AbstractTestCase>,
+    crossover: AbstractTreeCrossover
   ) {
-    super(new SimpleObjectiveManager<TestCase>(runner), encodingSampler);
+    super(new SimpleObjectiveManager<AbstractTestCase>(runner), encodingSampler, crossover);
   }
 
   /**
@@ -80,7 +82,7 @@ export class NSGAII extends EvolutionaryAlgorithm {
         this._objectiveManager.getCurrentObjectives()
       );
 
-      currentFront.sort(function (a: TestCase, b: TestCase) {
+      currentFront.sort(function (a: AbstractTestCase, b: AbstractTestCase) {
         // sort in descending order of crowding distance
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });

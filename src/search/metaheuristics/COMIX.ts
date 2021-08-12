@@ -1,11 +1,11 @@
 // import { GeneticAlgorithm } from "./GeneticAlgorithm";
-// import { TestCase } from "../..";
+// import { AbstractTestCase } from "../..";
 // import { MultiGA } from "./MultiGA";
 //
 // export class COMIX<T extends GeneticAlgorithm> extends MultiGA<T> {
 //   async multiGeneration(): Promise<void> {
 //     // pick champions
-//     const champions: TestCase[] = [];
+//     const champions: AbstractTestCase[] = [];
 //     for (const algorithm of this.subAlgorithms) {
 //       champions.push(algorithm.population[0]);
 //     }

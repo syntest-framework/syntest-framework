@@ -1,4 +1,4 @@
-import { TestCase } from "../TestCase";
+import { AbstractTestCase } from "../AbstractTestCase";
 import { Statement } from "../statements/Statement";
 
 /**
@@ -18,10 +18,10 @@ export interface TestCaseDecoder {
    * @return                     the decoded test case
    */
   decodeTestCase(
-    testCase: TestCase | TestCase[],
+    testCase: AbstractTestCase | AbstractTestCase[],
     targetName: string,
     addLogs?: boolean,
-    additionalAssertions?: Map<TestCase, { [p: string]: string }>
+    additionalAssertions?: Map<AbstractTestCase, { [p: string]: string }>
   ): string;
 
   /**

@@ -1,4 +1,4 @@
-import { BranchDistance, ObjectiveFunction, TestCase } from "../../../src";
+import { BranchDistance, ObjectiveFunction, AbstractTestCase } from "../../../src";
 import * as chai from "chai";
 
 const expect = chai.expect;

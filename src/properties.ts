@@ -293,6 +293,14 @@ export const properties = {
     default: "",
   },
 
+  // probability to sample from constant pool
+  constant_pool_probability: {
+    description:
+      "probability to sample from the constant pool instead creating random values",
+    type: "number",
+    default: 0.8,
+  },
+
   // misc output settings
   draw_cfg: {
     description:

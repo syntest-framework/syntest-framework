@@ -1,14 +1,14 @@
 import { MOSA } from "../../src/search/metaheuristics/evolutionary/mosa/MOSA";
-import { TestCase } from "../../src/testcase/TestCase";
+import { AbstractTestCase } from "../../src/testcase/AbstractTestCase";
 import { DummySearchSubject } from "./DummySubject.mock";
 
 export class MockedMOSA extends MOSA {
-  setPopulation(population: TestCase[], size: number) {
+  setPopulation(population: AbstractTestCase[], size: number) {
     this._populationSize = size;
     population.forEach((test) => this._population.push(test));
   }
 
-  getPopulation(): TestCase[] {
+  getPopulation(): AbstractTestCase[] {
     return this._population;
   }
 

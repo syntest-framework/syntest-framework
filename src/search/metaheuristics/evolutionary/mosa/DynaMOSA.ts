@@ -1,8 +1,9 @@
 import { MOSA } from "./MOSA";
 import { StructuralObjectiveManager } from "../../../objective/managers/StructuralObjectiveManager";
-import { TestCase } from "../../../../testcase/TestCase";
+import { AbstractTestCase } from "../../../../testcase/AbstractTestCase";
 import { EncodingSampler } from "../../../EncodingSampler";
 import { EncodingRunner } from "../../../EncodingRunner";
+import { AbstractTreeCrossover } from "../../../operators/crossover/AbstractTreeCrossover";
 
 /**
  * Dynamic Many-Objective Sorting Algorithm (DynaMOSA).
@@ -15,10 +16,11 @@ import { EncodingRunner } from "../../../EncodingRunner";
  */
 export class DynaMOSA extends MOSA {
   constructor(
-    encodingSampler: EncodingSampler<TestCase>,
-    runner: EncodingRunner<TestCase>
+    encodingSampler: EncodingSampler<AbstractTestCase>,
+    runner: EncodingRunner<AbstractTestCase>,
+    crossover: AbstractTreeCrossover
   ) {
-    super(encodingSampler, runner);
-    this._objectiveManager = new StructuralObjectiveManager<TestCase>(runner);
+    super(encodingSampler, runner, crossover);
+    this._objectiveManager = new StructuralObjectiveManager<AbstractTestCase>(runner);
   }
 }

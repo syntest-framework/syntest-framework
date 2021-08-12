@@ -9,9 +9,9 @@ import {
   setupLogger,
   setupOptions,
   setUserInterface,
-  TestCase,
+  AbstractTestCase,
 } from "../../../src";
-import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
+import { TestCaseMock } from "../../mocks/TestCase.mock";
 import { fastNonDomSorting } from "../../../src/search/operators/ranking/FastNonDomSorting";
 
 const expect = chai.expect;
@@ -36,29 +36,29 @@ describe("Fast non-dominated sorting", function () {
   });
 
   it("Sort three solutions", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(
+    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCase>(
+    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       false
     );
-    const objectives = new Set<BranchObjectiveFunction<TestCase>>();
+    const objectives = new Set<BranchObjectiveFunction<AbstractTestCase>>();
     objectives.add(objective1);
     objectives.add(objective2);
 
-    const ind1 = new DummyIndividual();
+    const ind1 = new TestCaseMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
 
-    const ind2 = new DummyIndividual();
+    const ind2 = new TestCaseMock();
     ind2.setDummyEvaluation([objective1, objective2], [3, 3]);
 
-    const ind3 = new DummyIndividual();
+    const ind3 = new TestCaseMock();
     ind3.setDummyEvaluation([objective1, objective2], [2, 0]);
 
     const F = fastNonDomSorting([ind1, ind2, ind3], objectives);
