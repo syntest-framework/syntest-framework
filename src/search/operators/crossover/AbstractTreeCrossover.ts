@@ -10,12 +10,8 @@ import { AbstractTestCase } from "../../..";
  * @author Annibale Panichella
  */
 export abstract class AbstractTreeCrossover {
-
   public abstract crossOver(
     parentA: AbstractTestCase,
     parentB: AbstractTestCase
   ): AbstractTestCase[];
-
 }
-
-

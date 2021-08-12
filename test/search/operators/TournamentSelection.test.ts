@@ -99,7 +99,10 @@ describe("Tournament selection", function () {
     ind4.setRank(1);
     ind4.setCrowdingDistance(4);
 
-    const winner: AbstractTestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
+    const winner: AbstractTestCase = tournamentSelection(
+      [ind2, ind1, ind3, ind4],
+      20
+    );
     expect(winner.getRank()).to.equal(0);
     expect(winner.getDistance(objective1)).to.equal(0);
     expect(winner.getDistance(objective2)).to.equal(1);
@@ -139,7 +142,10 @@ describe("Tournament selection", function () {
     ind4.setRank(0);
     ind4.setCrowdingDistance(4);
 
-    const winner: AbstractTestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
+    const winner: AbstractTestCase = tournamentSelection(
+      [ind2, ind1, ind3, ind4],
+      20
+    );
     expect(winner.getRank()).to.equal(0);
     expect(winner.getDistance(objective1)).to.equal(0);
     expect(winner.getDistance(objective2)).to.equal(1);

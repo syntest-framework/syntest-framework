@@ -30,7 +30,11 @@ export class NSGAII extends EvolutionaryAlgorithm {
     runner: EncodingRunner<AbstractTestCase>,
     crossover: AbstractTreeCrossover
   ) {
-    super(new SimpleObjectiveManager<AbstractTestCase>(runner), encodingSampler, crossover);
+    super(
+      new SimpleObjectiveManager<AbstractTestCase>(runner),
+      encodingSampler,
+      crossover
+    );
   }
 
   /**

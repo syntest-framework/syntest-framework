@@ -44,7 +44,12 @@ describe("Crowding distance", function () {
   });
 
   it("front with one solution", () => {
-    const objective = new BranchObjectiveFunction<AbstractTestCase>(null, "1", 1, true);
+    const objective = new BranchObjectiveFunction<AbstractTestCase>(
+      null,
+      "1",
+      1,
+      true
+    );
     const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
     objectives.add(objective);
 
@@ -54,7 +59,12 @@ describe("Crowding distance", function () {
   });
 
   it("front with two solutions", () => {
-    const objective = new BranchObjectiveFunction<AbstractTestCase>(null, "1", 1, true);
+    const objective = new BranchObjectiveFunction<AbstractTestCase>(
+      null,
+      "1",
+      1,
+      true
+    );
     const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
     objectives.add(objective);
 

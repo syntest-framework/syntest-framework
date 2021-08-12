@@ -3,7 +3,8 @@ import {
   NSGAII,
   TestCaseSampler,
   AbstractTestCase,
-  TestCaseRunner, AbstractTreeCrossover,
+  TestCaseRunner,
+  AbstractTreeCrossover,
 } from "../../";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";

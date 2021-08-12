@@ -18,6 +18,7 @@ export class Properties {
   public static delta_mutation_probability: number;
   public static sample_existing_value_probability: number;
   public static crossover_probability: number;
+  public static constant_pool_probability: number;
   public static sample_func_as_arg: number;
 
   public static algorithm: string;
@@ -298,7 +299,7 @@ export const properties = {
     description:
       "probability to sample from the constant pool instead creating random values",
     type: "number",
-    default: 0.8,
+    default: 0.5,
   },
 
   // misc output settings

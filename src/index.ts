@@ -59,7 +59,7 @@ export * from "./criterion/ExceptionObjectiveFunction";
 export * from "./search/operators/ranking/CrowdingDistance";
 export * from "./search/operators/ranking/FastNonDomSorting";
 export * from "./search/operators/selection/TournamentSelection";
-export * from "./search/operators/crossover/AbstractTreeCrossover"
+export * from "./search/operators/crossover/AbstractTreeCrossover";
 
 // Metaheuristics
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";

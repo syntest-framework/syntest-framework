@@ -52,7 +52,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
     this._encodingSampler = encodingSampler;
     this._population = [];
     this._populationSize = Properties.population_size;
-    this._crossover = crossover
+    this._crossover = crossover;
   }
 
   /**

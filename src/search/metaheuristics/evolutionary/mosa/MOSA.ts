@@ -25,7 +25,11 @@ export class MOSA extends EvolutionaryAlgorithm {
     runner: EncodingRunner<AbstractTestCase>,
     crossover: AbstractTreeCrossover
   ) {
-    super(new UncoveredObjectiveManager<AbstractTestCase>(runner), encodingSampler, crossover);
+    super(
+      new UncoveredObjectiveManager<AbstractTestCase>(runner),
+      encodingSampler,
+      crossover
+    );
   }
 
   protected _environmentalSelection(size: number): void {
@@ -91,7 +95,10 @@ export class MOSA extends EvolutionaryAlgorithm {
         this._objectiveManager.getCurrentObjectives()
       );
 
-      currentFront = currentFront.sort(function (a: AbstractTestCase, b: AbstractTestCase) {
+      currentFront = currentFront.sort(function (
+        a: AbstractTestCase,
+        b: AbstractTestCase
+      ) {
         // sort in descending order of crowding distance
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });

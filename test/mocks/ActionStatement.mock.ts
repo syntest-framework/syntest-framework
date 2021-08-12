@@ -1,7 +1,12 @@
-import { AbstractTestCase, AbstractTreeCrossover, ActionStatement, EncodingSampler, Statement } from "../../src";
+import {
+  AbstractTestCase,
+  AbstractTreeCrossover,
+  ActionStatement,
+  EncodingSampler,
+  Statement,
+} from "../../src";
 
 export class ActionStatementMock extends ActionStatement {
-
   constructor(type: string, uniqueId: string, args: Statement[]) {
     super(type, uniqueId, args);
   }
@@ -12,10 +17,15 @@ export class ActionStatementMock extends ActionStatement {
     return undefined;
   }
 
-  mutate(sampler: EncodingSampler<AbstractTestCase>, depth: number): ActionStatement;
+  mutate(
+    sampler: EncodingSampler<AbstractTestCase>,
+    depth: number
+  ): ActionStatement;
   mutate(sampler: EncodingSampler<AbstractTestCase>, depth: number): Statement;
-  mutate(sampler: EncodingSampler<AbstractTestCase>, depth: number): ActionStatement | Statement {
+  mutate(
+    sampler: EncodingSampler<AbstractTestCase>,
+    depth: number
+  ): ActionStatement | Statement {
     return undefined;
   }
-
 }

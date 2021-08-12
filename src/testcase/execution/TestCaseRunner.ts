@@ -16,7 +16,8 @@ export interface Datapoint {
   right: number[];
 }
 
-export abstract class TestCaseRunner implements EncodingRunner<AbstractTestCase> {
+export abstract class TestCaseRunner
+  implements EncodingRunner<AbstractTestCase> {
   protected _suiteBuilder: SuiteBuilder;
 
   protected constructor(suiteBuilder: SuiteBuilder) {

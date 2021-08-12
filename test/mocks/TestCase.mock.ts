@@ -8,11 +8,7 @@ export class TestCaseMock extends AbstractTestCase {
 
   constructor() {
     TestCaseMock.counter++;
-    const actionGene = new ActionStatementMock(
-      "dummy",
-      "dummy",
-      []
-    );
+    const actionGene = new ActionStatementMock("dummy", "dummy", []);
     super(actionGene);
   }
 

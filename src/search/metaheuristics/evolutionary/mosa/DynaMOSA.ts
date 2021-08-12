@@ -21,6 +21,8 @@ export class DynaMOSA extends MOSA {
     crossover: AbstractTreeCrossover
   ) {
     super(encodingSampler, runner, crossover);
-    this._objectiveManager = new StructuralObjectiveManager<AbstractTestCase>(runner);
+    this._objectiveManager = new StructuralObjectiveManager<AbstractTestCase>(
+      runner
+    );
   }
 }

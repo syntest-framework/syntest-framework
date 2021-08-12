@@ -72,9 +72,11 @@ describe("Test MOSA", function () {
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
 
-
-    const mosa = new MOSA(mockedRunner, mockedSampler,  new DummyCrossover());
-    const frontZero = mosa.preferenceCriterion([ind1 as AbstractTestCase, ind2, ind3], objectives);
+    const mosa = new MOSA(mockedRunner, mockedSampler, new DummyCrossover());
+    const frontZero = mosa.preferenceCriterion(
+      [ind1 as AbstractTestCase, ind2, ind3],
+      objectives
+    );
 
     expect(frontZero.length).to.equal(2);
     expect(frontZero).to.contain(ind2);
@@ -100,7 +102,7 @@ describe("Test MOSA", function () {
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
 
-    const mosa = new MOSA(mockedSampler, mockedRunner,  new DummyCrossover());
+    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.getNonDominatedFront(objectives, [
       ind1,
       ind2,
@@ -131,7 +133,7 @@ describe("Test MOSA", function () {
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
 
-    const mosa = new MOSA(mockedSampler, mockedRunner,  new DummyCrossover());
+    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.preferenceSortingAlgorithm(
       [ind1, ind2, ind3, ind4],
       objectives
@@ -167,7 +169,11 @@ describe("Test MOSA", function () {
     const mockedRunner = (<TestCaseRunner>{}) as any;
     const mockedSampler = (<TestCaseSampler>{}) as any;
 
-    const mosa = new MockedMOSA(mockedSampler, mockedRunner, new DummyCrossover());
+    const mosa = new MockedMOSA(
+      mockedSampler,
+      mockedRunner,
+      new DummyCrossover()
+    );
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
     mosa.updateObjectives(searchSubject);
     await mosa.environmentalSelection(4);
