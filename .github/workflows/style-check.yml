@@ -39,10 +39,6 @@ jobs:
 
       # Check format
       - name: Framework - Run Format Checker
-        run: pwd
-      - name: Framework - Run Format Checker
-        run: ls -al
-      - name: Framework - Run Format Checker
-        run: ls .prettierrc.json
+        run: npx prettier --find-config-path src/index.ts
       - name: Framework - Run Format Checker
         run: npm run format:check
