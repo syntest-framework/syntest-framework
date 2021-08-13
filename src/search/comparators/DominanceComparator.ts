@@ -1,4 +1,4 @@
-import { TestCase } from "../../testcase/TestCase";
+import { AbstractTestCase } from "../../testcase/AbstractTestCase";
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 
 export class DominanceComparator {
@@ -8,9 +8,9 @@ export class DominanceComparator {
    *  Selection of the Targets"
    */
   static compare(
-    individual1: TestCase,
-    individual2: TestCase,
-    objectives: Set<ObjectiveFunction<TestCase>>
+    individual1: AbstractTestCase,
+    individual2: AbstractTestCase,
+    objectives: Set<ObjectiveFunction<AbstractTestCase>>
   ): number {
     let dominatesX = false;
     let dominatesY = false;

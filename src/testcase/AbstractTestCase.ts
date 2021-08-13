@@ -1,4 +1,3 @@
-import { ConstructorCall } from "./statements/action/ConstructorCall";
 import { prng } from "../util/prng";
 import { TestCaseDecoder } from "./decoder/TestCaseDecoder";
 import { Encoding } from "../search/Encoding";
@@ -6,15 +5,15 @@ import { ExecutionResult } from "../search/ExecutionResult";
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 import { EncodingSampler } from "../search/EncodingSampler";
 import { getUserInterface } from "../ui/UserInterface";
+import { ActionStatement } from "./statements/ActionStatement";
 
 /**
- * TestCase class
+ * AbstractTestCase class
  *
- * @author Dimitri Stallenberg
- * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
  */
-export class TestCase implements Encoding {
-  protected _root: ConstructorCall;
+export abstract class AbstractTestCase implements Encoding {
+  protected _root: ActionStatement;
   protected _crowdingDistance: number;
   protected _rank: number;
   protected _id: string;
@@ -23,7 +22,7 @@ export class TestCase implements Encoding {
    * Mapping from objective to their distance values for this test case.
    * @protected
    */
-  protected _objectives: Map<ObjectiveFunction<TestCase>, number>;
+  protected _objectives: Map<ObjectiveFunction<AbstractTestCase>, number>;
 
   /**
    * The last execution result of this test case.
@@ -36,30 +35,18 @@ export class TestCase implements Encoding {
    *
    * @param root The root of the tree chromosome of the test case
    */
-  constructor(root: ConstructorCall) {
+  constructor(root: ActionStatement) {
     this._root = root;
     this._crowdingDistance = 0;
     this._rank = 0;
     this._id = prng.uniqueId(20);
-    this._objectives = new Map<ObjectiveFunction<TestCase>, number>();
+    this._objectives = new Map<ObjectiveFunction<AbstractTestCase>, number>();
     getUserInterface().debug(`Created test case: ${this._id}`);
   }
 
-  mutate(sampler: EncodingSampler<TestCase>) {
-    getUserInterface().debug(`Mutating test case: ${this._id}`);
-    return new TestCase(this._root.mutate(sampler, 0));
-  }
+  abstract mutate(sampler: EncodingSampler<AbstractTestCase>): AbstractTestCase;
 
-  hashCode(decoder: TestCaseDecoder): number {
-    const string = decoder.decodeTestCase(this, `${this.id}`);
-    let hash = 0;
-    for (let i = 0; i < string.length; i++) {
-      const character = string.charCodeAt(i);
-      hash = (hash << 5) - hash + character;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-  }
+  abstract hashCode(decoder: TestCaseDecoder): number;
 
   getCrowdingDistance(): number {
     return this._crowdingDistance;
@@ -80,18 +67,11 @@ export class TestCase implements Encoding {
   get id(): string {
     return this._id;
   }
-  get root(): ConstructorCall {
+  get root(): ActionStatement {
     return this._root;
   }
 
-  copy(): TestCase {
-    const copy = this.root.copy();
-    for (let index = 0; index < this.root.getChildren().length; index++) {
-      copy.setChild(index, this.root.getChildren()[index].copy());
-    }
-
-    return new TestCase(copy);
-  }
+  abstract copy(): AbstractTestCase;
 
   getExecutionResult(): ExecutionResult {
     return this._executionResult;
@@ -106,7 +86,7 @@ export class TestCase implements Encoding {
    *
    * @param objectiveFunction The objective.
    */
-  getDistance(objectiveFunction: ObjectiveFunction<TestCase>): number {
+  getDistance(objectiveFunction: ObjectiveFunction<AbstractTestCase>): number {
     if (this._objectives.has(objectiveFunction))
       return this._objectives.get(objectiveFunction);
     else {
@@ -126,7 +106,5 @@ export class TestCase implements Encoding {
     this._objectives.set(objectiveFunction, distance);
   }
 
-  getLength(): number {
-    return this.root.getMethodCalls().length;
-  }
+  abstract getLength(): number;
 }

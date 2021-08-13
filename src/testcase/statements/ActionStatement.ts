@@ -1,6 +1,6 @@
 import { Statement } from "./Statement";
 import { EncodingSampler } from "../../search/EncodingSampler";
-import { TestCase } from "../TestCase";
+import { AbstractTestCase } from "../AbstractTestCase";
 
 /**
  * @author Dimitri Stallenberg
@@ -21,7 +21,7 @@ export abstract class ActionStatement extends Statement {
   }
 
   abstract mutate(
-    sampler: EncodingSampler<TestCase>,
+    sampler: EncodingSampler<AbstractTestCase>,
     depth: number
   ): ActionStatement;
 

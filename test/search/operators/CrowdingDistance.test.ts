@@ -10,11 +10,11 @@ import {
   setupOptions,
   setUserInterface,
 } from "../../../src";
-import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
+import { TestCaseMock } from "../../mocks/TestCase.mock";
 import {
   BranchObjectiveFunction,
   ObjectiveFunction,
-  TestCase,
+  AbstractTestCase,
 } from "../../../src";
 
 const expect = chai.expect;
@@ -40,26 +40,36 @@ describe("Crowding distance", function () {
   });
 
   it("empty front", () => {
-    crowdingDistance([], new Set<ObjectiveFunction<TestCase>>());
+    crowdingDistance([], new Set<ObjectiveFunction<AbstractTestCase>>());
   });
 
   it("front with one solution", () => {
-    const objective = new BranchObjectiveFunction<TestCase>(null, "1", 1, true);
-    const objectives = new Set<ObjectiveFunction<TestCase>>();
+    const objective = new BranchObjectiveFunction<AbstractTestCase>(
+      null,
+      "1",
+      1,
+      true
+    );
+    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
     objectives.add(objective);
 
-    const ind = new DummyIndividual();
+    const ind = new TestCaseMock();
     crowdingDistance([ind], objectives);
     expect(ind.getCrowdingDistance()).to.equal(2.0);
   });
 
   it("front with two solutions", () => {
-    const objective = new BranchObjectiveFunction<TestCase>(null, "1", 1, true);
-    const objectives = new Set<ObjectiveFunction<TestCase>>();
+    const objective = new BranchObjectiveFunction<AbstractTestCase>(
+      null,
+      "1",
+      1,
+      true
+    );
+    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
     objectives.add(objective);
 
-    const ind1 = new DummyIndividual();
-    const ind2 = new DummyIndividual();
+    const ind1 = new TestCaseMock();
+    const ind2 = new TestCaseMock();
 
     crowdingDistance([ind1, ind2], objectives);
     expect(ind1.getCrowdingDistance()).to.equal(2.0);
@@ -67,29 +77,29 @@ describe("Crowding distance", function () {
   });
 
   it("Front with more than two solutions", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(
+    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCase>(
+    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       false
     );
-    const objectives = new Set<ObjectiveFunction<TestCase>>();
+    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
     objectives.add(objective1);
     objectives.add(objective2);
 
-    const ind1 = new DummyIndividual();
+    const ind1 = new TestCaseMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 2]);
 
-    const ind2 = new DummyIndividual();
+    const ind2 = new TestCaseMock();
     ind2.setDummyEvaluation([objective1, objective2], [2, 0]);
 
-    const ind3 = new DummyIndividual();
+    const ind3 = new TestCaseMock();
     ind3.setDummyEvaluation([objective1, objective2], [1, 1]);
 
     crowdingDistance([ind1, ind2, ind3], objectives);
@@ -99,22 +109,22 @@ describe("Crowding distance", function () {
   });
 
   it("Corner case with same obj values for all individual", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(
+    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       true
     );
-    const objectives = new Set<ObjectiveFunction<TestCase>>();
+    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
     objectives.add(objective1);
 
-    const ind1 = new DummyIndividual();
+    const ind1 = new TestCaseMock();
     ind1.setDummyEvaluation([objective1], [1]);
 
-    const ind2 = new DummyIndividual();
+    const ind2 = new TestCaseMock();
     ind2.setDummyEvaluation([objective1], [1]);
 
-    const ind3 = new DummyIndividual();
+    const ind3 = new TestCaseMock();
     ind3.setDummyEvaluation([objective1], [1]);
 
     crowdingDistance([ind1, ind2, ind3], objectives);
