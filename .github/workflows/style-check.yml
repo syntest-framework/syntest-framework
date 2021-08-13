@@ -39,4 +39,6 @@ jobs:
 
       # Check format
       - name: Framework - Run Format Checker
+        run: pwd
+      - name: Framework - Run Format Checker
         run: npm run format:check
