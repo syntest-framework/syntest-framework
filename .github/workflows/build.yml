@@ -33,8 +33,6 @@ jobs:
     steps:
       # Cloning
       - uses: actions/checkout@v2
-        with:
-          path: syntest-framework
 
       # Setup and Caching
       - name: Use Node.js ${{ matrix.node-version }}
@@ -43,19 +41,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
           architecture: ${{ matrix.architecture }}
           cache: npm
-          cache-dependency-path: syntest-framework/package-lock.json
 
       # Dependencies
       - name: Framework - Install Dependencies
         run: npm install
-        working-directory: syntest-framework
 
       # Building
       - name: Framework - Build
         run: npm run build
-        working-directory: syntest-framework
 
       # Testing
       - name: Framework - Run Tests
         run: npm test
-        working-directory: syntest-framework
