@@ -34,6 +34,7 @@ export class Properties {
   public static enhanced_cfg: boolean;
   public static probe_objective: boolean;
   public static modifier_extraction: boolean;
+  public static constant_pool: boolean;
   public static console_log_level: string;
   public static log_to_file: string[];
   public static user_interface: string;
@@ -225,6 +226,11 @@ export const properties = {
   },
   modifier_extraction: {
     description: "Enable modifier extraction",
+    type: "boolean",
+    default: false,
+  },
+  constant_pool: {
+    description: "Enable constant pool",
     type: "boolean",
     default: false,
   },
