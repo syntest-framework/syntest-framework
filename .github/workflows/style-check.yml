@@ -44,8 +44,3 @@ jobs:
       - name: Framework - Run Format Checker
         run: npm run format:check
         working-directory: syntest-framework
-
-      # Check linting
-      - name: Framework - Run Linting
-        run: npm run lint
-        working-directory: syntest-framework
