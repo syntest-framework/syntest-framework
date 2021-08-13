@@ -16,6 +16,7 @@ export class SummaryWriter<T extends Encoding> {
     RuntimeVariable.SEED,
     RuntimeVariable.ALGORITHM,
     RuntimeVariable.PROBE_ENABLED,
+    RuntimeVariable.CONSTANT_POOL_ENABLED,
     RuntimeVariable.COVERAGE,
     RuntimeVariable.COVERED_BRANCHES,
     RuntimeVariable.TOTAL_BRANCHES,
