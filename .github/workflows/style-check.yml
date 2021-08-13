@@ -13,8 +13,6 @@ jobs:
     steps:
       # Cloning
       - uses: actions/checkout@v2
-        with:
-          path: syntest-framework
 
       # Setup
       - name: Use Node.js
@@ -38,9 +36,7 @@ jobs:
       # Dependencies
       - name: Framework - Install Dependencies
         run: npm install
-        working-directory: syntest-framework
 
       # Check format
       - name: Framework - Run Format Checker
         run: npm run format:check
-        working-directory: syntest-framework
