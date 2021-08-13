@@ -41,4 +41,8 @@ jobs:
       - name: Framework - Run Format Checker
         run: pwd
       - name: Framework - Run Format Checker
+        run: ls -al
+      - name: Framework - Run Format Checker
+        run: ls .prettierrc.json
+      - name: Framework - Run Format Checker
         run: npm run format:check
