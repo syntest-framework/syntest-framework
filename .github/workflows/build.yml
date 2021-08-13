@@ -34,13 +34,25 @@ jobs:
       # Cloning
       - uses: actions/checkout@v2
 
-      # Setup and Caching
+      # Setup
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           architecture: ${{ matrix.architecture }}
-          cache: npm
+
+      # Caching
+      - name: Get NPM cache directory
+        id: npm-cache-dir
+        run: echo "::set-output name=dir::$(npm config get cache)"
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
 
       # Dependencies
       - name: Framework - Install Dependencies
