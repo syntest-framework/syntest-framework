@@ -1,27 +1,34 @@
-name: Node.js
+name: Build
 
 on:
   push:
     branches: [main]
     paths-ignore:
-      - '**.md'
+      - "docs/"
+      - "**.md"
   pull_request:
     branches: [main]
     paths-ignore:
-      - '**.md'
+      - "docs/"
+      - "**.md"
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      # Keep running other versions when a job fails
       fail-fast: false
+
       matrix:
         # Run the pipeline on all the currently supported OS versions
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
         # Run the pipeline on all the currently supported LTS versions and the upcoming version
-        node-version: [ 10, 12, 14, 16 ]
+        node-version: [10, 12, 14, 16]
+
+        # Run the pipeline on all the currently supported architectures
+        architecture: [x64]
 
     steps:
       # Cloning
@@ -34,7 +41,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          architecture: ${{ matrix.architecture }}
+          cache: npm
           cache-dependency-path: syntest-framework/package-lock.json
 
       # Dependencies
