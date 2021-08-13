@@ -1,7 +1,7 @@
 import { AbstractTestCase, SearchSubject } from "../../src";
-import { AbstractTreeCrossover } from "../../src";
+import { Crossover } from "../../src";
 
-export class DummyCrossover extends AbstractTreeCrossover {
+export class DummyCrossover extends Crossover {
   crossOver(
     parentA: AbstractTestCase,
     parentB: AbstractTestCase

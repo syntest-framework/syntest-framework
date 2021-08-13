@@ -5,7 +5,7 @@ import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
 import { EncodingSampler } from "../../EncodingSampler";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
-import { AbstractTreeCrossover } from "../../operators/crossover/AbstractTreeCrossover";
+import { Crossover } from "../../operators/crossover/Crossover";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -28,7 +28,7 @@ export class NSGAII extends EvolutionaryAlgorithm {
   constructor(
     encodingSampler: EncodingSampler<AbstractTestCase>,
     runner: EncodingRunner<AbstractTestCase>,
-    crossover: AbstractTreeCrossover
+    crossover: Crossover
   ) {
     super(
       new SimpleObjectiveManager<AbstractTestCase>(runner),

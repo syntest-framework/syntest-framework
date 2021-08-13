@@ -4,7 +4,7 @@ import {
   TestCaseSampler,
   AbstractTestCase,
   TestCaseRunner,
-  AbstractTreeCrossover,
+  Crossover,
 } from "../../";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";
@@ -21,7 +21,7 @@ import { Properties } from "../../properties";
 export function createAlgorithmFromConfig(
   sampler: TestCaseSampler,
   runner: TestCaseRunner,
-  crossover: AbstractTreeCrossover
+  crossover: Crossover
 ): SearchAlgorithm<AbstractTestCase> {
   const algorithm = Properties.algorithm;
 

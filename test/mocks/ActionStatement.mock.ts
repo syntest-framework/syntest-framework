@@ -1,6 +1,6 @@
 import {
   AbstractTestCase,
-  AbstractTreeCrossover,
+  Crossover,
   ActionStatement,
   EncodingSampler,
   Statement,

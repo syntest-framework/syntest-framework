@@ -7,7 +7,7 @@ import { ObjectiveFunction } from "../../../objective/ObjectiveFunction";
 import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
 import { DominanceComparator } from "../../../comparators/DominanceComparator";
 import { getUserInterface } from "../../../../ui/UserInterface";
-import { AbstractTreeCrossover } from "../../../operators/crossover/AbstractTreeCrossover";
+import { Crossover } from "../../../operators/crossover/Crossover";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -23,7 +23,7 @@ export class MOSA extends EvolutionaryAlgorithm {
   constructor(
     encodingSampler: EncodingSampler<AbstractTestCase>,
     runner: EncodingRunner<AbstractTestCase>,
-    crossover: AbstractTreeCrossover
+    crossover: Crossover
   ) {
     super(
       new UncoveredObjectiveManager<AbstractTestCase>(runner),

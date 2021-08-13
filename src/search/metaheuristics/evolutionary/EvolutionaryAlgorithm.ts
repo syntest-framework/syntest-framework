@@ -2,7 +2,7 @@ import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { EncodingSampler } from "../../EncodingSampler";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
-import { AbstractTreeCrossover } from "../../operators/crossover/AbstractTreeCrossover";
+import { Crossover } from "../../operators/crossover/Crossover";
 import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
@@ -33,7 +33,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
    */
   protected _populationSize: number;
 
-  protected _crossover: AbstractTreeCrossover;
+  protected _crossover: Crossover;
 
   /**
    * Constructor.
@@ -46,7 +46,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
   protected constructor(
     objectiveManager: ObjectiveManager<AbstractTestCase>,
     encodingSampler: EncodingSampler<AbstractTestCase>,
-    crossover: AbstractTreeCrossover
+    crossover: Crossover
   ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
