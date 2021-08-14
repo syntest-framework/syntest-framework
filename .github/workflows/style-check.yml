@@ -45,3 +45,7 @@ jobs:
       # Check format
       - name: Framework - Run Format Checker
         run: npm run format:check
+
+      # Check linting
+      - name: Framework - Run Linter
+        run: npm run lint
