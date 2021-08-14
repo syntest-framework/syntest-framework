@@ -8,7 +8,7 @@ on:
 
 jobs:
   style:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       # Cloning
@@ -39,6 +39,6 @@ jobs:
 
       # Check format
       - name: Framework - Run Format Checker
-        run: npx prettier --find-config-path src/index.ts
+        run: npm run format:check --write
       - name: Framework - Run Format Checker
-        run: npm run format:check
+        run: git diff
