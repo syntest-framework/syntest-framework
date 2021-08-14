@@ -39,6 +39,6 @@ jobs:
 
       # Check format
       - name: Framework - Run Format Checker
-        run: npm run format:check --write
+        run: npm run format
       - name: Framework - Run Format Checker
         run: git diff
