@@ -1,4 +1,4 @@
-import { TestCase } from "../../../testcase/TestCase";
+import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 
 /**
@@ -12,18 +12,18 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  * @author Dimitri Stallenberg
  */
 export function fastNonDomSorting(
-  population: TestCase[],
-  objectiveFunctions: Set<ObjectiveFunction<TestCase>>
+  population: AbstractTestCase[],
+  objectiveFunctions: Set<ObjectiveFunction<AbstractTestCase>>
 ) {
-  const S: { [id: string]: TestCase[] } = {};
-  const F: TestCase[][] = [[]];
+  const S: { [id: string]: AbstractTestCase[] } = {};
+  const F: AbstractTestCase[][] = [[]];
   const n: { [id: string]: number } = {};
   const indices: { [id: string]: number } = {};
 
   for (let index = 0; index < population.length; index++) {
     const p = population[index];
     indices[p.id] = index;
-    const Sp: TestCase[] = [];
+    const Sp: AbstractTestCase[] = [];
     S[index] = Sp;
     n[index] = 0;
     for (const q of population) {

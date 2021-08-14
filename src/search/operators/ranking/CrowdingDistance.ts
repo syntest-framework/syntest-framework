@@ -1,4 +1,4 @@
-import { TestCase } from "../../../testcase/TestCase";
+import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 
 /**
@@ -13,8 +13,8 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  * @author Annibale Panichella
  */
 export function crowdingDistance(
-  front: TestCase[],
-  objectiveFunctions: Set<ObjectiveFunction<TestCase>>
+  front: AbstractTestCase[],
+  objectiveFunctions: Set<ObjectiveFunction<AbstractTestCase>>
 ) {
   const size = front.length;
 

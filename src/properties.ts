@@ -18,6 +18,7 @@ export class Properties {
   public static delta_mutation_probability: number;
   public static sample_existing_value_probability: number;
   public static crossover_probability: number;
+  public static constant_pool_probability: number;
   public static sample_func_as_arg: number;
 
   public static algorithm: string;
@@ -33,6 +34,7 @@ export class Properties {
   public static enhanced_cfg: boolean;
   public static probe_objective: boolean;
   public static modifier_extraction: boolean;
+  public static constant_pool: boolean;
   public static console_log_level: string;
   public static log_to_file: string[];
   public static user_interface: string;
@@ -227,6 +229,11 @@ export const properties = {
     type: "boolean",
     default: false,
   },
+  constant_pool: {
+    description: "Enable constant pool",
+    type: "boolean",
+    default: false,
+  },
 
   // logging
   console_log_level: {
@@ -291,6 +298,14 @@ export const properties = {
     description: "The name of the configuration.",
     type: "string",
     default: "",
+  },
+
+  // probability to sample from constant pool
+  constant_pool_probability: {
+    description:
+      "probability to sample from the constant pool instead creating random values",
+    type: "number",
+    default: 0.5,
   },
 
   // misc output settings

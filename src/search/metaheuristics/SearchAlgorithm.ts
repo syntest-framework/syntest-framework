@@ -81,26 +81,30 @@ export abstract class SearchAlgorithm<T extends Encoding> {
 
     // Start initialization budget tracking
     budgetManager.initializationStarted();
+    getUserInterface().startProgressBar();
 
     // Inform listeners that the search started
     this._listeners.forEach((listener) => {
       listener.searchStarted(this, budgetManager, terminationManager);
     });
-    getUserInterface().startProgressBar();
-
-    // Initialize search process
-    await this._initialize(budgetManager, terminationManager);
-
-    getUserInterface().startProgressBar();
     getUserInterface().updateProgressBar(
       this.progress,
       budgetManager.getBudget()
     );
+
+    // Initialize search process
+    await this._initialize(budgetManager, terminationManager);
+
     // Stop initialization budget tracking, inform the listeners, and start search budget tracking
     budgetManager.initializationStopped();
     this._listeners.forEach((listener) =>
       listener.initializationDone(this, budgetManager, terminationManager)
     );
+    getUserInterface().updateProgressBar(
+      this.progress,
+      budgetManager.getBudget()
+    );
+    budgetManager.searchStarted();
 
     // Start search until the budget has expired, a termination trigger has been triggered, or there are no more objectives
     while (
@@ -124,12 +128,12 @@ export abstract class SearchAlgorithm<T extends Encoding> {
 
     // Stop search budget tracking
     budgetManager.searchStopped();
+    getUserInterface().stopProgressBar();
 
     // Inform listeners that the search stopped
     this._listeners.forEach((listener) => {
       listener.searchStarted(this, budgetManager, terminationManager);
     });
-    getUserInterface().stopProgressBar();
 
     // Return the archive of covered objectives
     return this._objectiveManager.getArchive();

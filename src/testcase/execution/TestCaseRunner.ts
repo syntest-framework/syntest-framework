@@ -1,4 +1,4 @@
-import { TestCase } from "../TestCase";
+import { AbstractTestCase } from "../AbstractTestCase";
 import { SuiteBuilder } from "../decoder/SuiteBuilder";
 import { EncodingRunner } from "../../search/EncodingRunner";
 import { ExecutionResult } from "../../search/ExecutionResult";
@@ -16,7 +16,8 @@ export interface Datapoint {
   right: number[];
 }
 
-export abstract class TestCaseRunner implements EncodingRunner<TestCase> {
+export abstract class TestCaseRunner
+  implements EncodingRunner<AbstractTestCase> {
   protected _suiteBuilder: SuiteBuilder;
 
   protected constructor(suiteBuilder: SuiteBuilder) {
@@ -28,7 +29,7 @@ export abstract class TestCaseRunner implements EncodingRunner<TestCase> {
   }
 
   public abstract execute(
-    subject: SearchSubject<TestCase>,
-    encoding: TestCase
+    subject: SearchSubject<AbstractTestCase>,
+    encoding: AbstractTestCase
   ): Promise<ExecutionResult>;
 }

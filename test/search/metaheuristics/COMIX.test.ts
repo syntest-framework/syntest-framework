@@ -12,7 +12,7 @@ import {
   setupOptions,
 } from "../../../src";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
+import { TestCaseMock } from "../../mocks/TestCase.mock";
 
 const expect = chai.expect;
 //

@@ -4,7 +4,7 @@
 //   getLogger,
 //   Objective,
 //   TestCaseSampler,
-//   TestCase,
+//   AbstractTestCase,
 // } from "../..";
 // import { Target } from "../objective/Target";
 //
@@ -111,11 +111,11 @@
 //    * List of test cases that will for the final test suite
 //    * @protected
 //    */
-//   public getFinalTestSuite(): Map<Objective, TestCase> {
-//     const champions: Map<Objective, TestCase> = new Map<Objective, TestCase>();
+//   public getFinalTestSuite(): Map<Objective, AbstractTestCase> {
+//     const champions: Map<Objective, AbstractTestCase> = new Map<Objective, AbstractTestCase>();
 //     for (const algorithm of this._subAlgorithms) {
 //       for (const key of algorithm.getFinalTestSuite().keys()) {
-//         champions.set(key, <TestCase>algorithm.getFinalTestSuite().get(key));
+//         champions.set(key, <AbstractTestCase>algorithm.getFinalTestSuite().get(key));
 //       }
 //     }
 //     return champions;
@@ -127,7 +127,7 @@
 //    * @param population the current population
 //    * @returns {[]} the population of the next generation
 //    */
-//   async generation(population: TestCase[]): Promise<TestCase[]> {
+//   async generation(population: AbstractTestCase[]): Promise<AbstractTestCase[]> {
 //     throw new Error(
 //       "MultiGA's cannot use the generation function, use multiGeneration instead"
 //     );

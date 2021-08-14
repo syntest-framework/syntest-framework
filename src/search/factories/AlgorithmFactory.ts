@@ -2,8 +2,9 @@ import {
   MOSA,
   NSGAII,
   TestCaseSampler,
-  TestCase,
+  AbstractTestCase,
   TestCaseRunner,
+  Crossover,
 } from "../../";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";
@@ -19,18 +20,19 @@ import { Properties } from "../../properties";
  */
 export function createAlgorithmFromConfig(
   sampler: TestCaseSampler,
-  runner: TestCaseRunner
-): SearchAlgorithm<TestCase> {
+  runner: TestCaseRunner,
+  crossover: Crossover
+): SearchAlgorithm<AbstractTestCase> {
   const algorithm = Properties.algorithm;
 
   switch (algorithm) {
     case "Random":
       return new RandomSearch(sampler, runner);
     case "NSGAII":
-      return new NSGAII(sampler, runner);
+      return new NSGAII(sampler, runner, crossover);
     case "MOSA":
-      return new MOSA(sampler, runner);
+      return new MOSA(sampler, runner, crossover);
     case "DynaMOSA":
-      return new DynaMOSA(sampler, runner);
+      return new DynaMOSA(sampler, runner, crossover);
   }
 }

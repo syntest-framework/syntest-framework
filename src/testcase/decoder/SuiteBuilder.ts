@@ -1,5 +1,5 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
-import { TestCase } from "../TestCase";
+import { AbstractTestCase } from "../AbstractTestCase";
 import { Archive } from "../../search/Archive";
 import { getUserInterface } from "../../ui/UserInterface";
 
@@ -34,10 +34,10 @@ export abstract class SuiteBuilder {
    */
   abstract writeTestCase(
     filePath: string,
-    testCase: TestCase,
+    testCase: AbstractTestCase,
     targetName: string,
     addLogs?: boolean,
-    additionalAssertions?: Map<TestCase, { [p: string]: string }>
+    additionalAssertions?: Map<AbstractTestCase, { [p: string]: string }>
   ): Promise<void>;
 
   /**
@@ -45,7 +45,7 @@ export abstract class SuiteBuilder {
    *
    * @param population    the population of individuals to write tests for
    */
-  abstract createSuite(archive: Archive<TestCase>): Promise<void>;
+  abstract createSuite(archive: Archive<AbstractTestCase>): Promise<void>;
 
   /**
    * Deletes a certain file.
