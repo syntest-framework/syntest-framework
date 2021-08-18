@@ -49,6 +49,7 @@ export class Properties {
   public static configuration: string;
 
   public static draw_cfg: boolean;
+  public static minimize: boolean;
 
   public static getDescription(property: string): string {
     return properties[property].description;
@@ -231,6 +232,13 @@ export const properties = {
   },
   constant_pool: {
     description: "Enable constant pool",
+    type: "boolean",
+    default: false,
+  },
+
+  // minimize test cases
+  minimize: {
+    description: "Minimize test cases at the end of the search",
     type: "boolean",
     default: false,
   },
