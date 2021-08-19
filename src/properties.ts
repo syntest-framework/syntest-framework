@@ -49,7 +49,7 @@ export class Properties {
   public static configuration: string;
 
   public static draw_cfg: boolean;
-  public static minimize: boolean;
+  public static test_minimization: boolean;
 
   public static getDescription(property: string): string {
     return properties[property].description;
@@ -237,7 +237,7 @@ export const properties = {
   },
 
   // minimize test cases
-  minimize: {
+  test_minimization: {
     description: "Minimize test cases at the end of the search",
     type: "boolean",
     default: false,
