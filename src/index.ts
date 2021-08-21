@@ -86,7 +86,6 @@ export * from "./graph/nodes/RootNode";
 export * from "./graph/nodes/PlaceholderNode";
 
 export * from "./graph/parsing/ActionDescription";
-export * from "./graph/parsing/ConstructorDescription";
 export * from "./graph/parsing/FunctionDescription";
 export * from "./graph/parsing/Parameter";
 export * from "./graph/parsing/Visibility";
@@ -104,5 +103,3 @@ export * from "./util/prng";
 export * from "./util/fileSystem";
 
 export * from "./properties";
-
-

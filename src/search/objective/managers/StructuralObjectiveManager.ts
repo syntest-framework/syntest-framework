@@ -3,6 +3,7 @@ import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { EncodingRunner } from "../../EncodingRunner";
+import {NodeType} from "../../../graph/nodes/Node";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.
@@ -74,7 +75,7 @@ export class StructuralObjectiveManager<
 
     // Set the current objectives
     const rootObjectiveNodes = this._subject.cfg.nodes.filter(
-      (node) => node.type === 'root'
+      (node) => node.type === NodeType.root
     );
     const rootObjectiveIds = rootObjectiveNodes.map(
       (objective) => objective.id

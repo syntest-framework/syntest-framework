@@ -1,12 +1,24 @@
-import {Node} from "./Node";
+import {Node, NodeType} from "./Node";
 
+/**
+ * Interface for a BranchNode.
+ *
+ * @author Dimitri Stallenberg
+ */
 export interface BranchNode extends Node {
-    type: 'branch';
+  type: NodeType.branch;
 
-    condition: Operation;
+  condition: Operation;
+
+  probe: boolean;
 }
 
+/**
+ * Interface for an Operation.
+ *
+ * @author Dimitri Stallenberg
+ */
 export interface Operation {
-    type: string;
-    operator: string;
+  type: string;
+  operator: string;
 }

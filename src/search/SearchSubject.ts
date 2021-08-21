@@ -2,8 +2,9 @@ import { CFG } from "../graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { Edge } from "../graph/Edge";
-import {ActionDescription} from "../graph/parsing/ActionDescription";
+import { ActionDescription } from "../graph/parsing/ActionDescription";
 import { getUserInterface } from "../ui/UserInterface";
+import {Parameter} from "../graph/parsing/Parameter";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 
@@ -51,7 +52,11 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param functionMap Function map of the subject
    * @protected
    */
-  protected constructor(name: string, cfg: CFG, functionMap: ActionDescription[]) {
+  protected constructor(
+    name: string,
+    cfg: CFG,
+    functionMap: ActionDescription[]
+  ) {
     this._name = name;
     this._cfg = cfg;
     this._functionMap = functionMap;
@@ -125,11 +130,11 @@ export abstract class SearchSubject<T extends Encoding> {
    * Return possible actions on this subject.
    *
    * @param type
-   * @param returnType
+   * @param returnTypes
    */
   public abstract getPossibleActions(
     type?: string,
-    returnType?: string
+    returnTypes?: Parameter[]
   ): ActionDescription[];
 
   public getPath(from: string, to: string) {
@@ -148,10 +153,3 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._functionMap;
   }
 }
-
-
-
-
-
-
-

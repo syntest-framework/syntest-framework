@@ -1,33 +1,35 @@
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { AbstractTestCase } from "../AbstractTestCase";
+import {Parameter} from "../../graph/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg
  */
 export abstract class Statement {
-  public get varName(): string {
-    return this._varName;
+  public get varNames(): string[] {
+    return this._varNames;
   }
   public get id(): string {
     return this._uniqueId;
   }
-  public get type(): string {
-    return this._type;
+  public get types(): Parameter[] {
+    return this._types;
   }
 
-  private _varName: string;
-  private _type: string;
+  private _varNames: string[];
+  private _types: Parameter[];
   private _uniqueId: string;
 
   /**
    * Constructor
-   * @param type
+   * @param types
    * @param uniqueId
    */
-  protected constructor(type: string, uniqueId: string) {
-    this._type = type;
+  protected constructor(types: Parameter[], uniqueId: string) {
+    this._types = types;
     this._uniqueId = uniqueId;
-    this._varName = type.replace("[]", "array") + uniqueId;
+    // TODO make the varnames capitalized
+    this._varNames = types.map((x) => x.name + x.type.replace("[]", "array") + uniqueId);
   }
 
   /**

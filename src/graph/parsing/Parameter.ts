@@ -1,4 +1,11 @@
 export interface Parameter {
-    name: string
-    type: string
+  /**
+   * Name of the parameter.
+   */
+  name: string;
+
+  /**
+   * Type of the parameter.
+   */
+  type: string;
 }

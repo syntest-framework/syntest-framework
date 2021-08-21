@@ -2,6 +2,7 @@ import { Statement } from "../statements/Statement";
 import { AbstractTestCase } from "../AbstractTestCase";
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { SearchSubject } from "../../search/SearchSubject";
+import {Parameter} from "../../graph/parsing/Parameter";
 
 /**
  * TestCaseSampler class
@@ -25,13 +26,13 @@ export abstract class TestCaseSampler
    * Should sample any statement based on the type.
    *
    * @param depth     the current depth of the statement tree
-   * @param type      the return type of the statement to sample
+   * @param types      the return types of the statement to sample
    * @param geneType  the type of the statement
    * @return          a sampled statement
    */
   abstract sampleStatement(
     depth: number,
-    type: string,
+    types: Parameter[],
     geneType: string
   ): Statement;
 

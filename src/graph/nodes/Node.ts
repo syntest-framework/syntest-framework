@@ -1,5 +1,10 @@
+/**
+ * Interface for a Node.
+ *
+ * @author Dimitri Stallenberg
+ */
 export interface Node {
-  type: string;
+  type: NodeType;
 
   id: string;
 
@@ -7,13 +12,13 @@ export interface Node {
   statements: string[];
 
   description?: string;
-
-  probe: boolean;
 }
 
 
-
-
-
-
-
+export enum NodeType {
+  intermediary,
+  branch,
+  placeholder,
+  root,
+  normal,
+}

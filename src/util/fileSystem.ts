@@ -43,24 +43,23 @@ export async function loadTargetFiles(): Promise<{
   }
 
   includes = includes.map((include) => {
-    if (include.includes('->')) {
-      return include.split('->')[0]
+    if (include.includes("->")) {
+      return include.split("->")[0];
     }
 
-    return include
-  })
+    return include;
+  });
 
   // only exclude files if all contracts are excluded
-  excludes = excludes
-      .filter((exclude) => {
-        return !exclude.includes('->')
-      })
+  excludes = excludes.filter((exclude) => {
+    return !exclude.includes("->");
+  });
 
   const includePaths = globby.sync(includes);
   const excludePaths = globby.sync(excludes);
 
   let includedTargets: TargetFile[] = [];
-  let excludedTargets: TargetFile[] = [];
+  const excludedTargets: TargetFile[] = [];
 
   const promises = [];
 
@@ -71,7 +70,7 @@ export async function loadTargetFiles(): Promise<{
           canonicalPath: path.resolve(_path),
           relativePath: path.basename(_path),
           source: await readFileSync(_path).toString(),
-          contracts: []
+          contracts: [],
         });
         resolve(null);
       })
@@ -85,7 +84,7 @@ export async function loadTargetFiles(): Promise<{
           canonicalPath: path.resolve(_path),
           relativePath: path.basename(_path),
           source: await readFileSync(_path).toString(),
-          contracts: []
+          contracts: [],
         });
         resolve(null);
       })

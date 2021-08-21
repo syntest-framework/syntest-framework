@@ -1,16 +1,21 @@
-import {Node} from "./Node";
-import {Parameter} from "../parsing/Parameter";
-import {Visibility} from "../parsing/Visibility";
+import {Node, NodeType} from "./Node";
+import { Parameter } from "../parsing/Parameter";
+import { Visibility } from "../parsing/Visibility";
 
+/**
+ * Interface for a RootNode
+ *
+ * @author Dimitri Stallenberg
+ */
 export interface RootNode extends Node {
-    type: 'root';
+  type: NodeType.root;
 
-    // if it is a root node
-    contractName: string;
-    functionName: string;
-    isConstructor: boolean;
+  // if it is a root node
+  contractName: string;
+  functionName: string;
+  isConstructor: boolean;
 
-    parameters: Parameter[]
-    returnParameters: Parameter[]
-    visibility: Visibility
+  parameters: Parameter[];
+  returnParameters: Parameter[];
+  visibility: Visibility;
 }
