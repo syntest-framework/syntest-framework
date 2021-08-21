@@ -52,6 +52,10 @@ export class Archive<T extends Encoding> {
   /**
    * Merges the given archive into this archive.
    *
+   * When there is overlap in the archives the current one will be overriden.
+   * WARNING: this function does thus not use the secondary objectives to select the optimal solution.
+   * TODO use the secondary objectives in this function
+   *
    * @param other the other archive
    */
   merge(other: Archive<T>): void {
