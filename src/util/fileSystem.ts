@@ -70,7 +70,7 @@ export async function loadTargetFiles(): Promise<{
           canonicalPath: path.resolve(_path),
           relativePath: path.basename(_path),
           source: await readFileSync(_path).toString(),
-          contracts: [],
+          targets: [],
         });
         resolve(null);
       })
@@ -84,7 +84,7 @@ export async function loadTargetFiles(): Promise<{
           canonicalPath: path.resolve(_path),
           relativePath: path.basename(_path),
           source: await readFileSync(_path).toString(),
-          contracts: [],
+          targets: [],
         });
         resolve(null);
       })
@@ -104,5 +104,5 @@ export interface TargetFile {
   canonicalPath: string;
   relativePath: string;
   source: string;
-  contracts: string[];
+  targets: string[];
 }
