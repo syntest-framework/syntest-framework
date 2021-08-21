@@ -14,7 +14,6 @@ export interface Node {
   description?: string;
 }
 
-
 export enum NodeType {
   intermediary,
   branch,

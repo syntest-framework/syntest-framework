@@ -4,7 +4,7 @@ import { Encoding } from "./Encoding";
 import { Edge } from "../graph/Edge";
 import { ActionDescription } from "../graph/parsing/ActionDescription";
 import { getUserInterface } from "../ui/UserInterface";
-import {Parameter} from "../graph/parsing/Parameter";
+import { Parameter } from "../graph/parsing/Parameter";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 

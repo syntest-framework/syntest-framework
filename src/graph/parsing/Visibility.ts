@@ -1,11 +1,11 @@
 export interface Visibility {
-  name: string
+  name: string;
 }
 
 export const PublicVisibility: Visibility = {
-  name: 'public'
-}
+  name: "public",
+};
 
 export const PrivateVisibility: Visibility = {
-  name: 'private'
-}
+  name: "private",
+};

@@ -3,7 +3,7 @@ import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { EncodingRunner } from "../../EncodingRunner";
-import {NodeType} from "../../../graph/nodes/Node";
+import { NodeType } from "../../../graph/nodes/Node";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.

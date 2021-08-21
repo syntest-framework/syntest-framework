@@ -1,4 +1,4 @@
-import {Node, NodeType} from "./Node";
+import { Node, NodeType } from "./Node";
 import { Parameter } from "../parsing/Parameter";
 import { Visibility } from "../parsing/Visibility";
 

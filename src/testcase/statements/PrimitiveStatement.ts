@@ -1,6 +1,6 @@
 import { Statement } from "./Statement";
 import { TestCaseSampler } from "../sampling/TestCaseSampler";
-import {Parameter} from "../../graph/parsing/Parameter";
+import { Parameter } from "../../graph/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg

@@ -313,7 +313,7 @@ export const properties = {
     description:
       "Whether to draw the Control Flow Graph of the code under test.",
     type: "boolean",
-    default: true,
+    default: false,
   },
 
   sample_func_as_arg: {

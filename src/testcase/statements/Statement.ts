@@ -1,6 +1,6 @@
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { AbstractTestCase } from "../AbstractTestCase";
-import {Parameter} from "../../graph/parsing/Parameter";
+import { Parameter } from "../../graph/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg
@@ -29,7 +29,9 @@ export abstract class Statement {
     this._types = types;
     this._uniqueId = uniqueId;
     // TODO make the varnames capitalized
-    this._varNames = types.map((x) => x.name + x.type.replace("[]", "array") + uniqueId);
+    this._varNames = types.map(
+      (x) => x.name + x.type.replace("[]", "array") + uniqueId
+    );
   }
 
   /**

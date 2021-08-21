@@ -1,4 +1,4 @@
-import {Node, NodeType} from "./Node";
+import { Node, NodeType } from "./Node";
 
 /**
  * Interface for a BranchNode.
