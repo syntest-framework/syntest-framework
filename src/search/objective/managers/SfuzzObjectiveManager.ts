@@ -15,7 +15,7 @@ import { EncodingRunner } from "../../EncodingRunner";
  */
 export class SfuzzObjectiveManager<
   T extends Encoding
-  > extends StructuralObjectiveManager<T> {
+> extends StructuralObjectiveManager<T> {
   /**
    * Constructor.
    *

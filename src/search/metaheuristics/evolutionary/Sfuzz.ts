@@ -46,7 +46,7 @@ export class Sfuzz extends MOSA {
     // non-dominated sorting
     getUserInterface().debug(
       "Number of objectives = " +
-      this._objectiveManager.getCurrentObjectives().size
+        this._objectiveManager.getCurrentObjectives().size
     );
 
     const F = this.preferenceSortingAlgorithm(
