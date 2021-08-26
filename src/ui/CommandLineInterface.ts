@@ -30,7 +30,7 @@ export class CommandLineInterface extends UserInterface {
       synchronousUpdate: false,
     });
 
-    this.bar.start(200, this.progressValue, {
+    this.bar.start(100, this.progressValue, {
       budget: "100",
     });
   }
