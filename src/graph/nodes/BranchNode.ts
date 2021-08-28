@@ -6,7 +6,7 @@ import { Node, NodeType } from "./Node";
  * @author Dimitri Stallenberg
  */
 export interface BranchNode extends Node {
-  type: NodeType.branch;
+  type: NodeType.Branch;
 
   condition: Operation;
 

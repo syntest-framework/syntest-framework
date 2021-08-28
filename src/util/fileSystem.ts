@@ -42,9 +42,12 @@ export async function loadTargetFiles(): Promise<{
     excludes = [excludes];
   }
 
+  // Mapping filepath ->
+  const includedTargets = new Map<string, string>()
+
   includes = includes.map((include) => {
-    if (include.includes("->")) {
-      return include.split("->")[0];
+    if (include.includes(":")) {
+      return include.split(":")[0];
     }
 
     return include;
@@ -52,7 +55,7 @@ export async function loadTargetFiles(): Promise<{
 
   // only exclude files if all contracts are excluded
   excludes = excludes.filter((exclude) => {
-    return !exclude.includes("->");
+    return !exclude.includes(":");
   });
 
   const includePaths = globby.sync(includes);
@@ -68,9 +71,7 @@ export async function loadTargetFiles(): Promise<{
       new Promise(async (resolve) => {
         includedTargets.push({
           canonicalPath: path.resolve(_path),
-          relativePath: path.basename(_path),
-          source: await readFileSync(_path).toString(),
-          targets: [],
+          relativePath: path.basename(_path)
         });
         resolve(null);
       })
@@ -82,9 +83,7 @@ export async function loadTargetFiles(): Promise<{
       new Promise(async (resolve) => {
         excludedTargets.push({
           canonicalPath: path.resolve(_path),
-          relativePath: path.basename(_path),
-          source: await readFileSync(_path).toString(),
-          targets: [],
+          relativePath: path.basename(_path)
         });
         resolve(null);
       })
@@ -97,12 +96,10 @@ export async function loadTargetFiles(): Promise<{
     (a) => !excludedTargets.find((b) => a.canonicalPath === b.canonicalPath)
   );
 
-  return { included: includedTargets, excluded: excludedTargets };
+  return { includedFiles: includedTargets, excludedFiles: excludedTargets };
 }
 
 export interface TargetFile {
   canonicalPath: string;
   relativePath: string;
-  source: string;
-  targets: string[];
 }

@@ -6,5 +6,5 @@ import { Node, NodeType } from "./Node";
  * @author Dimitri Stallenberg
  */
 export interface PlaceholderNode extends Node {
-  type: NodeType.placeholder;
+  type: NodeType.Placeholder;
 }

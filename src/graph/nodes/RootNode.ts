@@ -8,7 +8,7 @@ import { Visibility } from "../parsing/Visibility";
  * @author Dimitri Stallenberg
  */
 export interface RootNode extends Node {
-  type: NodeType.root;
+  type: NodeType.Root;
 
   // if it is a root node
   contractName: string;

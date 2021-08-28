@@ -30,7 +30,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Function map of the subject.
    * @protected
    */
-  protected readonly _functionMap: ActionDescription[];
+  protected readonly _functions: ActionDescription[];
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -49,17 +49,17 @@ export abstract class SearchSubject<T extends Encoding> {
    *
    * @param name Name of the subject
    * @param cfg Control flow graph of the subject
-   * @param functionMap Function map of the subject
+   * @param functions Functions of the subject
    * @protected
    */
   protected constructor(
     name: string,
     cfg: CFG,
-    functionMap: ActionDescription[]
+    functions: ActionDescription[]
   ) {
     this._name = name;
     this._cfg = cfg;
-    this._functionMap = functionMap;
+    this._functions = functions;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
     this._extractPaths();
@@ -149,7 +149,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._cfg;
   }
 
-  get functionMap(): any {
-    return this._functionMap;
+  get functions(): any {
+    return this._functions;
   }
 }

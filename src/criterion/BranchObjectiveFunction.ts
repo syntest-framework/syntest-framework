@@ -78,7 +78,7 @@ export class BranchObjectiveFunction<T extends Encoding>
 
     // find the corresponding branch node inside the cfg
     const branchNode = this._subject.cfg.nodes.find((n: Node) => {
-      return n.type === NodeType.branch && n.lines.includes(this._line);
+      return n.type === NodeType.Branch && n.lines.includes(this._line);
     });
     const childEdge = this._subject.cfg.edges.find((edge) => {
       return edge.from === branchNode.id && edge.branchType === this._type;
