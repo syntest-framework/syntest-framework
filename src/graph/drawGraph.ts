@@ -1,4 +1,4 @@
-import {NodeType} from "./nodes/Node";
+import { NodeType } from "./nodes/Node";
 
 const d3 = require("d3");
 const fs = require("fs");

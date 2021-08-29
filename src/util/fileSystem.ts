@@ -28,9 +28,7 @@ export async function deleteTempDirectories() {
   await rmdirSync(`.syntest`, { recursive: true });
 }
 
-export async function loadTargetFiles(): Promise<{
-  [key: string]: TargetFile[];
-}> {
+export async function loadTargets(): Promise<[Map<string, string[]>, Map<string, string[]>]> {
   let includes = Properties.include;
   let excludes = Properties.exclude;
 
@@ -42,64 +40,68 @@ export async function loadTargetFiles(): Promise<{
     excludes = [excludes];
   }
 
-  // Mapping filepath ->
-  const includedTargets = new Map<string, string>()
+  // Mapping filepath -> targets
+  const includedTargets = new Map<string, string[]>();
+  const excludedTargets = new Map<string, string[]>();
 
-  includes = includes.map((include) => {
+  includes.forEach((include) => {
+    let _path
+    let target
     if (include.includes(":")) {
-      return include.split(":")[0];
+      _path = include.split(":")[0]
+      target = include.split(":")[1]
+    } else {
+      _path = include
+      target = "*"
     }
 
-    return include;
+    const actualPaths = globby.sync(_path)
+
+    for (let _path of actualPaths) {
+      _path = path.resolve(_path)
+      if (!includedTargets.has(_path)) {
+        includedTargets.set(_path, [])
+      }
+
+      includedTargets.get(_path).push(target)
+    }
   });
 
   // only exclude files if all contracts are excluded
-  excludes = excludes.filter((exclude) => {
-    return !exclude.includes(":");
+  excludes.forEach((exclude) => {
+    let _path
+    let target
+    if (exclude.includes(":")) {
+      _path = exclude.split(":")[0]
+      target = exclude.split(":")[1]
+    } else {
+      _path = exclude
+      target = "*"
+    }
+
+    const actualPaths = globby.sync(_path)
+
+    for (let _path of actualPaths) {
+      _path = path.resolve(_path)
+      if (!excludedTargets.has(_path)) {
+        excludedTargets.set(_path, [])
+      }
+
+      excludedTargets.get(_path).push(target)
+    }
   });
 
-  const includePaths = globby.sync(includes);
-  const excludePaths = globby.sync(excludes);
+  for (const key of excludedTargets.keys()) {
+    if (includedTargets.has(key)) {
+      if (excludedTargets.get(key).includes("*")) {
+        // exclude all targets of the file
+        includedTargets.delete(key)
+      } else {
+        // exclude specific targets in the file
+        includedTargets.set(key, includedTargets.get(key).filter((target) => !excludedTargets.get(key).includes(target)))
+      }
+    }
+  }
 
-  let includedTargets: TargetFile[] = [];
-  const excludedTargets: TargetFile[] = [];
-
-  const promises = [];
-
-  includePaths.forEach((_path) => {
-    promises.push(
-      new Promise(async (resolve) => {
-        includedTargets.push({
-          canonicalPath: path.resolve(_path),
-          relativePath: path.basename(_path)
-        });
-        resolve(null);
-      })
-    );
-  });
-
-  excludePaths.forEach((_path) => {
-    promises.push(
-      new Promise(async (resolve) => {
-        excludedTargets.push({
-          canonicalPath: path.resolve(_path),
-          relativePath: path.basename(_path)
-        });
-        resolve(null);
-      })
-    );
-  });
-
-  await Promise.all(promises);
-
-  includedTargets = includedTargets.filter(
-    (a) => !excludedTargets.find((b) => a.canonicalPath === b.canonicalPath)
-  );
-
-  return { includedFiles: includedTargets, excludedFiles: excludedTargets };
-}
-
-export interface TargetFile {
-  canonicalPath: string;
-  relativePath: string;
+  return [includedTargets, excludedTargets];
 }
