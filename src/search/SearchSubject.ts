@@ -64,7 +64,7 @@ export abstract class SearchSubject<T extends Encoding> {
     cfg: CFG,
     functions: ActionDescription[]
   ) {
-    this._path = path
+    this._path = path;
     this._name = name;
     this._cfg = cfg;
     this._functions = functions;

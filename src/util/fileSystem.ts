@@ -1,4 +1,12 @@
-import {mkdirSync, readdir, readdirSync, readFileSync, rmdirSync, unlink, unlinkSync} from "fs";
+import {
+  mkdirSync,
+  readdir,
+  readdirSync,
+  readFileSync,
+  rmdirSync,
+  unlink,
+  unlinkSync,
+} from "fs";
 const globby = require("globby");
 import * as path from "path";
 import { Properties } from "../properties";
@@ -114,7 +122,7 @@ export async function loadTargets(): Promise<
 }
 
 export async function clearDirectory(directory: string) {
-  const files = await readdirSync(directory)
+  const files = await readdirSync(directory);
   for (const file of files) {
     await unlinkSync(path.join(directory, file));
   }
