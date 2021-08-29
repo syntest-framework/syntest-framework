@@ -15,6 +15,12 @@ const { Graph, alg } = require("@dagrejs/graphlib");
  */
 export abstract class SearchSubject<T extends Encoding> {
   /**
+   * Path to the subject.
+   * @protected
+   */
+  protected readonly _path: string;
+
+  /**
    * Name of the subject.
    * @protected
    */
@@ -53,10 +59,12 @@ export abstract class SearchSubject<T extends Encoding> {
    * @protected
    */
   protected constructor(
+    path: string,
     name: string,
     cfg: CFG,
     functions: ActionDescription[]
   ) {
+    this._path = path
     this._name = name;
     this._cfg = cfg;
     this._functions = functions;
