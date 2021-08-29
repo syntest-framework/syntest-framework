@@ -5,7 +5,7 @@ import {
   EncodingSampler,
   Statement,
 } from "../../src";
-import {Parameter} from "../../dist";
+import { Parameter } from "../../dist";
 
 export class ActionStatementMock extends ActionStatement {
   constructor(types: Parameter[], uniqueId: string, args: Statement[]) {

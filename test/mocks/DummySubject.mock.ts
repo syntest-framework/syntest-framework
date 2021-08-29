@@ -1,4 +1,9 @@
-import {ActionDescription, ObjectiveFunction, Parameter, SearchSubject} from "../../src";
+import {
+  ActionDescription,
+  ObjectiveFunction,
+  Parameter,
+  SearchSubject,
+} from "../../src";
 import { DummyCFG } from "./DummyCFG.mock";
 
 export class DummySearchSubject extends SearchSubject<any> {
@@ -9,7 +14,10 @@ export class DummySearchSubject extends SearchSubject<any> {
     this.objectives = objectives;
   }
 
-  getPossibleActions(type?: string, returnTypes?: Parameter[]): ActionDescription[] {
+  getPossibleActions(
+    type?: string,
+    returnTypes?: Parameter[]
+  ): ActionDescription[] {
     return [];
   }
 
