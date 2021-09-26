@@ -10,6 +10,7 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";
 import { DynaMOSA } from "../metaheuristics/evolutionary/mosa/DynaMOSA";
 import { Properties } from "../../properties";
+import { Sfuzz } from "../metaheuristics/evolutionary/Sfuzz";
 
 /**
  * Factory for creating an instance of a specific search algorithm from the config.
@@ -34,5 +35,7 @@ export function createAlgorithmFromConfig(
       return new MOSA(sampler, runner, crossover);
     case "DynaMOSA":
       return new DynaMOSA(sampler, runner, crossover);
+    case "sFuzz":
+      return new Sfuzz(sampler, runner, crossover);
   }
 }
