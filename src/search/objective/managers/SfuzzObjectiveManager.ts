@@ -1,18 +1,21 @@
-import { ObjectiveManager } from "./ObjectiveManager";
 import { Encoding } from "../../Encoding";
-import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
+import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
-import { NodeType } from "../../../graph/nodes/Node";
 
 /**
- * Objective manager that only evaluates an encoding on currently reachable objectives.
+ * sFuzz objective manager
+ *
+ * Based on:
+ * sFuzz: An Efficient Adaptive Fuzzer for Solidity Smart Contracts
+ * Tai D. Nguyen, Long H. Pham, Jun Sun, Yun Lin, Quang Tran Minh
  *
  * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
  */
-export class StructuralObjectiveManager<
+export class SfuzzObjectiveManager<
   T extends Encoding
-> extends ObjectiveManager<T> {
+> extends StructuralObjectiveManager<T> {
   /**
    * Constructor.
    *
@@ -31,6 +34,7 @@ export class StructuralObjectiveManager<
     encoding: T,
     distance: number
   ): void {
+    // When objective is covered update objectives
     if (distance === 0.0) {
       // Remove objective from the current and uncovered objectives
       this._uncoveredObjectives.delete(objectiveFunction);
@@ -58,39 +62,10 @@ export class StructuralObjectiveManager<
             this._currentObjectives.add(objective);
         });
     }
-  }
 
-  /**
-   * @inheritDoc
-   */
-  load(subject: SearchSubject<T>): void {
-    // Set the subject
-    this._subject = subject;
-
-    // TODO: Reset the objective manager
-    const objectives = subject.getObjectives();
-
-    // Add all objectives to the uncovered objectives
-    objectives.forEach((objective) => this._uncoveredObjectives.add(objective));
-
-    // Set the current objectives
-    const rootObjectiveNodes = this._subject.cfg.nodes.filter(
-      (node) => node.type === NodeType.Root
-    );
-    const rootObjectiveIds = rootObjectiveNodes.map(
-      (objective) => objective.id
-    );
-    let rootObjectives = [];
-    for (const id of rootObjectiveIds) {
-      rootObjectives = rootObjectives.concat(
-        this._subject
-          .getObjectives()
-          .filter((objective) => objective.getIdentifier() === id)
-      );
+    if (distance > 1) {
+      // This is to ignore the approach level
+      encoding.setDistance(objectiveFunction, 1);
     }
-
-    rootObjectives.forEach((objective) =>
-      this._currentObjectives.add(objective)
-    );
   }
 }

@@ -1,3 +1,5 @@
+import { NodeType } from "./nodes/Node";
+
 const d3 = require("d3");
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
@@ -20,19 +22,19 @@ export function drawGraph(cfg: any, path: string) {
           name = `(${n.lines[0]}: ${n.description})`;
         }
 
-        if (n.root) {
+        if (n.type === NodeType.Root) {
           name += ` ${n.contractName} ${n.functionName}`;
         }
 
-        if (n.branch) {
+        if (n.type === NodeType.Branch) {
           name += ` ${n.condition.operator}`;
         }
 
         const node = {
           id: n.id,
           name: name,
-          fixed: n.root,
-          root: n.root,
+          fixed: n.type === NodeType.Root,
+          root: n.type === NodeType.Root,
           fx: undefined,
           fy: undefined,
         };

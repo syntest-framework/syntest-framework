@@ -1,14 +1,19 @@
 import { AbstractTestCase } from "../../src/testcase/AbstractTestCase";
 import { BranchObjectiveFunction } from "../../src";
 import { ActionStatementMock } from "./ActionStatement.mock";
-import { EncodingSampler, TestCaseDecoder } from "../../dist";
+import { EncodingSampler, Parameter, TestCaseDecoder } from "../../dist";
 
 export class TestCaseMock extends AbstractTestCase {
   private static counter = 0;
 
   constructor() {
     TestCaseMock.counter++;
-    const actionGene = new ActionStatementMock("dummy", "dummy", []);
+    const param: Parameter = {
+      name: "dummy",
+      type: "dummy",
+    };
+
+    const actionGene = new ActionStatementMock([param], "dummy", []);
     super(actionGene);
   }
 
