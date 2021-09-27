@@ -75,11 +75,20 @@ export * from "./testcase/decoder/TestCaseDecoder";
 
 // Instrumentation
 export * from "./graph/CFG";
-export * from "./graph/Node";
 export * from "./graph/Edge";
 export * from "./graph/cfgUtils";
 export * from "./graph/drawGraph";
 export * from "./graph/CFGFactory";
+
+export * from "./graph/nodes/Node";
+export * from "./graph/nodes/BranchNode";
+export * from "./graph/nodes/RootNode";
+export * from "./graph/nodes/PlaceholderNode";
+
+export * from "./graph/parsing/ActionDescription";
+export * from "./graph/parsing/FunctionDescription";
+export * from "./graph/parsing/Parameter";
+export * from "./graph/parsing/Visibility";
 
 // UI
 export * from "./ui/UserInterface";

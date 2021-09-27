@@ -32,7 +32,7 @@ describe("PrimitiveStatement", () => {
 
   it("Primitive statements have no children", () => {
     const gene = new dummyPrimitiveStatement(
-      "dummyGene",
+      { type: "dummyGene", name: "dummyGene" },
       "randomid",
       "randomvalue"
     );
@@ -42,7 +42,7 @@ describe("PrimitiveStatement", () => {
 
   it("Primitive statements return empty children array", () => {
     const gene = new dummyPrimitiveStatement(
-      "dummyGene",
+      { type: "dummyGene", name: "dummyGene" },
       "randomid",
       "randomvalue"
     );
@@ -52,7 +52,11 @@ describe("PrimitiveStatement", () => {
 
   it("Primitive statement gives correct value", () => {
     const value = "randomvalue";
-    const gene = new dummyPrimitiveStatement("dummyGene", "randomid", value);
+    const gene = new dummyPrimitiveStatement(
+      { type: "dummyGene", name: "dummyGene" },
+      "randomid",
+      value
+    );
 
     expect(gene.value).to.equal(value);
   });
