@@ -30,7 +30,7 @@ export abstract class Statement {
     this._uniqueId = uniqueId;
     // TODO make the varnames capitalized
     this._varNames = types.map(
-      (x) => x.name + x.type.replace("[]", "array") + uniqueId
+      (x) => x.name + uniqueId // + x.type.replace("[]", "array") doesnt work
     );
   }
 
