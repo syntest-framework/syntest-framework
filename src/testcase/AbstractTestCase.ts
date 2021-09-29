@@ -17,7 +17,7 @@ export abstract class AbstractTestCase implements Encoding {
   protected _crowdingDistance: number;
   protected _rank: number;
   protected _id: string;
-  protected _assertions: Map<string, string>
+  protected _assertions: Map<string, string>;
 
   /**
    * Mapping from objective to their distance values for this test case.
@@ -42,7 +42,7 @@ export abstract class AbstractTestCase implements Encoding {
     this._rank = 0;
     this._id = prng.uniqueId(20);
     this._objectives = new Map<ObjectiveFunction<AbstractTestCase>, number>();
-    this._assertions = new Map()
+    this._assertions = new Map();
     getUserInterface().debug(`Created test case: ${this._id}`);
   }
 

@@ -7,6 +7,5 @@ export interface Parameter {
   /**
    * Type of the parameter.
    */
-  type: string
+  type: string;
 }
-
