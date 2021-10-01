@@ -1,5 +1,7 @@
 // Test case
-export * from "./testcase/TestCase";
+import exp = require("constants");
+
+export * from "./testcase/AbstractTestCase";
 
 // Runner
 export * from "./testcase/execution/TestCaseRunner";
@@ -10,14 +12,10 @@ export * from "./testcase/statements/Statement";
 export * from "./testcase/statements/PrimitiveStatement";
 
 // Action statement
-export * from "./testcase/statements/action/ConstructorCall";
-export * from "./testcase/statements/action/FunctionCall";
-export * from "./testcase/statements/action/ObjectFunctionCall";
+export * from "./testcase/statements/ActionStatement";
 
 // Primitive statement
-export * from "./testcase/statements/primitive/BoolStatement";
-export * from "./testcase/statements/primitive/NumericStatement";
-export * from "./testcase/statements/primitive/StringStatement";
+export * from "./testcase/statements/PrimitiveStatement";
 
 // Search
 export * from "./search/SearchSubject";
@@ -34,14 +32,20 @@ export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
 export * from "./search/budget/TotalTimeBudget";
 
+// Termination
+export * from "./search/termination/TerminationManager";
+export * from "./search/termination/SignalTerminationTrigger";
+
 // Statistics
-export * from "./statistics/StatisticsCollector";
-export * from "./statistics/SummaryWriter";
-export * from "./statistics/RuntimeVariable";
 export * from "./statistics/CoverageWriter";
+export * from "./statistics/RuntimeVariable";
+export * from "./statistics/StatisticsCollector";
+export * from "./statistics/StatisticsSearchListener";
+export * from "./statistics/SummaryWriter";
 
 // Factories
 export * from "./search/factories/AlgorithmFactory";
+export * from "./search/factories/TerminationFactory";
 
 // Objective
 export * from "./search/objective/ObjectiveFunction";
@@ -55,6 +59,7 @@ export * from "./criterion/ExceptionObjectiveFunction";
 export * from "./search/operators/ranking/CrowdingDistance";
 export * from "./search/operators/ranking/FastNonDomSorting";
 export * from "./search/operators/selection/TournamentSelection";
+export * from "./search/operators/crossover/Crossover";
 
 // Metaheuristics
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
@@ -70,11 +75,25 @@ export * from "./testcase/decoder/TestCaseDecoder";
 
 // Instrumentation
 export * from "./graph/CFG";
-export * from "./graph/Node";
 export * from "./graph/Edge";
 export * from "./graph/cfgUtils";
 export * from "./graph/drawGraph";
 export * from "./graph/CFGFactory";
+
+export * from "./graph/nodes/Node";
+export * from "./graph/nodes/BranchNode";
+export * from "./graph/nodes/RootNode";
+export * from "./graph/nodes/PlaceholderNode";
+
+export * from "./graph/parsing/ActionDescription";
+export * from "./graph/parsing/FunctionDescription";
+export * from "./graph/parsing/Parameter";
+export * from "./graph/parsing/Visibility";
+
+// UI
+export * from "./ui/UserInterface";
+export * from "./ui/CommandLineInterface";
+export * from "./ui/MonitorCommandLineInterface";
 
 // Util
 export * from "./config";

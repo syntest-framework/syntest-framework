@@ -24,6 +24,13 @@ export class Archive<T extends Encoding> {
   }
 
   /**
+   * The size of the archive.
+   */
+  get size(): number {
+    return this._map.size;
+  }
+
+  /**
    * Determines if the archive already contains this objective function.
    *
    * @param objectiveFunction The objective function to check for
@@ -40,6 +47,21 @@ export class Archive<T extends Encoding> {
    */
   update(objectiveFunction: ObjectiveFunction<T>, encoding: T): void {
     this._map.set(objectiveFunction, encoding);
+  }
+
+  /**
+   * Merges the given archive into this archive.
+   *
+   * When there is overlap in the archives the current one will be overriden.
+   * WARNING: this function does thus not use the secondary objectives to select the optimal solution.
+   * TODO use the secondary objectives in this function
+   *
+   * @param other the other archive
+   */
+  merge(other: Archive<T>): void {
+    for (const key of other.getObjectives()) {
+      this.update(key, other.getEncoding(key));
+    }
   }
 
   /**

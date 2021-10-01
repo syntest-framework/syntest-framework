@@ -10,11 +10,24 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
  */
 export interface BudgetListener<T extends Encoding> {
   /**
-   * Signal evaluation happened.
-   *
-   * @param encoding The encoding that was evaluated
+   * Start initialization budget tracking.
    */
-  evaluation(encoding: T): void;
+  initializationStarted(): void;
+
+  /**
+   * Stop initialization budget tracking.
+   */
+  initializationStopped(): void;
+
+  /**
+   * Start search budget tracking.
+   */
+  searchStarted(): void;
+
+  /**
+   * Stop search budget tracking.
+   */
+  searchStopped(): void;
 
   /**
    * Signal iteration happened.
@@ -24,22 +37,9 @@ export interface BudgetListener<T extends Encoding> {
   iteration(searchAlgorithm: SearchAlgorithm<T>): void;
 
   /**
-   * Start budget tracking.
+   * Signal evaluation happened.
+   *
+   * @param encoding The encoding that was evaluated
    */
-  start(): void;
-
-  /**
-   * Start initialization budget tracking.
-   */
-  startInitialization(): void;
-
-  /**
-   * Stop budget tracking.
-   */
-  stop(): void;
-
-  /**
-   * Stop initialization budget tracking.
-   */
-  stopInitialization(): void;
+  evaluation(encoding: T): void;
 }

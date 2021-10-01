@@ -1,7 +1,8 @@
 import { Statement } from "../statements/Statement";
-import { TestCase } from "../TestCase";
+import { AbstractTestCase } from "../AbstractTestCase";
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { SearchSubject } from "../../search/SearchSubject";
+import { Parameter } from "../../graph/parsing/Parameter";
 
 /**
  * TestCaseSampler class
@@ -9,14 +10,15 @@ import { SearchSubject } from "../../search/SearchSubject";
  * @author Dimitri Stallenberg
  * @author Mitchell Olsthoorn
  */
-export abstract class TestCaseSampler implements EncodingSampler<TestCase> {
-  protected _subject: SearchSubject<TestCase>;
+export abstract class TestCaseSampler
+  implements EncodingSampler<AbstractTestCase> {
+  protected _subject: SearchSubject<AbstractTestCase>;
 
   /**
    * Constructor
    * @param subject     the subject
    */
-  protected constructor(subject: SearchSubject<TestCase>) {
+  protected constructor(subject: SearchSubject<AbstractTestCase>) {
     this._subject = subject;
   }
 
@@ -24,21 +26,21 @@ export abstract class TestCaseSampler implements EncodingSampler<TestCase> {
    * Should sample any statement based on the type.
    *
    * @param depth     the current depth of the statement tree
-   * @param type      the return type of the statement to sample
+   * @param types      the return types of the statement to sample
    * @param geneType  the type of the statement
    * @return          a sampled statement
    */
   abstract sampleStatement(
     depth: number,
-    type: string,
+    types: Parameter[],
     geneType: string
   ): Statement;
 
-  get subject(): SearchSubject<TestCase> {
+  get subject(): SearchSubject<AbstractTestCase> {
     return this._subject;
   }
 
-  set subject(value: SearchSubject<TestCase>) {
+  set subject(value: SearchSubject<AbstractTestCase>) {
     this._subject = value;
   }
 
@@ -47,5 +49,5 @@ export abstract class TestCaseSampler implements EncodingSampler<TestCase> {
    *
    * @return  a sampled test case
    */
-  abstract sample(): TestCase;
+  abstract sample(): AbstractTestCase;
 }

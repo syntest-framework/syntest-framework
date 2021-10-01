@@ -17,6 +17,7 @@ export enum RuntimeVariable {
   EVALUATIONS,
   ITERATIONS,
   PROBE_ENABLED,
+  CONSTANT_POOL_ENABLED,
 
   /**
    * Objectives

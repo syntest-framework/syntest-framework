@@ -37,7 +37,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    *
    * @param maxSearchTime The maximum allowed time in seconds this budget should use
    */
-  public constructor(maxSearchTime = Number.MAX_SAFE_INTEGER) {
+  constructor(maxSearchTime = Number.MAX_SAFE_INTEGER) {
     this._currentSearchTime = 0;
     this._maxSearchTime = maxSearchTime;
     this._counterTime = 0;
@@ -47,25 +47,25 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public evaluation(encoding: T): void {}
+  getRemainingBudget(): number {
+    if (this.getUsedBudget() > this._maxSearchTime) {
+      console.log(
+        `Consumed ${
+          this.getUsedBudget() - this._maxSearchTime
+        }s over the allocated search time`
+      );
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public getAvailableBudget(): number {
-    return this._maxSearchTime - this.getCurrentBudget();
+    return Math.max(this._maxSearchTime - this.getUsedBudget(), 0);
   }
 
   /**
    * @inheritDoc
    */
-  public getCurrentBudget(): number {
-    const currentTime = Date.now() / 1000;
+  getUsedBudget(): number {
     if (this._tracking) {
-      const searchTime =
-        this._currentSearchTime + (currentTime - this._counterTime);
-      return Math.min(searchTime, this._maxSearchTime);
+      const currentTime = Date.now() / 1000;
+      return this._currentSearchTime + (currentTime - this._counterTime);
     } else {
       return this._currentSearchTime;
     }
@@ -74,20 +74,14 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public getTotalBudget(): number {
+  getTotalBudget(): number {
     return this._maxSearchTime;
   }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
-
-  /**
-   * @inheritDoc
-   */
-  public reset(): void {
+  reset(): void {
     this._currentSearchTime = 0;
     this._counterTime = 0;
     this._tracking = false;
@@ -96,7 +90,19 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  public start(): void {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  initializationStarted(): void {}
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  initializationStopped(): void {}
+
+  /**
+   * @inheritDoc
+   */
+  searchStarted(): void {
     if (!this._tracking) {
       this._counterTime = Date.now() / 1000;
       this._tracking = true;
@@ -106,25 +112,9 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public startInitialization(): void {}
-
-  /**
-   * @inheritDoc
-   */
-  public stop(): void {
+  searchStopped(): void {
     if (this._tracking) {
-      const currentTime = Date.now() / 1000;
-
-      if (
-        this._currentSearchTime + currentTime - this._counterTime >
-        this._maxSearchTime
-      ) {
-        this._currentSearchTime = this._maxSearchTime;
-      } else {
-        this._currentSearchTime += currentTime - this._counterTime;
-      }
-
+      this._currentSearchTime = this.getUsedBudget();
       this._counterTime = 0;
       this._tracking = false;
     }
@@ -133,6 +123,12 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public stopInitialization(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+
+  /**
+   * @inheritDoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  evaluation(encoding: T): void {}
 }

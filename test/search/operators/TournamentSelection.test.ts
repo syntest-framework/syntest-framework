@@ -6,9 +6,12 @@ import {
   processConfig,
   setupLogger,
   setupOptions,
-  TestCase,
+  AbstractTestCase,
+  CommandLineInterface,
+  Properties,
+  setUserInterface,
 } from "../../../src";
-import { DummyIndividual } from "../../mocks/DummyTestCase.mock";
+import { TestCaseMock } from "../../mocks/TestCase.mock";
 import { tournamentSelection } from "../../../src/search/operators/selection/TournamentSelection";
 
 const expect = chai.expect;
@@ -27,26 +30,33 @@ describe("Tournament selection", function () {
     await loadConfig();
     await processConfig({}, "");
     await setupLogger();
+
+    setUserInterface(
+      new CommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose"
+      )
+    );
   });
 
   it("Small Tournament size", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(
+    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCase>(
+    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       false
     );
 
-    const ind1 = new DummyIndividual();
+    const ind1 = new TestCaseMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
 
-    const ind2 = new DummyIndividual();
+    const ind2 = new TestCaseMock();
     ind2.setDummyEvaluation([objective1, objective2], [1, 1]);
 
     //fit('Null my value throws', () => {
@@ -56,80 +66,86 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by rank", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(
+    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCase>(
+    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       false
     );
 
-    const ind1 = new DummyIndividual();
+    const ind1 = new TestCaseMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
     ind1.setRank(0);
     ind1.setCrowdingDistance(10);
 
-    const ind2 = new DummyIndividual();
+    const ind2 = new TestCaseMock();
     ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind2.setRank(1);
     ind2.setCrowdingDistance(2);
 
-    const ind3 = new DummyIndividual();
+    const ind3 = new TestCaseMock();
     ind3.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind3.setRank(2);
     ind3.setCrowdingDistance(1);
 
-    const ind4 = new DummyIndividual();
+    const ind4 = new TestCaseMock();
     ind4.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind4.setRank(1);
     ind4.setCrowdingDistance(4);
 
-    const winner: TestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
+    const winner: AbstractTestCase = tournamentSelection(
+      [ind2, ind1, ind3, ind4],
+      20
+    );
     expect(winner.getRank()).to.equal(0);
     expect(winner.getDistance(objective1)).to.equal(0);
     expect(winner.getDistance(objective2)).to.equal(1);
   });
 
   it("Comparison by crowding distance", () => {
-    const objective1 = new BranchObjectiveFunction<TestCase>(
+    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCase>(
+    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
       null,
       "1",
       1,
       false
     );
 
-    const ind1 = new DummyIndividual();
+    const ind1 = new TestCaseMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
     ind1.setRank(0);
     ind1.setCrowdingDistance(10);
 
-    const ind2 = new DummyIndividual();
+    const ind2 = new TestCaseMock();
     ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind2.setRank(0);
     ind2.setCrowdingDistance(2);
 
-    const ind3 = new DummyIndividual();
+    const ind3 = new TestCaseMock();
     ind3.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind3.setRank(0);
     ind3.setCrowdingDistance(1);
 
-    const ind4 = new DummyIndividual();
+    const ind4 = new TestCaseMock();
     ind4.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind4.setRank(0);
     ind4.setCrowdingDistance(4);
 
-    const winner: TestCase = tournamentSelection([ind2, ind1, ind3, ind4], 20);
+    const winner: AbstractTestCase = tournamentSelection(
+      [ind2, ind1, ind3, ind4],
+      20
+    );
     expect(winner.getRank()).to.equal(0);
     expect(winner.getDistance(objective1)).to.equal(0);
     expect(winner.getDistance(objective2)).to.equal(1);

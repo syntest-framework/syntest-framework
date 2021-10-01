@@ -1,7 +1,7 @@
-import { TestCase } from "../testcase/TestCase";
+import { AbstractTestCase } from "../testcase/AbstractTestCase";
 import { TestCaseDecoder } from "../testcase/decoder/TestCaseDecoder";
 
-export class HashSet<T extends TestCase> extends Set<T> {
+export class HashSet<T extends AbstractTestCase> extends Set<T> {
   private decoder: TestCaseDecoder;
 
   constructor(props: any, decoder: TestCaseDecoder) {

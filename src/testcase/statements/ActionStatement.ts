@@ -1,6 +1,7 @@
 import { Statement } from "./Statement";
 import { EncodingSampler } from "../../search/EncodingSampler";
-import { TestCase } from "../TestCase";
+import { AbstractTestCase } from "../AbstractTestCase";
+import { Parameter } from "../../graph/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg
@@ -15,13 +16,17 @@ export abstract class ActionStatement extends Statement {
   }
   private _args: Statement[];
 
-  protected constructor(type: string, uniqueId: string, args: Statement[]) {
-    super(type, uniqueId);
+  protected constructor(
+    types: Parameter[],
+    uniqueId: string,
+    args: Statement[]
+  ) {
+    super(types, uniqueId);
     this._args = args;
   }
 
   abstract mutate(
-    sampler: EncodingSampler<TestCase>,
+    sampler: EncodingSampler<AbstractTestCase>,
     depth: number
   ): ActionStatement;
 

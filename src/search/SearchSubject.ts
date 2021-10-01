@@ -2,7 +2,9 @@ import { CFG } from "../graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { Edge } from "../graph/Edge";
-import { getLogger } from "../util/logger";
+import { ActionDescription } from "../graph/parsing/ActionDescription";
+import { getUserInterface } from "../ui/UserInterface";
+import { Parameter } from "../graph/parsing/Parameter";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 
@@ -12,6 +14,12 @@ const { Graph, alg } = require("@dagrejs/graphlib");
  * @author Mitchell Olsthoorn
  */
 export abstract class SearchSubject<T extends Encoding> {
+  /**
+   * Path to the subject.
+   * @protected
+   */
+  protected readonly _path: string;
+
   /**
    * Name of the subject.
    * @protected
@@ -28,7 +36,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Function map of the subject.
    * @protected
    */
-  protected readonly _functionMap: any;
+  protected readonly _functions: ActionDescription[];
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -47,13 +55,19 @@ export abstract class SearchSubject<T extends Encoding> {
    *
    * @param name Name of the subject
    * @param cfg Control flow graph of the subject
-   * @param functionMap Function map of the subject
+   * @param functions Functions of the subject
    * @protected
    */
-  protected constructor(name: string, cfg: CFG, functionMap: any) {
+  protected constructor(
+    path: string,
+    name: string,
+    cfg: CFG,
+    functions: ActionDescription[]
+  ) {
+    this._path = path;
     this._name = name;
     this._cfg = cfg;
-    this._functionMap = functionMap;
+    this._functions = functions;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
     this._extractPaths();
@@ -94,7 +108,7 @@ export abstract class SearchSubject<T extends Encoding> {
         );
       });
       if (!edge) {
-        getLogger().error(`Edge not found during dijkstra operation.`);
+        getUserInterface().error(`Edge not found during dijkstra operation.`);
         process.exit(1);
       }
 
@@ -124,11 +138,11 @@ export abstract class SearchSubject<T extends Encoding> {
    * Return possible actions on this subject.
    *
    * @param type
-   * @param returnType
+   * @param returnTypes
    */
   public abstract getPossibleActions(
     type?: string,
-    returnType?: string
+    returnTypes?: Parameter[]
   ): ActionDescription[];
 
   public getPath(from: string, to: string) {
@@ -143,13 +157,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._cfg;
   }
 
-  get functionMap(): any {
-    return this._functionMap;
+  get functions(): any {
+    return this._functions;
   }
-}
-
-export interface ActionDescription {
-  name: string;
-  type: string;
-  visibility: string;
 }

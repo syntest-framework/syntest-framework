@@ -18,6 +18,7 @@ export class Properties {
   public static delta_mutation_probability: number;
   public static sample_existing_value_probability: number;
   public static crossover_probability: number;
+  public static constant_pool_probability: number;
   public static sample_func_as_arg: number;
 
   public static algorithm: string;
@@ -28,12 +29,16 @@ export class Properties {
   public static search_time: number;
   public static total_time: number;
   public static iteration_budget: number;
+  public static evaluation_budget: number;
 
   public static enhanced_cfg: boolean;
   public static probe_objective: boolean;
   public static modifier_extraction: boolean;
+  public static constant_pool: boolean;
   public static console_log_level: string;
   public static log_to_file: string[];
+  public static user_interface: string;
+
   public static string_alphabet: string;
   public static string_maxlength: number;
   public static numeric_decimals: number;
@@ -44,6 +49,7 @@ export class Properties {
   public static configuration: string;
 
   public static draw_cfg: boolean;
+  public static test_minimization: boolean;
 
   public static getDescription(property: string): string {
     return properties[property].description;
@@ -80,6 +86,12 @@ export const properties = {
     description: "The path where the logs should be saved",
     type: "string",
     default: "syntest/logs",
+  },
+
+  user_interface: {
+    description: "The user interface you use",
+    type: "string",
+    default: "regular",
   },
 
   final_suite_directory: {
@@ -195,7 +207,12 @@ export const properties = {
   iteration_budget: {
     description: "Iteration budget",
     type: "number",
-    default: 1000,
+    default: Number.MAX_SAFE_INTEGER,
+  },
+  evaluation_budget: {
+    description: "Evaluation budget",
+    type: "number",
+    default: Number.MAX_SAFE_INTEGER,
   },
 
   enhanced_cfg: {
@@ -210,6 +227,18 @@ export const properties = {
   },
   modifier_extraction: {
     description: "Enable modifier extraction",
+    type: "boolean",
+    default: false,
+  },
+  constant_pool: {
+    description: "Enable constant pool",
+    type: "boolean",
+    default: false,
+  },
+
+  // minimize test cases
+  test_minimization: {
+    description: "Minimize test cases at the end of the search",
     type: "boolean",
     default: false,
   },
@@ -277,6 +306,14 @@ export const properties = {
     description: "The name of the configuration.",
     type: "string",
     default: "",
+  },
+
+  // probability to sample from constant pool
+  constant_pool_probability: {
+    description:
+      "probability to sample from the constant pool instead creating random values",
+    type: "number",
+    default: 0.5,
   },
 
   // misc output settings

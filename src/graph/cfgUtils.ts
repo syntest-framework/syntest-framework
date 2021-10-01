@@ -58,7 +58,7 @@ export function connectNonFinalNodes(cfg: any) {
       continue;
     }
 
-    if (node.root) {
+    if (node.type === "root") {
       // connect all nonFinals to this root
       for (const nonFinalNode of nonFinals) {
         cfg.edges.push({

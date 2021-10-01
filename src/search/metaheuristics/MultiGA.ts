@@ -4,7 +4,7 @@
 //   getLogger,
 //   Objective,
 //   TestCaseSampler,
-//   TestCase,
+//   AbstractTestCase,
 // } from "../..";
 // import { Target } from "../objective/Target";
 //
@@ -67,7 +67,7 @@
 //     for (const algorithm of this.subAlgorithms) {
 //       algorithm.population = algorithm.createInitialPopulation();
 //     }
-//     getLogger().info("Initial population created");
+//     getUserInterface().info("Initial population created");
 //
 //     for (const algorithm of this.subAlgorithms) {
 //       await algorithm.fitness.evaluateMany(
@@ -79,7 +79,7 @@
 //     this.currentGeneration = 0;
 //     this.startTime = Date.now();
 //
-//     getLogger().info(
+//     getUserInterface().info(
 //       `Search process started at ${new Date(
 //         this.startTime
 //       ).toLocaleTimeString()}`
@@ -91,15 +91,15 @@
 //       this.currentGeneration += 1;
 //       this.timePast = Date.now() - this.startTime;
 //       this.currentCoverage = this.getCurrentCoverage();
-//       getLogger().info(
+//       getUserInterface().info(
 //         `Generation: ${this.currentGeneration} done after ${
 //           this.timePast / 1000
 //         } seconds, current coverage: ${this.currentCoverage}`
 //       );
 //     }
 //
-//     getLogger().info(`The termination criteria have been satisfied.`);
-//     getLogger().info(
+//     getUserInterface().info(`The termination criteria have been satisfied.`);
+//     getUserInterface().info(
 //       `Ending the search process at ${new Date(
 //         Date.now()
 //       ).toLocaleTimeString()}`
@@ -111,11 +111,11 @@
 //    * List of test cases that will for the final test suite
 //    * @protected
 //    */
-//   public getFinalTestSuite(): Map<Objective, TestCase> {
-//     const champions: Map<Objective, TestCase> = new Map<Objective, TestCase>();
+//   public getFinalTestSuite(): Map<Objective, AbstractTestCase> {
+//     const champions: Map<Objective, AbstractTestCase> = new Map<Objective, AbstractTestCase>();
 //     for (const algorithm of this._subAlgorithms) {
 //       for (const key of algorithm.getFinalTestSuite().keys()) {
-//         champions.set(key, <TestCase>algorithm.getFinalTestSuite().get(key));
+//         champions.set(key, <AbstractTestCase>algorithm.getFinalTestSuite().get(key));
 //       }
 //     }
 //     return champions;
@@ -127,7 +127,7 @@
 //    * @param population the current population
 //    * @returns {[]} the population of the next generation
 //    */
-//   async generation(population: TestCase[]): Promise<TestCase[]> {
+//   async generation(population: AbstractTestCase[]): Promise<AbstractTestCase[]> {
 //     throw new Error(
 //       "MultiGA's cannot use the generation function, use multiGeneration instead"
 //     );

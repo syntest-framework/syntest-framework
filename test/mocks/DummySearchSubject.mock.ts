@@ -2,11 +2,11 @@ import {
   CFG,
   ObjectiveFunction,
   SearchSubject,
-  TestCase,
+  AbstractTestCase,
   ActionDescription,
 } from "../../src";
 
-export class DummySearchSubject extends SearchSubject<TestCase> {
+export class DummySearchSubject extends SearchSubject<AbstractTestCase> {
   protected readonly _cfg: CFG;
 
   protected _extractObjectives(): void {
@@ -20,8 +20,8 @@ export class DummySearchSubject extends SearchSubject<TestCase> {
   protected readonly _functionMap: any;
   protected readonly _name: string;
   protected _objectives: Map<
-    ObjectiveFunction<TestCase>,
-    ObjectiveFunction<TestCase>[]
+    ObjectiveFunction<AbstractTestCase>,
+    ObjectiveFunction<AbstractTestCase>[]
   >;
   protected _paths: any;
 
@@ -34,8 +34,8 @@ export class DummySearchSubject extends SearchSubject<TestCase> {
   }
 
   getChildObjectives(
-    objective: ObjectiveFunction<TestCase>
-  ): ObjectiveFunction<TestCase>[] {
+    objective: ObjectiveFunction<AbstractTestCase>
+  ): ObjectiveFunction<AbstractTestCase>[] {
     return [];
   }
 
@@ -54,11 +54,11 @@ export class DummySearchSubject extends SearchSubject<TestCase> {
     return "";
   }
 
-  getObjectives(): ObjectiveFunction<TestCase>[] {
+  getObjectives(): ObjectiveFunction<AbstractTestCase>[] {
     return Array.from(this._objectives.keys());
   }
 
-  setObjectives(objectives: ObjectiveFunction<TestCase>[]) {
+  setObjectives(objectives: ObjectiveFunction<AbstractTestCase>[]) {
     for (const obj of objectives) {
       this._objectives.set(obj, []);
     }

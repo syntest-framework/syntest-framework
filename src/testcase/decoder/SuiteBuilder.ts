@@ -1,7 +1,7 @@
 import { TestCaseDecoder } from "./TestCaseDecoder";
-import { TestCase } from "../TestCase";
-import { getLogger } from "../../util/logger";
+import { AbstractTestCase } from "../AbstractTestCase";
 import { Archive } from "../../search/Archive";
+import { getUserInterface } from "../../ui/UserInterface";
 
 const fs = require("fs");
 const path = require("path");
@@ -34,10 +34,10 @@ export abstract class SuiteBuilder {
    */
   abstract writeTestCase(
     filePath: string,
-    testCase: TestCase,
+    testCase: AbstractTestCase,
     targetName: string,
     addLogs?: boolean,
-    additionalAssertions?: Map<TestCase, { [p: string]: string }>
+    additionalAssertions?: Map<AbstractTestCase, { [p: string]: string }>
   ): Promise<void>;
 
   /**
@@ -45,7 +45,7 @@ export abstract class SuiteBuilder {
    *
    * @param population    the population of individuals to write tests for
    */
-  abstract createSuite(archive: Archive<TestCase>): Promise<void>;
+  abstract createSuite(archive: Archive<AbstractTestCase>): Promise<void>;
 
   /**
    * Deletes a certain file.
@@ -56,7 +56,7 @@ export abstract class SuiteBuilder {
     try {
       await fs.unlinkSync(filepath);
     } catch (error) {
-      getLogger().debug(error);
+      getUserInterface().debug(error);
     }
   }
 
