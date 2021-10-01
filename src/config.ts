@@ -64,7 +64,7 @@ export function setupOptions(program: string, additionalOptions: any) {
     yargs.option(optionName, option);
   };
 
-  const checkArg = ([name, setup]: [string, any]) => setup.visible
+  const checkArg = ([name, setup]: [string, any]) => setup.visible;
 
   Object.entries(properties).filter(checkArg).forEach(loadArg);
   Object.entries(additionalOptions).filter(checkArg).forEach(loadArg);
