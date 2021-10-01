@@ -150,10 +150,10 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * The progress of the search process.
    */
   public get progress(): number {
-    const numberOfCoveredObjectives = this._objectiveManager.getCoveredObjectives()
-      .size;
-    const numberOfUncoveredObjectives = this._objectiveManager.getUncoveredObjectives()
-      .size;
+    const numberOfCoveredObjectives =
+      this._objectiveManager.getCoveredObjectives().size;
+    const numberOfUncoveredObjectives =
+      this._objectiveManager.getUncoveredObjectives().size;
     const progress =
       (numberOfCoveredObjectives /
         (numberOfCoveredObjectives + numberOfUncoveredObjectives)) *

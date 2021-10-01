@@ -13,7 +13,8 @@ import { Datapoint } from "../testcase/execution/TestCaseRunner";
  * @author Dimitri Stallenberg
  */
 export class BranchObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T> {
+  implements ObjectiveFunction<T>
+{
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _line: number;

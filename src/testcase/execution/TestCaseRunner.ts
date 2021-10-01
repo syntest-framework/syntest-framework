@@ -17,7 +17,8 @@ export interface Datapoint {
 }
 
 export abstract class TestCaseRunner
-  implements EncodingRunner<AbstractTestCase> {
+  implements EncodingRunner<AbstractTestCase>
+{
   protected _suiteBuilder: SuiteBuilder;
 
   protected constructor(suiteBuilder: SuiteBuilder) {

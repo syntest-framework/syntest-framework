@@ -14,7 +14,8 @@ import { RuntimeVariable } from "./RuntimeVariable";
  * @author Mitchell Olsthoorn
  */
 export class StatisticsSearchListener<T extends Encoding>
-  implements SearchListener<T> {
+  implements SearchListener<T>
+{
   /**
    * The statistics collector
    * @protected
