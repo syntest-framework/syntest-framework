@@ -28,11 +28,9 @@ export abstract class Statement {
   protected constructor(types: Parameter[], uniqueId: string) {
     this._types = types;
     this._uniqueId = uniqueId;
-    this._varNames = types.map(
-      (x) => {
-        return x.name + uniqueId
-      }
-    );
+    this._varNames = types.map((x) => {
+      return x.name + uniqueId;
+    });
   }
 
   /**
