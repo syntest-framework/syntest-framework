@@ -11,8 +11,7 @@ import { SearchSubject } from "../search/SearchSubject";
  * @author Mitchell Olsthoorn
  */
 export class ExceptionObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T>
-{
+  implements ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _message: string;
