@@ -65,6 +65,8 @@ export const properties = {
       type: "string",
     },
     default: ["./src/**/*.*"],
+    visible: true,
+    alias: "i"
   },
 
   exclude: {
@@ -73,6 +75,8 @@ export const properties = {
       type: "string",
     },
     default: [],
+    visible: true,
+    alias: "e"
   },
 
   // directories
@@ -80,42 +84,49 @@ export const properties = {
     description: "The path where the csv should be saved",
     type: "string",
     default: "syntest/statistics",
+    visible: true
   },
 
   log_directory: {
     description: "The path where the logs should be saved",
     type: "string",
     default: "syntest/logs",
+    visible: true
   },
 
   user_interface: {
     description: "The user interface you use",
     type: "string",
     default: "regular",
+    visible: true
   },
 
   final_suite_directory: {
     description: "The path where the csv should be saved",
     type: "string",
     default: "syntest/tests",
+    visible: true
   },
 
   cfg_directory: {
     description: "The path where the csv should be saved",
     type: "string",
     default: "syntest/cfg",
+    visible: true
   },
 
   temp_test_directory: {
     description: "Path to the temporary test directory",
     type: "string",
     default: ".syntest/tests",
+    visible: true
   },
 
   temp_log_directory: {
     description: "Path to the temporary log directory",
     type: "string",
     default: ".syntest/logs",
+    visible: true
   },
 
   // random generator settings
@@ -123,6 +134,8 @@ export const properties = {
     description: "Seed to be used by the pseudo random number generator.",
     type: "string",
     default: null,
+    visible: true,
+    alias: "s"
   },
 
   // sampling settings
@@ -130,6 +143,7 @@ export const properties = {
     description: "Max depth of an individual's gene tree.",
     type: "number",
     default: 5,
+    visible: true
   },
 
   // mutation settings
@@ -138,6 +152,7 @@ export const properties = {
       "Allow primitives to become values outside of the specified bounds.",
     type: "boolean",
     default: false,
+    visible: true
   },
 
   // probability settings
@@ -145,22 +160,26 @@ export const properties = {
     description: "Probability a gene gets resampled from scratch.",
     type: "number",
     default: 0.01,
+    visible: true
   },
   delta_mutation_probability: {
     description: "Probability a delta mutation is performed.",
     type: "number",
     default: 0.8,
+    visible: true
   },
   sample_existing_value_probability: {
     description:
       "Probability the return value of a function is used as argument for another function.",
     type: "number",
     default: 0.5,
+    visible: true
   },
   crossover_probability: {
     description: "Probability crossover happens at a certain branch point.",
     type: "number",
     default: 0.8,
+    visible: true
   },
 
   // algorithm settings
@@ -168,16 +187,20 @@ export const properties = {
     description: "Algorithm to be used by the tool",
     type: "string",
     default: "MOSA",
+    visible: true
   },
   sub_algorithm: {
     description: "Algorithm to be used as sub algorithm when using a MultiGA",
     type: "string",
     default: "SimpleGA",
+    visible: true
   },
   population_size: {
     description: "Size of the population.",
     type: "number",
     default: 20,
+    visible: true,
+    alias: "p"
   },
 
   stopping_criteria: {
@@ -193,47 +216,57 @@ export const properties = {
         limit: 100,
       },
     ],
+    visible: true
   },
   search_time: {
     description: "Search time budget",
     type: "number",
     default: 3600,
+    visible: true
   },
   total_time: {
     description: "Total time budget",
     type: "number",
     default: 3600,
+    visible: true,
+    alias: "t"
   },
   iteration_budget: {
     description: "Iteration budget",
     type: "number",
     default: Number.MAX_SAFE_INTEGER,
+    visible: true
   },
   evaluation_budget: {
     description: "Evaluation budget",
     type: "number",
     default: Number.MAX_SAFE_INTEGER,
+    visible: true
   },
 
   enhanced_cfg: {
     description: "Enable enhanced CFG creation",
     type: "boolean",
     default: false,
+    visible: true
   },
   probe_objective: {
     description: "Enable the probe objectives",
     type: "boolean",
     default: false,
+    visible: true
   },
   modifier_extraction: {
     description: "Enable modifier extraction",
     type: "boolean",
     default: false,
+    visible: true
   },
   constant_pool: {
     description: "Enable constant pool",
     type: "boolean",
     default: false,
+    visible: true
   },
 
   // minimize test cases
@@ -241,6 +274,7 @@ export const properties = {
     description: "Minimize test cases at the end of the search",
     type: "boolean",
     default: false,
+    visible: true
   },
 
   // logging
@@ -248,6 +282,7 @@ export const properties = {
     description: "Log level of the tool",
     type: "string",
     default: "debug",
+    visible: true
   },
   log_to_file: {
     description: "Log level of the tool",
@@ -256,6 +291,7 @@ export const properties = {
       type: "string",
     },
     default: ["info", "warn", "error"],
+    visible: true
   },
 
   // gene defaults
@@ -263,27 +299,32 @@ export const properties = {
     description: "The alphabet to be used by the string gene.",
     type: "string",
     default: "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    visible: true
   },
   string_maxlength: {
     description: "Maximal length of the string gene.",
     type: "number",
     default: 100,
+    visible: true
   },
 
   numeric_decimals: {
     description: "Number of decimals placed used by the numeric gene.",
     type: "number",
     default: 64,
+    visible: true
   },
   numeric_max_value: {
     description: "Max value used by the numeric gene.",
     type: "number",
     default: Number.MAX_SAFE_INTEGER,
+    visible: true
   },
   numeric_signed: {
     description: "Whether the numeric genes are signed.",
     type: "boolean",
     default: true,
+    visible: true
   },
 
   // statistics output settings
@@ -300,12 +341,14 @@ export const properties = {
       "totalBranches",
       "fitnessEvaluations",
     ],
+    visible: true
     // default: ["timestamp", "targetName", "branch", "coveredBranches", "totalBranches", "branchCoverage"],
   },
   configuration: {
     description: "The name of the configuration.",
     type: "string",
     default: "",
+    visible: true
   },
 
   // probability to sample from constant pool
@@ -314,6 +357,7 @@ export const properties = {
       "probability to sample from the constant pool instead creating random values",
     type: "number",
     default: 0.5,
+    visible: true
   },
 
   // misc output settings
@@ -322,11 +366,13 @@ export const properties = {
       "Whether to draw the Control Flow Graph of the code under test.",
     type: "boolean",
     default: false,
+    visible: true
   },
 
   sample_func_as_arg: {
     description: "TODO",
     type: "number",
     default: 0.5,
+    visible: false
   },
 };

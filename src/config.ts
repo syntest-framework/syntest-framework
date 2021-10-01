@@ -64,8 +64,10 @@ export function setupOptions(program: string, additionalOptions: any) {
     yargs.option(optionName, option);
   };
 
-  Object.entries(properties).forEach(loadArg);
-  Object.entries(additionalOptions).forEach(loadArg);
+  const checkArg = ([name, setup]: [string, any]) => setup.visible
+
+  Object.entries(properties).filter(checkArg).forEach(loadArg);
+  Object.entries(additionalOptions).filter(checkArg).forEach(loadArg);
 }
 
 export function loadConfig(args: any = {}, baseConfig: any = {}): any {
