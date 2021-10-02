@@ -28,10 +28,9 @@ export abstract class Statement {
   protected constructor(types: Parameter[], uniqueId: string) {
     this._types = types;
     this._uniqueId = uniqueId;
-    // TODO make the varnames capitalized
-    this._varNames = types.map(
-      (x) => x.name + x.type.replace("[]", "array") + uniqueId
-    );
+    this._varNames = types.map((x) => {
+      return x.name + uniqueId;
+    });
   }
 
   /**
