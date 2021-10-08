@@ -1,6 +1,7 @@
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { AbstractTestCase } from "../AbstractTestCase";
 import { Parameter } from "../../graph/parsing/Parameter";
+import { prng } from "../../util/prng";
 
 /**
  * @author Dimitri Stallenberg
@@ -29,7 +30,7 @@ export abstract class Statement {
     this._types = types;
     this._uniqueId = uniqueId;
     this._varNames = types.map((x) => {
-      return x.name + uniqueId;
+      return x.name + prng.uniqueId();
     });
   }
 
