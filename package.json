@@ -1,5 +1,5 @@
 {
-  "name": "syntest-framework",
+  "name": "@syntest/framework",
   "version": "0.1.0",
   "description": "The common core of the SynTest Framework",
   "keywords": [
@@ -18,6 +18,9 @@
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syntest-framework/syntest-framework.git"
@@ -46,16 +49,16 @@
     "cli-progress": "^3.9.0",
     "d3": "^4.13.0",
     "fast-csv": "^4.3.6",
+    "globby": "^11.0.4",
+    "jsdom": "^16.6.0",
     "figlet": "^1.5.0",
-    "globby": "^11.0.3",
-    "jsdom": "^16.4.0",
     "seedrandom": "^3.0.5",
     "shelljs": "^0.8.4",
     "winston": "^3.3.3",
     "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.15",
+    "@types/chai": "^4.2.19",
     "@types/cli-progress": "^3.9.2",
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.37",
@@ -64,14 +67,14 @@
     "@typescript-eslint/parser": "^4.19.0",
     "chai": "^4.3.4",
     "eslint": "^7.23.0",
-    "eslint-config-prettier": "^8.1.0",
-    "jsdoc": "^3.6.6",
-    "mocha": "^8.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "jsdoc": "^3.6.7",
+    "mocha": "^8.4.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.2",
     "sinon": "^9.2.4",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
+    "typescript": "^4.3.5"
   },
   "engines": {
     "node": ">=10.24.0"
