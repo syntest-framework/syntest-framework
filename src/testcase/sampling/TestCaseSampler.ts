@@ -11,8 +11,7 @@ import { Parameter } from "../../graph/parsing/Parameter";
  * @author Mitchell Olsthoorn
  */
 export abstract class TestCaseSampler
-  implements EncodingSampler<AbstractTestCase>
-{
+  implements EncodingSampler<AbstractTestCase> {
   protected _subject: SearchSubject<AbstractTestCase>;
 
   /**

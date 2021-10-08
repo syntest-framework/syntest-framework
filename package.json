@@ -1,6 +1,6 @@
 {
   "name": "@syntest/framework",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -18,6 +18,9 @@
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syntest-framework/syntest-framework.git"
