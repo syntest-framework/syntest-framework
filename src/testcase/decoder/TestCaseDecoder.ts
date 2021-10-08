@@ -20,8 +20,7 @@ export interface TestCaseDecoder {
   decodeTestCase(
     testCase: AbstractTestCase | AbstractTestCase[],
     targetName: string,
-    addLogs?: boolean,
-    additionalAssertions?: Map<AbstractTestCase, { [p: string]: string }>
+    addLogs: boolean
   ): string;
 
   /**

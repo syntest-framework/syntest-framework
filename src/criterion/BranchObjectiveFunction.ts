@@ -1,6 +1,6 @@
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 import { Encoding } from "../search/Encoding";
-import { Node } from "../graph/Node";
+import { Node, NodeType } from "../graph/nodes/Node";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
 import { Datapoint } from "../testcase/execution/TestCaseRunner";
@@ -78,7 +78,7 @@ export class BranchObjectiveFunction<T extends Encoding>
 
     // find the corresponding branch node inside the cfg
     const branchNode = this._subject.cfg.nodes.find((n: Node) => {
-      return n.branch && n.lines.includes(this._line);
+      return n.type === NodeType.Branch && n.lines.includes(this._line);
     });
     const childEdge = this._subject.cfg.edges.find((edge) => {
       return edge.from === branchNode.id && edge.branchType === this._type;
