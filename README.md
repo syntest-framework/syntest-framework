@@ -51,24 +51,6 @@ $ npm install /path/to/syntest-framework
 
 For questions and help with how to use this library, please see [SUPPORT.md](SUPPORT.md).
 
-## Roadmap
-
-- [x] Create and Draw a Control Flow Graph of the code.
-- [x] Compute approach level distance using the Control Flow Graph.
-- [x] Compute branch distance for:
-  - [x] integer comparisons
-  - [x] float comparisons
-  - [ ] boolean evaluations
-  - [ ] strings comparisons
-- [x] Find test-cases that cover certain branches.
-- [x] Add assertions to the generated test cases.
-- [x] Allow the user to configure the algorithm's parameters and other settings
-  - [x] set the seed of the randomness object
-  - [x] choose the search algorithm and parameters like population_size
-  - [x] select stopping criteria
-  - [x] choose mutation probabilities
-  - [x] configure the log level
-
 ## Contributing
 
 Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change. For more information, please see [CONTRIBUTING.md](CONTRIBUTING.md).
