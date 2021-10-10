@@ -17,11 +17,21 @@ SynTest is a framework for automating the generation of test cases based on Java
 
 The common core contains the common interfaces for the code control-flow representation, test case structure, genes, and the implementation for the meta-heuristic search algorithms.
 
-For more in-depth information about the architecture we refer to: [Architecture](doc/ARCHITECTURE.md).
+For more in-depth information about the architecture we refer to: [Architecture](docs/ARCHITECTURE.md).
 
 ## Installation
 
-When the project reaches a stable state, a NPM package will be released. Until this happens, the library can be used by cloning the project, installing its dependencies, compiling the TypeScript, and requiring it in your project:
+### NPM
+
+The simplest way to use syntest-framework is by installing the npm package.
+
+```bash
+$ npm install @syntest/framework
+```
+
+### From source
+
+The library can be used by cloning the project, installing its dependencies, compiling the TypeScript, and requiring it in your project:
 
 - Clone the project
 
