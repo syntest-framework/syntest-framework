@@ -3,6 +3,9 @@
 > The aim of the common core of the SynTest framework is to extract the common parts (e.g., framework infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
 [![](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml)
+[![publish](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish.yml)
+![npm (scoped)](https://img.shields.io/npm/v/@syntest/framework?style=flat)
+![node-current (scoped)](https://img.shields.io/node/v/@syntest/framework)
 
 The common core of the [SynTest Framework](https://www.syntest.org).
 
