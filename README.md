@@ -1,6 +1,11 @@
 # SynTest Framework - Common Core
 
+> The aim of the common core of the SynTest framework is to extract the common parts (e.g., framework infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
+
 [![](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml)
+[![publish](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish.yml)
+![npm (scoped)](https://img.shields.io/npm/v/@syntest/framework?style=flat)
+![node-current (scoped)](https://img.shields.io/node/v/@syntest/framework)
 
 The common core of the [SynTest Framework](https://www.syntest.org).
 
@@ -12,11 +17,21 @@ SynTest is a framework for automating the generation of test cases based on Java
 
 The common core contains the common interfaces for the code control-flow representation, test case structure, genes, and the implementation for the meta-heuristic search algorithms.
 
-For more in-depth information about the architecture we refer to: [Architecture](doc/ARCHITECTURE.md).
+For more in-depth information about the architecture we refer to: [Architecture](docs/ARCHITECTURE.md).
 
 ## Installation
 
-When the project reaches a stable state, a NPM package will be released. Until this happens, the library can be used by cloning the project, installing its dependencies, compiling the TypeScript, and requiring it in your project:
+### NPM
+
+The simplest way to use syntest-framework is by installing the npm package.
+
+```bash
+$ npm install @syntest/framework
+```
+
+### From source
+
+The library can be used by cloning the project, installing its dependencies, compiling the TypeScript, and requiring it in your project:
 
 - Clone the project
 
@@ -46,24 +61,6 @@ $ npm install /path/to/syntest-framework
 
 For questions and help with how to use this library, please see [SUPPORT.md](SUPPORT.md).
 
-## Roadmap
-
-- [x] Create and Draw a Control Flow Graph of the code.
-- [x] Compute approach level distance using the Control Flow Graph.
-- [x] Compute branch distance for:
-  - [x] integer comparisons
-  - [x] float comparisons
-  - [ ] boolean evaluations
-  - [ ] strings comparisons
-- [x] Find test-cases that cover certain branches.
-- [x] Add assertions to the generated test cases.
-- [x] Allow the user to configure the algorithm's parameters and other settings
-  - [x] set the seed of the randomness object
-  - [x] choose the search algorithm and parameters like population_size
-  - [x] select stopping criteria
-  - [x] choose mutation probabilities
-  - [x] configure the log level
-
 ## Contributing
 
 Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change. For more information, please see [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -76,4 +73,4 @@ Contributions are welcome! For major changes, please open an issue first to disc
 
 ## License
 
-The content of this project itself is licensed under the [MIT license](LICENSE.md).
+The code within this project is licensed under the [Apache-2.0 license](LICENSE).

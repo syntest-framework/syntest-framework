@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-[yyyy] Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework.
  *
@@ -15,25 +15,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { Encoding } from "../search/Encoding";
-import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
-import { SearchSubject } from "../search/SearchSubject";
-
-/**
- *
- */
-export abstract class ProbeObjectiveFunction<
-  T extends Encoding
-> extends BranchObjectiveFunction<T> {
-  protected constructor(
-    subject: SearchSubject<T>,
-    id: string,
-    line: number,
-    type: boolean
-  ) {
-    super(subject, id, line, type);
-  }
-
-  abstract calculateDistance(encoding: T): number;
-}
