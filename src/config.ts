@@ -41,7 +41,7 @@ export function setupOptions(program: string, additionalOptions: any) {
 
   yargs
     .example(`${program} --population_size 10`, "Setting the population size")
-    .epilog("visit ... for more documentation")
+    .epilog("visit https://syntest.org for more documentation")
     .boolean("h")
     .boolean("version")
     .help(false)
