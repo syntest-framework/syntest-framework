@@ -32,7 +32,7 @@
     "url": "git+https://github.com/syntest-framework/syntest-javascript.git"
   },
   "scripts": {
-    "build": "npm run build:compile",
+    "build": "tsc --build",
     "build:compile": "tsc --build",
     "build:watch": "tsc --build --watch",
     "clean": "rm -rf .nyc_output dist node_modules",
@@ -42,7 +42,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "npm run build",
-    "run": "truffle run syntest-solidity",
+    "run": "ts-node ./src/bin.ts",
     "test": "mocha",
     "test:coverage": "nyc mocha",
     "test:watch": "mocha --watch"
@@ -60,6 +60,7 @@
     "mocha": "^9.1.3",
     "prettier": "^2.4.1",
     "sinon": "^12.0.1",
+    "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   },
   "engines": {
