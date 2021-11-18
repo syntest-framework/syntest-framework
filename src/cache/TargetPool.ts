@@ -19,7 +19,7 @@ import * as path from 'path'
 import { readFile } from "../utils/fileSystem";
 
 export class TargetPool {
-  protected abstractSyntaxTreeGenerator
+  protected abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator
   protected targetMapGenerator
   protected controlFlowGraphGenerator
 
@@ -29,7 +29,8 @@ export class TargetPool {
   // Mapping: filepath -> AST
   protected _abstractSyntaxTrees: Map<string, any>;
 
-  constructor() {
+  constructor(abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator) {
+    this.abstractSyntaxTreeGenerator = abstractSyntaxTreeGenerator
     this._sources = new Map<string, string>()
   }
 
@@ -46,6 +47,18 @@ export class TargetPool {
   getAST(targetPath: string) {
     const absoluteTargetPath = path.resolve(targetPath);
 
+    if (!this._abstractSyntaxTrees.has(absoluteTargetPath)) {
+      this._abstractSyntaxTrees.set(
+        absoluteTargetPath,
+        this.abstractSyntaxTreeGenerator.getAST(
+          this.getSource(targetPath),
+          absoluteTargetPath,
+          {}
+        )
+      )
+    }
+
+    this._abstractSyntaxTrees.get(absoluteTargetPath)
   }
 
   getCFG(targetPath: string) {
