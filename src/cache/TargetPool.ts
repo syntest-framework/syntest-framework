@@ -17,6 +17,7 @@
  */
 import * as path from 'path'
 import { readFile } from "../utils/fileSystem";
+import { AbstractSyntaxTreeGenerator } from "../analysis/AbstractSyntaxTreeGenerator";
 
 export class TargetPool {
   protected abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator

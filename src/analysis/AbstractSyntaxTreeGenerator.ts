@@ -1,9 +1,14 @@
+import { InstrumenterOptions } from "../instrumentation/CustomInstrumenter";
+import { defaults } from "@istanbuljs/schema"
 const { transformSync } = require('@babel/core');
 
-class AbstractSyntaxTreeGenerator {
-  protected config
-  constructor(config) {
-    this.config = config
+export class AbstractSyntaxTreeGenerator {
+  private opts: any;
+  constructor(opts: InstrumenterOptions = {}) {
+    this.opts = {
+      ...defaults.instrumenter,
+      ...opts
+    };
   }
 
   getAST(source, target, inputSourceMap) {
@@ -13,13 +18,13 @@ class AbstractSyntaxTreeGenerator {
       ast: true,
       filename: target || String(new Date().getTime()) + '.js',
       inputSourceMap,
-      sourceMaps: this.config.produceSourceMap,
-      compact: this.config.compact,
-      comments: this.config.preserveComments,
+      sourceMaps: this.opts.produceSourceMap,
+      compact: this.opts.compact,
+      comments: this.opts.preserveComments,
       parserOpts: {
-        allowReturnOutsideFunction: this.config.autoWrap,
-        sourceType: this.config.esModules ? 'module' : 'script',
-        plugins: this.config.parserPlugins
+        allowReturnOutsideFunction: this.opts.autoWrap,
+        sourceType: this.opts.esModules ? 'module' : 'script',
+        plugins: this.opts.parserPlugins
       },
       plugins: []
     };

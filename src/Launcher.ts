@@ -21,12 +21,15 @@ import {
   guessCWD,
   loadConfig,
   loadTargets,
-  processConfig,
+  processConfig, properties,
   setupLogger,
   setupOptions,
 } from "@syntest/framework";
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
 import { TargetPool } from "./cache/TargetPool";
+import { AbstractSyntaxTreeGenerator } from "./analysis/AbstractSyntaxTreeGenerator";
+import { CustomInstrumenter } from "./instrumentation/CustomInstrumenter";
+import * as schema from "@istanbuljs/schema"
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -40,7 +43,7 @@ export class Launcher {
     );
     await this.finalize(archive, imports, dependencies);
 
-    await exit()
+    await this.exit()
   }
 
   private async setup(): Promise<[Map<string, string[]>, Map<string, string[]>]> {
@@ -48,7 +51,8 @@ export class Launcher {
     const additionalOptions = {}; // TODO
     setupOptions(this._program, additionalOptions);
 
-    const index = process.argv.indexOf(process.argv.find((a) => a.includes(this._program)))
+    const programArgs = process.argv.filter((a) => a.includes(this._program) || a.includes("bin.ts"))
+    const index = process.argv.indexOf(programArgs[programArgs.length - 1])
     const args = process.argv.slice(index + 1);
 
     const config = loadConfig(args);
@@ -60,6 +64,7 @@ export class Launcher {
     const [included, excluded] = await loadTargets();
     if (!included.size) {
       // TODO ui error
+      console.log('nothing included')
       process.exit(1);
     }
 
@@ -74,12 +79,51 @@ export class Launcher {
   ): Promise<
     [Archive<JavaScriptTestCase>, Map<string, string>, Map<string, string[]>]
     > {
-    const targetPool = new TargetPool()
+    console.log(included)
 
+    const opts = {
+
+      autoWrap: true,
+      coverageVariable: '__coverage__',
+      embedSource: true,
+      ignoreClassMethods: [],
+      produceSourceMap: true,
+      compact: true,
+      preserveComments: true,
+      esModules: [null, 'instrument'],
+      parserPlugins: [
+        'asyncGenerators',
+        'bigInt',
+        'classProperties',
+        'classPrivateProperties',
+        'classPrivateMethods',
+        'dynamicImport',
+        'importMeta',
+        'numericSeparator',
+        'objectRestSpread',
+        'optionalCatchBinding',
+        'topLevelAwait'
+      ]
+    }
+    const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator(opts)
+    const targetPool = new TargetPool(abstractSyntaxTreeGenerator)
+
+    const instrumenter = new CustomInstrumenter(opts)
 
     // TODO setup temp folders
 
     // TODO instrument targets
+    for (const _path of included.keys()) {
+      const source = targetPool.getSource(_path)
+      console.log('source')
+      console.log(source)
+      const instrumented = await instrumenter.instrumentSync(source, _path, {})
+      console.log('instrumented')
+      console.log(instrumented)
+
+    }
+
+
 
     // TODO save instrumented files
 
