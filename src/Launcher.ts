@@ -21,15 +21,14 @@ import {
   guessCWD,
   loadConfig,
   loadTargets,
-  processConfig, properties,
+  processConfig,
   setupLogger,
   setupOptions,
 } from "@syntest/framework";
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
 import { TargetPool } from "./cache/TargetPool";
 import { AbstractSyntaxTreeGenerator } from "./analysis/AbstractSyntaxTreeGenerator";
-import { CustomInstrumenter } from "./instrumentation/CustomInstrumenter";
-import * as schema from "@istanbuljs/schema"
+import { Instrumenter } from "./instrumentation/Instrumenter";
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -81,46 +80,26 @@ export class Launcher {
     > {
     console.log(included)
 
-    const opts = {
-
-      autoWrap: true,
-      coverageVariable: '__coverage__',
-      embedSource: true,
-      ignoreClassMethods: [],
-      produceSourceMap: true,
-      compact: true,
-      preserveComments: true,
-      esModules: [null, 'instrument'],
-      parserPlugins: [
-        'asyncGenerators',
-        'bigInt',
-        'classProperties',
-        'classPrivateProperties',
-        'classPrivateMethods',
-        'dynamicImport',
-        'importMeta',
-        'numericSeparator',
-        'objectRestSpread',
-        'optionalCatchBinding',
-        'topLevelAwait'
-      ]
-    }
-    const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator(opts)
+    const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator()
     const targetPool = new TargetPool(abstractSyntaxTreeGenerator)
 
-    const instrumenter = new CustomInstrumenter(opts)
 
+    const instrumenter = new Instrumenter()
     // TODO setup temp folders
 
-    // TODO instrument targets
     for (const _path of included.keys()) {
       const source = targetPool.getSource(_path)
       console.log('source')
       console.log(source)
-      const instrumented = await instrumenter.instrumentSync(source, _path, {})
+
+      const codeMap = await instrumenter.instrument(source, _path)
+      const instrumented = codeMap.code
+      const ast = codeMap.ast
+
+      targetPool.setAST(_path, ast)
+
       console.log('instrumented')
       console.log(instrumented)
-
     }
 
 

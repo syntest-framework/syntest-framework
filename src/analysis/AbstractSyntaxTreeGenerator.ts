@@ -1,35 +1,14 @@
-import { InstrumenterOptions } from "../instrumentation/CustomInstrumenter";
-import { defaults } from "@istanbuljs/schema"
+import { defaultBabelOptions } from "../configs/DefaultBabelConfig";
 const { transformSync } = require('@babel/core');
 
 export class AbstractSyntaxTreeGenerator {
-  private opts: any;
-  constructor(opts: InstrumenterOptions = {}) {
-    this.opts = {
-      ...defaults.instrumenter,
-      ...opts
-    };
-  }
 
-  getAST(source, target, inputSourceMap) {
-    const babelOpts = {
-      configFile: false,
-      babelrc: false,
-      ast: true,
-      filename: target || String(new Date().getTime()) + '.js',
-      inputSourceMap,
-      sourceMaps: this.opts.produceSourceMap,
-      compact: this.opts.compact,
-      comments: this.opts.preserveComments,
-      parserOpts: {
-        allowReturnOutsideFunction: this.opts.autoWrap,
-        sourceType: this.opts.esModules ? 'module' : 'script',
-        plugins: this.opts.parserPlugins
-      },
-      plugins: []
-    };
+  getAST(source, target) {
+    const options = {...defaultBabelOptions}
 
-    const codeMap = transformSync(source, babelOpts);
+    options.filename = target || String(new Date().getTime()) + '.js'
+
+    const codeMap = transformSync(source, options);
 
     return codeMap.ast
   }
