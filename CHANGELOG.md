@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.1.2] - 2021-11-29
+
+### Fixed
+
+- CLI help instructions contained boilerplate content
+
 ## [0.1.1] - 2021-10-18
 
 ### Added
@@ -30,5 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Collector functionality to keep track of statistics regarding the search process
 - CLI user interface
 
-[unreleased]: https://github.com/syntest-framework/syntest-framework/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/syntest-framework/syntest-framework/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.1
