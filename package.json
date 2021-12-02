@@ -65,5 +65,10 @@
   },
   "engines": {
     "node": ">=10.24.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.16.0",
+    "@syntest/framework": "^0.1.1",
+    "istanbul-lib-instrument": "^5.1.0"
   }
 }
