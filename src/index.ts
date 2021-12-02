@@ -121,3 +121,8 @@ export * from "./util/prng";
 export * from "./util/fileSystem";
 
 export * from "./properties";
+
+// Targetting
+export * from "./targetting/TargetFile";
+export * from "./targetting/TargetPool";
+export * from "./targetting/targetUtil";
