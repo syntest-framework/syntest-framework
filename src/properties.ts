@@ -343,7 +343,8 @@ export const properties = {
   },
 
   sample_func_as_arg: {
-    description: "Probability to sample the output of a function as an argument.",
+    description:
+      "Probability to sample the output of a function as an argument.",
     type: "number",
     default: 0.5,
   },

@@ -16,15 +16,10 @@
  * limitations under the License.
  */
 
-import {
-  mkdirSync,
-  readdirSync,
-  rmdirSync,
-  unlinkSync,
-} from "fs";
+import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "fs";
 import * as path from "path";
 import { Properties } from "../properties";
-import TargetFile from "../targetting/TargetFile";
+import { TargetFile } from "../targetting/TargetFile";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { outputFileSync } = require("fs-extra");
 
@@ -53,7 +48,6 @@ export async function deleteTempDirectories() {
   await rmdirSync(`.syntest`, { recursive: true });
 }
 
-
 export async function clearDirectory(directory: string) {
   const files = await readdirSync(directory);
   for (const file of files) {
@@ -67,7 +61,11 @@ export async function clearDirectory(directory: string) {
  * @param  {[type]} originalDir absolute path to original contracts directory
  * @param  {[type]} tempDir     absolute path to temp contracts directory
  */
-export async function saveTempFiles(targets: TargetFile[], originalDir: string, tempDir: string) {
+export async function saveTempFiles(
+  targets: TargetFile[],
+  originalDir: string,
+  tempDir: string
+) {
   let _path;
   for (const target of targets) {
     _path = path.normalize(target.canonicalPath).replace(originalDir, tempDir);

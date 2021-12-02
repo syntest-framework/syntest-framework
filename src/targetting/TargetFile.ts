@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-export default interface TargetFile {
+export interface TargetFile {
   source: string;
   canonicalPath: string;
   relativePath: string;
