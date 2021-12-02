@@ -1,30 +1,14 @@
+import { defaultBabelOptions } from "../configs/DefaultBabelConfig";
 const { transformSync } = require('@babel/core');
 
-class AbstractSyntaxTreeGenerator {
-  protected config
-  constructor(config) {
-    this.config = config
-  }
+export class AbstractSyntaxTreeGenerator {
 
-  getAST(source, target, inputSourceMap) {
-    const babelOpts = {
-      configFile: false,
-      babelrc: false,
-      ast: true,
-      filename: target || String(new Date().getTime()) + '.js',
-      inputSourceMap,
-      sourceMaps: this.config.produceSourceMap,
-      compact: this.config.compact,
-      comments: this.config.preserveComments,
-      parserOpts: {
-        allowReturnOutsideFunction: this.config.autoWrap,
-        sourceType: this.config.esModules ? 'module' : 'script',
-        plugins: this.config.parserPlugins
-      },
-      plugins: []
-    };
+  getAST(source, target) {
+    const options = {...defaultBabelOptions}
 
-    const codeMap = transformSync(source, babelOpts);
+    options.filename = target || String(new Date().getTime()) + '.js'
+
+    const codeMap = transformSync(source, options);
 
     return codeMap.ast
   }

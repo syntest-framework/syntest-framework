@@ -17,6 +17,7 @@
  */
 import * as path from 'path'
 import { readFile } from "../utils/fileSystem";
+import { AbstractSyntaxTreeGenerator } from "../analysis/AbstractSyntaxTreeGenerator";
 
 export class TargetPool {
   protected abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator
@@ -32,6 +33,7 @@ export class TargetPool {
   constructor(abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator) {
     this.abstractSyntaxTreeGenerator = abstractSyntaxTreeGenerator
     this._sources = new Map<string, string>()
+    this._abstractSyntaxTrees = new Map<string, string>()
   }
 
   getSource(targetPath: string) {
@@ -52,13 +54,18 @@ export class TargetPool {
         absoluteTargetPath,
         this.abstractSyntaxTreeGenerator.getAST(
           this.getSource(targetPath),
-          absoluteTargetPath,
-          {}
+          absoluteTargetPath
         )
       )
     }
 
     this._abstractSyntaxTrees.get(absoluteTargetPath)
+  }
+
+  setAST(targetPath: string, ast: any) {
+    const absoluteTargetPath = path.resolve(targetPath);
+
+    this._abstractSyntaxTrees.set(absoluteTargetPath, ast)
   }
 
   getCFG(targetPath: string) {
