@@ -40,7 +40,6 @@ export async function createTempDirectoryStructure() {
   await mkdirSync(Properties.temp_test_directory, { recursive: true });
   await mkdirSync(Properties.temp_log_directory, { recursive: true });
   await mkdirSync(Properties.temp_instrumented_directory, { recursive: true });
-
 }
 
 export async function deleteTempDirectories() {
