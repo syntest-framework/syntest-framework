@@ -20,7 +20,7 @@ import { Statement } from "../statements/Statement";
 import { AbstractTestCase } from "../AbstractTestCase";
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { SearchSubject } from "../../search/SearchSubject";
-import { Parameter } from "../../graph/parsing/Parameter";
+import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
 
 /**
  * TestCaseSampler class

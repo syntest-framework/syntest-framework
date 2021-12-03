@@ -19,7 +19,7 @@
 import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "fs";
 import * as path from "path";
 import { Properties } from "../properties";
-import { TargetFile } from "../targetting/TargetFile";
+import { TargetFile } from "../analysis/static/TargetFile";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { outputFileSync } = require("fs-extra");
 

@@ -1,6 +1,6 @@
 import { TargetPool } from "./TargetPool";
 import { TargetFile } from "./TargetFile";
-import { Properties } from "../properties";
+import { Properties } from "../../properties";
 import * as path from "path";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const globby = require("globby");
