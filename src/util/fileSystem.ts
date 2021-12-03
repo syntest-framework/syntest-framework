@@ -39,11 +39,14 @@ export async function createTempDirectoryStructure() {
   // temp
   await mkdirSync(Properties.temp_test_directory, { recursive: true });
   await mkdirSync(Properties.temp_log_directory, { recursive: true });
+  await mkdirSync(Properties.temp_instrumented_directory, { recursive: true });
+
 }
 
 export async function deleteTempDirectories() {
   await rmdirSync(Properties.temp_test_directory, { recursive: true });
   await rmdirSync(Properties.temp_log_directory, { recursive: true });
+  await rmdirSync(Properties.temp_instrumented_directory, { recursive: true });
 
   await rmdirSync(`.syntest`, { recursive: true });
 }
