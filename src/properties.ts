@@ -27,6 +27,7 @@ export class Properties {
 
   public static temp_test_directory: string;
   public static temp_log_directory: string;
+  public static temp_instrumented_directory: string;
 
   public static seed: string | null;
   public static max_depth: number;
@@ -134,6 +135,12 @@ export const properties = {
     description: "Path to the temporary log directory",
     type: "string",
     default: ".syntest/logs",
+  },
+
+  temp_instrumented_directory: {
+    description: "Path to the temporary instrumented directory",
+    type: "string",
+    default: ".syntest/instrumented",
   },
 
   // random generator settings

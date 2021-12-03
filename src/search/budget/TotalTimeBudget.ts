@@ -27,7 +27,8 @@ import { SearchTimeBudget } from "./SearchTimeBudget";
  */
 export class TotalTimeBudget<T extends Encoding>
   extends SearchTimeBudget<T>
-  implements Budget<T> {
+  implements Budget<T>
+{
   /**
    * @inheritDoc
    */

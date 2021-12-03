@@ -7,7 +7,7 @@ const globby = require("globby");
 
 export async function loadTargets(
   targetPool: TargetPool
-): Promise<[TargetFile[], TargetFile[]]> {
+): Promise<void> {
   let includes = Properties.include;
   let excludes = Properties.exclude;
 
@@ -108,7 +108,8 @@ export async function loadTargets(
     });
   }
 
-  return [includedTargets, excludedTargets];
+  targetPool.included = includedTargets;
+  targetPool.excluded = excludedTargets;
 }
 
 export function getCommonBasePath(targets: TargetFile[]): string {
