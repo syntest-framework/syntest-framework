@@ -5,9 +5,7 @@ import * as path from "path";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const globby = require("globby");
 
-export async function loadTargets(
-  targetPool: TargetPool
-): Promise<void> {
+export async function loadTargets(targetPool: TargetPool): Promise<void> {
   let includes = Properties.include;
   let excludes = Properties.exclude;
 

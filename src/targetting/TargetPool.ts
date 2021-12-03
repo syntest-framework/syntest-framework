@@ -1,4 +1,4 @@
-import {TargetFile} from "./TargetFile";
+import { TargetFile } from "./TargetFile";
 
 export abstract class TargetPool {
   private _included: TargetFile[];
@@ -23,6 +23,6 @@ export abstract class TargetPool {
   }
 
   get targetFiles(): TargetFile[] {
-    return [ ...this.included, ...this._included ]
+    return [...this.included, ...this._included];
   }
 }
