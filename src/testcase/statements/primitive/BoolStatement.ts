@@ -23,6 +23,7 @@ import {
   Properties,
   Parameter,
 } from "@syntest/framework";
+import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -32,7 +33,7 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
     super(type, uniqueId, value);
   }
 
-  mutate(sampler: TestCaseSampler, depth: number) {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): BoolStatement {
     if (prng.nextBoolean(Properties.resample_gene_probability)) {
       return BoolStatement.getRandom(this.type);
     }

@@ -23,14 +23,10 @@ import {
   Properties,
   Parameter,
 } from "@syntest/framework";
+import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 
 /**
  * Generic number class
- *
- * Uses BigNumber to allow for numbers larger than allowed by javascript.
- *
- * Documentation on BigNumber:
- * https://www.npmjs.com/package/bignumber.js
  *
  * @author Dimitri Stallenberg
  */
@@ -43,7 +39,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
     super(type, uniqueId, value);
   }
 
-  mutate(sampler: TestCaseSampler, depth: number): NumericStatement {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): NumericStatement {
     if (prng.nextBoolean(Properties.delta_mutation_probability)) {
       return this.deltaMutation();
     }

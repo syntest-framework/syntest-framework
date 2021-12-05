@@ -23,6 +23,7 @@ import {
   Properties,
   Parameter,
 } from "@syntest/framework";
+import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -43,7 +44,7 @@ export class StringStatement extends PrimitiveStatement<string> {
     this.maxlength = maxlength;
   }
 
-  mutate(sampler: TestCaseSampler, depth: number): StringStatement {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): StringStatement {
     if (prng.nextBoolean(Properties.resample_gene_probability)) {
       return StringStatement.getRandom();
     }
