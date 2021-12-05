@@ -49,30 +49,30 @@ function generator() {
  * @author Dimitri Stallenberg
  */
 export const prng = {
-  nextBoolean: (trueChance = 0.5) => {
+  nextBoolean: (trueChance = 0.5): boolean => {
     return generator() <= trueChance;
   },
-  nextInt: (min = 0, max = Number.MAX_VALUE) => {
+  nextInt: (min = 0, max = Number.MAX_SAFE_INTEGER): number => {
     const value = generator();
 
     return Math.round(value * (max - min)) + min;
   },
   nextBigInt: (
     min: BigNumber = new BigNumber(0),
-    max = new BigNumber(Number.MAX_VALUE)
-  ) => {
+    max = new BigNumber(Number.MAX_SAFE_INTEGER)
+  ): BigNumber => {
     const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min).integerValue();
   },
-  nextDouble: (min = 0, max = Number.MAX_VALUE) => {
+  nextDouble: (min = 0, max = Number.MAX_SAFE_INTEGER): number => {
     const value = generator();
 
     return value * (max - min) + min;
   },
   nextBigDouble: (
     min: BigNumber = new BigNumber(0),
-    max = new BigNumber(Number.MAX_VALUE)
-  ) => {
+    max = new BigNumber(Number.MAX_SAFE_INTEGER)
+  ): BigNumber => {
     const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min);
   },
@@ -82,7 +82,7 @@ export const prng = {
    * Based on:
    * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
    */
-  nextGaussian: (mu = 0, sigma = 1) => {
+  nextGaussian: (mu = 0, sigma = 1): number => {
     const u1 = generator();
     const u2 = generator();
 
@@ -101,7 +101,7 @@ export const prng = {
     const index = Math.round(value * (options.length - 1));
     return options[index];
   },
-  uniqueId: (length = 7) => {
+  uniqueId: (length = 7): string => {
     let result = "";
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

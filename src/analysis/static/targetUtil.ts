@@ -118,8 +118,11 @@ export function getCommonBasePath(targets: TargetFile[]): string {
   const pathA = targets[0].canonicalPath;
   let finalCommonPathLength = pathA.length;
 
-  for (let t = 1; t < targets.length; t++) {
-    const pathB = targets[t].canonicalPath;
+  for (let t = 0; t < targets.length; t++) {
+    let pathB = targets[t].canonicalPath;
+
+    const lastSlashIndex = pathB.lastIndexOf("/")
+    pathB = pathB.substring(0, lastSlashIndex)
 
     let commonPathLength = 0;
 
@@ -133,5 +136,5 @@ export function getCommonBasePath(targets: TargetFile[]): string {
     finalCommonPathLength = Math.min(commonPathLength, finalCommonPathLength);
   }
 
-  return pathA.substring(0, finalCommonPathLength);
+  return pathA.substring(0, finalCommonPathLength + 1);
 }

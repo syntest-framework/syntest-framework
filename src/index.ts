@@ -107,6 +107,7 @@ export * from "./analysis/static/graph/parsing/ActionDescription";
 export * from "./analysis/static/graph/parsing/FunctionDescription";
 export * from "./analysis/static/graph/parsing/Parameter";
 export * from "./analysis/static/graph/parsing/Visibility";
+export * from "./analysis/static/graph/parsing/TargetMetaData";
 
 // UI
 export * from "./ui/UserInterface";

@@ -12,7 +12,7 @@ export abstract class TargetPool {
     targetName: string
   ): Map<string, any>;
 
-  abstract getCFG(targetPath: string): CFG;
+  abstract getCFG(targetPath: string, targetName: string): CFG;
   abstract getAST(targetPath: string): any;
 
   set included(value: TargetFile[]) {
@@ -32,6 +32,6 @@ export abstract class TargetPool {
   }
 
   get targetFiles(): TargetFile[] {
-    return [...this.included, ...this._included];
+    return [...this.included, ...this.excluded];
   }
 }
