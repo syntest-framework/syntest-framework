@@ -30,7 +30,7 @@ import {
   Properties,
   deleteTempDirectories,
   createDirectoryStructure,
-  createTempDirectoryStructure,
+  createTempDirectoryStructure, drawGraph, getUserInterface,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
@@ -39,6 +39,7 @@ import { AbstractSyntaxTreeGenerator } from "./analysis/static/ast/AbstractSynta
 import { Instrumenter } from "./instrumentation/Instrumenter";
 import * as path from "path";
 import { TargetMapGenerator } from "./analysis/static/map/TargetMapGenerator";
+import { JavaScriptSubject } from "./search/JavaScriptSubject";
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -95,6 +96,10 @@ export class Launcher {
   ): Promise<
     [Archive<JavaScriptTestCase>, Map<string, string>, Map<string, string[]>]
   > {
+    const excludedSet = new Set(
+      ...targetPool.excluded.map((x) => x.canonicalPath)
+    );
+
     const instrumenter = new Instrumenter();
     // TODO setup temp folders
 
@@ -124,8 +129,8 @@ export class Launcher {
     );
 
     const finalArchive = new Archive<JavaScriptTestCase>();
-    const finalImports: Map<string, string> = new Map();
-    const finalDependencies: Map<string, string[]> = new Map();
+    let finalImports: Map<string, string> = new Map();
+    let finalDependencies: Map<string, string[]> = new Map();
 
     // TODO search targets
     for (const targetFile of targetPool.included) {
@@ -133,11 +138,92 @@ export class Launcher {
 
       const targetMap = targetPool.getTargetMap(targetFile.canonicalPath);
       for (const target of targetMap.keys()) {
-        // TODO
+        // check if included
+        if (
+          !includedTargets.includes("*") &&
+          !includedTargets.includes(target)
+        ) {
+          continue;
+        }
+
+        // check if excluded
+        if (excludedSet.has(targetFile.canonicalPath)) {
+          const excludedTargets = targetPool.excluded.find(
+            (x) => x.canonicalPath === targetFile.canonicalPath
+          ).targets;
+          if (
+            excludedTargets.includes("*") ||
+            excludedTargets.includes(target)
+          ) {
+            continue;
+          }
+        }
+
+        const archive = await this.testTarget(
+          targetPool,
+          targetFile.canonicalPath,
+          target
+        );
+        const [importsMap, dependencyMap] = targetPool.getImportDependencies(
+          targetFile.canonicalPath,
+          target
+        );
+        finalArchive.merge(archive);
+
+        finalImports = new Map([
+          ...Array.from(finalImports.entries()),
+          ...Array.from(importsMap.entries()),
+        ]);
+        finalDependencies = new Map([
+          ...Array.from(finalDependencies.entries()),
+          ...Array.from(dependencyMap.entries()),
+        ]);
       }
     }
 
     return [finalArchive, finalImports, finalDependencies];
+  }
+
+  private async testTarget(
+    targetPool: JavaScriptTargetPool,
+    targetPath: string,
+    target: string
+  ): Promise<Archive<JavaScriptTestCase>> {
+    const cfg = targetPool.getCFG(targetPath, target);
+
+    if (Properties.draw_cfg) {
+      drawGraph(
+        cfg,
+        path.join(
+          Properties.cfg_directory,
+          // TODO also support .ts
+          `${path.basename(targetPath, '.js').split(".")[0]}.svg`
+        )
+      );
+    }
+
+    const ast = targetPool.getAST(targetPath)
+    const functionMap = targetPool.getFunctionMap(targetPath, target)
+
+    const currentSubject = new JavaScriptSubject(
+      path.basename(targetPath),
+      target,
+      cfg,
+      [...functionMap.values()]
+    )
+
+    if (!currentSubject.getPossibleActions().length) {
+      return new Archive();
+    }
+
+    const [importsMap, dependencyMap] = targetPool.getImportDependencies(
+      targetPath,
+      target
+    );
+
+    // const suiteBuilder = new
+
+
   }
 
   private async finalize(

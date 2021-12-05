@@ -94,8 +94,12 @@ export class JavaScriptTargetPool extends TargetPool {
     return this._abstractSyntaxTrees.get(absoluteTargetPath);
   }
 
-  getCFG(targetPath: string): any {
+  getCFG(targetPath: string, targetName: string): CFG {
     const absoluteTargetPath = path.resolve(targetPath);
+
+    // TODO
+
+    return new CFG()
   }
 
   getTargetMap(targetPath: string): Map<string, TargetMetaData> {
@@ -133,5 +137,11 @@ export class JavaScriptTargetPool extends TargetPool {
         `Target ${targetName} could not be found at ${targetPath}`
       );
     }
+  }
+
+  getImportDependencies(targetPath: string, targetName: string):  [Map<string, string>, Map<string, string[]>] {
+    // TODO
+
+    return [new Map(), new Map()]
   }
 }
