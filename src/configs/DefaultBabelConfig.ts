@@ -9,13 +9,13 @@ export const defaultBabelOptions: TransformOptions = {
   comments: true,
   parserOpts: {
     allowReturnOutsideFunction: true,
-    sourceType: 'module',
+    sourceType: "module",
     plugins: [
-      'asyncGenerators',
-      'classProperties',
-      'dynamicImport',
-      'objectRestSpread',
-    ]
+      "asyncGenerators",
+      "classProperties",
+      "dynamicImport",
+      "objectRestSpread",
+    ],
   },
-  plugins: []
+  plugins: [],
 };

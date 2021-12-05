@@ -22,110 +22,133 @@ import {
   loadConfig,
   loadTargets,
   processConfig,
+  saveTempFiles,
   setupLogger,
   setupOptions,
+  TargetFile,
+  getCommonBasePath,
+  Properties,
+  deleteTempDirectories,
+  createDirectoryStructure,
+  createTempDirectoryStructure,
 } from "@syntest/framework";
+
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
-import { TargetPool } from "./cache/TargetPool";
-import { AbstractSyntaxTreeGenerator } from "./analysis/AbstractSyntaxTreeGenerator";
+import { JavaScriptTargetPool } from "./analysis/static/JavaScriptTargetPool";
+import { AbstractSyntaxTreeGenerator } from "./analysis/static/ast/AbstractSyntaxTreeGenerator";
 import { Instrumenter } from "./instrumentation/Instrumenter";
+import * as path from "path";
+import { TargetMapGenerator } from "./analysis/static/map/TargetMapGenerator";
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
 
   public async run() {
-    await guessCWD(null)
-    const [included, excluded] = await this.setup()
-    const [archive, imports, dependencies] = await this.search(
-      included,
-      excluded
-    );
+    await guessCWD(null);
+    const targetPool = await this.setup();
+    const [archive, imports, dependencies] = await this.search(targetPool);
     await this.finalize(archive, imports, dependencies);
 
-    await this.exit()
+    await this.exit();
   }
 
-  private async setup(): Promise<[Map<string, string[]>, Map<string, string[]>]> {
+  private async setup(): Promise<JavaScriptTargetPool> {
     // Filesystem & Compiler Re-configuration
     const additionalOptions = {}; // TODO
     setupOptions(this._program, additionalOptions);
 
-    const programArgs = process.argv.filter((a) => a.includes(this._program) || a.includes("bin.ts"))
-    const index = process.argv.indexOf(programArgs[programArgs.length - 1])
+    const programArgs = process.argv.filter(
+      (a) => a.includes(this._program) || a.includes("bin.ts")
+    );
+    const index = process.argv.indexOf(programArgs[programArgs.length - 1]);
     const args = process.argv.slice(index + 1);
 
     const config = loadConfig(args);
     processConfig(config, args);
     setupLogger();
+    await createDirectoryStructure();
+    await createTempDirectoryStructure();
 
     // TODO ui setup
 
-    const [included, excluded] = await loadTargets();
-    if (!included.size) {
+    const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
+    const targetMapGenerator = new TargetMapGenerator();
+    const targetPool = new JavaScriptTargetPool(
+      abstractSyntaxTreeGenerator,
+      targetMapGenerator
+    );
+
+    await loadTargets(targetPool);
+    if (!targetPool.included.length) {
       // TODO ui error
-      console.log('nothing included')
+      console.log("nothing included");
       process.exit(1);
     }
 
     // TODO ui info messages
 
-    return [included, excluded]
+    return targetPool;
   }
 
   private async search(
-    included: Map<string, string[]>,
-    excluded: Map<string, string[]>
+    targetPool: JavaScriptTargetPool
   ): Promise<
     [Archive<JavaScriptTestCase>, Map<string, string>, Map<string, string[]>]
-    > {
-    console.log(included)
-
-    const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator()
-    const targetPool = new TargetPool(abstractSyntaxTreeGenerator)
-
-
-    const instrumenter = new Instrumenter()
+  > {
+    const instrumenter = new Instrumenter();
     // TODO setup temp folders
 
-    for (const _path of included.keys()) {
-      const source = targetPool.getSource(_path)
-      console.log('source')
-      console.log(source)
+    const instrumentedTargets: TargetFile[] = [];
 
-      const codeMap = await instrumenter.instrument(source, _path)
-      const instrumented = codeMap.code
-      const ast = codeMap.ast
+    for (const targetFile of targetPool.targetFiles) {
+      const instrumentedSource = await instrumenter.instrument(
+        targetFile.source,
+        targetFile.canonicalPath
+      );
 
-      targetPool.setAST(_path, ast)
-
-      console.log('instrumented')
-      console.log(instrumented)
+      instrumentedTargets.push({
+        source: instrumentedSource,
+        canonicalPath: targetFile.canonicalPath,
+        relativePath: targetFile.relativePath,
+        targets: targetFile.targets,
+      });
     }
 
+    const commonBasePath = getCommonBasePath(instrumentedTargets);
 
-
-    // TODO save instrumented files
+    // save instrumented files to
+    await saveTempFiles(
+      instrumentedTargets,
+      commonBasePath,
+      Properties.temp_instrumented_directory
+    );
 
     const finalArchive = new Archive<JavaScriptTestCase>();
-    let finalImports: Map<string, string> = new Map();
-    let finalDependencies: Map<string, string[]> = new Map();
+    const finalImports: Map<string, string> = new Map();
+    const finalDependencies: Map<string, string[]> = new Map();
 
     // TODO search targets
+    for (const targetFile of targetPool.included) {
+      const includedTargets = targetFile.targets;
 
-    return [finalArchive, finalImports, finalDependencies]
+      const targetMap = targetPool.getTargetMap(targetFile.canonicalPath);
+      for (const target of targetMap.keys()) {
+        // TODO
+      }
+    }
+
+    return [finalArchive, finalImports, finalDependencies];
   }
 
   private async finalize(
     archive: Archive<JavaScriptTestCase>,
     imports: Map<string, string>,
     dependencies: Map<string, string[]>
-  ): Promise<void> {
-
-  }
+  ): Promise<void> {}
 
   async exit(): Promise<void> {
     // Finish
-    // TODO delete temp folders
+    await deleteTempDirectories();
 
     process.exit(0);
   }

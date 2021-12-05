@@ -1,31 +1,30 @@
 class Wallet {
-
   constructor() {
-    this.balance = 100
+    this.balance = 100;
   }
 
-  pay (price) {
-    const newBalance = this.balance - price
+  pay(price) {
+    const newBalance = this.balance - price;
     if (newBalance < 0) {
-      return false
+      return false;
     } else {
-      this.balance = newBalance
-      return true
+      this.balance = newBalance;
+      return true;
     }
   }
 
-  save (amount) {
-    this.balance += amount
+  save(amount) {
+    this.balance += amount;
   }
 
   calculateInterest() {
     if (this.balance < 10000) {
-      this.balance += this.balance * 0.1
-      return
+      this.balance += this.balance * 0.1;
+      return;
     }
 
     for (let i = 0; i < 10; i++) {
-      this.balance += 10
+      this.balance += 10;
     }
   }
 }

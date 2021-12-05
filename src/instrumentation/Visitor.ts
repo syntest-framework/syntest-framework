@@ -1,23 +1,22 @@
-import { defaults } from "@istanbuljs/schema"
+import { defaults } from "@istanbuljs/schema";
 import { VisitState } from "./VisitState";
 import { createHash } from "crypto";
-import { template } from "@babel/core"
+import { template } from "@babel/core";
 
-const { name } = require('../../package.json');
+const { name } = require("../../package.json");
 
 // increment this version if there are schema changes
 // that are not backwards compatible:
-const VERSION = '4';
+const VERSION = "4";
 
-const SHA = 'sha1';
-const MAGIC_KEY = '_coverageSchema'
+const SHA = "sha1";
+const MAGIC_KEY = "_coverageSchema";
 const MAGIC_VALUE = createHash(SHA)
-  .update(name + '@' + VERSION)
-  .digest('hex')
+  .update(name + "@" + VERSION)
+  .digest("hex");
 
 // pattern for istanbul to ignore the whole file
 const COMMENT_FILE_RE = /^\s*istanbul\s+ignore\s+(file)(?=\W|$)/;
-
 
 export class Visitor {
   private types: any;
@@ -25,12 +24,12 @@ export class Visitor {
   private opts: any;
   private visitState: VisitState;
 
-  constructor(types, sourceFilePath = 'unknown.js', opts: VisitorOptions = {}) {
+  constructor(types, sourceFilePath = "unknown.js", opts: VisitorOptions = {}) {
     this.types = types;
-    this.sourceFilePath = sourceFilePath
+    this.sourceFilePath = sourceFilePath;
     this.opts = {
       ...defaults.instrumentVisitor,
-      ...opts
+      ...opts,
     };
     this.visitState = new VisitState(
       types,
@@ -38,12 +37,11 @@ export class Visitor {
       opts.inputSourceMap,
       opts.ignoreClassMethods,
       opts.reportLogic
-    )
+    );
   }
 
-
   enter(path) {
-    if (shouldIgnoreFile(path.find(p => p.isProgram()))) {
+    if (shouldIgnoreFile(path.find((p) => p.isProgram()))) {
       return;
     }
     if (alreadyInstrumented(path, this.visitState)) {
@@ -52,44 +50,44 @@ export class Visitor {
     path.traverse(codeVisitor, this.visitState);
   }
 
-  exit (path) {
+  exit(path) {
     if (alreadyInstrumented(path, this.visitState)) {
       return;
     }
     this.visitState.cov.freeze();
     const coverageData = this.visitState.cov.toJSON();
-    if (shouldIgnoreFile(path.find(p => p.isProgram()))) {
+    if (shouldIgnoreFile(path.find((p) => p.isProgram()))) {
       return {
         fileCoverage: coverageData,
-        sourceMappingURL: this.visitState.sourceMappingURL
+        sourceMappingURL: this.visitState.sourceMappingURL,
       };
     }
     coverageData[MAGIC_KEY] = MAGIC_VALUE;
     const hash = createHash(SHA)
       .update(JSON.stringify(coverageData))
-      .digest('hex');
+      .digest("hex");
     coverageData.hash = hash;
     const coverageNode = this.types.valueToNode(coverageData);
     delete coverageData[MAGIC_KEY];
     delete coverageData.hash;
     let gvTemplate;
     if (this.opts.coverageGlobalScopeFunc) {
-      if (path.scope.getBinding('Function')) {
+      if (path.scope.getBinding("Function")) {
         gvTemplate = globalTemplateAlteredFunction({
           GLOBAL_COVERAGE_SCOPE: this.types.stringLiteral(
-            'return ' + this.opts.coverageGlobalScope
-          )
+            "return " + this.opts.coverageGlobalScope
+          ),
         });
       } else {
         gvTemplate = globalTemplateFunction({
           GLOBAL_COVERAGE_SCOPE: this.types.stringLiteral(
-            'return ' + this.opts.coverageGlobalScope
-          )
+            "return " + this.opts.coverageGlobalScope
+          ),
         });
       }
     } else {
       gvTemplate = globalTemplateVariable({
-        GLOBAL_COVERAGE_SCOPE: this.opts.coverageGlobalScope
+        GLOBAL_COVERAGE_SCOPE: this.opts.coverageGlobalScope,
       });
     }
     const cv = coverageTemplate({
@@ -98,22 +96,24 @@ export class Visitor {
       COVERAGE_FUNCTION: this.types.identifier(this.visitState.varName),
       PATH: this.types.stringLiteral(this.sourceFilePath),
       INITIAL: coverageNode,
-      HASH: this.types.stringLiteral(hash)
+      HASH: this.types.stringLiteral(hash),
     });
     // explicitly call this.varName to ensure coverage is always initialized
     path.node.body.unshift(
       this.types.expressionStatement(
-        this.types.callExpression(this.types.identifier(this.visitState.varName), [])
+        this.types.callExpression(
+          this.types.identifier(this.visitState.varName),
+          []
+        )
       )
     );
     path.node.body.unshift(cv);
     return {
       fileCoverage: coverageData,
-      sourceMappingURL: this.visitState.sourceMappingURL
+      sourceMappingURL: this.visitState.sourceMappingURL,
     };
   }
 }
-
 
 // generic function that takes a set of visitor methods and
 // returns a visitor object with `enter` and `exit` properties,
@@ -126,21 +126,21 @@ export class Visitor {
 //
 function entries(...enter) {
   // the enter function
-  const wrappedEntry = function(path, node) {
+  const wrappedEntry = function (path, node) {
     this.onEnter(path);
     if (this.shouldIgnore(path)) {
       return;
     }
-    enter.forEach(e => {
+    enter.forEach((e) => {
       e.call(this, path, node);
     });
   };
-  const exit = function(path, node) {
+  const exit = function (path, node) {
     this.onExit(path, node);
   };
   return {
     enter: wrappedEntry,
-    exit
+    exit,
   };
 }
 
@@ -151,8 +151,8 @@ function coverStatement(path) {
 /* istanbul ignore next: no node.js support */
 function coverAssignmentPattern(path) {
   const n = path.node;
-  const b = this.cov.newBranch('default-arg', n.loc);
-  this.insertBranchCounter(path.get('right'), b);
+  const b = this.cov.newBranch("default-arg", n.loc);
+  this.insertBranchCounter(path.get("right"), b);
 }
 
 function coverFunction(path) {
@@ -160,11 +160,11 @@ function coverFunction(path) {
 }
 
 function coverVariableDeclarator(path) {
-  this.insertStatementCounter(path.get('init'));
+  this.insertStatementCounter(path.get("init"));
 }
 
 function coverClassPropDeclarator(path) {
-  this.insertStatementCounter(path.get('value'));
+  this.insertStatementCounter(path.get("value"));
 }
 
 function makeBlock(path) {
@@ -181,7 +181,7 @@ function makeBlock(path) {
 }
 
 function blockProp(prop) {
-  return function(path) {
+  return function (path) {
     makeBlock.call(this, path.get(prop));
   };
 }
@@ -194,7 +194,7 @@ function makeParenthesizedExpressionForNonIdentifier(path) {
 }
 
 function parenthesizedExpressionProp(prop) {
-  return function(path) {
+  return function (path) {
     makeParenthesizedExpressionForNonIdentifier.call(this, path.get(prop));
   };
 }
@@ -219,33 +219,33 @@ function convertArrowExpression(path) {
 function coverIfBranches(path) {
   const n = path.node;
   const hint = this.hintFor(n);
-  const ignoreIf = hint === 'if';
-  const ignoreElse = hint === 'else';
-  const branch = this.cov.newBranch('if', n.loc);
+  const ignoreIf = hint === "if";
+  const ignoreElse = hint === "else";
+  const branch = this.cov.newBranch("if", n.loc);
 
   if (ignoreIf) {
-    this.setAttr(n.consequent, 'skip-all', true);
+    this.setAttr(n.consequent, "skip-all", true);
   } else {
-    this.insertBranchCounter(path.get('consequent'), branch, n.loc);
+    this.insertBranchCounter(path.get("consequent"), branch, n.loc);
   }
   if (ignoreElse) {
-    this.setAttr(n.alternate, 'skip-all', true);
+    this.setAttr(n.alternate, "skip-all", true);
   } else {
-    this.insertBranchCounter(path.get('alternate'), branch);
+    this.insertBranchCounter(path.get("alternate"), branch);
   }
 }
 
 function createSwitchBranch(path) {
-  const b = this.cov.newBranch('switch', path.node.loc);
-  this.setAttr(path.node, 'branchName', b);
+  const b = this.cov.newBranch("switch", path.node.loc);
+  this.setAttr(path.node, "branchName", b);
 }
 
 function coverSwitchCase(path) {
   const T = this.types;
-  const b = this.getAttr(path.parentPath.node, 'branchName');
+  const b = this.getAttr(path.parentPath.node, "branchName");
   /* istanbul ignore if: paranoid check */
   if (b === null) {
-    throw new Error('Unable to get switch branch name');
+    throw new Error("Unable to get switch branch name");
   }
   const increment = this.getBranchIncrement(b, path.node.loc);
   path.node.consequent.unshift(T.expressionStatement(increment));
@@ -253,49 +253,41 @@ function coverSwitchCase(path) {
 
 function coverTernary(path) {
   const n = path.node;
-  const branch = this.cov.newBranch('cond-expr', path.node.loc);
+  const branch = this.cov.newBranch("cond-expr", path.node.loc);
   const cHint = this.hintFor(n.consequent);
   const aHint = this.hintFor(n.alternate);
 
-  if (cHint !== 'next') {
-    this.insertBranchCounter(path.get('consequent'), branch);
+  if (cHint !== "next") {
+    this.insertBranchCounter(path.get("consequent"), branch);
   }
-  if (aHint !== 'next') {
-    this.insertBranchCounter(path.get('alternate'), branch);
+  if (aHint !== "next") {
+    this.insertBranchCounter(path.get("alternate"), branch);
   }
 }
 
 function coverLogicalExpression(path) {
   const T = this.types;
-  if (path.parentPath.node.type === 'LogicalExpression') {
+  if (path.parentPath.node.type === "LogicalExpression") {
     return; // already processed
   }
   const leaves = [];
   this.findLeaves(path.node, leaves);
-  const b = this.cov.newBranch(
-    'binary-expr',
-    path.node.loc,
-    this.reportLogic
-  );
+  const b = this.cov.newBranch("binary-expr", path.node.loc, this.reportLogic);
   for (let i = 0; i < leaves.length; i += 1) {
     const leaf = leaves[i];
     const hint = this.hintFor(leaf.node);
-    if (hint === 'next') {
+    if (hint === "next") {
       continue;
     }
 
     if (this.reportLogic) {
-      const increment = this.getBranchLogicIncrement(
-        leaf,
-        b,
-        leaf.node.loc
-      );
+      const increment = this.getBranchLogicIncrement(leaf, b, leaf.node.loc);
       if (!increment[0]) {
         continue;
       }
       leaf.parent[leaf.property] = T.sequenceExpression([
         increment[0],
-        increment[1]
+        increment[1],
       ]);
       continue;
     }
@@ -304,10 +296,7 @@ function coverLogicalExpression(path) {
     if (!increment) {
       continue;
     }
-    leaf.parent[leaf.property] = T.sequenceExpression([
-      increment,
-      leaf.node
-    ]);
+    leaf.parent[leaf.property] = T.sequenceExpression([increment, leaf.node]);
   }
 }
 
@@ -318,7 +307,7 @@ const codeVisitor = {
   ExportDefaultDeclaration: entries(), // ignore processing only
   ExportNamedDeclaration: entries(), // ignore processing only
   ClassMethod: entries(coverFunction),
-  ClassDeclaration: entries(parenthesizedExpressionProp('superClass')),
+  ClassDeclaration: entries(parenthesizedExpressionProp("superClass")),
   ClassProperty: entries(coverClassPropDeclarator),
   ClassPrivateProperty: entries(coverClassPropDeclarator),
   ObjectMethod: entries(coverFunction),
@@ -332,24 +321,24 @@ const codeVisitor = {
   VariableDeclaration: entries(), // ignore processing only
   VariableDeclarator: entries(coverVariableDeclarator),
   IfStatement: entries(
-    blockProp('consequent'),
-    blockProp('alternate'),
+    blockProp("consequent"),
+    blockProp("alternate"),
     coverStatement,
     coverIfBranches
   ),
-  ForStatement: entries(blockProp('body'), coverStatement),
-  ForInStatement: entries(blockProp('body'), coverStatement),
-  ForOfStatement: entries(blockProp('body'), coverStatement),
-  WhileStatement: entries(blockProp('body'), coverStatement),
-  DoWhileStatement: entries(blockProp('body'), coverStatement),
+  ForStatement: entries(blockProp("body"), coverStatement),
+  ForInStatement: entries(blockProp("body"), coverStatement),
+  ForOfStatement: entries(blockProp("body"), coverStatement),
+  WhileStatement: entries(blockProp("body"), coverStatement),
+  DoWhileStatement: entries(blockProp("body"), coverStatement),
   SwitchStatement: entries(createSwitchBranch, coverStatement),
   SwitchCase: entries(coverSwitchCase),
-  WithStatement: entries(blockProp('body'), coverStatement),
+  WithStatement: entries(blockProp("body"), coverStatement),
   FunctionDeclaration: entries(coverFunction),
   FunctionExpression: entries(coverFunction),
   LabeledStatement: entries(coverStatement),
   ConditionalExpression: entries(coverTernary),
-  LogicalExpression: entries(coverLogicalExpression)
+  LogicalExpression: entries(coverLogicalExpression),
 };
 const globalTemplateAlteredFunction = template(`
         var Function = (function(){}).constructor;
@@ -397,15 +386,15 @@ function alreadyInstrumented(path, visitState) {
 function shouldIgnoreFile(programNode) {
   return (
     programNode.parent &&
-    programNode.parent.comments.some(c => COMMENT_FILE_RE.test(c.value))
+    programNode.parent.comments.some((c) => COMMENT_FILE_RE.test(c.value))
   );
 }
 
 export interface VisitorOptions {
-  inputSourceMap?: any
-  ignoreClassMethods?: any
-  reportLogic?: any
-  coverageGlobalScopeFunc?: any
-  coverageGlobalScope?: any
-  coverageVariable?: any
+  inputSourceMap?: any;
+  ignoreClassMethods?: any;
+  reportLogic?: any;
+  coverageGlobalScopeFunc?: any;
+  coverageGlobalScope?: any;
+  coverageVariable?: any;
 }

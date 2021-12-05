@@ -1,8 +1,10 @@
 import { createHash } from "crypto";
 
-const { SourceCoverage } = require('istanbul-lib-instrument/src/source-coverage');
+const {
+  SourceCoverage,
+} = require("istanbul-lib-instrument/src/source-coverage");
 
-const SHA = 'sha1';
+const SHA = "sha1";
 
 // pattern for istanbul to ignore a section
 const COMMENT_RE = /^\s*istanbul\s+ignore\s+(if|else|next)(?=\W|$)/;
@@ -13,22 +15,21 @@ const SOURCE_MAP_RE = /[#@]\s*sourceMappingURL=(.*)\s*$/m;
 function genVar(filename) {
   const hash = createHash(SHA);
   hash.update(filename);
-  return 'cov_' + parseInt(hash.digest('hex').substr(0, 12), 16).toString(36);
+  return "cov_" + parseInt(hash.digest("hex").substr(0, 12), 16).toString(36);
 }
-
 
 // VisitState holds the state of the visitor, provides helper functions
 // and is the `this` for the individual coverage visitors.
 export class VisitState {
   public varName: string;
-  public attrs: any
-  public nextIgnore: any
-  public cov: any
+  public attrs: any;
+  public nextIgnore: any;
+  public cov: any;
 
-  public ignoreClassMethods: any
-  public types: any
-  public sourceMappingURL: any
-  public reportLogic: any
+  public ignoreClassMethods: any;
+  public types: any;
+  public sourceMappingURL: any;
+  public reportLogic: any;
 
   constructor(
     types,
@@ -42,7 +43,7 @@ export class VisitState {
     this.nextIgnore = null;
     this.cov = new SourceCoverage(sourceFilePath);
 
-    if (typeof inputSourceMap !== 'undefined') {
+    if (typeof inputSourceMap !== "undefined") {
       this.cov.inputSourceMap(inputSourceMap);
     }
     this.ignoreClassMethods = ignoreClassMethods;
@@ -61,9 +62,9 @@ export class VisitState {
   hintFor(node) {
     let hint = null;
     if (node.leadingComments) {
-      node.leadingComments.forEach(c => {
+      node.leadingComments.forEach((c) => {
         const v = (
-          c.value || /* istanbul ignore next: paranoid check */ ''
+          c.value || /* istanbul ignore next: paranoid check */ ""
         ).trim();
         const groups = v.match(COMMENT_RE);
         if (groups) {
@@ -76,13 +77,13 @@ export class VisitState {
 
   // extract a source map URL from comments and keep track of it
   maybeAssignSourceMapURL(node) {
-    const extractURL = comments => {
+    const extractURL = (comments) => {
       if (!comments) {
         return;
       }
-      comments.forEach(c => {
+      comments.forEach((c) => {
         const v = (
-          c.value || /* istanbul ignore next: paranoid check */ ''
+          c.value || /* istanbul ignore next: paranoid check */ ""
         ).trim();
         const groups = v.match(SOURCE_MAP_RE);
         if (groups) {
@@ -116,12 +117,12 @@ export class VisitState {
     }
     // check hint to see if ignore should be turned on
     const hint = this.hintFor(n);
-    if (hint === 'next') {
+    if (hint === "next") {
       this.nextIgnore = n;
       return;
     }
     // else check custom node attribute set by a prior visitor
-    if (this.getAttr(path.node, 'skip-all') !== null) {
+    if (this.getAttr(path.node, "skip-all") !== null) {
       this.nextIgnore = n;
     }
 
@@ -129,7 +130,7 @@ export class VisitState {
     if (
       path.isFunctionExpression() &&
       this.ignoreClassMethods.some(
-        name => path.node.id && name === path.node.id.name
+        (name) => path.node.id && name === path.node.id.name
       )
     ) {
       this.nextIgnore = n;
@@ -137,7 +138,7 @@ export class VisitState {
     }
     if (
       path.isClassMethod() &&
-      this.ignoreClassMethods.some(name => name === path.node.key.name)
+      this.ignoreClassMethods.some((name) => name === path.node.key.name)
     ) {
       this.nextIgnore = n;
       return;
@@ -176,10 +177,10 @@ export class VisitState {
     const wrap =
       index !== null
         ? // If `index` present, turn `x` into `x[index]`.
-        x => T.memberExpression(x, T.numericLiteral(index), true)
-        : x => x;
+          (x) => T.memberExpression(x, T.numericLiteral(index), true)
+        : (x) => x;
     return T.updateExpression(
-      '++',
+      "++",
       wrap(
         T.memberExpression(
           T.memberExpression(
@@ -200,7 +201,7 @@ export class VisitState {
 
     return T.sequenceExpression([
       T.assignmentExpression(
-        '=',
+        "=",
         T.memberExpression(
           T.callExpression(T.identifier(this.varName), []),
           T.identifier(tempName)
@@ -220,7 +221,7 @@ export class VisitState {
       T.memberExpression(
         T.callExpression(T.identifier(this.varName), []),
         T.identifier(tempName)
-      )
+      ),
     ]);
   }
 
@@ -238,9 +239,7 @@ export class VisitState {
       // function names are maintained.
       const parent = path.parentPath.parentPath;
       if (parent && T.isExportNamedDeclaration(parent.parentPath)) {
-        parent.parentPath.insertBefore(
-          T.expressionStatement(increment)
-        );
+        parent.parentPath.insertBefore(T.expressionStatement(increment));
       } else if (
         parent &&
         (T.isProgram(parent.parentPath) ||
@@ -250,15 +249,10 @@ export class VisitState {
       } else {
         path.replaceWith(T.sequenceExpression([increment, path.node]));
       }
-    } /* istanbul ignore else: not expected */ else if (
-      path.isExpression()
-    ) {
+    } /* istanbul ignore else: not expected */ else if (path.isExpression()) {
       path.replaceWith(T.sequenceExpression([increment, path.node]));
     } else {
-      console.error(
-        'Unable to insert counter for node type:',
-        path.node.type
-      );
+      console.error("Unable to insert counter for node type:", path.node.type);
     }
   }
 
@@ -268,7 +262,7 @@ export class VisitState {
       return;
     }
     const index = this.cov.newStatement(path.node.loc);
-    const increment = this.increase('s', index, null);
+    const increment = this.increase("s", index, null);
     this.insertCounter(path, increment);
   }
 
@@ -283,8 +277,8 @@ export class VisitState {
     let dloc = null;
     // get location for declaration
     switch (n.type) {
-      case 'FunctionDeclaration':
-      case 'FunctionExpression':
+      case "FunctionDeclaration":
+      case "FunctionExpression":
         /* istanbul ignore else: paranoid check */
         if (n.id) {
           dloc = n.id.loc;
@@ -294,20 +288,20 @@ export class VisitState {
     if (!dloc) {
       dloc = {
         start: n.loc.start,
-        end: { line: n.loc.start.line, column: n.loc.start.column + 1 }
+        end: { line: n.loc.start.line, column: n.loc.start.column + 1 },
       };
     }
 
     const name = path.node.id ? path.node.id.name : path.node.name;
     const index = this.cov.newFunction(name, dloc, path.node.body.loc);
-    const increment = this.increase('f', index, null);
-    const body = path.get('body');
+    const increment = this.increase("f", index, null);
+    const body = path.get("body");
     /* istanbul ignore else: not expected */
     if (body.isBlockStatement()) {
       body.node.body.unshift(T.expressionStatement(increment));
     } else {
       console.error(
-        'Unable to process function body node type:',
+        "Unable to process function body node type:",
         path.node.type
       );
     }
@@ -315,22 +309,19 @@ export class VisitState {
 
   getBranchIncrement(branchName, loc) {
     const index = this.cov.addBranchPath(branchName, loc);
-    return this.increase('b', branchName, index);
+    return this.increase("b", branchName, index);
   }
 
   getBranchLogicIncrement(path, branchName, loc) {
     const index = this.cov.addBranchPath(branchName, loc);
     return [
-      this.increase('b', branchName, index),
-      this.increaseTrue('bT', branchName, index, path.node)
+      this.increase("b", branchName, index),
+      this.increaseTrue("bT", branchName, index, path.node),
     ];
   }
 
   insertBranchCounter(path, branchName, loc) {
-    const increment = this.getBranchIncrement(
-      branchName,
-      loc || path.node.loc
-    );
+    const increment = this.getBranchIncrement(branchName, loc || path.node.loc);
     this.insertCounter(path, increment);
   }
 
@@ -338,17 +329,17 @@ export class VisitState {
     if (!node) {
       return;
     }
-    if (node.type === 'LogicalExpression') {
+    if (node.type === "LogicalExpression") {
       const hint = this.hintFor(node);
-      if (hint !== 'next') {
-        this.findLeaves(node.left, accumulator, node, 'left');
-        this.findLeaves(node.right, accumulator, node, 'right');
+      if (hint !== "next") {
+        this.findLeaves(node.left, accumulator, node, "left");
+        this.findLeaves(node.right, accumulator, node, "right");
       }
     } else {
       accumulator.push({
         node,
         parent,
-        property
+        property,
       });
     }
   }

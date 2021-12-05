@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as path from 'path'
-import {readFileSync} from "fs";
+import * as path from "path";
+import { readFileSync } from "fs";
 
 export function readFile(absolutePath: string): string {
   if (!path.isAbsolute(absolutePath)) {
-    absolutePath = path.resolve(absolutePath)
+    absolutePath = path.resolve(absolutePath);
   }
-  return readFileSync(absolutePath).toString('utf-8')
+  return readFileSync(absolutePath).toString("utf-8");
 }
