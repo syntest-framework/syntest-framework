@@ -121,8 +121,8 @@ export function getCommonBasePath(targets: TargetFile[]): string {
   for (let t = 0; t < targets.length; t++) {
     let pathB = targets[t].canonicalPath;
 
-    const lastSlashIndex = pathB.lastIndexOf("/")
-    pathB = pathB.substring(0, lastSlashIndex)
+    const lastSlashIndex = pathB.lastIndexOf("/");
+    pathB = pathB.substring(0, lastSlashIndex);
 
     let commonPathLength = 0;
 

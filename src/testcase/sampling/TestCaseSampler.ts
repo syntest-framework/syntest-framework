@@ -44,16 +44,23 @@ export abstract class TestCaseSampler
   /**
    * Should sample any statement based on the type.
    *
-   * @param depth     the current depth of the statement tree
+   * @param depth      the current depth of the statement tree
    * @param types      the return types of the statement to sample
-   * @param geneType  the type of the statement
-   * @return          a sampled statement
+   * @param geneType   the type of the statement
+   * @return Statement a sampled statement
    */
   abstract sampleStatement(
     depth: number,
     types: Parameter[],
     geneType: string
   ): Statement;
+
+  /**
+   * Should sample a test case.
+   *
+   * @return AbstractTestCase a sampled test case
+   */
+  abstract sample(): AbstractTestCase;
 
   get subject(): SearchSubject<AbstractTestCase> {
     return this._subject;
@@ -62,11 +69,4 @@ export abstract class TestCaseSampler
   set subject(value: SearchSubject<AbstractTestCase>) {
     this._subject = value;
   }
-
-  /**
-   * Should sample a test case.
-   *
-   * @return  a sampled test case
-   */
-  abstract sample(): AbstractTestCase;
 }
