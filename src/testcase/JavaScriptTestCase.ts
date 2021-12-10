@@ -15,10 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AbstractTestCase, EncodingSampler, TestCaseDecoder } from "@syntest/framework";
+import {
+  AbstractTestCase,
+  EncodingSampler,
+  TestCaseDecoder,
+} from "@syntest/framework";
 
 export class JavaScriptTestCase extends AbstractTestCase {
-
   mutate(sampler: EncodingSampler<AbstractTestCase>): AbstractTestCase {
     return undefined;
   }
@@ -34,9 +37,4 @@ export class JavaScriptTestCase extends AbstractTestCase {
   getLength(): number {
     return 0;
   }
-
-
-
-
-
 }

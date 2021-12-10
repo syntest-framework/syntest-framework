@@ -1,26 +1,23 @@
-import { TransformOptions, transform } from "@babel/core"
+import { TransformOptions, transform } from "@babel/core";
 import { Visitor } from "./Visitor";
 import { defaultBabelOptions } from "../configs/DefaultBabelConfig";
 
 export interface OutputObject {
-  fileCoverage?: any
-  sourceMappingURL?: any
+  fileCoverage?: any;
+  sourceMappingURL?: any;
 }
 
 export class Instrumenter {
-  constructor() {
-  }
-
   instrument(code: string, filename: string) {
-    const options = {...defaultBabelOptions}
+    const options = { ...defaultBabelOptions };
 
     let output: OutputObject = {};
 
-    options.filename = filename
+    options.filename = filename;
     options.plugins.push([
       ({ types }) => {
         const ee = new Visitor(types, filename, {
-          coverageVariable: '__coverage__',
+          coverageVariable: "__coverage__",
           // reportLogic: opts.reportLogic,
           // coverageGlobalScope: opts.coverageGlobalScope,
           // coverageGlobalScopeFunc: opts.coverageGlobalScopeFunc,
@@ -34,12 +31,12 @@ export class Instrumenter {
               enter: (path) => ee.enter(path),
               exit(path) {
                 output = ee.exit(path);
-              }
-            }
-          }
+              },
+            },
+          },
         };
-      }
-    ])
+      },
+    ]);
 
     const codeMap = transform(code, options);
 
@@ -47,6 +44,6 @@ export class Instrumenter {
       return code;
     }
 
-    return codeMap;
+    return codeMap.code;
   }
 }
