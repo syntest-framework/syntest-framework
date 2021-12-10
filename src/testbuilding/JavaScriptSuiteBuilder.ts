@@ -20,7 +20,7 @@ import { Archive, SuiteBuilder, TestCaseDecoder } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { writeFileSync } from "fs";
 
-export class SoliditySuiteBuilder extends SuiteBuilder {
+export class JavaScriptSuiteBuilder extends SuiteBuilder {
   constructor(decoder: TestCaseDecoder) {
     super(decoder);
   }

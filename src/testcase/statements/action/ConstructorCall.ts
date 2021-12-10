@@ -108,7 +108,7 @@ export class ConstructorCall extends ActionStatement {
       this._calls.splice(
         index,
         0,
-        sampler.sampleObjectFunctionCall(depth, this)
+        sampler.sampleFunctionCall(depth, this)
       );
 
       count++;

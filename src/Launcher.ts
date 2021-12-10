@@ -30,7 +30,18 @@ import {
   Properties,
   deleteTempDirectories,
   createDirectoryStructure,
-  createTempDirectoryStructure, drawGraph, getUserInterface,
+  createTempDirectoryStructure,
+  drawGraph,
+  getUserInterface,
+  createAlgorithmFromConfig,
+  IterationBudget,
+  EvaluationBudget,
+  SearchTimeBudget,
+  TotalTimeBudget,
+  BudgetManager,
+  configureTermination,
+  StatisticsCollector,
+  StatisticsSearchListener, SummaryWriter, CoverageWriter, clearDirectory,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
@@ -40,6 +51,12 @@ import { Instrumenter } from "./instrumentation/Instrumenter";
 import * as path from "path";
 import { TargetMapGenerator } from "./analysis/static/map/TargetMapGenerator";
 import { JavaScriptSubject } from "./search/JavaScriptSubject";
+import { JavaScriptSuiteBuilder } from "./testbuilding/JavaScriptSuiteBuilder";
+import { JavaScriptDecoder } from "./testbuilding/JavaScriptDecoder";
+import { JavaScriptRunner } from "./testcase/execution/JavaScriptRunner";
+import { JavaScriptRandomSampler } from "./testcase/sampling/JavaScriptRandomSampler";
+import { JavaScriptTreeCrossover } from "./search/crossover/JavaScriptTreeCrossover";
+import { collectCoverageData, collectInitialVariables, collectStatistics } from "./utils/collection";
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -213,6 +230,7 @@ export class Launcher {
     )
 
     if (!currentSubject.getPossibleActions().length) {
+      // report skipped
       return new Archive();
     }
 
@@ -221,16 +239,105 @@ export class Launcher {
       target
     );
 
-    // const suiteBuilder = new
+    const decoder = new JavaScriptDecoder(importsMap, dependencyMap)
+    const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
+    const runner = new JavaScriptRunner(suiteBuilder)
+
+    // TODO constant pool
+
+    const sampler = new JavaScriptRandomSampler(currentSubject)
+    const crossover = new JavaScriptTreeCrossover()
+    const algorithm = createAlgorithmFromConfig(sampler, runner, crossover);
+
+    await suiteBuilder.clearDirectory(Properties.temp_test_directory);
+
+    // allocate budget manager
+    const iterationBudget = new IterationBudget(Properties.iteration_budget);
+    const evaluationBudget = new EvaluationBudget();
+    const searchBudget = new SearchTimeBudget(Properties.search_time);
+    const totalTimeBudget = new TotalTimeBudget(Properties.total_time);
+    const budgetManager = new BudgetManager();
+    budgetManager.addBudget(iterationBudget);
+    budgetManager.addBudget(evaluationBudget);
+    budgetManager.addBudget(searchBudget);
+    budgetManager.addBudget(totalTimeBudget);
 
 
+    // Termination
+    const terminationManager = configureTermination();
+
+    // Collector
+    const collector = new StatisticsCollector(totalTimeBudget);
+    collectInitialVariables(collector, currentSubject, targetPath);
+
+    // Statistics listener
+    const statisticsSearchListener = new StatisticsSearchListener(collector);
+    algorithm.addListener(statisticsSearchListener);
+
+    // This searches for a covering population
+    const archive = await algorithm.search(
+      currentSubject,
+      budgetManager,
+      terminationManager
+    );
+
+    // Gather statistics after the search
+    collectStatistics(
+      collector,
+      currentSubject,
+      archive,
+      totalTimeBudget,
+      searchBudget,
+      iterationBudget,
+      evaluationBudget
+    );
+
+    collectCoverageData(collector, archive, "branch");
+    collectCoverageData(collector, archive, "statement");
+    collectCoverageData(collector, archive, "function");
+
+    const statisticsDirectory = path.resolve(Properties.statistics_directory);
+
+    const summaryWriter = new SummaryWriter();
+    summaryWriter.write(collector, statisticsDirectory + "/statistics.csv");
+
+    const coverageWriter = new CoverageWriter();
+    coverageWriter.write(collector, statisticsDirectory + "/coverage.csv");
+
+    await clearDirectory(Properties.temp_test_directory);
+    await clearDirectory(Properties.temp_log_directory);
+
+    return archive;
   }
 
   private async finalize(
     archive: Archive<JavaScriptTestCase>,
     imports: Map<string, string>,
     dependencies: Map<string, string[]>
-  ): Promise<void> {}
+  ): Promise<void> {
+    const testDir = path.resolve(Properties.final_suite_directory);
+    await clearDirectory(testDir);
+
+    const decoder = new JavaScriptDecoder(
+      imports,
+      dependencies
+    );
+
+    const suiteBuilder = new JavaScriptSuiteBuilder(decoder);
+
+    await suiteBuilder.createSuite(archive);
+
+    // Run tests
+    try {
+      // TODO
+    } catch (e) {
+      getUserInterface().error(e);
+      console.trace(e);
+    }
+
+    // Run Istanbul
+    // TODO
+  }
 
   async exit(): Promise<void> {
     // Finish

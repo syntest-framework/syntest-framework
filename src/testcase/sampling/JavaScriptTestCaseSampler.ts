@@ -25,7 +25,8 @@ import {
 
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { ConstructorCall } from "../statements/action/ConstructorCall";
-import { ObjectFunctionCall } from "../statements/action/ObjectFunctionCall";
+import { FunctionCall } from "../statements/action/FunctionCall";
+import { StaticFunctionCall } from "../statements/action/StaticFunctionCall";
 
 /**
  * SolidityRandomSampler class
@@ -38,12 +39,17 @@ export abstract class JavaScriptTestCaseSampler extends TestCaseSampler {
   }
 
   abstract sampleConstructor(depth: number): ConstructorCall;
-  abstract sampleObjectFunctionCall(depth: number, root: ConstructorCall): ObjectFunctionCall;
+  abstract sampleFunctionCall(depth: number, root: ConstructorCall): FunctionCall;
 
-  abstract sampleObjectFunctionCallTypeBased(
+  abstract sampleFunctionCallTypeBased(
     depth: number,
     types: Parameter[]
-  ): ObjectFunctionCall;
+  ): FunctionCall;
+
+  abstract sampleStaticFunctionCallTypeBased(
+    depth: number,
+    types: Parameter[]
+  ): StaticFunctionCall;
 
   abstract sampleArgument(
     depth: number,
