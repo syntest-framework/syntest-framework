@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { EncodingSampler } from "../../EncodingSampler";
 import { EncodingRunner } from "../../EncodingRunner";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
 import { getUserInterface } from "../../../ui/UserInterface";
 import { MOSA } from "./mosa/MOSA";
+import {Encoding} from "../../Encoding";
 
 /**
  * sFuzz
@@ -34,14 +34,14 @@ import { MOSA } from "./mosa/MOSA";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class Sfuzz extends MOSA {
+export class Sfuzz<T extends Encoding> extends MOSA<T> {
   constructor(
-    encodingSampler: EncodingSampler<AbstractTestCase>,
-    runner: EncodingRunner<AbstractTestCase>,
-    crossover: Crossover
+    encodingSampler: EncodingSampler<T>,
+    runner: EncodingRunner<T>,
+    crossover: Crossover<T>
   ) {
     super(encodingSampler, runner, crossover);
-    this._objectiveManager = new SfuzzObjectiveManager<AbstractTestCase>(
+    this._objectiveManager = new SfuzzObjectiveManager<T>(
       runner
     );
   }

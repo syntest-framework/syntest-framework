@@ -21,29 +21,29 @@ import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { EncodingSampler } from "../../EncodingSampler";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
 import { Crossover } from "../../operators/crossover/Crossover";
-import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { Properties } from "../../../properties";
 import { TerminationManager } from "../../termination/TerminationManager";
+import {Encoding} from "../../Encoding";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
- * Uses the AbstractTestCase encoding.
+ * Uses the T encoding.
  */
-export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTestCase> {
+export abstract class EvolutionaryAlgorithm<T extends Encoding> extends SearchAlgorithm<T> {
   /**
    * The sampler used to sample new encodings.
    * @protected
    */
-  protected _encodingSampler: EncodingSampler<AbstractTestCase>;
+  protected _encodingSampler: EncodingSampler<T>;
 
   /**
    * The population of the EA.
    * This population is evolved over time and becomes more optimized.
    * @protected
    */
-  protected _population: AbstractTestCase[];
+  protected _population: T[];
 
   /**
    * The size of the population.
@@ -51,7 +51,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
    */
   protected _populationSize: number;
 
-  protected _crossover: Crossover;
+  protected _crossover: Crossover<T>;
 
   /**
    * Constructor.
@@ -62,9 +62,9 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
    * @protected
    */
   protected constructor(
-    objectiveManager: ObjectiveManager<AbstractTestCase>,
-    encodingSampler: EncodingSampler<AbstractTestCase>,
-    crossover: Crossover
+    objectiveManager: ObjectiveManager<T>,
+    encodingSampler: EncodingSampler<T>,
+    crossover: Crossover<T>
   ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
@@ -78,7 +78,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
    * @protected
    */
   protected async _initialize(
-    budgetManager: BudgetManager<AbstractTestCase>,
+    budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<void> {
     for (let i = 0; i < Properties.population_size; i++) {
@@ -101,7 +101,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
    * @protected
    */
   protected async _iterate(
-    budgetManager: BudgetManager<AbstractTestCase>,
+    budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<void> {
     const offspring = this._generateOffspring();
@@ -126,7 +126,7 @@ export abstract class EvolutionaryAlgorithm extends SearchAlgorithm<AbstractTest
    *
    * @protected
    */
-  protected _generateOffspring(): AbstractTestCase[] {
+  protected _generateOffspring(): T[] {
     const offspring = [];
 
     const rounds = Math.max(2, Math.round(this._populationSize / 5));

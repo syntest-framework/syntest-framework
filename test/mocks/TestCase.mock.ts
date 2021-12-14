@@ -1,10 +1,10 @@
-import { AbstractTestCase } from "../../src/testcase/AbstractTestCase";
 import { BranchObjectiveFunction } from "../../src";
 import { ActionStatementMock } from "./ActionStatement.mock";
-import { EncodingSampler, Parameter, TestCaseDecoder } from "../../dist";
+import {Encoding, EncodingSampler, Parameter} from "../../src";
 
-export class TestCaseMock extends AbstractTestCase {
+export class TestCaseMock extends Encoding {
   private static counter = 0;
+  private root: ActionStatementMock
 
   constructor() {
     TestCaseMock.counter++;
@@ -13,12 +13,13 @@ export class TestCaseMock extends AbstractTestCase {
       type: "dummy",
     };
 
-    const actionGene = new ActionStatementMock([param], "dummy", []);
-    super(actionGene);
+    super();
+    this.root = new ActionStatementMock([param], "dummy", []);
+
   }
 
   public setDummyEvaluation(
-    objective: BranchObjectiveFunction<AbstractTestCase>[],
+    objective: BranchObjectiveFunction<TestCaseMock>[],
     values: number[]
   ) {
     if (objective.length != values.length)
@@ -29,7 +30,7 @@ export class TestCaseMock extends AbstractTestCase {
     }
   }
 
-  copy(): AbstractTestCase {
+  copy(): TestCaseMock {
     return null;
   }
 
@@ -41,7 +42,7 @@ export class TestCaseMock extends AbstractTestCase {
     return 0;
   }
 
-  mutate(sampler: EncodingSampler<any>): AbstractTestCase {
+  mutate(sampler: EncodingSampler<any>): TestCaseMock {
     return undefined;
   }
 }

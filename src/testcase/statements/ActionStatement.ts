@@ -18,8 +18,8 @@
 
 import { Statement } from "./Statement";
 import { EncodingSampler } from "../../search/EncodingSampler";
-import { AbstractTestCase } from "../AbstractTestCase";
 import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
+import {Encoding} from "../../search/Encoding";
 
 /**
  * @author Dimitri Stallenberg
@@ -44,7 +44,7 @@ export abstract class ActionStatement extends Statement {
   }
 
   abstract mutate(
-    sampler: EncodingSampler<AbstractTestCase>,
+    sampler: EncodingSampler<Encoding>,
     depth: number
   ): ActionStatement;
 

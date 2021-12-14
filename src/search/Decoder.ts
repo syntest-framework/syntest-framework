@@ -16,29 +16,24 @@
  * limitations under the License.
  */
 
-import { Decoder } from "../search/Decoder";
-import {Encoding} from "../search/Encoding";
+import {Encoding} from "./Encoding";
 
-export class HashSet<T extends Encoding> extends Set<T> {
-  private decoder: Decoder<T, string>;
-
-  constructor(props: any, decoder: Decoder<T, string>) {
-    super(props);
-    this.decoder = decoder;
-  }
-
-  add(value: T): this {
-    let found = false;
-    this.forEach((item) => {
-      if (item.hashCode(this.decoder) === value.hashCode(this.decoder)) {
-        found = true;
-      }
-    });
-
-    if (!found) {
-      super.add(value);
-    }
-
-    return this;
-  }
+/**
+ * Decoder interface.
+ *
+ * @author Dimitri Stallenberg
+ * @author Mitchell Olsthoorn
+ */
+export interface Decoder<E extends Encoding, D> {
+  /**
+   * Creates a decoded version of an encoding
+   *
+   * @param encoding             the encoding to decode
+   * @param targetName           the name of the target, used to create informative decodings
+   * @return decoded             the decoded encoding
+   */
+  decodeTestCase(
+    encoding: E,
+    targetName: string
+  ): D;
 }

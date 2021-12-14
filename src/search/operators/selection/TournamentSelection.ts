@@ -17,7 +17,7 @@
  */
 
 import { prng } from "../../../util/prng";
-import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
+import {Encoding} from "../../Encoding";
 
 /**
  * This function selects the individual for reproduction using tournament selection
@@ -27,10 +27,10 @@ import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
  *
  * @author Annibale Panichella
  */
-export function tournamentSelection(
-  population: AbstractTestCase[],
+export function tournamentSelection<T extends Encoding>(
+  population: T[],
   tournamentSize: number
-): AbstractTestCase {
+): T {
   if (tournamentSize < 2)
     throw new Error("The tournament size should be greater than 1 ");
 

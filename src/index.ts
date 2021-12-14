@@ -19,10 +19,8 @@
 // Test case
 import exp = require("constants");
 
-export * from "./testcase/AbstractTestCase";
-
 // Runner
-export * from "./testcase/execution/TestCaseRunner";
+export * from "./util/Datapoint";
 
 // Statements
 export * from "./testcase/statements/ActionStatement";
@@ -85,11 +83,10 @@ export * from "./search/metaheuristics/evolutionary/NSGAII";
 export * from "./search/metaheuristics/evolutionary/mosa/MOSA";
 
 // Sampling
-export * from "./testcase/sampling/TestCaseSampler";
+export * from "./search/EncodingSampler";
 
 // Test building
-export * from "./testcase/decoder/SuiteBuilder";
-export * from "./testcase/decoder/TestCaseDecoder";
+export * from "./search/Decoder";
 
 // Instrumentation
 export * from "./analysis/static/graph/CFG";

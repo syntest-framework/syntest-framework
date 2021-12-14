@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { AbstractTestCase } from "../../testcase/AbstractTestCase";
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
+import {Encoding} from "../Encoding";
 
 export class DominanceComparator {
   /**
@@ -25,10 +25,10 @@ export class DominanceComparator {
    * "Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic
    *  Selection of the Targets"
    */
-  static compare(
-    individual1: AbstractTestCase,
-    individual2: AbstractTestCase,
-    objectives: Set<ObjectiveFunction<AbstractTestCase>>
+  static compare<T extends Encoding>(
+    individual1: T,
+    individual2: T,
+    objectives: Set<ObjectiveFunction<T>>
   ): number {
     let dominatesX = false;
     let dominatesY = false;

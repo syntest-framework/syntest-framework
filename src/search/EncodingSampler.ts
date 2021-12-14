@@ -17,15 +17,52 @@
  */
 
 import { Encoding } from "./Encoding";
+import {SearchSubject} from "./SearchSubject";
+import {Parameter} from "../analysis/static/graph/parsing/Parameter";
+import {Statement} from "../testcase/statements/Statement";
 
 /**
  * Sampler for encodings.
  *
  * @author Mitchell Olsthoorn
+ * @author Dimitri Stallenberg
  */
-export interface EncodingSampler<T extends Encoding> {
+export abstract class EncodingSampler<T extends Encoding> {
+  protected _subject: SearchSubject<T>;
+
+  /**
+   * Constructor
+   * @param subject     the subject
+   */
+  protected constructor(subject: SearchSubject<T>) {
+    this._subject = subject;
+  }
+
   /**
    * Sample an encoding.
    */
-  sample(): T;
+  abstract sample(): T;
+
+
+  /**
+   * Should sample any statement based on the type.
+   *
+   * @param depth      the current depth of the statement tree
+   * @param types      the return types of the statement to sample
+   * @param geneType   the type of the statement
+   * @return Statement a sampled statement
+   */
+  abstract sampleStatement(
+      depth: number,
+      types: Parameter[],
+      geneType: string
+  ): Statement;
+
+  get subject(): SearchSubject<T> {
+    return this._subject;
+  }
+
+  set subject(value: SearchSubject<T>) {
+    this._subject = value;
+  }
 }

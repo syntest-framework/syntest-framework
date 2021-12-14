@@ -17,9 +17,9 @@
  */
 
 import { EncodingSampler } from "../../search/EncodingSampler";
-import { AbstractTestCase } from "../AbstractTestCase";
 import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
 import { prng } from "../../util/prng";
+import {Encoding} from "../../search/Encoding";
 
 /**
  * @author Dimitri Stallenberg
@@ -59,7 +59,7 @@ export abstract class Statement {
    * @return          the mutated copy of the gene
    */
   abstract mutate(
-    sampler: EncodingSampler<AbstractTestCase>,
+    sampler: EncodingSampler<Encoding>,
     depth: number
   ): Statement;
 

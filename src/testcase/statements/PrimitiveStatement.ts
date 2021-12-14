@@ -17,8 +17,8 @@
  */
 
 import { Statement } from "./Statement";
-import { TestCaseSampler } from "../sampling/TestCaseSampler";
 import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
+import {EncodingSampler} from "../../search/EncodingSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -43,7 +43,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
   }
 
   abstract mutate(
-    sampler: TestCaseSampler,
+    sampler: EncodingSampler<any>,
     depth: number
   ): PrimitiveStatement<T>;
 
