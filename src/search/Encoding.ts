@@ -18,10 +18,10 @@
 
 import { ExecutionResult } from "./ExecutionResult";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
-import {prng} from "../util/prng";
-import {getUserInterface} from "../ui/UserInterface";
-import {EncodingSampler} from "./EncodingSampler";
-import {Decoder} from "./Decoder";
+import { prng } from "../util/prng";
+import { getUserInterface } from "../ui/UserInterface";
+import { EncodingSampler } from "./EncodingSampler";
+import { Decoder } from "./Decoder";
 
 /**
  * Encoding of the search problem.
@@ -57,7 +57,6 @@ export abstract class Encoding {
     this._assertions = new Map();
     getUserInterface().debug(`Created test case: ${this._id}`);
   }
-
 
   abstract mutate(sampler: EncodingSampler<Encoding>): Encoding;
 
@@ -134,8 +133,8 @@ export abstract class Encoding {
    * @param distance The distance
    */
   setDistance(
-      objectiveFunction: ObjectiveFunction<Encoding>,
-      distance: number
+    objectiveFunction: ObjectiveFunction<Encoding>,
+    distance: number
   ): void {
     this._objectives.set(objectiveFunction, distance);
   }

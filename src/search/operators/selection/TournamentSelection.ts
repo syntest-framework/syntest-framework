@@ -17,7 +17,7 @@
  */
 
 import { prng } from "../../../util/prng";
-import {Encoding} from "../../Encoding";
+import { Encoding } from "../../Encoding";
 
 /**
  * This function selects the individual for reproduction using tournament selection

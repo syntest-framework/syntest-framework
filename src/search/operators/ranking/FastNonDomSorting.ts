@@ -17,7 +17,7 @@
  */
 
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
-import {Encoding} from "../../Encoding";
+import { Encoding } from "../../Encoding";
 
 /**
  * Sort the population using fast non-dominated sorting.

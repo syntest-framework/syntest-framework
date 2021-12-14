@@ -18,7 +18,7 @@
 
 import { Statement } from "./Statement";
 import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
-import {EncodingSampler} from "../../search/EncodingSampler";
+import { EncodingSampler } from "../../search/EncodingSampler";
 
 /**
  * @author Dimitri Stallenberg

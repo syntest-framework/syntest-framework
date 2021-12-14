@@ -17,9 +17,9 @@
  */
 
 import { Encoding } from "./Encoding";
-import {SearchSubject} from "./SearchSubject";
-import {Parameter} from "../analysis/static/graph/parsing/Parameter";
-import {Statement} from "../testcase/statements/Statement";
+import { SearchSubject } from "./SearchSubject";
+import { Parameter } from "../analysis/static/graph/parsing/Parameter";
+import { Statement } from "../testcase/statements/Statement";
 
 /**
  * Sampler for encodings.
@@ -43,7 +43,6 @@ export abstract class EncodingSampler<T extends Encoding> {
    */
   abstract sample(): T;
 
-
   /**
    * Should sample any statement based on the type.
    *
@@ -53,9 +52,9 @@ export abstract class EncodingSampler<T extends Encoding> {
    * @return Statement a sampled statement
    */
   abstract sampleStatement(
-      depth: number,
-      types: Parameter[],
-      geneType: string
+    depth: number,
+    types: Parameter[],
+    geneType: string
   ): Statement;
 
   get subject(): SearchSubject<T> {

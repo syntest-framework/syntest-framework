@@ -19,7 +19,7 @@
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
 import { prng } from "../../util/prng";
-import {Encoding} from "../../search/Encoding";
+import { Encoding } from "../../search/Encoding";
 
 /**
  * @author Dimitri Stallenberg
@@ -58,10 +58,7 @@ export abstract class Statement {
    * @param depth     the depth of the gene in the gene tree
    * @return          the mutated copy of the gene
    */
-  abstract mutate(
-    sampler: EncodingSampler<Encoding>,
-    depth: number
-  ): Statement;
+  abstract mutate(sampler: EncodingSampler<Encoding>, depth: number): Statement;
 
   /**
    * Creates an exact copy of the current gene

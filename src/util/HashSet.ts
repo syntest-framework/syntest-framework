@@ -17,7 +17,7 @@
  */
 
 import { Decoder } from "../search/Decoder";
-import {Encoding} from "../search/Encoding";
+import { Encoding } from "../search/Encoding";
 
 export class HashSet<T extends Encoding> extends Set<T> {
   private decoder: Decoder<T, string>;

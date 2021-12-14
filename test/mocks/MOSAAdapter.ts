@@ -1,6 +1,6 @@
 import { MOSA } from "../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { DummySearchSubject } from "./DummySubject.mock";
-import {Encoding} from "../../src/search/Encoding";
+import { Encoding } from "../../src/search/Encoding";
 
 export class MockedMOSA<T extends Encoding> extends MOSA<T> {
   setPopulation(population: T[], size: number) {

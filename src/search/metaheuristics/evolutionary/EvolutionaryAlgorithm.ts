@@ -25,13 +25,15 @@ import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { Properties } from "../../../properties";
 import { TerminationManager } from "../../termination/TerminationManager";
-import {Encoding} from "../../Encoding";
+import { Encoding } from "../../Encoding";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
  * Uses the T encoding.
  */
-export abstract class EvolutionaryAlgorithm<T extends Encoding> extends SearchAlgorithm<T> {
+export abstract class EvolutionaryAlgorithm<
+  T extends Encoding
+> extends SearchAlgorithm<T> {
   /**
    * The sampler used to sample new encodings.
    * @protected

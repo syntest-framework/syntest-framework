@@ -25,7 +25,7 @@ import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
 import { DominanceComparator } from "../../../comparators/DominanceComparator";
 import { getUserInterface } from "../../../../ui/UserInterface";
 import { Crossover } from "../../../operators/crossover/Crossover";
-import {Encoding} from "../../../Encoding";
+import { Encoding } from "../../../Encoding";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -43,11 +43,7 @@ export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     runner: EncodingRunner<T>,
     crossover: Crossover<T>
   ) {
-    super(
-      new UncoveredObjectiveManager<T>(runner),
-      encodingSampler,
-      crossover
-    );
+    super(new UncoveredObjectiveManager<T>(runner), encodingSampler, crossover);
   }
 
   protected _environmentalSelection(size: number): void {
@@ -113,10 +109,7 @@ export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         this._objectiveManager.getCurrentObjectives()
       );
 
-      currentFront = currentFront.sort(function (
-        a: T,
-        b: T
-      ) {
+      currentFront = currentFront.sort(function (a: T, b: T) {
         // sort in descending order of crowding distance
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });

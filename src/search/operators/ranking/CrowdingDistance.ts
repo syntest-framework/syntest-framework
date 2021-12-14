@@ -17,7 +17,7 @@
  */
 
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
-import {Encoding} from "../../Encoding";
+import { Encoding } from "../../Encoding";
 
 /**
  * Compute the crowding distance for all individual int the front. This is a

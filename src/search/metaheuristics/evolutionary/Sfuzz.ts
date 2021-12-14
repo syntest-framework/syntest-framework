@@ -22,7 +22,7 @@ import { Crossover } from "../../operators/crossover/Crossover";
 import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
 import { getUserInterface } from "../../../ui/UserInterface";
 import { MOSA } from "./mosa/MOSA";
-import {Encoding} from "../../Encoding";
+import { Encoding } from "../../Encoding";
 
 /**
  * sFuzz
@@ -41,9 +41,7 @@ export class Sfuzz<T extends Encoding> extends MOSA<T> {
     crossover: Crossover<T>
   ) {
     super(encodingSampler, runner, crossover);
-    this._objectiveManager = new SfuzzObjectiveManager<T>(
-      runner
-    );
+    this._objectiveManager = new SfuzzObjectiveManager<T>(runner);
   }
 
   protected _environmentalSelection(size: number): void {

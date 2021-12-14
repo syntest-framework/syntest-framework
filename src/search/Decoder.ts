@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import {Encoding} from "./Encoding";
+import { Encoding } from "./Encoding";
 
 /**
  * Decoder interface.
@@ -32,8 +32,5 @@ export interface Decoder<E extends Encoding, D> {
    * @param targetName           the name of the target, used to create informative decodings
    * @return decoded             the decoded encoding
    */
-  decodeTestCase(
-    encoding: E,
-    targetName: string
-  ): D;
+  decodeTestCase(encoding: E, targetName: string): D;
 }

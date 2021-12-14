@@ -19,7 +19,10 @@
 import {
   MOSA,
   NSGAII,
-  Crossover, EncodingSampler, Encoding, EncodingRunner,
+  Crossover,
+  EncodingSampler,
+  Encoding,
+  EncodingRunner,
 } from "../../";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";

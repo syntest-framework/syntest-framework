@@ -23,7 +23,7 @@ import { EncodingSampler } from "../../EncodingSampler";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
 import { Crossover } from "../../operators/crossover/Crossover";
-import {Encoding} from "../../Encoding";
+import { Encoding } from "../../Encoding";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -48,11 +48,7 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     runner: EncodingRunner<T>,
     crossover: Crossover<T>
   ) {
-    super(
-      new SimpleObjectiveManager<T>(runner),
-      encodingSampler,
-      crossover
-    );
+    super(new SimpleObjectiveManager<T>(runner), encodingSampler, crossover);
   }
 
   /**

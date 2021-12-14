@@ -1,10 +1,10 @@
 import { BranchObjectiveFunction } from "../../src";
 import { ActionStatementMock } from "./ActionStatement.mock";
-import {Encoding, EncodingSampler, Parameter} from "../../src";
+import { Encoding, EncodingSampler, Parameter } from "../../src";
 
 export class TestCaseMock extends Encoding {
   private static counter = 0;
-  private root: ActionStatementMock
+  private root: ActionStatementMock;
 
   constructor() {
     TestCaseMock.counter++;
@@ -15,7 +15,6 @@ export class TestCaseMock extends Encoding {
 
     super();
     this.root = new ActionStatementMock([param], "dummy", []);
-
   }
 
   public setDummyEvaluation(
