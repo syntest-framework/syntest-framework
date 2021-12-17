@@ -159,7 +159,8 @@ export const properties = {
   },
 
   max_action_statements: {
-    description: "Max number of top level action statements in an individual's gene tree.",
+    description:
+      "Max number of top level action statements in an individual's gene tree.",
     type: "number",
     default: 5,
   },
