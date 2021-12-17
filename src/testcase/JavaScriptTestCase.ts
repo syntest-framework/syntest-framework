@@ -16,25 +16,126 @@
  * limitations under the License.
  */
 import {
-  AbstractTestCase,
-  EncodingSampler,
-  TestCaseDecoder,
+  ActionStatement,
+  Decoder,
+  Encoding, prng,
 } from "@syntest/framework";
+import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
 
-export class JavaScriptTestCase extends AbstractTestCase {
-  mutate(sampler: EncodingSampler<AbstractTestCase>): AbstractTestCase {
-    return undefined;
+export class JavaScriptTestCase extends Encoding {
+  private _root: ActionStatement[];
+
+  /**
+   * Constructor.
+   *
+   * @param root The root of the tree chromosome of the test case
+   */
+  constructor(root: ActionStatement[]) {
+    super();
+    this._root = root;
   }
 
-  hashCode(decoder: TestCaseDecoder): number {
+  mutate(sampler: JavaScriptTestCaseSampler) {
+
+    let newRoot: ActionStatement[] = []
+    let changed = false;
+    if (
+      prng.nextBoolean(1 / 10) &&
+      this._root.length > 1
+    ) {
+      newRoot = this.deleteMethodCall();
+      changed = true
+    }
+    if (
+      prng.nextBoolean(1 / 10) &&
+      !changed
+    ) {
+      newRoot = this.replaceMethodCall(sampler);
+      changed = true
+    }
+    if (
+      prng.nextBoolean(1 / 10) &&
+      !changed
+    ) {
+      newRoot = this.addMethodCall(sampler);
+      changed = true
+    }
+
+    newRoot = newRoot.map((action) => {
+      if (prng.nextBoolean(1 / newRoot.length)) {
+        return action.mutate(sampler, 0)
+      } else {
+        return action.copy()
+      }
+    })
+
+    return new JavaScriptTestCase(newRoot);
+  }
+
+
+  protected addMethodCall(
+    sampler: JavaScriptTestCaseSampler,
+  ): ActionStatement[] {
+    let newRoot = [...this._root]
+    let count = 0;
+    // TODO either do one at the time or also have multiple delete/replace
+    while (prng.nextBoolean(Math.pow(0.5, count)) && count < 10) {
+      const index = prng.nextInt(0, newRoot.length);
+
+      // get a random test case and we extract one of its method call
+      newRoot.splice(
+        index,
+        0,
+        sampler.sampleFunctionCall(0)
+      );
+
+      count++;
+    }
+
+    return newRoot
+  }
+
+  protected replaceMethodCall(
+    sampler: JavaScriptTestCaseSampler,
+  ): ActionStatement[] {
+    let newRoot = [...this._root]
+
+    if (newRoot.length) {
+      const index = prng.nextInt(0, newRoot.length - 1);
+      newRoot[index] = sampler.sampleFunctionCall(0);
+    }
+
+    return newRoot
+  }
+
+  protected deleteMethodCall(): ActionStatement[] {
+    let newRoot = [...this._root]
+
+    if (newRoot.length) {
+      const index = prng.nextInt(0, newRoot.length - 1);
+      this._root.splice(index, 1);
+    }
+
+    return newRoot
+  }
+
+
+  hashCode(decoder: Decoder<Encoding, string>): number {
     return 0;
   }
 
-  copy(): AbstractTestCase {
+  copy(): JavaScriptTestCase {
+    // TODO
     return undefined;
   }
 
   getLength(): number {
+    // TODO
     return 0;
+  }
+
+
+  get root(): ActionStatement[] {
+    return this._root;
   }
 }

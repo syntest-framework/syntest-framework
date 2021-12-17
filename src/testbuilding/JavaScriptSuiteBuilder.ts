@@ -16,13 +16,44 @@
  * limitations under the License.
  */
 
-import { Archive, SuiteBuilder, TestCaseDecoder } from "@syntest/framework";
+import { Archive, getUserInterface } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
-import { writeFileSync } from "fs";
+import { readdirSync, unlinkSync, writeFileSync } from "fs";
+import * as path from "path";
+import { JavaScriptDecoder } from "./JavaScriptDecoder";
 
-export class JavaScriptSuiteBuilder extends SuiteBuilder {
-  constructor(decoder: TestCaseDecoder) {
-    super(decoder);
+export class JavaScriptSuiteBuilder {
+  private decoder: JavaScriptDecoder;
+
+  constructor(decoder: JavaScriptDecoder) {
+    this.decoder = decoder
+  }
+
+
+  /**
+   * Deletes a certain file.
+   *
+   * @param filepath  the filepath of the file to delete
+   */
+  async deleteTestCase(filepath: string) {
+    try {
+      await unlinkSync(filepath);
+    } catch (error) {
+      getUserInterface().debug(error);
+    }
+  }
+
+  /**
+   * Removes all files that match the given regex within a certain directory
+   * @param dirPath   the directory to clear
+   * @param match     the regex to which the files must match
+   */
+  async clearDirectory(dirPath: string, match = /.*\.(js)/g) {
+    const dirContent = await readdirSync(dirPath);
+
+    for (const file of dirContent.filter((el: string) => el.match(match))) {
+      await unlinkSync(path.resolve(dirPath, file));
+    }
   }
 
   async createSuite(archive: Archive<JavaScriptTestCase>): Promise<void> {

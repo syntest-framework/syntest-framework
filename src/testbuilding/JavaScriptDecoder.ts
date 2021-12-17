@@ -1,8 +1,8 @@
-import { Statement, TestCaseDecoder } from "@syntest/framework";
+import { Decoder, Statement } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 
 
-export class JavaScriptDecoder implements TestCaseDecoder {
+export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   private imports: Map<string, string>;
   private contractDependencies: Map<string, string[]>;
 

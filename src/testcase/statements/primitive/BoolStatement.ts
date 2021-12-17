@@ -18,7 +18,6 @@
 
 import {
   PrimitiveStatement,
-  TestCaseSampler,
   prng,
   Properties,
   Parameter,

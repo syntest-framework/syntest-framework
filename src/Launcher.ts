@@ -41,7 +41,7 @@ import {
   BudgetManager,
   configureTermination,
   StatisticsCollector,
-  StatisticsSearchListener, SummaryWriter, CoverageWriter, clearDirectory,
+  StatisticsSearchListener, SummaryWriter, CoverageWriter, clearDirectory, setUserInterface, getSeed,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
@@ -57,6 +57,8 @@ import { JavaScriptRunner } from "./testcase/execution/JavaScriptRunner";
 import { JavaScriptRandomSampler } from "./testcase/sampling/JavaScriptRandomSampler";
 import { JavaScriptTreeCrossover } from "./search/crossover/JavaScriptTreeCrossover";
 import { collectCoverageData, collectInitialVariables, collectStatistics } from "./utils/collection";
+import Messages from "./ui/Messages";
+import { JavaScriptCommandLineInterface } from "./ui/JavaScriptCommandLineInterface";
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -87,7 +89,23 @@ export class Launcher {
     await createDirectoryStructure();
     await createTempDirectoryStructure();
 
-    // TODO ui setup
+    const messages = new Messages();
+    setUserInterface(
+      new JavaScriptCommandLineInterface(
+        Properties.console_log_level === "silent",
+        Properties.console_log_level === "verbose",
+        messages
+      )
+    );
+
+    getUserInterface().report("clear", []);
+    getUserInterface().report("asciiArt", ["Syntest"]);
+    getUserInterface().report("version", [require("../package.json").version]);
+
+    if (args.includes("--help") || args.includes("-h")) {
+      getUserInterface().report("help", []);
+      await this.exit();
+    } // Exit if --help
 
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
@@ -96,14 +114,83 @@ export class Launcher {
       targetMapGenerator
     );
 
+
+    getUserInterface().report("header", ["GENERAL INFO"]);
+    // TODO ui info messages
+
+
+    getUserInterface().report("header", ["TARGETS"]);
+
     await loadTargets(targetPool);
     if (!targetPool.included.length) {
-      // TODO ui error
-      console.log("nothing included");
-      process.exit(1);
+      getUserInterface().error(
+        `No targets where selected! Try changing the 'include' parameter`
+      );
+      await this.exit();
     }
 
-    // TODO ui info messages
+    let names = [];
+
+    targetPool.included.forEach((targetFile) =>
+      names.push(
+        `${path.basename(
+          targetFile.canonicalPath
+        )} -> ${targetFile.targets.join(", ")}`
+      )
+    );
+    getUserInterface().report("targets", names);
+
+    names = [];
+    targetPool.excluded.forEach((targetFile) =>
+      names.push(
+        `${path.basename(
+          targetFile.canonicalPath
+        )} -> ${targetFile.targets.join(", ")}`
+      )
+    );
+    getUserInterface().report("skip-files", names);
+
+    getUserInterface().report("header", ["CONFIGURATION"]);
+
+    getUserInterface().report("single-property", ["Seed", getSeed()]);
+    getUserInterface().report("property-set", [
+      "Budgets",
+      [
+        ["Iteration Budget", `${Properties.iteration_budget} iterations`],
+        ["Evaluation Budget", `${Properties.evaluation_budget} evaluations`],
+        ["Search Time Budget", `${Properties.search_time} seconds`],
+        ["Total Time Budget", `${Properties.total_time} seconds`],
+      ],
+    ]);
+    getUserInterface().report("property-set", [
+      "Algorithm",
+      [
+        ["Algorithm", Properties.algorithm],
+        ["Population Size", Properties.population_size],
+      ],
+    ]);
+    getUserInterface().report("property-set", [
+      "Variation Probabilities",
+      [
+        ["Resampling", Properties.resample_gene_probability],
+        ["Delta mutation", Properties.delta_mutation_probability],
+        [
+          "Re-sampling from chromosome",
+          Properties.sample_existing_value_probability,
+        ],
+        ["Crossover", Properties.crossover_probability],
+      ],
+    ]);
+
+    getUserInterface().report("property-set", [
+      "Sampling",
+      [
+        ["Max Depth", Properties.max_depth],
+        ["Explore Illegal Values", Properties.explore_illegal_values],
+        ["Sample Function Result as Argument", Properties.sample_func_as_arg],
+        ["Crossover", Properties.crossover_probability],
+      ],
+    ]);
 
     return targetPool;
   }

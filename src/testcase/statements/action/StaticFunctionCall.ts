@@ -19,7 +19,6 @@
 import {
   Statement,
   ActionStatement,
-  TestCaseSampler,
   prng,
   Properties,
   Parameter,
