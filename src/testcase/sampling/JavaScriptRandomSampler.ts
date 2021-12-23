@@ -23,8 +23,15 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     super(subject);
   }
 
+
   sample(): JavaScriptTestCase {
-    const root = this.sampleConstructor(0)
+    const root: ActionStatement[] = []
+
+    const numberOfFunctions = prng.nextInt(1,  Properties.max_action_statements)
+    for (let i = 0; i < numberOfFunctions; i++) {
+      root.push(this.sampleFunctionCall(0))
+    }
+
     return new JavaScriptTestCase(root);
   }
 
@@ -53,7 +60,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         );
       }
     } else if (geneType === "functionCall") {
-      return this.sampleFunctionCallTypeBased(depth, types);
+      return this.sampleSpecificFunctionCall(depth, types, this.sampleConstructor(depth));
     } else if (geneType === "constructor") {
       return this.sampleConstructor(depth);
     }
@@ -75,7 +82,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     ) {
       // Take result from function call
       // TODO sample existing function call
-      return this.sampleFunctionCallTypeBased(depth, [type]);
+      return this.sampleSpecificFunctionCall(depth, [type], this.sampleConstructor(depth));
     }
 
     // Take regular primitive value
@@ -84,6 +91,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleConstructor(depth: number): ConstructorCall {
+    // TODO sample existing constructor
     const constructors = this._subject.getPossibleActions("constructor");
 
     if (constructors.length > 0) {
@@ -101,52 +109,74 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
           }
         })
 
-      // TODO this is stupid too much coupling
-      const root = new ConstructorCall(
+      return new ConstructorCall(
         [{ type: action.name, name: "contract" }],
         prng.uniqueId(),
         `${action.name}`,
-        args,
-        []
+        args
       );
-
-      const nCalls = prng.nextInt(1, 5);
-      for (let index = 0; index <= nCalls; index++) {
-        const call = this.sampleFunctionCall(1, root);
-        root.setMethodCall(index, call as ActionStatement);
-      }
-      return root;
-    } {
+    } else {
       // if no constructors is available, we invoke the default (implicit) constructor
-      const root = new ConstructorCall(
+      return new ConstructorCall(
         [{ type: this._subject.name, name: "contract" }],
         prng.uniqueId(),
         `${this._subject.name}`,
-        [],
         []
       );
-
-      const nCalls = prng.nextInt(1, 5);
-      for (let index = 0; index <= nCalls; index++) {
-        const call = this.sampleFunctionCall(1, root);
-        root.setMethodCall(index, call as ActionStatement);
-      }
-
-      return root;
     }
   }
 
-  sampleFunctionCall(depth: number, root: ConstructorCall): FunctionCall {
-    // TODO
-    return undefined;
+  sampleFunctionCall(depth: number): FunctionCall {
+    // Pick a random function
+    // TODO Could be static or object function
+    const action = <FunctionDescription>(
+      prng.pickOne(this._subject.getPossibleActions("function"))
+    );
+
+    const parent = this.sampleConstructor(depth + 1)
+
+    const args: Statement[] = [];
+
+    for (const param of action.parameters) {
+      if (param.type != "")
+        args.push(
+          this.sampleArgument(depth + 1, param)
+        );
+    }
+
+    return new FunctionCall(
+      action.returnParameters,
+      prng.uniqueId(),
+      parent,
+      action.name,
+      args
+    );
   }
 
-  sampleFunctionCallTypeBased(depth: number, types: Parameter[]): FunctionCall {
-    // TODO
-    return undefined;
+  sampleSpecificFunctionCall(depth: number, types: Parameter[], parent: ConstructorCall): FunctionCall {
+    const action = <FunctionDescription>(
+      prng.pickOne(this._subject.getPossibleActions("function", types))
+    );
+
+    const args: Statement[] = [];
+
+    for (const param of action.parameters) {
+      if (param.type != "")
+        args.push(
+          this.sampleArgument(depth + 1, param)
+        );
+    }
+
+    return new FunctionCall(
+      action.returnParameters,
+      prng.uniqueId(),
+      parent,
+      action.name,
+      args
+    );
   }
 
-  sampleStaticFunctionCallTypeBased(
+  sampleSpecificStaticFunctionCall(
     depth: number,
     types: Parameter[]
   ): StaticFunctionCall {

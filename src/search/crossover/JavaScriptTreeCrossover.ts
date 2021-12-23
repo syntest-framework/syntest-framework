@@ -34,7 +34,7 @@ import { ConstructorCall } from "../../testcase/statements/action/ConstructorCal
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export class JavaScriptTreeCrossover implements Crossover {
+export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
   public crossOver(
     parentA: JavaScriptTestCase,
     parentB: JavaScriptTestCase
@@ -46,13 +46,13 @@ export class JavaScriptTreeCrossover implements Crossover {
 
     for (
       let i = 0;
-      i < (rootA as ConstructorCall).getMethodCalls().length;
+      i < rootA.length;
       i++
     ) {
       queueA.push({
         parent: rootA,
         childIndex: i,
-        child: (rootA as ConstructorCall).getMethodCalls()[i],
+        child: rootA[i],
       });
     }
 
@@ -93,11 +93,12 @@ export class JavaScriptTreeCrossover implements Crossover {
       donorTree.parent.setChild(donorTree.childIndex, pair.child.copy());
     }
 
-    rootA.args = [...parentA.root.args];
-    rootB.args = [...parentB.root.args];
+    // TODO
+    // rootA.args = [...parentA.root.args];
+    // rootB.args = [...parentB.root.args];
     return [
-      new JavaScriptTestCase(rootA as ConstructorCall),
-      new JavaScriptTestCase(rootB as ConstructorCall),
+      new JavaScriptTestCase(rootA),
+      new JavaScriptTestCase(rootB),
     ];
   }
 
@@ -109,16 +110,18 @@ export class JavaScriptTreeCrossover implements Crossover {
    *
    * @author Dimitri Stallenberg
    */
-  protected findSimilarSubtree(wanted: Statement, tree: Statement) {
+  protected findSimilarSubtree(wanted: Statement, trees: Statement[]) {
     const queue: any = [];
     const similar = [];
 
-    for (let i = 0; i < tree.getChildren().length; i++) {
-      queue.push({
-        parent: tree,
-        childIndex: i,
-        child: tree.getChildren()[i],
-      });
+    for (let tree of trees) {
+      for (let i = 0; i < tree.getChildren().length; i++) {
+        queue.push({
+          parent: tree,
+          childIndex: i,
+          child: tree.getChildren()[i],
+        });
+      }
     }
 
     while (queue.length) {

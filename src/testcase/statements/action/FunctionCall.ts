@@ -21,7 +21,6 @@ import { ConstructorCall } from "./ConstructorCall";
 import {
   Statement,
   ActionStatement,
-  TestCaseSampler,
   prng,
   Properties,
   Parameter,
@@ -60,7 +59,7 @@ export class FunctionCall extends ActionStatement {
     if (prng.nextBoolean(Properties.resample_gene_probability)) {
       // resample the gene
       return <FunctionCall>(
-        sampler.sampleStatement(depth, this.types, "functionCall")
+        sampler.sampleSpecificFunctionCall(depth, this.types, this._parent.copy())
       );
     } else {
       const args = [...this.args.map((a: Statement) => a.copy())];

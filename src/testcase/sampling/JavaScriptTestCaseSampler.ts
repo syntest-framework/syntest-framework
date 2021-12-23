@@ -17,10 +17,9 @@
  */
 
 import {
-  TestCaseSampler,
   Statement,
   SearchSubject,
-  Parameter,
+  Parameter, EncodingSampler,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
@@ -33,20 +32,21 @@ import { StaticFunctionCall } from "../statements/action/StaticFunctionCall";
  *
  * @author Dimitri Stallenberg
  */
-export abstract class JavaScriptTestCaseSampler extends TestCaseSampler {
+export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScriptTestCase> {
   protected constructor(subject: SearchSubject<JavaScriptTestCase>) {
     super(subject);
   }
 
   abstract sampleConstructor(depth: number): ConstructorCall;
-  abstract sampleFunctionCall(depth: number, root: ConstructorCall): FunctionCall;
+  abstract sampleFunctionCall(depth: number): FunctionCall;
 
-  abstract sampleFunctionCallTypeBased(
+  abstract sampleSpecificFunctionCall(
     depth: number,
-    types: Parameter[]
+    types: Parameter[],
+    parent: ConstructorCall
   ): FunctionCall;
 
-  abstract sampleStaticFunctionCallTypeBased(
+  abstract sampleSpecificStaticFunctionCall(
     depth: number,
     types: Parameter[]
   ): StaticFunctionCall;
