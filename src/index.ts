@@ -22,18 +22,6 @@ import exp = require("constants");
 // Runner
 export * from "./util/Datapoint";
 
-// Statements
-export * from "./testcase/statements/Statement";
-
-// Action statement
-export * from "./testcase/statements/ActionStatement";
-
-// Primitive statement
-export * from "./testcase/statements/PrimitiveStatement";
-
-// Root statements
-export * from "./testcase/statements/RootStatement";
-
 // Search
 export * from "./search/SearchSubject";
 export * from "./search/EncodingSampler";
