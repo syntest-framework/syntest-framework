@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Solidity.
+ * This file is part of SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,17 @@
  */
 
 import {
-  Statement,
   SearchSubject,
   Parameter, EncodingSampler,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
-import { ConstructorCall } from "../statements/action/ConstructorCall";
-import { FunctionCall } from "../statements/action/FunctionCall";
-import { StaticFunctionCall } from "../statements/action/StaticFunctionCall";
+import { ConstructorCall } from "../statements/root/ConstructorCall";
+import { MethodCall } from "../statements/action/MethodCall";
+import { Statement } from "../statements/Statement";
 
 /**
- * SolidityRandomSampler class
+ * JavaScriptRandomSampler class
  *
  * @author Dimitri Stallenberg
  */
@@ -38,22 +37,18 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   }
 
   abstract sampleConstructor(depth: number): ConstructorCall;
-  abstract sampleFunctionCall(depth: number): FunctionCall;
-
-  abstract sampleSpecificFunctionCall(
-    depth: number,
-    types: Parameter[],
-    parent: ConstructorCall
-  ): FunctionCall;
-
-  abstract sampleSpecificStaticFunctionCall(
-    depth: number,
-    types: Parameter[]
-  ): StaticFunctionCall;
-
+  abstract sampleMethodCall(depth: number): MethodCall;
   abstract sampleArgument(
     depth: number,
-    type: Parameter,
-    bits: number
+    type: Parameter
   ): Statement;
+
+  abstract samplePrimitive(
+    depth: number,
+    type: Parameter
+  ): Statement;
+
+  // TODO
+  // abstract sampleStaticMethodCall(depth: number): MethodCall;
+  // abstract sampleFunctionCall(depth: number): FunctionCall;
 }

@@ -17,17 +17,18 @@
  */
 
 import {
-  PrimitiveStatement,
   prng,
   Properties,
   Parameter,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
+import { PrimitiveStatement } from "./PrimitiveStatement";
 
 /**
  * @author Dimitri Stallenberg
  */
 export class StringStatement extends PrimitiveStatement<string> {
+
   private readonly alphabet: string;
   private readonly maxlength: number;
 
@@ -209,5 +210,9 @@ export class StringStatement extends PrimitiveStatement<string> {
       Properties.string_alphabet,
       Properties.string_maxlength
     );
+  }
+
+  decode(): string {
+    return `const ${this.varName} = "${this.value}";`
   }
 }

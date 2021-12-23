@@ -1,20 +1,19 @@
 import { JavaScriptTestCaseSampler } from "./JavaScriptTestCaseSampler";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import {
-  ActionStatement,
   FunctionDescription,
   Parameter,
   prng,
   Properties,
   SearchSubject,
-  Statement,
 } from "@syntest/framework";
-import { ConstructorCall } from "../statements/action/ConstructorCall";
-import { FunctionCall } from "../statements/action/FunctionCall";
+import { ConstructorCall } from "../statements/root/ConstructorCall";
+import { MethodCall } from "../statements/action/MethodCall";
 import { BoolStatement } from "../statements/primitive/BoolStatement";
 import { StringStatement } from "../statements/primitive/StringStatement";
 import { NumericStatement } from "../statements/primitive/NumericStatement";
-import { StaticFunctionCall } from "../statements/action/StaticFunctionCall";
+import { RootStatement } from "../statements/root/RootStatement";
+import { Statement } from "../statements/Statement";
 
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
@@ -25,73 +24,14 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
 
   sample(): JavaScriptTestCase {
-    const root: ActionStatement[] = []
+    const root: RootStatement = this.sampleConstructor(0)
 
-    const numberOfFunctions = prng.nextInt(1,  Properties.max_action_statements)
-    for (let i = 0; i < numberOfFunctions; i++) {
-      root.push(this.sampleFunctionCall(0))
-    }
+    // TODO could also be static access object or functioncall
 
     return new JavaScriptTestCase(root);
   }
 
-  sampleStatement(depth: number, types: Parameter[], geneType = 'primitive'): Statement {
-    if (geneType === "primitive") {
-      if (types.length === 0) {
-        throw new Error(
-          "To sample a statement at least one type must be given!"
-        );
-      }
-
-      if (types.length !== 1) {
-        throw new Error(
-          "Primitive can only have a single type, multiple where given."
-        );
-      }
-      if (types[0].type === "bool") {
-        return BoolStatement.getRandom(types[0]);
-      } else if (types[0].type === "string") {
-        return StringStatement.getRandom(types[0]);
-      } else if (types[0].type === "number") {
-        return NumericStatement.getRandom(types[0]);
-      } else if (types[0].type == "") {
-        throw new Error(
-          `Type "" not recognized. It must be a bug in our parser!`
-        );
-      }
-    } else if (geneType === "functionCall") {
-      return this.sampleSpecificFunctionCall(depth, types, this.sampleConstructor(depth));
-    } else if (geneType === "constructor") {
-      return this.sampleConstructor(depth);
-    }
-
-    throw new Error(`Unknown types [${types.join(", ")}] ${geneType}!`);
-  }
-
-  sampleArgument(depth: number, type: Parameter): Statement {
-    // check depth to decide whether to pick a variable
-
-    let options = this._subject
-      .getPossibleActions()
-      .filter((a) => a.type === type.type)
-
-    if (
-      depth < Properties.max_depth &&
-      options.length &&
-      prng.nextBoolean(Properties.sample_func_as_arg)
-    ) {
-      // Take result from function call
-      // TODO sample existing function call
-      return this.sampleSpecificFunctionCall(depth, [type], this.sampleConstructor(depth));
-    }
-
-    // Take regular primitive value
-    // TODO sample existing primitive value
-    return this.sampleStatement(depth, [type]);
-  }
-
   sampleConstructor(depth: number): ConstructorCall {
-    // TODO sample existing constructor
     const constructors = this._subject.getPossibleActions("constructor");
 
     if (constructors.length > 0) {
@@ -104,37 +44,48 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         .forEach((param) => {
           if (param.type != "") {
             args.push(
-              this.sampleArgument(1, param)
+              this.sampleArgument(depth + 1, param)
             );
           }
         })
 
+      const calls: Statement[] = []
+      const nCalls = prng.nextInt(1, Properties.max_action_statements);
+      for (let i = 0; i < nCalls; i++) {
+        calls.push(this.sampleMethodCall(depth + 1))
+      }
+
       return new ConstructorCall(
-        [{ type: action.name, name: "contract" }],
+        { type: action.name, name: "contract" },
         prng.uniqueId(),
-        `${action.name}`,
-        args
+        args,
+        calls,
+        `${action.name}`
       );
     } else {
       // if no constructors is available, we invoke the default (implicit) constructor
+
+      const calls: Statement[] = []
+      const nCalls = prng.nextInt(1, Properties.max_action_statements);
+      for (let i = 0; i < nCalls; i++) {
+        calls.push(this.sampleMethodCall(depth + 1))
+      }
+
       return new ConstructorCall(
-        [{ type: this._subject.name, name: "contract" }],
+        { type: this._subject.name, name: "contract" },
         prng.uniqueId(),
-        `${this._subject.name}`,
-        []
+        [],
+        calls,
+        `${this._subject.name}`
       );
     }
   }
 
-  sampleFunctionCall(depth: number): FunctionCall {
-    // Pick a random function
-    // TODO Could be static or object function
+  sampleMethodCall(depth: number) {
     const action = <FunctionDescription>(
       prng.pickOne(this._subject.getPossibleActions("function"))
     );
 
-    const parent = this.sampleConstructor(depth + 1)
-
     const args: Statement[] = [];
 
     for (const param of action.parameters) {
@@ -144,44 +95,31 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         );
     }
 
-    return new FunctionCall(
-      action.returnParameters,
+    return new MethodCall(
+      action.returnParameters[0],
       prng.uniqueId(),
-      parent,
       action.name,
       args
     );
   }
 
-  sampleSpecificFunctionCall(depth: number, types: Parameter[], parent: ConstructorCall): FunctionCall {
-    const action = <FunctionDescription>(
-      prng.pickOne(this._subject.getPossibleActions("function", types))
-    );
+  sampleArgument(depth: number, type: Parameter): Statement {
+    // TODO sampling arrays or objects
+    // TODO more complex sampling of function return values
+    // Take regular primitive value
+    return this.samplePrimitive(depth, type);
+  }
 
-    const args: Statement[] = [];
-
-    for (const param of action.parameters) {
-      if (param.type != "")
-        args.push(
-          this.sampleArgument(depth + 1, param)
-        );
+  samplePrimitive(depth: number, type: Parameter): Statement {
+    if (type.type === "bool") {
+      return BoolStatement.getRandom(type);
+    } else if (type.type === "string") {
+      return StringStatement.getRandom(type);
+    } else if (type.type === "number") {
+      return NumericStatement.getRandom(type);
     }
 
-    return new FunctionCall(
-      action.returnParameters,
-      prng.uniqueId(),
-      parent,
-      action.name,
-      args
-    );
-  }
-
-  sampleSpecificStaticFunctionCall(
-    depth: number,
-    types: Parameter[]
-  ): StaticFunctionCall {
-    // TODO
-    return undefined
+    throw new Error(`Unknown type '${type}'!`);
   }
 
 }

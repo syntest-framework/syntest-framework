@@ -16,95 +16,82 @@
  * limitations under the License.
  */
 
-import { ConstructorCall } from "./ConstructorCall";
-
 import {
-  Statement,
-  ActionStatement,
   prng,
-  Properties,
   Parameter,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
+import { ActionStatement } from "./ActionStatement";
+import { Statement } from "../Statement";
 
+
+// TODO maybe delete?
 /**
  * @author Dimitri Stallenberg
  */
-export class FunctionCall extends ActionStatement {
-  private readonly _functionName: string;
+export class StaticMethodCall extends ActionStatement {
 
-  private readonly _parent: ConstructorCall;
+  private readonly _functionName: string;
 
   /**
    * Constructor
-   * @param types the return types of the function
+   * @param type the return type of the function
    * @param uniqueId id of the gene
-   * @param instance the object to call the function on
-   * @param functionName the name of the function
    * @param args the arguments of the function
+   * @param functionName the name of the function
    */
   constructor(
-    types: Parameter[],
+    type: Parameter,
     uniqueId: string,
-    instance: ConstructorCall,
-    functionName: string,
-    args: Statement[]
+    args: Statement[],
+    functionName: string
   ) {
-    super(types, uniqueId, [...args]);
-    this._parent = instance;
+    super(type, uniqueId, args);
     this._functionName = functionName;
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number): FunctionCall {
-    if (prng.nextBoolean(Properties.resample_gene_probability)) {
-      // resample the gene
-      return <FunctionCall>(
-        sampler.sampleSpecificFunctionCall(depth, this.types, this._parent.copy())
-      );
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
+    // if (prng.nextBoolean(Properties.resample_gene_probability)) {
+    //   // resample the gene
+    //   return sampler.sampleStatement(depth, this.types, "functionCall");
+    // } else
+    if (!this.args.length) {
+      return this.copy();
     } else {
+      // randomly mutate one of the args
       const args = [...this.args.map((a: Statement) => a.copy())];
-      if (args.length === 0) return this;
-
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
 
-      const instance = this._parent;
-      return new FunctionCall(
-        this.types,
-        this.id,
-        instance,
-        this.functionName,
-        args
-      );
+      return new StaticMethodCall(this.type, this.id, args, this.functionName);
     }
   }
 
   copy() {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
-    return new FunctionCall(
-      this.types,
+    return new StaticMethodCall(
+      this.type,
       this.id,
-      this._parent,
-      this.functionName,
-      deepCopyArgs
+      deepCopyArgs,
+      this.functionName
     );
   }
 
   hasChildren(): boolean {
-    // since every object function call has an instance there must be atleast one child
-    return true;
+    return !!this.args.length;
   }
 
   getChildren(): Statement[] {
     return [...this.args];
   }
 
-  getParent(): ConstructorCall {
-    return this._parent;
-  }
-
   get functionName(): string {
     return this._functionName;
+  }
+
+  decode(): string {
+    // TODO
+    return "";
   }
 }

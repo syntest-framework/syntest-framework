@@ -17,12 +17,12 @@
  */
 
 import {
-  PrimitiveStatement,
   prng,
   Properties,
   Parameter,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
+import { PrimitiveStatement } from "./PrimitiveStatement";
 
 /**
  * @author Dimitri Stallenberg

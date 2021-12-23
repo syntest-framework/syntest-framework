@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Javascript.
+ * This file is part of SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,127 +15,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
-  ActionStatement,
+  getUserInterface,
+  Encoding,
   Decoder,
-  Encoding, prng,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
+import { RootStatement } from "./statements/root/RootStatement";
 
+/**
+ * SolidityTestCase class
+ *
+ * @author Dimitri Stallenberg
+ */
 export class JavaScriptTestCase extends Encoding {
-  private _root: ActionStatement[];
+  private _root: RootStatement;
 
   /**
    * Constructor.
    *
    * @param root The root of the tree chromosome of the test case
    */
-  constructor(root: ActionStatement[]) {
+  constructor(root: RootStatement) {
     super();
     this._root = root;
   }
 
   mutate(sampler: JavaScriptTestCaseSampler) {
-
-    let newRoot: ActionStatement[] = []
-    let changed = false;
-    if (
-      prng.nextBoolean(1 / 10) &&
-      this._root.length > 1
-    ) {
-      newRoot = this.deleteMethodCall();
-      changed = true
-    }
-    if (
-      prng.nextBoolean(1 / 10) &&
-      !changed
-    ) {
-      newRoot = this.replaceMethodCall(sampler);
-      changed = true
-    }
-    if (
-      prng.nextBoolean(1 / 10) &&
-      !changed
-    ) {
-      newRoot = this.addMethodCall(sampler);
-      changed = true
-    }
-
-    newRoot = newRoot.map((action) => {
-      if (prng.nextBoolean(1 / newRoot.length)) {
-        return action.mutate(sampler, 0)
-      } else {
-        return action.copy()
-      }
-    })
-
-    return new JavaScriptTestCase(newRoot);
+    getUserInterface().debug(`Mutating test case: ${this._id}`);
+    return new JavaScriptTestCase(
+      this._root.mutate(sampler, 0)
+    );
   }
-
-
-  protected addMethodCall(
-    sampler: JavaScriptTestCaseSampler,
-  ): ActionStatement[] {
-    let newRoot = [...this._root]
-    let count = 0;
-    // TODO either do one at the time or also have multiple delete/replace
-    while (prng.nextBoolean(Math.pow(0.5, count)) && count < 10) {
-      const index = prng.nextInt(0, newRoot.length);
-
-      // get a random test case and we extract one of its method call
-      newRoot.splice(
-        index,
-        0,
-        sampler.sampleFunctionCall(0)
-      );
-
-      count++;
-    }
-
-    return newRoot
-  }
-
-  protected replaceMethodCall(
-    sampler: JavaScriptTestCaseSampler,
-  ): ActionStatement[] {
-    let newRoot = [...this._root]
-
-    if (newRoot.length) {
-      const index = prng.nextInt(0, newRoot.length - 1);
-      newRoot[index] = sampler.sampleFunctionCall(0);
-    }
-
-    return newRoot
-  }
-
-  protected deleteMethodCall(): ActionStatement[] {
-    let newRoot = [...this._root]
-
-    if (newRoot.length) {
-      const index = prng.nextInt(0, newRoot.length - 1);
-      this._root.splice(index, 1);
-    }
-
-    return newRoot
-  }
-
 
   hashCode(decoder: Decoder<Encoding, string>): number {
-    return 0;
+    const string = decoder.decodeTestCase(this, `${this.id}`);
+    let hash = 0;
+    for (let i = 0; i < string.length; i++) {
+      const character = string.charCodeAt(i);
+      hash = (hash << 5) - hash + character;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
   }
 
   copy(): JavaScriptTestCase {
-    // TODO
-    return undefined;
+    return new JavaScriptTestCase(this.root.copy());
   }
 
   getLength(): number {
-    // TODO
-    return 0;
+    return this.root.getChildren().length;
   }
 
-
-  get root(): ActionStatement[] {
+  get root(): RootStatement {
     return this._root;
   }
 }
