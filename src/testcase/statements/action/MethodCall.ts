@@ -17,62 +17,56 @@
  */
 
 import {
-  Statement,
-  ActionStatement,
   prng,
-  Properties,
   Parameter,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
+import { ActionStatement } from "./ActionStatement";
+import { Statement } from "../Statement";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class StaticFunctionCall extends ActionStatement {
-  get functionName(): string {
-    return this._functionName;
-  }
-
+export class MethodCall extends ActionStatement {
   private readonly _functionName: string;
 
   /**
    * Constructor
-   * @param types the return types of the function
+   * @param type the return type of the function
    * @param uniqueId id of the gene
    * @param functionName the name of the function
    * @param args the arguments of the function
    */
   constructor(
-    types: Parameter[],
+    type: Parameter,
     uniqueId: string,
     functionName: string,
     args: Statement[]
   ) {
-    super(types, uniqueId, [...args]);
+    super(type, uniqueId, args);
     this._functionName = functionName;
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
-    if (prng.nextBoolean(Properties.resample_gene_probability)) {
-      // resample the gene
-      return sampler.sampleStatement(depth, this.types, "functionCall");
-    } else if (!this.args.length) {
-      return this.copy();
-    } else {
-      // randomly mutate one of the args
-      const args = [...this.args.map((a: Statement) => a.copy())];
-      const index = prng.nextInt(0, args.length - 1);
-      args[index] = args[index].mutate(sampler, depth + 1);
+    const args = [...this.args.map((a: Statement) => a.copy())];
+    if (args.length === 0) return this.copy();
 
-      return new StaticFunctionCall(this.types, this.id, this.functionName, args);
-    }
+    const index = prng.nextInt(0, args.length - 1);
+    args[index] = args[index].mutate(sampler, depth + 1);
+
+    return new MethodCall(
+      this.type,
+      this.id,
+      this.functionName,
+      args
+    );
   }
 
   copy() {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
-    return new StaticFunctionCall(
-      this.types,
+    return new MethodCall(
+      this.type,
       this.id,
       this.functionName,
       deepCopyArgs
@@ -85,5 +79,22 @@ export class StaticFunctionCall extends ActionStatement {
 
   getChildren(): Statement[] {
     return [...this.args];
+  }
+
+  get functionName(): string {
+    return this._functionName;
+  }
+
+  decode(): string {
+    throw new Error('Cannot call decode on method calls!')
+  }
+
+  decodeWithObject(objectVariable: string): string {
+    return `const ${this.varName} = ${objectVariable}.${this.functionName}()`
+  }
+
+  decodeErroring(objectVariable: string): string {
+    return `await expect(${objectVariable}.${this.functionName}()).to.be.rejectedWith(Error);`;
+
   }
 }
