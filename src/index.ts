@@ -23,15 +23,16 @@ import exp = require("constants");
 export * from "./util/Datapoint";
 
 // Statements
-export * from "./testcase/statements/ActionStatement";
 export * from "./testcase/statements/Statement";
-export * from "./testcase/statements/PrimitiveStatement";
 
 // Action statement
 export * from "./testcase/statements/ActionStatement";
 
 // Primitive statement
 export * from "./testcase/statements/PrimitiveStatement";
+
+// Root statements
+export * from "./testcase/statements/RootStatement";
 
 // Search
 export * from "./search/SearchSubject";

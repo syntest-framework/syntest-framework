@@ -20,38 +20,41 @@ import { Statement } from "./Statement";
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
 import { Encoding } from "../../search/Encoding";
+import {ActionStatement} from "./ActionStatement";
 
 /**
  * @author Dimitri Stallenberg
  */
-export abstract class ActionStatement extends Statement {
-  private _args: Statement[];
+export abstract class RootStatement extends ActionStatement {
+  private _children: Statement[];
 
   protected constructor(
     types: Parameter[],
     uniqueId: string,
-    args: Statement[]
+    args: Statement[],
+    children: Statement[],
   ) {
-    super(types, uniqueId);
-    this._args = args;
+    super(types, uniqueId, args);
+    this._children = children;
   }
 
   abstract mutate(
     sampler: EncodingSampler<Encoding>,
     depth: number
-  ): ActionStatement;
+  ): RootStatement;
 
-  abstract copy(): ActionStatement;
+  abstract copy(): RootStatement;
 
   hasChildren(): boolean {
-    return !!this._args.length;
+    return !!this._children.length || !!this.args.length;
   }
 
   getChildren(): Statement[] {
-    return [...this._args];
+    return [...this._children, ...this.args];
   }
 
-  get args(): Statement[] {
-    return this._args;
+
+  get children(): Statement[] {
+    return this._children;
   }
 }
