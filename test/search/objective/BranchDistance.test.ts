@@ -1,7 +1,5 @@
 import {
   BranchDistance,
-  ObjectiveFunction,
-  AbstractTestCase,
 } from "../../../src";
 import * as chai from "chai";
 

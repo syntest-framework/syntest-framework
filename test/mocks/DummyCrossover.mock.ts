@@ -1,11 +1,11 @@
-import { AbstractTestCase, SearchSubject } from "../../src";
 import { Crossover } from "../../src";
+import { TestCaseMock } from "./TestCase.mock";
 
-export class DummyCrossover implements Crossover {
+export class DummyCrossover implements Crossover<TestCaseMock> {
   crossOver(
-    parentA: AbstractTestCase,
-    parentB: AbstractTestCase
-  ): AbstractTestCase[] {
+    parentA: TestCaseMock,
+    parentB: TestCaseMock
+  ): TestCaseMock[] {
     return [parentA.copy(), parentB.copy()];
   }
 }
