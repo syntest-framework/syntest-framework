@@ -22,3 +22,10 @@ export interface TargetFile {
   relativePath: string;
   targets: string[];
 }
+
+export interface Target {
+  source: string;
+  canonicalPath: string;
+  relativePath: string;
+  targetName: string;
+}
