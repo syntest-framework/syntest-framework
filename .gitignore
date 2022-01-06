@@ -123,3 +123,7 @@ package-lock.json
 .npmrc
 temp/
 .npmrc
+
+.syntest.js
+.syntest/
+syntest/
