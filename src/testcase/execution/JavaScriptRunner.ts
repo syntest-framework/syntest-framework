@@ -13,6 +13,7 @@ import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilde
 import { handleRequires } from "mocha/lib/cli/run-helpers"
 import * as _ from 'lodash'
 const Mocha = require('mocha')
+const originalrequire = require("original-require");
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   protected suiteBuilder: JavaScriptSuiteBuilder;
@@ -25,47 +26,51 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     subject: JavaScriptSubject,
     testCase: JavaScriptTestCase
   ): Promise<ExecutionResult> {
-    const testPath = path.join(Properties.temp_test_directory, "tempTest.ts");
+    const testPath = path.resolve(path.join(Properties.temp_test_directory, "tempTest.spec.ts"))
 
     await this.suiteBuilder.writeTestCase(testPath, testCase, subject.name);
 
     // TODO make this running in memory
 
     let argv = {
-      package: require('../../../package.json'),
-      _: [],
-      require: [ 'ts-node/register', '@babel/register' ],
-      config: false,
-      diff: true,
-      extension: [ 'js', 'cjs', 'mjs' ],
-      reporter: 'spec',
-      slow: 75,
-      timeout: 2000,
-      ui: 'bdd',
-      'watch-ignore': [ 'node_modules', '.git' ],
-      watchIgnore: [ 'node_modules', '.git' ],
-      spec: [ './test/**/*.ts' ],
-
+      // package: require('../../../package.json'),
+      // _: [],
+      require: [ 'ts-node/register' ], // , '@babel/register'
+      // config: false,
+      // diff: true,
+      // extension: [ 'js', 'cjs', 'mjs', 'ts' ],
+      // reporter: 'spec',
+      // slow: 75,
+      // timeout: 2000,
+      // ui: 'bdd',
+      // 'watch-ignore': [ 'node_modules', '.git' ],
+      // watchIgnore: [ 'node_modules', '.git' ]
+      spec: testPath
     }
-    // // load requires first, because it can impact "plugin" validation
-    // const plugins = await handleRequires(requires);
-    // Object.assign(argv, plugins);
 
-// console.log(plugins)
-//     console.log(argv)
     const mocha = new Mocha(argv)
 
+    delete originalrequire.cache[testPath];
     mocha.addFile(testPath);
-    // await mocha.loadFilesAsync()
 
-    const runner: Runner = await new Promise<Runner>((resolve, reject) => {
-      const _runner = mocha.run(function(failures) {
-        process.on('exit', function () {
-          process.exit(failures); // TODO maybe not exit?
-        });
-        resolve(_runner)
+    // By replacing the global log function we disable the output of the truffle test framework
+    const old = console.log;
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    console.log = () => {};
+
+    let runner: Runner = null
+
+    // Finally, run mocha.
+    process.on("unhandledRejection", reason => {
+      throw reason;
+    });
+
+    await new Promise((resolve) => {
+      runner = mocha.run((failures) => {
+        resolve(failures)
       })
     })
+    console.log = old;
 
     const stats = runner.stats
 
@@ -156,11 +161,26 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     }
 
     // Reset instrumentation data (no hits)
-    // TODO // this.api.resetInstrumentationData();
+    this.resetInstrumentationData();
+
 
     // Remove test file
     await this.suiteBuilder.deleteTestCase(testPath);
 
     return executionResult;
+  }
+
+  resetInstrumentationData () {
+    for (const key of Object.keys(global.__coverage__)) {
+      for (const statementKey of Object.keys(global.__coverage__[key].s)) {
+        global.__coverage__[key].s[statementKey] = 0
+      }
+      for (const functionKey of Object.keys(global.__coverage__[key].f)) {
+        global.__coverage__[key].f[functionKey] = 0
+      }
+      for (const branchKey of Object.keys(global.__coverage__[key].b)) {
+        global.__coverage__[key].b[branchKey] = [0, 0]
+      }
+    }
   }
 }

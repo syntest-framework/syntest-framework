@@ -40,7 +40,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
               .filter((node) => node.id === edge.to)
               .forEach((childNode) => {
                 // Add objective function
-                console.log('adding', childNode.id)
                 this._objectives.set(
                   new BranchObjectiveFunction(
                     this,

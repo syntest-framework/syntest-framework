@@ -48,7 +48,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
     );
   }
 
-  deltaMutation() {
+  deltaMutation(): NumericStatement {
     // small mutation
     let change = prng.nextGaussian(0, 20);
 
@@ -78,7 +78,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
     );
   }
 
-  copy() {
+  copy(): NumericStatement {
     return new NumericStatement(
       this.type,
       prng.uniqueId(),
@@ -88,7 +88,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
 
   static getRandom(
     type: Parameter = { type: "number", name: "noname" }
-  ) {
+  ): NumericStatement {
     // by default we create small numbers (do we need very large numbers?)
     const max = Number.MAX_SAFE_INTEGER
     const min = Number.MIN_SAFE_INTEGER

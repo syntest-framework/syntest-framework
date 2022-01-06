@@ -41,6 +41,10 @@ export abstract class ActionStatement extends Statement {
 
   abstract copy(): ActionStatement;
 
+  setChild(index: number, newChild: Statement) {
+    this.args[index] = newChild;
+  }
+
   hasChildren(): boolean {
     return !!this._args.length;
   }

@@ -51,9 +51,8 @@ export class ConstructorCall extends RootStatement {
     this._constructorName = constructorName;
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): ConstructorCall {
     // TODO replace entire constructor?
-
     const args = [...this.args.map((a: Statement) => a.copy())];
     const calls = [...this.children.map((a: Statement) => a.copy())];
 
@@ -102,7 +101,7 @@ export class ConstructorCall extends RootStatement {
     return new ConstructorCall(this.type, prng.uniqueId(), args, finalCalls, this.constructorName);
   }
 
-  copy() {
+  copy(): ConstructorCall {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
     const deepCopyChildren = [...this.children.map((a: Statement) => a.copy())];
 

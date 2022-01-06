@@ -40,13 +40,13 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
     return new BoolStatement(this.type, prng.uniqueId(), !this.value);
   }
 
-  copy() {
+  copy(): BoolStatement {
     return new BoolStatement(this.type, this.id, this.value);
   }
 
   static getRandom(
     type: Parameter = { type: "bool", name: "noname" }
-  ): PrimitiveStatement<any> {
+  ): BoolStatement {
     return new BoolStatement(type, prng.uniqueId(), prng.nextBoolean());
   }
 }

@@ -50,21 +50,19 @@ export class StaticMethodCall extends ActionStatement {
     this._functionName = functionName;
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): StaticMethodCall {
     const args = [...this.args.map((a: Statement) => a.copy())];
 
-    if (!this.args.length) {
-      return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);
-    } else {
+    if (args.length != 0) {
       // randomly mutate one of the args
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
-
-      return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);
     }
+
+    return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);
   }
 
-  copy() {
+  copy(): StaticMethodCall {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
     return new StaticMethodCall(
@@ -73,14 +71,6 @@ export class StaticMethodCall extends ActionStatement {
       deepCopyArgs,
       this.functionName
     );
-  }
-
-  hasChildren(): boolean {
-    return !!this.args.length;
-  }
-
-  getChildren(): Statement[] {
-    return [...this.args];
   }
 
   get functionName(): string {

@@ -47,12 +47,13 @@ export class MethodCall extends ActionStatement {
     this._functionName = functionName;
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): MethodCall {
     const args = [...this.args.map((a: Statement) => a.copy())];
-    if (args.length === 0) return this.copy();
 
-    const index = prng.nextInt(0, args.length - 1);
-    args[index] = args[index].mutate(sampler, depth + 1);
+    if (args.length !== 0) {
+      const index = prng.nextInt(0, args.length - 1);
+      args[index] = args[index].mutate(sampler, depth + 1);
+    }
 
     return new MethodCall(
       this.type,
@@ -62,7 +63,7 @@ export class MethodCall extends ActionStatement {
     );
   }
 
-  copy() {
+  copy(): MethodCall {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
     return new MethodCall(
@@ -71,14 +72,6 @@ export class MethodCall extends ActionStatement {
       this.functionName,
       deepCopyArgs
     );
-  }
-
-  hasChildren(): boolean {
-    return !!this.args.length;
-  }
-
-  getChildren(): Statement[] {
-    return [...this.args];
   }
 
   get functionName(): string {
@@ -97,4 +90,6 @@ export class MethodCall extends ActionStatement {
     return `await expect(${objectVariable}.${this.functionName}()).to.be.rejectedWith(Error);`;
 
   }
+
+
 }
