@@ -25,7 +25,7 @@ import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler"
 import { RootStatement } from "./statements/root/RootStatement";
 
 /**
- * SolidityTestCase class
+ * JavaScriptTestCase class
  *
  * @author Dimitri Stallenberg
  */

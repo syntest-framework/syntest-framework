@@ -22,7 +22,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   }
 
   async execute(
-    subject: JavaScriptSubject<JavaScriptTestCase>,
+    subject: JavaScriptSubject,
     testCase: JavaScriptTestCase
   ): Promise<ExecutionResult> {
     const testPath = path.join(Properties.temp_test_directory, "tempTest.ts");
