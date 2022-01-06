@@ -59,17 +59,25 @@ import { JavaScriptTreeCrossover } from "./search/crossover/JavaScriptTreeCrosso
 import { collectCoverageData, collectInitialVariables, collectStatistics } from "./utils/collection";
 import Messages from "./ui/Messages";
 import { JavaScriptCommandLineInterface } from "./ui/JavaScriptCommandLineInterface";
+import { ControlFlowGraphGenerator } from "./analysis/static/cfg/ControlFlowGraphGenerator";
+import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
+import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
 
   public async run() {
-    await guessCWD(null);
-    const targetPool = await this.setup();
-    const [archive, imports, dependencies] = await this.search(targetPool);
-    await this.finalize(archive, imports, dependencies);
+    try {
+      await guessCWD(null);
+      const targetPool = await this.setup();
+      const [archive, imports, dependencies] = await this.search(targetPool);
+      await this.finalize(archive, imports, dependencies);
 
-    await this.exit();
+      await this.exit();
+    } catch (e) {
+      console.log(e)
+      console.trace(e)
+    }
   }
 
   private async setup(): Promise<JavaScriptTargetPool> {
@@ -109,9 +117,15 @@ export class Launcher {
 
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
+    const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
+    const importGenerator = new ImportGenerator()
+    const exportGenerator = new ExportGenerator()
     const targetPool = new JavaScriptTargetPool(
       abstractSyntaxTreeGenerator,
-      targetMapGenerator
+      targetMapGenerator,
+      controlFlowGraphGenerator,
+      importGenerator,
+      exportGenerator
     );
 
 
@@ -295,7 +309,7 @@ export class Launcher {
   ): Promise<Archive<JavaScriptTestCase>> {
     const cfg = targetPool.getCFG(targetPath, target);
 
-    if (Properties.draw_cfg) {
+    if (Properties.draw_cfg || true) {
       drawGraph(
         cfg,
         path.join(

@@ -37,7 +37,7 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
       return BoolStatement.getRandom(this.type);
     }
 
-    return new BoolStatement(this.type, this.id, !this.value);
+    return new BoolStatement(this.type, prng.uniqueId(), !this.value);
   }
 
   copy() {

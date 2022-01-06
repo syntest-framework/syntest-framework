@@ -99,7 +99,7 @@ export class ConstructorCall extends RootStatement {
     //     args[index] = args[index].mutate(sampler, depth + 1);
     // }
 
-    return new ConstructorCall(this.type, this.id, args, finalCalls, this.constructorName);
+    return new ConstructorCall(this.type, prng.uniqueId(), args, finalCalls, this.constructorName);
   }
 
   copy() {

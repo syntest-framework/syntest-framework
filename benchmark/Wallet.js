@@ -1,3 +1,8 @@
+
+function test (x) {
+  return '' + x
+}
+
 class Wallet {
   constructor() {
     this.balance = 100;
@@ -7,6 +12,11 @@ class Wallet {
     const newBalance = this.balance - price;
     if (newBalance < 0) {
       return false;
+    } else if (newBalance === 0) {
+      if (price > 10) {
+        price += 1
+      }
+      return true
     } else {
       this.balance = newBalance;
       return true;
@@ -23,8 +33,10 @@ class Wallet {
       return;
     }
 
-    for (let i = 0; i < 10; i++) {
-      this.balance += 10;
-    }
+    // for (let i = 0; i < 10; i++) {
+    //   this.balance += 10;
+    // }
   }
 }
+
+module.exports = {test, Wallet}

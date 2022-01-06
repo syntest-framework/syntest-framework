@@ -9,7 +9,7 @@ export interface OutputObject {
 
 export class Instrumenter {
   instrument(code: string, filename: string) {
-    const options = { ...defaultBabelOptions };
+    const options = JSON.parse(JSON.stringify(defaultBabelOptions)) ;
 
     let output: OutputObject = {};
 

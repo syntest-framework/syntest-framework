@@ -56,11 +56,11 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
 
       return new ConstructorCall(
-        { type: action.name, name: "contract" },
+        { type: this.subject.name, name: "class" },
         prng.uniqueId(),
         args,
         calls,
-        `${action.name}`
+        `${this.subject.name}`
       );
     } else {
       // if no constructors is available, we invoke the default (implicit) constructor
@@ -72,7 +72,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
 
       return new ConstructorCall(
-        { type: this._subject.name, name: "contract" },
+        { type: this._subject.name, name: "class" },
         prng.uniqueId(),
         [],
         calls,
@@ -104,6 +104,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleArgument(depth: number, type: Parameter): Statement {
+
     // TODO sampling arrays or objects
     // TODO more complex sampling of function return values
     // Take regular primitive value
@@ -117,9 +118,19 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       return StringStatement.getRandom(type);
     } else if (type.type === "number") {
       return NumericStatement.getRandom(type);
+    } else if (type.type === "any") {
+      // TODO
+      const choice = prng.nextInt(0, 2)
+      if (choice === 0) {
+        return BoolStatement.getRandom(type);
+      } else if (choice === 1) {
+        return StringStatement.getRandom(type);
+      } else {
+        return NumericStatement.getRandom(type);
+      }
     }
 
-    throw new Error(`Unknown type '${type}'!`);
+    throw new Error(`Unknown type '${type.type}'!`);
   }
 
 }

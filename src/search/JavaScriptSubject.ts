@@ -1,4 +1,13 @@
-import { CFG, Encoding, FunctionDescription, Parameter, PublicVisibility, SearchSubject } from "@syntest/framework";
+import {
+  BranchNode, BranchObjectiveFunction,
+  CFG,
+  Encoding,
+  FunctionDescription,
+  NodeType,
+  Parameter,
+  PublicVisibility,
+  SearchSubject,
+} from "@syntest/framework";
 import { JavaScriptFunction } from "../analysis/static/map/JavaScriptFunction";
 
 
@@ -14,7 +23,35 @@ export class JavaScriptSubject<T extends Encoding> extends SearchSubject<T> {
   }
 
   protected _extractObjectives(): void {
-    // TODO create branch objectives
+    // Branch objectives
+    this._cfg.nodes
+      // Find all branch nodes
+      .filter(
+        (node) => node.type === NodeType.Branch
+      )
+      .forEach((branchNode) => {
+        this._cfg.edges
+          // Find all edges from the branch node
+          .filter((edge) => edge.from === branchNode.id)
+          .forEach((edge) => {
+            this._cfg.nodes
+              // Find nodes with incoming edge from branch node
+              .filter((node) => node.id === edge.to)
+              .forEach((childNode) => {
+                // Add objective function
+                this._objectives.set(
+                  new BranchObjectiveFunction(
+                    this,
+                    childNode.id,
+                    branchNode.lines[0],
+                    edge.branchType
+                  ),
+                  []
+                );
+              });
+          });
+      });
+
   }
 
   getPossibleActions(

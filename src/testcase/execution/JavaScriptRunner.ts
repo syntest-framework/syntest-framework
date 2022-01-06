@@ -1,6 +1,7 @@
 import {
+  Datapoint,
   EncodingRunner,
-  ExecutionResult,
+  ExecutionResult, getUserInterface,
   Properties,
 } from "@syntest/framework";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
@@ -9,6 +10,9 @@ import * as path from "path";
 import { JavaScriptExecutionResult, JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
 import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
+import { handleRequires } from "mocha/lib/cli/run-helpers"
+import * as _ from 'lodash'
+const Mocha = require('mocha')
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   protected suiteBuilder: JavaScriptSuiteBuilder;
@@ -21,39 +25,98 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     subject: JavaScriptSubject<JavaScriptTestCase>,
     testCase: JavaScriptTestCase
   ): Promise<ExecutionResult> {
-    const testPath = path.join(Properties.temp_test_directory, "tempTest.js");
+    const testPath = path.join(Properties.temp_test_directory, "tempTest.ts");
 
     await this.suiteBuilder.writeTestCase(testPath, testCase, subject.name);
 
     // TODO make this running in memory
 
-    const mocha = new Mocha()
+    let argv = {
+      package: require('../../../package.json'),
+      _: [],
+      require: [ 'ts-node/register', '@babel/register' ],
+      config: false,
+      diff: true,
+      extension: [ 'js', 'cjs', 'mjs' ],
+      reporter: 'spec',
+      slow: 75,
+      timeout: 2000,
+      ui: 'bdd',
+      'watch-ignore': [ 'node_modules', '.git' ],
+      watchIgnore: [ 'node_modules', '.git' ],
+      spec: [ './test/**/*.ts' ],
+
+    }
+    // // load requires first, because it can impact "plugin" validation
+    // const plugins = await handleRequires(requires);
+    // Object.assign(argv, plugins);
+
+// console.log(plugins)
+//     console.log(argv)
+    const mocha = new Mocha(argv)
 
     mocha.addFile(testPath);
+    // await mocha.loadFilesAsync()
 
     const runner: Runner = await new Promise<Runner>((resolve, reject) => {
-      resolve(mocha.run(function(failures) {
+      const _runner = mocha.run(function(failures) {
         process.on('exit', function () {
           process.exit(failures); // TODO maybe not exit?
         });
-      }))
+        resolve(_runner)
+      })
     })
 
     const stats = runner.stats
 
     // If one of the executions failed, log it
     if (stats.failures > 0) {
-      // TODO
-      // getUserInterface().error("Test case has failed!");
+      getUserInterface().error("Test case has failed!");
     }
 
     // Retrieve execution traces
-    const instrumentationData = null // TODO get info from the saved instrumentation data//this.api.getInstrumentationData();
+    const instrumentationData = _.cloneDeep(global.__coverage__)//null // TODO get info from the saved instrumentation data//this.api.getInstrumentationData();
 
-    const traces = [];
+    const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {
-      if (instrumentationData[key].contractPath.includes(subject.name))
-        traces.push(instrumentationData[key]);
+      if (instrumentationData[key].path.includes(subject.name))
+        for (const branchKey of Object.keys(instrumentationData[key].branchMap)) {
+          const branch = instrumentationData[key].branchMap[branchKey]
+          const hits = instrumentationData[key].b[branchKey]
+
+          traces.push({
+            id: `${branch.line}${branch.type}`,
+            line: branch.line,
+            type: "branch",
+
+            locationIdx: 0,
+            branchType: true,
+
+            hits: hits[0],
+
+            // TODO
+            left: [],
+            opcode: "",
+            right: [],
+          });
+
+          traces.push({
+            id: `b-${branch.line}`,
+            line: branch.line,
+            type: "branch",
+
+            locationIdx: 1,
+            branchType: false,
+
+            hits: hits[1],
+
+            // TODO
+            left: [],
+            opcode: "",
+            right: [],
+          });
+        }
+
     }
 
     // Retrieve execution information

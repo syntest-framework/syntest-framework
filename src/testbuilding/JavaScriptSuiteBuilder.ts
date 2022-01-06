@@ -21,6 +21,7 @@ import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { readdirSync, unlinkSync, writeFileSync } from "fs";
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
+import * as ts from "typescript"
 
 export class JavaScriptSuiteBuilder {
   private decoder: JavaScriptDecoder;
@@ -68,6 +69,10 @@ export class JavaScriptSuiteBuilder {
       targetName,
       addLogs
     );
+
+    // const transpiledTestCase = ts.transpileModule(decodedTestCase, { compilerOptions: { module: ts.ModuleKind.CommonJS }}).outputText
+    // await writeFileSync(filePath, transpiledTestCase);
+
     await writeFileSync(filePath, decodedTestCase);
   }
 

@@ -20,17 +20,22 @@ import { readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
 import {
   CFG,
-  FunctionDescription,
   TargetMetaData,
   TargetPool,
 } from "@syntest/framework";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { JavaScriptFunction } from "./map/JavaScriptFunction";
+import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
+import { ImportGenerator } from "./dependency/ImportGenerator";
+import { ExportGenerator } from "./dependency/ExportGenerator";
+import { existsSync } from "fs";
 
 export class JavaScriptTargetPool extends TargetPool {
   protected abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator;
   protected targetMapGenerator: TargetMapGenerator;
-  protected controlFlowGraphGenerator;
+  protected controlFlowGraphGenerator: ControlFlowGraphGenerator;
+  protected importGenerator: ImportGenerator;
+  protected exportGenerator: ExportGenerator;
 
   // Mapping: filepath -> source code
   protected _sources: Map<string, string>;
@@ -50,13 +55,26 @@ export class JavaScriptTargetPool extends TargetPool {
   // Mapping: filepath -> target name -> (function name -> CFG)
   protected _controlFlowGraphs: Map<string, Map<string, CFG>>;
 
+  // Mapping: filepath -> target name -> [importsMap, dependencyMap]
+  // TODO better name...
+  protected _dependencyMaps: Map<
+    string,
+    Map<string, [Map<string, string>, Map<string, string[]>]>
+    >;
+
   constructor(
     abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator,
-    targetMapGenerator: TargetMapGenerator
+    targetMapGenerator: TargetMapGenerator,
+    controlFlowGraphGenerator: ControlFlowGraphGenerator,
+    importGenerator: ImportGenerator,
+    exportGenerator: ExportGenerator
   ) {
     super();
     this.abstractSyntaxTreeGenerator = abstractSyntaxTreeGenerator;
     this.targetMapGenerator = targetMapGenerator;
+    this.controlFlowGraphGenerator = controlFlowGraphGenerator;
+    this.importGenerator = importGenerator;
+    this.exportGenerator = exportGenerator;
 
     this._sources = new Map<string, string>();
     this._abstractSyntaxTrees = new Map<string, string>();
@@ -66,13 +84,25 @@ export class JavaScriptTargetPool extends TargetPool {
       Map<string, Map<string, JavaScriptFunction>>
     >();
     this._controlFlowGraphs = new Map<string, Map<string, CFG>>();
+
+    this._dependencyMaps = new Map();
   }
 
   getSource(targetPath: string) {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._sources.has(absoluteTargetPath)) {
-      this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
+      if (existsSync(absoluteTargetPath)) {
+        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
+
+      } else if (existsSync(absoluteTargetPath + '.js')) {
+        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath + '.js'));
+
+      } else if (existsSync(absoluteTargetPath + '.ts')) {
+        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath + '.ts'));
+      } else {
+        throw new Error("Cannot find source: " + absoluteTargetPath)
+      }
     }
 
     return this._sources.get(absoluteTargetPath);
@@ -97,9 +127,20 @@ export class JavaScriptTargetPool extends TargetPool {
   getCFG(targetPath: string, targetName: string): CFG {
     const absoluteTargetPath = path.resolve(targetPath);
 
-    // TODO
+    if (!this._controlFlowGraphs.has(absoluteTargetPath)) {
+      this._controlFlowGraphs.set(absoluteTargetPath, new Map<string, CFG>())
+    }
 
-    return new CFG()
+    if (!this._controlFlowGraphs.get(absoluteTargetPath).has(targetName)) {
+      this._controlFlowGraphs.get(absoluteTargetPath).set(
+        targetName,
+        this.controlFlowGraphGenerator.convertAST(
+          this.getAST(absoluteTargetPath)
+        )
+      );
+    }
+
+    return this._controlFlowGraphs.get(absoluteTargetPath).get(targetName);
   }
 
   getTargetMap(targetPath: string): Map<string, TargetMetaData> {
@@ -140,8 +181,48 @@ export class JavaScriptTargetPool extends TargetPool {
   }
 
   getImportDependencies(targetPath: string, targetName: string):  [Map<string, string>, Map<string, string[]>] {
-    // TODO
+    const absoluteTargetPath = path.resolve(targetPath);
 
-    return [new Map(), new Map()]
+    if (!this._dependencyMaps.has(absoluteTargetPath))
+      this._dependencyMaps.set(absoluteTargetPath, new Map());
+
+    if (!this._dependencyMaps.get(absoluteTargetPath).has(targetName)) {
+      // Import the contract under test
+      const importsMap = new Map<string, string>();
+      importsMap.set(targetName, targetName);
+
+      // Find all external imports in the contract under test
+      const imports = this.importGenerator.generate(this.getAST(targetPath))
+
+      // For each external import scan the file for libraries with exported functions
+      const libraries: string[] = [];
+      imports.forEach((importPath: string) => {
+        // Full path to the imported file
+        const pathLib = path.join(path.dirname(targetPath), importPath);
+
+        // Scan for libraries with public or external functions
+        const exports = this.exportGenerator.generate(this.getAST(pathLib))
+
+        // Import the external file in the test
+        importsMap.set(
+          path.basename(importPath).split(".")[0],
+          path.basename(importPath).split(".")[0]
+        );
+
+        // Import the found libraries
+        // TODO: check for duplicates in libraries
+        libraries.push(...exports);
+      });
+
+      // Return the library dependency information
+      const dependencyMap = new Map<string, string[]>();
+      dependencyMap.set(targetName, libraries);
+
+      this._dependencyMaps
+        .get(targetPath)
+        .set(targetName, [importsMap, dependencyMap]);
+    }
+
+    return this._dependencyMaps.get(absoluteTargetPath).get(targetName);
   }
 }

@@ -45,10 +45,14 @@ export class TargetVisitor {
       parameters: path.node.params.map((x) => {
         return {
           name: x.name,
-          type: "??", // TODO unknown because javascript! (check how this looks in typescript)
+          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
         };
       }),
       returnParameters: [
+        {
+          name: "unknown",
+          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+        }
         // TODO unknown because javascript! (check how this looks in typescript)
       ],
       isStatic: path.node.static,

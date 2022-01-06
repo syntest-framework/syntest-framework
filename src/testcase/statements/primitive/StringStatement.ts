@@ -164,7 +164,7 @@ export class StringStatement extends PrimitiveStatement<string> {
 
     return new StringStatement(
       this.type,
-      this.id,
+      prng.uniqueId(),
       newValue,
       this.alphabet,
       this.maxlength

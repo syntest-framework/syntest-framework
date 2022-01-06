@@ -56,7 +56,7 @@ export class MethodCall extends ActionStatement {
 
     return new MethodCall(
       this.type,
-      this.id,
+      prng.uniqueId(),
       this.functionName,
       args
     );

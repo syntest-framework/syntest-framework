@@ -73,7 +73,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
 
     return new NumericStatement(
       this.type,
-      this.id,
+      prng.uniqueId(),
       newValue
     );
   }

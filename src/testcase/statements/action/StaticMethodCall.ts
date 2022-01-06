@@ -51,19 +51,16 @@ export class StaticMethodCall extends ActionStatement {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
-    // if (prng.nextBoolean(Properties.resample_gene_probability)) {
-    //   // resample the gene
-    //   return sampler.sampleStatement(depth, this.types, "functionCall");
-    // } else
+    const args = [...this.args.map((a: Statement) => a.copy())];
+
     if (!this.args.length) {
-      return this.copy();
+      return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);
     } else {
       // randomly mutate one of the args
-      const args = [...this.args.map((a: Statement) => a.copy())];
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
 
-      return new StaticMethodCall(this.type, this.id, args, this.functionName);
+      return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);
     }
   }
 
