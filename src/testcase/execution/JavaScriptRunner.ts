@@ -85,14 +85,43 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {
       if (instrumentationData[key].path.includes(subject.name))
+        for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
+          const fn = instrumentationData[key].fnMap[functionKey]
+          const hits = instrumentationData[key].f[functionKey]
+
+          traces.push({
+            id: `f-${fn.line}`,
+            type: "function",
+            path: key,
+            line: fn.line,
+
+            hits: hits,
+          })
+        }
+
+        for (const statementKey of Object.keys(instrumentationData[key].statementMap)) {
+          const statement = instrumentationData[key].statementMap[statementKey]
+          const hits = instrumentationData[key].s[statementKey]
+
+          traces.push({
+            id: `f-${statement.line}`,
+            type: "statement",
+            path: key,
+            line: statement.line,
+
+            hits: hits,
+          })
+        }
+
         for (const branchKey of Object.keys(instrumentationData[key].branchMap)) {
           const branch = instrumentationData[key].branchMap[branchKey]
           const hits = instrumentationData[key].b[branchKey]
 
           traces.push({
-            id: `${branch.line}${branch.type}`,
-            line: branch.line,
+            id: `b-${branch.line}`,
+            path: key,
             type: "branch",
+            line: branch.line,
 
             locationIdx: 0,
             branchType: true,
@@ -107,8 +136,9 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
           traces.push({
             id: `b-${branch.line}`,
-            line: branch.line,
+            path: key,
             type: "branch",
+            line: branch.line,
 
             locationIdx: 1,
             branchType: false,
@@ -162,7 +192,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // Reset instrumentation data (no hits)
     this.resetInstrumentationData();
-
 
     // Remove test file
     await this.suiteBuilder.deleteTestCase(testPath);

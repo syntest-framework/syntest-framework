@@ -121,7 +121,7 @@ export function collectCoverageData(
       .getTraces()
       .filter((element) => element.type.includes(objectiveType))
       .filter((element) => {
-        const paths = (element as any).contractPath.split("/");
+        const paths = (element as any).path.split("/");
         return paths[paths.length - 1].includes(fileName);
       })
       .forEach((current) => {

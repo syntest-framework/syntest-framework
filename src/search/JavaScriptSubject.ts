@@ -53,7 +53,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
           });
       });
 
-
     // Add children for branches and probe objectives
     for (const objective of this._objectives.keys()) {
       const childrenObj = this.findChildren(objective);
