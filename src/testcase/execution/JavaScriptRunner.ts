@@ -35,7 +35,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     let argv = {
       // package: require('../../../package.json'),
       // _: [],
-      require: [ 'ts-node/register' ], // , '@babel/register'
+      // require: [ 'ts-node/register' ], // , '@babel/register'
       // config: false,
       // diff: true,
       // extension: [ 'js', 'cjs', 'mjs', 'ts' ],

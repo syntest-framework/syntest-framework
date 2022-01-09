@@ -83,11 +83,13 @@ export class MethodCall extends ActionStatement {
   }
 
   decodeWithObject(objectVariable: string): string {
-    return `const ${this.varName} = ${objectVariable}.${this.functionName}()`
+    const args = this.args.map((a) => a.varName).join(', ')
+    return `const ${this.varName} = ${objectVariable}.${this.functionName}(${args})`
   }
 
   decodeErroring(objectVariable: string): string {
-    return `await expect(${objectVariable}.${this.functionName}()).to.be.rejectedWith(Error);`;
+    const args = this.args.map((a) => a.varName).join(', ')
+    return `await expect(${objectVariable}.${this.functionName}(${args})).to.be.rejectedWith(Error);`;
 
   }
 

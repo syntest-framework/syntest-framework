@@ -1,12 +1,6 @@
 import { JavaScriptTestCaseSampler } from "./JavaScriptTestCaseSampler";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
-import {
-  FunctionDescription,
-  Parameter,
-  prng,
-  Properties,
-  SearchSubject,
-} from "@syntest/framework";
+import { FunctionDescription, Parameter, prng, Properties } from "@syntest/framework";
 import { ConstructorCall } from "../statements/root/ConstructorCall";
 import { MethodCall } from "../statements/action/MethodCall";
 import { BoolStatement } from "../statements/primitive/BoolStatement";
@@ -14,21 +8,51 @@ import { StringStatement } from "../statements/primitive/StringStatement";
 import { NumericStatement } from "../statements/primitive/NumericStatement";
 import { RootStatement } from "../statements/root/RootStatement";
 import { Statement } from "../statements/Statement";
+import { FunctionCall } from "../statements/root/FunctionCall";
+import { JavaScriptSubject, SubjectType } from "../../search/JavaScriptSubject";
 
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
-  constructor(subject: SearchSubject<JavaScriptTestCase>) {
+  constructor(subject: JavaScriptSubject) {
     super(subject);
   }
 
 
   sample(): JavaScriptTestCase {
-    const root: RootStatement = this.sampleConstructor(0)
+    let root: RootStatement
 
-    // TODO could also be static access object or functioncall
+    if ((<JavaScriptSubject>this._subject).type === SubjectType.function) {
+      root = this.sampleFunctionCall(0)
+    } else if ((<JavaScriptSubject>this._subject).type === SubjectType.class) {
+      root = this.sampleConstructor(0)
+    }
+
+    // TODO could also be static access object
 
     return new JavaScriptTestCase(root);
+  }
+
+  sampleFunctionCall(depth: number): FunctionCall {
+    const action = <FunctionDescription>(
+      prng.pickOne(this._subject.getPossibleActions("function"))
+    );
+
+    const args: Statement[] = [];
+
+    for (const param of action.parameters) {
+      if (param.type != "")
+        args.push(
+          this.sampleArgument(depth + 1, param)
+        );
+    }
+
+    return new FunctionCall(
+      action.returnParameters[0],
+      prng.uniqueId(),
+      action.name,
+      args
+    );
   }
 
   sampleConstructor(depth: number): ConstructorCall {
@@ -83,7 +107,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   sampleMethodCall(depth: number) {
     const action = <FunctionDescription>(
-      prng.pickOne(this._subject.getPossibleActions("function"))
+      prng.pickOne(this._subject.getPossibleActions("method"))
     );
 
     const args: Statement[] = [];

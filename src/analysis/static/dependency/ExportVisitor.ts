@@ -1,24 +1,129 @@
+export enum ExportType {
+  function,
+  class,
+  const,
+}
+
+export interface Export {
+  name: string,
+  type: ExportType,
+  default: boolean,
+  module: boolean,
+  filePath: string
+}
+
 export class ExportVisitor {
-  // TODO export types maybe (const/function/class)
-  // TODO default vs named
   // TODO other export types such as module.export or exports.
 
-  private _exports: Set<string>;
+  private _targetPath: string
+  private _exports: Export[];
+  private _identifiers: Map<string, ExportType>
 
-  constructor() {
-    this._exports = new Set<string>();
+  constructor(targetPath: string) {
+    this._targetPath = targetPath
+    this._exports = [];
+    this._identifiers = new Map<string, ExportType>()
   }
 
+  // exports
   public ExportNamedDeclaration: (path) => void = (path) => {
-    this._exports.add(path.node.declaration.id.name)
+    this._exports.push({
+      name: path.node.declaration.id.name,
+      type: this._getType(path.node.declaration.type, path.node.declaration.name),
+      default: false,
+      module: false,
+      filePath: this._targetPath
+    })
   };
 
   public ExportDefaultDeclaration: (path) => void = (path) => {
-    // TODO
+    this._exports.push({
+      name: path.node.declaration.name,
+      type: this._getType(path.node.declaration.type, path.node.declaration.name),
+      default: true,
+      module: false,
+      filePath: this._targetPath
+    })
   };
 
+  public ExpressionStatement: (path) => void = (path) => {
+    if (path.node.expression.type === 'AssignmentExpression'
+      && path.node.expression.left.type === 'MemberExpression'
+      && path.node.expression.left.object.name === 'module'
+      && path.node.expression.left.property.name === 'exports'
+    ) {
+      if (path.node.expression.right.type === 'Identifier') {
+        this._exports.push({
+          name: path.node.expression.right.name,
+          type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
+          default: true,
+          module: true,
+          filePath: this._targetPath
+        })
+      } else if (path.node.expression.right.type === 'Literal'
+        || path.node.expression.right.type === 'ArrayExpression') {
+        this._exports.push({
+          name: `${path.node.expression.right.type}`,
+          type: ExportType.const,
+          default: true,
+          module: true,
+          filePath: this._targetPath
+        })
+      } else if (path.node.expression.right.type === 'ObjectExpression') {
+        for (const property of path.node.expression.right.properties) {
+          this._exports.push({
+            name: property.key.name,
+            type: this._getType(property.key.type, property.key.name),
+            default: false,
+            module: true,
+            filePath: this._targetPath
+          })
+        }
+      }
+    }
+  };
 
-  get exports(): Set<string> {
+  // identifiable stuff
+  public FunctionDeclaration: (path) => void = (path) => {
+    const identifier = path.node.id.name;
+    this._identifiers.set(identifier, ExportType.function)
+  }
+
+  public ClassDeclaration: (path) => void = (path) => {
+    const identifier = path.node.id.name;
+    this._identifiers.set(identifier, ExportType.class)
+  }
+
+  public VariableDeclaration: (path) => void = (path) => {
+    for (const declaration of path.node.declarations) {
+      const identifier = declaration.id.name;
+      this._identifiers.set(identifier, ExportType.const)
+    }
+  }
+
+  // util function
+  _getType(type: string, name?: string): ExportType {
+    if (type === 'FunctionDeclaration') {
+      return ExportType.function
+    } else if (type === 'VariableDeclaration') {
+      return ExportType.const
+    } else if (type === 'ClassDeclaration') {
+      return ExportType.class
+    }else if (type === 'Identifier') {
+      if (!this._identifiers.has(name)) {
+        throw new Error("Cannot find identifier that is exported: " + name + " - " + type)
+      }
+
+      return this._identifiers.get(name)
+    }
+
+    throw new Error("Unknown export type: " + type)
+  }
+
+  // getters
+  get exports(): Export[] {
     return this._exports;
   }
 }
+
+

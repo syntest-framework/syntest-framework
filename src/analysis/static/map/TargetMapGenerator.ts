@@ -20,6 +20,7 @@ import { traverse } from "@babel/core";
 import { TargetVisitor } from "./TargetVisitor";
 import { TargetMetaData, FunctionDescription } from "@syntest/framework";
 import { JavaScriptFunction } from "./JavaScriptFunction";
+import { JavaScriptTargetMetaData } from "../JavaScriptTargetPool";
 
 /**
  * Function map generator for targets.

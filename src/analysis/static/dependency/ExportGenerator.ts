@@ -17,7 +17,7 @@
  */
 
 import { traverse } from "@babel/core";
-import { ExportVisitor } from "./ExportVisitor";
+import { Export, ExportVisitor } from "./ExportVisitor";
 
 /**
  * Exports generator for targets.
@@ -28,10 +28,11 @@ export class ExportGenerator {
   /**
    * Generate function map for specified target.
    *
+   * @param targetPath The path of the AST
    * @param targetAST The AST of the target
    */
-  generate(targetAST: any): Set<string> {
-    const visitor = new ExportVisitor();
+  generate(targetPath: string, targetAST: any): Export[] {
+    const visitor = new ExportVisitor(targetPath);
 
     traverse(targetAST, visitor);
 

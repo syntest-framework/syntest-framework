@@ -18,17 +18,20 @@
 import * as path from "path";
 import { readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
-import {
-  CFG,
-  TargetMetaData,
-  TargetPool,
-} from "@syntest/framework";
+import { CFG, TargetMetaData, TargetPool } from "@syntest/framework";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { JavaScriptFunction } from "./map/JavaScriptFunction";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
 import { ExportGenerator } from "./dependency/ExportGenerator";
 import { existsSync } from "fs";
+import { Export, ExportType } from "./dependency/ExportVisitor";
+import { SubjectType } from "../../search/JavaScriptSubject";
+
+export interface JavaScriptTargetMetaData extends TargetMetaData {
+  type: SubjectType,
+  export: Export
+}
 
 export class JavaScriptTargetPool extends TargetPool {
   protected abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator;
@@ -44,7 +47,7 @@ export class JavaScriptTargetPool extends TargetPool {
   protected _abstractSyntaxTrees: Map<string, any>;
 
   // Mapping: filepath -> target name -> target meta data
-  protected _targetMap: Map<string, Map<string, TargetMetaData>>;
+  protected _targetMap: Map<string, Map<string, JavaScriptTargetMetaData>>;
 
   // Mapping: filepath -> target name -> function name -> function
   protected _functionMaps: Map<
@@ -59,8 +62,11 @@ export class JavaScriptTargetPool extends TargetPool {
   // TODO better name...
   protected _dependencyMaps: Map<
     string,
-    Map<string, [Map<string, string>, Map<string, string[]>]>
+    Map<string, [Map<string, string>, Map<string, Export[]>]>
     >;
+
+  // Mapping: filepath -> target name -> Exports
+  protected _exportMap: Map<string, Export[]>
 
   constructor(
     abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator,
@@ -78,7 +84,7 @@ export class JavaScriptTargetPool extends TargetPool {
 
     this._sources = new Map<string, string>();
     this._abstractSyntaxTrees = new Map<string, string>();
-    this._targetMap = new Map<string, Map<string, TargetMetaData>>();
+    this._targetMap = new Map<string, Map<string, JavaScriptTargetMetaData>>();
     this._functionMaps = new Map<
       string,
       Map<string, Map<string, JavaScriptFunction>>
@@ -86,6 +92,8 @@ export class JavaScriptTargetPool extends TargetPool {
     this._controlFlowGraphs = new Map<string, Map<string, CFG>>();
 
     this._dependencyMaps = new Map();
+
+    this._exportMap = new Map()
   }
 
   getSource(targetPath: string) {
@@ -143,14 +151,29 @@ export class JavaScriptTargetPool extends TargetPool {
     return this._controlFlowGraphs.get(absoluteTargetPath).get(targetName);
   }
 
-  getTargetMap(targetPath: string): Map<string, TargetMetaData> {
+  getTargetMap(targetPath: string): Map<string, JavaScriptTargetMetaData> {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._targetMap.has(absoluteTargetPath)) {
       const targetAST = this.getAST(absoluteTargetPath);
       const { targetMap, functionMap } =
         this.targetMapGenerator.generate(targetAST);
-      this._targetMap.set(absoluteTargetPath, targetMap);
+
+      const exports = this.getExports(targetPath)
+
+      const finalTargetMap = new Map<string, JavaScriptTargetMetaData>()
+
+      for (const key of targetMap.keys()) {
+        const name = targetMap.get(key).name
+        const export_ = exports.find((e) => e.name === name)
+        finalTargetMap.set(key, {
+          name: name,
+          type: export_.type === ExportType.function ? SubjectType.function : SubjectType.class,
+          export: export_
+        })
+      }
+
+      this._targetMap.set(absoluteTargetPath, finalTargetMap);
       this._functionMaps.set(absoluteTargetPath, functionMap);
     }
 
@@ -164,11 +187,7 @@ export class JavaScriptTargetPool extends TargetPool {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._functionMaps.has(absoluteTargetPath)) {
-      const targetAST = this.getAST(absoluteTargetPath);
-      const { targetMap, functionMap } =
-        this.targetMapGenerator.generate(targetAST);
-      this._targetMap.set(absoluteTargetPath, targetMap);
-      this._functionMaps.set(absoluteTargetPath, functionMap);
+      this.getTargetMap(absoluteTargetPath)
     }
 
     if (this._functionMaps.get(absoluteTargetPath).has(targetName)) {
@@ -180,7 +199,19 @@ export class JavaScriptTargetPool extends TargetPool {
     }
   }
 
-  getImportDependencies(targetPath: string, targetName: string):  [Map<string, string>, Map<string, string[]>] {
+  getExports(targetPath: string): Export[] {
+    const absoluteTargetPath = path.resolve(targetPath);
+
+    if (!this._exportMap.has(absoluteTargetPath)) {
+      const exports = this.exportGenerator.generate(absoluteTargetPath, this.getAST(absoluteTargetPath))
+
+      this._exportMap.set(absoluteTargetPath, exports);
+    }
+
+    return this._exportMap.get(absoluteTargetPath)
+  }
+
+  getImportDependencies(targetPath: string, targetName: string):  [Map<string, string>, Map<string, Export[]>] {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._dependencyMaps.has(absoluteTargetPath))
@@ -195,13 +226,13 @@ export class JavaScriptTargetPool extends TargetPool {
       const imports = this.importGenerator.generate(this.getAST(targetPath))
 
       // For each external import scan the file for libraries with exported functions
-      const libraries: string[] = [];
+      const libraries: Export[] = [];
       imports.forEach((importPath: string) => {
         // Full path to the imported file
         const pathLib = path.join(path.dirname(targetPath), importPath);
 
         // Scan for libraries with public or external functions
-        const exports = this.exportGenerator.generate(this.getAST(pathLib))
+        const exports = this.getExports(pathLib)
 
         // Import the external file in the test
         importsMap.set(
@@ -215,7 +246,7 @@ export class JavaScriptTargetPool extends TargetPool {
       });
 
       // Return the library dependency information
-      const dependencyMap = new Map<string, string[]>();
+      const dependencyMap = new Map<string, Export[]>();
       dependencyMap.set(targetName, libraries);
 
       this._dependencyMaps

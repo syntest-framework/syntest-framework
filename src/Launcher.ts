@@ -45,7 +45,7 @@ import {
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
-import { JavaScriptTargetPool } from "./analysis/static/JavaScriptTargetPool";
+import { JavaScriptTargetMetaData, JavaScriptTargetPool } from "./analysis/static/JavaScriptTargetPool";
 import { AbstractSyntaxTreeGenerator } from "./analysis/static/ast/AbstractSyntaxTreeGenerator";
 import { Instrumenter } from "./instrumentation/Instrumenter";
 import * as path from "path";
@@ -62,6 +62,7 @@ import { JavaScriptCommandLineInterface } from "./ui/JavaScriptCommandLineInterf
 import { ControlFlowGraphGenerator } from "./analysis/static/cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
 import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
+import { Export } from "./analysis/static/dependency/ExportVisitor";
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -70,8 +71,8 @@ export class Launcher {
     try {
       await guessCWD(null);
       const targetPool = await this.setup();
-      const [archive, imports, dependencies] = await this.search(targetPool);
-      await this.finalize(archive, imports, dependencies);
+      const [archive, imports, dependencies, exports] = await this.search(targetPool);
+      await this.finalize(archive, imports, dependencies, exports);
 
       await this.exit();
     } catch (e) {
@@ -212,7 +213,7 @@ export class Launcher {
   private async search(
     targetPool: JavaScriptTargetPool
   ): Promise<
-    [Archive<JavaScriptTestCase>, Map<string, string>, Map<string, string[]>]
+    [Archive<JavaScriptTestCase>, Map<string, string>, Map<string, Export[]>, Export[]]
   > {
     const excludedSet = new Set(
       ...targetPool.excluded.map((x) => x.canonicalPath)
@@ -223,7 +224,7 @@ export class Launcher {
 
     const instrumentedTargets: TargetFile[] = [];
 
-    for (const targetFile of targetPool.targetFiles) {
+    for (const targetFile of targetPool.included) {
       const instrumentedSource = await instrumenter.instrument(
         targetFile.source,
         targetFile.canonicalPath
@@ -248,7 +249,8 @@ export class Launcher {
 
     const finalArchive = new Archive<JavaScriptTestCase>();
     let finalImports: Map<string, string> = new Map();
-    let finalDependencies: Map<string, string[]> = new Map();
+    let finalDependencies: Map<string, Export[]> = new Map();
+    let finalExports: Export[] = []
 
     // TODO search targets
     for (const targetFile of targetPool.included) {
@@ -280,7 +282,7 @@ export class Launcher {
         const archive = await this.testTarget(
           targetPool,
           targetFile.canonicalPath,
-          target
+          targetMap.get(target)
         );
         const [importsMap, dependencyMap] = targetPool.getImportDependencies(
           targetFile.canonicalPath,
@@ -296,18 +298,19 @@ export class Launcher {
           ...Array.from(finalDependencies.entries()),
           ...Array.from(dependencyMap.entries()),
         ]);
+        finalExports.push(...targetPool.getExports(targetFile.canonicalPath))
       }
     }
 
-    return [finalArchive, finalImports, finalDependencies];
+    return [finalArchive, finalImports, finalDependencies, finalExports];
   }
 
   private async testTarget(
     targetPool: JavaScriptTargetPool,
     targetPath: string,
-    target: string
+    targetMeta: JavaScriptTargetMetaData
   ): Promise<Archive<JavaScriptTestCase>> {
-    const cfg = targetPool.getCFG(targetPath, target);
+    const cfg = targetPool.getCFG(targetPath, targetMeta.name);
 
     if (Properties.draw_cfg || true) {
       drawGraph(
@@ -321,13 +324,14 @@ export class Launcher {
     }
 
     const ast = targetPool.getAST(targetPath)
-    const functionMap = targetPool.getFunctionMap(targetPath, target)
+    const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
 
+    console.log(functionMap)
     const currentSubject = new JavaScriptSubject(
       path.basename(targetPath),
-      target,
+      targetMeta,
       cfg,
-      [...functionMap.values()]
+      [...functionMap.values()],
     )
 
     if (!currentSubject.getPossibleActions().length) {
@@ -337,10 +341,12 @@ export class Launcher {
 
     const [importsMap, dependencyMap] = targetPool.getImportDependencies(
       targetPath,
-      target
+      targetMeta.name
     );
 
-    const decoder = new JavaScriptDecoder(importsMap, dependencyMap)
+    const exports = targetPool.getExports(targetPath)
+
+    const decoder = new JavaScriptDecoder(importsMap, dependencyMap, exports)
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
     const runner = new JavaScriptRunner(suiteBuilder)
 
@@ -414,14 +420,16 @@ export class Launcher {
   private async finalize(
     archive: Archive<JavaScriptTestCase>,
     imports: Map<string, string>,
-    dependencies: Map<string, string[]>
+    dependencies: Map<string, Export[]>,
+    exports: Export[]
   ): Promise<void> {
     const testDir = path.resolve(Properties.final_suite_directory);
     await clearDirectory(testDir);
 
     const decoder = new JavaScriptDecoder(
       imports,
-      dependencies
+      dependencies,
+      exports
     );
 
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder);

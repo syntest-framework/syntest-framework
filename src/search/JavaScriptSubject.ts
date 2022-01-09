@@ -10,17 +10,26 @@ import {
 } from "@syntest/framework";
 import { JavaScriptFunction } from "../analysis/static/map/JavaScriptFunction";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
+import { JavaScriptTargetMetaData } from "../analysis/static/JavaScriptTargetPool";
 
+export enum SubjectType {
+  class,
+  function
+}
 
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
+  private _type: SubjectType
+
   constructor(
     path: string,
-    name: string,
+    targetMeta: JavaScriptTargetMetaData,
     cfg: CFG,
-    functions: FunctionDescription[]
+    functions: FunctionDescription[],
   ) {
-    super(path, name, cfg, functions);
+    super(path, targetMeta.name, cfg, functions);
+    // TODO SearchSubject should just use the targeMetaData
+    this._type = targetMeta.type
   }
 
   protected _extractObjectives(): void {
@@ -120,11 +129,12 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
           return false;
         }
         for (let i = 0; i < returnTypes.length; i++) {
-          if (returnTypes[i].type !== f.returnParameters[i].type) {
+          if (returnTypes[i].type !== f.returnParameters[i]._type) {
             return false;
           }
         }
       }
+
       return ((type === undefined || f.type === type) &&
         (f.visibility === PublicVisibility) &&
         f.name !== "" // fallback function has no name
@@ -132,4 +142,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     });
   }
 
+  get type(): SubjectType {
+    return this._type;
+  }
 }

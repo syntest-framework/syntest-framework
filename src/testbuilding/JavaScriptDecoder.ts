@@ -5,18 +5,24 @@ import { ConstructorCall } from "../testcase/statements/root/ConstructorCall";
 import { MethodCall } from "../testcase/statements/action/MethodCall";
 import { Statement } from "../testcase/statements/Statement";
 import { PrimitiveStatement } from "../testcase/statements/primitive/PrimitiveStatement";
+import { Export } from "../analysis/static/dependency/ExportVisitor";
+import { FunctionCall } from "../testcase/statements/root/FunctionCall";
+import { RootStatement } from "../testcase/statements/root/RootStatement";
 
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   private imports: Map<string, string>;
-  private contractDependencies: Map<string, string[]>;
+  private contractDependencies: Map<string, Export[]>;
+  private exports: Export[]
 
   constructor(
     imports: Map<string, string>,
-    contractDependencies: Map<string, string[]>
+    contractDependencies: Map<string, Export[]>,
+    exports: Export[]
   ) {
     this.imports = imports;
     this.contractDependencies = contractDependencies;
+    this.exports = exports
   }
 
   decodeTestCase(testCases: JavaScriptTestCase | JavaScriptTestCase[], targetName: string, addLogs = false): string {
@@ -48,7 +54,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         testString.push("try {");
       }
 
-      const importableGenes: ConstructorCall[] = [];
+      const importableGenes: RootStatement[] = [];
 
       const root = testCase.root;
 
@@ -81,7 +87,21 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
             `\t\t${(gene as MethodCall).decodeWithObject(root.varName)}`
           );
           count += 1;
+        } else if (gene instanceof FunctionCall) {
+          importableGenes.push(<FunctionCall>gene);
+
+          if (count === stopAfter) {
+            assertions.push(
+              `\t\t${(gene as FunctionCall).decodeErroring()}`
+            );
+            if (Properties.test_minimization) break;
+          }
+          functionCalls.push(
+            `\t\t${(gene as FunctionCall).decode()}`
+          );
+          count += 1;
         } else {
+          console.log(gene)
           throw Error(`The type of gene ${gene} is not recognized`);
         }
 
@@ -187,13 +207,16 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     return stack;
   }
 
-  gatherImports(importableGenes: ConstructorCall[]): string[] {
+  gatherImports(importableGenes: RootStatement[]): string[] {
     const imports: string[] = [];
 
     for (const gene of importableGenes) {
-      const importName = gene.constructorName;
-
-      const importString: string = this.getImport(importName)
+      const importName = gene instanceof FunctionCall ? gene.functionName : (gene instanceof ConstructorCall ? gene.constructorName : null);
+      const export_: Export = this.exports.find((x) => x.name === importName)
+      if (!export_) {
+        throw new Error('Cannot find an export corresponding to the importable gene: ' + importName)
+      }
+      const importString: string = this.getImport(export_)
 
       if (imports.includes(importString) || importString.length === 0) {
         continue;
@@ -218,16 +241,24 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     return imports;
   }
 
-  getImport(dependency: string): string {
-    if (!this.imports.has(dependency)) {
+  getImport(dependency: Export): string {
+    if (!this.imports.has(dependency.name)) {
       throw new Error(
         `Cannot find the import: ${dependency}`
       );
     }
 
+    // TODO correct import (something without the hardcoded "/instrumented/" stuff
+    const path = dependency.filePath.replace(process.cwd() + '/benchmark', '')
+    console.log(process.cwd())
+    console.log(dependency)
     // TODO module imports etc
-    // TODO correct import
-    return `import {${dependency}} from "../instrumented/${this.imports.get(dependency)}";`;
+
+    if (dependency.default) {
+      return `import ${dependency.name} from "../instrumented${path}";`;
+    } else {
+      return `import {${dependency.name}} from "../instrumented${path}";`;
+    }
   }
 
   generateAssertions(testCase: JavaScriptTestCase): string[] {

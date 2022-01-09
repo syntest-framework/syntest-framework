@@ -24,5 +24,8 @@ module.exports = {
     log_to_file: ["info", "warn", "error"],
     include: [
         "./benchmark/**/*.js"
+    ],
+    exclude: [
+      './benchmark/lodash/test'
     ]
 }

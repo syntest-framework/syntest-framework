@@ -353,6 +353,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "ReturnStatement":
         return this.visitReturnStatement(child, parents)
+      case "ThrowStatement":
+        return this.visitThrowStatement(child, parents)
 
       case "BlockStatement":
         return this.visitBlockStatement(child, parents)
@@ -567,6 +569,17 @@ export class ControlFlowGraphGenerator implements CFGFactory {
    * @private
    */
   private visitReturnStatement(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createNode([ast.loc.start.line], []);
+    this.connectParents(parents, [node]);
+
+    return {
+      childNodes: [],
+      breakNodes: [],
+    };
+  }
+
+  // TODO try catch support
+  private visitThrowStatement(ast: any, parents: Node[]): ReturnValue {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
 
