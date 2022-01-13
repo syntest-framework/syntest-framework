@@ -249,9 +249,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     }
 
     // TODO correct import (something without the hardcoded "/instrumented/" stuff
-    const path = dependency.filePath.replace(process.cwd() + '/benchmark', '')
-    console.log(process.cwd())
-    console.log(dependency)
+    const path = dependency.filePath.replace(process.cwd(), '')
     // TODO module imports etc
 
     if (dependency.default) {

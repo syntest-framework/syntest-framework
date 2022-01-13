@@ -12,6 +12,7 @@ import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
 import { handleRequires } from "mocha/lib/cli/run-helpers"
 import * as _ from 'lodash'
+import { spawn } from "child_process";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
@@ -26,7 +27,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     subject: JavaScriptSubject,
     testCase: JavaScriptTestCase
   ): Promise<ExecutionResult> {
-    const testPath = path.resolve(path.join(Properties.temp_test_directory, "tempTest.spec.ts"))
+    const testPath = path.resolve(path.join(Properties.temp_test_directory, "tempTest.spec.js"))
 
     await this.suiteBuilder.writeTestCase(testPath, testCase, subject.name);
 
@@ -35,7 +36,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     let argv = {
       // package: require('../../../package.json'),
       // _: [],
-      // require: [ 'ts-node/register' ], // , '@babel/register'
       // config: false,
       // diff: true,
       // extension: [ 'js', 'cjs', 'mjs', 'ts' ],
@@ -49,6 +49,16 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     }
 
     const mocha = new Mocha(argv)
+
+    // require('ts-node/register')
+
+
+    require("regenerator-runtime/runtime");
+    require('@babel/register')({
+      presets: [
+        "@babel/preset-env"
+      ]
+    })
 
     delete originalrequire.cache[testPath];
     mocha.addFile(testPath);
@@ -80,7 +90,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     }
 
     // Retrieve execution traces
-    const instrumentationData = _.cloneDeep(global.__coverage__)//null // TODO get info from the saved instrumentation data//this.api.getInstrumentationData();
+    const instrumentationData = _.cloneDeep(global.__coverage__)
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {

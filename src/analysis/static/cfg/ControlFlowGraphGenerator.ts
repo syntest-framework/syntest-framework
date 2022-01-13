@@ -21,9 +21,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   // convertast(ast: any): CFG {
   //   const visitor = new ControlFlowGraphVisitor();
   //
-  //   console.log('parsing')
   //   traverse(ast, visitor);
-  //   console.log('done parsing')
   //
   //   return visitor.cfg;
   // }
@@ -334,8 +332,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       };
     }
 
-    // console.log(child.type, child.loc ? child.loc.start.line : '?')
-    // console.log()
     switch (child.type) {
       case "File":
         return this.visitChild(child.program, parents)
