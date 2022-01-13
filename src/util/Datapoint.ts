@@ -21,11 +21,14 @@
 export interface Datapoint {
   id: string;
   type: string;
-  locationIdx: number;
-  branchType: boolean;
+  path: string;
   line: number;
+
   hits: number;
-  opcode: string;
-  left: number[];
-  right: number[];
+
+  locationIdx?: number;
+  branchType?: boolean;
+  opcode?: string;
+  left?: number[];
+  right?: number[];
 }
