@@ -166,6 +166,16 @@ export class JavaScriptTargetPool extends TargetPool {
       for (const key of targetMap.keys()) {
         const name = targetMap.get(key).name
         const export_ = exports.find((e) => e.name === name)
+
+        if (!export_) {
+          // No export found so we cannot import it and thus not test it
+          continue
+        }
+
+        if(export_.type === ExportType.const) {
+          throw new Error("Target cannot be constant!")
+        }
+
         finalTargetMap.set(key, {
           name: name,
           type: export_.type === ExportType.function ? SubjectType.function : SubjectType.class,

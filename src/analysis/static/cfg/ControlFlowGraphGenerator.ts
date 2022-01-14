@@ -364,6 +364,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "IfStatement":
         return this.visitIfStatement(child, parents);
+      case "TryStatement":
+        return this.visitTryStatement(child, parents)
+      // TODO TryStatement
       // case "SourceUnit":
       //   return this.SourceUnit(cfg, child);
       // case "ContractDefinition":
@@ -726,5 +729,15 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         breakNodes: totalBreakNodes,
       };
     }
+  }
+
+  private visitTryStatement(ast: any, parents:Node[]): ReturnValue {
+
+    // TODO
+    throw new Error("TryStatement is not implemented yet")
+    return {
+      childNodes: [],
+      breakNodes: [],
+    };
   }
 }

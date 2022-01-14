@@ -16,9 +16,7 @@ export class TargetVisitor {
     this._functionMap = new Map<string, Map<string, JavaScriptFunction>>();
   }
 
-  public ClassDeclaration: (path) => void = (path) => {
-    const targetName = path.node.id.name;
-
+  _createMaps(targetName) {
     if (!this._targetMap.has(targetName)) {
       this._targetMap.set(targetName, {
         name: targetName,
@@ -26,6 +24,11 @@ export class TargetVisitor {
 
       this._functionMap.set(targetName, new Map<string, JavaScriptFunction>());
     }
+  }
+
+  public ClassDeclaration: (path) => void = (path) => {
+    const targetName = path.node.id.name;
+    this._createMaps(targetName)
   };
 
   public ClassMethod: (path) => void = (path) => {
@@ -44,12 +47,7 @@ export class TargetVisitor {
       type: functionName === "constructor" ? "constructor" : "method",
       visibility: visibility,
       isConstructor: functionName === "constructor",
-      parameters: path.node.params.map((x) => {
-        return {
-          name: x.name,
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
-        };
-      }),
+      parameters: path.node.params.map(this._extractParam),
       returnParameters: [
         {
           name: "unknown",
@@ -68,25 +66,14 @@ export class TargetVisitor {
     const functionName = targetName;
     let visibility = PublicVisibility;
 
-    if (!this._targetMap.has(targetName)) {
-      this._targetMap.set(targetName, {
-        name: targetName,
-      });
-
-      this._functionMap.set(targetName, new Map<string, JavaScriptFunction>());
-    }
+    this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
       name: functionName,
       type: "function",
       visibility: visibility,
       isConstructor: false,
-      parameters: path.node.params.map((x) => {
-        return {
-          name: x.name,
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
-        };
-      }),
+      parameters: path.node.params.map(this._extractParam),
       returnParameters: [
         {
           name: "unknown",
@@ -97,6 +84,48 @@ export class TargetVisitor {
       isStatic: path.node.static,
       isAsync: path.node.async,
     });
+  }
+
+  // arrow function
+  public ArrowFunctionExpression: (path) => void = (path) => {
+    const targetName = path.node.id
+      ? path.node.id.name
+      : (path.parent.id
+        ? path.parent.id.name
+        : 'anonymous');
+    const functionName = targetName;
+    let visibility = PublicVisibility;
+
+    this._createMaps(targetName)
+
+    this._functionMap.get(targetName).set(functionName, {
+      name: functionName,
+      type: "function",
+      visibility: visibility,
+      isConstructor: false,
+      parameters: path.node.params.map(this._extractParam),
+      returnParameters: [
+        {
+          name: "unknown",
+          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+        }
+        // TODO unknown because javascript! (check how this looks in typescript)
+      ],
+      isStatic: path.node.static,
+      isAsync: path.node.async,
+    });
+  }
+
+  _extractParam(param: any) {
+      if (param.type === 'RestElement') {
+        // TODO this can actually be an infinite amount of arguments...
+      }
+
+      return {
+        name: param.name || "unknown",
+        type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+      };
+
   }
 
   get targetMap(): Map<string, any> {

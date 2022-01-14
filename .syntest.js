@@ -23,11 +23,13 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
     include: [
-        "./benchmark/top10npm/lodash/*.js"
+        "./benchmark/custom/**/*.js",
+        "./benchmark/top10npm/lodash/**/*.js",
+        "./benchmark/top10npm/lodash/.internal/**/*.js"
     ],
     exclude: [
-      './benchmark/top10npm/lodash/test',
-      './benchmark/top10npm/moment/templates',
+    './benchmark/top10npm/lodash/test',
+    './benchmark/top10npm/moment/templates',
     './benchmark/top10npm/react'
     ]
 }
