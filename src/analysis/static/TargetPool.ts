@@ -98,10 +98,10 @@ export abstract class TargetPool {
       }
     }
 
-    const targets: Target[] = []
+    const targets: Target[] = [];
 
     for (const _path of includedMap.keys()) {
-      const includedTargets = includedMap.get(_path)
+      const includedTargets = includedMap.get(_path);
       const targetMap = this.getTargetMap(_path);
       for (const target of targetMap.keys()) {
         // check if included
@@ -125,14 +125,13 @@ export abstract class TargetPool {
 
         targets.push({
           canonicalPath: _path,
-          targetName: target
-        })
+          targetName: target,
+        });
       }
     }
 
-    this._targets = targets
+    this._targets = targets;
   }
-
 
   get targets(): Target[] {
     return this._targets;

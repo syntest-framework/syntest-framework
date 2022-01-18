@@ -1,4 +1,4 @@
-import {Target} from "../analysis/static/Target";
+import { Target } from "../analysis/static/Target";
 
 export function getCommonBasePath(targets: Target[]): string {
   if (targets.length === 0) {
@@ -11,8 +11,8 @@ export function getCommonBasePath(targets: Target[]): string {
   for (let t = 0; t < targets.length; t++) {
     let pathB = targets[t].canonicalPath;
 
-    const lastSlashIndex = pathB.lastIndexOf("/")
-    pathB = pathB.substring(0, lastSlashIndex)
+    const lastSlashIndex = pathB.lastIndexOf("/");
+    pathB = pathB.substring(0, lastSlashIndex);
 
     let commonPathLength = 0;
 
