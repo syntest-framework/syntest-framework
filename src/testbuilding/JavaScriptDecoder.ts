@@ -3,7 +3,7 @@ import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import * as path from "path";
 import { ConstructorCall } from "../testcase/statements/root/ConstructorCall";
 import { MethodCall } from "../testcase/statements/action/MethodCall";
-import { Statement } from "../testcase/statements/Statement";
+import { Decoding, Statement } from "../testcase/statements/Statement";
 import { PrimitiveStatement } from "../testcase/statements/primitive/PrimitiveStatement";
 import { Export } from "../analysis/static/dependency/ExportVisitor";
 import { FunctionCall } from "../testcase/statements/root/FunctionCall";
@@ -34,15 +34,13 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     const imports: string[] = []
 
     for (const testCase of testCases) {
-      // The stopAfter variable makes sure that when one of the function calls has thrown an exception the test case ends there.
-      let stopAfter = -1;
-      if (testCase.assertions.size !== 0 && testCase.assertions.has("error")) {
-        stopAfter = testCase.assertions.size;
-      }
+      const root = testCase.root;
 
-      const testString = [];
-      const stack: Statement[] = this.convertToStatementStack(testCase);
+      const importableGenes: RootStatement[] = [];
+      const statements: Decoding[] = root.decode(addLogs)
+      const assertions: string[] = [];
 
+      const testString: string[] = [];
       if (addLogs) {
         imports.push(`const fs = require('fs');\n\n`);
         testString.push(
@@ -54,88 +52,20 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         testString.push("try {");
       }
 
-      const importableGenes: RootStatement[] = [];
-
-      const root = testCase.root;
-
-      let primitiveStatements: string[] = [];
-      const functionCalls: string[] = [];
-      const assertions: string[] = [];
-
-      let count = 1;
-      while (stack.length) {
-        const gene: Statement = stack.pop()!;
-
-        if (gene instanceof ConstructorCall) {
-          if (count === stopAfter) {
-            // assertions.push(`\t\t${this.decodeErroringConstructorCall(gene)}`);
-            if (Properties.test_minimization) break;
-          }
-          testString.push(`\t\t${(gene as ConstructorCall).decode()}`);
-          importableGenes.push(<ConstructorCall>gene);
-          count += 1;
-        } else if (gene instanceof PrimitiveStatement) {
-          primitiveStatements.push(`\t\t${gene.decode()}`);
-        } else if (gene instanceof MethodCall) {
-          if (count === stopAfter) {
-            assertions.push(
-              `\t\t${(gene as MethodCall).decodeErroring(root.varName)}`
-            );
-            if (Properties.test_minimization) break;
-          }
-          functionCalls.push(
-            `\t\t${(gene as MethodCall).decodeWithObject(root.varName)}`
-          );
-          count += 1;
-        } else if (gene instanceof FunctionCall) {
-          importableGenes.push(<FunctionCall>gene);
-
-          if (count === stopAfter) {
-            assertions.push(
-              `\t\t${(gene as FunctionCall).decodeErroring()}`
-            );
-            if (Properties.test_minimization) break;
-          }
-          functionCalls.push(
-            `\t\t${(gene as FunctionCall).decode()}`
-          );
-          count += 1;
-        } else {
-          console.log(gene)
-          throw Error(`The type of gene ${gene} is not recognized`);
-        }
-
-        if (addLogs) {
-          if (gene instanceof MethodCall) {
-            functionCalls.push(
-              `\t\tawait fs.writeFileSync('${path.join(
-                Properties.temp_log_directory,
-                testCase.id,
-                gene.varName
-              )}', '' + ${gene.varName})`
-            );
-          } else if (gene instanceof ConstructorCall) {
-            testString.push(
-              `\t\tawait fs.writeFileSync('${path.join(
-                Properties.temp_log_directory,
-                testCase.id,
-                gene.varName
-              )}', '' + ${gene.varName})`
-            );
-          }
-        }
+      if (testCase.assertions.size !== 0 && testCase.assertions.has("error")) {
+        const stopAfter = testCase.assertions.size;
+        // TODO this would only work if each variable is printed...
+        // TODO best would be to extract the stack trace and do it based on line number
       }
-      // filter non-required statements
-      primitiveStatements = primitiveStatements.filter((s) => {
-        const varName = s.split(" ")[1];
-        return (
-          functionCalls.find((f) => f.includes(varName)) ||
-          assertions.find((f) => f.includes(varName))
-        );
-      });
 
-      testString.push(...primitiveStatements);
-      testString.push(...functionCalls);
+      statements.forEach((value) => {
+        if (value.reference instanceof RootStatement) {
+          importableGenes.push(value.reference)
+        }
+        testString.push(
+          '\t\t' + value.decoded.replace('\n', '\n\t\t')
+        )
+      })
 
       if (addLogs) {
         testString.push(`} catch (e) {`);
@@ -190,21 +120,6 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       test;
 
     return test;
-  }
-
-  convertToStatementStack(testCase: JavaScriptTestCase): Statement[] {
-    const stack: Statement[] = [];
-    const queue: Statement[] = [testCase.root];
-    while (queue.length) {
-      const current: Statement = queue.splice(0, 1)[0];
-
-      stack.push(current);
-
-      for (const child of current.getChildren()) {
-        queue.push(child);
-      }
-    }
-    return stack;
   }
 
   gatherImports(importableGenes: RootStatement[]): string[] {

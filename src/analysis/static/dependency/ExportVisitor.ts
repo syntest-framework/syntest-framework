@@ -27,13 +27,33 @@ export class ExportVisitor {
 
   // exports
   public ExportNamedDeclaration: (path) => void = (path) => {
-    this._exports.push({
-      name: path.node.declaration.id.name,
-      type: this._getType(path.node.declaration.type, path.node.declaration.name),
-      default: false,
-      module: false,
-      filePath: this._targetPath
-    })
+    if (path.node.declaration) {
+      this._exports.push({
+        name: path.node.declaration.id.name,
+        type: this._getType(path.node.declaration.type, path.node.declaration.name),
+        default: false,
+        module: false,
+        filePath: this._targetPath
+      })
+    } else if (path.node.specifiers) {
+
+      if (path.node.source) {
+        // TODO skip because we already tested it in another file
+        return
+      }
+
+      for (const specifier of path.node.specifiers) {
+        this._exports.push({
+          name: specifier.local.name,
+          type: this._getType(specifier.local.type, specifier.local.name),
+          default: specifier.local.name === 'default',
+          module: false,
+          filePath: this._targetPath
+        })
+      }
+    }
+
+    throw new Error('Unknown named export')
   };
 
   public ExportDefaultDeclaration: (path) => void = (path) => {

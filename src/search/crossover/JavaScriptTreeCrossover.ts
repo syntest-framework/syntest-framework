@@ -134,7 +134,11 @@ export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
         });
       }
 
-      if (wanted.type === pair.child.type) {
+      if (!wanted.classType || !pair.child.classType) {
+        throw new Error("All statements require a classType!")
+      }
+
+      if (wanted.type === pair.child.type) { // && wanted.classType === pair.child.classType) { TODO this might be necessary
         similar.push(pair);
       }
     }
