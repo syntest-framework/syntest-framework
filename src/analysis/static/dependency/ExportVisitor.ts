@@ -97,7 +97,12 @@ export class ExportVisitor {
   public VariableDeclaration: (path) => void = (path) => {
     for (const declaration of path.node.declarations) {
       const identifier = declaration.id.name;
-      this._identifiers.set(identifier, ExportType.const)
+
+      if (declaration.init && declaration.init.type === "ArrowFunctionExpression") {
+        this._identifiers.set(identifier, ExportType.function) // not always the case
+      } else {
+        this._identifiers.set(identifier, ExportType.const) // not always the case
+      }
     }
   }
 

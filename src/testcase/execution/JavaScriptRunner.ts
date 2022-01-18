@@ -12,6 +12,7 @@ import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
 import { handleRequires } from "mocha/lib/cli/run-helpers"
 import * as _ from 'lodash'
+import { spawn } from "child_process";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
@@ -26,37 +27,37 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     subject: JavaScriptSubject,
     testCase: JavaScriptTestCase
   ): Promise<ExecutionResult> {
-    const testPath = path.resolve(path.join(Properties.temp_test_directory, "tempTest.spec.ts"))
+    const testPath = path.resolve(path.join(Properties.temp_test_directory, "tempTest.spec.js"))
 
     await this.suiteBuilder.writeTestCase(testPath, testCase, subject.name);
 
     // TODO make this running in memory
 
     let argv = {
-      // package: require('../../../package.json'),
-      // _: [],
-      // require: [ 'ts-node/register' ], // , '@babel/register'
-      // config: false,
-      // diff: true,
-      // extension: [ 'js', 'cjs', 'mjs', 'ts' ],
-      // reporter: 'spec',
-      // slow: 75,
-      // timeout: 2000,
-      // ui: 'bdd',
-      // 'watch-ignore': [ 'node_modules', '.git' ],
-      // watchIgnore: [ 'node_modules', '.git' ]
       spec: testPath
     }
 
     const mocha = new Mocha(argv)
 
+    // require('ts-node/register')
+
+    require("regenerator-runtime/runtime");
+    require('@babel/register')({
+      presets: [
+        "@babel/preset-env"
+      ]
+    })
+
     delete originalrequire.cache[testPath];
     mocha.addFile(testPath);
 
     // By replacing the global log function we disable the output of the truffle test framework
-    const old = console.log;
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    console.log = () => {};
+    const levels = ['log', 'debug', 'info', 'warn', 'error'];
+    const originalFunctions = levels.map(level => console[level]);
+    levels.forEach((level) => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      console[level] = () => {}
+    })
 
     let runner: Runner = null
 
@@ -70,7 +71,10 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         resolve(failures)
       })
     })
-    console.log = old;
+
+    levels.forEach((level, index) => {
+      console[level] = originalFunctions[index]
+    })
 
     const stats = runner.stats
 
@@ -80,7 +84,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     }
 
     // Retrieve execution traces
-    const instrumentationData = _.cloneDeep(global.__coverage__)//null // TODO get info from the saved instrumentation data//this.api.getInstrumentationData();
+    const instrumentationData = _.cloneDeep(global.__coverage__)
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {

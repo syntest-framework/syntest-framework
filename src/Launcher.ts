@@ -148,9 +148,7 @@ export class Launcher {
 
     targetPool.included.forEach((targetFile) =>
       names.push(
-        `${path.basename(
-          targetFile.canonicalPath
-        )} -> ${targetFile.targets.join(", ")}`
+        `${path.relative(process.cwd(), targetFile.canonicalPath)} -> ${targetFile.targets.join(", ")}`
       )
     );
     getUserInterface().report("targets", names);
@@ -158,9 +156,7 @@ export class Launcher {
     names = [];
     targetPool.excluded.forEach((targetFile) =>
       names.push(
-        `${path.basename(
-          targetFile.canonicalPath
-        )} -> ${targetFile.targets.join(", ")}`
+        `${path.relative(process.cwd(), targetFile.canonicalPath)} -> ${targetFile.targets.join(", ")}`
       )
     );
     getUserInterface().report("skip-files", names);
@@ -238,12 +234,12 @@ export class Launcher {
       });
     }
 
-    const commonBasePath = getCommonBasePath(instrumentedTargets);
+    // const commonBasePath = getCommonBasePath(instrumentedTargets);
 
     // save instrumented files to
     await saveTempFiles(
       instrumentedTargets,
-      commonBasePath,
+      process.cwd(),
       Properties.temp_instrumented_directory
     );
 
@@ -326,7 +322,6 @@ export class Launcher {
     const ast = targetPool.getAST(targetPath)
     const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
 
-    console.log(functionMap)
     const currentSubject = new JavaScriptSubject(
       path.basename(targetPath),
       targetMeta,

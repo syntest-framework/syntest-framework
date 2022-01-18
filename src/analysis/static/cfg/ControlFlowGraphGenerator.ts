@@ -21,9 +21,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   // convertast(ast: any): CFG {
   //   const visitor = new ControlFlowGraphVisitor();
   //
-  //   console.log('parsing')
   //   traverse(ast, visitor);
-  //   console.log('done parsing')
   //
   //   return visitor.cfg;
   // }
@@ -334,8 +332,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       };
     }
 
-    // console.log(child.type, child.loc ? child.loc.start.line : '?')
-    // console.log()
     switch (child.type) {
       case "File":
         return this.visitChild(child.program, parents)
@@ -368,6 +364,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "IfStatement":
         return this.visitIfStatement(child, parents);
+      case "TryStatement":
+        return this.visitTryStatement(child, parents)
+      // TODO TryStatement
       // case "SourceUnit":
       //   return this.SourceUnit(cfg, child);
       // case "ContractDefinition":
@@ -730,5 +729,15 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         breakNodes: totalBreakNodes,
       };
     }
+  }
+
+  private visitTryStatement(ast: any, parents:Node[]): ReturnValue {
+
+    // TODO
+    throw new Error("TryStatement is not implemented yet")
+    return {
+      childNodes: [],
+      breakNodes: [],
+    };
   }
 }
