@@ -14,15 +14,18 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   private imports: Map<string, string>;
   private contractDependencies: Map<string, Export[]>;
   private exports: Export[]
+  private folder: string
 
   constructor(
     imports: Map<string, string>,
     contractDependencies: Map<string, Export[]>,
-    exports: Export[]
+    exports: Export[],
+    folder: string = '../instrumented'
   ) {
     this.imports = imports;
     this.contractDependencies = contractDependencies;
     this.exports = exports
+    this.folder = folder
   }
 
   decodeTestCase(testCases: JavaScriptTestCase | JavaScriptTestCase[], targetName: string, addLogs = false): string {
@@ -164,13 +167,13 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     }
 
     // TODO correct import (something without the hardcoded "/instrumented/" stuff
-    const path = dependency.filePath.replace(process.cwd(), '')
+    const _path = dependency.filePath.replace(process.cwd(), '')
     // TODO module imports etc
 
     if (dependency.default) {
-      return `import ${dependency.name} from "../instrumented${path}";`;
+      return `import ${dependency.name} from "${this.folder}${_path}";`;
     } else {
-      return `import {${dependency.name}} from "../instrumented${path}";`;
+      return `import {${dependency.name}} from "${this.folder}${_path}";`;
     }
   }
 

@@ -61,6 +61,8 @@ export class JavaScriptCommandLineInterface extends CommandLineInterface {
         return console.log(
           `Skipping '${args[0]}' no possible function calls found!`
         );
+      case "report-coverage":
+        return console.log(this.messages.reportCoverage(args[0], args[1], args[2]))
     }
 
     throw new Error(`Message not supported by UI: "${text}"`);
