@@ -16,16 +16,7 @@
  * limitations under the License.
  */
 
-export interface TargetFile {
-  source: string;
-  canonicalPath: string;
-  relativePath: string;
-  targets: string[];
-}
-
 export interface Target {
-  source: string;
   canonicalPath: string;
-  relativePath: string;
   targetName: string;
 }

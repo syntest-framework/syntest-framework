@@ -125,5 +125,5 @@ export * from "./util/targetUtil";
 export * from "./properties";
 
 // Targetting
-export * from "./analysis/static/TargetFile";
+export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetPool";

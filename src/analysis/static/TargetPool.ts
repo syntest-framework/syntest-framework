@@ -1,4 +1,4 @@
-import { Target, TargetFile } from "./TargetFile";
+import { Target } from "./Target";
 import { CFG } from "./graph/CFG";
 import { Properties } from "../../properties";
 import * as path from "path";
@@ -6,7 +6,6 @@ import * as path from "path";
 const globby = require("globby");
 
 export abstract class TargetPool {
-  private _targetFiles: TargetFile[];
   private _targets: Target[];
 
   abstract getSource(targetPath: string): string;
@@ -99,37 +98,11 @@ export abstract class TargetPool {
       }
     }
 
-    const included: TargetFile[] = [];
-    const excluded: TargetFile[] = [];
-
-    for (const _path of includedMap.keys()) {
-      included.push({
-        source: this.getSource(_path),
-        canonicalPath: _path,
-        relativePath: path.basename(_path),
-        targets: includedMap.get(_path),
-      });
-    }
-
-    for (const _path of excludedMap.keys()) {
-      excluded.push({
-        source: this.getSource(_path),
-        canonicalPath: _path,
-        relativePath: path.basename(_path),
-        targets: excludedMap.get(_path),
-      });
-    }
-
-    const excludedSet = new Set(
-      ...excluded.map((x) => x.canonicalPath)
-    );
-
     const targets: Target[] = []
 
-    for (const targetFile of included) {
-      const includedTargets = targetFile.targets;
-
-      const targetMap = this.getTargetMap(targetFile.canonicalPath);
+    for (const _path of includedMap.keys()) {
+      const includedTargets = includedMap.get(_path)
+      const targetMap = this.getTargetMap(_path);
       for (const target of targetMap.keys()) {
         // check if included
         if (
@@ -140,10 +113,8 @@ export abstract class TargetPool {
         }
 
         // check if excluded
-        if (excludedSet.has(targetFile.canonicalPath)) {
-          const excludedTargets = excluded.find(
-            (x) => x.canonicalPath === targetFile.canonicalPath
-          ).targets;
+        if (excludedMap.has(_path)) {
+          const excludedTargets = excludedMap.get(_path);
           if (
             excludedTargets.includes("*") ||
             excludedTargets.includes(target)
@@ -153,24 +124,17 @@ export abstract class TargetPool {
         }
 
         targets.push({
-          source: targetFile.source,
-          canonicalPath: targetFile.canonicalPath,
-          relativePath: targetFile.relativePath,
+          canonicalPath: _path,
           targetName: target
         })
       }
     }
 
-    this._targetFiles = [...included, ...excluded]
     this._targets = targets
   }
 
 
   get targets(): Target[] {
     return this._targets;
-  }
-
-  get targetFiles(): TargetFile[] {
-    return this._targetFiles;
   }
 }

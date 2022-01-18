@@ -1,6 +1,6 @@
-import { TargetFile } from "../analysis/static/TargetFile";
+import {Target} from "../analysis/static/Target";
 
-export function getCommonBasePath(targets: TargetFile[]): string {
+export function getCommonBasePath(targets: Target[]): string {
   if (targets.length === 0) {
     return "";
   }
