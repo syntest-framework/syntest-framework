@@ -74,6 +74,7 @@
     "@syntest/framework": "file:../syntest-framework",
     "@types/babel-core": "^6.25.7",
     "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
     "chalk": "^4.0.0",
     "clear": "^0.1.0",
     "esm": "^3.2.25",
