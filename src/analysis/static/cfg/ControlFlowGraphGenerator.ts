@@ -342,10 +342,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "ExpressionStatement":
         return this.visitExpressionStatement(child, parents);
-      case "CallExpression":
-        return this.visitCallExpression(child, parents)
-      case "AssignmentExpression":
-        return this.visitAssignmentExpression(child, parents)
+
+      case "VariableDeclaration":
+        return this.visitVariableDeclaration(child, parents)
 
       case "ReturnStatement":
         return this.visitReturnStatement(child, parents)
@@ -359,14 +358,29 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         return this.visitClassDeclaration(child)
       case "ClassMethod":
         return this.visitClassMethod(child)
-      case "VariableDeclaration":
-        return this.visitVariableDeclaration(child, parents)
 
       case "IfStatement":
         return this.visitIfStatement(child, parents);
       case "TryStatement":
         return this.visitTryStatement(child, parents)
-      // TODO TryStatement
+
+      case "CatchClause":
+        return this.visitCatchClause(child, parents);
+
+      case "WhileStatement":
+        return this.visitWhileStatement(child, parents);
+      case "DoWhileStatement":
+        return this.visitDoWhileStatement(child, parents);
+      case "ForOfStatement":
+        return this.visitForOfStatement(child, parents)
+      case "ForInStatement":
+        return this.visitForOfStatement(child, parents)
+
+      case "BreakStatement":
+        return this.visitBreakStatement(child, parents)
+
+      case "SwitchStatement":
+        return this.visitSwitchStatement(child, parents)
       // case "SourceUnit":
       //   return this.SourceUnit(cfg, child);
       // case "ContractDefinition":
@@ -389,8 +403,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       //   return this.ForStatement(cfg, child, parents);
       // case "WhileStatement":
       //   return this.WhileStatement(cfg, child, parents);
-      // case "DoWhileStatement":
-      //   return this.DoWhileStatement(cfg, child, parents);
+
       //
       // case "VariableDeclarationStatement":
       //   return this.VariableDeclarationStatement(cfg, child, parents);
@@ -479,69 +492,11 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
 
-    const { childNodes, breakNodes } = this.visitChild(ast.expression, [node]);
+    // const { childNodes, breakNodes } = this.visitChild(ast.expression, [node]);
 
     return {
       childNodes: [node],
-      breakNodes: breakNodes,
-    };
-    //
-    // return {
-    //   childNodes: [],
-    //   breakNodes: [],
-    // };
-    // if (ast.expression.type === "CallExpression") {
-    //   const { childNodes, breakNodes } = this.visitChild(
-    //     ast.expression,
-    //     parents
-    //   );
-    //
-    //   return {
-    //     childNodes: childNodes,
-    //     breakNodes: breakNodes,
-    //   };
-    // } else {
-    //   const node: Node = this.createNode([ast.loc.start.line], []);
-    //   this.connectParents(parents, [node]);
-    //
-    //   const { childNodes, breakNodes } = this.visitChild(ast.expression, [
-    //     node,
-    //   ]);
-    //
-    //   return {
-    //     childNodes: childNodes,
-    //     breakNodes: breakNodes,
-    //   };
-    // }
-  }
-
-  private visitAssignmentExpression(ast: any, parents: Node[]): ReturnValue {
-    // console.log(ast)
-    // const { childNodes, breakNodes } = this.visitChild(
-    //   ast.expression,
-    //   parents
-    // );
-    //
-    // return {
-    //   childNodes: childNodes,
-    //   breakNodes: breakNodes,
-    // };
-
-    return {
-      childNodes: [],
       breakNodes: [],
-    };
-  }
-
-  private visitCallExpression(ast: any, parents: Node[]): ReturnValue {
-    const { childNodes, breakNodes } = this.visitChild(
-      ast.expression,
-      parents
-    );
-
-    return {
-      childNodes: childNodes,
-      breakNodes: breakNodes,
     };
   }
 
@@ -732,11 +687,345 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   }
 
   private visitTryStatement(ast: any, parents:Node[]): ReturnValue {
+    // TODO finalizer try -> catch -> finally
+    const node: BranchNode = this.createBranchNode(
+      [ast.loc.start.line],
+      [],
+      {
+        type: ast.type,
+        operator: 'exception',
+      }
+    );
 
-    // TODO
-    throw new Error("TryStatement is not implemented yet")
+    this.connectParents(parents, [node]);
+
+    // Store all break points
+    const totalBreakNodes = [];
+
+    // Visit try flow
+    let count = this.cfg.edges.length;
+    let tryNodes = this.visitChild(ast.block, [
+      node,
+    ]);
+    const tryChildNodes = tryNodes.childNodes;
+    totalBreakNodes.push(...tryNodes.breakNodes);
+
+    // Check if a child node was created
+    if (this.cfg.edges[count]) {
+      // Add edge type to first added edge
+      this.cfg.edges[count].branchType = true;
+    } else {
+      // Add empty placeholder node
+      const emptyChildNode = this.createPlaceholderNode(
+        [ast.consequent.loc.start.line],
+        []
+      );
+      tryChildNodes.push(emptyChildNode);
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: emptyChildNode.id,
+        branchType: true,
+      });
+    }
+
+    // Visit catch flow
+    count = this.cfg.edges.length;
+    const catchNodes = this.visitChild(ast.handler, [
+      node,
+    ]);
+    const catchChildNodes = catchNodes.childNodes;
+    totalBreakNodes.push(...catchNodes.breakNodes);
+
+    // Check if a child node was created
+    if (this.cfg.edges[count]) {
+      // Add edge type to first added edge
+      this.cfg.edges[count].branchType = false;
+    } else {
+      // Add empty placeholder node
+      const emptyChildNode = this.createPlaceholderNode(
+        [ast.alternate.loc.start.line],
+        []
+      );
+      catchChildNodes.push(emptyChildNode);
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: emptyChildNode.id,
+        branchType: false,
+      });
+    }
+
+    return {
+      childNodes: [...tryChildNodes, ...catchChildNodes],
+      breakNodes: totalBreakNodes,
+    };
+  }
+
+  private visitCatchClause(ast: any, parents:Node[]): ReturnValue {
+    const node: Node = this.createNode([ast.loc.start.line], []);
+    this.connectParents(parents, [node]);
+
+    return {
+      childNodes: [node],
+      breakNodes: [],
+    };
+  }
+
+  private visitWhileStatement(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createBranchNode([ast.loc.start.line], [], {
+      type: ast.test.type,
+      operator: ast.test.operator,
+    });
+    this.connectParents(parents, [node]);
+
+    const count = this.cfg.edges.length;
+    const { childNodes, breakNodes } = this.visitChild(ast.body, [node]);
+    const trueNodes = childNodes;
+
+    // Check if a child node was created
+    if (this.cfg.edges[count]) {
+      // Add edge type to first added edge
+      this.cfg.edges[count].branchType = true;
+    } else {
+      // Add empty placeholder node
+      const emptyChildNode = this.createPlaceholderNode(
+        [ast.loc.start.line],
+        []
+      );
+      trueNodes.push(emptyChildNode);
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: emptyChildNode.id,
+        branchType: true,
+      });
+    }
+
+    // Add empty placeholder node for the false flow
+    const falseNode = this.createPlaceholderNode( [ast.loc.end.line], []);
+    this.cfg.edges.push({
+      from: node.id,
+      to: falseNode.id,
+      branchType: false,
+    });
+
+    // Connect break points
+    for (const breakNode of breakNodes) {
+      this.cfg.edges.push({
+        from: breakNode.id,
+        to: falseNode.id,
+      });
+    }
+
+    // Connect loop
+    this.connectParents(trueNodes, [node]);
+
+    return {
+      childNodes: [falseNode],
+      breakNodes: [],
+    };
+  }
+
+  private visitForOfStatement(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createBranchNode([ast.loc.start.line], [], {
+      type: 'CallExpression',
+      operator: 'isEmpty',
+    });
+    this.connectParents(parents, [node]);
+
+    const count = this.cfg.edges.length;
+    const { childNodes, breakNodes } = this.visitChild(ast.body, [node]);
+    const loopNodes = childNodes;
+
+    // Check if a child node was created
+    if (this.cfg.edges[count]) {
+      // Add edge type to first added edge
+      this.cfg.edges[count].branchType = true;
+    } else {
+      // Add empty placeholder node
+      const emptyChildNode = this.createPlaceholderNode(
+        [ast.loc.start.line],
+        []
+      );
+      loopNodes.push(emptyChildNode);
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: emptyChildNode.id,
+        branchType: true,
+      });
+    }
+
+    // Add empty placeholder node for the false flow
+    const falseNode = this.createPlaceholderNode([ast.loc.end.line], []);
+    this.cfg.edges.push({
+      from: node.id,
+      to: falseNode.id,
+      branchType: false,
+    });
+
+    // Connect break points
+    for (const breakNode of breakNodes) {
+      this.cfg.edges.push({
+        from: breakNode.id,
+        to: falseNode.id,
+      });
+    }
+
+    // Connect loop
+    this.connectParents(loopNodes, [node]);
+
+    return {
+      childNodes: [falseNode],
+      breakNodes: [],
+    };
+  }
+
+  /**
+   * This is a break statement
+   * @param ast
+   * @param parents
+   * @constructor
+   * @private
+   */
+  private visitBreakStatement(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createNode([ast.loc.start.line], []);
+    this.connectParents(parents, [node]);
+
     return {
       childNodes: [],
+      breakNodes: [node],
+    };
+  }
+
+  private visitDoWhileStatement(ast: any, parents: Node[]): ReturnValue {
+    // entry node
+    const entryNode: Node = this.createBranchNode(
+      [ast.loc.start.line],
+      [],
+      {
+        type: ast.test.type,
+        operator: ast.test.operator,
+      }
+    );
+    this.connectParents(parents, [entryNode]);
+
+    // TODO: We can check if a node is generated. This eliminates the need for entryNode
+    // 'do' block
+    const { childNodes, breakNodes } = this.visitChild(ast.body, [
+      entryNode,
+    ]);
+    const trueNodes = childNodes;
+
+    // while check
+    const whileNode: Node = this.createBranchNode(
+      [ast.loc.start.line],
+      [],
+      {
+        type: ast.test.type,
+        operator: ast.test.operator,
+      }
+    );
+    this.connectParents(trueNodes, [whileNode]);
+
+    // Connect back to the entry node and mark as true branch
+    this.cfg.edges.push({
+      from: whileNode.id,
+      to: entryNode.id,
+      branchType: true,
+    });
+
+    // Add empty placeholder node for the false flow
+    const falseNode: Node = this.createPlaceholderNode(
+      [ast.loc.end.line],
+      []
+    );
+    this.cfg.edges.push({
+      from: whileNode.id,
+      to: falseNode.id,
+      branchType: false,
+    });
+
+    // Connect break points
+    for (const breakNode of breakNodes) {
+      this.cfg.edges.push({
+        from: breakNode.id,
+        to: falseNode.id,
+      });
+    }
+
+    return {
+      childNodes: [falseNode],
+      breakNodes: [],
+    };
+  }
+
+  private visitSwitchStatement(ast: any, parent: Node[]): ReturnValue {
+    // TODO
+    throw new Error("Unimplemented")
+    // return {
+    //   childNodes: [],
+    //   breakNodes: [],
+    // };
+  }
+
+  private ForStatement(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createBranchNode([ast.loc.start.line], [], {
+      type: ast.conditionExpression.type,
+      operator: ast.conditionExpression.operator,
+    });
+    this.connectParents(parents, [node]);
+    // TODO For each probably not supported
+
+    // TODO init expression
+    // TODO condition expression
+    // TODO loopExpression
+
+    const count = this.cfg.edges.length;
+    const { childNodes, breakNodes } = this.visitChild(ast.body, [node]);
+    const trueNodes = childNodes;
+
+    // Check if a child node was created
+    if (this.cfg.edges[count]) {
+      // Add edge type to first added edge
+      this.cfg.edges[count].branchType = true;
+    } else {
+      // Add empty placeholder node
+      const emptyChildNode = this.createPlaceholderNode(
+        [ast.loc.start.line],
+        []
+      );
+      trueNodes.push(emptyChildNode);
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: emptyChildNode.id,
+        branchType: true,
+      });
+    }
+
+    // Add empty placeholder node for the false flow
+    const falseNode = this.createPlaceholderNode([ast.loc.end.line], []);
+    this.cfg.edges.push({
+      from: node.id,
+      to: falseNode.id,
+      branchType: false,
+    });
+
+    // Connect break points
+    for (const breakNode of breakNodes) {
+      this.cfg.edges.push({
+        from: breakNode.id,
+        to: falseNode.id,
+      });
+    }
+
+    // Connect loop
+    this.connectParents(trueNodes, [node]);
+
+    return {
+      childNodes: [falseNode],
       breakNodes: [],
     };
   }

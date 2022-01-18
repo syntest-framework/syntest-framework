@@ -22,7 +22,7 @@ import {
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
-import { Statement } from "../Statement";
+import { Decoding, Statement } from "../Statement";
 
 
 // TODO maybe delete?
@@ -47,6 +47,8 @@ export class StaticMethodCall extends ActionStatement {
     functionName: string
   ) {
     super(type, uniqueId, args);
+    this._classType = 'StaticMethodCall'
+
     this._functionName = functionName;
   }
 
@@ -77,8 +79,13 @@ export class StaticMethodCall extends ActionStatement {
     return this._functionName;
   }
 
-  decode(): string {
+  decode(addLogs: boolean): Decoding[] {
     // TODO
-    return "";
+    return [
+      {
+        decoded: 'TODO',
+        reference: this
+      }
+    ];
   }
 }

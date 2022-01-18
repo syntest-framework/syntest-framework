@@ -30,6 +30,7 @@ import { PrimitiveStatement } from "./PrimitiveStatement";
 export class BoolStatement extends PrimitiveStatement<boolean> {
   constructor(type: Parameter, uniqueId: string, value: boolean) {
     super(type, uniqueId, value);
+    this._classType = 'BoolStatement'
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): BoolStatement {

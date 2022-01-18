@@ -18,11 +18,12 @@
 
 import {
   prng,
-  Parameter,
+  Parameter, Properties,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
-import { Statement } from "../Statement";
+import { Decoding, Statement } from "../Statement";
+import * as path from "path";
 
 /**
  * @author Dimitri Stallenberg
@@ -44,6 +45,7 @@ export class MethodCall extends ActionStatement {
     args: Statement[]
   ) {
     super(type, uniqueId, args);
+    this._classType = "MethodCall"
     this._functionName = functionName;
   }
 
@@ -78,15 +80,39 @@ export class MethodCall extends ActionStatement {
     return this._functionName;
   }
 
-  decode(): string {
+  decode(addLogs: boolean): Decoding[] {
     throw new Error('Cannot call decode on method calls!')
   }
 
-  decodeWithObject(objectVariable: string): string {
-    const args = this.args.map((a) => a.varName).join(', ')
-    return `const ${this.varName} = ${objectVariable}.${this.functionName}(${args})`
+  decodeWithObject(addLogs: boolean, objectVariable: string): Decoding[] {
+    const args = this.args
+      .map((a) => a.varName)
+      .join(', ')
+
+    const argStatements: Decoding[] = this.args
+      .flatMap((a) => a.decode(addLogs))
+
+    let decoded = `const ${this.varName} = ${objectVariable}.${this.functionName}(${args})`
+
+    if (addLogs) {
+      const logDir = path.join(
+        Properties.temp_log_directory,
+        // testCase.id,
+        this.varName
+      )
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+    }
+
+    return [
+      ...argStatements,
+      {
+        decoded: decoded,
+        reference: this
+      }
+    ]
   }
 
+  // TODO
   decodeErroring(objectVariable: string): string {
     const args = this.args.map((a) => a.varName).join(', ')
     return `await expect(${objectVariable}.${this.functionName}(${args})).to.be.rejectedWith(Error);`;

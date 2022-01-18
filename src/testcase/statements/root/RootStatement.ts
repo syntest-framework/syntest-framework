@@ -61,15 +61,15 @@ export abstract class RootStatement extends ActionStatement {
       throw new Error("Invalid new child!")
     }
 
-    if (index >= this.children.length + this.args.length) {
+    if (index >= this.args.length + this.children.length) {
       throw new Error("Invalid child location!")
     }
 
-    if (index < this.children.length) {
-      this.children[index] = newChild
-    } else {
-      index -= this.children.length
+    if (index < this.args.length) {
       this.args[index] = newChild
+    } else {
+      index -= this.args.length
+      this.children[index] = newChild
     }
   }
 }

@@ -17,7 +17,7 @@
  */
 
 
-import { Statement } from "../Statement";
+import { Decoding, Statement } from "../Statement";
 import { EncodingSampler, Parameter } from "../../../../../syntest-framework";
 
 /**
@@ -53,7 +53,12 @@ export abstract class PrimitiveStatement<T> extends Statement {
     throw new Error("Unimplemented function!");
   }
 
-  decode(): string {
-    return `const ${this.varName} = ${this.value};`
+  decode(addLogs: boolean): Decoding[] {
+    return [
+      {
+        decoded: `const ${this.varName} = ${this.value};`,
+        reference: this
+      }
+    ]
   }
 }
