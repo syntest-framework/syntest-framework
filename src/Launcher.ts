@@ -63,6 +63,7 @@ import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
 import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 import { Export } from "./analysis/static/dependency/ExportVisitor";
 import { Runner } from "mocha";
+import { VariableGenerator } from "./analysis/static/variable/VariableGenerator";
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
 
@@ -323,6 +324,9 @@ export class Launcher {
 
     const ast = targetPool.getAST(targetPath)
     const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
+
+    const generator = new VariableGenerator()
+    generator.generate(ast)
 
     const currentSubject = new JavaScriptSubject(
       path.basename(targetPath),
