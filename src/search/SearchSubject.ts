@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-import { CFG } from "../graph/CFG";
+import { CFG } from "../analysis/static/graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
-import { Edge } from "../graph/Edge";
-import { ActionDescription } from "../graph/parsing/ActionDescription";
+import { Edge } from "../analysis/static/graph/Edge";
+import { ActionDescription } from "../analysis/static/graph/parsing/ActionDescription";
 import { getUserInterface } from "../ui/UserInterface";
-import { Parameter } from "../graph/parsing/Parameter";
+import { Parameter } from "../analysis/static/graph/parsing/Parameter";
 
 const { Graph, alg } = require("@dagrejs/graphlib");
 

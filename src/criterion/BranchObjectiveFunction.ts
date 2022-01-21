@@ -18,7 +18,7 @@
 
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 import { Encoding } from "../search/Encoding";
-import { Node, NodeType } from "../graph/nodes/Node";
+import { Node, NodeType } from "../analysis/static/graph/nodes/Node";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
 import { Datapoint } from "../testcase/execution/TestCaseRunner";
@@ -31,7 +31,8 @@ import { Datapoint } from "../testcase/execution/TestCaseRunner";
  * @author Dimitri Stallenberg
  */
 export class BranchObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T> {
+  implements ObjectiveFunction<T>
+{
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _line: number;

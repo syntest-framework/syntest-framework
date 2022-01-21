@@ -16,18 +16,10 @@
  * limitations under the License.
  */
 
-import {
-  mkdirSync,
-  readdir,
-  readdirSync,
-  readFileSync,
-  rmdirSync,
-  unlink,
-  unlinkSync,
-} from "fs";
-const globby = require("globby");
+import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "fs";
 import * as path from "path";
 import { Properties } from "../properties";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 
 export async function createDirectoryStructure() {
   // outputs
@@ -45,98 +37,15 @@ export async function createTempDirectoryStructure() {
   // temp
   await mkdirSync(Properties.temp_test_directory, { recursive: true });
   await mkdirSync(Properties.temp_log_directory, { recursive: true });
+  await mkdirSync(Properties.temp_instrumented_directory, { recursive: true });
 }
 
 export async function deleteTempDirectories() {
   await rmdirSync(Properties.temp_test_directory, { recursive: true });
   await rmdirSync(Properties.temp_log_directory, { recursive: true });
+  await rmdirSync(Properties.temp_instrumented_directory, { recursive: true });
 
   await rmdirSync(`.syntest`, { recursive: true });
-}
-
-export async function loadTargets(): Promise<
-  [Map<string, string[]>, Map<string, string[]>]
-> {
-  let includes = Properties.include;
-  let excludes = Properties.exclude;
-
-  if (typeof includes === "string") {
-    includes = [includes];
-  }
-
-  if (typeof excludes === "string") {
-    excludes = [excludes];
-  }
-
-  // Mapping filepath -> targets
-  const includedTargets = new Map<string, string[]>();
-  const excludedTargets = new Map<string, string[]>();
-
-  includes.forEach((include) => {
-    let _path;
-    let target;
-    if (include.includes(":")) {
-      _path = include.split(":")[0];
-      target = include.split(":")[1];
-    } else {
-      _path = include;
-      target = "*";
-    }
-
-    const actualPaths = globby.sync(_path);
-
-    for (let _path of actualPaths) {
-      _path = path.resolve(_path);
-      if (!includedTargets.has(_path)) {
-        includedTargets.set(_path, []);
-      }
-
-      includedTargets.get(_path).push(target);
-    }
-  });
-
-  // only exclude files if all contracts are excluded
-  excludes.forEach((exclude) => {
-    let _path;
-    let target;
-    if (exclude.includes(":")) {
-      _path = exclude.split(":")[0];
-      target = exclude.split(":")[1];
-    } else {
-      _path = exclude;
-      target = "*";
-    }
-
-    const actualPaths = globby.sync(_path);
-
-    for (let _path of actualPaths) {
-      _path = path.resolve(_path);
-      if (!excludedTargets.has(_path)) {
-        excludedTargets.set(_path, []);
-      }
-
-      excludedTargets.get(_path).push(target);
-    }
-  });
-
-  for (const key of excludedTargets.keys()) {
-    if (includedTargets.has(key)) {
-      if (excludedTargets.get(key).includes("*")) {
-        // exclude all targets of the file
-        includedTargets.delete(key);
-      } else {
-        // exclude specific targets in the file
-        includedTargets.set(
-          key,
-          includedTargets
-            .get(key)
-            .filter((target) => !excludedTargets.get(key).includes(target))
-        );
-      }
-    }
-  }
-
-  return [includedTargets, excludedTargets];
 }
 
 export async function clearDirectory(directory: string) {

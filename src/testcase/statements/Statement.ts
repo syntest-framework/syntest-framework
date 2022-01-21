@@ -18,7 +18,7 @@
 
 import { EncodingSampler } from "../../search/EncodingSampler";
 import { AbstractTestCase } from "../AbstractTestCase";
-import { Parameter } from "../../graph/parsing/Parameter";
+import { Parameter } from "../../analysis/static/graph/parsing/Parameter";
 import { prng } from "../../util/prng";
 
 /**

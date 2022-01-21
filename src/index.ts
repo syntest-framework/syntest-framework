@@ -92,21 +92,22 @@ export * from "./testcase/decoder/SuiteBuilder";
 export * from "./testcase/decoder/TestCaseDecoder";
 
 // Instrumentation
-export * from "./graph/CFG";
-export * from "./graph/Edge";
-export * from "./graph/cfgUtils";
-export * from "./graph/drawGraph";
-export * from "./graph/CFGFactory";
+export * from "./analysis/static/graph/CFG";
+export * from "./analysis/static/graph/Edge";
+export * from "./analysis/static/graph/cfgUtils";
+export * from "./analysis/static/graph/drawGraph";
+export * from "./analysis/static/graph/CFGFactory";
 
-export * from "./graph/nodes/Node";
-export * from "./graph/nodes/BranchNode";
-export * from "./graph/nodes/RootNode";
-export * from "./graph/nodes/PlaceholderNode";
+export * from "./analysis/static/graph/nodes/Node";
+export * from "./analysis/static/graph/nodes/BranchNode";
+export * from "./analysis/static/graph/nodes/RootNode";
+export * from "./analysis/static/graph/nodes/PlaceholderNode";
 
-export * from "./graph/parsing/ActionDescription";
-export * from "./graph/parsing/FunctionDescription";
-export * from "./graph/parsing/Parameter";
-export * from "./graph/parsing/Visibility";
+export * from "./analysis/static/graph/parsing/ActionDescription";
+export * from "./analysis/static/graph/parsing/FunctionDescription";
+export * from "./analysis/static/graph/parsing/Parameter";
+export * from "./analysis/static/graph/parsing/Visibility";
+export * from "./analysis/static/graph/parsing/TargetMetaData";
 
 // UI
 export * from "./ui/UserInterface";
@@ -119,5 +120,10 @@ export * from "./util/HashSet";
 export * from "./util/logger";
 export * from "./util/prng";
 export * from "./util/fileSystem";
+export * from "./util/targetUtil";
 
 export * from "./properties";
+
+// Targetting
+export * from "./analysis/static/Target";
+export * from "./analysis/static/TargetPool";
