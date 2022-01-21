@@ -16,11 +16,15 @@
  * limitations under the License.
  */
 
-import { Archive, getUserInterface } from "@syntest/framework";
+import { Archive, getUserInterface, Properties } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
-import { readdirSync, unlinkSync, writeFileSync } from "fs";
+import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
+import * as ts from "typescript"
+import { Runner } from "mocha";
+const Mocha = require('mocha')
+const originalrequire = require("original-require");
 
 export class JavaScriptSuiteBuilder {
   private decoder: JavaScriptDecoder;
@@ -57,9 +61,143 @@ export class JavaScriptSuiteBuilder {
   }
 
   async createSuite(archive: Archive<JavaScriptTestCase>): Promise<void> {
+    const reducedArchive = this.reduceArchive(archive);
 
-    // TODO
-    return Promise.resolve(undefined);
+    const paths: string[] = []
+    // write the test cases with logs to know what to assert
+    for (const key of reducedArchive.keys()) {
+      for (const testCase of reducedArchive.get(key)!) {
+        const testPath = path.join(
+          Properties.temp_test_directory,
+          `test${key}${testCase.id}.spec.ts`
+        );
+        paths.push(testPath)
+        await this.writeTestCase(testPath, testCase, "", true);
+      }
+    }
+
+    let argv = {
+      // package: require('../../../package.json'),
+      // _: [],
+      require: [ 'ts-node/register' ], // , '@babel/register'
+      // config: false,
+      // diff: true,
+      // extension: [ 'js', 'cjs', 'mjs', 'ts' ],
+      // reporter: 'spec',
+      // slow: 75,
+      // timeout: 2000,
+      // ui: 'bdd',
+      // 'watch-ignore': [ 'node_modules', '.git' ],
+      // watchIgnore: [ 'node_modules', '.git' ]
+      spec: paths
+    }
+
+    const mocha = new Mocha(argv)
+
+    for (const testPath of paths) {
+      delete originalrequire.cache[testPath];
+      mocha.addFile(testPath);
+    }
+
+
+    // By replacing the global log function we disable the output of the truffle test framework
+    const old = console.log;
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    console.log = () => {};
+
+    let runner: Runner = null
+
+    // Finally, run mocha.
+    process.on("unhandledRejection", reason => {
+      throw reason;
+    });
+
+    await new Promise((resolve) => {
+      runner = mocha.run((failures) => {
+        resolve(failures)
+      })
+    })
+    console.log = old;
+
+    // Create final tests files with assertions
+    await this.clearDirectory(Properties.temp_test_directory);
+
+    for (const key of reducedArchive.keys()) {
+      await this.gatherAssertions(reducedArchive.get(key));
+      const testPath = path.join(
+        Properties.final_suite_directory,
+        `test-${key}.spec.ts`
+      );
+      await writeFileSync(
+        testPath,
+        this.decoder.decodeTestCase(reducedArchive.get(key), `${key}`, false)
+      );
+    }
+
+    this.resetInstrumentationData();
+  }
+
+  async gatherAssertions(testCases: JavaScriptTestCase[]): Promise<void> {
+    for (const testCase of testCases) {
+      const assertions = new Map<string, string>();
+      try {
+        // extract the log statements
+        const dir = await readdirSync(
+          path.join(Properties.temp_log_directory, testCase.id)
+        );
+
+        for (const file of dir) {
+          const assertionValue = await readFileSync(
+            path.join(Properties.temp_log_directory, testCase.id, file),
+            "utf8"
+          );
+          assertions.set(file, assertionValue);
+        }
+      } catch (error) {
+        continue;
+      }
+
+      await this.clearDirectory(
+        path.join(Properties.temp_log_directory, testCase.id),
+        /.*/g
+      );
+      await rmdirSync(path.join(Properties.temp_log_directory, testCase.id));
+
+      testCase.assertions = assertions;
+    }
+  }
+
+  reduceArchive(
+    archive: Archive<JavaScriptTestCase>
+  ): Map<string, JavaScriptTestCase[]> {
+    const reducedArchive = new Map<string, JavaScriptTestCase[]>();
+
+    for (const objective of archive.getObjectives()) {
+      const targetName = objective
+        .getSubject()
+        .name.split("/")
+        .pop()!
+        .split(".")[0]!;
+
+      if (!reducedArchive.has(targetName)) {
+        reducedArchive.set(targetName, []);
+      }
+
+      if (
+        reducedArchive
+          .get(targetName)
+          .includes(archive.getEncoding(objective) as JavaScriptTestCase)
+      ) {
+        // skip duplicate individuals (i.e. individuals which cover multiple objectives
+        continue;
+      }
+
+      reducedArchive
+        .get(targetName)
+        .push(archive.getEncoding(objective) as JavaScriptTestCase);
+    }
+
+    return reducedArchive;
   }
 
   async writeTestCase(filePath: string, testCase: JavaScriptTestCase, targetName: string, addLogs = false): Promise<void> {
@@ -68,8 +206,27 @@ export class JavaScriptSuiteBuilder {
       targetName,
       addLogs
     );
+
+    // const transpiledTestCase = ts.transpileModule(decodedTestCase, { compilerOptions: { module: ts.ModuleKind.CommonJS }}).outputText
+    // await writeFileSync(filePath, transpiledTestCase);
+
     await writeFileSync(filePath, decodedTestCase);
   }
 
+
+
+  resetInstrumentationData () {
+    for (const key of Object.keys(global.__coverage__)) {
+      for (const statementKey of Object.keys(global.__coverage__[key].s)) {
+        global.__coverage__[key].s[statementKey] = 0
+      }
+      for (const functionKey of Object.keys(global.__coverage__[key].f)) {
+        global.__coverage__[key].f[functionKey] = 0
+      }
+      for (const branchKey of Object.keys(global.__coverage__[key].b)) {
+        global.__coverage__[key].b[branchKey] = [0, 0]
+      }
+    }
+  }
 
 }

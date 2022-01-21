@@ -30,6 +30,7 @@ import { PrimitiveStatement } from "./PrimitiveStatement";
 export class BoolStatement extends PrimitiveStatement<boolean> {
   constructor(type: Parameter, uniqueId: string, value: boolean) {
     super(type, uniqueId, value);
+    this._classType = 'BoolStatement'
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): BoolStatement {
@@ -37,16 +38,16 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
       return BoolStatement.getRandom(this.type);
     }
 
-    return new BoolStatement(this.type, this.id, !this.value);
+    return new BoolStatement(this.type, prng.uniqueId(), !this.value);
   }
 
-  copy() {
+  copy(): BoolStatement {
     return new BoolStatement(this.type, this.id, this.value);
   }
 
   static getRandom(
     type: Parameter = { type: "bool", name: "noname" }
-  ): PrimitiveStatement<any> {
+  ): BoolStatement {
     return new BoolStatement(type, prng.uniqueId(), prng.nextBoolean());
   }
 }

@@ -23,6 +23,7 @@ import {
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
+import { Decoding } from "../Statement";
 
 /**
  * @author Dimitri Stallenberg
@@ -40,6 +41,8 @@ export class StringStatement extends PrimitiveStatement<string> {
     maxlength: number
   ) {
     super(type, uniqueId, value);
+    this._classType = 'StringStatement'
+
     this.alphabet = alphabet;
     this.maxlength = maxlength;
   }
@@ -164,7 +167,7 @@ export class StringStatement extends PrimitiveStatement<string> {
 
     return new StringStatement(
       this.type,
-      this.id,
+      prng.uniqueId(),
       newValue,
       this.alphabet,
       this.maxlength
@@ -212,7 +215,12 @@ export class StringStatement extends PrimitiveStatement<string> {
     );
   }
 
-  decode(): string {
-    return `const ${this.varName} = "${this.value}";`
+  decode(addLogs: boolean): Decoding[] {
+    return [
+      {
+        decoded: `const ${this.varName} = "${this.value}";`,
+        reference: this
+      }
+    ]
   }
 }

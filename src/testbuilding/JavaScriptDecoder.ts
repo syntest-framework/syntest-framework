@@ -1,25 +1,28 @@
-import { Decoder, PrimitiveStatement, Properties } from "@syntest/framework";
+import { Decoder, Properties } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import * as path from "path";
 import { ConstructorCall } from "../testcase/statements/root/ConstructorCall";
 import { MethodCall } from "../testcase/statements/action/MethodCall";
-import { Statement } from "../testcase/statements/Statement";
+import { Decoding, Statement } from "../testcase/statements/Statement";
+import { PrimitiveStatement } from "../testcase/statements/primitive/PrimitiveStatement";
+import { Export } from "../analysis/static/dependency/ExportVisitor";
+import { FunctionCall } from "../testcase/statements/root/FunctionCall";
+import { RootStatement } from "../testcase/statements/root/RootStatement";
 
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   private imports: Map<string, string>;
-  private contractDependencies: Map<string, string[]>;
+  private contractDependencies: Map<string, Export[]>;
+  private exports: Export[]
 
   constructor(
     imports: Map<string, string>,
-    contractDependencies: Map<string, string[]>
+    contractDependencies: Map<string, Export[]>,
+    exports: Export[]
   ) {
     this.imports = imports;
     this.contractDependencies = contractDependencies;
-  }
-
-  decodeStatement(statement: Statement): string {
-    return "";
+    this.exports = exports
   }
 
   decodeTestCase(testCases: JavaScriptTestCase | JavaScriptTestCase[], targetName: string, addLogs = false): string {
@@ -31,15 +34,13 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     const imports: string[] = []
 
     for (const testCase of testCases) {
-      // The stopAfter variable makes sure that when one of the function calls has thrown an exception the test case ends there.
-      let stopAfter = -1;
-      if (testCase.assertions.size !== 0 && testCase.assertions.has("error")) {
-        stopAfter = testCase.assertions.size;
-      }
+      const root = testCase.root;
 
-      const testString = [];
-      const stack: Statement[] = this.convertToStatementStack(testCase);
+      const importableGenes: RootStatement[] = [];
+      const statements: Decoding[] = root.decode(addLogs)
+      const assertions: string[] = [];
 
+      const testString: string[] = [];
       if (addLogs) {
         imports.push(`const fs = require('fs');\n\n`);
         testString.push(
@@ -51,83 +52,154 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         testString.push("try {");
       }
 
-      const importableGenes: ConstructorCall[] = [];
-
-      const root = testCase.root;
-      stack.push(root);
-
-      let primitiveStatements: string[] = [];
-      const functionCalls: string[] = [];
-      const assertions: string[] = [];
-
-      let count = 1;
-      while (stack.length) {
-        const gene: Statement = stack.pop()!;
-
-        if (gene instanceof ConstructorCall) {
-          if (count === stopAfter) {
-            // assertions.push(`\t\t${this.decodeErroringConstructorCall(gene)}`);
-            if (Properties.test_minimization) break;
-          }
-          testString.push(`\t\t${(gene as ConstructorCall).decode()}`);
-          importableGenes.push(<ConstructorCall>gene);
-          count += 1;
-        } else if (gene instanceof PrimitiveStatement) {
-          primitiveStatements.push(`\t\t${this.decodeStatement(gene)}`);
-        } else if (gene instanceof MethodCall) {
-          if (count === stopAfter) {
-            assertions.push(
-              `\t\t${(gene as MethodCall).decodeErroring(root.varName)}`
-            );
-            if (Properties.test_minimization) break;
-          }
-          functionCalls.push(
-            `\t\t${(gene as MethodCall).decodeWithObject(root.varName)}`
-          );
-          count += 1;
-        } else {
-          throw Error(`The type of gene ${gene} is not recognized`);
-        }
-
-        if (addLogs) {
-          if (gene instanceof MethodCall) {
-            functionCalls.push(
-              `\t\tawait fs.writeFileSync('${path.join(
-                Properties.temp_log_directory,
-                testCase.id,
-                gene.varName
-              )}', '' + ${gene.varName})`
-            );
-          } else if (gene instanceof ConstructorCall) {
-            testString.push(
-              `\t\tawait fs.writeFileSync('${path.join(
-                Properties.temp_log_directory,
-                testCase.id,
-                gene.varName
-              )}', '' + ${gene.varName})`
-            );
-          }
-        }
+      if (testCase.assertions.size !== 0 && testCase.assertions.has("error")) {
+        const stopAfter = testCase.assertions.size;
+        // TODO this would only work if each variable is printed...
+        // TODO best would be to extract the stack trace and do it based on line number
       }
 
+      statements.forEach((value) => {
+        if (value.reference instanceof RootStatement) {
+          importableGenes.push(value.reference)
+        }
+        testString.push(
+          '\t\t' + value.decoded.replace('\n', '\n\t\t')
+        )
+      })
 
+      if (addLogs) {
+        testString.push(`} catch (e) {`);
+        testString.push(
+          `await fs.writeFileSync('${path.join(
+            Properties.temp_log_directory,
+            testCase.id,
+            "error"
+          )}', '' + e.stack)`
+        );
+        testString.push("}");
+      }
+
+      const importsOfTest = this.gatherImports(importableGenes);
+      imports.push(...importsOfTest);
+
+      if (testCase.assertions.size) {
+        imports.push(`const chai = require('chai');`);
+        imports.push(`const expect = chai.expect;`);
+        imports.push(`chai.use(require('chai-as-promised'));`);
+      }
+
+      assertions.unshift(...this.generateAssertions(testCase));
+
+      const body = [];
+      if (testString.length) {
+        body.push(`${testString.join("\n")}`);
+      }
+      if (assertions.length) {
+        body.push(`${assertions.join("\n")}`);
+      }
+
+      // TODO instead of using the targetName use the function call or a better description of the test
+      tests.push(
+        `\tit('test for ${targetName}', async () => {\n` +
+        `${body.join("\n\n")}` +
+        `\n\t});`
+      );
     }
 
-    return "";
+    let test =
+      `describe('${targetName}', () => {\n` +
+      tests.join("\n\n") +
+      `\n})`;
+
+    // Add the imports
+    test =
+      imports
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .join("\n") +
+      `\n\n` +
+      test;
+
+    return test;
   }
 
-  convertToStatementStack(testCase: JavaScriptTestCase): Statement[] {
-    const stack: Statement[] = [];
-    const queue: Statement[] = [testCase.root];
-    while (queue.length) {
-      const current: Statement = queue.splice(0, 1)[0];
+  gatherImports(importableGenes: RootStatement[]): string[] {
+    const imports: string[] = [];
 
-      stack.push(current);
+    for (const gene of importableGenes) {
+      const importName = gene instanceof FunctionCall ? gene.functionName : (gene instanceof ConstructorCall ? gene.constructorName : null);
+      const export_: Export = this.exports.find((x) => x.name === importName)
+      if (!export_) {
+        throw new Error('Cannot find an export corresponding to the importable gene: ' + importName)
+      }
+      const importString: string = this.getImport(export_)
 
-      for (const child of current.getChildren()) {
-        queue.push(child);
+      if (imports.includes(importString) || importString.length === 0) {
+        continue;
+      }
+
+      imports.push(importString);
+
+      let count = 0;
+      for (const dependency of this.contractDependencies.get(importName)) {
+        const importString: string = this.getImport(dependency);
+
+        if (imports.includes(importString) || importString.length === 0) {
+          continue;
+        }
+
+        imports.push(importString);
+
+        count += 1;
       }
     }
-    return stack;
+
+    return imports;
+  }
+
+  getImport(dependency: Export): string {
+    if (!this.imports.has(dependency.name)) {
+      throw new Error(
+        `Cannot find the import: ${dependency}`
+      );
+    }
+
+    // TODO correct import (something without the hardcoded "/instrumented/" stuff
+    const path = dependency.filePath.replace(process.cwd(), '')
+    // TODO module imports etc
+
+    if (dependency.default) {
+      return `import ${dependency.name} from "../instrumented${path}";`;
+    } else {
+      return `import {${dependency.name}} from "../instrumented${path}";`;
+    }
+  }
+
+  generateAssertions(testCase: JavaScriptTestCase): string[] {
+    const assertions: string[] = [];
+    if (testCase.assertions.size !== 0) {
+      for (const variableName of testCase.assertions.keys()) {
+        if (variableName === "error") {
+          continue;
+        }
+
+        if (testCase.assertions.get(variableName) === "[object Object]") continue;
+
+        if (variableName.includes("string")) {
+          assertions.push(
+            `\t\tassert.equal(${variableName}, "${testCase.assertions.get(
+              variableName
+            )}")`
+          );
+        } else {
+          assertions.push(
+            `\t\tassert.equal(${variableName}, ${testCase.assertions.get(
+              variableName
+            )})`
+          );
+        }
+      }
+    }
+
+    return assertions;
   }
 }

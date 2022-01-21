@@ -18,12 +18,13 @@
 
 import {
   prng,
-  Parameter
+  Parameter, Properties,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./RootStatement";
-import { Statement } from "../Statement";
-import { PrimitiveStatement } from "../primitive/PrimitiveStatement";
+import { Decoding, Statement } from "../Statement";
+import { MethodCall } from "../action/MethodCall";
+import * as path from "path";
 
 /**
  * @author Dimitri Stallenberg
@@ -48,12 +49,25 @@ export class ConstructorCall extends RootStatement {
     constructorName: string,
   ) {
     super(type, uniqueId, args, calls);
+    this._classType = 'ConstructorCall'
+
     this._constructorName = constructorName;
+
+    for (const arg of args) {
+      if (arg instanceof MethodCall) {
+        throw new Error("Constructor args cannot be of type MethodCall")
+      }
+    }
+
+    for (const call of calls) {
+      if (!(call instanceof MethodCall)) {
+        throw new Error("Constructor children must be of type MethodCall")
+      }
+    }
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): ConstructorCall {
     // TODO replace entire constructor?
-
     const args = [...this.args.map((a: Statement) => a.copy())];
     const calls = [...this.children.map((a: Statement) => a.copy())];
 
@@ -99,10 +113,10 @@ export class ConstructorCall extends RootStatement {
     //     args[index] = args[index].mutate(sampler, depth + 1);
     // }
 
-    return new ConstructorCall(this.type, this.id, args, finalCalls, this.constructorName);
+    return new ConstructorCall(this.type, prng.uniqueId(), args, finalCalls, this.constructorName);
   }
 
-  copy() {
+  copy(): ConstructorCall {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
     const deepCopyChildren = [...this.children.map((a: Statement) => a.copy())];
 
@@ -119,13 +133,35 @@ export class ConstructorCall extends RootStatement {
     return this._constructorName;
   }
 
-  decode(): string {
-    const formattedArgs = this.args
-      .map((a: PrimitiveStatement<any>) => a.varName)
+  decode(addLogs: boolean): Decoding[] {
+    const args = this.args
+      .map((a) => a.varName)
       .join(", ");
 
-    return (
-      `const ${this.varName} = new ${this.constructorName}(${formattedArgs})`
-    )
+    const argStatements: Decoding[] = this.args
+      .flatMap((a) => a.decode(addLogs))
+
+    const childStatements: Decoding[] = this.children
+      .flatMap((a: MethodCall) => a.decodeWithObject(addLogs, this.varName))
+
+    let decoded = `const ${this.varName} = new ${this.constructorName}(${args})`
+
+    if (addLogs) {
+      const logDir = path.join(
+        Properties.temp_log_directory,
+        // testCase.id,
+        this.varName
+      )
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+    }
+
+    return [
+      ...argStatements,
+      {
+        decoded: decoded,
+        reference: this
+      },
+      ...childStatements
+    ]
   }
 }

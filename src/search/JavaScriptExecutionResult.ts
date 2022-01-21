@@ -72,13 +72,6 @@ export class JavaScriptExecutionResult implements ExecutionResult {
     this._traces = traces;
     this._duration = duration;
     this._exception = exception;
-
-    this._traces.forEach((point) => {
-      if (point.type === "requirePost") point.type = "probePost";
-
-      if (point.type === "requirePre") point.type = "probePre";
-      //point..satisfied = true;
-    });
   }
 
   /**
@@ -89,7 +82,6 @@ export class JavaScriptExecutionResult implements ExecutionResult {
       if (
         (trace.type === "statement" ||
           trace.type === "function" ||
-          trace.type === "requirePre" ||
           trace.type === "branch") && // this line is needed for branches with no control dependent statements
         trace.line === line &&
         trace.hits > 0

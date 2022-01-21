@@ -22,7 +22,7 @@ import {
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
-import { Statement } from "../Statement";
+import { Decoding, Statement } from "../Statement";
 
 
 // TODO maybe delete?
@@ -47,27 +47,24 @@ export class StaticMethodCall extends ActionStatement {
     functionName: string
   ) {
     super(type, uniqueId, args);
+    this._classType = 'StaticMethodCall'
+
     this._functionName = functionName;
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
-    // if (prng.nextBoolean(Properties.resample_gene_probability)) {
-    //   // resample the gene
-    //   return sampler.sampleStatement(depth, this.types, "functionCall");
-    // } else
-    if (!this.args.length) {
-      return this.copy();
-    } else {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): StaticMethodCall {
+    const args = [...this.args.map((a: Statement) => a.copy())];
+
+    if (args.length != 0) {
       // randomly mutate one of the args
-      const args = [...this.args.map((a: Statement) => a.copy())];
       const index = prng.nextInt(0, args.length - 1);
       args[index] = args[index].mutate(sampler, depth + 1);
-
-      return new StaticMethodCall(this.type, this.id, args, this.functionName);
     }
+
+    return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);
   }
 
-  copy() {
+  copy(): StaticMethodCall {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
     return new StaticMethodCall(
@@ -78,20 +75,17 @@ export class StaticMethodCall extends ActionStatement {
     );
   }
 
-  hasChildren(): boolean {
-    return !!this.args.length;
-  }
-
-  getChildren(): Statement[] {
-    return [...this.args];
-  }
-
   get functionName(): string {
     return this._functionName;
   }
 
-  decode(): string {
+  decode(addLogs: boolean): Decoding[] {
     // TODO
-    return "";
+    return [
+      {
+        decoded: 'TODO',
+        reference: this
+      }
+    ];
   }
 }

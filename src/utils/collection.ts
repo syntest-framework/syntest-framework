@@ -34,7 +34,7 @@ import { JavaScriptSubject } from "../search/JavaScriptSubject";
 
 export function collectInitialVariables(
   collector: StatisticsCollector<any>,
-  currentSubject: JavaScriptSubject<any>,
+  currentSubject: JavaScriptSubject,
   targetPath: string
 ) {
   collector.recordVariable(RuntimeVariable.VERSION, 1);
@@ -57,7 +57,7 @@ export function collectInitialVariables(
 
 export function collectStatistics(
   collector: StatisticsCollector<any>,
-  currentSubject: JavaScriptSubject<any>,
+  currentSubject: JavaScriptSubject,
   archive: Archive<any>,
   totalTimeBudget: TotalTimeBudget<any>,
   searchBudget: SearchTimeBudget<any>,
@@ -121,7 +121,7 @@ export function collectCoverageData(
       .getTraces()
       .filter((element) => element.type.includes(objectiveType))
       .filter((element) => {
-        const paths = (element as any).contractPath.split("/");
+        const paths = (element as any).path.split("/");
         return paths[paths.length - 1].includes(fileName);
       })
       .forEach((current) => {

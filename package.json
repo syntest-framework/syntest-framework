@@ -42,40 +42,48 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "npm run build",
-    "run": "node ./dist/bin.js --include='./benchmark/**/*.js'",
-    "run-ts": "ts-node ./src/bin.ts --include='./benchmark/**/*.js'",
+    "run": "node ./dist/bin.js",
+    "run-ts": "ts-node ./src/bin.ts",
     "test": "mocha",
     "test:coverage": "nyc mocha",
     "test:watch": "mocha --watch"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.22",
+    "@types/chai": "^4.3.0",
     "@types/figlet": "^1.5.4",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
     "@types/sinon": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "chai": "^4.3.4",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.3.0",
-    "mocha": "^9.1.3",
     "prettier": "^2.4.1",
     "sinon": "^12.0.1",
-    "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   },
   "engines": {
     "node": ">=10.24.0"
   },
   "dependencies": {
-    "@babel/core": "^7.16.0",
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/register": "^7.16.5",
     "@istanbuljs/schema": "^0.1.3",
     "@syntest/framework": "file:../syntest-framework",
     "@types/babel-core": "^6.25.7",
+    "chai": "^4.3.4",
     "chalk": "^4.0.0",
     "clear": "^0.1.0",
+    "esm": "^3.2.25",
     "figlet": "^1.5.2",
-    "istanbul-lib-instrument": "^5.1.0"
+    "istanbul-lib-instrument": "^5.1.0",
+    "lodash": "^4.17.21",
+    "mocha": "^9.1.3",
+    "original-require": "^1.0.1",
+    "regenerator-runtime": "^0.13.9",
+    "ts-babel-node": "^1.1.1",
+    "ts-node": "^10.4.0"
   }
 }

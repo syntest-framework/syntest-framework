@@ -18,11 +18,12 @@
 
 import {
   prng,
-  Parameter,
+  Parameter, Properties,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
-import { Statement } from "../Statement";
+import { Decoding, Statement } from "../Statement";
+import * as path from "path";
 
 /**
  * @author Dimitri Stallenberg
@@ -44,25 +45,27 @@ export class MethodCall extends ActionStatement {
     args: Statement[]
   ) {
     super(type, uniqueId, args);
+    this._classType = "MethodCall"
     this._functionName = functionName;
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number) {
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): MethodCall {
     const args = [...this.args.map((a: Statement) => a.copy())];
-    if (args.length === 0) return this.copy();
 
-    const index = prng.nextInt(0, args.length - 1);
-    args[index] = args[index].mutate(sampler, depth + 1);
+    if (args.length !== 0) {
+      const index = prng.nextInt(0, args.length - 1);
+      args[index] = args[index].mutate(sampler, depth + 1);
+    }
 
     return new MethodCall(
       this.type,
-      this.id,
+      prng.uniqueId(),
       this.functionName,
       args
     );
   }
 
-  copy() {
+  copy(): MethodCall {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
     return new MethodCall(
@@ -73,28 +76,48 @@ export class MethodCall extends ActionStatement {
     );
   }
 
-  hasChildren(): boolean {
-    return !!this.args.length;
-  }
-
-  getChildren(): Statement[] {
-    return [...this.args];
-  }
-
   get functionName(): string {
     return this._functionName;
   }
 
-  decode(): string {
+  decode(addLogs: boolean): Decoding[] {
     throw new Error('Cannot call decode on method calls!')
   }
 
-  decodeWithObject(objectVariable: string): string {
-    return `const ${this.varName} = ${objectVariable}.${this.functionName}()`
+  decodeWithObject(addLogs: boolean, objectVariable: string): Decoding[] {
+    const args = this.args
+      .map((a) => a.varName)
+      .join(', ')
+
+    const argStatements: Decoding[] = this.args
+      .flatMap((a) => a.decode(addLogs))
+
+    let decoded = `const ${this.varName} = ${objectVariable}.${this.functionName}(${args})`
+
+    if (addLogs) {
+      const logDir = path.join(
+        Properties.temp_log_directory,
+        // testCase.id,
+        this.varName
+      )
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+    }
+
+    return [
+      ...argStatements,
+      {
+        decoded: decoded,
+        reference: this
+      }
+    ]
   }
 
+  // TODO
   decodeErroring(objectVariable: string): string {
-    return `await expect(${objectVariable}.${this.functionName}()).to.be.rejectedWith(Error);`;
+    const args = this.args.map((a) => a.varName).join(', ')
+    return `await expect(${objectVariable}.${this.functionName}(${args})).to.be.rejectedWith(Error);`;
 
   }
+
+
 }

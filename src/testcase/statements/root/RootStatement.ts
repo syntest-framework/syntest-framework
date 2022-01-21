@@ -44,14 +44,32 @@ export abstract class RootStatement extends ActionStatement {
   abstract copy(): RootStatement;
 
   hasChildren(): boolean {
-    return !!this._children.length || !!this.args.length;
+    return !!this.args.length || !!this._children.length;
   }
 
   getChildren(): Statement[] {
-    return [...this._children, ...this.args];
+    return [...this.args, ...this._children];
   }
 
   get children(): Statement[] {
     return this._children;
+  }
+
+
+  setChild(index: number, newChild: Statement) {
+    if (!newChild) {
+      throw new Error("Invalid new child!")
+    }
+
+    if (index >= this.args.length + this.children.length) {
+      throw new Error("Invalid child location!")
+    }
+
+    if (index < this.args.length) {
+      this.args[index] = newChild
+    } else {
+      index -= this.args.length
+      this.children[index] = newChild
+    }
   }
 }

@@ -33,6 +33,12 @@ export abstract class Statement {
     return this._type;
   }
 
+
+  get classType(): string {
+    return this._classType;
+  }
+
+  protected _classType: string
   private _varName: string;
   private _type: Parameter;
   private _uniqueId: string;
@@ -77,5 +83,10 @@ export abstract class Statement {
   /**
    * Decodes the statement
    */
-  abstract decode(): string;
+  abstract decode(addLogs: boolean): Decoding[];
+}
+
+export interface Decoding {
+  decoded: string,
+  reference: Statement
 }
