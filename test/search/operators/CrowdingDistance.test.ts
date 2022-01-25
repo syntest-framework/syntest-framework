@@ -14,7 +14,6 @@ import { TestCaseMock } from "../../mocks/TestCase.mock";
 import {
   BranchObjectiveFunction,
   ObjectiveFunction,
-  AbstractTestCase,
 } from "../../../src";
 
 const expect = chai.expect;
@@ -40,17 +39,17 @@ describe("Crowding distance", function () {
   });
 
   it("empty front", () => {
-    crowdingDistance([], new Set<ObjectiveFunction<AbstractTestCase>>());
+    crowdingDistance([], new Set<ObjectiveFunction<TestCaseMock>>());
   });
 
   it("front with one solution", () => {
-    const objective = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
+    const objectives = new Set<ObjectiveFunction<TestCaseMock>>();
     objectives.add(objective);
 
     const ind = new TestCaseMock();
@@ -59,13 +58,13 @@ describe("Crowding distance", function () {
   });
 
   it("front with two solutions", () => {
-    const objective = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
+    const objectives = new Set<ObjectiveFunction<TestCaseMock>>();
     objectives.add(objective);
 
     const ind1 = new TestCaseMock();
@@ -77,19 +76,19 @@ describe("Crowding distance", function () {
   });
 
   it("Front with more than two solutions", () => {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       false
     );
-    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
+    const objectives = new Set<ObjectiveFunction<TestCaseMock>>();
     objectives.add(objective1);
     objectives.add(objective2);
 
@@ -109,13 +108,13 @@ describe("Crowding distance", function () {
   });
 
   it("Corner case with same obj values for all individual", () => {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objectives = new Set<ObjectiveFunction<AbstractTestCase>>();
+    const objectives = new Set<ObjectiveFunction<TestCaseMock>>();
     objectives.add(objective1);
 
     const ind1 = new TestCaseMock();

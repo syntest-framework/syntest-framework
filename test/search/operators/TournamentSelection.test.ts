@@ -6,7 +6,6 @@ import {
   processConfig,
   setupLogger,
   setupOptions,
-  AbstractTestCase,
   CommandLineInterface,
   Properties,
   setUserInterface,
@@ -40,13 +39,13 @@ describe("Tournament selection", function () {
   });
 
   it("Small Tournament size", () => {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
@@ -66,13 +65,13 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by rank", () => {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
@@ -99,7 +98,7 @@ describe("Tournament selection", function () {
     ind4.setRank(1);
     ind4.setCrowdingDistance(4);
 
-    const winner: AbstractTestCase = tournamentSelection(
+    const winner: TestCaseMock = tournamentSelection(
       [ind2, ind1, ind3, ind4],
       20
     );
@@ -109,13 +108,13 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by crowding distance", () => {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
@@ -142,7 +141,7 @@ describe("Tournament selection", function () {
     ind4.setRank(0);
     ind4.setCrowdingDistance(4);
 
-    const winner: AbstractTestCase = tournamentSelection(
+    const winner: TestCaseMock = tournamentSelection(
       [ind2, ind1, ind3, ind4],
       20
     );

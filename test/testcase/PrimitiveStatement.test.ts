@@ -4,9 +4,10 @@ import {
   loadConfig,
   PrimitiveStatement,
   processConfig,
-  TestCaseSampler,
+  EncodingSampler,
   setupLogger,
   setupOptions,
+  Encoding
 } from "../../src";
 
 const expect = chai.expect;
@@ -16,7 +17,7 @@ class dummyPrimitiveStatement extends PrimitiveStatement<string> {
     return this;
   }
 
-  mutate(sampler: TestCaseSampler, depth: number): PrimitiveStatement<string> {
+  mutate(sampler: EncodingSampler<Encoding>, depth: number): PrimitiveStatement<string> {
     return this;
   }
 }
