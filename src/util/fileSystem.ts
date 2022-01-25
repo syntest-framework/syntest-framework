@@ -23,7 +23,6 @@ import { TargetFile } from "../analysis/static/TargetFile";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { outputFileSync } = require("fs-extra");
 
-
 export async function createDirectoryStructure() {
   // outputs
   await mkdirSync(Properties.statistics_directory, {
