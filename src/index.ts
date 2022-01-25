@@ -120,10 +120,12 @@ export * from "./util/HashSet";
 export * from "./util/logger";
 export * from "./util/prng";
 export * from "./util/fileSystem";
+export * from "./util/targetUtil";
 
 export * from "./properties";
 
 // Targetting
 export * from "./analysis/static/TargetFile";
 export * from "./analysis/static/TargetPool";
-export * from "./analysis/static/targetUtil";
+// export * from "./analysis/static/targetUtil";
+
