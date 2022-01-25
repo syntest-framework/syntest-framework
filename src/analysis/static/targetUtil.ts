@@ -1,4 +1,4 @@
-import { Target } from "../analysis/static/Target";
+import { Target } from "./Target";
 
 export function getCommonBasePath(targets: Target[]): string {
   if (targets.length === 0) {

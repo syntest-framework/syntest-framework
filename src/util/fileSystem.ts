@@ -19,7 +19,6 @@
 import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "fs";
 import * as path from "path";
 import { Properties } from "../properties";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 
 export async function createDirectoryStructure() {
   // outputs
