@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-export interface Target {
+export class Target {
   canonicalPath: string;
   targetName: string;
 }
