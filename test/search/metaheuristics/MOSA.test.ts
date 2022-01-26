@@ -9,7 +9,8 @@ import {
   CommandLineInterface,
   Properties,
   Encoding,
-  EncodingRunner, EncodingSampler
+  EncodingRunner,
+  EncodingSampler,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { TestCaseMock } from "../../mocks/TestCase.mock";

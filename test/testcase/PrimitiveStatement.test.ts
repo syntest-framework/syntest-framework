@@ -7,7 +7,7 @@ import {
   EncodingSampler,
   setupLogger,
   setupOptions,
-  Encoding
+  Encoding,
 } from "../../src";
 
 const expect = chai.expect;
@@ -17,7 +17,10 @@ class dummyPrimitiveStatement extends PrimitiveStatement<string> {
     return this;
   }
 
-  mutate(sampler: EncodingSampler<Encoding>, depth: number): PrimitiveStatement<string> {
+  mutate(
+    sampler: EncodingSampler<Encoding>,
+    depth: number
+  ): PrimitiveStatement<string> {
     return this;
   }
 }

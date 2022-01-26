@@ -11,10 +11,7 @@ import {
   setUserInterface,
 } from "../../../src";
 import { TestCaseMock } from "../../mocks/TestCase.mock";
-import {
-  BranchObjectiveFunction,
-  ObjectiveFunction,
-} from "../../../src";
+import { BranchObjectiveFunction, ObjectiveFunction } from "../../../src";
 
 const expect = chai.expect;
 

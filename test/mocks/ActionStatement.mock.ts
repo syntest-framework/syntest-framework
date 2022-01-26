@@ -1,8 +1,4 @@
-import {
-  ActionStatement,
-  EncodingSampler,
-  Statement,
-} from "../../src";
+import { ActionStatement, EncodingSampler, Statement } from "../../src";
 import { Parameter } from "../../dist";
 import { TestCaseMock } from "./TestCase.mock";
 

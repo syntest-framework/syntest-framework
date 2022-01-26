@@ -35,8 +35,5 @@ export interface Decoder<E extends Encoding, D> {
    * @param targetName           the name of the target, used to create informative decodings
    * @return decoded             the decoded encoding
    */
-  decode(
-    encoding: E,
-    targetName: string
-  ): D;
+  decode(encoding: E, targetName: string): D;
 }

@@ -58,7 +58,10 @@ export class DummySearchSubject extends SearchSubject<TestCaseMock> {
     }
   }
 
-  getPossibleActions(type: string | undefined, returnTypes: Parameter[] | undefined): ActionDescription[] {
+  getPossibleActions(
+    type: string | undefined,
+    returnTypes: Parameter[] | undefined
+  ): ActionDescription[] {
     return [];
   }
 }
