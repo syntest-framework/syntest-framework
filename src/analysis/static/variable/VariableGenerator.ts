@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest JavaScript.
  *
@@ -17,9 +17,7 @@
  */
 
 import { traverse } from "@babel/core";
-import { VariableVisitor } from "./VariableVisitor";
-import { TargetMetaData, FunctionDescription } from "@syntest/framework";
-import { JavaScriptTargetMetaData } from "../JavaScriptTargetPool";
+import { VariableVisitor } from "./VariableVisitor4";
 
 /**
  * Typing generator for targets.
@@ -36,6 +34,14 @@ export class VariableGenerator {
     const visitor = new VariableVisitor();
 
     traverse(targetAST, visitor);
+    console.log(visitor.scopes)
+    console.log(visitor.elements)
+    for (const rel of visitor.relations) {
+      console.log(rel)
+    }
+    console.log(visitor.wrapperElementIsRelation)
+
+    // process.exit()
 
     return null;
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Javascript.
  *
@@ -278,6 +278,13 @@ export class Launcher {
           }
         }
 
+        console.log(targetFile.canonicalPath)
+        const ast = targetPool.getAST(targetFile.canonicalPath)
+        const generator = new VariableGenerator()
+        generator.generate(ast)
+        console.log("\n")
+        continue
+
         const archive = await this.testTarget(
           targetPool,
           targetFile.canonicalPath,
@@ -327,6 +334,7 @@ export class Launcher {
 
     const generator = new VariableGenerator()
     generator.generate(ast)
+
 
     const currentSubject = new JavaScriptSubject(
       path.basename(targetPath),
