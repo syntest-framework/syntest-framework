@@ -43,6 +43,6 @@ export class VariableGenerator {
 
     // process.exit()
 
-    return null;
+    return [visitor.scopes, visitor.elements, visitor.relations, visitor.wrapperElementIsRelation];
   }
 }

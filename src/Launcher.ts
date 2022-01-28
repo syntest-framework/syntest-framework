@@ -64,6 +64,7 @@ import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 import { Export } from "./analysis/static/dependency/ExportVisitor";
 import { Runner } from "mocha";
 import { VariableGenerator } from "./analysis/static/variable/VariableGenerator";
+import { TypeResolverInference } from "./analysis/static/types/TypeResolverInference";
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
 
@@ -281,8 +282,10 @@ export class Launcher {
         console.log(targetFile.canonicalPath)
         const ast = targetPool.getAST(targetFile.canonicalPath)
         const generator = new VariableGenerator()
-        generator.generate(ast)
+        const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(ast)
         console.log("\n")
+        const resolver = new TypeResolverInference(scopes, elements, relations, wrapperElementIsRelation)
+        // resolver.getTyping()
         continue
 
         const archive = await this.testTarget(
