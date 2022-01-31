@@ -10,7 +10,7 @@ import {
   Properties,
   setUserInterface,
 } from "../../../src";
-import { TestCaseMock } from "../../mocks/TestCase.mock";
+import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { tournamentSelection } from "../../../src/search/operators/selection/TournamentSelection";
 
 const expect = chai.expect;
@@ -39,23 +39,23 @@ describe("Tournament selection", function () {
   });
 
   it("Small Tournament size", () => {
-    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
+    const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
+    const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       false
     );
 
-    const ind1 = new TestCaseMock();
+    const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
 
-    const ind2 = new TestCaseMock();
+    const ind2 = new DummyEncodingMock();
     ind2.setDummyEvaluation([objective1, objective2], [1, 1]);
 
     //fit('Null my value throws', () => {
@@ -65,40 +65,40 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by rank", () => {
-    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
+    const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
+    const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       false
     );
 
-    const ind1 = new TestCaseMock();
+    const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
     ind1.setRank(0);
     ind1.setCrowdingDistance(10);
 
-    const ind2 = new TestCaseMock();
+    const ind2 = new DummyEncodingMock();
     ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind2.setRank(1);
     ind2.setCrowdingDistance(2);
 
-    const ind3 = new TestCaseMock();
+    const ind3 = new DummyEncodingMock();
     ind3.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind3.setRank(2);
     ind3.setCrowdingDistance(1);
 
-    const ind4 = new TestCaseMock();
+    const ind4 = new DummyEncodingMock();
     ind4.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind4.setRank(1);
     ind4.setCrowdingDistance(4);
 
-    const winner: TestCaseMock = tournamentSelection(
+    const winner: DummyEncodingMock = tournamentSelection(
       [ind2, ind1, ind3, ind4],
       20
     );
@@ -108,40 +108,40 @@ describe("Tournament selection", function () {
   });
 
   it("Comparison by crowding distance", () => {
-    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
+    const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
+    const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       false
     );
 
-    const ind1 = new TestCaseMock();
+    const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation([objective1, objective2], [0, 1]);
     ind1.setRank(0);
     ind1.setCrowdingDistance(10);
 
-    const ind2 = new TestCaseMock();
+    const ind2 = new DummyEncodingMock();
     ind2.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind2.setRank(0);
     ind2.setCrowdingDistance(2);
 
-    const ind3 = new TestCaseMock();
+    const ind3 = new DummyEncodingMock();
     ind3.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind3.setRank(0);
     ind3.setCrowdingDistance(1);
 
-    const ind4 = new TestCaseMock();
+    const ind4 = new DummyEncodingMock();
     ind4.setDummyEvaluation([objective1, objective2], [0, 2]);
     ind4.setRank(0);
     ind4.setCrowdingDistance(4);
 
-    const winner: TestCaseMock = tournamentSelection(
+    const winner: DummyEncodingMock = tournamentSelection(
       [ind2, ind1, ind3, ind4],
       20
     );

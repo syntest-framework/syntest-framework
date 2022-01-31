@@ -1,8 +1,8 @@
 import { Crossover } from "../../src";
-import { TestCaseMock } from "./TestCase.mock";
+import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-export class DummyCrossover implements Crossover<TestCaseMock> {
-  crossOver(parentA: TestCaseMock, parentB: TestCaseMock): TestCaseMock[] {
+export class DummyCrossover implements Crossover<DummyEncodingMock> {
+  crossOver(parentA: DummyEncodingMock, parentB: DummyEncodingMock): DummyEncodingMock[] {
     return [parentA.copy(), parentB.copy()];
   }
 }

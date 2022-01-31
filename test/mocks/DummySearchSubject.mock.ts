@@ -4,10 +4,10 @@ import {
   SearchSubject,
   ActionDescription,
 } from "../../src";
-import { TestCaseMock } from "./TestCase.mock";
+import { DummyEncodingMock } from "./TestCase.mock";
 import { Parameter } from "../../dist";
 
-export class DummySearchSubject extends SearchSubject<TestCaseMock> {
+export class DummySearchSubject extends SearchSubject<DummyEncodingMock> {
   protected readonly _cfg: CFG;
 
   protected _extractObjectives(): void {
@@ -21,8 +21,8 @@ export class DummySearchSubject extends SearchSubject<TestCaseMock> {
   protected readonly _functionMap: any;
   protected readonly _name: string;
   protected _objectives: Map<
-    ObjectiveFunction<TestCaseMock>,
-    ObjectiveFunction<TestCaseMock>[]
+    ObjectiveFunction<DummyEncodingMock>,
+    ObjectiveFunction<DummyEncodingMock>[]
   >;
   protected _paths: any;
 
@@ -35,8 +35,8 @@ export class DummySearchSubject extends SearchSubject<TestCaseMock> {
   }
 
   getChildObjectives(
-    objective: ObjectiveFunction<TestCaseMock>
-  ): ObjectiveFunction<TestCaseMock>[] {
+    objective: ObjectiveFunction<DummyEncodingMock>
+  ): ObjectiveFunction<DummyEncodingMock>[] {
     return [];
   }
 
@@ -48,11 +48,11 @@ export class DummySearchSubject extends SearchSubject<TestCaseMock> {
     return "";
   }
 
-  getObjectives(): ObjectiveFunction<TestCaseMock>[] {
+  getObjectives(): ObjectiveFunction<DummyEncodingMock>[] {
     return Array.from(this._objectives.keys());
   }
 
-  setObjectives(objectives: ObjectiveFunction<TestCaseMock>[]) {
+  setObjectives(objectives: ObjectiveFunction<DummyEncodingMock>[]) {
     for (const obj of objectives) {
       this._objectives.set(obj, []);
     }
