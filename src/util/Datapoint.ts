@@ -15,13 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { AbstractTestCase } from "../AbstractTestCase";
-import { SuiteBuilder } from "../decoder/SuiteBuilder";
-import { EncodingRunner } from "../../search/EncodingRunner";
-import { ExecutionResult } from "../../search/ExecutionResult";
-import { SearchSubject } from "../../search/SearchSubject";
-
+/**
+ * @author Dimitri Stallenberg
+ */
 export interface Datapoint {
   id: string;
   type: string;
@@ -32,23 +28,4 @@ export interface Datapoint {
   opcode: string;
   left: number[];
   right: number[];
-}
-
-export abstract class TestCaseRunner
-  implements EncodingRunner<AbstractTestCase>
-{
-  protected _suiteBuilder: SuiteBuilder;
-
-  protected constructor(suiteBuilder: SuiteBuilder) {
-    this._suiteBuilder = suiteBuilder;
-  }
-
-  get suiteBuilder(): SuiteBuilder {
-    return this._suiteBuilder;
-  }
-
-  public abstract execute(
-    subject: SearchSubject<AbstractTestCase>,
-    encoding: AbstractTestCase
-  ): Promise<ExecutionResult>;
 }

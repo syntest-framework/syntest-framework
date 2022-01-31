@@ -17,15 +17,35 @@
  */
 
 import { Encoding } from "./Encoding";
+import { SearchSubject } from "./SearchSubject";
 
 /**
  * Sampler for encodings.
  *
  * @author Mitchell Olsthoorn
+ * @author Dimitri Stallenberg
  */
-export interface EncodingSampler<T extends Encoding> {
+export abstract class EncodingSampler<T extends Encoding> {
+  protected _subject: SearchSubject<T>;
+
+  /**
+   * Constructor
+   * @param subject     the subject
+   */
+  protected constructor(subject: SearchSubject<T>) {
+    this._subject = subject;
+  }
+
   /**
    * Sample an encoding.
    */
-  sample(): T;
+  abstract sample(): T;
+
+  get subject(): SearchSubject<T> {
+    return this._subject;
+  }
+
+  set subject(value: SearchSubject<T>) {
+    this._subject = value;
+  }
 }

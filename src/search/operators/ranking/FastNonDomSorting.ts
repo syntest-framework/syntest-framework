@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { Encoding } from "../../Encoding";
 
 /**
  * Sort the population using fast non-dominated sorting.
@@ -29,19 +29,19 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export function fastNonDomSorting(
-  population: AbstractTestCase[],
-  objectiveFunctions: Set<ObjectiveFunction<AbstractTestCase>>
+export function fastNonDomSorting<T extends Encoding>(
+  population: T[],
+  objectiveFunctions: Set<ObjectiveFunction<T>>
 ) {
-  const S: { [id: string]: AbstractTestCase[] } = {};
-  const F: AbstractTestCase[][] = [[]];
+  const S: { [id: string]: T[] } = {};
+  const F: T[][] = [[]];
   const n: { [id: string]: number } = {};
   const indices: { [id: string]: number } = {};
 
   for (let index = 0; index < population.length; index++) {
     const p = population[index];
     indices[p.id] = index;
-    const Sp: AbstractTestCase[] = [];
+    const Sp: T[] = [];
     S[index] = Sp;
     n[index] = 0;
     for (const q of population) {

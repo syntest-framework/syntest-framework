@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
@@ -24,6 +23,7 @@ import { EncodingSampler } from "../../EncodingSampler";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
 import { Crossover } from "../../operators/crossover/Crossover";
+import { Encoding } from "../../Encoding";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -36,7 +36,7 @@ import { Crossover } from "../../operators/crossover/Crossover";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export class NSGAII extends EvolutionaryAlgorithm {
+export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   /**
    * Constructor.
    *
@@ -44,15 +44,11 @@ export class NSGAII extends EvolutionaryAlgorithm {
    * @param runner The runner
    */
   constructor(
-    encodingSampler: EncodingSampler<AbstractTestCase>,
-    runner: EncodingRunner<AbstractTestCase>,
-    crossover: Crossover
+    encodingSampler: EncodingSampler<T>,
+    runner: EncodingRunner<T>,
+    crossover: Crossover<T>
   ) {
-    super(
-      new SimpleObjectiveManager<AbstractTestCase>(runner),
-      encodingSampler,
-      crossover
-    );
+    super(new SimpleObjectiveManager<T>(runner), encodingSampler, crossover);
   }
 
   /**
@@ -104,7 +100,7 @@ export class NSGAII extends EvolutionaryAlgorithm {
         this._objectiveManager.getCurrentObjectives()
       );
 
-      currentFront.sort(function (a: AbstractTestCase, b: AbstractTestCase) {
+      currentFront.sort(function (a: T, b: T) {
         // sort in descending order of crowding distance
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });

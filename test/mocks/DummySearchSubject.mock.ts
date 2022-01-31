@@ -2,11 +2,12 @@ import {
   CFG,
   ObjectiveFunction,
   SearchSubject,
-  AbstractTestCase,
   ActionDescription,
 } from "../../src";
+import { DummyEncodingMock } from "./TestCase.mock";
+import { Parameter } from "../../dist";
 
-export class DummySearchSubject extends SearchSubject<AbstractTestCase> {
+export class DummySearchSubject extends SearchSubject<DummyEncodingMock> {
   protected readonly _cfg: CFG;
 
   protected _extractObjectives(): void {
@@ -20,8 +21,8 @@ export class DummySearchSubject extends SearchSubject<AbstractTestCase> {
   protected readonly _functionMap: any;
   protected readonly _name: string;
   protected _objectives: Map<
-    ObjectiveFunction<AbstractTestCase>,
-    ObjectiveFunction<AbstractTestCase>[]
+    ObjectiveFunction<DummyEncodingMock>,
+    ObjectiveFunction<DummyEncodingMock>[]
   >;
   protected _paths: any;
 
@@ -34,8 +35,8 @@ export class DummySearchSubject extends SearchSubject<AbstractTestCase> {
   }
 
   getChildObjectives(
-    objective: ObjectiveFunction<AbstractTestCase>
-  ): ObjectiveFunction<AbstractTestCase>[] {
+    objective: ObjectiveFunction<DummyEncodingMock>
+  ): ObjectiveFunction<DummyEncodingMock>[] {
     return [];
   }
 
@@ -43,24 +44,24 @@ export class DummySearchSubject extends SearchSubject<AbstractTestCase> {
     return null;
   }
 
-  getPossibleActions(
-    type: string | undefined,
-    returnType: string | undefined
-  ): ActionDescription[] {
-    return [];
-  }
-
   get name(): string {
     return "";
   }
 
-  getObjectives(): ObjectiveFunction<AbstractTestCase>[] {
+  getObjectives(): ObjectiveFunction<DummyEncodingMock>[] {
     return Array.from(this._objectives.keys());
   }
 
-  setObjectives(objectives: ObjectiveFunction<AbstractTestCase>[]) {
+  setObjectives(objectives: ObjectiveFunction<DummyEncodingMock>[]) {
     for (const obj of objectives) {
       this._objectives.set(obj, []);
     }
+  }
+
+  getPossibleActions(
+    type: string | undefined,
+    returnTypes: Parameter[] | undefined
+  ): ActionDescription[] {
+    return [];
   }
 }

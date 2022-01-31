@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { AbstractTestCase } from "../../../testcase/AbstractTestCase";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { Encoding } from "../../Encoding";
 
 /**
  * Compute the crowding distance for all individual int the front. This is a
@@ -30,9 +30,9 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  *
  * @author Annibale Panichella
  */
-export function crowdingDistance(
-  front: AbstractTestCase[],
-  objectiveFunctions: Set<ObjectiveFunction<AbstractTestCase>>
+export function crowdingDistance<T extends Encoding>(
+  front: T[],
+  objectiveFunctions: Set<ObjectiveFunction<T>>
 ) {
   const size = front.length;
 

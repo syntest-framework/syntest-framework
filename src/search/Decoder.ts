@@ -16,7 +16,24 @@
  * limitations under the License.
  */
 
-export class Target {
-  canonicalPath: string;
-  targetName: string;
+import { Encoding } from "./Encoding";
+
+/**
+ * Decoder interface.
+ *
+ * @author Dimitri Stallenberg
+ * @author Mitchell Olsthoorn
+ *
+ * @param E the encoding to decode
+ * @param D the Object type to decode the encoding to
+ */
+export interface Decoder<E extends Encoding, D> {
+  /**
+   * Creates a decoded version of an encoding
+   *
+   * @param encoding             the encoding to decode
+   * @param targetName           the name of the target, used to create informative decodings
+   * @return decoded             the decoded encoding
+   */
+  decode(encoding: E, targetName: string): D;
 }

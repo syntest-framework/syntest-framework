@@ -21,7 +21,7 @@ import { Encoding } from "../search/Encoding";
 import { Node, NodeType } from "../analysis/static/graph/nodes/Node";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
-import { Datapoint } from "../testcase/execution/TestCaseRunner";
+import { Datapoint } from "../util/Datapoint";
 
 /**
  * Objective function for the branch criterion.

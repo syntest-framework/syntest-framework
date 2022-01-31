@@ -17,7 +17,6 @@
  */
 
 import { EvolutionaryAlgorithm } from "../EvolutionaryAlgorithm";
-import { AbstractTestCase } from "../../../../testcase/AbstractTestCase";
 import { EncodingSampler } from "../../../EncodingSampler";
 import { EncodingRunner } from "../../../EncodingRunner";
 import { UncoveredObjectiveManager } from "../../../objective/managers/UncoveredObjectiveManager";
@@ -26,6 +25,7 @@ import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
 import { DominanceComparator } from "../../../comparators/DominanceComparator";
 import { getUserInterface } from "../../../../ui/UserInterface";
 import { Crossover } from "../../../operators/crossover/Crossover";
+import { Encoding } from "../../../Encoding";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -37,17 +37,13 @@ import { Crossover } from "../../../operators/crossover/Crossover";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class MOSA extends EvolutionaryAlgorithm {
+export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
-    encodingSampler: EncodingSampler<AbstractTestCase>,
-    runner: EncodingRunner<AbstractTestCase>,
-    crossover: Crossover
+    encodingSampler: EncodingSampler<T>,
+    runner: EncodingRunner<T>,
+    crossover: Crossover<T>
   ) {
-    super(
-      new UncoveredObjectiveManager<AbstractTestCase>(runner),
-      encodingSampler,
-      crossover
-    );
+    super(new UncoveredObjectiveManager<T>(runner), encodingSampler, crossover);
   }
 
   protected _environmentalSelection(size: number): void {
@@ -84,7 +80,7 @@ export class MOSA extends EvolutionaryAlgorithm {
     getUserInterface().debug("First front size = " + F[0].length);
 
     // Obtain the next front
-    let currentFront: AbstractTestCase[] = F[index];
+    let currentFront: T[] = F[index];
 
     while (remain > 0 && remain >= currentFront.length) {
       // Assign crowding distance to individuals
@@ -113,10 +109,7 @@ export class MOSA extends EvolutionaryAlgorithm {
         this._objectiveManager.getCurrentObjectives()
       );
 
-      currentFront = currentFront.sort(function (
-        a: AbstractTestCase,
-        b: AbstractTestCase
-      ) {
+      currentFront = currentFront.sort(function (a: T, b: T) {
         // sort in descending order of crowding distance
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });
@@ -139,10 +132,10 @@ export class MOSA extends EvolutionaryAlgorithm {
    * @param objectiveFunctions
    */
   public preferenceSortingAlgorithm(
-    population: AbstractTestCase[],
-    objectiveFunctions: Set<ObjectiveFunction<AbstractTestCase>>
-  ): AbstractTestCase[][] {
-    const fronts: AbstractTestCase[][] = [[]];
+    population: T[],
+    objectiveFunctions: Set<ObjectiveFunction<T>>
+  ): T[][] {
+    const fronts: T[][] = [[]];
 
     if (objectiveFunctions === null) {
       getUserInterface().debug(
@@ -169,7 +162,7 @@ export class MOSA extends EvolutionaryAlgorithm {
     getUserInterface().debug("Pop + Off size :" + population.length);
 
     // compute the remaining non-dominated Fronts
-    const remainingSolutions: AbstractTestCase[] = population;
+    const remainingSolutions: T[] = population;
     for (const selected of frontZero) {
       const index = remainingSolutions.indexOf(selected);
       remainingSolutions.splice(index, 1);
@@ -182,7 +175,7 @@ export class MOSA extends EvolutionaryAlgorithm {
       selectedSolutions < this._populationSize &&
       remainingSolutions.length != 0
     ) {
-      const front: AbstractTestCase[] = this.getNonDominatedFront(
+      const front: T[] = this.getNonDominatedFront(
         objectiveFunctions,
         remainingSolutions
       );
@@ -212,15 +205,15 @@ export class MOSA extends EvolutionaryAlgorithm {
    * It retrieves the front of non-dominated solutions from a list
    */
   public getNonDominatedFront(
-    uncoveredObjectives: Set<ObjectiveFunction<AbstractTestCase>>,
-    remainingSolutions: AbstractTestCase[]
-  ): AbstractTestCase[] {
-    const front: AbstractTestCase[] = [];
+    uncoveredObjectives: Set<ObjectiveFunction<T>>,
+    remainingSolutions: T[]
+  ): T[] {
+    const front: T[] = [];
     let isDominated: boolean;
 
     for (const current of remainingSolutions) {
       isDominated = false;
-      const dominatedSolutions: AbstractTestCase[] = [];
+      const dominatedSolutions: T[] = [];
       for (const best of front) {
         const flag = DominanceComparator.compare(
           current,
@@ -255,10 +248,10 @@ export class MOSA extends EvolutionaryAlgorithm {
    * @protected
    */
   public preferenceCriterion(
-    population: AbstractTestCase[],
-    objectives: Set<ObjectiveFunction<AbstractTestCase>>
-  ): AbstractTestCase[] {
-    const frontZero: AbstractTestCase[] = [];
+    population: T[],
+    objectives: Set<ObjectiveFunction<T>>
+  ): T[] {
+    const frontZero: T[] = [];
     for (const objective of objectives) {
       let chosen = population[0];
 

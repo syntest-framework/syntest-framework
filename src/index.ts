@@ -19,21 +19,8 @@
 // Test case
 import exp = require("constants");
 
-export * from "./testcase/AbstractTestCase";
-
 // Runner
-export * from "./testcase/execution/TestCaseRunner";
-
-// Statements
-export * from "./testcase/statements/ActionStatement";
-export * from "./testcase/statements/Statement";
-export * from "./testcase/statements/PrimitiveStatement";
-
-// Action statement
-export * from "./testcase/statements/ActionStatement";
-
-// Primitive statement
-export * from "./testcase/statements/PrimitiveStatement";
+export * from "./util/Datapoint";
 
 // Search
 export * from "./search/SearchSubject";
@@ -85,11 +72,10 @@ export * from "./search/metaheuristics/evolutionary/NSGAII";
 export * from "./search/metaheuristics/evolutionary/mosa/MOSA";
 
 // Sampling
-export * from "./testcase/sampling/TestCaseSampler";
+export * from "./search/EncodingSampler";
 
 // Test building
-export * from "./testcase/decoder/SuiteBuilder";
-export * from "./testcase/decoder/TestCaseDecoder";
+export * from "./search/Decoder";
 
 // Instrumentation
 export * from "./analysis/static/graph/CFG";
@@ -124,5 +110,6 @@ export * from "./util/fileSystem";
 export * from "./properties";
 
 // Targetting
+export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";

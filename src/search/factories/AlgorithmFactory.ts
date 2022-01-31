@@ -19,10 +19,10 @@
 import {
   MOSA,
   NSGAII,
-  TestCaseSampler,
-  AbstractTestCase,
-  TestCaseRunner,
   Crossover,
+  EncodingSampler,
+  Encoding,
+  EncodingRunner,
 } from "../../";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";
@@ -37,23 +37,23 @@ import { Sfuzz } from "../metaheuristics/evolutionary/Sfuzz";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export function createAlgorithmFromConfig(
-  sampler: TestCaseSampler,
-  runner: TestCaseRunner,
-  crossover: Crossover
-): SearchAlgorithm<AbstractTestCase> {
+export function createAlgorithmFromConfig<T extends Encoding>(
+  sampler: EncodingSampler<T>,
+  runner: EncodingRunner<T>,
+  crossover: Crossover<T>
+): SearchAlgorithm<T> {
   const algorithm = Properties.algorithm;
 
   switch (algorithm) {
     case "Random":
       return new RandomSearch(sampler, runner);
     case "NSGAII":
-      return new NSGAII(sampler, runner, crossover);
+      return new NSGAII<T>(sampler, runner, crossover);
     case "MOSA":
-      return new MOSA(sampler, runner, crossover);
+      return new MOSA<T>(sampler, runner, crossover);
     case "DynaMOSA":
-      return new DynaMOSA(sampler, runner, crossover);
+      return new DynaMOSA<T>(sampler, runner, crossover);
     case "sFuzz":
-      return new Sfuzz(sampler, runner, crossover);
+      return new Sfuzz<T>(sampler, runner, crossover);
   }
 }
