@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-import { AbstractTestCase } from "../testcase/AbstractTestCase";
-import { TestCaseDecoder } from "../testcase/decoder/TestCaseDecoder";
+import { Decoder } from "../search/Decoder";
+import { Encoding } from "../search/Encoding";
 
-export class HashSet<T extends AbstractTestCase> extends Set<T> {
-  private decoder: TestCaseDecoder;
+export class HashSet<T extends Encoding> extends Set<T> {
+  private decoder: Decoder<T, string>;
 
-  constructor(props: any, decoder: TestCaseDecoder) {
+  constructor(props: any, decoder: Decoder<T, string>) {
     super(props);
     this.decoder = decoder;
   }

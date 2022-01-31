@@ -9,7 +9,6 @@ import {
   setupLogger,
   setupOptions,
   setUserInterface,
-  AbstractTestCase,
 } from "../../../src";
 import { TestCaseMock } from "../../mocks/TestCase.mock";
 import { fastNonDomSorting } from "../../../src/search/operators/ranking/FastNonDomSorting";
@@ -36,19 +35,19 @@ describe("Fast non-dominated sorting", function () {
   });
 
   it("Sort three solutions", () => {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       false
     );
-    const objectives = new Set<BranchObjectiveFunction<AbstractTestCase>>();
+    const objectives = new Set<BranchObjectiveFunction<TestCaseMock>>();
     objectives.add(objective1);
     objectives.add(objective2);
 

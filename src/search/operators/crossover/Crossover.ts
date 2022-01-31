@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { AbstractTestCase } from "../../..";
+import { Encoding } from "../../..";
 
 /**
  * Creates 2 children swapping statements between the two parents
@@ -27,9 +27,6 @@ import { AbstractTestCase } from "../../..";
  *
  * @author Annibale Panichella
  */
-export interface Crossover {
-  crossOver(
-    parentA: AbstractTestCase,
-    parentB: AbstractTestCase
-  ): AbstractTestCase[];
+export interface Crossover<T extends Encoding> {
+  crossOver(parentA: T, parentB: T): T[];
 }

@@ -3,20 +3,22 @@ import {
   guessCWD,
   loadConfig,
   processConfig,
-  TestCaseRunner,
-  TestCaseSampler,
   setupLogger,
   setupOptions,
   setUserInterface,
   CommandLineInterface,
   Properties,
+  Encoding,
+  EncodingRunner,
+  EncodingSampler,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { TestCaseMock } from "../../mocks/TestCase.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { BranchObjectiveFunction, AbstractTestCase } from "../../../src";
+import { BranchObjectiveFunction } from "../../../src";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
+import { Test } from "mocha";
 
 const expect = chai.expect;
 
@@ -39,22 +41,22 @@ describe("Test MOSA", function () {
     );
   });
 
-  let objectives: Set<BranchObjectiveFunction<AbstractTestCase>>;
+  let objectives: Set<BranchObjectiveFunction<TestCaseMock>>;
 
   beforeEach(function () {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       false
     );
-    objectives = new Set<BranchObjectiveFunction<AbstractTestCase>>();
+    objectives = new Set<BranchObjectiveFunction<TestCaseMock>>();
     objectives.add(objective1);
     objectives.add(objective2);
   });
@@ -69,12 +71,12 @@ describe("Test MOSA", function () {
     const ind3 = new TestCaseMock();
     ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<TestCaseMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<TestCaseMock>>{}) as any;
 
     const mosa = new MOSA(mockedRunner, mockedSampler, new DummyCrossover());
     const frontZero = mosa.preferenceCriterion(
-      [ind1 as AbstractTestCase, ind2, ind3],
+      [ind1 as TestCaseMock, ind2, ind3],
       objectives
     );
 
@@ -99,8 +101,8 @@ describe("Test MOSA", function () {
     const ind5 = new TestCaseMock();
     ind5.setDummyEvaluation(Array.from(objectives), [5, 5]);
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<TestCaseMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<TestCaseMock>>{}) as any;
 
     const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.getNonDominatedFront(objectives, [
@@ -130,8 +132,8 @@ describe("Test MOSA", function () {
     const ind4 = new TestCaseMock();
     ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<TestCaseMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<TestCaseMock>>{}) as any;
 
     const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.preferenceSortingAlgorithm(
@@ -166,8 +168,8 @@ describe("Test MOSA", function () {
 
     const searchSubject = new DummySearchSubject(Array.from(objectives));
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<TestCaseMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<TestCaseMock>>{}) as any;
 
     const mosa = new MockedMOSA(
       mockedSampler,

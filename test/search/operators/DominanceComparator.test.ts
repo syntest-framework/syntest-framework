@@ -10,7 +10,6 @@ import {
   setupLogger,
   setupOptions,
   setUserInterface,
-  AbstractTestCase,
 } from "../../../src";
 import { TestCaseMock } from "../../mocks/TestCase.mock";
 
@@ -35,22 +34,22 @@ describe("Dominance comparator", function () {
     );
   });
 
-  let objectives: Set<BranchObjectiveFunction<AbstractTestCase>>;
+  let objectives: Set<BranchObjectiveFunction<TestCaseMock>>;
 
   beforeEach(function () {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "1",
       1,
       false
     );
-    objectives = new Set<BranchObjectiveFunction<AbstractTestCase>>();
+    objectives = new Set<BranchObjectiveFunction<TestCaseMock>>();
     objectives.add(objective1);
     objectives.add(objective2);
   });
@@ -92,7 +91,7 @@ describe("Dominance comparator", function () {
   });
 
   it("None dominates with three objective", () => {
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<TestCaseMock>(
       null,
       "2",
       1,
