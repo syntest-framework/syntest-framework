@@ -110,10 +110,6 @@ export * from "./util/fileSystem";
 export * from "./properties";
 
 // Targetting
-<<<<<<< HEAD
-export * from "./analysis/static/TargetFile";
-=======
 export * from "./analysis/static/Target";
->>>>>>> main
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
