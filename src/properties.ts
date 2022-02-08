@@ -31,6 +31,7 @@ export class Properties {
 
   public static seed: string | null;
   public static max_depth: number;
+  public static max_action_statements: number;
   public static explore_illegal_values: boolean;
 
   public static resample_gene_probability: number;
@@ -153,6 +154,13 @@ export const properties = {
   // sampling settings
   max_depth: {
     description: "Max depth of an individual's gene tree.",
+    type: "number",
+    default: 5,
+  },
+
+  max_action_statements: {
+    description:
+      "Max number of top level action statements in an individual's gene tree.",
     type: "number",
     default: 5,
   },
