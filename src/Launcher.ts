@@ -26,7 +26,6 @@ import {
   setupLogger,
   setupOptions,
   TargetFile,
-  getCommonBasePath,
   Properties,
   deleteTempDirectories,
   createDirectoryStructure,
@@ -63,6 +62,9 @@ import { ControlFlowGraphGenerator } from "./analysis/static/cfg/ControlFlowGrap
 import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
 import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 import { Export } from "./analysis/static/dependency/ExportVisitor";
+import { Runner } from "mocha";
+const originalrequire = require("original-require");
+const Mocha = require('mocha')
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -418,29 +420,129 @@ export class Launcher {
     dependencies: Map<string, Export[]>,
     exports: Export[]
   ): Promise<void> {
+    console.log('finalizing')
+
     const testDir = path.resolve(Properties.final_suite_directory);
     await clearDirectory(testDir);
+
 
     const decoder = new JavaScriptDecoder(
       imports,
       dependencies,
-      exports
+      exports,
+      '../../.syntest/instrumented'
     );
 
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder);
 
-    await suiteBuilder.createSuite(archive);
+    const paths = await suiteBuilder.createSuite(archive);
 
-    // Run tests
-    try {
-      // TODO
-    } catch (e) {
-      getUserInterface().error(e);
-      console.trace(e);
+    const mocha = new Mocha()
+
+    // require('ts-node/register')
+
+    require("regenerator-runtime/runtime");
+    require('@babel/register')({
+      presets: [
+        "@babel/preset-env"
+      ]
+    })
+
+    console.log('requiring paths')
+    for (const _path of paths) {
+      console.log(_path)
+      delete originalrequire.cache[_path];
+      mocha.addFile(_path);
     }
+
+    // // By replacing the global log function we disable the output of the truffle test framework
+    // const levels = ['log', 'debug', 'info', 'warn', 'error'];
+    // const originalFunctions = levels.map(level => console[level]);
+    // levels.forEach((level) => {
+    //   // eslint-disable-next-line @typescript-eslint/no-empty-function
+    //   console[level] = () => {}
+    // })
+
+    let runner: Runner = null
+
+    // Finally, run mocha.
+    process.on("unhandledRejection", reason => {
+      throw reason;
+    });
+
+    await new Promise((resolve) => {
+      runner = mocha.run((failures) => {
+        resolve(failures)
+      })
+    })
+
+    // levels.forEach((level, index) => {
+    //   console[level] = originalFunctions[index]
+    // })
+
+    getUserInterface().report("header", ["SEARCH RESULTS"]);
+    const instrumentationData = global.__coverage__
 
     // Run Istanbul
     // TODO
+
+    getUserInterface().report("report-coverage", ['Coverage report', { branch: 'Branch', statement: 'Statement', function: 'Function' }, true])
+
+    const overall = {
+      branch: 0,
+      statement: 0,
+      function: 0
+    }
+    let totalBranches = 0
+    let totalStatements = 0
+    let totalFunctions = 0
+    for (const file of Object.keys(instrumentationData)) {
+      const data = instrumentationData[file]
+
+      const summary = {
+        branch: 0,
+        statement: 0,
+        function: 0
+      }
+
+      for (const statementKey of Object.keys(data.s)) {
+        summary['statement'] += data.s[statementKey] ? 1 : 0
+        overall['statement'] += data.s[statementKey] ? 1 : 0
+      }
+
+      for (const branchKey of Object.keys(data.b)) {
+        summary['branch'] += data.b[branchKey][0] ? 1 : 0
+        overall['branch'] += data.b[branchKey][0] ? 1 : 0
+        summary['branch'] += data.b[branchKey][1] ? 1 : 0
+        overall['branch'] += data.b[branchKey][1] ? 1 : 0
+      }
+
+      for (const functionKey of Object.keys(data.f)) {
+        summary['function'] += data.f[functionKey] ? 1 : 0
+        overall['function'] += data.f[functionKey] ? 1 : 0
+      }
+
+      totalStatements += Object.keys(data.s).length
+      totalBranches += (Object.keys(data.b).length * 2)
+      totalFunctions += Object.keys(data.f).length
+
+      getUserInterface().report("report-coverage", [file, {
+        'statement': summary['statement'] + ' / ' + Object.keys(data.s).length,
+        'branch': summary['branch'] + ' / ' + (Object.keys(data.b).length * 2),
+        'function': summary['function'] + ' / ' + Object.keys(data.f).length
+      }, false])
+    }
+
+    overall['statement'] /= totalStatements
+    overall['branch'] /= totalBranches
+    overall['function'] /= totalFunctions
+
+    getUserInterface().report("report-coverage", ['Total', {
+      'statement': (overall['statement'] * 100) + ' %',
+      'branch': (overall['branch'] * 100) + ' %',
+      'function': (overall['function'] * 100) + ' %'
+    }, true])
+
   }
 
   async exit(): Promise<void> {

@@ -10,8 +10,8 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 10,
-    total_time: 10,
+    search_time: 5,
+    total_time: 5,
     iteration_budget: 1000,
 
     probe_objective: true,
@@ -24,10 +24,10 @@ module.exports = {
     log_to_file: ["info", "warn", "error"],
     include: [
         // "./benchmark/custom/**/*.js",
-        // "./benchmark/top10npm/lodash/**/*.js",
+        "./benchmark/top10npm/lodash/after.js",
         // "./benchmark/top10npm/lodash/.internal/**/*.js",
         // "./benchmark/top10npm/lodash/.internal/baseClone.js"
-        './benchmark/top10npm/lodash/a*.js',
+        // './benchmark/top10npm/lodash/b*.js',
 
     ],
     exclude: [

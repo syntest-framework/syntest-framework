@@ -69,4 +69,11 @@ export default class Messages {
   header(header: string): string {
     return "\n" + chalk.green(chalk.bold(`${header}`)) + "\n";
   }
+
+  reportCoverage(name: string, report: any, bold = false): string {
+    if (bold) {
+      return chalk.bold(`${String(report['branch']).padStart(20, ' ')} | ${String(report['statement']).padStart(20, ' ')} | ${String(report['function']).padStart(20, ' ')} | ${name}`)
+    }
+    return `${String(report['branch']).padStart(20, ' ')} | ${String(report['statement']).padStart(20, ' ')} | ${String(report['function']).padStart(20, ' ')} | ${name}`
+  }
 }

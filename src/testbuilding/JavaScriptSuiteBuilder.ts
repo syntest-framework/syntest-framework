@@ -60,7 +60,7 @@ export class JavaScriptSuiteBuilder {
     }
   }
 
-  async createSuite(archive: Archive<JavaScriptTestCase>): Promise<void> {
+  async createSuite(archive: Archive<JavaScriptTestCase>): Promise<string[]> {
     const reducedArchive = this.reduceArchive(archive);
 
     const paths: string[] = []
@@ -122,12 +122,14 @@ export class JavaScriptSuiteBuilder {
     // Create final tests files with assertions
     await this.clearDirectory(Properties.temp_test_directory);
 
+    const finalPaths = []
     for (const key of reducedArchive.keys()) {
       await this.gatherAssertions(reducedArchive.get(key));
       const testPath = path.join(
         Properties.final_suite_directory,
         `test-${key}.spec.ts`
       );
+      finalPaths.push(testPath)
       await writeFileSync(
         testPath,
         this.decoder.decodeTestCase(reducedArchive.get(key), `${key}`, false)
@@ -135,6 +137,8 @@ export class JavaScriptSuiteBuilder {
     }
 
     this.resetInstrumentationData();
+
+    return finalPaths
   }
 
   async gatherAssertions(testCases: JavaScriptTestCase[]): Promise<void> {
