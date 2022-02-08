@@ -1,9 +1,7 @@
 import { BranchObjectiveFunction } from "../../src";
-
 import { Encoding, EncodingSampler, Parameter } from "../../src";
 
 export class DummyEncodingMock extends Encoding {
-
   private static counter = 0;
 
   constructor() {
