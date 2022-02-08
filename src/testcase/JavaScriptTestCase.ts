@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest JavaScript.
  *
@@ -50,7 +50,7 @@ export class JavaScriptTestCase extends Encoding {
   }
 
   hashCode(decoder: Decoder<Encoding, string>): number {
-    const string = decoder.decodeTestCase(this, `${this.id}`);
+    const string = decoder.decode(this, `${this.id}`);
     let hash = 0;
     for (let i = 0; i < string.length; i++) {
       const character = string.charCodeAt(i);

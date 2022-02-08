@@ -23,14 +23,21 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
     include: [
-        // "./benchmark/custom/**/*.js",
-        "./benchmark/top10npm/lodash/after.js",
-        // "./benchmark/top10npm/lodash/.internal/**/*.js",
+        // "./benchmark/custom/tests.js",
+        "./benchmark/top10npm/lodash/sampleSize.js",
+        "./benchmark/top10npm/lodash/slice.js",
+
+        // "./benchmark/top10npm/lodash/**/*.js",
+
+        "./benchmark/top10npm/lodash/.internal/**/*.js",
         // "./benchmark/top10npm/lodash/.internal/baseClone.js"
         // './benchmark/top10npm/lodash/b*.js',
 
     ],
     exclude: [
+        "./benchmark/top10npm/lodash/slice.js",
+        "./benchmark/top10npm/lodash/.internal/**/*.js",
+
         // './benchmark/top10npm/lodash/a*.js',
         // './benchmark/top10npm/lodash/b*.js',
         // './benchmark/top10npm/lodash/c*.js',

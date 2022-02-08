@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Solidity.
  *
@@ -132,7 +132,7 @@ export class JavaScriptSuiteBuilder {
       finalPaths.push(testPath)
       await writeFileSync(
         testPath,
-        this.decoder.decodeTestCase(reducedArchive.get(key), `${key}`, false)
+        this.decoder.decode(reducedArchive.get(key), `${key}`, false)
       );
     }
 
@@ -205,7 +205,7 @@ export class JavaScriptSuiteBuilder {
   }
 
   async writeTestCase(filePath: string, testCase: JavaScriptTestCase, targetName: string, addLogs = false): Promise<void> {
-    const decodedTestCase = this.decoder.decodeTestCase(
+    const decodedTestCase = this.decoder.decode(
       testCase,
       targetName,
       addLogs

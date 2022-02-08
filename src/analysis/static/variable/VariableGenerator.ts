@@ -17,32 +17,32 @@
  */
 
 import { traverse } from "@babel/core";
-import { TargetVisitor } from "./TargetVisitor";
-import { TargetMetaData, FunctionDescription } from "@syntest/framework";
-import { JavaScriptFunction } from "./JavaScriptFunction";
-import { JavaScriptTargetMetaData } from "../JavaScriptTargetPool";
+import { VariableVisitor } from "./VariableVisitor";
 
 /**
- * Function map generator for targets.
+ * Typing generator for targets.
  *
  * @author Dimitri Stallenberg
  */
-export class TargetMapGenerator {
+export class VariableGenerator {
   /**
    * Generate function map for specified target.
    *
    * @param targetAST The AST of the target
    */
-  generate(targetAST: any): {
-    targetMap: Map<string, TargetMetaData>;
-    functionMap: Map<string, Map<string, JavaScriptFunction>>;
-  } {
-    const visitor = new TargetVisitor();
+  generate(targetAST: any): any {
+    const visitor = new VariableVisitor();
 
     traverse(targetAST, visitor);
+    // console.log(visitor.scopes)
+    // console.log(visitor.elements)
+    // for (const rel of visitor.relations) {
+    //   console.log(rel)
+    // }
+    // console.log(visitor.wrapperElementIsRelation)
 
-    const targetMap = visitor.targetMap;
-    const functionMap = visitor.functionMap;
-    return { targetMap, functionMap };
+    // process.exit()
+
+    return [visitor.scopes, visitor.elements, visitor.relations, visitor.wrapperElementIsRelation];
   }
 }
