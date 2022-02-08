@@ -23,6 +23,9 @@ import { Encoding } from "./Encoding";
  *
  * @author Dimitri Stallenberg
  * @author Mitchell Olsthoorn
+ *
+ * @param E the encoding to decode
+ * @param D the Object type to decode the encoding to
  */
 export interface Decoder<E extends Encoding, D> {
   /**
@@ -32,5 +35,5 @@ export interface Decoder<E extends Encoding, D> {
    * @param targetName           the name of the target, used to create informative decodings
    * @return decoded             the decoded encoding
    */
-  decodeTestCase(encoding: E, targetName: string): D;
+  decode(encoding: E, targetName: string): D;
 }

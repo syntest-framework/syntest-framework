@@ -3,20 +3,22 @@ import {
   guessCWD,
   loadConfig,
   processConfig,
-  TestCaseRunner,
-  TestCaseSampler,
   setupLogger,
   setupOptions,
   setUserInterface,
   CommandLineInterface,
   Properties,
+  Encoding,
+  EncodingRunner,
+  EncodingSampler,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
-import { TestCaseMock } from "../../mocks/TestCase.mock";
+import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { BranchObjectiveFunction, AbstractTestCase } from "../../../src";
+import { BranchObjectiveFunction } from "../../../src";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
+import { Test } from "mocha";
 
 const expect = chai.expect;
 
@@ -39,42 +41,42 @@ describe("Test MOSA", function () {
     );
   });
 
-  let objectives: Set<BranchObjectiveFunction<AbstractTestCase>>;
+  let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {
-    const objective1 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       true
     );
-    const objective2 = new BranchObjectiveFunction<AbstractTestCase>(
+    const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,
       "1",
       1,
       false
     );
-    objectives = new Set<BranchObjectiveFunction<AbstractTestCase>>();
+    objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
     objectives.add(objective2);
   });
 
   it("Test Preference criterion", () => {
-    const ind1 = new TestCaseMock();
+    const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
-    const ind2 = new TestCaseMock();
+    const ind2 = new DummyEncodingMock();
     ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
-    const ind3 = new TestCaseMock();
+    const ind3 = new DummyEncodingMock();
     ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{}) as any;
 
     const mosa = new MOSA(mockedRunner, mockedSampler, new DummyCrossover());
     const frontZero = mosa.preferenceCriterion(
-      [ind1 as AbstractTestCase, ind2, ind3],
+      [ind1 as DummyEncodingMock, ind2, ind3],
       objectives
     );
 
@@ -84,23 +86,23 @@ describe("Test MOSA", function () {
   });
 
   it("Test Non Dominated front", () => {
-    const ind1 = new TestCaseMock();
+    const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
-    const ind2 = new TestCaseMock();
+    const ind2 = new DummyEncodingMock();
     ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
-    const ind3 = new TestCaseMock();
+    const ind3 = new DummyEncodingMock();
     ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
-    const ind4 = new TestCaseMock();
+    const ind4 = new DummyEncodingMock();
     ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
-    const ind5 = new TestCaseMock();
+    const ind5 = new DummyEncodingMock();
     ind5.setDummyEvaluation(Array.from(objectives), [5, 5]);
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{}) as any;
 
     const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.getNonDominatedFront(objectives, [
@@ -118,20 +120,20 @@ describe("Test MOSA", function () {
   });
 
   it("Test Preference Sorting", () => {
-    const ind1 = new TestCaseMock();
+    const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
-    const ind2 = new TestCaseMock();
+    const ind2 = new DummyEncodingMock();
     ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
-    const ind3 = new TestCaseMock();
+    const ind3 = new DummyEncodingMock();
     ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
-    const ind4 = new TestCaseMock();
+    const ind4 = new DummyEncodingMock();
     ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{}) as any;
 
     const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.preferenceSortingAlgorithm(
@@ -149,25 +151,25 @@ describe("Test MOSA", function () {
   });
 
   it("Environmental Selection", async () => {
-    const ind1 = new TestCaseMock();
+    const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
-    const ind2 = new TestCaseMock();
+    const ind2 = new DummyEncodingMock();
     ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
 
-    const ind3 = new TestCaseMock();
+    const ind3 = new DummyEncodingMock();
     ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
-    const ind4 = new TestCaseMock();
+    const ind4 = new DummyEncodingMock();
     ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
-    const ind5 = new TestCaseMock();
+    const ind5 = new DummyEncodingMock();
     ind5.setDummyEvaluation(Array.from(objectives), [3, 2]);
 
     const searchSubject = new DummySearchSubject(Array.from(objectives));
 
-    const mockedRunner = (<TestCaseRunner>{}) as any;
-    const mockedSampler = (<TestCaseSampler>{}) as any;
+    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{}) as any;
+    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{}) as any;
 
     const mosa = new MockedMOSA(
       mockedSampler,
