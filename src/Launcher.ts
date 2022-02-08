@@ -225,8 +225,6 @@ export class Launcher {
     }
 
     const instrumenter = new Instrumenter();
-    // TODO setup temp folders
-    const commonBasePath = getCommonBasePath(targetPool.targets);
 
     for (const targetPath of targetPaths) {
       const source = targetPool.getSource(targetPath)
@@ -238,7 +236,7 @@ export class Launcher {
       const _path = path
         .normalize(targetPath)
         .replace(
-          commonBasePath,
+          process.cwd(),
           Properties.temp_instrumented_directory
         );
       await outputFileSync(_path, instrumentedSource);
