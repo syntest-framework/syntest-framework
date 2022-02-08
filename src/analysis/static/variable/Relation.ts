@@ -1,5 +1,8 @@
 import { Element } from "./Element";
 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators
+// TODO add missing
+
 export interface Relation {
   relation: RelationType
   involved: Element[]
@@ -12,6 +15,8 @@ export enum RelationType {
   PlusUnary="+L",
   MinusUnary="-L",
   TypeOf="typeof L",
+  Delete="delete L",
+
   //
   PlusPlus="L++",
   MinusMinus="L--",
@@ -35,6 +40,12 @@ export enum RelationType {
   StrictGreater="L>R",
   Smaller="L<=R",
   Greater="L>=R",
+
+  // shift
+  LeftShift="L<<R",
+  RightShift="L>>R",
+  UnsignedRightShift="L>>>R",
+
   // logical
   LazyOr="L||R",
   LazyAnd="L&&R",
@@ -44,8 +55,18 @@ export enum RelationType {
   Return="L->R",
   // member
   Member="L.R",
-  // assignment
+
+  // assignments
   Assignment="L=R",
+  MultiplicationAssignment="L*=R",
+  ExponentiationAssignment="L**=R",
+  DivisionAssignment="L/=R",
+  RemainderAssigment="L%=R",
+  AdditionAssignment="L+=R",
+  SubtractionAssignment="L-=R",
+  LeftShiftAssignment="L<<=R",
+  RightShiftAssignment="L>>=R",
+  UnSignedRightShiftAssignment="L>>>=R",
 
   // TERNARY
   Ternary="Q?L:R",
@@ -73,6 +94,8 @@ export function getRelationType(type: string, operator: string): RelationType {
         return RelationType.PlusUnary
       case "typeof":
         return RelationType.TypeOf
+      case "delete":
+        return RelationType.Delete
       case "++":
         return RelationType.PlusPlus
       case "--":
@@ -108,6 +131,15 @@ export function getRelationType(type: string, operator: string): RelationType {
         return RelationType.Smaller
       case ">=":
         return RelationType.Greater
+
+      // bitwise shifts
+      case "<<":
+        return RelationType.LeftShift
+      case ">>":
+        return RelationType.RightShift
+      case ">>>":
+        return RelationType.UnsignedRightShift
+
 
       case "||":
         return RelationType.LazyOr

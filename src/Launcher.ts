@@ -20,12 +20,9 @@ import {
   Archive,
   guessCWD,
   loadConfig,
-  loadTargets,
   processConfig,
-  saveTempFiles,
   setupLogger,
   setupOptions,
-  TargetFile,
   Properties,
   deleteTempDirectories,
   createDirectoryStructure,
@@ -40,7 +37,7 @@ import {
   BudgetManager,
   configureTermination,
   StatisticsCollector,
-  StatisticsSearchListener, SummaryWriter, CoverageWriter, clearDirectory, setUserInterface, getSeed,
+  StatisticsSearchListener, SummaryWriter, CoverageWriter, clearDirectory, setUserInterface, getSeed, getCommonBasePath,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
@@ -65,8 +62,10 @@ import { Export } from "./analysis/static/dependency/ExportVisitor";
 import { Runner } from "mocha";
 import { VariableGenerator } from "./analysis/static/variable/VariableGenerator";
 import { TypeResolverInference } from "./analysis/static/types/TypeResolverInference";
+import { TypeResolverUnknown } from "./analysis/static/types/TypeResolverUnknown";
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
+const { outputFileSync } = require("fs-extra");
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -122,7 +121,9 @@ export class Launcher {
 
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
-    const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
+    // const typeResolver = new TypeResolverUnknown() // TODO make switch for the type of resolver
+    const typeResolver = new TypeResolverInference() // TODO make switch for the type of resolver
+    const controlFlowGraphGenerator = new ControlFlowGraphGenerator(typeResolver)
     const importGenerator = new ImportGenerator()
     const exportGenerator = new ExportGenerator()
     const targetPool = new JavaScriptTargetPool(
@@ -140,8 +141,8 @@ export class Launcher {
 
     getUserInterface().report("header", ["TARGETS"]);
 
-    await loadTargets(targetPool);
-    if (!targetPool.included.length) {
+    await targetPool.loadTargets();
+    if (!targetPool.targets.length) {
       getUserInterface().error(
         `No targets where selected! Try changing the 'include' parameter`
       );
@@ -150,20 +151,12 @@ export class Launcher {
 
     let names = [];
 
-    targetPool.included.forEach((targetFile) =>
+    targetPool.targets.forEach((target) =>
       names.push(
-        `${path.relative(process.cwd(), targetFile.canonicalPath)} -> ${targetFile.targets.join(", ")}`
+        `${path.basename(target.canonicalPath)} -> ${target.targetName}`
       )
     );
     getUserInterface().report("targets", names);
-
-    names = [];
-    targetPool.excluded.forEach((targetFile) =>
-      names.push(
-        `${path.relative(process.cwd(), targetFile.canonicalPath)} -> ${targetFile.targets.join(", ")}`
-      )
-    );
-    getUserInterface().report("skip-files", names);
 
     getUserInterface().report("header", ["CONFIGURATION"]);
 
@@ -215,100 +208,69 @@ export class Launcher {
   ): Promise<
     [Archive<JavaScriptTestCase>, Map<string, string>, Map<string, Export[]>, Export[]]
   > {
-    const excludedSet = new Set(
-      ...targetPool.excluded.map((x) => x.canonicalPath)
-    );
+    const targetPaths = new Set<string>();
+
+    // TODO search targets
+    for (const target of targetPool.targets) {
+      targetPaths.add(target.canonicalPath);
+
+      const [importsMap, dependencyMap] = targetPool.getImportDependencies(
+        target.canonicalPath,
+        target.targetName
+      );
+
+      for (const dependency of dependencyMap.get(target.targetName)) {
+        targetPaths.add(dependency.filePath);
+      }
+    }
 
     const instrumenter = new Instrumenter();
     // TODO setup temp folders
+    const commonBasePath = getCommonBasePath(targetPool.targets);
 
-    const instrumentedTargets: TargetFile[] = [];
-
-    for (const targetFile of targetPool.included) {
+    for (const targetPath of targetPaths) {
+      const source = targetPool.getSource(targetPath)
       const instrumentedSource = await instrumenter.instrument(
-        targetFile.source,
-        targetFile.canonicalPath
+        source,
+        targetPath
       );
 
-      instrumentedTargets.push({
-        source: instrumentedSource,
-        canonicalPath: targetFile.canonicalPath,
-        relativePath: targetFile.relativePath,
-        targets: targetFile.targets,
-      });
+      const _path = path
+        .normalize(targetPath)
+        .replace(
+          commonBasePath,
+          Properties.temp_instrumented_directory
+        );
+      await outputFileSync(_path, instrumentedSource);
     }
-
-    // const commonBasePath = getCommonBasePath(instrumentedTargets);
-
-    // save instrumented files to
-    await saveTempFiles(
-      instrumentedTargets,
-      process.cwd(),
-      Properties.temp_instrumented_directory
-    );
 
     const finalArchive = new Archive<JavaScriptTestCase>();
     let finalImports: Map<string, string> = new Map();
     let finalDependencies: Map<string, Export[]> = new Map();
     let finalExports: Export[] = []
 
-    // TODO search targets
-    for (const targetFile of targetPool.included) {
-      const includedTargets = targetFile.targets;
+    for (const target of targetPool.targets) {
+      const archive = await this.testTarget(
+        targetPool,
+        target.canonicalPath,
+        targetPool.getTargetMap(target.canonicalPath).get(target.targetName)
+      );
 
-      const targetMap = targetPool.getTargetMap(targetFile.canonicalPath);
-      for (const target of targetMap.keys()) {
-        // check if included
-        if (
-          !includedTargets.includes("*") &&
-          !includedTargets.includes(target)
-        ) {
-          continue;
-        }
+      const [importsMap, dependencyMap] = targetPool.getImportDependencies(
+        target.canonicalPath,
+        target.targetName
+      );
+      finalArchive.merge(archive);
 
-        // check if excluded
-        if (excludedSet.has(targetFile.canonicalPath)) {
-          const excludedTargets = targetPool.excluded.find(
-            (x) => x.canonicalPath === targetFile.canonicalPath
-          ).targets;
-          if (
-            excludedTargets.includes("*") ||
-            excludedTargets.includes(target)
-          ) {
-            continue;
-          }
-        }
-
-        console.log(targetFile.canonicalPath)
-        const ast = targetPool.getAST(targetFile.canonicalPath)
-        const generator = new VariableGenerator()
-        const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(ast)
-        console.log("\n")
-        const resolver = new TypeResolverInference(scopes, elements, relations, wrapperElementIsRelation)
-        // resolver.getTyping()
-        continue
-
-        const archive = await this.testTarget(
-          targetPool,
-          targetFile.canonicalPath,
-          targetMap.get(target)
-        );
-        const [importsMap, dependencyMap] = targetPool.getImportDependencies(
-          targetFile.canonicalPath,
-          target
-        );
-        finalArchive.merge(archive);
-
-        finalImports = new Map([
-          ...Array.from(finalImports.entries()),
-          ...Array.from(importsMap.entries()),
-        ]);
-        finalDependencies = new Map([
-          ...Array.from(finalDependencies.entries()),
-          ...Array.from(dependencyMap.entries()),
-        ]);
-        finalExports.push(...targetPool.getExports(targetFile.canonicalPath))
-      }
+      finalImports = new Map([
+        ...Array.from(finalImports.entries()),
+        ...Array.from(importsMap.entries()),
+      ]);
+      finalDependencies = new Map([
+        ...Array.from(finalDependencies.entries()),
+        ...Array.from(dependencyMap.entries()),
+      ]);
+      finalExports.push(...targetPool.getExports(target.canonicalPath))
     }
 
     return [finalArchive, finalImports, finalDependencies, finalExports];
@@ -332,12 +294,7 @@ export class Launcher {
       );
     }
 
-    const ast = targetPool.getAST(targetPath)
     const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
-
-    const generator = new VariableGenerator()
-    generator.generate(ast)
-
 
     const currentSubject = new JavaScriptSubject(
       path.basename(targetPath),
@@ -435,7 +392,6 @@ export class Launcher {
     dependencies: Map<string, Export[]>,
     exports: Export[]
   ): Promise<void> {
-    console.log('finalizing')
 
     const testDir = path.resolve(Properties.final_suite_directory);
     await clearDirectory(testDir);
@@ -463,9 +419,7 @@ export class Launcher {
       ]
     })
 
-    console.log('requiring paths')
     for (const _path of paths) {
-      console.log(_path)
       delete originalrequire.cache[_path];
       mocha.addFile(_path);
     }

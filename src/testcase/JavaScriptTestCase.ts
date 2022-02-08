@@ -50,7 +50,7 @@ export class JavaScriptTestCase extends Encoding {
   }
 
   hashCode(decoder: Decoder<Encoding, string>): number {
-    const string = decoder.decodeTestCase(this, `${this.id}`);
+    const string = decoder.decode(this, `${this.id}`);
     let hash = 0;
     for (let i = 0; i < string.length; i++) {
       const character = string.charCodeAt(i);

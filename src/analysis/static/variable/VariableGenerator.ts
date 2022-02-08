@@ -17,7 +17,7 @@
  */
 
 import { traverse } from "@babel/core";
-import { VariableVisitor } from "./VariableVisitor4";
+import { VariableVisitor } from "./VariableVisitor";
 
 /**
  * Typing generator for targets.
@@ -34,12 +34,12 @@ export class VariableGenerator {
     const visitor = new VariableVisitor();
 
     traverse(targetAST, visitor);
-    console.log(visitor.scopes)
-    console.log(visitor.elements)
-    for (const rel of visitor.relations) {
-      console.log(rel)
-    }
-    console.log(visitor.wrapperElementIsRelation)
+    // console.log(visitor.scopes)
+    // console.log(visitor.elements)
+    // for (const rel of visitor.relations) {
+    //   console.log(rel)
+    // }
+    // console.log(visitor.wrapperElementIsRelation)
 
     // process.exit()
 

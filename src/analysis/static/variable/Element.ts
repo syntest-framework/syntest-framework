@@ -80,6 +80,8 @@ export function getElement(scope: Scope, node): Element {
     || node.type === 'ArrayExpression'
     || node.type === 'ObjectExpression'
 
+    || node.type === 'ObjectProperty' // TODO not sure about this one
+
     || node.type === 'AssignmentExpression') {
     return {
       scope: scope,

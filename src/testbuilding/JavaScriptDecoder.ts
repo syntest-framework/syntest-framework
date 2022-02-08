@@ -28,7 +28,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     this.folder = folder
   }
 
-  decodeTestCase(testCases: JavaScriptTestCase | JavaScriptTestCase[], targetName: string, addLogs = false): string {
+  decode(testCases: JavaScriptTestCase | JavaScriptTestCase[], targetName: string, addLogs = false): string {
     if (testCases instanceof JavaScriptTestCase) {
       testCases = [testCases];
     }

@@ -2,22 +2,25 @@ import { ElementType } from "../variable/Element";
 
 export interface Typing {
   type: TypingType
-  import?: string,
+
+  name?: string
+  import?: string
 
   params?: Typing[]
 }
 
 export enum TypingType {
-  Numeric,
-  String,
-  Boolean,
-  Null,
-  Regex,
+  Unknown='any',
+  Numeric='numeric',
+  String='string',
+  Boolean='boolean',
+  Null='null',
+  Regex='regex',
 
-  Array,
-  Object,
+  Array='array',
+  Object='object',
 
-  Function
+  Function='function'
 }
 
 export function elementTypeToTypingType(elementType: ElementType): TypingType | void {

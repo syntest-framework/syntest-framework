@@ -27,6 +27,12 @@ import { ExportGenerator } from "./dependency/ExportGenerator";
 import { existsSync } from "fs";
 import { Export, ExportType } from "./dependency/ExportVisitor";
 import { SubjectType } from "../../search/JavaScriptSubject";
+import { Typing } from "./types/Typing";
+import { TypeResolver } from "./types/TypeResolver";
+import { Scope } from "./variable/Scope";
+import { Element } from "./variable/Element";
+import { VariableGenerator } from "./variable/VariableGenerator";
+import { TypeResolverInference } from "./types/TypeResolverInference";
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
   type: SubjectType,
