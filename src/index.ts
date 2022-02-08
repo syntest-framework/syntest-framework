@@ -22,17 +22,6 @@ import exp = require("constants");
 // Runner
 export * from "./util/Datapoint";
 
-// Statements
-export * from "./testcase/statements/ActionStatement";
-export * from "./testcase/statements/Statement";
-export * from "./testcase/statements/PrimitiveStatement";
-
-// Action statement
-export * from "./testcase/statements/ActionStatement";
-
-// Primitive statement
-export * from "./testcase/statements/PrimitiveStatement";
-
 // Search
 export * from "./search/SearchSubject";
 export * from "./search/EncodingSampler";
@@ -121,6 +110,10 @@ export * from "./util/fileSystem";
 export * from "./properties";
 
 // Targetting
+<<<<<<< HEAD
 export * from "./analysis/static/TargetFile";
+=======
+export * from "./analysis/static/Target";
+>>>>>>> main
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";

@@ -6,13 +6,11 @@ import {
   //NSGA2,
   //Objective,
   processConfig,
-  TestCaseRunner,
-  TestCaseSampler,
   setupLogger,
   setupOptions,
 } from "../../../src";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { TestCaseMock } from "../../mocks/TestCase.mock";
+import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 //
