@@ -6,6 +6,7 @@ import { Scope, ScopeType } from "./Scope";
 // TODO return
 export class VariableVisitor {
 
+  private filePath: string;
   // Stack because functions in functions in functions ... etc.
   private _currentScopeStack: Scope[]
 
@@ -43,7 +44,8 @@ export class VariableVisitor {
     return this._relations;
   }
 
-  constructor() {
+  constructor(filePath: string) {
+    this.filePath = filePath
     this._scopes = []
     this._relations = []
     this._currentScopeStack = []
@@ -55,6 +57,7 @@ export class VariableVisitor {
   private _createGlobalScope() {
     const globalScope: Scope = {
       name: "global",
+      filePath: this.filePath,
       type: ScopeType.Global
     }
 
@@ -69,6 +72,7 @@ export class VariableVisitor {
   private _enterScope(name: string, type: ScopeType) {
     const scope: Scope = {
       name: name,
+      filePath: this.filePath,
       type: type,
     }
     this._currentScopeStack.push(scope)
@@ -247,7 +251,7 @@ export class VariableVisitor {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: getRelationType("unary", path.node.operator),
+      relation: getRelationType("unary", path.node.operator, path.node.prefix),
       involved: [
         getElement(scope, path.node.argument)
       ]
@@ -313,11 +317,11 @@ export class VariableVisitor {
     this.relations.push(relation)
   }
 
-  public AssignmentPattern: (path) => void = (path) => {
+  public AssignmentExpression: (path) => void = (path) => {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: RelationType.Assignment,
+      relation: getRelationType("assignment", path.node.operator),
       involved: [
         getElement(scope, path.node.left),
         getElement(scope, path.node.right)
@@ -363,7 +367,7 @@ export class VariableVisitor {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: RelationType.Member,
+      relation: RelationType.PropertyAccessor,
       involved: [
         getElement(scope, path.node.object),
         getElement(scope, path.node.property)
@@ -379,7 +383,7 @@ export class VariableVisitor {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: RelationType.Ternary,
+      relation: RelationType.Conditional,
       involved: [
         getElement(scope, path.node.test),
         getElement(scope, path.node.consequent),

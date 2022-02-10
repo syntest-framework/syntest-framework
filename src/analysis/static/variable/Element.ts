@@ -77,6 +77,7 @@ export function getElement(scope: Scope, node): Element {
 
     || node.type === 'ArrowFunctionExpression'
 
+    // TODO
     || node.type === 'ArrayExpression'
     || node.type === 'ObjectExpression'
 
@@ -93,5 +94,5 @@ export function getElement(scope: Scope, node): Element {
 }
 
 export function getElementId(element: Element): string {
-  return `scope=(name=${element.scope.name},type=${element.scope.type}),type=${element.type},value=${element.value}`
+  return `scope=(name=${element.scope.name},filePath=${element.scope.filePath},type=${element.scope.type}),type=${element.type},value=${element.value}`
 }

@@ -1,5 +1,6 @@
 export interface Scope {
   name: string,
+  filePath: string,
   type: ScopeType
 }
 

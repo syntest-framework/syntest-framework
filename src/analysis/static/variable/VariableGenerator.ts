@@ -28,10 +28,11 @@ export class VariableGenerator {
   /**
    * Generate function map for specified target.
    *
+   * @param filePath the path of the current file
    * @param targetAST The AST of the target
    */
-  generate(targetAST: any): any {
-    const visitor = new VariableVisitor();
+  generate(filePath: string, targetAST: any): any {
+    const visitor = new VariableVisitor(filePath);
 
     traverse(targetAST, visitor);
     // console.log(visitor.scopes)
