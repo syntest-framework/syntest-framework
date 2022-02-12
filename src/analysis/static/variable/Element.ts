@@ -21,7 +21,8 @@ export enum ElementType {
 }
 
 export function getElement(scope: Scope, node): Element {
-  if (node.type === "StringLiteral") {
+  if (node.type === "StringLiteral"
+  || node.type === "TemplateLiteral") {
     return {
       scope: scope,
       type: ElementType.StringConstant,
@@ -76,6 +77,9 @@ export function getElement(scope: Scope, node): Element {
     || node.type === 'MemberExpression'
 
     || node.type === 'ArrowFunctionExpression'
+
+    || node.type === 'SpreadElement'
+    || node.type === 'NewExpression'
 
     // TODO
     || node.type === 'ArrayExpression'

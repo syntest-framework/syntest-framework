@@ -18,7 +18,7 @@
 import * as path from "path";
 import { readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
-import { CFG, TargetMetaData, TargetPool } from "@syntest/framework";
+import { CFG, Target, TargetMetaData, TargetPool } from "@syntest/framework";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { JavaScriptFunction } from "./map/JavaScriptFunction";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
@@ -45,6 +45,7 @@ export class JavaScriptTargetPool extends TargetPool {
   protected controlFlowGraphGenerator: ControlFlowGraphGenerator;
   protected importGenerator: ImportGenerator;
   protected exportGenerator: ExportGenerator;
+  private _typeResolver: TypeResolver;
 
   // Mapping: filepath -> source code
   protected _sources: Map<string, string>;
@@ -64,12 +65,8 @@ export class JavaScriptTargetPool extends TargetPool {
   // Mapping: filepath -> target name -> (function name -> CFG)
   protected _controlFlowGraphs: Map<string, Map<string, CFG>>;
 
-  // Mapping: filepath -> target name -> [importsMap, dependencyMap]
-  // TODO better name...
-  protected _dependencyMaps: Map<
-    string,
-    Map<string, [Map<string, string>, Map<string, Export[]>]>
-    >;
+  // Mapping: filepath -> dependencies
+  protected _dependencyMaps: Map<string, Export[]>;
 
   // Mapping: filepath -> target name -> Exports
   protected _exportMap: Map<string, Export[]>
@@ -79,7 +76,8 @@ export class JavaScriptTargetPool extends TargetPool {
     targetMapGenerator: TargetMapGenerator,
     controlFlowGraphGenerator: ControlFlowGraphGenerator,
     importGenerator: ImportGenerator,
-    exportGenerator: ExportGenerator
+    exportGenerator: ExportGenerator,
+    typeResolver: TypeResolver
   ) {
     super();
     this.abstractSyntaxTreeGenerator = abstractSyntaxTreeGenerator;
@@ -87,6 +85,7 @@ export class JavaScriptTargetPool extends TargetPool {
     this.controlFlowGraphGenerator = controlFlowGraphGenerator;
     this.importGenerator = importGenerator;
     this.exportGenerator = exportGenerator;
+    this._typeResolver = typeResolver;
 
     this._sources = new Map<string, string>();
     this._abstractSyntaxTrees = new Map<string, string>();
@@ -227,18 +226,11 @@ export class JavaScriptTargetPool extends TargetPool {
     return this._exportMap.get(absoluteTargetPath)
   }
 
-  getImportDependencies(targetPath: string, targetName: string):  [Map<string, string>, Map<string, Export[]>] {
+  getDependencies(targetPath: string):  Export[] {
     const absoluteTargetPath = path.resolve(targetPath);
 
-    if (!this._dependencyMaps.has(absoluteTargetPath))
-      this._dependencyMaps.set(absoluteTargetPath, new Map());
-
-    if (!this._dependencyMaps.get(absoluteTargetPath).has(targetName)) {
-      // Import the contract under test
-      const importsMap = new Map<string, string>();
-      importsMap.set(targetName, targetName);
-
-      // Find all external imports in the contract under test
+    if (!this._dependencyMaps.has(absoluteTargetPath)) {
+      // Find all external imports in the file under test
       const imports = this.importGenerator.generate(this.getAST(targetPath))
 
       // For each external import scan the file for libraries with exported functions
@@ -250,26 +242,51 @@ export class JavaScriptTargetPool extends TargetPool {
         // Scan for libraries with public or external functions
         const exports = this.getExports(pathLib)
 
-        // Import the external file in the test
-        importsMap.set(
-          path.basename(importPath).split(".")[0],
-          path.basename(importPath).split(".")[0]
-        );
-
         // Import the found libraries
         // TODO: check for duplicates in libraries
         libraries.push(...exports);
       });
 
-      // Return the library dependency information
-      const dependencyMap = new Map<string, Export[]>();
-      dependencyMap.set(targetName, libraries);
-
       this._dependencyMaps
-        .get(targetPath)
-        .set(targetName, [importsMap, dependencyMap]);
+        .set(targetPath, libraries);
     }
 
-    return this._dependencyMaps.get(absoluteTargetPath).get(targetName);
+    return this._dependencyMaps.get(absoluteTargetPath)
+  }
+
+  getInstrumentationTargets(targetPath: string, paths: Set<string> = null): Set<string> {
+    if (paths === null) {
+      paths = new Set<string>()
+    }
+
+    paths.add(targetPath);
+
+    const dependencies = this.getDependencies(targetPath);
+
+    for (const dependency of dependencies) {
+      if (paths.has(dependency.filePath)) {
+        continue
+      }
+      this.getInstrumentationTargets(dependency.filePath, paths).forEach((path) => {
+        paths.add(path)
+      })
+    }
+
+    return paths
+  }
+
+  resolveTypes(targetPath: string): void {
+    const ast = this.getAST(targetPath)
+
+    // TODO first look at dependencies to extract other features
+    const generator = new VariableGenerator()
+    const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(targetPath, ast)
+
+    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation)
+  }
+
+
+  get typeResolver(): TypeResolver {
+    return this._typeResolver;
   }
 }

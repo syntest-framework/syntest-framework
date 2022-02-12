@@ -6,7 +6,7 @@ import { Scope, ScopeType } from "./Scope";
 // TODO return
 export class VariableVisitor {
 
-  private filePath: string;
+  private _filePath: string;
   // Stack because functions in functions in functions ... etc.
   private _currentScopeStack: Scope[]
 
@@ -45,7 +45,8 @@ export class VariableVisitor {
   }
 
   constructor(filePath: string) {
-    this.filePath = filePath
+    this._filePath = filePath
+
     this._scopes = []
     this._relations = []
     this._currentScopeStack = []
@@ -57,7 +58,7 @@ export class VariableVisitor {
   private _createGlobalScope() {
     const globalScope: Scope = {
       name: "global",
-      filePath: this.filePath,
+      filePath: this._filePath,
       type: ScopeType.Global
     }
 
@@ -72,7 +73,7 @@ export class VariableVisitor {
   private _enterScope(name: string, type: ScopeType) {
     const scope: Scope = {
       name: name,
-      filePath: this.filePath,
+      filePath: this._filePath,
       type: type,
     }
     this._currentScopeStack.push(scope)

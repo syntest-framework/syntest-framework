@@ -29,22 +29,11 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   //   return visitor.cfg;
   // }
 
-  private typeResolver: TypeResolver
   private cfg: CFG;
   private _contracts: string[] = [];
 
-
-  constructor(typeResolver: TypeResolver) {
-    this.typeResolver = typeResolver;
-  }
-
   convertAST(ast: any, compress = false, placeholder = false): CFG {
     // TODO the imported stuff should also be resolved...
-    const generator = new VariableGenerator()
-    const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(ast)
-
-    this.typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation)
-
     this._contracts = [];
 
     this.cfg = new CFG();
@@ -300,7 +289,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   private parseParameter(parameter, scopeName: string, scopeType: ScopeType): Parameter {
     return {
       name: parameter.name || 'unknown',
-      type: parameter.name ? this.typeResolver.getTyping(scopeName, scopeType, parameter.name).type : 'any'
+      type: 'unknown'
     };
   }
 

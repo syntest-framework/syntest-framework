@@ -21,6 +21,7 @@ import { TargetVisitor } from "./TargetVisitor";
 import { TargetMetaData, FunctionDescription } from "@syntest/framework";
 import { JavaScriptFunction } from "./JavaScriptFunction";
 import { JavaScriptTargetMetaData } from "../JavaScriptTargetPool";
+import { TypeResolver } from "../types/TypeResolver";
 
 /**
  * Function map generator for targets.
@@ -31,6 +32,7 @@ export class TargetMapGenerator {
   /**
    * Generate function map for specified target.
    *
+   * @param typeResolver The type resolver object
    * @param targetAST The AST of the target
    */
   generate(targetAST: any): {

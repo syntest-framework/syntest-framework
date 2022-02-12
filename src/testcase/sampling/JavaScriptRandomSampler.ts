@@ -10,6 +10,7 @@ import { RootStatement } from "../statements/root/RootStatement";
 import { Statement } from "../statements/Statement";
 import { FunctionCall } from "../statements/root/FunctionCall";
 import { JavaScriptSubject, SubjectType } from "../../search/JavaScriptSubject";
+import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionStatement";
 
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
@@ -132,16 +133,29 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     // TODO sampling arrays or objects
     // TODO more complex sampling of function return values
     // Take regular primitive value
+
+    if (type.type === "function") {
+      // TODO expectation of return value
+      return new ArrowFunctionStatement(
+        type,
+        prng.uniqueId(),
+        this.sampleArgument(depth + 1, {type: 'any', name: 'noname'})
+      )
+    }
+
     return this.samplePrimitive(depth, type);
   }
 
   samplePrimitive(depth: number, type: Parameter): Statement {
-    if (type.type === "bool") {
+    if (type.type === "boolean") {
       return BoolStatement.getRandom(type);
     } else if (type.type === "string") {
       return StringStatement.getRandom(type);
-    } else if (type.type === "number") {
+    } else if (type.type === "numeric") {
       return NumericStatement.getRandom(type);
+      // TODO null
+      // TODO Regex
+      // TODO
     } else if (type.type === "any") {
       // TODO
       const choice = prng.nextInt(0, 2)

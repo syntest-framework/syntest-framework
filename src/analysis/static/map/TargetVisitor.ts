@@ -1,15 +1,13 @@
-import {
-  PublicVisibility,
-  PrivateVisibility,
-  TargetMetaData,
-} from "@syntest/framework";
+import { PrivateVisibility, PublicVisibility, TargetMetaData } from "@syntest/framework";
 import { JavaScriptFunction, ProtectedVisibility } from "./JavaScriptFunction";
-import { JavaScriptTargetMetaData } from "../JavaScriptTargetPool";
+import { TypeResolver } from "../types/TypeResolver";
+import { ScopeType } from "../variable/Scope";
 
 // TODO check if exported (and how)
 export class TargetVisitor {
   private _targetMap: Map<string, TargetMetaData>;
   private _functionMap: Map<string, Map<string, JavaScriptFunction>>;
+
 
   constructor() {
     this._targetMap = new Map<string, TargetMetaData>();
@@ -51,7 +49,7 @@ export class TargetVisitor {
       returnParameters: [
         {
           name: "unknown",
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+          type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
         }
         // TODO unknown because javascript! (check how this looks in typescript)
       ],
@@ -77,7 +75,7 @@ export class TargetVisitor {
       returnParameters: [
         {
           name: "unknown",
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+          type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
         }
         // TODO unknown because javascript! (check how this looks in typescript)
       ],
@@ -107,7 +105,7 @@ export class TargetVisitor {
       returnParameters: [
         {
           name: "unknown",
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+          type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
         }
         // TODO unknown because javascript! (check how this looks in typescript)
       ],
@@ -123,7 +121,7 @@ export class TargetVisitor {
 
       return {
         name: param.name || "unknown",
-        type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+        type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
       };
 
   }

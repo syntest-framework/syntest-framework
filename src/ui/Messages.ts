@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Solidity.
+ * This file is part of SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ export default class Messages {
     return chalk.yellow(textSync(text, { horizontalLayout: "full" }));
   }
 
-  version(syntestSolidity: string): string {
+  version(syntestJavaScript: string): string {
     return `\n${this.ct} ${chalk.bold(
       "syntest-javascript"
-    )}: v${syntestSolidity}`;
+    )}: v${syntestJavaScript}`;
   }
 
   skipFiles(files: string[]): string {

@@ -64,7 +64,7 @@ export enum RelationType {
   // Binary bitwise
   BitwiseAnd="L&R",
   BitwiseOr="L|R",
-  BitwiseXOr="L^R",
+  BitwiseXor="L^R",
 
   // Binary logical
   LogicalAnd="L&&R",
@@ -185,7 +185,7 @@ export function getRelationType(type: string, operator: string, prefix=false): R
       case "|":
         return RelationType.BitwiseOr
       case "^":
-        return RelationType.BitwiseXOr
+        return RelationType.BitwiseXor
 
       case "&&":
         return RelationType.LogicalAnd

@@ -132,9 +132,11 @@ export class ExportVisitor {
       return ExportType.function
     } else if (type === 'VariableDeclaration') {
       return ExportType.const
+    }  else if (type === 'NewExpression') {
+      return ExportType.const
     } else if (type === 'ClassDeclaration') {
       return ExportType.class
-    }else if (type === 'Identifier') {
+    } else if (type === 'Identifier') {
       if (!this._identifiers.has(name)) {
         throw new Error("Cannot find identifier that is exported: " + name + " - " + type)
       }
