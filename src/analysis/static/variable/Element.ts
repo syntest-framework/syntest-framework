@@ -59,11 +59,18 @@ export function getElement(scope: Scope, node): Element {
       value: node.name
     }
   } else if (node.type === "ThisExpression") {
-    // TODO should be done differntly maybe
+    // TODO should be done differently maybe
     return {
       scope: scope,
       type: ElementType.Identifier,
       value: 'this'
+    }
+  } else if (node.type === "Super") {
+    // TODO should be done differently maybe
+    return {
+      scope: scope,
+      type: ElementType.Identifier,
+      value: 'super'
     }
   } else if (node.type === 'UnaryExpression'
     || node.type === 'UpdateExpression'
@@ -78,10 +85,12 @@ export function getElement(scope: Scope, node): Element {
 
     || node.type === 'ArrowFunctionExpression'
 
+    // TODO
+
     || node.type === 'SpreadElement'
     || node.type === 'NewExpression'
+    || node.type === 'SequenceExpression'
 
-    // TODO
     || node.type === 'ArrayExpression'
     || node.type === 'ObjectExpression'
 

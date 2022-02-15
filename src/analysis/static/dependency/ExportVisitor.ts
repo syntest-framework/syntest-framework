@@ -69,33 +69,55 @@ export class ExportVisitor {
   public ExpressionStatement: (path) => void = (path) => {
     if (path.node.expression.type === 'AssignmentExpression'
       && path.node.expression.left.type === 'MemberExpression'
-      && path.node.expression.left.object.name === 'module'
-      && path.node.expression.left.property.name === 'exports'
     ) {
-      if (path.node.expression.right.type === 'Identifier') {
-        this._exports.push({
-          name: path.node.expression.right.name,
-          type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
-          default: true,
-          module: true,
-          filePath: this._targetPath
-        })
-      } else if (path.node.expression.right.type === 'Literal'
-        || path.node.expression.right.type === 'ArrayExpression') {
-        this._exports.push({
-          name: `${path.node.expression.right.type}`,
-          type: ExportType.const,
-          default: true,
-          module: true,
-          filePath: this._targetPath
-        })
-      } else if (path.node.expression.right.type === 'ObjectExpression') {
-        for (const property of path.node.expression.right.properties) {
+      if (path.node.expression.left.object.name === 'module'
+        && path.node.expression.left.property.name === 'exports'
+      ) {
+        if (path.node.expression.right.type === 'Identifier') {
           this._exports.push({
-            name: property.key.name,
-            type: this._getType(property.key.type, property.key.name),
-            default: false,
+            name: path.node.expression.right.name,
+            type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
+            default: true,
             module: true,
+            filePath: this._targetPath
+          })
+        } else if (path.node.expression.right.type === 'Literal'
+          || path.node.expression.right.type === 'ArrayExpression') {
+          this._exports.push({
+            name: `${path.node.expression.right.type}`,
+            type: ExportType.const,
+            default: true,
+            module: true,
+            filePath: this._targetPath
+          })
+        } else if (path.node.expression.right.type === 'ObjectExpression') {
+          for (const property of path.node.expression.right.properties) {
+            this._exports.push({
+              name: property.key.name,
+              type: this._getType(property.key.type, property.key.name),
+              default: false,
+              module: true,
+              filePath: this._targetPath
+            })
+          }
+        }
+      } else if (path.node.expression.left.object.name === 'exports') {
+        if (path.node.expression.right.type === 'Identifier') {
+          this._exports.push({
+            name: path.node.expression.left.property.type === 'Identifier' ? path.node.expression.left.property.name : path.node.expression.left.property.value,
+            type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
+            default: false,
+            module: false,
+            filePath: this._targetPath
+          })
+        } else if (path.node.expression.right.type === 'Literal'
+          || path.node.expression.right.type === 'ArrayExpression'
+          || path.node.expression.right.type === 'ObjectExpression') {
+          this._exports.push({
+            name: path.node.expression.left.property.type === 'Identifier' ? path.node.expression.left.property.name : path.node.expression.left.property.value,
+            type: ExportType.const,
+            default: false,
+            module: false,
             filePath: this._targetPath
           })
         }

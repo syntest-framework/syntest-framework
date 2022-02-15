@@ -150,7 +150,10 @@ export class Launcher {
 
     getUserInterface().report("header", ["TARGETS"]);
 
+    console.log('test')
     await targetPool.loadTargets();
+    console.log(targetPool.targets)
+
     if (!targetPool.targets.length) {
       getUserInterface().error(
         `No targets where selected! Try changing the 'include' parameter`
@@ -158,6 +161,7 @@ export class Launcher {
       await this.exit();
     }
 
+    console.log(targetPool.targets)
     let names = [];
 
     targetPool.targets.forEach((target) =>
