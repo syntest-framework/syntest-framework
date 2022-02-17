@@ -5,15 +5,9 @@ import {
   Node,
   NodeType, Operation,
   Parameter, PlaceholderNode,
-  Properties,
   PublicVisibility,
   RootNode,
 } from "@syntest/framework";
-import { traverse } from "@babel/core";
-import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
-import { TypeResolver } from "../types/TypeResolver";
-import { VariableGenerator } from "../variable/VariableGenerator";
-import { ScopeType } from "../variable/Scope";
 
 interface ReturnValue {
   childNodes: Node[];
@@ -286,7 +280,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     return node;
   }
 
-  private parseParameter(parameter, scopeName: string, scopeType: ScopeType): Parameter {
+  private parseParameter(parameter): Parameter {
     return {
       name: parameter.name || 'unknown',
       type: 'unknown'
@@ -456,8 +450,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       [],
       ast.id.name,
       ast.isConstructor, // TODO
-      ast.params.map((p) => this.parseParameter(p, ast.id.name, ScopeType.Function)),
-      ast.returnParameter ? this.parseParameter(ast.returnParameter, ast.id.name, ScopeType.Function) : { name: 'unknown', type: 'any' }
+      ast.params.map((p) => this.parseParameter(p)),
+      ast.returnParameter ? this.parseParameter(ast.returnParameter) : { name: 'unknown', type: 'any' }
     );
 
 
@@ -567,8 +561,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       [],
       ast.key.name,
       ast.isConstructor, // TODO
-      ast.params.map((p) => this.parseParameter(p, ast.key.name, ScopeType.Method)),
-      ast.returnParameter ? this.parseParameter(ast.returnParameter, ast.key.name, ScopeType.Method) : { name: 'unknown', type: 'any' }
+      ast.params.map((p) => this.parseParameter(p)),
+      ast.returnParameter ? this.parseParameter(ast.returnParameter) : { name: 'unknown', type: 'any' }
     );
 
     let parents: Node[] = [node];

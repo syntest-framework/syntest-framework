@@ -27,12 +27,11 @@ import { ExportGenerator } from "./dependency/ExportGenerator";
 import { existsSync } from "fs";
 import { Export, ExportType } from "./dependency/ExportVisitor";
 import { SubjectType } from "../../search/JavaScriptSubject";
-import { Typing } from "./types/Typing";
-import { TypeResolver } from "./types/TypeResolver";
-import { Scope } from "./variable/Scope";
-import { Element } from "./variable/Element";
-import { VariableGenerator } from "./variable/VariableGenerator";
-import { TypeResolverInference } from "./types/TypeResolverInference";
+import { TypeResolver } from "./types/resolving/TypeResolver";
+import { VariableGenerator } from "./types/discovery/VariableGenerator";
+import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
+import { ComplexObject } from "./types/discovery/object/ComplexObject";
+
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
   type: SubjectType,
@@ -255,13 +254,15 @@ export class JavaScriptTargetPool extends TargetPool {
   }
 
   getInstrumentationTargets(targetPath: string, paths: Set<string> = null): Set<string> {
+    const absoluteTargetPath = path.resolve(targetPath);
+
     if (paths === null) {
       paths = new Set<string>()
     }
 
-    paths.add(targetPath);
+    paths.add(absoluteTargetPath);
 
-    const dependencies = this.getDependencies(targetPath);
+    const dependencies = this.getDependencies(absoluteTargetPath);
 
     for (const dependency of dependencies) {
       if (paths.has(dependency.filePath)) {
@@ -276,13 +277,62 @@ export class JavaScriptTargetPool extends TargetPool {
   }
 
   resolveTypes(targetPath: string): void {
-    const ast = this.getAST(targetPath)
+    const absoluteTargetPath = path.resolve(targetPath);
 
-    // TODO first look at dependencies to extract other features
+    const ast = this.getAST(absoluteTargetPath)
+
+    const dependencies = this.getDependencies(absoluteTargetPath);
+
+    // TODO first look at dependencies to extract other variables?
+
+    const objects: ComplexObject[] = []
+
+    const objectGenerator = new ObjectGenerator()
+    objects.push(...objectGenerator.generate(absoluteTargetPath, ast))
+
+    // standard stuff
+    // function https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
+    objects.push({
+      import: "",
+      name: "function",
+      properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
+      functions: new Set(['apply', 'bind', 'call', 'toString'])
+    })
+
+    // array https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+    objects.push({
+      import: "",
+      name: "array",
+      properties: new Set(['length']),
+      functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values'])
+    })
+
+    // string
+    objects.push({
+      import: "",
+      name: "string",
+      properties: new Set(['length']),
+      functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf'])
+    })
+
+    // object
+    // TODO
+    // this._objects.push({
+    //   import: "",
+    //   name: "object",
+    //   properties: new Set([]),
+    //   functions: new Set([])
+    // })
+
+    for (const dependency of dependencies) {
+      const objectGenerator = new ObjectGenerator()
+      objects.push(...objectGenerator.generate(dependency.filePath, this.getAST(dependency.filePath)))
+    }
+
     const generator = new VariableGenerator()
     const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(targetPath, ast)
 
-    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation)
+    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation, objects)
   }
 
 

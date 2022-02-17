@@ -24,14 +24,14 @@ module.exports = {
     log_to_file: ["info", "warn", "error"],
     include: [
         // "./benchmark/top10npm/lodash/**/*.js",
-        "./benchmark/top10npm/commanderjs/lib/*.js",
+        // "./benchmark/top10npm/commanderjs/lib/*.js",
 
         // "./benchmark/top10npm/lodash/.internal/**/*.js",
         // "./benchmark/top10npm/lodash/.internal/baseClone.js"
         // './benchmark/top10npm/lodash/b*.js',
         // "./benchmark/custom/tests.js",
         // "./benchmark/top10npm/lodash/sampleSize.js",
-        // "./benchmark/top10npm/lodash/after.js",
+        "./benchmark/top10npm/lodash/before.js",
 
     ],
     exclude: [
@@ -62,9 +62,9 @@ module.exports = {
         // './benchmark/top10npm/lodash/y*.js',
         // './benchmark/top10npm/lodash/z*.js',
 
-        "./benchmark/top10npm/commanderjs/lib/argument.js",
-        "./benchmark/top10npm/commanderjs/lib/command.js",
-        "./benchmark/top10npm/commanderjs/lib/error.js",
+        // "./benchmark/top10npm/commanderjs/lib/argument.js",
+        // "./benchmark/top10npm/commanderjs/lib/command.js",
+        // "./benchmark/top10npm/commanderjs/lib/error.js",
 
     ]
 }

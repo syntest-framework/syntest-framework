@@ -1,8 +1,8 @@
 import { TypeResolver } from "./TypeResolver";
 import { Typing, TypingType } from "./Typing";
-import { Scope, ScopeType } from "../variable/Scope";
-import { Element } from "../variable/Element";
-import { Relation } from "../variable/Relation";
+import { Element } from "../discovery/Element";
+import { Scope, ScopeType } from "../discovery/Scope";
+import { Relation } from "../discovery/Relation";
 
 export class TypeResolverUnknown extends TypeResolver{
 

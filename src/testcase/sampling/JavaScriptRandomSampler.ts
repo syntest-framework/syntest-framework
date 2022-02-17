@@ -144,6 +144,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         this.sampleArgument(depth + 1, {type: 'any', name: 'noname'})
       )
     }
+    // TODO
+    else if (type.type === 'object') {
+      return
+    }
 
     return this.samplePrimitive(depth, type);
   }

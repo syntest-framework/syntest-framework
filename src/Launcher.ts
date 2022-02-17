@@ -65,9 +65,9 @@ import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
 import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 import { Export } from "./analysis/static/dependency/ExportVisitor";
 import { Runner } from "mocha";
-import { TypeResolverInference } from "./analysis/static/types/TypeResolverInference";
-import { ScopeType } from "./analysis/static/variable/Scope";
-import { TypeResolverUnknown } from "./analysis/static/types/TypeResolverUnknown";
+import { TypeResolverInference } from "./analysis/static/types/resolving/logic/TypeResolverInference";
+import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
+import { ScopeType } from "./analysis/static/types/discovery/Scope";
 
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
@@ -226,8 +226,6 @@ export class Launcher {
           targetPaths.add(path)
         })
     }
-
-    console.log(targetPaths)
 
     const instrumenter = new Instrumenter();
 

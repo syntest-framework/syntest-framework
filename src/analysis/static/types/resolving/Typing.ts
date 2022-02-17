@@ -1,12 +1,13 @@
-import { ElementType } from "../variable/Element";
+import { ElementType } from "../discovery/Element";
 
 export interface Typing {
   type: TypingType
+}
 
-  name?: string
-  import?: string
-
-  params?: Typing[]
+export interface ComplexTyping extends Typing {
+  type: TypingType.Object
+  name: string
+  import: string
 }
 
 export enum TypingType {

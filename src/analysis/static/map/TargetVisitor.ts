@@ -1,7 +1,5 @@
 import { PrivateVisibility, PublicVisibility, TargetMetaData } from "@syntest/framework";
 import { JavaScriptFunction, ProtectedVisibility } from "./JavaScriptFunction";
-import { TypeResolver } from "../types/TypeResolver";
-import { ScopeType } from "../variable/Scope";
 
 // TODO check if exported (and how)
 export class TargetVisitor {

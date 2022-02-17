@@ -1,6 +1,7 @@
 import { Element, ElementType, getElement, getElementId } from "./Element";
 import { getRelationType, Relation, RelationType } from "./Relation";
 import { Scope, ScopeType } from "./Scope";
+import { ComplexObject } from "./object/ComplexObject";
 
 // TODO functionexpression
 // TODO return

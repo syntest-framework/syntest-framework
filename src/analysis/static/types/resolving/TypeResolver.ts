@@ -1,7 +1,8 @@
 import { Typing } from "./Typing";
-import { Scope, ScopeType } from "../variable/Scope";
-import { Element } from "../variable/Element";
-import { Relation } from "../variable/Relation";
+import { Element } from "../discovery/Element";
+import { Scope, ScopeType } from "../discovery/Scope";
+import { Relation } from "../discovery/Relation";
+import { ComplexObject } from "../discovery/object/ComplexObject";
 
 // TODO would be better if the typeresolver works for all files
 export abstract class TypeResolver {
@@ -16,7 +17,7 @@ export abstract class TypeResolver {
     this._relationFullyResolved = new Set()
   }
 
-  abstract resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>)
+  abstract resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[])
   abstract getTyping(scopeName: string, scopeType: ScopeType, variableName: string): Typing
 
   get relationTyping(): Map<Relation, Typing> {

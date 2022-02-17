@@ -17,14 +17,14 @@
  */
 
 import { traverse } from "@babel/core";
-import { VariableVisitor } from "./VariableVisitor";
+import { ObjectVisitor } from "./ObjectVisitor";
 
 /**
  * Typing generator for targets.
  *
  * @author Dimitri Stallenberg
  */
-export class VariableGenerator {
+export class ObjectGenerator {
   /**
    * Generate function map for specified target.
    *
@@ -32,18 +32,10 @@ export class VariableGenerator {
    * @param targetAST The AST of the target
    */
   generate(filePath: string, targetAST: any): any {
-    const visitor = new VariableVisitor(filePath);
+    const visitor = new ObjectVisitor(filePath);
 
     traverse(targetAST, visitor);
-    // console.log(visitor.scopes)
-    // console.log(visitor.elements)
-    // for (const rel of visitor.relations) {
-    //   console.log(rel)
-    // }
-    // console.log(visitor.wrapperElementIsRelation)
 
-    // process.exit()
-
-    return [visitor.scopes, visitor.elements, visitor.relations, visitor.wrapperElementIsRelation];
+    return visitor.objects;
   }
 }

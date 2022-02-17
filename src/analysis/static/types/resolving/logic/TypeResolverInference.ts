@@ -1,8 +1,9 @@
-import { TypeResolver } from "./TypeResolver";
-import { elementTypeToTypingType, Typing, TypingType } from "./Typing";
-import { Element, ElementType, isInstanceOfElement } from "../variable/Element";
-import { Scope, ScopeType } from "../variable/Scope";
-import { Relation, RelationType } from "../variable/Relation";
+import { TypeResolver } from "../TypeResolver";
+import { ComplexTyping, elementTypeToTypingType, Typing, TypingType } from "../Typing";
+import { Relation, RelationType } from "../../discovery/Relation";
+import { Scope, ScopeType } from "../../discovery/Scope";
+import { Element, isInstanceOfElement } from "../../discovery/Element";
+import { ComplexObject } from "../../discovery/object/ComplexObject";
 
 export class TypeResolverInference extends TypeResolver{
 
@@ -27,39 +28,83 @@ export class TypeResolverInference extends TypeResolver{
     return somethingSolved
   }
 
-  resolveComplexElements(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>): boolean {
+  // TODO should be setting probabilities instead of exact typings
+  resolveComplexElements(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]): boolean {
     let somethingSolved = false
 
+    // filter relations by property accessors
+    const propertyAccessors = relations.filter((r) => r.relation === RelationType.PropertyAccessor)
 
     for (const element of elements) {
       if (this.elementTyping.has(element)) {
         continue
       }
 
-      // standard stuff like arrays/functions
+      if (element.type !== 'identifier') {
+        continue
+      }
 
+      // TODO should also have same scope
+      const relevantAccessors = propertyAccessors.filter((r) => r.involved[0].value === element.value)
+      const properties = relevantAccessors.map((r) => r.involved[1])
 
-      // matching to discovered objects
+      if (!properties.length) {
+        continue
+      }
 
+      // TODO find out wether function property or regular property
+
+      // find best matching object
+      let bestScore = -1
+      let bestMatch = objects[0]
+      for (const object of objects) {
+        let score = 0
+        for (const prop of properties) {
+          if (object.properties.has(prop.value) || object.functions.has(prop.value)) {
+            score += 1
+          }
+        }
+
+        if (score > bestScore) {
+          bestScore = score
+          bestMatch = object
+        }
+      }
+
+      if (bestScore === 0) {
+        continue
+      }
+
+      this.elementTyping.set(element, <ComplexTyping>{
+        type: TypingType.Object,
+        name: bestMatch.name,
+        import: bestMatch.import,
+      })
+      console.log(element, this.elementTyping.get(element))
+      somethingSolved = true
     }
-    console.log(scopes)
-    console.log(elements)
-    console.log(relations)
-    console.log(wrapperElementIsRelation)
-
-    process.exit()
+    // console.log(scopes)
+    // console.log(elements)
+    // console.log(relations)
+    // console.log(wrapperElementIsRelation)
+    // console.log(objects)
+    //
+    // process.exit()
     return somethingSolved
   }
 
-  resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>) {
+  resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]) {
     this.wrapperElementIsRelation = wrapperElementIsRelation
+
+
+
     let somethingSolved = true
     while (somethingSolved) {
       somethingSolved = false
 
       // TODO maybe this is only needed once
       somethingSolved = this.resolvePrimitiveElements(elements) || somethingSolved
-      somethingSolved = this.resolveComplexElements(scopes, elements, relations, wrapperElementIsRelation) || somethingSolved
+      // somethingSolved = this.resolveComplexElements(scopes, elements, relations, wrapperElementIsRelation, objects) || somethingSolved
 
 
       for (const relation of relations) {
@@ -129,13 +174,6 @@ export class TypeResolverInference extends TypeResolver{
     switch (relation) {
       case RelationType.PropertyAccessor: // could be multiple things
         // although the first has to an object/array/function
-        // TODO TODO this is a hack to fix .apply to be mapped to functions
-        if (isInstanceOfElement(involved[0]) && isInstanceOfElement(involved[1]) && involved[1].value === 'apply') {
-          this.elementTyping.set(involved[0], {type: TypingType.Function})
-          this.elementTyping.set(involved[1], {type: TypingType.Function})
-
-          return true
-        }
         return false
       case RelationType.New: //
         return false
