@@ -326,7 +326,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   ): ReturnValue {
     const skipable: string[] = [
       "ImportDeclaration",
-      "ClassProperty"
+      "ClassProperty",
+      "EmptyStatement"
     ];
 
     if (skipable.includes(child.type)) {
@@ -379,6 +380,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         return this.visitForOfStatement(child, parents)
       case "ForInStatement":
         return this.visitForOfStatement(child, parents)
+      case "ForStatement":
+        return this.visitForStatement(child, parents);
 
       case "BreakStatement":
         return this.visitBreakStatement(child, parents)
@@ -403,8 +406,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       // case "Conditional":
       //   return this.Conditional(cfg, child, parents);
       //
-      // case "ForStatement":
-      //   return this.ForStatement(cfg, child, parents);
+
       // case "WhileStatement":
       //   return this.WhileStatement(cfg, child, parents);
 
@@ -973,10 +975,10 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     // };
   }
 
-  private ForStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitForStatement(ast: any, parents: Node[]): ReturnValue {
     const node: Node = this.createBranchNode([ast.loc.start.line], [], {
-      type: ast.conditionExpression.type,
-      operator: ast.conditionExpression.operator,
+      type: ast.test.type,
+      operator: ast.test.operator || ast.test.name || ast.test.value,
     });
     this.connectParents(parents, [node]);
     // TODO For each probably not supported

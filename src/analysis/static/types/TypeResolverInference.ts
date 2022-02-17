@@ -8,6 +8,49 @@ export class TypeResolverInference extends TypeResolver{
 
   private wrapperElementIsRelation: Map<string, Relation>
 
+  resolvePrimitiveElements(elements: Element[]): boolean {
+    let somethingSolved = false
+    for (const element of elements) {
+      if (this.elementTyping.has(element)) {
+        continue
+      }
+
+      const typingsType = elementTypeToTypingType(element.type)
+
+      if (typingsType) {
+        this.elementTyping.set(element, {
+          type: typingsType
+        })
+        somethingSolved = true
+      }
+    }
+    return somethingSolved
+  }
+
+  resolveComplexElements(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>): boolean {
+    let somethingSolved = false
+
+
+    for (const element of elements) {
+      if (this.elementTyping.has(element)) {
+        continue
+      }
+
+      // standard stuff like arrays/functions
+
+
+      // matching to discovered objects
+
+    }
+    console.log(scopes)
+    console.log(elements)
+    console.log(relations)
+    console.log(wrapperElementIsRelation)
+
+    process.exit()
+    return somethingSolved
+  }
+
   resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>) {
     this.wrapperElementIsRelation = wrapperElementIsRelation
     let somethingSolved = true
@@ -15,20 +58,9 @@ export class TypeResolverInference extends TypeResolver{
       somethingSolved = false
 
       // TODO maybe this is only needed once
-      for (const element of elements) {
-        if (this.elementTyping.has(element)) {
-          continue
-        }
+      somethingSolved = this.resolvePrimitiveElements(elements) || somethingSolved
+      somethingSolved = this.resolveComplexElements(scopes, elements, relations, wrapperElementIsRelation) || somethingSolved
 
-        const typingsType = elementTypeToTypingType(element.type)
-
-        if (typingsType) {
-          this.elementTyping.set(element, {
-            type: typingsType
-          })
-          somethingSolved = true
-        }
-      }
 
       for (const relation of relations) {
         if (this.relationFullyResolved.has(relation)) {
@@ -65,10 +97,9 @@ export class TypeResolverInference extends TypeResolver{
           const relationResolved = this.resolveRelation(relation, involved)
 
           if (relationResolved) {
+            somethingSolved = true
             this.relationFullyResolved.add(relation)
           }
-
-          somethingSolved = true
         }
       }
     }
@@ -82,10 +113,10 @@ export class TypeResolverInference extends TypeResolver{
     const element = [...this.elementTyping.keys()].find((e) => e.scope.name === scopeName && e.scope.type === scopeType && e.value === variableName)
 
     if (!element) {
-      console.log('not found')
-      console.log(scopeName, scopeType)
-      console.log(variableName)
-      console.log(element)
+      // console.log('not found')
+      // console.log(scopeName, scopeType)
+      // console.log(variableName)
+      // console.log(element)
       // throw new Error("xx")
       return {
         type: TypingType.Unknown

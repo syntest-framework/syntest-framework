@@ -75,7 +75,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         })
 
       const calls: Statement[] = []
-      const nCalls = prng.nextInt(1, Properties.max_action_statements);
+      const methods = this._subject.getPossibleActions("method")
+      const nCalls = methods.length && prng.nextInt(1, Math.min(Properties.max_action_statements, methods.length));
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1))
       }
@@ -91,7 +92,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // if no constructors is available, we invoke the default (implicit) constructor
 
       const calls: Statement[] = []
-      const nCalls = prng.nextInt(1, Properties.max_action_statements);
+      const methods = this._subject.getPossibleActions("method")
+      const nCalls = methods.length && prng.nextInt(1, Math.min(Properties.max_action_statements, methods.length));
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1))
       }
@@ -106,7 +108,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     }
   }
 
-  sampleMethodCall(depth: number) {
+  sampleMethodCall(depth: number): MethodCall {
     const action = <FunctionDescription>(
       prng.pickOne(this._subject.getPossibleActions("method"))
     );

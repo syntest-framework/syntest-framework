@@ -150,9 +150,7 @@ export class Launcher {
 
     getUserInterface().report("header", ["TARGETS"]);
 
-    console.log('test')
     await targetPool.loadTargets();
-    console.log(targetPool.targets)
 
     if (!targetPool.targets.length) {
       getUserInterface().error(
@@ -161,7 +159,6 @@ export class Launcher {
       await this.exit();
     }
 
-    console.log(targetPool.targets)
     let names = [];
 
     targetPool.targets.forEach((target) =>
@@ -230,6 +227,8 @@ export class Launcher {
         })
     }
 
+    console.log(targetPaths)
+
     const instrumenter = new Instrumenter();
 
     for (const targetPath of targetPaths) {
@@ -275,6 +274,7 @@ export class Launcher {
     targetMeta: JavaScriptTargetMetaData
   ): Promise<Archive<JavaScriptTestCase>> {
     targetPool.resolveTypes(targetPath)
+
     const cfg = targetPool.getCFG(targetPath, targetMeta.name);
 
     if (Properties.draw_cfg || true) {

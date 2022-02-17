@@ -80,8 +80,10 @@ export class ConstructorCall extends RootStatement {
       }
     }
 
+    const methodsAvailable = !!sampler.subject.getPossibleActions("method").length
+
     const finalCalls = []
-    if (calls.length === 0) {
+    if (calls.length === 0 && methodsAvailable) {
       // add a call
       finalCalls.push(sampler.sampleMethodCall(depth + 1))
     } else {
@@ -90,13 +92,14 @@ export class ConstructorCall extends RootStatement {
         if (prng.nextBoolean(1 / calls.length)) {
           // Mutate this position
           const choice = prng.nextDouble()
-          if (choice < 0.1) {
+
+          if (choice < 0.1 && methodsAvailable) {
             // 10% chance to add a call on this position
             finalCalls.push(sampler.sampleMethodCall(depth + 1))
             finalCalls.push(calls[i])
-          } else if (choice < 0.1) {
+          } else if (choice < 0.2) {
             // 10% chance to delete the call
-          } else if (choice < 0.3) {
+          } else if (choice < 0.5) {
             // 30% chance to replace the call
             finalCalls.push(sampler.sampleMethodCall(depth + 1))
           } else {
