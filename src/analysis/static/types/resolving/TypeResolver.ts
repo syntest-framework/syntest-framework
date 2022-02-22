@@ -7,7 +7,7 @@ import { ComplexObject } from "../discovery/object/ComplexObject";
 // TODO would be better if the typeresolver works for all files
 export abstract class TypeResolver {
   private _relationTyping: Map<Relation, Typing> // TODO should be probability distribution per typing
-  private _elementTyping: Map<Element, Typing> // TODO should be probability distribution per typing
+  private _elementTyping: Map<Element, Map<Typing, number>> // TODO should be probability distribution per typing
 
   private _relationFullyResolved: Set<Relation> // TODO should be probability distribution per typing
 
@@ -24,7 +24,7 @@ export abstract class TypeResolver {
     return this._relationTyping;
   }
 
-  get elementTyping(): Map<Element, Typing> {
+  get elementTyping(): Map<Element, Map<Typing, number>> {
     return this._elementTyping;
   }
 

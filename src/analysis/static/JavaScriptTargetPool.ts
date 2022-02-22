@@ -287,6 +287,7 @@ export class JavaScriptTargetPool extends TargetPool {
 
     const objects: ComplexObject[] = []
 
+    //TODO the entire project should be searched for complex object types instead of dependencies only
     const objectGenerator = new ObjectGenerator()
     objects.push(...objectGenerator.generate(absoluteTargetPath, ast))
 

@@ -5,7 +5,7 @@ import { Scope, ScopeType } from "../../discovery/Scope";
 import { Element, isInstanceOfElement } from "../../discovery/Element";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 
-export class TypeResolverInference extends TypeResolver{
+export class TypeResolverInference extends TypeResolver {
 
   private wrapperElementIsRelation: Map<string, Relation>
 
@@ -19,9 +19,9 @@ export class TypeResolverInference extends TypeResolver{
       const typingsType = elementTypeToTypingType(element.type)
 
       if (typingsType) {
-        this.elementTyping.set(element, {
-          type: typingsType
-        })
+        const probabilities = new Map()
+        probabilities.set({ type: typingsType }, 1)
+        this.elementTyping.set(element, probabilities)
         somethingSolved = true
       }
     }
@@ -54,9 +54,10 @@ export class TypeResolverInference extends TypeResolver{
 
       // TODO find out wether function property or regular property
 
+      const probabilities = new Map()
+
       // find best matching object
-      let bestScore = -1
-      let bestMatch = objects[0]
+      let total = 0
       for (const object of objects) {
         let score = 0
         for (const prop of properties) {
@@ -65,22 +66,23 @@ export class TypeResolverInference extends TypeResolver{
           }
         }
 
-        if (score > bestScore) {
-          bestScore = score
-          bestMatch = object
+        // atleast score of one?
+        if (score > 0) {
+          probabilities.set(<ComplexTyping>{
+            type: TypingType.Object,
+            name: object.name,
+            import: object.import,
+          }, score)
+          total += score
         }
       }
 
-      if (bestScore === 0) {
-        continue
+      for (const obj of probabilities.keys()) {
+        probabilities.set(obj, probabilities.get(obj) / total)
       }
 
-      this.elementTyping.set(element, <ComplexTyping>{
-        type: TypingType.Object,
-        name: bestMatch.name,
-        import: bestMatch.import,
-      })
-      console.log(element, this.elementTyping.get(element))
+      this.elementTyping.set(element, probabilities)
+      // console.log(element, this.elementTyping.get(element))
       somethingSolved = true
     }
     // console.log(scopes)
