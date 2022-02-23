@@ -69,11 +69,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param functions Functions of the subject
    * @protected
    */
-  protected constructor(
-    path: string,
-    name: string,
-    cfg: CFG
-  ) {
+  protected constructor(path: string, name: string, cfg: CFG) {
     this._path = path;
     this._name = name;
     this._cfg = cfg;
