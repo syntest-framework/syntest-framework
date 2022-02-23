@@ -1614,7 +1614,7 @@ export function writeStartSegment(
       return writeChunk(destination, startSegmentColGroup2);
     }
     default: {
-      throw new Error('Unknown insertion mode. This is a bug in React.');
+      throw new Error('ANY insertion mode. This is a bug in React.');
     }
   }
 }
@@ -1646,7 +1646,7 @@ export function writeEndSegment(
       return writeChunk(destination, endSegmentColGroup);
     }
     default: {
-      throw new Error('Unknown insertion mode. This is a bug in React.');
+      throw new Error('ANY insertion mode. This is a bug in React.');
     }
   }
 }

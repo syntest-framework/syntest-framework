@@ -2,7 +2,7 @@
  * Checks if `path` is a direct or inherited property of `object`.
  *
  * @since 4.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to query.
  * @param {string} key The key to check.
  * @returns {boolean} Returns `true` if `key` exists, else `false`.

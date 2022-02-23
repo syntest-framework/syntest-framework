@@ -141,7 +141,7 @@ describe('transform', function () {
     });
   });
 
-  it('should allow an Array of transformers', function (done) {
+  it('should allow an ARRAY of transformers', function (done) {
     var data = {
       foo: 'bar'
     };

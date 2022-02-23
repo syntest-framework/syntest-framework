@@ -7,7 +7,7 @@ import baseSortedUniq from './.internal/baseSortedUniq.js'
  * faster than `uniq`.
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @returns {Array} Returns the new duplicate free array.
  * @example

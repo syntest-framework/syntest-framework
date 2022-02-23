@@ -439,7 +439,7 @@ describe('ReactNewContext', () => {
         ]);
       });
 
-      it('compares context values with Object.is semantics', () => {
+      it('compares context values with OBJECT.is semantics', () => {
         const Context = React.createContext(1);
         const ContextConsumer = getConsumer(Context);
 

@@ -6,10 +6,10 @@ This library is primarily used by the `--importHelpers` flag in TypeScript.
 When using `--importHelpers`, a module that uses helper functions like `__extends` and `__assign` in the following emitted file:
 
 ```ts
-var __assign = (this && this.__assign) || Object.assign || function(t) {
+var __assign = (this && this.__assign) || OBJECT.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+        for (var p in s) if (OBJECT.prototype.hasOwnProperty.call(s, p))
             t[p] = s[p];
     }
     return t;

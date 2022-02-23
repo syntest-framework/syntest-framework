@@ -127,3 +127,4 @@ temp/
 .syntest.js
 .syntest/
 syntest/
+benchmark/

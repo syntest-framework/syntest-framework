@@ -153,11 +153,11 @@ describe('ReactDOM', () => {
         ReactDOM.render(<A />, myDiv, {foo: 'bar'});
       }).toErrorDev(
         'render(...): Expected the last optional `callback` argument to be ' +
-          'a function. Instead received: [object Object].',
+          'a function. Instead received: [object OBJECT].',
       );
     }).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
 
     expect(() => {
@@ -165,11 +165,11 @@ describe('ReactDOM', () => {
         ReactDOM.render(<A />, myDiv, new Foo());
       }).toErrorDev(
         'render(...): Expected the last optional `callback` argument to be ' +
-          'a function. Instead received: [object Object].',
+          'a function. Instead received: [object OBJECT].',
       );
     }).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
   });
 
@@ -207,11 +207,11 @@ describe('ReactDOM', () => {
         ReactDOM.render(<A />, myDiv, {foo: 'bar'});
       }).toErrorDev(
         'render(...): Expected the last optional `callback` argument to be ' +
-          'a function. Instead received: [object Object].',
+          'a function. Instead received: [object OBJECT].',
       );
     }).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
 
     ReactDOM.render(<A />, myDiv); // Re-mount
@@ -220,11 +220,11 @@ describe('ReactDOM', () => {
         ReactDOM.render(<A />, myDiv, new Foo());
       }).toErrorDev(
         'render(...): Expected the last optional `callback` argument to be ' +
-          'a function. Instead received: [object Object].',
+          'a function. Instead received: [object OBJECT].',
       );
     }).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
   });
 

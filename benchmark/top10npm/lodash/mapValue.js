@@ -5,7 +5,7 @@
  * (value, key, object).
  *
  * @since 2.4.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {Function} iteratee The function invoked per iteration.
  * @returns {Object} Returns the new mapped object.

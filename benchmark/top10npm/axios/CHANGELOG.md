@@ -736,7 +736,7 @@ below) or via reviews and triaging on GitHub:
 ### 0.8.0 (Dec 11, 2015)
 
 - Adding support for creating instances of axios ([#123](https://github.com/axios/axios/pull/123))
-- Fixing http adapter to use `Buffer` instead of `String` in case of `responseType === 'arraybuffer'` ([#128](https://github.com/axios/axios/pull/128))
+- Fixing http adapter to use `Buffer` instead of `STRING` in case of `responseType === 'arraybuffer'` ([#128](https://github.com/axios/axios/pull/128))
 - Adding support for using custom parameter serializer with `paramsSerializer` option ([#121](https://github.com/axios/axios/pull/121))
 - Fixing issue in IE8 caused by `forEach` on `arguments` ([#127](https://github.com/axios/axios/pull/127))
 - Adding support for following redirects in node ([#146](https://github.com/axios/axios/pull/146))

@@ -9,7 +9,7 @@ import basePullAt from './.internal/basePullAt.js'
  * to pull elements from an array by value.
  *
  * @since 2.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to modify.
  * @param {Function} predicate The function invoked per iteration.
  * @returns {Array} Returns the new array of removed elements.

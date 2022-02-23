@@ -4,7 +4,7 @@ import slice from './slice.js'
  * Creates a slice of `array` with `n` elements taken from the beginning.
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to query.
  * @param {number} [n=1] The number of elements to take.
  * @returns {Array} Returns the slice of `array`.

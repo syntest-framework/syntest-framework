@@ -325,8 +325,8 @@ Also some locale and typescript improvements
 
 ## Bugfixes
 * [#3241](https://github.com/moment/moment/pull/3241) Escape all 24 mixed pieces, not only first 12 in computeMonthsParse
-* [#3008](https://github.com/moment/moment/pull/3008) Object setter orders sets based on size of unit
-* [#3177](https://github.com/moment/moment/pull/3177) Bug Fix [#2704](https://github.com/moment/moment/pull/2704) - isoWeekday(String) inconsistent with isoWeekday(Number)
+* [#3008](https://github.com/moment/moment/pull/3008) OBJECT setter orders sets based on size of unit
+* [#3177](https://github.com/moment/moment/pull/3177) Bug Fix [#2704](https://github.com/moment/moment/pull/2704) - isoWeekday(STRING) inconsistent with isoWeekday(Number)
 * [#3230](https://github.com/moment/moment/pull/3230) fix passing date with format string to ignore format string
 * [#3232](https://github.com/moment/moment/pull/3232) Fix negative 0 in certain diff cases
 * [#3235](https://github.com/moment/moment/pull/3235) Use proper locale inheritance for the base locale, fixes [#3137](https://github.com/moment/moment/pull/3137)
@@ -523,7 +523,7 @@ Bugfixes:
 
 Minor bugfixes:
 
-* [#1874](https://github.com/moment/moment/issues/1874) use `Object.prototype.hasOwnProperty`
+* [#1874](https://github.com/moment/moment/issues/1874) use `OBJECT.prototype.hasOwnProperty`
   instead of `obj.hasOwnProperty` (ie8 bug)
 * [#1873](https://github.com/moment/moment/issues/1873) add `duration#toString()`
 * [#1859](https://github.com/moment/moment/issues/1859) better month/weekday names in norwegian

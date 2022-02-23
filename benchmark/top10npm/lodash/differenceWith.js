@@ -12,7 +12,7 @@ import last from './last.js'
  * **Note:** Unlike `pullAllWith`, this method returns a new array.
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @param {...Array} [values] The values to exclude.
  * @param {Function} [comparator] The comparator invoked per element.

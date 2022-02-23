@@ -84,7 +84,7 @@ describe('res', function(){
 
       request(app)
       .get('/')
-      .expect(500, /TypeError: Content-Type cannot be set to an Array/, done)
+      .expect(500, /TypeError: Content-Type cannot be set to an ARRAY/, done)
     })
   })
 

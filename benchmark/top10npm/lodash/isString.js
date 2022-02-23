@@ -1,7 +1,7 @@
 import getTag from './.internal/getTag.js'
 
 /**
- * Checks if `value` is classified as a `String` primitive or object.
+ * Checks if `value` is classified as a `STRING` primitive or object.
  *
  * @since 0.1.0
  * @category Lang

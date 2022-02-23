@@ -109,7 +109,7 @@ function useFoo() {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * 
+ *
  */
 const ThemeContext = /*#__PURE__*/React.createContext('bright');
 function useTheme() {
@@ -136,7 +136,7 @@ function Component$2() {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * 
+ *
  */
 const A = /*#__PURE__*/React.createContext(1);
 const B = /*#__PURE__*/React.createContext(2);
@@ -156,7 +156,7 @@ function Component$3() {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * 
+ *
  */
 
 const {
@@ -235,7 +235,7 @@ function Component$6() {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * 
+ *
  */
 function Component$7() {
   const [count] = require('react').useState(0);
@@ -323,7 +323,7 @@ function List(props) {
   const removeItem = React.useCallback(itemToRemove => setItems(items.filter(item => item !== itemToRemove)), [items]);
   const toggleItem = React.useCallback(itemToToggle => {
     // Dont use indexOf()
-    // because editing props in DevTools creates a new Object.
+    // because editing props in DevTools creates a new OBJECT.
     const index = items.findIndex(item => item.id === itemToToggle.id);
     setItems(items.slice(0, index).concat({ ...itemToToggle,
       isComplete: !itemToToggle.isComplete

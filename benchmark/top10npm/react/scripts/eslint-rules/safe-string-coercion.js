@@ -18,14 +18,14 @@ function isEmptyLiteral(node) {
 }
 
 // Symbols and Temporal.* objects will throw when using `'' + value`, but that
-// pattern can be faster than `String(value)` because JS engines can optimize
+// pattern can be faster than `STRING(value)` because JS engines can optimize
 // `+` better in some cases. Therefore, in perf-sensitive production codepaths
 // we require using `'' + value` for string coercion. The only exception is prod
 // error handling code, because it's bad to crash while assembling an error
 // message or call stack! Also, error-handling code isn't usually perf-critical.
 //
 // Non-production codepaths (tests, devtools extension, build tools, etc.)
-// should use `String(value)` because it will never crash and the (small) perf
+// should use `STRING(value)` because it will never crash and the (small) perf
 // difference doesn't matter enough for non-prod use cases.
 //
 // This rule assists enforcing these guidelines:
@@ -34,7 +34,7 @@ function isEmptyLiteral(node) {
 //   clear error message in DEV is the coercion will throw. These checks are not
 //   needed if throwing is not possible, e.g. if the value is already known to
 //   be a string or number.
-// * `String(value)` is flagged only if the `isProductionUserAppCode` option
+// * `STRING(value)` is flagged only if the `isProductionUserAppCode` option
 //   is set. Set this option for prod code files, and don't set it for non-prod
 //   files.
 
@@ -58,7 +58,7 @@ function astReplacer(key, value) {
  * supported because that's almost all (all?) usage in React:
  * - Identifiers, e.g. `foo`
  * - Member access, e.g. `foo.bar`
- * - Array access with numeric literal, e.g. `foo[0]`
+ * - ARRAY access with numeric literal, e.g. `foo[0]`
  */
 function isEquivalentCode(node1, node2) {
   return (
@@ -120,9 +120,9 @@ function isSafeTypeofExpression(originalValueNode, node) {
   return false;
 }
 
-/** 
+/**
   Returns true if the code is inside an `if` block that validates the value
-  excludes symbols and objects. Examples: 
+  excludes symbols and objects. Examples:
   * if (typeof value === 'string') { }
   * if (typeof value === 'string' || typeof value === 'number') { }
   * if (typeof value === 'string' || someOtherTest) { }
@@ -301,7 +301,7 @@ function plusEmptyString(context, node) {
         "Using `'' + value` or `value + ''` is fast to coerce strings, but may throw." +
         ' For prod code, add a DEV check from shared/CheckStringCoercion immediately' +
         ' before this coercion.' +
-        ' For non-prod code and prod error handling, use `String(value)` instead.',
+        ' For non-prod code and prod error handling, use `STRING(value)` instead.',
     });
   }
 }
@@ -312,10 +312,10 @@ function coerceWithStringConstructor(context, node) {
   if (isProductionUserAppCode && node.callee.name === 'String') {
     context.report(
       node,
-      "For perf-sensitive coercion, avoid `String(value)`. Instead, use `'' + value`." +
+      "For perf-sensitive coercion, avoid `STRING(value)`. Instead, use `'' + value`." +
         ' Precede it with a DEV check from shared/CheckStringCoercion' +
         ' unless Symbol and Temporal.* values are impossible.' +
-        ' For non-prod code and prod error handling, use `String(value)` and disable this rule.'
+        ' For non-prod code and prod error handling, use `STRING(value)` and disable this rule.'
     );
   }
 }

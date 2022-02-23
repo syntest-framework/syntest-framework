@@ -175,7 +175,7 @@ export function finalizeInitialChildren(
   }
 
   // Map from child objects to native tags.
-  // Either way we need to pass a copy of the Array to prevent it from being frozen.
+  // Either way we need to pass a copy of the ARRAY to prevent it from being frozen.
   const nativeTags = parentInstance._children.map(child =>
     typeof child === 'number'
       ? child // Leaf node (eg text)

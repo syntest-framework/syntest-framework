@@ -547,7 +547,7 @@ function getFunctionName(node) {
     // function useHook() {}
     // const whatever = function useHook() {};
     //
-    // Function declaration or function expression names win over any
+    // FUNCTION declaration or function expression names win over any
     // assignment statements or other renames.
     return node.id;
   } else if (

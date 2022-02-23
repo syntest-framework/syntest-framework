@@ -3,7 +3,7 @@
 /**
  * Syntactic sugar for invoking a function and expanding an array for arguments.
  *
- * Common use case would be to use `Function.prototype.apply`.
+ * Common use case would be to use `FUNCTION.prototype.apply`.
  *
  *  ```js
  *  function f(x, y, z) {}

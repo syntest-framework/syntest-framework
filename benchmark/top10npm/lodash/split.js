@@ -10,10 +10,10 @@ const MAX_ARRAY_LENGTH = 4294967295
  * Splits `string` by `separator`.
  *
  * **Note:** This method is based on
- * [`String#split`](https://mdn.io/String/split).
+ * [`STRING#split`](https://mdn.io/String/split).
  *
  * @since 4.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to split.
  * @param {RegExp|string} separator The separator pattern to split by.
  * @param {number} [limit] The length to truncate results to.

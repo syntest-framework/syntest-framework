@@ -81,7 +81,7 @@ export class Launcher {
       await guessCWD(null);
       const targetPool = await this.setup();
       const [archive, dependencies, exports] = await this.search(targetPool);
-      await this.finalize(archive, dependencies, exports);
+      await this.finalize(targetPool, archive, dependencies, exports);
 
       await this.exit();
     } catch (e) {
@@ -128,8 +128,8 @@ export class Launcher {
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
 
-    // const typeResolver = new TypeResolverUnknown() // TODO make switch for the type of resolver
-    const typeResolver = new TypeResolverInference() // TODO make switch for the type of resolver
+    const typeResolver = new TypeResolverUnknown() // TODO make switch for the type of resolver
+    // const typeResolver = new TypeResolverInference() // TODO make switch for the type of resolver
 
     const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
     const importGenerator = new ImportGenerator()
@@ -205,7 +205,7 @@ export class Launcher {
       [
         ["Max Depth", Properties.max_depth],
         ["Explore Illegal Values", Properties.explore_illegal_values],
-        ["Sample Function Result as Argument", Properties.sample_func_as_arg],
+        ["Sample FUNCTION Result as Argument", Properties.sample_func_as_arg],
         ["Crossover", Properties.crossover_probability],
       ],
     ]);
@@ -292,10 +292,7 @@ export class Launcher {
     for (const key of functionMap.keys()) {
       const func = functionMap.get(key)
       for (const param of func.parameters) {
-
-        if (param.type === 'unknown') {
-          param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name).type
-        }
+        param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
       }
     // TODO return types
     }
@@ -390,6 +387,7 @@ export class Launcher {
   }
 
   private async finalize(
+    targetPool: JavaScriptTargetPool,
     archive: Archive<JavaScriptTestCase>,
     dependencies: Map<string, Export[]>,
     exports: Export[]
@@ -397,7 +395,6 @@ export class Launcher {
 
     const testDir = path.resolve(Properties.final_suite_directory);
     await clearDirectory(testDir);
-
 
     const decoder = new JavaScriptDecoder(
       dependencies,
@@ -467,6 +464,10 @@ export class Launcher {
     let totalStatements = 0
     let totalFunctions = 0
     for (const file of Object.keys(instrumentationData)) {
+      if (!targetPool.targets.find((t) => t.canonicalPath === file)) {
+        continue
+      }
+
       const data = instrumentationData[file]
 
       const summary = {
@@ -501,6 +502,8 @@ export class Launcher {
         'branch': summary['branch'] + ' / ' + (Object.keys(data.b).length * 2),
         'function': summary['function'] + ' / ' + Object.keys(data.f).length
       }, false])
+
+      console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
     }
 
     overall['statement'] /= totalStatements
@@ -512,6 +515,7 @@ export class Launcher {
       'branch': (overall['branch'] * 100) + ' %',
       'function': (overall['function'] * 100) + ' %'
     }, true])
+
 
   }
 

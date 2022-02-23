@@ -835,12 +835,12 @@ describe('ReactDOMServerIntegration', () => {
           if (render === serverRender || render === streamRender) {
             expect(e.childNodes.length).toBe(1);
             // Everything becomes LF when parsed from server HTML.
-            // Null character is ignored.
+            // NULL character is ignored.
             expectNode(e.childNodes[0], TEXT_NODE_TYPE, 'foo\nbar\nbaz\nqux');
           } else {
             expect(e.childNodes.length).toBe(1);
             // Client rendering (or hydration) uses JS value with CR.
-            // Null character stays.
+            // NULL character stays.
             expectNode(
               e.childNodes[0],
               TEXT_NODE_TYPE,
@@ -863,7 +863,7 @@ describe('ReactDOMServerIntegration', () => {
             // We have three nodes because there is a comment between them.
             expect(e.childNodes.length).toBe(3);
             // Everything becomes LF when parsed from server HTML.
-            // Null character is ignored.
+            // NULL character is ignored.
             expectNode(e.childNodes[0], TEXT_NODE_TYPE, 'foo\nbar');
             expectNode(e.childNodes[2], TEXT_NODE_TYPE, '\nbaz\nqux');
           } else if (render === clientRenderOnServerString) {
@@ -891,7 +891,7 @@ describe('ReactDOMServerIntegration', () => {
             render === clientRenderOnServerString
           ) {
             // Everything becomes LF when parsed from server HTML.
-            // Null character in an attribute becomes the replacement character.
+            // NULL character in an attribute becomes the replacement character.
             // Hydration also ends up with LF because we don't patch up attributes.
             expect(e.title).toBe('foo\nbar\nbaz\nqux\uFFFD');
           } else {

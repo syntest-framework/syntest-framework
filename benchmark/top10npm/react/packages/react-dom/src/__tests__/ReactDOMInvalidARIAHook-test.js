@@ -48,7 +48,7 @@ describe('ReactDOMInvalidARIAHook', () => {
     it('should warn for an improperly cased aria-* prop', () => {
       // The valid attribute name is aria-haspopup.
       expect(() => mountComponent({'aria-hasPopup': 'true'})).toErrorDev(
-        'Warning: Unknown ARIA attribute `aria-hasPopup`. ' +
+        'Warning: ANY ARIA attribute `aria-hasPopup`. ' +
           'Did you mean `aria-haspopup`?',
       );
     });

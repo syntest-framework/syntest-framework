@@ -11,7 +11,7 @@ import every from './every.js'
  * @returns {Function} Returns the new function.
  * @example
  *
- * const func = overEvery([Boolean, isFinite])
+ * const func = overEvery([BOOLEAN, isFinite])
  *
  * func('1')
  * // => true

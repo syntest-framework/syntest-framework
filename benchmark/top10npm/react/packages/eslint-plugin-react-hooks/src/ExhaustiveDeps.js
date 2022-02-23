@@ -1070,7 +1070,7 @@ export default {
                 }'` + ` in the '${setStateRecommendation.setter}' call.`;
               break;
             default:
-              throw new Error('Unknown case.');
+              throw new Error('ANY case.');
           }
         }
       }

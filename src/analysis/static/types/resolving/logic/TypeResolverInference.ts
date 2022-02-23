@@ -1,9 +1,10 @@
 import { TypeResolver } from "../TypeResolver";
-import { ComplexTyping, elementTypeToTypingType, Typing, TypingType } from "../Typing";
+import { elementTypeToTypingType, Typing, TypingType } from "../Typing";
 import { Relation, RelationType } from "../../discovery/Relation";
 import { Scope, ScopeType } from "../../discovery/Scope";
 import { Element, isInstanceOfElement } from "../../discovery/Element";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
+import { TypeProbabilityMap } from "../TypeProbabilityMap";
 
 export class TypeResolverInference extends TypeResolver {
 
@@ -19,9 +20,7 @@ export class TypeResolverInference extends TypeResolver {
       const typingsType = elementTypeToTypingType(element.type)
 
       if (typingsType) {
-        const probabilities = new Map()
-        probabilities.set({ type: typingsType }, 1)
-        this.elementTyping.set(element, probabilities)
+        this.setElementType(element, { type: typingsType }, 1)
         somethingSolved = true
       }
     }
@@ -54,8 +53,6 @@ export class TypeResolverInference extends TypeResolver {
 
       // TODO find out wether function property or regular property
 
-      const probabilities = new Map()
-
       // find best matching object
       let total = 0
       for (const object of objects) {
@@ -66,32 +63,29 @@ export class TypeResolverInference extends TypeResolver {
           }
         }
 
-        // atleast score of one?
+        // atleast score of one
         if (score > 0) {
-          probabilities.set(<ComplexTyping>{
-            type: TypingType.Object,
-            name: object.name,
-            import: object.import,
-          }, score)
+          if (object.name === 'function') {
+            this.setElementType(element, { type: TypingType.FUNCTION }, score)
+          } else if (object.name === 'string') {
+            this.setElementType(element, { type: TypingType.STRING }, score)
+          } else if (object.name === 'array') {
+            this.setElementType(element, { type: TypingType.ARRAY }, score)
+          }else {
+            this.setElementType(element, {
+              type: TypingType.OBJECT,
+              name: object.name,
+              import: object.import,
+            }, score)
+          }
+
           total += score
         }
       }
 
-      for (const obj of probabilities.keys()) {
-        probabilities.set(obj, probabilities.get(obj) / total)
-      }
-
-      this.elementTyping.set(element, probabilities)
-      // console.log(element, this.elementTyping.get(element))
       somethingSolved = true
     }
-    // console.log(scopes)
-    // console.log(elements)
-    // console.log(relations)
-    // console.log(wrapperElementIsRelation)
-    // console.log(objects)
-    //
-    // process.exit()
+
     return somethingSolved
   }
 
@@ -106,7 +100,7 @@ export class TypeResolverInference extends TypeResolver {
 
       // TODO maybe this is only needed once
       somethingSolved = this.resolvePrimitiveElements(elements) || somethingSolved
-      // somethingSolved = this.resolveComplexElements(scopes, elements, relations, wrapperElementIsRelation, objects) || somethingSolved
+      somethingSolved = this.resolveComplexElements(scopes, elements, relations, wrapperElementIsRelation, objects) || somethingSolved
 
 
       for (const relation of relations) {
@@ -122,7 +116,7 @@ export class TypeResolverInference extends TypeResolver {
           return e
         }
 
-        const involved: (Element | Typing)[] = relation.involved
+        const involved: (Element | TypeProbabilityMap)[] = relation.involved
           .map(resolveInvolved)
 
         const allResolved = this.resolveRelationElements(relation.relation, involved)
@@ -138,7 +132,7 @@ export class TypeResolverInference extends TypeResolver {
             throw new Error("Should all be resolved!!!")
           }
 
-          const involved: Typing[] = relation.involved
+          const involved: TypeProbabilityMap[] = relation.involved
             .map(resolveInvolved)
 
           const relationResolved = this.resolveRelation(relation, involved)
@@ -150,29 +144,18 @@ export class TypeResolverInference extends TypeResolver {
         }
       }
     }
-
-    // console.log(this.elementTyping)
-    // console.log(this.relationTyping)
-    // process.exit()
   }
 
-  getTyping(scopeName: string, scopeType: ScopeType, variableName: string): Typing {
+  getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbabilityMap {
     const element = [...this.elementTyping.keys()].find((e) => e.scope.name === scopeName && e.scope.type === scopeType && e.value === variableName)
 
     if (!element) {
-      // console.log('not found')
-      // console.log(scopeName, scopeType)
-      // console.log(variableName)
-      // console.log(element)
-      // throw new Error("xx")
-      return {
-        type: TypingType.Unknown
-      }
+      return new TypeProbabilityMap()
     }
     return this.elementTyping.get(element);
   }
 
-  resolveRelationElements(relation: RelationType, involved: (Element | Typing)[]): boolean {
+  resolveRelationElements(relation: RelationType, involved: (Element | TypeProbabilityMap)[]): boolean {
     switch (relation) {
       case RelationType.PropertyAccessor: // could be multiple things
         // although the first has to an object/array/function
@@ -187,7 +170,7 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.PlusPlusPostFix: // must be numerical
       case RelationType.MinusMinusPostFix: // must be numerical
         if (isInstanceOfElement(involved[0])) {
-          this.elementTyping.set(involved[0], { type: TypingType.Numeric })
+          this.setElementType(involved[0], { type: TypingType.NUMERIC }, 1)
         }
         return true
 
@@ -217,10 +200,10 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Remainder: // must be numerical
       case RelationType.Exponentiation: // must be numerical
         if (isInstanceOfElement(involved[0])) {
-          this.elementTyping.set(involved[0], { type: TypingType.Numeric })
+          this.setElementType(involved[0], { type: TypingType.NUMERIC }, 1)
         }
         if (isInstanceOfElement(involved[1])) {
-          this.elementTyping.set(involved[1], { type: TypingType.Numeric })
+          this.setElementType(involved[1], { type: TypingType.NUMERIC }, 1)
         }
         return true
 
@@ -231,10 +214,10 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.LessOrEqual: // must be numeric
       case RelationType.GreaterOrEqual: // must be numeric
         if (isInstanceOfElement(involved[0])) {
-          this.elementTyping.set(involved[0], { type: TypingType.Numeric })
+          this.setElementType(involved[0], { type: TypingType.NUMERIC }, 1)
         }
         if (isInstanceOfElement(involved[1])) {
-          this.elementTyping.set(involved[1], { type: TypingType.Numeric })
+          this.setElementType(involved[1], { type: TypingType.NUMERIC }, 1)
         }
         return true
 
@@ -252,10 +235,10 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.BitwiseOr: // must be numeric
       case RelationType.BitwiseXor: // must be numeric
         if (isInstanceOfElement(involved[0])) {
-          this.elementTyping.set(involved[0], { type: TypingType.Numeric })
+          this.setElementType(involved[0], { type: TypingType.NUMERIC }, 1)
         }
         if (isInstanceOfElement(involved[1])) {
-          this.elementTyping.set(involved[1], { type: TypingType.Numeric })
+          this.setElementType(involved[1], { type: TypingType.NUMERIC }, 1)
         }
         return true
 
@@ -269,11 +252,14 @@ export class TypeResolverInference extends TypeResolver {
         return false
 
       case RelationType.Assignment: // must be the same
+        // TODO not sure if this works, this will propogate changed to either element to the other
         if (isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          this.elementTyping.set(<Element>involved[0], <Typing>{ type: involved[1].type })
+          // this.setElementType(involved[0], { type: involved[1].type }, 1)
+          this.elementTyping.set(involved[0], involved[1])
           return true
         } else if (!isInstanceOfElement(involved[0]) && isInstanceOfElement(involved[1])) {
-          this.elementTyping.set(<Element>involved[1], <Typing>{ type: involved[0].type })
+          // this.setElementType(involved[1], { type: involved[0].type }, 1)
+          this.elementTyping.set(involved[1], involved[0])
           return true
         }
         return false
@@ -289,10 +275,10 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.BitwiseXorAssignment: // must be numeric
       case RelationType.BitwiseOrAssignment: // must be numeric
         if (isInstanceOfElement(involved[0])) {
-          this.elementTyping.set(involved[0], { type: TypingType.Numeric })
+          this.setElementType(involved[0], { type: TypingType.NUMERIC }, 1)
         }
         if (isInstanceOfElement(involved[1])) {
-          this.elementTyping.set(involved[1], { type: TypingType.Numeric })
+          this.setElementType(involved[1], { type: TypingType.NUMERIC }, 1)
         }
         return true
       case RelationType.AdditionAssignment: // must be numeric or string
@@ -310,7 +296,7 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Call: // could be multiple things
         // but we do know that the first involved element is a function
         if (isInstanceOfElement(involved[0])) {
-          this.elementTyping.set(involved[0], { type: TypingType.Function })
+          this.setElementType(involved[0], { type: TypingType.FUNCTION }, 1)
         }
         return false
 
@@ -322,26 +308,26 @@ export class TypeResolverInference extends TypeResolver {
     throw new Error("not implemented")
   }
 
-  resolveRelation(relation: Relation, involved: Typing[]): boolean {
+  resolveRelation(relation: Relation, involved: TypeProbabilityMap[]): boolean {
     // TODO
 
     switch (relation.relation) {
       // Unary
       case RelationType.PropertyAccessor: // must be equal to the type of the member element
-        this.relationTyping.set(relation, { type: involved[1].type })
+        this.relationTyping.set(relation, involved[1])
         return true
       case RelationType.New: //
         // TODO
         return false
       case RelationType.Spread: // must be array i think
-        this.relationTyping.set(relation, { type: TypingType.Array })
+        this.setRelationType(relation, { type: TypingType.ARRAY }, 1)
         return true
 
       case RelationType.PlusPlusPostFix: // must be numerical
       case RelationType.MinusMinusPostFix: // must be numerical
       case RelationType.PlusPlusPrefix: // must be numerical
       case RelationType.MinusMinusPrefix: // must be numerical
-        this.relationTyping.set(relation, { type: TypingType.Numeric })
+        this.setRelationType(relation, { type: TypingType.NUMERIC }, 1)
         return true
 
       case RelationType.Delete: // must be string
@@ -351,38 +337,35 @@ export class TypeResolverInference extends TypeResolver {
         // TODO
         return false
       case RelationType.TypeOf: // must be string
-        this.relationTyping.set(relation, { type: TypingType.String })
+        this.setRelationType(relation, { type: TypingType.STRING }, 1)
         return true
       case RelationType.PlusUnary: // must be numerical
-        this.relationTyping.set(relation, { type: TypingType.Numeric })
-        return true
       case RelationType.MinusUnary: // must be numerical
-        this.relationTyping.set(relation, { type: TypingType.Numeric })
+        this.setRelationType(relation, { type: TypingType.NUMERIC }, 1)
         return true
       case RelationType.BitwiseNotUnary: // must be boolean
-        this.relationTyping.set(relation, { type: TypingType.Boolean })
-        return true
       case RelationType.LogicalNotUnary: // must be boolean
-        this.relationTyping.set(relation, { type: TypingType.Boolean })
+        this.setRelationType(relation, { type: TypingType.BOOLEAN }, 1)
         return true
 
 
       // binary
       case RelationType.Addition:
-        if (involved[0].type === TypingType.String || involved[1].type === TypingType.String) {
-          this.relationTyping.set(relation, { type: TypingType.String })
-        } else if (involved[0].type === TypingType.Numeric || involved[1].type === TypingType.Numeric) {
-          this.relationTyping.set(relation, { type: TypingType.Numeric })
-        } else {
-          return false // TODO maybe its always NaN?
-        }
-        return true
+        // if (involved[0].g === TypingType.STRING || involved[1].type === TypingType.STRING) {
+        //   this.relationTyping.set(relation, { type: TypingType.STRING })
+        // } else if (involved[0].type === TypingType.NUMERIC || involved[1].type === TypingType.NUMERIC) {
+        //   this.relationTyping.set(relation, { type: TypingType.NUMERIC })
+        // } else {
+        //   return false // TODO maybe its always NaN?
+        // }
+        // TODO no clue
+        return false
       case RelationType.Subtraction: // must be numerical
       case RelationType.Division: // must be numerical
       case RelationType.Multiplication: // must be numerical
       case RelationType.Remainder: // must be numerical
       case RelationType.Exponentiation: // must be numerical
-        this.relationTyping.set(relation, { type: TypingType.Numeric })
+        this.setRelationType(relation, { type: TypingType.NUMERIC }, 1)
         return true
 
       case RelationType.In: //
@@ -393,26 +376,26 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Greater: // must be boolean
       case RelationType.LessOrEqual: // must be boolean
       case RelationType.GreaterOrEqual: // must be boolean
-        this.relationTyping.set(relation, { type: TypingType.Boolean })
+        this.setRelationType(relation, { type: TypingType.BOOLEAN }, 1)
         return true
 
       case RelationType.Equality: // must be boolean
       case RelationType.InEquality: // must be boolean
       case RelationType.StrictEquality: // must be boolean
       case RelationType.StrictInequality: // must be boolean
-        this.relationTyping.set(relation, { type: TypingType.Boolean })
+        this.setRelationType(relation, { type: TypingType.BOOLEAN }, 1)
         return true
 
       case RelationType.BitwiseLeftShift: // must be numeric
       case RelationType.BitwiseRightShift: // must be numeric
       case RelationType.BitwiseUnsignedRightShift: // must be numeric
-        this.relationTyping.set(relation, { type: TypingType.Numeric })
+        this.setRelationType(relation, { type: TypingType.NUMERIC }, 1)
         return true
 
       case RelationType.BitwiseAnd: // must be numeric
       case RelationType.BitwiseOr: // must be numeric
       case RelationType.BitwiseXor: // must be numeric
-        this.relationTyping.set(relation, { type: TypingType.Numeric })
+        this.setRelationType(relation, { type: TypingType.NUMERIC }, 1)
         return true
 
       case RelationType.LogicalOr: // can be the type of the first or second one depending on if the first is not false/null/undefined
@@ -444,7 +427,7 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.LogicalNullishAssignment: // no relation type
 
         // TODO
-        // this.relationTyping.set(relation, { type: TypingType.Null })
+        // this.relationTyping.set(relation, { type: TypingType.NULL })
         return false
 
       // TODO

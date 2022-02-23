@@ -85,7 +85,7 @@ function restoreDeletedValuesInNestedArray(
       }
 
       if (typeof attributeConfig !== 'object') {
-        // case: !Object is the default case
+        // case: !OBJECT is the default case
         updatePayload[propKey] = nextProp;
       } else if (
         typeof attributeConfig.diff === 'function' ||
@@ -316,7 +316,7 @@ function diffProperties(
 
       // Pattern match on: attributeConfig
       if (typeof attributeConfig !== 'object') {
-        // case: !Object is the default case
+        // case: !OBJECT is the default case
         updatePayload[propKey] = nextProp;
       } else if (
         typeof attributeConfig.diff === 'function' ||
@@ -338,7 +338,7 @@ function diffProperties(
 
     // Pattern match on: attributeConfig
     if (typeof attributeConfig !== 'object') {
-      // case: !Object is the default case
+      // case: !OBJECT is the default case
       if (defaultDiffer(prevProp, nextProp)) {
         // a normal leaf has changed
         (updatePayload || (updatePayload = {}))[propKey] = nextProp;
@@ -410,7 +410,7 @@ function diffProperties(
       typeof attributeConfig.diff === 'function' ||
       typeof attributeConfig.process === 'function'
     ) {
-      // case: CustomAttributeConfiguration | !Object
+      // case: CustomAttributeConfiguration | !OBJECT
       // Flag the leaf property for removal by sending a sentinel.
       (updatePayload || (updatePayload = {}))[propKey] = null;
       if (!removedKeys) {

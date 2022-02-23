@@ -884,17 +884,17 @@ describe('ReactUpdates', () => {
     expect(() => {
       expect(() => component.setState({}, {foo: 'bar'})).toErrorDev(
         'setState(...): Expected the last optional `callback` argument to be ' +
-          'a function. Instead received: [object Object].',
+          'a function. Instead received: [object OBJECT].',
       );
     }).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
     // Make sure the warning is deduplicated and doesn't fire again
     component = ReactTestUtils.renderIntoDocument(<A />);
     expect(() => component.setState({}, new Foo())).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
   });
 
@@ -927,17 +927,17 @@ describe('ReactUpdates', () => {
     expect(() => {
       expect(() => component.forceUpdate({foo: 'bar'})).toErrorDev(
         'forceUpdate(...): Expected the last optional `callback` argument to be ' +
-          'a function. Instead received: [object Object].',
+          'a function. Instead received: [object OBJECT].',
       );
     }).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
     // Make sure the warning is deduplicated and doesn't fire again
     component = ReactTestUtils.renderIntoDocument(<A />);
     expect(() => component.forceUpdate(new Foo())).toThrowError(
       'Invalid argument passed as callback. Expected a function. Instead ' +
-        'received: [object Object]',
+        'received: [object OBJECT]',
     );
   });
 

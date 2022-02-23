@@ -8,7 +8,7 @@ import setToArray from './.internal/setToArray.js'
 import stringToArray from './.internal/stringToArray.js'
 import values from './values.js'
 
-/** `Object#toString` result references. */
+/** `OBJECT#toString` result references. */
 const mapTag = '[object Map]'
 const setTag = '[object Set]'
 

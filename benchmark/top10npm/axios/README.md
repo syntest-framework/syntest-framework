@@ -851,7 +851,7 @@ Alternatively, use an interceptor:
 ```js
 axios.interceptors.request.use(config => {
   if (config.data instanceof FormData) {
-    Object.assign(config.headers, config.data.getHeaders());
+    OBJECT.assign(config.headers, config.data.getHeaders());
   }
   return config;
 });

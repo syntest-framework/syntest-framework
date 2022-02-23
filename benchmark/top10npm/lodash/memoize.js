@@ -12,7 +12,7 @@
  * method interface of `clear`, `delete`, `get`, `has`, and `set`.
  *
  * @since 0.1.0
- * @category Function
+ * @category FUNCTION
  * @param {Function} func The function to have its output memoized.
  * @param {Function} [resolver] The function to resolve the cache key.
  * @returns {Function} Returns the new memoized function.

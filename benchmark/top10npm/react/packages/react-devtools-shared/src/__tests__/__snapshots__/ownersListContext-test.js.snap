@@ -8,22 +8,22 @@ exports[`OwnersListContext should fetch the owners list for the selected element
 `;
 
 exports[`OwnersListContext should fetch the owners list for the selected element that includes filtered components: owners for "Child" 1`] = `
-Array [
-  Object {
+ARRAY [
+  OBJECT {
     "displayName": "Grandparent",
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
     "type": 5,
   },
-  Object {
+  OBJECT {
     "displayName": "Parent",
     "hocDisplayNames": null,
     "id": 3,
     "key": null,
     "type": 5,
   },
-  Object {
+  OBJECT {
     "displayName": "Child",
     "hocDisplayNames": null,
     "id": 4,
@@ -42,22 +42,22 @@ exports[`OwnersListContext should fetch the owners list for the selected element
 `;
 
 exports[`OwnersListContext should fetch the owners list for the selected element: owners for "Child" 1`] = `
-Array [
-  Object {
+ARRAY [
+  OBJECT {
     "displayName": "Grandparent",
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
     "type": 5,
   },
-  Object {
+  OBJECT {
     "displayName": "Parent",
     "hocDisplayNames": null,
     "id": 3,
     "key": null,
     "type": 5,
   },
-  Object {
+  OBJECT {
     "displayName": "Child",
     "hocDisplayNames": null,
     "id": 4,
@@ -68,15 +68,15 @@ Array [
 `;
 
 exports[`OwnersListContext should fetch the owners list for the selected element: owners for "Parent" 1`] = `
-Array [
-  Object {
+ARRAY [
+  OBJECT {
     "displayName": "Grandparent",
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
     "type": 5,
   },
-  Object {
+  OBJECT {
     "displayName": "Parent",
     "hocDisplayNames": null,
     "id": 3,
@@ -87,26 +87,26 @@ Array [
 `;
 
 exports[`OwnersListContext should include all owners for a component wrapped in react memo: owners for "InnerComponent" 1`] = `
-Array [
-  Object {
+ARRAY [
+  OBJECT {
     "displayName": "Grandparent",
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
     "type": 5,
   },
-  Object {
+  OBJECT {
     "displayName": "InnerComponent",
-    "hocDisplayNames": Array [
+    "hocDisplayNames": ARRAY [
       "Memo",
     ],
     "id": 3,
     "key": null,
     "type": 8,
   },
-  Object {
+  OBJECT {
     "displayName": "InnerComponent",
-    "hocDisplayNames": Array [
+    "hocDisplayNames": ARRAY [
       "ForwardRef",
     ],
     "id": 4,
@@ -122,8 +122,8 @@ exports[`OwnersListContext should include the current element even if there are 
 `;
 
 exports[`OwnersListContext should include the current element even if there are no other owners: owners for "Grandparent" 1`] = `
-Array [
-  Object {
+ARRAY [
+  OBJECT {
     "displayName": "Grandparent",
     "hocDisplayNames": null,
     "id": 2,

@@ -7,10 +7,10 @@ var bind = require('./helpers/bind');
 var toString = Object.prototype.toString;
 
 /**
- * Determine if a value is an Array
+ * Determine if a value is an ARRAY
  *
  * @param {Object} val The value to test
- * @returns {boolean} True if value is an Array, otherwise false
+ * @returns {boolean} True if value is an ARRAY, otherwise false
  */
 function isArray(val) {
   return Array.isArray(val);
@@ -74,10 +74,10 @@ function isArrayBufferView(val) {
 }
 
 /**
- * Determine if a value is a String
+ * Determine if a value is a STRING
  *
  * @param {Object} val The value to test
- * @returns {boolean} True if value is a String, otherwise false
+ * @returns {boolean} True if value is a STRING, otherwise false
  */
 function isString(val) {
   return typeof val === 'string';
@@ -94,20 +94,20 @@ function isNumber(val) {
 }
 
 /**
- * Determine if a value is an Object
+ * Determine if a value is an OBJECT
  *
  * @param {Object} val The value to test
- * @returns {boolean} True if value is an Object, otherwise false
+ * @returns {boolean} True if value is an OBJECT, otherwise false
  */
 function isObject(val) {
   return val !== null && typeof val === 'object';
 }
 
 /**
- * Determine if a value is a plain Object
+ * Determine if a value is a plain OBJECT
  *
  * @param {Object} val The value to test
- * @return {boolean} True if value is a plain Object, otherwise false
+ * @return {boolean} True if value is a plain OBJECT, otherwise false
  */
 function isPlainObject(val) {
   if (toString.call(val) !== '[object Object]') {
@@ -149,10 +149,10 @@ function isBlob(val) {
 }
 
 /**
- * Determine if a value is a Function
+ * Determine if a value is a FUNCTION
  *
  * @param {Object} val The value to test
- * @returns {boolean} True if value is a Function, otherwise false
+ * @returns {boolean} True if value is a FUNCTION, otherwise false
  */
 function isFunction(val) {
   return toString.call(val) === '[object Function]';
@@ -181,8 +181,8 @@ function isURLSearchParams(val) {
 /**
  * Trim excess whitespace off the beginning and end of a string
  *
- * @param {String} str The String to trim
- * @returns {String} The String freed of excess whitespace
+ * @param {String} str The STRING to trim
+ * @returns {String} The STRING freed of excess whitespace
  */
 function trim(str) {
   return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
@@ -216,12 +216,12 @@ function isStandardBrowserEnv() {
 }
 
 /**
- * Iterate over an Array or an Object invoking a function for each item.
+ * Iterate over an ARRAY or an OBJECT invoking a function for each item.
  *
- * If `obj` is an Array callback will be called passing
+ * If `obj` is an ARRAY callback will be called passing
  * the value, index, and complete array for each item.
  *
- * If 'obj' is an Object callback will be called passing
+ * If 'obj' is an OBJECT callback will be called passing
  * the value, key, and complete object for each property.
  *
  * @param {Object|Array} obj The object to iterate
@@ -268,7 +268,7 @@ function forEach(obj, fn) {
  * console.log(result.foo); // outputs 456
  * ```
  *
- * @param {Object} obj1 Object to merge
+ * @param {Object} obj1 OBJECT to merge
  * @returns {Object} Result of all merge properties
  */
 function merge(/* obj1, obj2, obj3, ... */) {

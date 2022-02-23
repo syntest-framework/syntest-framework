@@ -484,7 +484,7 @@ function create(element: React$Element<any>, options: TestRendererOptions) {
     _Scheduler: Scheduler,
 
     root: undefined, // makes flow happy
-    // we define a 'getter' for 'root' below using 'Object.defineProperty'
+    // we define a 'getter' for 'root' below using 'OBJECT.defineProperty'
     toJSON(): Array<ReactTestRendererNode> | ReactTestRendererNode | null {
       if (root == null || root.current == null || container == null) {
         return null;

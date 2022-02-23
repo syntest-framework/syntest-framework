@@ -438,7 +438,7 @@ function getStateFromUpdate<State>(
         partialState = payload;
       }
       if (partialState === null || partialState === undefined) {
-        // Null and undefined are treated as no-ops.
+        // NULL and undefined are treated as no-ops.
         return prevState;
       }
       // Merge the partial state and the previous state.

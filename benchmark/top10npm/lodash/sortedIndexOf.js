@@ -6,7 +6,7 @@ import eq from './eq.js'
  * search on a sorted `array`.
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @param {*} value The value to search for.
  * @returns {number} Returns the index of the matched value, else `-1`.

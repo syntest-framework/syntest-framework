@@ -53,7 +53,7 @@ export class ExportVisitor {
       }
     }
 
-    throw new Error('Unknown named export')
+    throw new Error('ANY named export')
   };
 
   public ExportDefaultDeclaration: (path) => void = (path) => {
@@ -166,7 +166,7 @@ export class ExportVisitor {
       return this._identifiers.get(name)
     }
 
-    throw new Error("Unknown export type: " + type)
+    throw new Error("ANY export type: " + type)
   }
 
   // getters

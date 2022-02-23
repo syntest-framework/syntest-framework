@@ -5,7 +5,7 @@ import copyArray from './.internal/copyArray.js'
  * [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher-Yates_shuffle).
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to shuffle.
  * @returns {Array} Returns the new shuffled array.
  * @example

@@ -3,7 +3,7 @@
  * Creates a function that invokes `func` with its arguments transformed.
  *
  * @since 4.0.0
- * @category Function
+ * @category FUNCTION
  * @param {Function} func The function to wrap.
  * @param {Function[]} [transforms=[identity]]
  *  The argument transforms.

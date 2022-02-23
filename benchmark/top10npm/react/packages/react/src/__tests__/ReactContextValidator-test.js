@@ -667,14 +667,14 @@ describe('ReactContextValidator', () => {
     ComponentB.contextType = Context;
 
     expect(() => ReactTestUtils.renderIntoDocument(<ComponentA />)).toErrorDev(
-      'Warning: ComponentA: Function components do not support contextType.',
+      'Warning: ComponentA: FUNCTION components do not support contextType.',
     );
 
     // Warnings should be deduped by component type
     ReactTestUtils.renderIntoDocument(<ComponentA />);
 
     expect(() => ReactTestUtils.renderIntoDocument(<ComponentB />)).toErrorDev(
-      'Warning: ComponentB: Function components do not support contextType.',
+      'Warning: ComponentB: FUNCTION components do not support contextType.',
     );
   });
 

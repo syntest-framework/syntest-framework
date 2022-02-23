@@ -20,7 +20,6 @@ import { readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
 import { CFG, Target, TargetMetaData, TargetPool } from "@syntest/framework";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
-import { JavaScriptFunction } from "./map/JavaScriptFunction";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
 import { ExportGenerator } from "./dependency/ExportGenerator";
@@ -31,6 +30,7 @@ import { TypeResolver } from "./types/resolving/TypeResolver";
 import { VariableGenerator } from "./types/discovery/VariableGenerator";
 import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
 import { ComplexObject } from "./types/discovery/object/ComplexObject";
+import { ActionDescription } from "./parsing/ActionDescription";
 
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
@@ -58,7 +58,7 @@ export class JavaScriptTargetPool extends TargetPool {
   // Mapping: filepath -> target name -> function name -> function
   protected _functionMaps: Map<
     string,
-    Map<string, Map<string, JavaScriptFunction>>
+    Map<string, Map<string, ActionDescription>>
   >;
 
   // Mapping: filepath -> target name -> (function name -> CFG)
@@ -91,7 +91,7 @@ export class JavaScriptTargetPool extends TargetPool {
     this._targetMap = new Map<string, Map<string, JavaScriptTargetMetaData>>();
     this._functionMaps = new Map<
       string,
-      Map<string, Map<string, JavaScriptFunction>>
+      Map<string, Map<string, ActionDescription>>
     >();
     this._controlFlowGraphs = new Map<string, Map<string, CFG>>();
 
@@ -197,7 +197,7 @@ export class JavaScriptTargetPool extends TargetPool {
   getFunctionMap(
     targetPath: string,
     targetName: string
-  ): Map<string, JavaScriptFunction> {
+  ): Map<string, ActionDescription> {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._functionMaps.has(absoluteTargetPath)) {

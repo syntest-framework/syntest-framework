@@ -6,7 +6,7 @@ import toString from './toString.js'
  * to lower case.
  *
  * @since 3.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to capitalize.
  * @returns {string} Returns the capitalized string.
  * @example

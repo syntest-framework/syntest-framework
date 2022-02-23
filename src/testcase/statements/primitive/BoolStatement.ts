@@ -19,10 +19,12 @@
 import {
   prng,
   Properties,
-  Parameter,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { TypingType } from "../../../analysis/static/types/resolving/Typing";
+import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
 
 /**
  * @author Dimitri Stallenberg
@@ -46,8 +48,14 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
   }
 
   static getRandom(
-    type: Parameter = { type: "bool", name: "noname" }
+    type: Parameter = null
   ): BoolStatement {
+    if (!type) {
+      const typeMap = new TypeProbabilityMap()
+      typeMap.addType({ type: TypingType.BOOLEAN })
+      type = { type: typeMap, name: "noname" }
+    }
+
     return new BoolStatement(type, prng.uniqueId(), prng.nextBoolean());
   }
 }

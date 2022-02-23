@@ -8,7 +8,7 @@ import baseUpdate from './.internal/baseUpdate.js'
  * **Note:** This method mutates `object`.
  *
  * @since 4.6.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to modify.
  * @param {Array|string} path The path of the property to set.
  * @param {Function} updater The function to produce the updated value.

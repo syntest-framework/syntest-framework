@@ -16,13 +16,12 @@
  * limitations under the License.
  */
 
-import {
-  prng,
-  Properties,
-  Parameter,
-} from "@syntest/framework";
+import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { TypingType } from "../../../analysis/static/types/resolving/Typing";
+import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
 
 /**
  * Generic number class
@@ -52,11 +51,6 @@ export class NumericStatement extends PrimitiveStatement<number> {
   deltaMutation(): NumericStatement {
     // small mutation
     let change = prng.nextGaussian(0, 20);
-
-    if (this.type.type.includes("int")) {
-      change = Math.round(change);
-      if (change == 0) change = prng.nextBoolean() ? -1 : 1;
-    }
 
     let newValue = this.value + change;
 
@@ -88,8 +82,13 @@ export class NumericStatement extends PrimitiveStatement<number> {
   }
 
   static getRandom(
-    type: Parameter = { type: "number", name: "noname" }
+    type: Parameter = null
   ): NumericStatement {
+    if (!type) {
+      const typeMap = new TypeProbabilityMap()
+      typeMap.addType({ type: TypingType.NUMERIC })
+      type = { type: typeMap, name: "noname" }
+    }
     // by default we create small numbers (do we need very large numbers?)
     const max = Number.MAX_SAFE_INTEGER
     const min = Number.MIN_SAFE_INTEGER

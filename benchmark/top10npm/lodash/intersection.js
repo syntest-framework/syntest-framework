@@ -9,7 +9,7 @@ import castArrayLikeObject from './.internal/castArrayLikeObject.js'
  * determined by the first array.
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {...Array} [arrays] The arrays to inspect.
  * @returns {Array} Returns the new array of intersecting values.
  * @example

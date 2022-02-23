@@ -235,7 +235,7 @@ type MapFunc = (child: ?React$Node) => ?ReactNodeList;
  * @param {?*} children Children tree container.
  * @param {function(*, int)} func The map function.
  * @param {*} context Context for mapFunction.
- * @return {object} Object containing the ordered map of results.
+ * @return {object} OBJECT containing the ordered map of results.
  */
 function mapChildren(
   children: ?ReactNodeList,

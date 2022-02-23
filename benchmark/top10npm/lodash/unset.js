@@ -6,7 +6,7 @@ import baseUnset from './.internal/baseUnset.js'
  * **Note:** This method mutates `object`.
  *
  * @since 4.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to modify.
  * @param {Array|string} path The path of the property to unset.
  * @returns {boolean} Returns `true` if the property is deleted, else `false`.

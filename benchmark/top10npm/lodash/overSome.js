@@ -11,7 +11,7 @@ import some from './some.js'
  * @returns {Function} Returns the new function.
  * @example
  *
- * const func = overSome([Boolean, isFinite])
+ * const func = overSome([BOOLEAN, isFinite])
  *
  * func('1')
  * // => true

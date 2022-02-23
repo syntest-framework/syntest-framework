@@ -110,7 +110,7 @@ describe('res', function(){
     })
   })
 
-  describe('.send(String)', function(){
+  describe('.send(STRING)', function(){
     it('should send as html', function(done){
       var app = express();
 
@@ -234,7 +234,7 @@ describe('res', function(){
     })
   })
 
-  describe('.send(Object)', function(){
+  describe('.send(OBJECT)', function(){
     it('should send as application/json', function(done){
       var app = express();
 

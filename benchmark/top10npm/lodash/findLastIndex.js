@@ -6,7 +6,7 @@ import toInteger from './toInteger.js'
  * of `collection` from right to left.
  *
  * @since 2.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @param {Function} predicate The function invoked per iteration.
  * @param {number} [fromIndex=array.length-1] The index to search from.

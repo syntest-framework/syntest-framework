@@ -58,7 +58,7 @@ describe('res', function(){
         .expect(200, '300', done)
       })
 
-      it('should respond with json for String', function(done){
+      it('should respond with json for STRING', function(done){
         var app = express();
 
         app.use(function(req, res){

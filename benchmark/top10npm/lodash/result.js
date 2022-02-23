@@ -7,7 +7,7 @@ import toKey from './.internal/toKey.js'
  * its result is returned.
  *
  * @since 0.1.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to query.
  * @param {Array|string} path The path of the property to resolve.
  * @param {*} [defaultValue] The value returned for `undefined` resolved values.

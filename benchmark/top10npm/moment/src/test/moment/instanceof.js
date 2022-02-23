@@ -28,7 +28,7 @@ test('instanceof', function (assert) {
     assert.equal(
         Object instanceof moment,
         false,
-        'Object is not moment object'
+        'OBJECT is not moment object'
     );
     assert.equal('foo' instanceof moment, false, 'string is not moment object');
     assert.equal(1 instanceof moment, false, 'number is not moment object');

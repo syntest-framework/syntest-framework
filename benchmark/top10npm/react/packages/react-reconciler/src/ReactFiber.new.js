@@ -155,7 +155,7 @@ function FiberNode(
     //
     // Initializing the fields below to smis and later updating them with
     // double values will cause Fibers to end up having separate shapes.
-    // This behavior/bug has something to do with Object.preventExtension().
+    // This behavior/bug has something to do with OBJECT.preventExtension().
     // Fortunately this only impacts DEV builds.
     // Unfortunately it makes React unusably slow for some applications.
     // To work around this, initialize the fields below with doubles.
@@ -798,8 +798,8 @@ export function assignFiberPropertiesInDEV(
   }
 
   // This is intentionally written as a list of all properties.
-  // We tried to use Object.assign() instead but this is called in
-  // the hottest path, and Object.assign() was too slow:
+  // We tried to use OBJECT.assign() instead but this is called in
+  // the hottest path, and OBJECT.assign() was too slow:
   // https://github.com/facebook/react/issues/12502
   // This code is DEV-only so size is not a concern.
 

@@ -82,7 +82,7 @@ properties in a table, as follows. This matches the formatting used in the
 
 |Property | Description | Type | Default|
 |----------|-----------|------------|-------------|
-|Name of the property in `monospace`. | Brief description | String, Number, Boolean, etc. | If applicable.|
+|Name of the property in `monospace`. | Brief description | STRING, Number, BOOLEAN, etc. | If applicable.|
 
 If all the properties are required (i.e. there are no defaults), then you
 can omit the default column.

@@ -1,16 +1,17 @@
 import {
-  BranchNode, BranchObjectiveFunction,
+  BranchObjectiveFunction,
   CFG,
-  Encoding,
-  FunctionDescription, FunctionObjectiveFunction,
-  NodeType, ObjectiveFunction,
-  Parameter,
-  PublicVisibility,
+  FunctionObjectiveFunction,
+  NodeType,
+  ObjectiveFunction,
   SearchSubject,
 } from "@syntest/framework";
-import { JavaScriptFunction } from "../analysis/static/map/JavaScriptFunction";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { JavaScriptTargetMetaData } from "../analysis/static/JavaScriptTargetPool";
+import { ActionDescription } from "../analysis/static/parsing/ActionDescription";
+import { Parameter } from "../analysis/static/parsing/Parameter";
+import { ActionVisibility } from "../analysis/static/parsing/ActionVisibility";
+import { ActionType } from "../analysis/static/parsing/ActionType";
 
 export enum SubjectType {
   class,
@@ -19,17 +20,24 @@ export enum SubjectType {
 
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
+  private _functions: ActionDescription[]
   private _type: SubjectType
+
+
+  get functions(): ActionDescription[] {
+    return this._functions;
+  }
 
   constructor(
     path: string,
     targetMeta: JavaScriptTargetMetaData,
     cfg: CFG,
-    functions: FunctionDescription[],
+    functions: ActionDescription[],
   ) {
-    super(path, targetMeta.name, cfg, functions);
+    super(path, targetMeta.name, cfg);
     // TODO SearchSubject should just use the targeMetaData
     this._type = targetMeta.type
+    this._functions = functions
   }
 
   protected _extractObjectives(): void {
@@ -68,7 +76,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
       this._objectives.get(objective).push(...childrenObj);
     }
 
-    // Function objectives
+    // FUNCTION objectives
     this._cfg.nodes
       // Find all root function nodes
       .filter((node) => node.type === NodeType.Root)
@@ -120,23 +128,19 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
   }
 
   getPossibleActions(
-    type?: string,
-    returnTypes?: Parameter[]
-  ): JavaScriptFunction[] {
+    type?: ActionType,
+    returnType?: Parameter
+  ): ActionDescription[] {
     return this.functions.filter((f) => {
-      if (returnTypes) {
-        if (returnTypes.length !== f.returnParameters.length) {
+      if (returnType) {
+        // TODO this will not work (comparing typeprobability maps)
+        if (returnType.type !== f.returnParameter.type) {
           return false;
-        }
-        for (let i = 0; i < returnTypes.length; i++) {
-          if (returnTypes[i].type !== f.returnParameters[i]._type) {
-            return false;
-          }
         }
       }
 
       return ((type === undefined || f.type === type) &&
-        (f.visibility === PublicVisibility) &&
+        (f.visibility === ActionVisibility.PUBLIC) &&
         f.name !== "" // fallback function has no name
       );
     });

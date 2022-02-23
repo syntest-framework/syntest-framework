@@ -28,7 +28,7 @@ const reComboMark = RegExp(rsCombo, 'g')
  * [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
  *
  * @since 3.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to deburr.
  * @returns {string} Returns the deburred string.
  * @example

@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`profiling charts flamegraph chart should contain valid data: 0: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -15,8 +15,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
         4,
         5,
@@ -29,8 +29,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 3,
@@ -39,8 +39,8 @@ Object {
       "treeBaseDuration": 3,
       "type": 8,
     },
-    4 => Object {
-      "children": Array [],
+    4 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 4,
@@ -49,8 +49,8 @@ Object {
       "treeBaseDuration": 2,
       "type": 8,
     },
-    5 => Object {
-      "children": Array [],
+    5 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 5,
@@ -65,7 +65,7 @@ Object {
 `;
 
 exports[`profiling charts flamegraph chart should contain valid data: 0: FlamegraphChartData 1`] = `
-Object {
+OBJECT {
   "baseDuration": 15,
   "depth": 2,
   "idToDepthMap": Map {
@@ -79,9 +79,9 @@ Object {
     1,
     2,
   },
-  "rows": Array [
-    Array [
-      Object {
+  "rows": ARRAY [
+    ARRAY [
+      OBJECT {
         "actualDuration": 15,
         "didRender": true,
         "id": 2,
@@ -92,8 +92,8 @@ Object {
         "treeBaseDuration": 15,
       },
     ],
-    Array [
-      Object {
+    ARRAY [
+      OBJECT {
         "actualDuration": 0,
         "didRender": true,
         "id": 5,
@@ -103,7 +103,7 @@ Object {
         "selfDuration": 0,
         "treeBaseDuration": 0,
       },
-      Object {
+      OBJECT {
         "actualDuration": 2,
         "didRender": true,
         "id": 4,
@@ -113,7 +113,7 @@ Object {
         "selfDuration": 2,
         "treeBaseDuration": 2,
       },
-      Object {
+      OBJECT {
         "actualDuration": 3,
         "didRender": true,
         "id": 3,
@@ -129,10 +129,10 @@ Object {
 `;
 
 exports[`profiling charts flamegraph chart should contain valid data: 1: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -143,8 +143,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
         4,
         5,
@@ -157,8 +157,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 3,
@@ -167,8 +167,8 @@ Object {
       "treeBaseDuration": 3,
       "type": 8,
     },
-    4 => Object {
-      "children": Array [],
+    4 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 4,
@@ -177,8 +177,8 @@ Object {
       "treeBaseDuration": 2,
       "type": 8,
     },
-    5 => Object {
-      "children": Array [],
+    5 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 5,
@@ -193,7 +193,7 @@ Object {
 `;
 
 exports[`profiling charts flamegraph chart should contain valid data: 1: FlamegraphChartData 1`] = `
-Object {
+OBJECT {
   "baseDuration": 15,
   "depth": 2,
   "idToDepthMap": Map {
@@ -206,9 +206,9 @@ Object {
   "renderPathNodes": Set {
     1,
   },
-  "rows": Array [
-    Array [
-      Object {
+  "rows": ARRAY [
+    ARRAY [
+      OBJECT {
         "actualDuration": 10,
         "didRender": true,
         "id": 2,
@@ -219,8 +219,8 @@ Object {
         "treeBaseDuration": 15,
       },
     ],
-    Array [
-      Object {
+    ARRAY [
+      OBJECT {
         "actualDuration": 0,
         "didRender": false,
         "id": 5,
@@ -230,7 +230,7 @@ Object {
         "selfDuration": 0,
         "treeBaseDuration": 0,
       },
-      Object {
+      OBJECT {
         "actualDuration": 0,
         "didRender": false,
         "id": 4,
@@ -240,7 +240,7 @@ Object {
         "selfDuration": 0,
         "treeBaseDuration": 2,
       },
-      Object {
+      OBJECT {
         "actualDuration": 0,
         "didRender": false,
         "id": 3,
@@ -256,10 +256,10 @@ Object {
 `;
 
 exports[`profiling charts ranked chart should contain valid data: 0: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -270,8 +270,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
         4,
         5,
@@ -284,8 +284,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 3,
@@ -294,8 +294,8 @@ Object {
       "treeBaseDuration": 3,
       "type": 8,
     },
-    4 => Object {
-      "children": Array [],
+    4 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 4,
@@ -304,8 +304,8 @@ Object {
       "treeBaseDuration": 2,
       "type": 8,
     },
-    5 => Object {
-      "children": Array [],
+    5 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 5,
@@ -320,28 +320,28 @@ Object {
 `;
 
 exports[`profiling charts ranked chart should contain valid data: 0: RankedChartData 1`] = `
-Object {
+OBJECT {
   "maxValue": 10,
-  "nodes": Array [
-    Object {
+  "nodes": ARRAY [
+    OBJECT {
       "id": 2,
       "label": "Parent (10ms)",
       "name": "Parent",
       "value": 10,
     },
-    Object {
+    OBJECT {
       "id": 3,
       "label": "Child (Memo) key=\\"first\\" (3ms)",
       "name": "Child",
       "value": 3,
     },
-    Object {
+    OBJECT {
       "id": 4,
       "label": "Child (Memo) key=\\"second\\" (2ms)",
       "name": "Child",
       "value": 2,
     },
-    Object {
+    OBJECT {
       "id": 5,
       "label": "Child (Memo) key=\\"third\\" (<0.1ms)",
       "name": "Child",
@@ -352,10 +352,10 @@ Object {
 `;
 
 exports[`profiling charts ranked chart should contain valid data: 1: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -366,8 +366,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
         4,
         5,
@@ -380,8 +380,8 @@ Object {
       "treeBaseDuration": 15,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 3,
@@ -390,8 +390,8 @@ Object {
       "treeBaseDuration": 3,
       "type": 8,
     },
-    4 => Object {
-      "children": Array [],
+    4 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 4,
@@ -400,8 +400,8 @@ Object {
       "treeBaseDuration": 2,
       "type": 8,
     },
-    5 => Object {
-      "children": Array [],
+    5 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 5,
@@ -416,10 +416,10 @@ Object {
 `;
 
 exports[`profiling charts ranked chart should contain valid data: 1: RankedChartData 1`] = `
-Object {
+OBJECT {
   "maxValue": 10,
-  "nodes": Array [
-    Object {
+  "nodes": ARRAY [
+    OBJECT {
       "id": 2,
       "label": "Parent (10ms)",
       "name": "Parent",

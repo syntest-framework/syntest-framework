@@ -7,7 +7,7 @@ const INFINITY = 1 / 0
  * Recursively flattens `array`.
  *
  * @since 3.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to flatten.
  * @returns {Array} Returns the new flattened array.
  * @see flatMap, flatMapDeep, flatMapDepth, flatten, flattenDepth

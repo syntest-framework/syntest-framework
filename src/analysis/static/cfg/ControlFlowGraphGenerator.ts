@@ -4,10 +4,11 @@ import {
   CFGFactory, Edge,
   Node,
   NodeType, Operation,
-  Parameter, PlaceholderNode,
-  PublicVisibility,
+  PlaceholderNode,
   RootNode,
 } from "@syntest/framework";
+import { Parameter } from "../parsing/Parameter";
+import { ActionVisibility } from "../parsing/ActionVisibility";
 
 interface ReturnValue {
   childNodes: Node[];
@@ -195,25 +196,13 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
   private createRootNode(
     lines: number[],
-    statements: string[],
-    functionName: string,
-    isConstructor: boolean,
-    parameters: Parameter[],
-    returnParameter: Parameter,
+    statements: string[]
   ): RootNode {
     const node: RootNode = {
-      contractName: "",
-      functionName: functionName,
       id: `f-${lines[0]}`,
-      isConstructor: isConstructor,
       lines: lines,
       statements: statements,
       type: NodeType.Root,
-
-      parameters: parameters,
-      returnParameters: [returnParameter],
-
-      visibility: PublicVisibility,
     };
 
     this.cfg.nodes.push(node);
@@ -278,13 +267,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     this.cfg.nodes.push(node);
 
     return node;
-  }
-
-  private parseParameter(parameter): Parameter {
-    return {
-      name: parameter.name || 'unknown',
-      type: 'unknown'
-    };
   }
 
   /**
@@ -448,10 +430,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     const node: RootNode = this.createRootNode(
       [ast.loc.start.line],
       [],
-      ast.id.name,
-      ast.isConstructor, // TODO
-      ast.params.map((p) => this.parseParameter(p)),
-      ast.returnParameter ? this.parseParameter(ast.returnParameter) : { name: 'unknown', type: 'any' }
     );
 
 
@@ -558,11 +536,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   private visitClassMethod(ast: any): ReturnValue {
     const node: RootNode = this.createRootNode(
       [ast.loc.start.line],
-      [],
-      ast.key.name,
-      ast.isConstructor, // TODO
-      ast.params.map((p) => this.parseParameter(p)),
-      ast.returnParameter ? this.parseParameter(ast.returnParameter) : { name: 'unknown', type: 'any' }
+      []
     );
 
     let parents: Node[] = [node];

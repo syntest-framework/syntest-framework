@@ -176,7 +176,7 @@ export function getSelection(input) {
  * @setSelection: Sets the selection bounds of a textarea or input and focuses
  * the input.
  * -@input     Set selection bounds of this input or textarea
- * -@offsets   Object of same form that is returned from get*
+ * -@offsets   OBJECT of same form that is returned from get*
  */
 export function setSelection(input, offsets) {
   const start = offsets.start;

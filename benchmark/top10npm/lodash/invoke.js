@@ -7,7 +7,7 @@ import toKey from './.internal/toKey.js'
  * Invokes the method at `path` of `object`.
  *
  * @since 4.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to query.
  * @param {Array|string} path The path of the method to invoke.
  * @param {Array} [args] The arguments to invoke the method with.

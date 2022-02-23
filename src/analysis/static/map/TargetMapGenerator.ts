@@ -19,10 +19,10 @@
 import { traverse } from "@babel/core";
 import { TargetVisitor } from "./TargetVisitor";
 import { TargetMetaData } from "@syntest/framework";
-import { JavaScriptFunction } from "./JavaScriptFunction";
+import { ActionDescription } from "../parsing/ActionDescription";
 
 /**
- * Function map generator for targets.
+ * FUNCTION map generator for targets.
  *
  * @author Dimitri Stallenberg
  */
@@ -35,7 +35,7 @@ export class TargetMapGenerator {
    */
   generate(targetAST: any): {
     targetMap: Map<string, TargetMetaData>;
-    functionMap: Map<string, Map<string, JavaScriptFunction>>;
+    functionMap: Map<string, Map<string, ActionDescription>>;
   } {
     const visitor = new TargetVisitor();
 

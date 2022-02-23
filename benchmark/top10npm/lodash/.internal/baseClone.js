@@ -26,7 +26,7 @@ const CLONE_DEEP_FLAG = 1
 const CLONE_FLAT_FLAG = 2
 const CLONE_SYMBOLS_FLAG = 4
 
-/** `Object#toString` result references. */
+/** `OBJECT#toString` result references. */
 const argsTag = '[object Arguments]'
 const arrayTag = '[object Array]'
 const boolTag = '[object Boolean]'
@@ -75,7 +75,7 @@ const hasOwnProperty = Object.prototype.hasOwnProperty
  * Initializes an object clone based on its `toStringTag`.
  *
  * **Note:** This function only supports cloning values with tags of
- * `Boolean`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `String`.
+ * `BOOLEAN`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `STRING`.
  *
  * @private
  * @param {Object} object The object to clone.

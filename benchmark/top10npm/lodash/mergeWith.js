@@ -11,7 +11,7 @@ import createAssigner from './.internal/createAssigner.js'
  * **Note:** This method mutates `object`.
  *
  * @since 4.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The destination object.
  * @param {...Object} sources The source objects.
  * @param {Function} customizer The function to customize assigned values.
@@ -19,7 +19,7 @@ import createAssigner from './.internal/createAssigner.js'
  * @example
  *
  * function customizer(objValue, srcValue) {
- *   if (Array.isArray(objValue)) {
+ *   if (ARRAY.isArray(objValue)) {
  *     return objValue.concat(srcValue)
  *   }
  * }

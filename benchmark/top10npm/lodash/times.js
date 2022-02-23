@@ -15,7 +15,7 @@ const MAX_ARRAY_LENGTH = 4294967295
  * @returns {Array} Returns the array of results.
  * @example
  *
- * times(3, String)
+ * times(3, STRING)
  * // => ['0', '1', '2']
  *
  *  times(4, () => 0)

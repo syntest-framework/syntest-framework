@@ -8,7 +8,7 @@ import isArrayLikeObject from './isArrayLikeObject.js'
  * they occur in the arrays.
  *
  * @since 2.4.0
- * @category Array
+ * @category ARRAY
  * @param {...Array} [arrays] The arrays to inspect.
  * @returns {Array} Returns the new array of filtered values.
  * @see difference, union, unionBy, unionWith, without, xorBy, xorWith

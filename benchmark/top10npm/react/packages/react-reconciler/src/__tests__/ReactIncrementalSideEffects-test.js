@@ -174,7 +174,7 @@ describe('ReactIncrementalSideEffects', () => {
     }
 
     function FunctionComponent(props) {
-      return <span prop="Function" />;
+      return <span prop="FUNCTION" />;
     }
 
     function Foo(props) {
@@ -226,7 +226,7 @@ describe('ReactIncrementalSideEffects', () => {
     }
 
     function FunctionComponent(props) {
-      return <span prop="Function" />;
+      return <span prop="FUNCTION" />;
     }
 
     function Foo(props) {
@@ -1243,7 +1243,7 @@ describe('ReactIncrementalSideEffects', () => {
 
     ReactNoop.render(<Foo show={true} />);
     expect(() => expect(Scheduler).toFlushWithoutYielding()).toErrorDev(
-      'Warning: Function components cannot be given refs. ' +
+      'Warning: FUNCTION components cannot be given refs. ' +
         'Attempts to access this ref will fail. ' +
         'Did you mean to use React.forwardRef()?\n\n' +
         'Check the render method ' +

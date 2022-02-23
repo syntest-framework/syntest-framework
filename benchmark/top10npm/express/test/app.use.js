@@ -271,7 +271,7 @@ describe('app', function(){
 
     it('should reject null as middleware', function () {
       var app = express()
-      assert.throws(function () { app.use('/', null) }, /requires a middleware function but got a Null/)
+      assert.throws(function () { app.use('/', null) }, /requires a middleware function but got a NULL/)
     })
 
     it('should reject Date as middleware', function () {

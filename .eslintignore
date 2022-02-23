@@ -8,3 +8,4 @@ syntest/
 .*
 *.json
 *.md
+benchmark/

@@ -2,7 +2,7 @@
  * Gets a random element from `array`.
  *
  * @since 2.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to sample.
  * @returns {*} Returns the random element.
  * @example

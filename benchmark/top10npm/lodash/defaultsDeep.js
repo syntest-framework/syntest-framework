@@ -8,7 +8,7 @@ import mergeWith from './mergeWith.js'
  * **Note:** This method mutates `object`.
  *
  * @since 3.10.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The destination object.
  * @param {...Object} [sources] The source objects.
  * @returns {Object} Returns `object`.

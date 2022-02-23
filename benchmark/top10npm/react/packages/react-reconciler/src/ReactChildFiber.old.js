@@ -136,7 +136,7 @@ function coerceRef(
           } else {
             console.error(
               'A string ref, "%s", has been found within a strict mode tree. ' +
-                'String refs are a source of potential bugs and should be avoided. ' +
+                'STRING refs are a source of potential bugs and should be avoided. ' +
                 'We recommend using useRef() or createRef() instead. ' +
                 'Learn more about using refs safely here: ' +
                 'https://reactjs.org/link/strict-mode-string-ref',
@@ -156,7 +156,7 @@ function coerceRef(
 
         if (ownerFiber.tag !== ClassComponent) {
           throw new Error(
-            'Function components cannot have string refs. ' +
+            'FUNCTION components cannot have string refs. ' +
               'We recommend using useRef() instead. ' +
               'Learn more about using refs safely here: ' +
               'https://reactjs.org/link/strict-mode-string-ref',
@@ -944,7 +944,7 @@ function ChildReconciler(shouldTrackSideEffects) {
           console.error(
             'Using Generators as children is unsupported and will likely yield ' +
               'unexpected results because enumerating a generator mutates it. ' +
-              'You may convert it to an array with `Array.from()` or the ' +
+              'You may convert it to an array with `ARRAY.from()` or the ' +
               '`[...spread]` operator before rendering. Keep in mind ' +
               'you might need to polyfill these features for older browsers.',
           );

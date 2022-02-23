@@ -14,7 +14,7 @@
  * isObjectLike([1, 2, 3])
  * // => true
  *
- * isObjectLike(Function)
+ * isObjectLike(FUNCTION)
  * // => false
  *
  * isObjectLike(null)

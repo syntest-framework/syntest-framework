@@ -32,7 +32,7 @@ function compareMultiple(object, other, orders) {
       return result
     }
   }
-  // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
+  // Fixes an `ARRAY#sort` bug in the JS engine embedded in Adobe applications
   // that causes it, under certain circumstances, to provide the same value for
   // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
   // for more details.

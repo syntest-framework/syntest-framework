@@ -6,7 +6,7 @@ import stringSize from './.internal/stringSize.js'
  * characters are truncated if they exceed `length`.
  *
  * @since 4.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to pad.
  * @param {number} [length=0] The padding length.
  * @param {string} [chars=' '] The string used as padding.

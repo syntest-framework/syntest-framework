@@ -109,7 +109,7 @@ describe('ReactFunctionComponent', () => {
     expect(() =>
       ReactDOM.render(<FunctionComponentWithChildContext />, container),
     ).toErrorDev(
-      'FunctionComponentWithChildContext: Function ' +
+      'FunctionComponentWithChildContext: FUNCTION ' +
         'components do not support getDerivedStateFromProps.',
     );
   });
@@ -156,7 +156,7 @@ describe('ReactFunctionComponent', () => {
       ReactTestUtils.renderIntoDocument(<Child test="test" />);
     }).toThrowError(
       __DEV__
-        ? 'Function components cannot have string refs. We recommend using useRef() instead.'
+        ? 'FUNCTION components cannot have string refs. We recommend using useRef() instead.'
         : // It happens because we don't save _owner in production for
           // function components.
           'Element ref was specified as a string (me) but no owner was set. This could happen for one of' +
@@ -186,7 +186,7 @@ describe('ReactFunctionComponent', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<ParentUsingStringRef />),
     ).toErrorDev(
-      'Warning: Function components cannot be given refs. ' +
+      'Warning: FUNCTION components cannot be given refs. ' +
         'Attempts to access this ref will fail. ' +
         'Did you mean to use React.forwardRef()?\n\n' +
         'Check the render method ' +
@@ -224,7 +224,7 @@ describe('ReactFunctionComponent', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<ParentUsingFunctionRef />),
     ).toErrorDev(
-      'Warning: Function components cannot be given refs. ' +
+      'Warning: FUNCTION components cannot be given refs. ' +
         'Attempts to access this ref will fail. ' +
         'Did you mean to use React.forwardRef()?\n\n' +
         'Check the render method ' +
@@ -254,7 +254,7 @@ describe('ReactFunctionComponent', () => {
       instance1 = ReactTestUtils.renderIntoDocument(
         <AnonymousParentUsingJSX />,
       );
-    }).toErrorDev('Warning: Function components cannot be given refs.');
+    }).toErrorDev('Warning: FUNCTION components cannot be given refs.');
     // Should be deduped (offending element is on the same line):
     instance1.forceUpdate();
     // Should also be deduped (offending element is on the same line):
@@ -278,7 +278,7 @@ describe('ReactFunctionComponent', () => {
       instance2 = ReactTestUtils.renderIntoDocument(
         <AnonymousParentNotUsingJSX />,
       );
-    }).toErrorDev('Warning: Function components cannot be given refs.');
+    }).toErrorDev('Warning: FUNCTION components cannot be given refs.');
     // Should be deduped (same internal instance, no additional warnings)
     instance2.forceUpdate();
     // Could not be differentiated (since owner is anonymous and no source location)
@@ -296,7 +296,7 @@ describe('ReactFunctionComponent', () => {
     let instance3;
     expect(() => {
       instance3 = ReactTestUtils.renderIntoDocument(<NamedParentNotUsingJSX />);
-    }).toErrorDev('Warning: Function components cannot be given refs.');
+    }).toErrorDev('Warning: FUNCTION components cannot be given refs.');
     // Should be deduped (same owner name, no additional warnings):
     instance3.forceUpdate();
     // Should also be deduped (same owner name, no additional warnings):
@@ -328,7 +328,7 @@ describe('ReactFunctionComponent', () => {
     }
 
     expect(() => ReactTestUtils.renderIntoDocument(<Parent />)).toErrorDev(
-      'Warning: Function components cannot be given refs. ' +
+      'Warning: FUNCTION components cannot be given refs. ' +
         'Attempts to access this ref will fail. ' +
         'Did you mean to use React.forwardRef()?\n\n' +
         'Check the render method ' +

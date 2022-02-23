@@ -3,7 +3,7 @@
  * `object` in the opposite order.
  *
  * @since 2.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {Function} iteratee The function invoked per iteration.
  * @returns {Object} Returns `object`.

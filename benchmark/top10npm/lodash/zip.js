@@ -6,7 +6,7 @@ import unzip from './unzip.js'
  * second elements of the given arrays, and so on.
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {...Array} [arrays] The arrays to process.
  * @returns {Array} Returns the new array of grouped elements.
  * @see unzip, unzipWith, zipObject, zipObjectDeep, zipWith

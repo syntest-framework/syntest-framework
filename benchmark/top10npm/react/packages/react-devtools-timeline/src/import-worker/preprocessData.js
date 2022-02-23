@@ -1076,7 +1076,7 @@ export default async function preprocessData(
     thrownErrors: [],
   };
 
-  // Sort `timeline`. JSON Array Format trace events need not be ordered. See:
+  // Sort `timeline`. JSON ARRAY Format trace events need not be ordered. See:
   // https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview#heading=h.f2f0yd51wi15
   timeline = timeline.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
 

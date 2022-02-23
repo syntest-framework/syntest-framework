@@ -8,7 +8,7 @@ import isArrayLikeObject from './isArrayLikeObject.js'
  * for equality comparisons.
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {...Array} [arrays] The arrays to inspect.
  * @returns {Array} Returns the new array of combined values.
  * @see difference, unionBy, unionWith, without, xor, xorBy

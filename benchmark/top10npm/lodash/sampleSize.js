@@ -6,7 +6,7 @@ import slice from './slice.js'
  * size of `array`.
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to sample.
  * @param {number} [n=1] The number of elements to sample.
  * @returns {Array} Returns the random elements.

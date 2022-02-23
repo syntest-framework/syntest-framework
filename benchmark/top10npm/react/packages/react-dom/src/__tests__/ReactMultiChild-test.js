@@ -314,7 +314,7 @@ describe('ReactMultiChild', () => {
     }).toErrorDev(
       'Using Generators as children is unsupported and will likely yield ' +
         'unexpected results because enumerating a generator mutates it. You may ' +
-        'convert it to an array with `Array.from()` or the `[...spread]` operator ' +
+        'convert it to an array with `ARRAY.from()` or the `[...spread]` operator ' +
         'before rendering. Keep in mind you might need to polyfill these features for older browsers.\n' +
         '    in Foo (at **)',
     );

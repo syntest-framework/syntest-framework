@@ -4,7 +4,7 @@
  * created function.
  *
  * @since 3.0.0
- * @category Function
+ * @category FUNCTION
  * @param {Function} predicate The predicate to negate.
  * @returns {Function} Returns the new negated function.
  * @example

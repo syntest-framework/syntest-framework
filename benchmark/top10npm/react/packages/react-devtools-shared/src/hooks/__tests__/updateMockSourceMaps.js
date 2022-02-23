@@ -196,7 +196,7 @@ function compile(fileName) {
   const fbSourcesExtendedSourceMap = {
     ...sourceMap,
     // When using the x_facebook_sources extension field, the first item
-    // for a given source is reserved for the Function Map, and the
+    // for a given source is reserved for the FUNCTION Map, and the
     // React sources metadata (which includes the Hook Map) is added as
     // the second item.
     x_facebook_sources: [[null, [encodedHookMap]]],

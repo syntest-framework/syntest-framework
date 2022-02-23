@@ -6,7 +6,7 @@ import toString from './toString.js'
  * [kebab case](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles).
  *
  * @since 3.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to convert.
  * @returns {string} Returns the kebab cased string.
  * @see camelCase, lowerCase, snakeCase, startCase, upperCase, upperFirst

@@ -237,7 +237,7 @@ export class VariableVisitor {
     // operations
   // public ReturnStatement: (path) => void = (path) => {
   //   // get the name of the function that we are returning
-  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.type === ScopeType.Method || s.type === ScopeType.Function)
+  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.type === ScopeType.Method || s.type === ScopeType.FUNCTION)
   //   // get the corresponding variable of the function
   //   const variable = this._getVariableInScope(functionScope.name)
   //

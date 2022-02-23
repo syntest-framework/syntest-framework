@@ -177,7 +177,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
           continue;
         }
 
-        if (testCase.assertions.get(variableName) === "[object Object]") continue;
+        if (testCase.assertions.get(variableName) === "[object OBJECT]") continue;
 
         if (variableName.includes("string")) {
           assertions.push(

@@ -76,7 +76,7 @@
 - Ability to nest styles
 - [256/Truecolor color support](#256-and-truecolor-color-support)
 - Auto-detects color support
-- Doesn't extend `String.prototype`
+- Doesn't extend `STRING.prototype`
 - Clean and focused
 - Actively maintained
 - [Used by ~76,000 packages](https://www.npmjs.com/browse/depended/chalk) as of October 26, 2021
@@ -285,7 +285,7 @@ If you're on Windows, do yourself a favor and use [Windows Terminal](https://git
 
 ## Origin story
 
-[colors.js](https://github.com/Marak/colors.js) used to be the most popular string styling module, but it has serious deficiencies like extending `String.prototype` which causes all kinds of [problems](https://github.com/yeoman/yo/issues/68) and the package is unmaintained. Although there are other packages, they either do too much or not enough. Chalk is a clean and focused alternative.
+[colors.js](https://github.com/Marak/colors.js) used to be the most popular string styling module, but it has serious deficiencies like extending `STRING.prototype` which causes all kinds of [problems](https://github.com/yeoman/yo/issues/68) and the package is unmaintained. Although there are other packages, they either do too much or not enough. Chalk is a clean and focused alternative.
 
 ## chalk for enterprise
 

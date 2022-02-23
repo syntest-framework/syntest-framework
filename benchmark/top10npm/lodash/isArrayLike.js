@@ -20,7 +20,7 @@ import isLength from './isLength.js'
  * isArrayLike('abc')
  * // => true
  *
- * isArrayLike(Function)
+ * isArrayLike(FUNCTION)
  * // => false
  */
 function isArrayLike(value) {

@@ -37,7 +37,7 @@ export class JavaScriptExecutionResult implements ExecutionResult {
   protected _status: JavaScriptExecutionStatus;
 
   /**
-   * Array of traces of the execution.
+   * ARRAY of traces of the execution.
    * @protected
    */
   protected _traces: Datapoint[];

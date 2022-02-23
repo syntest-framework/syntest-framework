@@ -29,7 +29,7 @@ const reHasUnescapedHtml = RegExp(reUnescapedHtml.source)
  * XSS vectors.
  *
  * @since 0.1.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to escape.
  * @returns {string} Returns the escaped string.
  * @see escapeRegExp, unescape

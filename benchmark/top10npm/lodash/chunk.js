@@ -7,7 +7,7 @@ import toInteger from './toInteger.js'
  * elements.
  *
  * @since 3.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to process.
  * @param {number} [size=1] The length of each chunk
  * @returns {Array} Returns the new array of chunks.

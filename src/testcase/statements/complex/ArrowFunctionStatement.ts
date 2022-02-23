@@ -17,13 +17,10 @@
  */
 
 // TODO
-import {
-  prng,
-  Parameter,
-} from "@syntest/framework";
+import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
-import { PrimitiveStatement } from "../primitive/PrimitiveStatement";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg
@@ -39,7 +36,11 @@ export class ArrowFunctionStatement extends Statement {
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): ArrowFunctionStatement {
     // TODO mutate returnvalue type
-    return new ArrowFunctionStatement(this.type, prng.uniqueId(), this._returnValue);
+    if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
+      return new ArrowFunctionStatement(this.type, prng.uniqueId(), sampler.sampleArgument(depth + 1, this._returnValue.type));
+    }
+
+    return new ArrowFunctionStatement(this.type, prng.uniqueId(), this._returnValue.mutate(sampler, depth + 1));
   }
 
   copy(): ArrowFunctionStatement {

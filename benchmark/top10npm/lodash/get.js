@@ -5,7 +5,7 @@ import baseGet from './.internal/baseGet.js'
  * `undefined`, the `defaultValue` is returned in its place.
  *
  * @since 3.7.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to query.
  * @param {Array|string} path The path of the property to get.
  * @param {*} [defaultValue] The value returned for `undefined` resolved values.

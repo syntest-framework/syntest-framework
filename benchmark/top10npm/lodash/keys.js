@@ -9,7 +9,7 @@ import isArrayLike from './isArrayLike.js'
  * for more details.
  *
  * @since 0.1.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to query.
  * @returns {Array} Returns the array of property names.
  * @see values, valuesIn

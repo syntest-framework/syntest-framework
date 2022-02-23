@@ -7,7 +7,7 @@ const reQuotes = /['\u2019]/g
  * Converts `string`, as space separated words, to lower case.
  *
  * @since 4.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to convert.
  * @returns {string} Returns the lower cased string.
  * @see camelCase, kebabCase, snakeCase, startCase, upperCase, upperFirst

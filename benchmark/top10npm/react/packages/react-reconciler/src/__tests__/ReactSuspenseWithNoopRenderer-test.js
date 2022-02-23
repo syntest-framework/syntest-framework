@@ -2464,7 +2464,7 @@ describe('ReactSuspenseWithNoopRenderer', () => {
       'Foo',
       'A',
       'Suspend! [B]',
-      // Null
+      // NULL
     ]);
     // Still suspended.
     expect(ReactNoop.getChildren()).toEqual([span('A')]);

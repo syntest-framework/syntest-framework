@@ -15,7 +15,7 @@ const nativeParseInt = root.parseInt
  * [ES5 implementation](https://es5.github.io/#x15.1.2.2) of `parseInt`.
  *
  * @since 1.1.0
- * @category String
+ * @category STRING
  * @param {string} string The string to convert.
  * @param {number} [radix=10] The radix to interpret `string` by.
  * @returns {number} Returns the converted integer.

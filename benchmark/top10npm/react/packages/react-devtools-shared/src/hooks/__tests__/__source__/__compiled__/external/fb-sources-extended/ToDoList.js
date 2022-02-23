@@ -94,7 +94,7 @@ function List(props) {
   const removeItem = (0, React.useCallback)(itemToRemove => setItems(items.filter(item => item !== itemToRemove)), [items]);
   const toggleItem = (0, React.useCallback)(itemToToggle => {
     // Dont use indexOf()
-    // because editing props in DevTools creates a new Object.
+    // because editing props in DevTools creates a new OBJECT.
     const index = items.findIndex(item => item.id === itemToToggle.id);
     setItems(items.slice(0, index).concat({ ...itemToToggle,
       isComplete: !itemToToggle.isComplete

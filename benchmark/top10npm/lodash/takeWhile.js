@@ -6,7 +6,7 @@ import baseWhile from './.internal/baseWhile.js'
  * three arguments: (value, index, array).
  *
  * @since 3.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to query.
  * @param {Function} predicate The function invoked per iteration.
  * @returns {Array} Returns the slice of `array`.

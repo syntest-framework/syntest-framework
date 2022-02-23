@@ -6,7 +6,7 @@ import before from './before.js'
  * invoked with the `this` binding and arguments of the created function.
  *
  * @since 0.1.0
- * @category Function
+ * @category FUNCTION
  * @param {Function} func The function to restrict.
  * @returns {Function} Returns the new restricted function.
  * @example

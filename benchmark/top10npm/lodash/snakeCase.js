@@ -6,7 +6,7 @@ import toString from './toString.js'
  * [snake case](https://en.wikipedia.org/wiki/Snake_case).
  *
  * @since 3.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to convert.
  * @returns {string} Returns the snake cased string.
  * @see camelCase, lowerCase, kebabCase, startCase, upperCase, upperFirst

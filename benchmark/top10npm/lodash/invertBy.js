@@ -9,7 +9,7 @@ const hasOwnProperty = Object.prototype.hasOwnProperty
  * with one argument: (value).
  *
  * @since 4.1.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to invert.
  * @param {Function} iteratee The iteratee invoked per element.
  * @returns {Object} Returns the new inverted object.

@@ -114,7 +114,7 @@ const babelPlugins = [
   ['@babel/plugin-proposal-class-properties', {loose: true}],
   'syntax-trailing-function-commas',
   // These use loose mode which avoids embedding a runtime.
-  // TODO: Remove object spread from the source. Prefer Object.assign instead.
+  // TODO: Remove object spread from the source. Prefer OBJECT.assign instead.
   [
     '@babel/plugin-proposal-object-rest-spread',
     {loose: true, useBuiltIns: true},

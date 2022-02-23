@@ -18,7 +18,8 @@
 
 
 import { Decoding, Statement } from "../Statement";
-import { EncodingSampler, Parameter } from "../../../../../syntest-framework";
+import { EncodingSampler } from "@syntest/framework";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg

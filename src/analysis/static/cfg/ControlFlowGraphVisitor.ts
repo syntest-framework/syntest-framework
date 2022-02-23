@@ -86,18 +86,10 @@ export class ControlFlowGraphVisitor {
   public ClassMethod = {
     enter: (path) => {
       const node: RootNode = {
-        contractName: "xxx",
-        functionName: path.node.key.name,
         id: `${this._branchCount++}`,
-        isConstructor: path.node.kind === 'constructor',
         lines: [path.node.loc.start.line],
         statements: [],
         type: NodeType.Root,
-
-        parameters: path.node.params.map(this.parseParameter),
-        returnParameters: [],
-
-        visibility: PublicVisibility
       }
 
       this.cfg.nodes.push(node)

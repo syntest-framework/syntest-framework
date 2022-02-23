@@ -1099,7 +1099,7 @@ describe('ReactDOMServer', () => {
   });
 
   describe('custom element server rendering', () => {
-    it('String properties should be server rendered for custom elements', () => {
+    it('STRING properties should be server rendered for custom elements', () => {
       const output = ReactDOMServer.renderToString(
         <my-custom-element foo="bar" />,
       );
@@ -1114,7 +1114,7 @@ describe('ReactDOMServer', () => {
     });
 
     // @gate enableCustomElementPropertySupport
-    it('Object properties should not be server rendered for custom elements', () => {
+    it('OBJECT properties should not be server rendered for custom elements', () => {
       const output = ReactDOMServer.renderToString(
         <my-custom-element foo={{foo: 'bar'}} />,
       );
@@ -1122,14 +1122,14 @@ describe('ReactDOMServer', () => {
     });
 
     // @gate enableCustomElementPropertySupport
-    it('Array properties should not be server rendered for custom elements', () => {
+    it('ARRAY properties should not be server rendered for custom elements', () => {
       const output = ReactDOMServer.renderToString(
         <my-custom-element foo={['foo', 'bar']} />,
       );
       expect(output).toBe(`<my-custom-element></my-custom-element>`);
     });
 
-    it('Function properties should not be server rendered for custom elements', () => {
+    it('FUNCTION properties should not be server rendered for custom elements', () => {
       const output = ReactDOMServer.renderToString(
         <my-custom-element foo={() => console.log('bar')} />,
       );

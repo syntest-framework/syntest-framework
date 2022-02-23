@@ -1,6 +1,6 @@
 import { JavaScriptTestCaseSampler } from "./JavaScriptTestCaseSampler";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
-import { FunctionDescription, Parameter, prng, Properties } from "@syntest/framework";
+import { prng, Properties } from "@syntest/framework";
 import { ConstructorCall } from "../statements/root/ConstructorCall";
 import { MethodCall } from "../statements/action/MethodCall";
 import { BoolStatement } from "../statements/primitive/BoolStatement";
@@ -11,6 +11,11 @@ import { Statement } from "../statements/Statement";
 import { FunctionCall } from "../statements/root/FunctionCall";
 import { JavaScriptSubject, SubjectType } from "../../search/JavaScriptSubject";
 import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionStatement";
+import { ActionDescription } from "../../analysis/static/parsing/ActionDescription";
+import { ActionType } from "../../analysis/static/parsing/ActionType";
+import { Parameter } from "../../analysis/static/parsing/Parameter";
+import { TypeProbabilityMap } from "../../analysis/static/types/resolving/TypeProbabilityMap";
+import { TypingType } from "../../analysis/static/types/resolving/Typing";
 
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
@@ -35,21 +40,14 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleFunctionCall(depth: number): FunctionCall {
-    const action = <FunctionDescription>(
-      prng.pickOne(this._subject.getPossibleActions("function"))
+    const action = <ActionDescription>(
+      prng.pickOne((<JavaScriptSubject>this._subject).getPossibleActions(ActionType.FUNCTION))
     );
 
-    const args: Statement[] = [];
-
-    for (const param of action.parameters) {
-      if (param.type != "")
-        args.push(
-          this.sampleArgument(depth + 1, param)
-        );
-    }
+    const args: Statement[] = action.parameters.map((param) => this.sampleArgument(depth + 1, param));
 
     return new FunctionCall(
-      action.returnParameters[0],
+      action.returnParameter,
       prng.uniqueId(),
       action.name,
       args
@@ -57,32 +55,31 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleConstructor(depth: number): ConstructorCall {
-    const constructors = this._subject.getPossibleActions("constructor");
+    const constructors = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.CONSTRUCTOR);
+
+    const typeMap = new TypeProbabilityMap()
+    typeMap.addType({
+      type: TypingType.OBJECT,
+      name: this.subject.name,
+      import: '' // TODO
+    }, 1)
 
     if (constructors.length > 0) {
-      const action = <FunctionDescription>(
+      const action = <ActionDescription>(
         prng.pickOne(constructors)
       );
 
-      const args: Statement[] = []
-      action.parameters
-        .forEach((param) => {
-          if (param.type != "") {
-            args.push(
-              this.sampleArgument(depth + 1, param)
-            );
-          }
-        })
+      const args: Statement[] = action.parameters.map((param) => this.sampleArgument(depth + 1, param));
 
       const calls: Statement[] = []
-      const methods = this._subject.getPossibleActions("method")
+      const methods = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
       const nCalls = methods.length && prng.nextInt(1, Math.min(Properties.max_action_statements, methods.length));
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1))
       }
 
       return new ConstructorCall(
-        { type: this.subject.name, name: "class" },
+        { type: typeMap, name: "class" },
         prng.uniqueId(),
         args,
         calls,
@@ -92,14 +89,14 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // if no constructors is available, we invoke the default (implicit) constructor
 
       const calls: Statement[] = []
-      const methods = this._subject.getPossibleActions("method")
+      const methods = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
       const nCalls = methods.length && prng.nextInt(1, Math.min(Properties.max_action_statements, methods.length));
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1))
       }
 
       return new ConstructorCall(
-        { type: this._subject.name, name: "class" },
+        { type: typeMap, name: "class" },
         prng.uniqueId(),
         [],
         calls,
@@ -109,21 +106,14 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleMethodCall(depth: number): MethodCall {
-    const action = <FunctionDescription>(
-      prng.pickOne(this._subject.getPossibleActions("method"))
+    const action = <ActionDescription>(
+      prng.pickOne((<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD))
     );
 
-    const args: Statement[] = [];
-
-    for (const param of action.parameters) {
-      if (param.type != "")
-        args.push(
-          this.sampleArgument(depth + 1, param)
-        );
-    }
+    const args: Statement[] = action.parameters.map((param) => this.sampleArgument(depth + 1, param));
 
     return new MethodCall(
-      action.returnParameters[0],
+      action.returnParameter,
       prng.uniqueId(),
       action.name,
       args
@@ -136,33 +126,30 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     // TODO more complex sampling of function return values
     // Take regular primitive value
 
-    if (type.type === "function") {
+    const chosenType = type.type.getRandomType()
+
+    if (chosenType.type === "function") {
       // TODO expectation of return value
       return new ArrowFunctionStatement(
         type,
         prng.uniqueId(),
-        this.sampleArgument(depth + 1, {type: 'any', name: 'noname'})
+        this.sampleArgument(depth + 1, {type: new TypeProbabilityMap(), name: 'noname'})
       )
-    }
-    // TODO
-    else if (type.type === 'object') {
-      return
+    } else if (chosenType.type === 'object') {
+      // TODO
+      // return
     }
 
-    return this.samplePrimitive(depth, type);
-  }
-
-  samplePrimitive(depth: number, type: Parameter): Statement {
-    if (type.type === "boolean") {
+    if (chosenType.type === "boolean") {
       return BoolStatement.getRandom(type);
-    } else if (type.type === "string") {
+    } else if (chosenType.type === "string") {
       return StringStatement.getRandom(type);
-    } else if (type.type === "numeric") {
+    } else if (chosenType.type === "numeric") {
       return NumericStatement.getRandom(type);
       // TODO null
-      // TODO Regex
+      // TODO REGEX
       // TODO
-    } else if (type.type === "any") {
+    } else if (chosenType.type === "any") {
       // TODO
       const choice = prng.nextInt(0, 2)
       if (choice === 0) {
@@ -174,7 +161,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
     }
 
-    throw new Error(`Unknown type '${type.type}'!`);
+    throw new Error(`Unknown type!\n${JSON.stringify(chosenType, null, 2)}`);
   }
-
 }

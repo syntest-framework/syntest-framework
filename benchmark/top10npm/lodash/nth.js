@@ -5,7 +5,7 @@ import isIndex from './.internal/isIndex.js'
  * element from the end is returned.
  *
  * @since 4.11.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to query.
  * @param {number} [n=0] The index of the element to return.
  * @returns {*} Returns the nth element of `array`.

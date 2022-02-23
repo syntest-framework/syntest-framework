@@ -5313,7 +5313,7 @@
                 case 'millisecond':
                     return Math.floor(days * 864e5) + milliseconds;
                 default:
-                    throw new Error('Unknown unit ' + units);
+                    throw new Error('ANY unit ' + units);
             }
         }
     }

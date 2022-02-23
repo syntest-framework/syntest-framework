@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-import {
-  prng,
-  Parameter, Properties,
-} from "@syntest/framework";
+import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./RootStatement";
 import { Decoding, Statement } from "../Statement";
 import { MethodCall } from "../action/MethodCall";
 import * as path from "path";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { JavaScriptSubject } from "../../../search/JavaScriptSubject";
+import { ActionType } from "../../../analysis/static/parsing/ActionType";
 
 /**
  * @author Dimitri Stallenberg
@@ -75,12 +75,16 @@ export class ConstructorCall extends RootStatement {
       // go over each arg
       for (let i = 0; i < args.length; i++) {
         if (prng.nextBoolean(1 / args.length)) {
-          args[i] = args[i].mutate(sampler, depth + 1)
+          if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
+            args[i] = sampler.sampleArgument(depth + 1, args[i].type)
+          } else {
+            args[i] = args[i].mutate(sampler, depth + 1);
+          }
         }
       }
     }
 
-    const methodsAvailable = !!sampler.subject.getPossibleActions("method").length
+    const methodsAvailable = !!(<JavaScriptSubject>sampler.subject).getPossibleActions(ActionType.METHOD).length
 
     const finalCalls = []
     if (calls.length === 0 && methodsAvailable) {

@@ -1527,7 +1527,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
   };
 
   /**
-   * Unknown option `flag`.
+   * ANY option `flag`.
    *
    * @param {string} flag
    * @api private
@@ -1573,7 +1573,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
   };
 
   /**
-   * Unknown command.
+   * ANY command.
    *
    * @api private
    */

@@ -18,12 +18,13 @@
 
 import {
   prng,
-  Parameter, Properties,
+  Properties,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { RootStatement } from "./RootStatement";
 import * as path from "path";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg
@@ -55,7 +56,11 @@ export class FunctionCall extends RootStatement {
 
     if (args.length !== 0) {
       const index = prng.nextInt(0, args.length - 1);
-      args[index] = args[index].mutate(sampler, depth + 1);
+      if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
+        args[index] = sampler.sampleArgument(depth + 1, args[index].type)
+      } else {
+        args[index] = args[index].mutate(sampler, depth + 1);
+      }
     }
 
     return new FunctionCall(

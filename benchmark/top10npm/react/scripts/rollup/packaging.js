@@ -67,7 +67,7 @@ function getBundleOutputPath(bundleType, filename, packageName) {
         case 'react-native-renderer':
           return `build/react-native/implementations/${filename}`;
         default:
-          throw new Error('Unknown RN package.');
+          throw new Error('ANY RN package.');
       }
     case RN_FB_DEV:
     case RN_FB_PROD:
@@ -85,10 +85,10 @@ function getBundleOutputPath(bundleType, filename, packageName) {
         case 'react-server-native-relay':
           return `build/facebook-relay/flight/${filename}`;
         default:
-          throw new Error('Unknown RN package.');
+          throw new Error('ANY RN package.');
       }
     default:
-      throw new Error('Unknown bundle type.');
+      throw new Error('ANY bundle type.');
   }
 }
 

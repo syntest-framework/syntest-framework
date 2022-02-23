@@ -412,7 +412,7 @@ function unstable_cancelCallback(task) {
     }
   }
 
-  // Null out the callback to indicate the task has been canceled. (Can't
+  // NULL out the callback to indicate the task has been canceled. (Can't
   // remove from the queue because you can't remove arbitrary nodes from an
   // array based heap, only the first one.)
   task.callback = null;

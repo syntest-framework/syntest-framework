@@ -2,39 +2,35 @@ import { ElementType } from "../discovery/Element";
 
 export interface Typing {
   type: TypingType
-}
-
-export interface ComplexTyping extends Typing {
-  type: TypingType.Object
-  name: string
-  import: string
+  name?: string
+  import?: string
 }
 
 export enum TypingType {
-  Unknown='any',
-  Numeric='numeric',
-  String='string',
-  Boolean='boolean',
-  Null='null',
-  Regex='regex',
+  ANY='any',
+  NUMERIC='numeric',
+  STRING='string',
+  BOOLEAN='boolean',
+  NULL='null',
+  REGEX='regex',
 
-  Array='array',
-  Object='object',
+  ARRAY='array',
+  OBJECT='object',
 
-  Function='function'
+  FUNCTION='function'
 }
 
 export function elementTypeToTypingType(elementType: ElementType): TypingType | void {
   switch (elementType) {
   case ElementType.BooleanConstant:
-    return TypingType.Boolean
+    return TypingType.BOOLEAN
   case ElementType.StringConstant:
-    return TypingType.String
+    return TypingType.STRING
   case ElementType.NumericalConstant:
-    return TypingType.Numeric
+    return TypingType.NUMERIC
   case ElementType.NullConstant:
-    return TypingType.Null
+    return TypingType.NULL
   case ElementType.RegexConstant:
-    return TypingType.Regex
+    return TypingType.REGEX
   }
 }

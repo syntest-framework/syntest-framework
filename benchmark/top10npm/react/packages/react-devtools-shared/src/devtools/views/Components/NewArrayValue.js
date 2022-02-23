@@ -45,7 +45,7 @@ export default function NewArrayValue({
   const [isInvalid, setIsInvalid] = useState(false);
 
   // This is a bit of an unusual usage of the EditableName component,
-  // but otherwise it acts the way we want for a new Array entry.
+  // but otherwise it acts the way we want for a new ARRAY entry.
   const overrideName = (oldPath, newPath) => {
     const value = newPath[newPath.length - 1];
 
