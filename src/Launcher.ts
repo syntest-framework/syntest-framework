@@ -128,8 +128,8 @@ export class Launcher {
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
 
-    const typeResolver = new TypeResolverUnknown() // TODO make switch for the type of resolver
-    // const typeResolver = new TypeResolverInference() // TODO make switch for the type of resolver
+    // const typeResolver = new TypeResolverUnknown() // TODO make switch for the type of resolver
+    const typeResolver = new TypeResolverInference() // TODO make switch for the type of resolver
 
     const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
     const importGenerator = new ImportGenerator()

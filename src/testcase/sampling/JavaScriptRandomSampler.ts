@@ -16,6 +16,7 @@ import { ActionType } from "../../analysis/static/parsing/ActionType";
 import { Parameter } from "../../analysis/static/parsing/Parameter";
 import { TypeProbabilityMap } from "../../analysis/static/types/resolving/TypeProbabilityMap";
 import { TypingType } from "../../analysis/static/types/resolving/Typing";
+import { ArrayStatement } from "../statements/complex/ArrayStatement";
 
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
@@ -120,11 +121,18 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     );
   }
 
-  sampleArgument(depth: number, type: Parameter): Statement {
+  sampleArgument(depth: number, type: Parameter = null): Statement {
 
     // TODO sampling arrays or objects
     // TODO more complex sampling of function return values
     // Take regular primitive value
+
+    if (!type) {
+      type = {
+        name: "unnamed",
+        type: new TypeProbabilityMap()
+      }
+    }
 
     const chosenType = type.type.getRandomType()
 
@@ -133,14 +141,25 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       return new ArrowFunctionStatement(
         type,
         prng.uniqueId(),
-        this.sampleArgument(depth + 1, {type: new TypeProbabilityMap(), name: 'noname'})
+        this.sampleArgument(depth + 1)
       )
     } else if (chosenType.type === 'object') {
       // TODO
       // return
-    }
+    } else if (chosenType.type === 'array') {
+      const children = []
 
-    if (chosenType.type === "boolean") {
+      for (let i = 0; i < prng.nextInt(0, 5); i++) {
+        children.push(
+          this.sampleArgument(depth + 1)
+        )
+      }
+      return new ArrayStatement(
+        type,
+        prng.uniqueId(),
+        children
+      )
+    }else if (chosenType.type === "boolean") {
       return BoolStatement.getRandom(type);
     } else if (chosenType.type === "string") {
       return StringStatement.getRandom(type);
@@ -151,13 +170,19 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // TODO
     } else if (chosenType.type === "any") {
       // TODO
-      const choice = prng.nextInt(0, 2)
+      const choice = prng.nextInt(0, 3)
       if (choice === 0) {
         return BoolStatement.getRandom(type);
       } else if (choice === 1) {
         return StringStatement.getRandom(type);
-      } else {
+      } else if (choice === 2) {
         return NumericStatement.getRandom(type);
+      } else if (choice === 3) {
+        return new ArrowFunctionStatement(
+          type,
+          prng.uniqueId(),
+          this.sampleArgument(depth + 1, {type: new TypeProbabilityMap(), name: 'noname'})
+        )
       }
     }
 

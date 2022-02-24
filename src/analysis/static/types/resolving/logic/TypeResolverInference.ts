@@ -93,10 +93,12 @@ export class TypeResolverInference extends TypeResolver {
     this.wrapperElementIsRelation = wrapperElementIsRelation
 
 
-
+    // TODO remove this
+    let rounds = 0
     let somethingSolved = true
-    while (somethingSolved) {
+    while (somethingSolved && rounds < 1000) {
       somethingSolved = false
+      rounds += 1 // TODO remove this
 
       // TODO maybe this is only needed once
       somethingSolved = this.resolvePrimitiveElements(elements) || somethingSolved
