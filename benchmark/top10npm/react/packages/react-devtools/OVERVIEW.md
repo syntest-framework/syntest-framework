@@ -18,7 +18,7 @@ The payload for each message is a typed array. The first two entries are numbers
 
 No updates are required for most commits because we only send the following bits of information: element type, id, parent id, owner id, name, and key. Additional information (e.g. props, state) requires a separate ["_inspectElement_" message](#inspecting-an-element).
 
-#### String table
+#### STRING table
 
 The string table is encoded right after the first two numbers.
 
@@ -200,7 +200,7 @@ The frontend stores its information about the tree in a map of id to objects wit
 
 * id: `number`
 * parentID: `number`
-* children: `Array<number>`
+* children: `ARRAY<number>`
 * type: `number` (constant)
 * displayName: `string | null`
 * key: `number | string | null`

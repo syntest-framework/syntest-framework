@@ -18,21 +18,20 @@
 import * as path from "path";
 import { readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
-import { CFG, TargetMetaData, TargetPool } from "@syntest/framework";
+import { CFG, Target, TargetMetaData, TargetPool } from "@syntest/framework";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
-import { JavaScriptFunction } from "./map/JavaScriptFunction";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
 import { ExportGenerator } from "./dependency/ExportGenerator";
 import { existsSync } from "fs";
 import { Export, ExportType } from "./dependency/ExportVisitor";
 import { SubjectType } from "../../search/JavaScriptSubject";
-import { Typing } from "./types/Typing";
-import { TypeResolver } from "./types/TypeResolver";
-import { Scope } from "./variable/Scope";
-import { Element } from "./variable/Element";
-import { VariableGenerator } from "./variable/VariableGenerator";
-import { TypeResolverInference } from "./types/TypeResolverInference";
+import { TypeResolver } from "./types/resolving/TypeResolver";
+import { VariableGenerator } from "./types/discovery/VariableGenerator";
+import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
+import { ComplexObject } from "./types/discovery/object/ComplexObject";
+import { ActionDescription } from "./parsing/ActionDescription";
+
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
   type: SubjectType,
@@ -45,6 +44,7 @@ export class JavaScriptTargetPool extends TargetPool {
   protected controlFlowGraphGenerator: ControlFlowGraphGenerator;
   protected importGenerator: ImportGenerator;
   protected exportGenerator: ExportGenerator;
+  private _typeResolver: TypeResolver;
 
   // Mapping: filepath -> source code
   protected _sources: Map<string, string>;
@@ -58,18 +58,14 @@ export class JavaScriptTargetPool extends TargetPool {
   // Mapping: filepath -> target name -> function name -> function
   protected _functionMaps: Map<
     string,
-    Map<string, Map<string, JavaScriptFunction>>
+    Map<string, Map<string, ActionDescription>>
   >;
 
   // Mapping: filepath -> target name -> (function name -> CFG)
   protected _controlFlowGraphs: Map<string, Map<string, CFG>>;
 
-  // Mapping: filepath -> target name -> [importsMap, dependencyMap]
-  // TODO better name...
-  protected _dependencyMaps: Map<
-    string,
-    Map<string, [Map<string, string>, Map<string, Export[]>]>
-    >;
+  // Mapping: filepath -> dependencies
+  protected _dependencyMaps: Map<string, Export[]>;
 
   // Mapping: filepath -> target name -> Exports
   protected _exportMap: Map<string, Export[]>
@@ -79,7 +75,8 @@ export class JavaScriptTargetPool extends TargetPool {
     targetMapGenerator: TargetMapGenerator,
     controlFlowGraphGenerator: ControlFlowGraphGenerator,
     importGenerator: ImportGenerator,
-    exportGenerator: ExportGenerator
+    exportGenerator: ExportGenerator,
+    typeResolver: TypeResolver
   ) {
     super();
     this.abstractSyntaxTreeGenerator = abstractSyntaxTreeGenerator;
@@ -87,13 +84,14 @@ export class JavaScriptTargetPool extends TargetPool {
     this.controlFlowGraphGenerator = controlFlowGraphGenerator;
     this.importGenerator = importGenerator;
     this.exportGenerator = exportGenerator;
+    this._typeResolver = typeResolver;
 
     this._sources = new Map<string, string>();
     this._abstractSyntaxTrees = new Map<string, string>();
     this._targetMap = new Map<string, Map<string, JavaScriptTargetMetaData>>();
     this._functionMaps = new Map<
       string,
-      Map<string, Map<string, JavaScriptFunction>>
+      Map<string, Map<string, ActionDescription>>
     >();
     this._controlFlowGraphs = new Map<string, Map<string, CFG>>();
 
@@ -199,7 +197,7 @@ export class JavaScriptTargetPool extends TargetPool {
   getFunctionMap(
     targetPath: string,
     targetName: string
-  ): Map<string, JavaScriptFunction> {
+  ): Map<string, ActionDescription> {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._functionMaps.has(absoluteTargetPath)) {
@@ -227,18 +225,11 @@ export class JavaScriptTargetPool extends TargetPool {
     return this._exportMap.get(absoluteTargetPath)
   }
 
-  getImportDependencies(targetPath: string, targetName: string):  [Map<string, string>, Map<string, Export[]>] {
+  getDependencies(targetPath: string):  Export[] {
     const absoluteTargetPath = path.resolve(targetPath);
 
-    if (!this._dependencyMaps.has(absoluteTargetPath))
-      this._dependencyMaps.set(absoluteTargetPath, new Map());
-
-    if (!this._dependencyMaps.get(absoluteTargetPath).has(targetName)) {
-      // Import the contract under test
-      const importsMap = new Map<string, string>();
-      importsMap.set(targetName, targetName);
-
-      // Find all external imports in the contract under test
+    if (!this._dependencyMaps.has(absoluteTargetPath)) {
+      // Find all external imports in the file under test
       const imports = this.importGenerator.generate(this.getAST(targetPath))
 
       // For each external import scan the file for libraries with exported functions
@@ -250,26 +241,103 @@ export class JavaScriptTargetPool extends TargetPool {
         // Scan for libraries with public or external functions
         const exports = this.getExports(pathLib)
 
-        // Import the external file in the test
-        importsMap.set(
-          path.basename(importPath).split(".")[0],
-          path.basename(importPath).split(".")[0]
-        );
-
         // Import the found libraries
         // TODO: check for duplicates in libraries
         libraries.push(...exports);
       });
 
-      // Return the library dependency information
-      const dependencyMap = new Map<string, Export[]>();
-      dependencyMap.set(targetName, libraries);
-
       this._dependencyMaps
-        .get(targetPath)
-        .set(targetName, [importsMap, dependencyMap]);
+        .set(targetPath, libraries);
     }
 
-    return this._dependencyMaps.get(absoluteTargetPath).get(targetName);
+    return this._dependencyMaps.get(absoluteTargetPath)
+  }
+
+  getInstrumentationTargets(targetPath: string, paths: Set<string> = null): Set<string> {
+    const absoluteTargetPath = path.resolve(targetPath);
+
+    if (paths === null) {
+      paths = new Set<string>()
+    }
+
+    paths.add(absoluteTargetPath);
+
+    const dependencies = this.getDependencies(absoluteTargetPath);
+
+    for (const dependency of dependencies) {
+      if (paths.has(dependency.filePath)) {
+        continue
+      }
+      this.getInstrumentationTargets(dependency.filePath, paths).forEach((path) => {
+        paths.add(path)
+      })
+    }
+
+    return paths
+  }
+
+  resolveTypes(targetPath: string): void {
+    const absoluteTargetPath = path.resolve(targetPath);
+
+    const ast = this.getAST(absoluteTargetPath)
+
+    const dependencies = this.getDependencies(absoluteTargetPath);
+
+    // TODO first look at dependencies to extract other variables?
+
+    const objects: ComplexObject[] = []
+
+    //TODO the entire project should be searched for complex object types instead of dependencies only
+    const objectGenerator = new ObjectGenerator()
+    objects.push(...objectGenerator.generate(absoluteTargetPath, ast))
+
+    // standard stuff
+    // function https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
+    objects.push({
+      import: "",
+      name: "function",
+      properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
+      functions: new Set(['apply', 'bind', 'call', 'toString'])
+    })
+
+    // array https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+    objects.push({
+      import: "",
+      name: "array",
+      properties: new Set(['length']),
+      functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values'])
+    })
+
+    // string
+    objects.push({
+      import: "",
+      name: "string",
+      properties: new Set(['length']),
+      functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf'])
+    })
+
+    // object
+    // TODO
+    // this._objects.push({
+    //   import: "",
+    //   name: "object",
+    //   properties: new Set([]),
+    //   functions: new Set([])
+    // })
+
+    for (const dependency of dependencies) {
+      const objectGenerator = new ObjectGenerator()
+      objects.push(...objectGenerator.generate(dependency.filePath, this.getAST(dependency.filePath)))
+    }
+
+    const generator = new VariableGenerator()
+    const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(targetPath, ast)
+
+    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation, objects)
+  }
+
+
+  get typeResolver(): TypeResolver {
+    return this._typeResolver;
   }
 }

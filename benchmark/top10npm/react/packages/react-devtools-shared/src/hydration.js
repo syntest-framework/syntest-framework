@@ -250,7 +250,7 @@ export function dehydrate(
 
         // TRICKY
         // Don't use [...spread] syntax for this purpose.
-        // This project uses @babel/plugin-transform-spread in "loose" mode which only works with Array values.
+        // This project uses @babel/plugin-transform-spread in "loose" mode which only works with ARRAY values.
         // Other types (e.g. typed arrays, Sets) will not spread correctly.
         Array.from(data).forEach(
           (item, i) =>

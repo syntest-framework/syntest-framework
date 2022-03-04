@@ -17,7 +17,7 @@ const nodeIsArrayBuffer = nodeTypes && nodeTypes.isArrayBuffer
  * isArrayBuffer(new ArrayBuffer(2))
  * // => true
  *
- * isArrayBuffer(new Array(2))
+ * isArrayBuffer(new ARRAY(2))
  * // => false
  */
 const isArrayBuffer = nodeIsArrayBuffer

@@ -749,7 +749,7 @@ export function inspectHooksOfFiber(
     fiber.tag !== ForwardRef
   ) {
     throw new Error(
-      'Unknown Fiber. Needs to be a function component to inspect hooks.',
+      'ANY Fiber. Needs to be a function component to inspect hooks.',
     );
   }
   // Warm up the cache so that it doesn't consume the currentHook.

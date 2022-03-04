@@ -1,11 +1,30 @@
+/*
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest JavaScript.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { Element, ElementType, getElement, getElementId } from "./Element";
 import { getRelationType, Relation, RelationType } from "./Relation";
 import { Scope, ScopeType } from "./Scope";
+import { ComplexObject } from "./object/ComplexObject";
 
 // TODO functionexpression
 // TODO return
 export class VariableVisitor {
 
+  private _filePath: string;
   // Stack because functions in functions in functions ... etc.
   private _currentScopeStack: Scope[]
 
@@ -43,7 +62,9 @@ export class VariableVisitor {
     return this._relations;
   }
 
-  constructor() {
+  constructor(filePath: string) {
+    this._filePath = filePath
+
     this._scopes = []
     this._relations = []
     this._currentScopeStack = []
@@ -55,6 +76,7 @@ export class VariableVisitor {
   private _createGlobalScope() {
     const globalScope: Scope = {
       name: "global",
+      filePath: this._filePath,
       type: ScopeType.Global
     }
 
@@ -69,6 +91,7 @@ export class VariableVisitor {
   private _enterScope(name: string, type: ScopeType) {
     const scope: Scope = {
       name: name,
+      filePath: this._filePath,
       type: type,
     }
     this._currentScopeStack.push(scope)
@@ -231,7 +254,7 @@ export class VariableVisitor {
     // operations
   // public ReturnStatement: (path) => void = (path) => {
   //   // get the name of the function that we are returning
-  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.type === ScopeType.Method || s.type === ScopeType.Function)
+  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.type === ScopeType.Method || s.type === ScopeType.FUNCTION)
   //   // get the corresponding variable of the function
   //   const variable = this._getVariableInScope(functionScope.name)
   //
@@ -247,7 +270,7 @@ export class VariableVisitor {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: getRelationType("unary", path.node.operator),
+      relation: getRelationType("unary", path.node.operator, path.node.prefix),
       involved: [
         getElement(scope, path.node.argument)
       ]
@@ -313,11 +336,11 @@ export class VariableVisitor {
     this.relations.push(relation)
   }
 
-  public AssignmentPattern: (path) => void = (path) => {
+  public AssignmentExpression: (path) => void = (path) => {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: RelationType.Assignment,
+      relation: getRelationType("assignment", path.node.operator),
       involved: [
         getElement(scope, path.node.left),
         getElement(scope, path.node.right)
@@ -363,7 +386,7 @@ export class VariableVisitor {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: RelationType.Member,
+      relation: RelationType.PropertyAccessor,
       involved: [
         getElement(scope, path.node.object),
         getElement(scope, path.node.property)
@@ -379,7 +402,7 @@ export class VariableVisitor {
     const scope = this._getCurrentScope()
 
     const relation: Relation = {
-      relation: RelationType.Ternary,
+      relation: RelationType.Conditional,
       involved: [
         getElement(scope, path.node.test),
         getElement(scope, path.node.consequent),

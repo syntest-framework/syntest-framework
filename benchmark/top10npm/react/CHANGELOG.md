@@ -179,7 +179,7 @@ Today, we are releasing React 17!
 * Fix heuristic for determining when to hydrate, so we don't incorrectly hydrate during an update. ([@sebmarkbage](http://github.com/sebmarkbage) in [#16739](https://github.com/facebook/react/pull/16739))
 * Clear additional fiber fields during unmount to save memory. ([@trueadm](http://github.com/trueadm) in [#16807](https://github.com/facebook/react/pull/16807))
 * Fix bug with required text fields in Firefox. ([@halvves](http://github.com/halvves) in [#16578](https://github.com/facebook/react/pull/16578))
-* Prefer `Object.is` instead of inline polyfill, when available. ([@ku8ar](http://github.com/ku8ar) in [#16212](https://github.com/facebook/react/pull/16212))
+* Prefer `OBJECT.is` instead of inline polyfill, when available. ([@ku8ar](http://github.com/ku8ar) in [#16212](https://github.com/facebook/react/pull/16212))
 * Fix bug when mixing Suspense and error handling. ([@acdlite](http://github.com/acdlite) in [#16801](https://github.com/facebook/react/pull/16801))
 
 
@@ -312,7 +312,7 @@ Today, we are releasing React 17!
 ### React DOM
 
 * Bail out of rendering on identical values for `useState` and `useReducer` Hooks. ([@acdlite](https://github.com/acdlite) in [#14569](https://github.com/facebook/react/pull/14569))
-* Use `Object.is` algorithm for comparing `useState` and `useReducer` values. ([@Jessidhia](https://github.com/Jessidhia) in [#14752](https://github.com/facebook/react/pull/14752))
+* Use `OBJECT.is` algorithm for comparing `useState` and `useReducer` values. ([@Jessidhia](https://github.com/Jessidhia) in [#14752](https://github.com/facebook/react/pull/14752))
 * Don’t compare the first argument passed to `useEffect`/`useMemo`/`useCallback` Hooks. ([@acdlite](https://github.com/acdlite) in [#14594](https://github.com/facebook/react/pull/14594))
 * Support synchronous thenables passed to `React.lazy()`. ([@gaearon](https://github.com/gaearon) in [#14626](https://github.com/facebook/react/pull/14626))
 * Render components with Hooks twice in Strict Mode (DEV-only) to match class behavior. ([@gaearon](https://github.com/gaearon) in [#14654](https://github.com/facebook/react/pull/14654))
@@ -927,7 +927,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 
 * Fix AMD support for addons depending on `react`. ([@flarnie](https://github.com/flarnie) in [#9919](https://github.com/facebook/react/issues/9919))
 * Fix `isMounted()` to return `true` in `componentWillUnmount`. ([@mridgway](https://github.com/mridgway) in [#9638](https://github.com/facebook/react/issues/9638))
-* Fix `react-addons-update` to not depend on native `Object.assign`. ([@gaearon](https://github.com/gaearon) in [#9937](https://github.com/facebook/react/pull/9937))
+* Fix `react-addons-update` to not depend on native `OBJECT.assign`. ([@gaearon](https://github.com/gaearon) in [#9937](https://github.com/facebook/react/pull/9937))
 * Remove broken Google Closure Compiler annotation from `create-react-class`. ([@gaearon](https://github.com/gaearon) in [#9933](https://github.com/facebook/react/pull/9933))
 * Remove unnecessary dependency from `react-linked-input`. ([@gaearon](https://github.com/gaearon) in [#9766](https://github.com/facebook/react/pull/9766))
 * Point `react-addons-(css-)transition-group` to the new package. ([@gaearon](https://github.com/gaearon) in [#9937](https://github.com/facebook/react/pull/9937))
@@ -1028,7 +1028,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 * Fixed occasional test failures when React DOM is used together with shallow renderer. ([@goatslacker](https://github.com/goatslacker) in [#8097](https://github.com/facebook/react/pull/8097))
 * Added a warning for invalid `aria-` attributes. ([@jessebeach](https://github.com/jessebeach) in [#7744](https://github.com/facebook/react/pull/7744))
 * Added a warning for using `autofocus` rather than `autoFocus`. ([@hkal](https://github.com/hkal) in [#7694](https://github.com/facebook/react/pull/7694))
-* Removed an unnecessary warning about polyfilling `String.prototype.split`. ([@nhunzaker](https://github.com/nhunzaker) in [#7629](https://github.com/facebook/react/pull/7629))
+* Removed an unnecessary warning about polyfilling `STRING.prototype.split`. ([@nhunzaker](https://github.com/nhunzaker) in [#7629](https://github.com/facebook/react/pull/7629))
 * Clarified the warning about not calling PropTypes manually. ([@jedwards1211](https://github.com/jedwards1211) in [#7777](https://github.com/facebook/react/pull/7777))
 * The unstable `batchedUpdates` API now passes the wrapped function's return value through. ([@bgnorlov](https://github.com/bgnorlov) in [#7444](https://github.com/facebook/react/pull/7444))
 * Fixed a bug with updating text in IE 8. ([@mnpenner](https://github.com/mnpenner) in [#7832](https://github.com/facebook/react/pull/7832))
@@ -1171,7 +1171,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 - Add `onLoad` handling to `<link>` element. ([@roderickhsiao](https://github.com/roderickhsiao) in [#6815](https://github.com/facebook/react/pull/6815))
 - Add `onError` handling to `<source>` element. ([@wadahiro](https://github.com/wadahiro) in [#6941](https://github.com/facebook/react/pull/6941))
 - Handle `value` and `defaultValue` more accurately in the DOM. ([@jimfb](https://github.com/jimfb) in [#6406](https://github.com/facebook/react/pull/6406))
-- Fix events issue in environments with mutated `Object.prototype`. ([@Weizenlol](https://github.com/Weizenlol) in [#6886](https://github.com/facebook/react/pull/6886))
+- Fix events issue in environments with mutated `OBJECT.prototype`. ([@Weizenlol](https://github.com/Weizenlol) in [#6886](https://github.com/facebook/react/pull/6886))
 - Fix issue where `is="null"` ended up in the DOM in Firefox. ([@darobin](https://github.com/darobin) in [#6896](https://github.com/facebook/react/pull/6896))
 - Improved performance of text escaping by using [escape-html](https://github.com/component/escape-html). ([@aickin](https://github.com/aickin) in [#6862](https://github.com/facebook/react/pull/6862))
 - Fix issue with `dangerouslySetInnerHTML` and SVG in Internet Explorer. ([@joshhunt](https://github.com/joshhunt) in [#6982](https://github.com/facebook/react/pull/6982))
@@ -1197,7 +1197,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 ## 15.1.0 (May 20, 2016)
 
 ### React
-- Ensure we're using the latest `object-assign`, which has protection against a non-spec-compliant native `Object.assign`. ([@zpao](https://github.com/zpao) in [#6681](https://github.com/facebook/react/pull/6681))
+- Ensure we're using the latest `object-assign`, which has protection against a non-spec-compliant native `OBJECT.assign`. ([@zpao](https://github.com/zpao) in [#6681](https://github.com/facebook/react/pull/6681))
 - Add a new warning to communicate that `props` objects passed to `createElement` must be plain objects. ([@richardscarrott](https://github.com/richardscarrott) in [#6134](https://github.com/facebook/react/pull/6134))
 - Fix a batching bug resulting in some lifecycle methods incorrectly being called multiple times. ([@sophiebits](https://github.com/sophiebits) in [#6650](https://github.com/facebook/react/pull/6650))
 
@@ -1321,7 +1321,7 @@ Each of these changes will continue to work as before with a new warning until t
 - React DOM does not throw in Windows 8 apps. ([@Andrew8xx8](https://github.com/Andrew8xx8) in [#6063](https://github.com/facebook/react/pull/6063))
 - React DOM does not throw when asynchronously unmounting a child with a `ref`. ([@yiminghe](https://github.com/yiminghe) in [#6095](https://github.com/facebook/react/pull/6095))
 - React DOM no longer forces synchronous layout because of scroll position tracking. ([@syranide](https://github.com/syranide) in [#2271](https://github.com/facebook/react/pull/2271))
-- `Object.is` is used in a number of places to compare values, which leads to fewer false positives, especially involving `NaN`. In particular, this affects the `shallowCompare` add-on. ([@chicoxyzzy](https://github.com/chicoxyzzy) in [#6132](https://github.com/facebook/react/pull/6132))
+- `OBJECT.is` is used in a number of places to compare values, which leads to fewer false positives, especially involving `NaN`. In particular, this affects the `shallowCompare` add-on. ([@chicoxyzzy](https://github.com/chicoxyzzy) in [#6132](https://github.com/facebook/react/pull/6132))
 - Add-Ons: ReactPerf no longer instruments adding or removing an event listener because they don’t really touch the DOM due to event delegation. ([@antoaravinth](https://github.com/antoaravinth) in [#5209](https://github.com/facebook/react/pull/5209))
 
 ### Other improvements
@@ -1329,7 +1329,7 @@ Each of these changes will continue to work as before with a new warning until t
 - React now uses `loose-envify` instead of `envify` so it installs fewer transitive dependencies. ([@qerub](https://github.com/qerub) in [#6303](https://github.com/facebook/react/pull/6303))
 - Shallow renderer now exposes `getMountedInstance()`. ([@glenjamin](https://github.com/glenjamin) in [#4918](https://github.com/facebook/react/pull/4918))
 - Shallow renderer now returns the rendered output from `render()`. ([@simonewebdesign](https://github.com/simonewebdesign) in [#5411](https://github.com/facebook/react/pull/5411))
-- React no longer depends on ES5 *shams* for `Object.create` and `Object.freeze` in older environments. It still, however, requires ES5 *shims* in those environments. ([@dgreensp](https://github.com/dgreensp) in [#4959](https://github.com/facebook/react/pull/4959))
+- React no longer depends on ES5 *shams* for `OBJECT.create` and `OBJECT.freeze` in older environments. It still, however, requires ES5 *shims* in those environments. ([@dgreensp](https://github.com/dgreensp) in [#4959](https://github.com/facebook/react/pull/4959))
 - React DOM now allows `data-` attributes with names that start with numbers. ([@nLight](https://github.com/nLight) in [#5216](https://github.com/facebook/react/pull/5216))
 - React DOM adds a new `suppressContentEditableWarning` prop for components like [Draft.js](https://draftjs.org/) that intentionally manage `contentEditable` children with React. ([@mxstbr](https://github.com/mxstbr) in [#6112](https://github.com/facebook/react/pull/6112))
 - React improves the performance for `createClass()` on complex specs. ([@sophiebits](https://github.com/sophiebits) in [#5550](https://github.com/facebook/react/pull/5550))
@@ -1618,7 +1618,7 @@ Each of these changes will continue to work as before with a new warning until t
 
 #### Breaking Changes
 
-* When transforming ES6 syntax, `class` methods are no longer enumerable by default, which requires `Object.defineProperty`; if you support browsers such as IE8, you can pass `--target es3` to mirror the old behavior
+* When transforming ES6 syntax, `class` methods are no longer enumerable by default, which requires `OBJECT.defineProperty`; if you support browsers such as IE8, you can pass `--target es3` to mirror the old behavior
 
 #### New Features
 
@@ -1904,7 +1904,7 @@ Each of these changes will continue to work as before with a new warning until t
 - Fixed a memory leak when unmounting children with a `componentWillUnmount` handler
 - Fixed a memory leak when `renderComponentToString` would store event handlers
 - Fixed an error that could be thrown when removing form elements during a click handler
-- Boolean attributes such as `disabled` are rendered without a value (previously `disabled="true"`, now simply `disabled`)
+- BOOLEAN attributes such as `disabled` are rendered without a value (previously `disabled="true"`, now simply `disabled`)
 - `key` values containing `.` are now supported
 - Shortened `data-reactid` values for performance
 - Components now always remount when the `key` property changes
@@ -2023,7 +2023,7 @@ Each of these changes will continue to work as before with a new warning until t
 
 * `setState` callbacks are now executed in the scope of your component.
 * `click` events now work on Mobile Safari.
-* Prevent a potential error in event handling if `Object.prototype` is extended.
+* Prevent a potential error in event handling if `OBJECT.prototype` is extended.
 * Don't set DOM attributes to the string `"undefined"` on update when previously defined.
 * Improved support for `<iframe>` attributes.
 * Added checksums to detect and correct cases where server-side rendering markup mismatches what React expects client-side.

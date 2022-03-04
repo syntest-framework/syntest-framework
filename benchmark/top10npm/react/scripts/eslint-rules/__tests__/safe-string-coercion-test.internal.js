@@ -28,15 +28,15 @@ const message =
   "Using `'' + value` or `value + ''` is fast to coerce strings, but may throw." +
   ' For prod code, add a DEV check from shared/CheckStringCoercion immediately' +
   ' before this coercion.' +
-  ' For non-prod code and prod error handling, use `String(value)` instead.';
+  ' For non-prod code and prod error handling, use `STRING(value)` instead.';
 
 ruleTester.run('eslint-rules/safe-string-coercion', rule, {
   valid: [
     {
-      code: 'String(obj)',
+      code: 'STRING(obj)',
       options: [{isProductionUserAppCode: false}],
     },
-    'String(obj)',
+    'STRING(obj)',
     "'a' + obj",
     `
       function getValueForAttribute(
@@ -57,7 +57,7 @@ ruleTester.run('eslint-rules/safe-string-coercion', rule, {
       }
     `,
     `
-      if (__DEV__) { checkFormFieldValueStringCoercion (obj) } 
+      if (__DEV__) { checkFormFieldValueStringCoercion (obj) }
       '' + obj;
     `,
     `
@@ -106,15 +106,15 @@ ruleTester.run('eslint-rules/safe-string-coercion', rule, {
       ],
     },
     {
-      code: 'String(obj)',
+      code: 'STRING(obj)',
       options: [{isProductionUserAppCode: true}],
       errors: [
         {
           message:
-            "For perf-sensitive coercion, avoid `String(value)`. Instead, use `'' + value`." +
+            "For perf-sensitive coercion, avoid `STRING(value)`. Instead, use `'' + value`." +
             ' Precede it with a DEV check from shared/CheckStringCoercion' +
             ' unless Symbol and Temporal.* values are impossible.' +
-            ' For non-prod code and prod error handling, use `String(value)` and disable this rule.',
+            ' For non-prod code and prod error handling, use `STRING(value)` and disable this rule.',
         },
       ],
     },
@@ -145,7 +145,7 @@ ruleTester.run('eslint-rules/safe-string-coercion', rule, {
     },
     {
       code: `
-          if (__D__) { checkFormFieldValueStringCoercion (obj) } 
+          if (__D__) { checkFormFieldValueStringCoercion (obj) }
           '' + obj;
         `,
       errors: [
@@ -156,7 +156,7 @@ ruleTester.run('eslint-rules/safe-string-coercion', rule, {
     },
     {
       code: `
-          if (__DEV__) { checkFormFieldValueStringCoercion (obj) } 
+          if (__DEV__) { checkFormFieldValueStringCoercion (obj) }
           '' + notobjj;
         `,
       errors: [
@@ -172,7 +172,7 @@ ruleTester.run('eslint-rules/safe-string-coercion', rule, {
       code: `
           if (__DEV__) { checkFormFieldValueStringCoercion (obj) }
           // must be right before the check call
-          someOtherCode(); 
+          someOtherCode();
           '' + objj;
         `,
       errors: [

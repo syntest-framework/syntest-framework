@@ -712,7 +712,7 @@ describe('ReactLazy', () => {
       </Suspense>,
     );
     expect(Scheduler).toFlushAndThrow(
-      'Element type is invalid. Received a promise that resolves to: [object Object]. ' +
+      'Element type is invalid. Received a promise that resolves to: [object OBJECT]. ' +
         'Lazy element type must resolve to a class or function.' +
         (__DEV__
           ? ' Did you wrap a component in React.lazy() more than once?'
@@ -1184,7 +1184,7 @@ describe('ReactLazy', () => {
     await Promise.resolve();
     expect(() => {
       expect(Scheduler).toFlushAndYield([]);
-    }).toErrorDev('Function components cannot be given refs');
+    }).toErrorDev('FUNCTION components cannot be given refs');
   });
 
   it('should error with a component stack naming the resolved component', async () => {

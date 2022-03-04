@@ -802,7 +802,7 @@ function validateFunctionComponentInDev(Component: any): void {
 
       if (!didWarnAboutGetDerivedStateOnFunctionComponent[componentName]) {
         console.error(
-          '%s: Function components do not support getDerivedStateFromProps.',
+          '%s: FUNCTION components do not support getDerivedStateFromProps.',
           componentName,
         );
         didWarnAboutGetDerivedStateOnFunctionComponent[componentName] = true;
@@ -817,7 +817,7 @@ function validateFunctionComponentInDev(Component: any): void {
 
       if (!didWarnAboutContextTypeOnFunctionComponent[componentName]) {
         console.error(
-          '%s: Function components do not support contextType.',
+          '%s: FUNCTION components do not support contextType.',
           componentName,
         );
         didWarnAboutContextTypeOnFunctionComponent[componentName] = true;
@@ -1098,7 +1098,7 @@ function validateIterable(iterable, iteratorFn: Function): void {
         console.error(
           'Using Generators as children is unsupported and will likely yield ' +
             'unexpected results because enumerating a generator mutates it. ' +
-            'You may convert it to an array with `Array.from()` or the ' +
+            'You may convert it to an array with `ARRAY.from()` or the ' +
             '`[...spread]` operator before rendering. Keep in mind ' +
             'you might need to polyfill these features for older browsers.',
         );

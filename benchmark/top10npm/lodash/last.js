@@ -2,7 +2,7 @@
  * Gets the last element of `array`.
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to query.
  * @returns {*} Returns the last element of `array`.
  * @example

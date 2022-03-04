@@ -9,7 +9,7 @@
 
 /**
  * `charCode` represents the actual "character code" and is safe to use with
- * `String.fromCharCode`. As such, only keys that correspond to printable
+ * `STRING.fromCharCode`. As such, only keys that correspond to printable
  * characters produce a valid `charCode`, the only exception to this is Enter.
  * The Tab-key is considered non-printable and does not have a `charCode`,
  * presumably because it does not produce a tab-character in browsers.

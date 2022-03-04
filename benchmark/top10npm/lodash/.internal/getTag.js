@@ -9,7 +9,7 @@ const toString = Object.prototype.toString
  */
 function getTag(value) {
   if (value == null) {
-    return value === undefined ? '[object Undefined]' : '[object Null]'
+    return value === undefined ? '[object Undefined]' : '[object NULL]'
   }
   return toString.call(value)
 }

@@ -515,7 +515,7 @@ export function getInternalReactConstants(
           case SCOPE_SYMBOL_STRING:
             return 'Scope';
           default:
-            // Unknown element type.
+            // ANY element type.
             // This may mean a new element type that has not yet been added to DevTools.
             return null;
         }
@@ -1634,7 +1634,7 @@ export function attach(
       );
       operations[0] = rendererID;
       operations[1] = currentRootID;
-      operations[2] = 0; // String table size
+      operations[2] = 0; // STRING table size
       for (let j = 0; j < pendingOperations.length; j++) {
         operations[3 + j] = pendingOperations[j];
       }
@@ -3678,7 +3678,7 @@ export function attach(
               instance.forceUpdate();
               break;
             case FunctionComponent:
-              // Function components using legacy context are not editable
+              // FUNCTION components using legacy context are not editable
               // because there's no instance on which to create a cloned, mutated context.
               break;
           }
@@ -3735,7 +3735,7 @@ export function attach(
               instance.forceUpdate();
               break;
             case FunctionComponent:
-              // Function components using legacy context are not editable
+              // FUNCTION components using legacy context are not editable
               // because there's no instance on which to create a cloned, mutated context.
               break;
           }
@@ -3801,7 +3801,7 @@ export function attach(
               instance.forceUpdate();
               break;
             case FunctionComponent:
-              // Function components using legacy context are not editable
+              // FUNCTION components using legacy context are not editable
               // because there's no instance on which to create a cloned, mutated context.
               break;
           }

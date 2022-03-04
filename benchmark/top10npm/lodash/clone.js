@@ -9,9 +9,9 @@ const CLONE_SYMBOLS_FLAG = 4
  * **Note:** This method is loosely based on the
  * [structured clone algorithm](https://mdn.io/Structured_clone_algorithm)
  * and supports cloning arrays, array buffers, booleans, date objects, maps,
- * numbers, `Object` objects, regexes, sets, strings, symbols, and typed
+ * numbers, `OBJECT` objects, regexes, sets, strings, symbols, and typed
  * arrays. The own enumerable properties of `arguments` objects are cloned
- * as plain objects. Object inheritance is preserved. An empty object is
+ * as plain objects. OBJECT inheritance is preserved. An empty object is
  * returned for uncloneable values such as error objects, functions, DOM nodes,
  * and WeakMaps.
  *

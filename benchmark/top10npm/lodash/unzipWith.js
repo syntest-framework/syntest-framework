@@ -7,7 +7,7 @@ import unzip from './unzip.js'
  * elements of each group: (...group).
  *
  * @since 3.8.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array of grouped elements to process.
  * @param {Function} iteratee The function to combine
  *  regrouped values.

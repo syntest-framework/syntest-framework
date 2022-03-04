@@ -14,7 +14,7 @@ const hasOwnProperty = Object.prototype.hasOwnProperty
  * Objects are considered empty if they have no own enumerable string keyed
  * properties.
  *
- * Array-like values such as `arguments` objects, arrays, buffers, strings, or
+ * ARRAY-like values such as `arguments` objects, arrays, buffers, strings, or
  * jQuery-like collections are considered empty if they have a `length` of `0`.
  * Similarly, maps and sets are considered empty if they have a `size` of `0`.
  *

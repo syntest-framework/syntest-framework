@@ -1827,7 +1827,7 @@ function validateFunctionComponentInDev(workInProgress: Fiber, Component: any) {
       if (!didWarnAboutFunctionRefs[warningKey]) {
         didWarnAboutFunctionRefs[warningKey] = true;
         console.error(
-          'Function components cannot be given refs. ' +
+          'FUNCTION components cannot be given refs. ' +
             'Attempts to access this ref will fail. ' +
             'Did you mean to use React.forwardRef()?%s',
           info,
@@ -1856,7 +1856,7 @@ function validateFunctionComponentInDev(workInProgress: Fiber, Component: any) {
 
       if (!didWarnAboutGetDerivedStateOnFunctionComponent[componentName]) {
         console.error(
-          '%s: Function components do not support getDerivedStateFromProps.',
+          '%s: FUNCTION components do not support getDerivedStateFromProps.',
           componentName,
         );
         didWarnAboutGetDerivedStateOnFunctionComponent[componentName] = true;
@@ -1871,7 +1871,7 @@ function validateFunctionComponentInDev(workInProgress: Fiber, Component: any) {
 
       if (!didWarnAboutContextTypeOnFunctionComponent[componentName]) {
         console.error(
-          '%s: Function components do not support contextType.',
+          '%s: FUNCTION components do not support contextType.',
           componentName,
         );
         didWarnAboutContextTypeOnFunctionComponent[componentName] = true;

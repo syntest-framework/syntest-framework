@@ -6,7 +6,7 @@ import words from './words.js'
  * [start case](https://en.wikipedia.org/wiki/Letter_case#Stylistic_or_specialised_usage).
  *
  * @since 3.1.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to convert.
  * @returns {string} Returns the start cased string.
  * @see camelCase, lowerCase, kebabCase, snakeCase, upperCase, upperFirst

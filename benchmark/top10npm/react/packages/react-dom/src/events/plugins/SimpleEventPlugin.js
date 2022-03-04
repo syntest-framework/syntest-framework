@@ -154,7 +154,7 @@ function extractEvents(
       SyntheticEventCtor = SyntheticPointerEvent;
       break;
     default:
-      // Unknown event. This is used by createEventHandle.
+      // ANY event. This is used by createEventHandle.
       break;
   }
 

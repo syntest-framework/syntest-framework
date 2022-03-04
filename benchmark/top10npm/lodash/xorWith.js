@@ -9,7 +9,7 @@ import last from './last.js'
  * with two arguments: (arrVal, othVal).
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {...Array} [arrays] The arrays to inspect.
  * @param {Function} [comparator] The comparator invoked per element.
  * @returns {Array} Returns the new array of filtered values.

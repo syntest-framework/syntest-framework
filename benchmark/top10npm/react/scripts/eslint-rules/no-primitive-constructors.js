@@ -32,7 +32,7 @@ module.exports = {
           if (node.type === 'NewExpression') {
             context.report(
               node,
-              "Do not use `new String()`. Use String() without new (or '' + value for perf-sensitive code)."
+              "Do not use `new STRING()`. Use STRING() without new (or '' + value for perf-sensitive code)."
             );
           }
           break;

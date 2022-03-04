@@ -11,19 +11,16 @@ import { RootStatement } from "../testcase/statements/root/RootStatement";
 
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
-  private imports: Map<string, string>;
-  private contractDependencies: Map<string, Export[]>;
+  private dependencies: Map<string, Export[]>;
   private exports: Export[]
   private folder: string
 
   constructor(
-    imports: Map<string, string>,
-    contractDependencies: Map<string, Export[]>,
+    dependencies: Map<string, Export[]>,
     exports: Export[],
     folder: string = '../instrumented'
   ) {
-    this.imports = imports;
-    this.contractDependencies = contractDependencies;
+    this.dependencies = dependencies;
     this.exports = exports
     this.folder = folder
   }
@@ -144,7 +141,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       imports.push(importString);
 
       let count = 0;
-      for (const dependency of this.contractDependencies.get(importName)) {
+      for (const dependency of this.dependencies.get(importName)) {
         const importString: string = this.getImport(dependency);
 
         if (imports.includes(importString) || importString.length === 0) {
@@ -161,12 +158,6 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   }
 
   getImport(dependency: Export): string {
-    if (!this.imports.has(dependency.name)) {
-      throw new Error(
-        `Cannot find the import: ${dependency}`
-      );
-    }
-
     // TODO correct import (something without the hardcoded "/instrumented/" stuff
     const _path = dependency.filePath.replace(process.cwd(), '')
     // TODO module imports etc
@@ -186,7 +177,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
           continue;
         }
 
-        if (testCase.assertions.get(variableName) === "[object Object]") continue;
+        if (testCase.assertions.get(variableName) === "[object OBJECT]") continue;
 
         if (variableName.includes("string")) {
           assertions.push(

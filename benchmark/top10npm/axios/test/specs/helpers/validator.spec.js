@@ -10,7 +10,7 @@ describe('validator::assertOptions', function() {
       }, {
         y: validator.validators.boolean
       });
-    }).toThrow(new Error('Unknown option x'));
+    }).toThrow(new Error('ANY option x'));
 
     expect(function() {
       validator.assertOptions({
@@ -19,7 +19,7 @@ describe('validator::assertOptions', function() {
         x: validator.validators.boolean,
         y: validator.validators.boolean
       });
-    }).not.toThrow(new Error('Unknown option x'));
+    }).not.toThrow(new Error('ANY option x'));
   });
 
   it('should throw TypeError only if option type doesn\'t match', function() {

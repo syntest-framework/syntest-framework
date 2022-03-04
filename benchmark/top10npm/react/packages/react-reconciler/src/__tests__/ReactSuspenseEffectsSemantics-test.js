@@ -2276,7 +2276,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
       function App({children = null}) {
         return (
           <Suspense fallback={<ClassText text="Fallback" />}>
-            <Text text="Function" />
+            <Text text="FUNCTION" />
             {children}
             <ClassText text="Class" />
           </Suspense>
@@ -2287,11 +2287,11 @@ describe('ReactSuspenseEffectsSemantics', () => {
         ReactNoop.render(<App />);
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'ClassText:Class render',
-        'Text:Function create layout',
+        'Text:FUNCTION create layout',
         'ClassText:Class componentDidMount',
-        'Text:Function create passive',
+        'Text:FUNCTION create passive',
       ]);
       expect(ReactNoop.getChildren()).toEqual([
         span('Function'),
@@ -2308,7 +2308,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
         );
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'Suspend:Async_1',
         'Suspend:Async_2',
         'ClassText:Class render',
@@ -2323,7 +2323,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
 
       // Timing out should commit the fallback and destroy inner layout effects.
       expect(Scheduler).toHaveYielded([
-        'Text:Function destroy layout',
+        'Text:FUNCTION destroy layout',
         'ClassText:Class componentWillUnmount',
         'ClassText:Fallback componentDidMount',
       ]);
@@ -2338,7 +2338,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
         await resolveText('Async_1');
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'AsyncText:Async_1 render',
         'Suspend:Async_2',
         'ClassText:Class render',
@@ -2354,12 +2354,12 @@ describe('ReactSuspenseEffectsSemantics', () => {
         await resolveText('Async_2');
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'AsyncText:Async_1 render',
         'AsyncText:Async_2 render',
         'ClassText:Class render',
         'ClassText:Fallback componentWillUnmount',
-        'Text:Function create layout',
+        'Text:FUNCTION create layout',
         'AsyncText:Async_1 create layout',
         'AsyncText:Async_2 create layout',
         'ClassText:Class componentDidMount',
@@ -2377,11 +2377,11 @@ describe('ReactSuspenseEffectsSemantics', () => {
         ReactNoop.render(null);
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function destroy layout',
+        'Text:FUNCTION destroy layout',
         'AsyncText:Async_1 destroy layout',
         'AsyncText:Async_2 destroy layout',
         'ClassText:Class componentWillUnmount',
-        'Text:Function destroy passive',
+        'Text:FUNCTION destroy passive',
         'AsyncText:Async_1 destroy passive',
         'AsyncText:Async_2 destroy passive',
       ]);
@@ -2425,7 +2425,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
       function App({children = null}) {
         return (
           <Suspense fallback={<ClassText text="Fallback" />}>
-            <Text text="Function" />
+            <Text text="FUNCTION" />
             <Suspender />
             <ClassText text="Class" />
           </Suspense>
@@ -2436,12 +2436,12 @@ describe('ReactSuspenseEffectsSemantics', () => {
         ReactNoop.render(<App />);
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'Suspender "null" render',
         'ClassText:Class render',
-        'Text:Function create layout',
+        'Text:FUNCTION create layout',
         'ClassText:Class componentDidMount',
-        'Text:Function create passive',
+        'Text:FUNCTION create passive',
       ]);
       expect(ReactNoop.getChildren()).toEqual([
         span('Function'),
@@ -2455,7 +2455,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
         ReactNoop.render(<App />);
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'Suspender "A" render',
         'Suspend:A',
         'ClassText:Class render',
@@ -2471,7 +2471,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
 
       // Timing out should commit the fallback and destroy inner layout effects.
       expect(Scheduler).toHaveYielded([
-        'Text:Function destroy layout',
+        'Text:FUNCTION destroy layout',
         'ClassText:Class componentWillUnmount',
         'ClassText:Fallback componentDidMount',
       ]);
@@ -2488,7 +2488,7 @@ describe('ReactSuspenseEffectsSemantics', () => {
         await resolveText('A');
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'Suspender "B" render',
         'Suspend:B',
         'ClassText:Class render',
@@ -2505,11 +2505,11 @@ describe('ReactSuspenseEffectsSemantics', () => {
         await resolveText('B');
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function render',
+        'Text:FUNCTION render',
         'Suspender "B" render',
         'ClassText:Class render',
         'ClassText:Fallback componentWillUnmount',
-        'Text:Function create layout',
+        'Text:FUNCTION create layout',
         'ClassText:Class componentDidMount',
       ]);
       expect(ReactNoop.getChildren()).toEqual([
@@ -2522,9 +2522,9 @@ describe('ReactSuspenseEffectsSemantics', () => {
         ReactNoop.render(null);
       });
       expect(Scheduler).toHaveYielded([
-        'Text:Function destroy layout',
+        'Text:FUNCTION destroy layout',
         'ClassText:Class componentWillUnmount',
-        'Text:Function destroy passive',
+        'Text:FUNCTION destroy passive',
       ]);
     });
   });

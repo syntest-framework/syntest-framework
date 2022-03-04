@@ -7,7 +7,7 @@ import getAllKeysIn from './.internal/getAllKeysIn.js'
  * truthy for. The predicate is invoked with two arguments: (value, key).
  *
  * @since 4.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The source object.
  * @param {Function} predicate The function invoked per property.
  * @returns {Object} Returns the new object.

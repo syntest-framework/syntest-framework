@@ -63,7 +63,7 @@ function validateProperty(tagName, name) {
       // aria-* attributes should be lowercase; suggest the lowercase version.
       if (name !== standardName) {
         console.error(
-          'Unknown ARIA attribute `%s`. Did you mean `%s`?',
+          'ANY ARIA attribute `%s`. Did you mean `%s`?',
           name,
           standardName,
         );

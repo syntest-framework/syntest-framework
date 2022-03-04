@@ -18,12 +18,11 @@
 
 import { traverse } from "@babel/core";
 import { TargetVisitor } from "./TargetVisitor";
-import { TargetMetaData, FunctionDescription } from "@syntest/framework";
-import { JavaScriptFunction } from "./JavaScriptFunction";
-import { JavaScriptTargetMetaData } from "../JavaScriptTargetPool";
+import { TargetMetaData } from "@syntest/framework";
+import { ActionDescription } from "../parsing/ActionDescription";
 
 /**
- * Function map generator for targets.
+ * FUNCTION map generator for targets.
  *
  * @author Dimitri Stallenberg
  */
@@ -31,11 +30,12 @@ export class TargetMapGenerator {
   /**
    * Generate function map for specified target.
    *
+   * @param typeResolver The type resolver object
    * @param targetAST The AST of the target
    */
   generate(targetAST: any): {
     targetMap: Map<string, TargetMetaData>;
-    functionMap: Map<string, Map<string, JavaScriptFunction>>;
+    functionMap: Map<string, Map<string, ActionDescription>>;
   } {
     const visitor = new TargetVisitor();
 

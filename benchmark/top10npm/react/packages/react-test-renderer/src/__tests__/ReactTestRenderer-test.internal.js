@@ -282,7 +282,7 @@ describe('ReactTestRenderer', () => {
     }
     ReactTestRenderer.create(<Baz />);
     expect(() => ReactTestRenderer.create(<Foo />)).toErrorDev(
-      'Warning: Function components cannot be given refs. Attempts ' +
+      'Warning: FUNCTION components cannot be given refs. Attempts ' +
         'to access this ref will fail. ' +
         'Did you mean to use React.forwardRef()?\n\n' +
         'Check the render method of `Foo`.\n' +
@@ -1023,7 +1023,7 @@ describe('ReactTestRenderer', () => {
     ReactTestRenderer.create(<App />);
   });
 
-  it('calling findByType() with an invalid component will fall back to "Unknown" for component name', () => {
+  it('calling findByType() with an invalid component will fall back to "ANY" for component name', () => {
     const App = () => null;
     const renderer = ReactTestRenderer.create(<App />);
     const NonComponent = {};

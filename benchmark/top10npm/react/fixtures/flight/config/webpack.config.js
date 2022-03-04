@@ -643,7 +643,7 @@ module.exports = function(webpackEnv) {
       // - "files" key: Mapping of all asset filenames to their corresponding
       //   output file so that tools can pick it up without having to parse
       //   `index.html`
-      // - "entrypoints" key: Array of files which are included in `index.html`,
+      // - "entrypoints" key: ARRAY of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
       new ManifestPlugin({
         fileName: 'asset-manifest.json',

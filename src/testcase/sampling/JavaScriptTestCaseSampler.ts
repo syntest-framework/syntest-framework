@@ -17,14 +17,15 @@
  */
 
 import {
-  SearchSubject,
-  Parameter, EncodingSampler,
+  EncodingSampler,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { ConstructorCall } from "../statements/root/ConstructorCall";
 import { MethodCall } from "../statements/action/MethodCall";
 import { Statement } from "../statements/Statement";
+import { JavaScriptSubject } from "../../search/JavaScriptSubject";
+import { Parameter } from "../../analysis/static/parsing/Parameter";
 
 /**
  * JavaScriptRandomSampler class
@@ -32,18 +33,13 @@ import { Statement } from "../statements/Statement";
  * @author Dimitri Stallenberg
  */
 export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScriptTestCase> {
-  protected constructor(subject: SearchSubject<JavaScriptTestCase>) {
+  protected constructor(subject: JavaScriptSubject) {
     super(subject);
   }
 
   abstract sampleConstructor(depth: number): ConstructorCall;
   abstract sampleMethodCall(depth: number): MethodCall;
   abstract sampleArgument(
-    depth: number,
-    type: Parameter
-  ): Statement;
-
-  abstract samplePrimitive(
     depth: number,
     type: Parameter
   ): Statement;

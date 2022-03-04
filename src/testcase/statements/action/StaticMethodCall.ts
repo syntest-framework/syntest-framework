@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Solidity.
+ * This file is part of SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
  */
 
 import {
-  prng,
-  Parameter,
+  prng, Properties,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
 import { Decoding, Statement } from "../Statement";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
 
 
 // TODO maybe delete?
@@ -58,7 +58,11 @@ export class StaticMethodCall extends ActionStatement {
     if (args.length != 0) {
       // randomly mutate one of the args
       const index = prng.nextInt(0, args.length - 1);
-      args[index] = args[index].mutate(sampler, depth + 1);
+      if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
+        args[index] = sampler.sampleArgument(depth + 1, args[index].type)
+      } else {
+        args[index] = args[index].mutate(sampler, depth + 1);
+      }
     }
 
     return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);

@@ -16,33 +16,13 @@
  * limitations under the License.
  */
 
-import { traverse } from "@babel/core";
-import { VariableVisitor } from "./VariableVisitor";
-
 /**
- * Typing generator for targets.
+ * Enum for a Action Types.
  *
  * @author Dimitri Stallenberg
  */
-export class VariableGenerator {
-  /**
-   * Generate function map for specified target.
-   *
-   * @param targetAST The AST of the target
-   */
-  generate(targetAST: any): any {
-    const visitor = new VariableVisitor();
-
-    traverse(targetAST, visitor);
-    // console.log(visitor.scopes)
-    // console.log(visitor.elements)
-    // for (const rel of visitor.relations) {
-    //   console.log(rel)
-    // }
-    // console.log(visitor.wrapperElementIsRelation)
-
-    // process.exit()
-
-    return [visitor.scopes, visitor.elements, visitor.relations, visitor.wrapperElementIsRelation];
-  }
+export enum ActionType {
+  METHOD= "method",
+  CONSTRUCTOR="constructor",
+  FUNCTION="function",
 }

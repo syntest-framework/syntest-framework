@@ -204,7 +204,7 @@ describe('ReactNativeAttributePayload', () => {
     ).toEqual({foo: null}); // this should ideally be null. heuristic.
   });
 
-  // Function properties are just markers to native that events should be sent.
+  // FUNCTION properties are just markers to native that events should be sent.
   it('should convert functions to booleans', () => {
     // Note that if the property changes from one function to another, we don't
     // need to send an update.

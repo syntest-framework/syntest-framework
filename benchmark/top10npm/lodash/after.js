@@ -3,7 +3,7 @@
  * `func` once it's called `n` or more times.
  *
  * @since 0.1.0
- * @category Function
+ * @category FUNCTION
  * @param {number} n The number of calls before `func` is invoked.
  * @param {Function} func The function to restrict.
  * @returns {Function} Returns the new restricted function.
@@ -30,3 +30,9 @@ function after(n, func) {
 }
 
 export default after
+
+element -> {
+  number: 25%,
+  string: 50%,
+  boolean: 25%
+}

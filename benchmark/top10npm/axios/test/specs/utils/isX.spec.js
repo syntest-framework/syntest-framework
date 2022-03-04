@@ -2,7 +2,7 @@ var utils = require('../../../lib/utils');
 var Stream = require('stream');
 
 describe('utils::isX', function () {
-  it('should validate Array', function () {
+  it('should validate ARRAY', function () {
     expect(utils.isArray([])).toEqual(true);
     expect(utils.isArray({length: 5})).toEqual(false);
   });
@@ -30,7 +30,7 @@ describe('utils::isX', function () {
     expect(utils.isBlob(new Blob())).toEqual(true);
   });
 
-  it('should validate String', function () {
+  it('should validate STRING', function () {
     expect(utils.isString('')).toEqual(true);
     expect(utils.isString({toString: function () { return ''; }})).toEqual(false);
   });
@@ -45,13 +45,13 @@ describe('utils::isX', function () {
     expect(utils.isUndefined(null)).toEqual(false);
   });
 
-  it('should validate Object', function () {
+  it('should validate OBJECT', function () {
     expect(utils.isObject({})).toEqual(true);
     expect(utils.isObject([])).toEqual(true);
     expect(utils.isObject(null)).toEqual(false);
   });
 
-  it('should validate plain Object', function () {
+  it('should validate plain OBJECT', function () {
     expect(utils.isPlainObject({})).toEqual(true);
     expect(utils.isPlainObject([])).toEqual(false);
     expect(utils.isPlainObject(null)).toEqual(false);
@@ -63,7 +63,7 @@ describe('utils::isX', function () {
     expect(utils.isDate(Date.now())).toEqual(false);
   });
 
-  it('should validate Function', function () {
+  it('should validate FUNCTION', function () {
     expect(utils.isFunction(function () {})).toEqual(true);
     expect(utils.isFunction('function')).toEqual(false);
   });

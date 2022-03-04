@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`commit tree Lazy should support Lazy components (createRoot): 0: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -15,8 +15,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
       ],
       "displayName": "App",
@@ -27,8 +27,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Suspense",
       "hocDisplayNames": null,
       "id": 3,
@@ -43,10 +43,10 @@ Object {
 `;
 
 exports[`commit tree Lazy should support Lazy components (createRoot): 1: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -57,8 +57,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
       ],
       "displayName": "App",
@@ -69,8 +69,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [
+    3 => OBJECT {
+      "children": ARRAY [
         6,
       ],
       "displayName": "Suspense",
@@ -81,8 +81,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 12,
     },
-    6 => Object {
-      "children": Array [],
+    6 => OBJECT {
+      "children": ARRAY [],
       "displayName": "LazyInnerComponent",
       "hocDisplayNames": null,
       "id": 6,
@@ -97,10 +97,10 @@ Object {
 `;
 
 exports[`commit tree Lazy should support Lazy components (legacy render): 0: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -111,8 +111,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
       ],
       "displayName": "App",
@@ -123,8 +123,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Suspense",
       "hocDisplayNames": null,
       "id": 3,
@@ -139,10 +139,10 @@ Object {
 `;
 
 exports[`commit tree Lazy should support Lazy components (legacy render): 1: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -153,8 +153,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
       ],
       "displayName": "App",
@@ -165,8 +165,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [
+    3 => OBJECT {
+      "children": ARRAY [
         6,
       ],
       "displayName": "Suspense",
@@ -177,8 +177,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 12,
     },
-    6 => Object {
-      "children": Array [],
+    6 => OBJECT {
+      "children": ARRAY [],
       "displayName": "LazyInnerComponent",
       "hocDisplayNames": null,
       "id": 6,
@@ -193,10 +193,10 @@ Object {
 `;
 
 exports[`commit tree Lazy should support Lazy components that are unmounted before resolving (createRoot): 0: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -207,8 +207,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
       ],
       "displayName": "App",
@@ -219,8 +219,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Suspense",
       "hocDisplayNames": null,
       "id": 3,
@@ -235,10 +235,10 @@ Object {
 `;
 
 exports[`commit tree Lazy should support Lazy components that are unmounted before resolving (createRoot): 1: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -249,8 +249,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [],
+    2 => OBJECT {
+      "children": ARRAY [],
       "displayName": "App",
       "hocDisplayNames": null,
       "id": 2,
@@ -265,10 +265,10 @@ Object {
 `;
 
 exports[`commit tree Lazy should support Lazy components that are unmounted before resolving (legacy render): 0: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -279,8 +279,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
       ],
       "displayName": "App",
@@ -291,8 +291,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Suspense",
       "hocDisplayNames": null,
       "id": 3,
@@ -307,10 +307,10 @@ Object {
 `;
 
 exports[`commit tree Lazy should support Lazy components that are unmounted before resolving (legacy render): 1: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -321,8 +321,8 @@ Object {
       "treeBaseDuration": 0,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [],
+    2 => OBJECT {
+      "children": ARRAY [],
       "displayName": "App",
       "hocDisplayNames": null,
       "id": 2,
@@ -337,10 +337,10 @@ Object {
 `;
 
 exports[`commit tree should be able to rebuild the store tree for each commit: 0: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -351,8 +351,8 @@ Object {
       "treeBaseDuration": 12,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
       ],
       "displayName": "Parent",
@@ -363,8 +363,8 @@ Object {
       "treeBaseDuration": 12,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 3,
@@ -379,10 +379,10 @@ Object {
 `;
 
 exports[`commit tree should be able to rebuild the store tree for each commit: 1: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -393,8 +393,8 @@ Object {
       "treeBaseDuration": 16,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
         4,
         5,
@@ -407,8 +407,8 @@ Object {
       "treeBaseDuration": 16,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 3,
@@ -417,8 +417,8 @@ Object {
       "treeBaseDuration": 2,
       "type": 8,
     },
-    4 => Object {
-      "children": Array [],
+    4 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 4,
@@ -427,8 +427,8 @@ Object {
       "treeBaseDuration": 2,
       "type": 8,
     },
-    5 => Object {
-      "children": Array [],
+    5 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 5,
@@ -443,10 +443,10 @@ Object {
 `;
 
 exports[`commit tree should be able to rebuild the store tree for each commit: 2: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -457,8 +457,8 @@ Object {
       "treeBaseDuration": 14,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [
+    2 => OBJECT {
+      "children": ARRAY [
         3,
         4,
       ],
@@ -470,8 +470,8 @@ Object {
       "treeBaseDuration": 14,
       "type": 5,
     },
-    3 => Object {
-      "children": Array [],
+    3 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 3,
@@ -480,8 +480,8 @@ Object {
       "treeBaseDuration": 2,
       "type": 8,
     },
-    4 => Object {
-      "children": Array [],
+    4 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Child",
       "hocDisplayNames": null,
       "id": 4,
@@ -496,10 +496,10 @@ Object {
 `;
 
 exports[`commit tree should be able to rebuild the store tree for each commit: 3: CommitTree 1`] = `
-Object {
+OBJECT {
   "nodes": Map {
-    1 => Object {
-      "children": Array [
+    1 => OBJECT {
+      "children": ARRAY [
         2,
       ],
       "displayName": null,
@@ -510,8 +510,8 @@ Object {
       "treeBaseDuration": 10,
       "type": 11,
     },
-    2 => Object {
-      "children": Array [],
+    2 => OBJECT {
+      "children": ARRAY [],
       "displayName": "Parent",
       "hocDisplayNames": null,
       "id": 2,

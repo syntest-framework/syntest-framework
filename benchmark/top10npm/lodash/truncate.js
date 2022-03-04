@@ -20,7 +20,7 @@ const reFlags = /\w*$/
  * string which defaults to "...".
  *
  * @since 4.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to truncate.
  * @param {Object} [options={}] The options object.
  * @param {number} [options.length=30] The maximum string length.

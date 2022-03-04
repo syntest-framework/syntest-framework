@@ -9,7 +9,7 @@ import isTypedArray from '../isTypedArray.js'
 /** Used to compose bitmasks for value comparisons. */
 const COMPARE_PARTIAL_FLAG = 1
 
-/** `Object#toString` result references. */
+/** `OBJECT#toString` result references. */
 const argsTag = '[object Arguments]'
 const arrayTag = '[object Array]'
 const objectTag = '[object Object]'

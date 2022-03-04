@@ -181,21 +181,21 @@ describe('ReactDOMComponent', () => {
       expect(() =>
         ReactDOM.render(<div onUnknown='alert("hack")' />, container),
       ).toErrorDev(
-        'Warning: Unknown event handler property `onUnknown`. It will be ignored.\n    in div (at **)',
+        'Warning: ANY event handler property `onUnknown`. It will be ignored.\n    in div (at **)',
       );
       expect(container.firstChild.hasAttribute('onUnknown')).toBe(false);
       expect(container.firstChild.onUnknown).toBe(undefined);
       expect(() =>
         ReactDOM.render(<div onunknown='alert("hack")' />, container),
       ).toErrorDev(
-        'Warning: Unknown event handler property `onunknown`. It will be ignored.\n    in div (at **)',
+        'Warning: ANY event handler property `onunknown`. It will be ignored.\n    in div (at **)',
       );
       expect(container.firstChild.hasAttribute('onunknown')).toBe(false);
       expect(container.firstChild.onunknown).toBe(undefined);
       expect(() =>
         ReactDOM.render(<div on-unknown='alert("hack")' />, container),
       ).toErrorDev(
-        'Warning: Unknown event handler property `on-unknown`. It will be ignored.\n    in div (at **)',
+        'Warning: ANY event handler property `on-unknown`. It will be ignored.\n    in div (at **)',
       );
       expect(container.firstChild.hasAttribute('on-unknown')).toBe(false);
       expect(container.firstChild['on-unknown']).toBe(undefined);
@@ -206,21 +206,21 @@ describe('ReactDOMComponent', () => {
       expect(() =>
         ReactDOM.render(<div onUnknown={function() {}} />, container),
       ).toErrorDev(
-        'Warning: Unknown event handler property `onUnknown`. It will be ignored.\n    in div (at **)',
+        'Warning: ANY event handler property `onUnknown`. It will be ignored.\n    in div (at **)',
       );
       expect(container.firstChild.hasAttribute('onUnknown')).toBe(false);
       expect(container.firstChild.onUnknown).toBe(undefined);
       expect(() =>
         ReactDOM.render(<div onunknown={function() {}} />, container),
       ).toErrorDev(
-        'Warning: Unknown event handler property `onunknown`. It will be ignored.\n    in div (at **)',
+        'Warning: ANY event handler property `onunknown`. It will be ignored.\n    in div (at **)',
       );
       expect(container.firstChild.hasAttribute('onunknown')).toBe(false);
       expect(container.firstChild.onunknown).toBe(undefined);
       expect(() =>
         ReactDOM.render(<div on-unknown={function() {}} />, container),
       ).toErrorDev(
-        'Warning: Unknown event handler property `on-unknown`. It will be ignored.\n    in div (at **)',
+        'Warning: ANY event handler property `on-unknown`. It will be ignored.\n    in div (at **)',
       );
       expect(container.firstChild.hasAttribute('on-unknown')).toBe(false);
       expect(container.firstChild['on-unknown']).toBe(undefined);
@@ -2520,7 +2520,7 @@ describe('ReactDOMComponent', () => {
     });
   });
 
-  describe('Object stringification', function() {
+  describe('OBJECT stringification', function() {
     it('allows objects on known properties', function() {
       const el = ReactTestUtils.renderIntoDocument(<div acceptCharset={{}} />);
       expect(el.getAttribute('accept-charset')).toBe('[object Object]');
@@ -2580,7 +2580,7 @@ describe('ReactDOMComponent', () => {
     });
   });
 
-  describe('String boolean attributes', function() {
+  describe('STRING boolean attributes', function() {
     it('does not assign string boolean attributes for custom attributes', function() {
       let el;
       expect(() => {
@@ -2614,7 +2614,7 @@ describe('ReactDOMComponent', () => {
     });
   });
 
-  describe('Boolean attributes', function() {
+  describe('BOOLEAN attributes', function() {
     it('warns on the ambiguous string value "false"', function() {
       let el;
       expect(() => {

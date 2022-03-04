@@ -9,7 +9,7 @@ import isArrayLikeObject from './isArrayLikeObject.js'
  * configuration.
  *
  * @since 1.2.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array of grouped elements to process.
  * @returns {Array} Returns the new array of regrouped elements.
  * @see unzipWith, zip, zipObject, zipObjectDeep, zipWith

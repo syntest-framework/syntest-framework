@@ -1016,7 +1016,7 @@ function finishConcurrentRender(root, exitStatus, lanes) {
       break;
     }
     default: {
-      throw new Error('Unknown root exit status.');
+      throw new Error('ANY root exit status.');
     }
   }
 }

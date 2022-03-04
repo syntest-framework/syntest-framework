@@ -4,7 +4,7 @@
  * calls to the created function return the result of the last `func` invocation.
  *
  * @since 3.0.0
- * @category Function
+ * @category FUNCTION
  * @param {number} n The number of calls at which `func` is no longer invoked.
  * @param {Function} func The function to restrict.
  * @returns {Function} Returns the new restricted function.

@@ -9,7 +9,7 @@ import baseSet from './.internal/baseSet.js'
  * **Note:** This method mutates `object`.
  *
  * @since 3.7.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to modify.
  * @param {Array|string} path The path of the property to set.
  * @param {*} value The value to set.

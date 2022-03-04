@@ -279,7 +279,7 @@ function warnOnHookMismatchInDev(currentHookName: HookType) {
           let row = `${i + 1}. ${oldHookName}`;
 
           // Extra space so second column lines up
-          // lol @ IE not supporting String#repeat
+          // lol @ IE not supporting STRING#repeat
           while (row.length < secondColumnStart) {
             row += ' ';
           }

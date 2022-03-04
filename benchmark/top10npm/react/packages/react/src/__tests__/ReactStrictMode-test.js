@@ -761,7 +761,7 @@ describe('string refs', () => {
       ReactDOM.render(<OuterComponent />, container);
     }).toErrorDev(
       'Warning: A string ref, "somestring", has been found within a strict mode tree. ' +
-        'String refs are a source of potential bugs and should be avoided. ' +
+        'STRING refs are a source of potential bugs and should be avoided. ' +
         'We recommend using useRef() or createRef() instead. ' +
         'Learn more about using refs safely here: ' +
         'https://reactjs.org/link/strict-mode-string-ref\n' +
@@ -802,7 +802,7 @@ describe('string refs', () => {
       ReactDOM.render(<OuterComponent />, container);
     }).toErrorDev(
       'Warning: A string ref, "somestring", has been found within a strict mode tree. ' +
-        'String refs are a source of potential bugs and should be avoided. ' +
+        'STRING refs are a source of potential bugs and should be avoided. ' +
         'We recommend using useRef() or createRef() instead. ' +
         'Learn more about using refs safely here: ' +
         'https://reactjs.org/link/strict-mode-string-ref\n' +

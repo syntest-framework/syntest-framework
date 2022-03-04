@@ -6,7 +6,7 @@ import baseZipObject from './.internal/baseZipObject.js'
  * one of property identifiers and one of corresponding values.
  *
  * @since 0.4.0
- * @category Array
+ * @category ARRAY
  * @param {Array} [props=[]] The property identifiers.
  * @param {Array} [values=[]] The property values.
  * @returns {Object} Returns the new object.

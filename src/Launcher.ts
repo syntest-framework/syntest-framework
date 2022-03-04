@@ -18,26 +18,31 @@
 
 import {
   Archive,
-  guessCWD,
-  loadConfig,
-  processConfig,
-  setupLogger,
-  setupOptions,
-  Properties,
-  deleteTempDirectories,
+  BudgetManager,
+  clearDirectory,
+  configureTermination,
+  CoverageWriter,
+  createAlgorithmFromConfig,
   createDirectoryStructure,
   createTempDirectoryStructure,
+  deleteTempDirectories,
   drawGraph,
-  getUserInterface,
-  createAlgorithmFromConfig,
-  IterationBudget,
   EvaluationBudget,
+  getSeed,
+  getUserInterface,
+  guessCWD,
+  IterationBudget,
+  loadConfig,
+  processConfig,
+  Properties,
   SearchTimeBudget,
-  TotalTimeBudget,
-  BudgetManager,
-  configureTermination,
+  setupLogger,
+  setupOptions,
+  setUserInterface,
   StatisticsCollector,
-  StatisticsSearchListener, SummaryWriter, CoverageWriter, clearDirectory, setUserInterface, getSeed, getCommonBasePath,
+  StatisticsSearchListener,
+  SummaryWriter,
+  TotalTimeBudget,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
@@ -60,9 +65,11 @@ import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
 import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 import { Export } from "./analysis/static/dependency/ExportVisitor";
 import { Runner } from "mocha";
-import { VariableGenerator } from "./analysis/static/variable/VariableGenerator";
-import { TypeResolverInference } from "./analysis/static/types/TypeResolverInference";
-import { TypeResolverUnknown } from "./analysis/static/types/TypeResolverUnknown";
+import { TypeResolverInference } from "./analysis/static/types/resolving/logic/TypeResolverInference";
+import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
+import { ScopeType } from "./analysis/static/types/discovery/Scope";
+import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
+
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
 const { outputFileSync } = require("fs-extra");
@@ -74,8 +81,8 @@ export class Launcher {
     try {
       await guessCWD(null);
       const targetPool = await this.setup();
-      const [archive, imports, dependencies, exports] = await this.search(targetPool);
-      await this.finalize(archive, imports, dependencies, exports);
+      const [archive, dependencies, exports] = await this.search(targetPool);
+      await this.finalize(targetPool, archive, dependencies, exports);
 
       await this.exit();
     } catch (e) {
@@ -86,7 +93,13 @@ export class Launcher {
 
   private async setup(): Promise<JavaScriptTargetPool> {
     // Filesystem & Compiler Re-configuration
-    const additionalOptions = {}; // TODO
+    const additionalOptions = {
+      use_type_inference: {
+        description: "The type inference mode",
+        type: "boolean",
+        default: true,
+      },
+    };
     setupOptions(this._program, additionalOptions);
 
     const programArgs = process.argv.filter(
@@ -121,9 +134,16 @@ export class Launcher {
 
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
-    // const typeResolver = new TypeResolverUnknown() // TODO make switch for the type of resolver
-    const typeResolver = new TypeResolverInference() // TODO make switch for the type of resolver
-    const controlFlowGraphGenerator = new ControlFlowGraphGenerator(typeResolver)
+
+    let typeResolver: TypeResolver
+
+    if (Properties['use_type_inference']) {
+      typeResolver = new TypeResolverInference()
+    } else {
+      typeResolver = new TypeResolverUnknown()
+    }
+
+    const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
     const importGenerator = new ImportGenerator()
     const exportGenerator = new ExportGenerator()
     const targetPool = new JavaScriptTargetPool(
@@ -131,7 +151,8 @@ export class Launcher {
       targetMapGenerator,
       controlFlowGraphGenerator,
       importGenerator,
-      exportGenerator
+      exportGenerator,
+      typeResolver
     );
 
 
@@ -142,6 +163,7 @@ export class Launcher {
     getUserInterface().report("header", ["TARGETS"]);
 
     await targetPool.loadTargets();
+
     if (!targetPool.targets.length) {
       getUserInterface().error(
         `No targets where selected! Try changing the 'include' parameter`
@@ -195,7 +217,7 @@ export class Launcher {
       [
         ["Max Depth", Properties.max_depth],
         ["Explore Illegal Values", Properties.explore_illegal_values],
-        ["Sample Function Result as Argument", Properties.sample_func_as_arg],
+        ["Sample FUNCTION Result as Argument", Properties.sample_func_as_arg],
         ["Crossover", Properties.crossover_probability],
       ],
     ]);
@@ -206,22 +228,15 @@ export class Launcher {
   private async search(
     targetPool: JavaScriptTargetPool
   ): Promise<
-    [Archive<JavaScriptTestCase>, Map<string, string>, Map<string, Export[]>, Export[]]
+    [Archive<JavaScriptTestCase>, Map<string, Export[]>, Export[]]
   > {
-    const targetPaths = new Set<string>();
+    const targetPaths= new Set<string>();
 
-    // TODO search targets
     for (const target of targetPool.targets) {
-      targetPaths.add(target.canonicalPath);
-
-      const [importsMap, dependencyMap] = targetPool.getImportDependencies(
-        target.canonicalPath,
-        target.targetName
-      );
-
-      for (const dependency of dependencyMap.get(target.targetName)) {
-        targetPaths.add(dependency.filePath);
-      }
+      targetPool.getInstrumentationTargets(target.canonicalPath)
+        .forEach((path) => {
+          targetPaths.add(path)
+        })
     }
 
     const instrumenter = new Instrumenter();
@@ -243,7 +258,6 @@ export class Launcher {
     }
 
     const finalArchive = new Archive<JavaScriptTestCase>();
-    let finalImports: Map<string, string> = new Map();
     let finalDependencies: Map<string, Export[]> = new Map();
     let finalExports: Export[] = []
 
@@ -254,24 +268,14 @@ export class Launcher {
         targetPool.getTargetMap(target.canonicalPath).get(target.targetName)
       );
 
-      const [importsMap, dependencyMap] = targetPool.getImportDependencies(
-        target.canonicalPath,
-        target.targetName
-      );
-      finalArchive.merge(archive);
+      const dependencies = targetPool.getDependencies(target.canonicalPath);
+      finalArchive.merge(archive)
 
-      finalImports = new Map([
-        ...Array.from(finalImports.entries()),
-        ...Array.from(importsMap.entries()),
-      ]);
-      finalDependencies = new Map([
-        ...Array.from(finalDependencies.entries()),
-        ...Array.from(dependencyMap.entries()),
-      ]);
+      finalDependencies.set(target.targetName, dependencies)
       finalExports.push(...targetPool.getExports(target.canonicalPath))
     }
 
-    return [finalArchive, finalImports, finalDependencies, finalExports];
+    return [finalArchive, finalDependencies, finalExports];
   }
 
   private async testTarget(
@@ -279,6 +283,8 @@ export class Launcher {
     targetPath: string,
     targetMeta: JavaScriptTargetMetaData
   ): Promise<Archive<JavaScriptTestCase>> {
+    targetPool.resolveTypes(targetPath)
+
     const cfg = targetPool.getCFG(targetPath, targetMeta.name);
 
     if (Properties.draw_cfg || true) {
@@ -294,6 +300,15 @@ export class Launcher {
 
     const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
 
+    // couple types to parameters
+    for (const key of functionMap.keys()) {
+      const func = functionMap.get(key)
+      for (const param of func.parameters) {
+        param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
+      }
+    // TODO return types
+    }
+
     const currentSubject = new JavaScriptSubject(
       path.basename(targetPath),
       targetMeta,
@@ -306,14 +321,13 @@ export class Launcher {
       return new Archive();
     }
 
-    const [importsMap, dependencyMap] = targetPool.getImportDependencies(
-      targetPath,
-      targetMeta.name
-    );
-
+    const dependencies = targetPool.getDependencies(targetPath);
+    const dependencyMap = new Map<string, Export[]>()
+    dependencyMap.set(targetMeta.name, dependencies)
     const exports = targetPool.getExports(targetPath)
 
-    const decoder = new JavaScriptDecoder(importsMap, dependencyMap, exports)
+
+    const decoder = new JavaScriptDecoder(dependencyMap, exports)
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
     const runner = new JavaScriptRunner(suiteBuilder)
 
@@ -385,8 +399,8 @@ export class Launcher {
   }
 
   private async finalize(
+    targetPool: JavaScriptTargetPool,
     archive: Archive<JavaScriptTestCase>,
-    imports: Map<string, string>,
     dependencies: Map<string, Export[]>,
     exports: Export[]
   ): Promise<void> {
@@ -394,9 +408,7 @@ export class Launcher {
     const testDir = path.resolve(Properties.final_suite_directory);
     await clearDirectory(testDir);
 
-
     const decoder = new JavaScriptDecoder(
-      imports,
       dependencies,
       exports,
       '../../.syntest/instrumented'
@@ -464,6 +476,10 @@ export class Launcher {
     let totalStatements = 0
     let totalFunctions = 0
     for (const file of Object.keys(instrumentationData)) {
+      if (!targetPool.targets.find((t) => t.canonicalPath === file)) {
+        continue
+      }
+
       const data = instrumentationData[file]
 
       const summary = {
@@ -498,6 +514,8 @@ export class Launcher {
         'branch': summary['branch'] + ' / ' + (Object.keys(data.b).length * 2),
         'function': summary['function'] + ' / ' + Object.keys(data.f).length
       }, false])
+
+      // console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
     }
 
     overall['statement'] /= totalStatements
@@ -509,6 +527,7 @@ export class Launcher {
       'branch': (overall['branch'] * 100) + ' %',
       'function': (overall['function'] * 100) + ' %'
     }, true])
+
 
   }
 

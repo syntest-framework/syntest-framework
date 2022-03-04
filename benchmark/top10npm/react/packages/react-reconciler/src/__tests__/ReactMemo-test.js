@@ -57,7 +57,7 @@ describe('memo', () => {
     }
     ReactNoop.render(<Outer />);
     expect(() => expect(Scheduler).toFlushWithoutYielding()).toErrorDev([
-      'Warning: Function components cannot be given refs. Attempts to access ' +
+      'Warning: FUNCTION components cannot be given refs. Attempts to access ' +
         'this ref will fail.',
     ]);
   });
@@ -75,7 +75,7 @@ describe('memo', () => {
     }
     ReactNoop.render(<Outer />);
     expect(() => expect(Scheduler).toFlushWithoutYielding()).toErrorDev([
-      'Warning: Function components cannot be given refs. Attempts to access ' +
+      'Warning: FUNCTION components cannot be given refs. Attempts to access ' +
         'this ref will fail.',
     ]);
   });

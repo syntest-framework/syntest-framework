@@ -1,19 +1,29 @@
+/*
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest JavaScript.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {
   BranchNode,
   CFG,
   CFGFactory, Edge,
   Node,
   NodeType, Operation,
-  Parameter, PlaceholderNode,
-  Properties,
-  PublicVisibility,
+  PlaceholderNode,
   RootNode,
 } from "@syntest/framework";
-import { traverse } from "@babel/core";
-import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
-import { TypeResolver } from "../types/TypeResolver";
-import { VariableGenerator } from "../variable/VariableGenerator";
-import { ScopeType } from "../variable/Scope";
 
 interface ReturnValue {
   childNodes: Node[];
@@ -21,30 +31,12 @@ interface ReturnValue {
 }
 
 export class ControlFlowGraphGenerator implements CFGFactory {
-  // convertast(ast: any): CFG {
-  //   const visitor = new ControlFlowGraphVisitor();
-  //
-  //   traverse(ast, visitor);
-  //
-  //   return visitor.cfg;
-  // }
 
-  private typeResolver: TypeResolver
   private cfg: CFG;
   private _contracts: string[] = [];
 
-
-  constructor(typeResolver: TypeResolver) {
-    this.typeResolver = typeResolver;
-  }
-
   convertAST(ast: any, compress = false, placeholder = false): CFG {
     // TODO the imported stuff should also be resolved...
-    const generator = new VariableGenerator()
-    const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(ast)
-
-    this.typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation)
-
     this._contracts = [];
 
     this.cfg = new CFG();
@@ -212,25 +204,13 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
   private createRootNode(
     lines: number[],
-    statements: string[],
-    functionName: string,
-    isConstructor: boolean,
-    parameters: Parameter[],
-    returnParameter: Parameter,
+    statements: string[]
   ): RootNode {
     const node: RootNode = {
-      contractName: "",
-      functionName: functionName,
       id: `f-${lines[0]}`,
-      isConstructor: isConstructor,
       lines: lines,
       statements: statements,
       type: NodeType.Root,
-
-      parameters: parameters,
-      returnParameters: [returnParameter],
-
-      visibility: PublicVisibility,
     };
 
     this.cfg.nodes.push(node);
@@ -297,13 +277,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     return node;
   }
 
-  private parseParameter(parameter, scopeName: string, scopeType: ScopeType): Parameter {
-    return {
-      name: parameter.name || 'unknown',
-      type: parameter.name ? this.typeResolver.getTyping(scopeName, scopeType, parameter.name).type : 'any'
-    };
-  }
-
   /**
    * This method creates edges to connect the given parents to the given children
    * @param cfg the cfg to add the edges to
@@ -337,7 +310,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   ): ReturnValue {
     const skipable: string[] = [
       "ImportDeclaration",
-      "ClassProperty"
+      "ClassProperty",
+      "EmptyStatement"
     ];
 
     if (skipable.includes(child.type)) {
@@ -390,6 +364,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         return this.visitForOfStatement(child, parents)
       case "ForInStatement":
         return this.visitForOfStatement(child, parents)
+      case "ForStatement":
+        return this.visitForStatement(child, parents);
 
       case "BreakStatement":
         return this.visitBreakStatement(child, parents)
@@ -414,8 +390,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       // case "Conditional":
       //   return this.Conditional(cfg, child, parents);
       //
-      // case "ForStatement":
-      //   return this.ForStatement(cfg, child, parents);
+
       // case "WhileStatement":
       //   return this.WhileStatement(cfg, child, parents);
 
@@ -463,10 +438,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     const node: RootNode = this.createRootNode(
       [ast.loc.start.line],
       [],
-      ast.id.name,
-      ast.isConstructor, // TODO
-      ast.params.map((p) => this.parseParameter(p, ast.id.name, ScopeType.Function)),
-      ast.returnParameter ? this.parseParameter(ast.returnParameter, ast.id.name, ScopeType.Function) : { name: 'unknown', type: 'any' }
     );
 
 
@@ -573,11 +544,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   private visitClassMethod(ast: any): ReturnValue {
     const node: RootNode = this.createRootNode(
       [ast.loc.start.line],
-      [],
-      ast.key.name,
-      ast.isConstructor, // TODO
-      ast.params.map((p) => this.parseParameter(p, ast.key.name, ScopeType.Method)),
-      ast.returnParameter ? this.parseParameter(ast.returnParameter, ast.key.name, ScopeType.Method) : { name: 'unknown', type: 'any' }
+      []
     );
 
     let parents: Node[] = [node];
@@ -984,10 +951,10 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     // };
   }
 
-  private ForStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitForStatement(ast: any, parents: Node[]): ReturnValue {
     const node: Node = this.createBranchNode([ast.loc.start.line], [], {
-      type: ast.conditionExpression.type,
-      operator: ast.conditionExpression.operator,
+      type: ast.test.type,
+      operator: ast.test.operator || ast.test.name || ast.test.value,
     });
     this.connectParents(parents, [node]);
     // TODO For each probably not supported

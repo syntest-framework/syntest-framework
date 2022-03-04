@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Solidity.
+ * This file is part of SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ export enum JavaScriptExecutionStatus {
 }
 
 /**
- * Solidity specific implementation of the execution results.
+ * JavaScript specific implementation of the execution results.
  *
  * @author Mitchell Olsthoorn
  */
@@ -37,7 +37,7 @@ export class JavaScriptExecutionResult implements ExecutionResult {
   protected _status: JavaScriptExecutionStatus;
 
   /**
-   * Array of traces of the execution.
+   * ARRAY of traces of the execution.
    * @protected
    */
   protected _traces: Datapoint[];

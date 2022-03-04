@@ -8,7 +8,7 @@ import baseUniq from './.internal/baseUniq.js'
  * (value).
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @param {Function} iteratee The iteratee invoked per element.
  * @returns {Array} Returns the new duplicate free array.

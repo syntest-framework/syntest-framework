@@ -6,7 +6,7 @@
  * If you want an object in return, consider `pickBy`.
  *
  * @since 5.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {Function} predicate The function invoked per iteration.
  * @returns {Array} Returns the new filtered array.

@@ -9,7 +9,7 @@ import isArrayLikeObject from './isArrayLikeObject.js'
  * **Note:** Unlike `pull`, this method returns a new array.
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @param {...*} [values] The values to exclude.
  * @returns {Array} Returns the new array of filtered values.

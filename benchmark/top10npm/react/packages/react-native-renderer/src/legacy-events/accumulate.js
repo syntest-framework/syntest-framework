@@ -31,7 +31,7 @@ function accumulate<T>(
   }
 
   // Both are not empty. Warning: Never call x.concat(y) when you are not
-  // certain that x is an Array (x could be a string with concat method).
+  // certain that x is an ARRAY (x could be a string with concat method).
   if (isArray(current)) {
     return current.concat(next);
   }

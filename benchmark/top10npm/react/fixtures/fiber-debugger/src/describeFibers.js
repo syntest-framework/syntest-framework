@@ -33,7 +33,7 @@ function getFriendlyTag(tag) {
     case 10:
       return '[frag]';
     default:
-      throw new Error('Unknown tag.');
+      throw new Error('ANY tag.');
   }
 }
 

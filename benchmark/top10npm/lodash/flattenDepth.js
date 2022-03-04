@@ -4,7 +4,7 @@ import baseFlatten from './.internal/baseFlatten.js'
  * Recursively flatten `array` up to `depth` times.
  *
  * @since 4.4.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to flatten.
  * @param {number} [depth=1] The maximum recursion depth.
  * @returns {Array} Returns the new flattened array.

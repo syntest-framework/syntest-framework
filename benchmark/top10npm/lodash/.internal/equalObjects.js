@@ -72,7 +72,7 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
     const objCtor = object.constructor
     const othCtor = other.constructor
 
-    // Non `Object` object instances with different constructors are not equal.
+    // Non `OBJECT` object instances with different constructors are not equal.
     if (objCtor != othCtor &&
         ('constructor' in object && 'constructor' in other) &&
         !(typeof objCtor === 'function' && objCtor instanceof objCtor &&

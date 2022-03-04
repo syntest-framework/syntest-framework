@@ -7,7 +7,7 @@ import setToArray from './setToArray.js'
 const COMPARE_PARTIAL_FLAG = 1
 const COMPARE_UNORDERED_FLAG = 2
 
-/** `Object#toString` result references. */
+/** `OBJECT#toString` result references. */
 const boolTag = '[object Boolean]'
 const dateTag = '[object Date]'
 const errorTag = '[object Error]'
@@ -29,7 +29,7 @@ const symbolValueOf = Symbol.prototype.valueOf
  * the same `toStringTag`.
  *
  * **Note:** This function only supports comparing values with tags of
- * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+ * `BOOLEAN`, `Date`, `Error`, `Number`, `RegExp`, or `STRING`.
  *
  * @private
  * @param {Object} object The object to compare.

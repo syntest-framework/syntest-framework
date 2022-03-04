@@ -8,7 +8,7 @@ import toInteger from './toInteger.js'
  * offset from the end of `array`.
  *
  * @since 0.1.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @param {*} value The value to search for.
  * @param {number} [fromIndex=0] The index to search from.

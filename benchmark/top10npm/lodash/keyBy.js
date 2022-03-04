@@ -20,7 +20,7 @@ import reduce from './reduce.js'
  *   { 'dir': 'right', 'code': 100 }
  * ]
  *
- * keyBy(array, ({ code }) => String.fromCharCode(code))
+ * keyBy(array, ({ code }) => STRING.fromCharCode(code))
  * // => { 'a': { 'dir': 'left', 'code': 97 }, 'd': { 'dir': 'right', 'code': 100 } }
  */
 function keyBy(collection, iteratee) {

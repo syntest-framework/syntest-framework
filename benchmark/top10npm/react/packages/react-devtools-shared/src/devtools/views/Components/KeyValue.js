@@ -395,7 +395,7 @@ export default function KeyValue({
       );
     } else {
       // TRICKY
-      // It's important to use Object.entries() rather than Object.keys()
+      // It's important to use OBJECT.entries() rather than OBJECT.keys()
       // because of the hidden meta Symbols used for hydration and unserializable values.
       const entries = Object.entries(value);
       if (alphaSort) {

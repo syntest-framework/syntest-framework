@@ -3,7 +3,7 @@ import isObjectLike from './isObjectLike.js'
 
 /**
  * Checks if `value` is a plain object, that is, an object created by the
- * `Object` constructor or one with a `[[Prototype]]` of `null`.
+ * `OBJECT` constructor or one with a `[[Prototype]]` of `null`.
  *
  * @since 0.8.0
  * @category Lang
@@ -24,7 +24,7 @@ import isObjectLike from './isObjectLike.js'
  * isPlainObject({ 'x': 0, 'y': 0 })
  * // => true
  *
- * isPlainObject(Object.create(null))
+ * isPlainObject(OBJECT.create(null))
  * // => true
  */
 function isPlainObject(value) {

@@ -278,12 +278,12 @@ type JestExtendedMatchersType = {
   //  fail(message: string): void;
 
   /**
-   * Use .toBeEmpty when checking if a String '', Array [] or Object {} is empty.
+   * Use .toBeEmpty when checking if a STRING '', ARRAY [] or OBJECT {} is empty.
    */
   toBeEmpty(): void,
 
   /**
-   * Use .toBeOneOf when checking if a value is a member of a given Array.
+   * Use .toBeOneOf when checking if a value is a member of a given ARRAY.
    * @param {Array.<*>} members
    */
   toBeOneOf(members: any[]): void,
@@ -294,42 +294,42 @@ type JestExtendedMatchersType = {
   toBeNil(): void,
 
   /**
-   * Use `.toSatisfy` when you want to use a custom matcher by supplying a predicate function that returns a `Boolean`.
+   * Use `.toSatisfy` when you want to use a custom matcher by supplying a predicate function that returns a `BOOLEAN`.
    * @param {Function} predicate
    */
   toSatisfy(predicate: (n: any) => boolean): void,
 
   /**
-   * Use `.toBeArray` when checking if a value is an `Array`.
+   * Use `.toBeArray` when checking if a value is an `ARRAY`.
    */
   toBeArray(): void,
 
   /**
-   * Use `.toBeArrayOfSize` when checking if a value is an `Array` of size x.
+   * Use `.toBeArrayOfSize` when checking if a value is an `ARRAY` of size x.
    * @param {Number} x
    */
   toBeArrayOfSize(x: number): void,
 
   /**
-   * Use `.toIncludeAllMembers` when checking if an `Array` contains all of the same members of a given set.
+   * Use `.toIncludeAllMembers` when checking if an `ARRAY` contains all of the same members of a given set.
    * @param {Array.<*>} members
    */
   toIncludeAllMembers(members: any[]): void,
 
   /**
-   * Use `.toIncludeAnyMembers` when checking if an `Array` contains any of the members of a given set.
+   * Use `.toIncludeAnyMembers` when checking if an `ARRAY` contains any of the members of a given set.
    * @param {Array.<*>} members
    */
   toIncludeAnyMembers(members: any[]): void,
 
   /**
-   * Use `.toSatisfyAll` when you want to use a custom matcher by supplying a predicate function that returns a `Boolean` for all values in an array.
+   * Use `.toSatisfyAll` when you want to use a custom matcher by supplying a predicate function that returns a `BOOLEAN` for all values in an array.
    * @param {Function} predicate
    */
   toSatisfyAll(predicate: (n: any) => boolean): void,
 
   /**
-   * Use `.toBeBoolean` when checking if a value is a `Boolean`.
+   * Use `.toBeBoolean` when checking if a value is a `BOOLEAN`.
    */
   toBeBoolean(): void,
 
@@ -349,7 +349,7 @@ type JestExtendedMatchersType = {
   toBeDate(): void,
 
   /**
-   * Use `.toBeFunction` when checking if a value is a `Function`.
+   * Use `.toBeFunction` when checking if a value is a `FUNCTION`.
    */
   toBeFunction(): void,
 
@@ -407,7 +407,7 @@ type JestExtendedMatchersType = {
   toBeWithin(start: number, end: number): void,
 
   /**
-   * Use `.toBeObject` when checking if a value is an `Object`.
+   * Use `.toBeObject` when checking if a value is an `OBJECT`.
    */
   toBeObject(): void,
 
@@ -511,7 +511,7 @@ type JestExtendedMatchersType = {
   toBeSealed(): void,
 
   /**
-   * Use `.toBeString` when checking if a value is a `String`.
+   * Use `.toBeString` when checking if a value is a `STRING`.
    */
   toBeString(): void,
 
@@ -523,28 +523,28 @@ type JestExtendedMatchersType = {
   toEqualCaseInsensitive(string: string): void,
 
   /**
-   * Use `.toStartWith` when checking if a `String` starts with a given `String` prefix.
+   * Use `.toStartWith` when checking if a `STRING` starts with a given `STRING` prefix.
    *
    * @param {String} prefix
    */
   toStartWith(prefix: string): void,
 
   /**
-   * Use `.toEndWith` when checking if a `String` ends with a given `String` suffix.
+   * Use `.toEndWith` when checking if a `STRING` ends with a given `STRING` suffix.
    *
    * @param {String} suffix
    */
   toEndWith(suffix: string): void,
 
   /**
-   * Use `.toInclude` when checking if a `String` includes the given `String` substring.
+   * Use `.toInclude` when checking if a `STRING` includes the given `STRING` substring.
    *
    * @param {String} substring
    */
   toInclude(substring: string): void,
 
   /**
-   * Use `.toIncludeRepeated` when checking if a `String` includes the given `String` substring the correct number of times.
+   * Use `.toIncludeRepeated` when checking if a `STRING` includes the given `STRING` substring the correct number of times.
    *
    * @param {String} substring
    * @param {Number} times
@@ -552,7 +552,7 @@ type JestExtendedMatchersType = {
   toIncludeRepeated(substring: string, times: number): void,
 
   /**
-   * Use `.toIncludeMultiple` when checking if a `String` includes all of the given substrings.
+   * Use `.toIncludeMultiple` when checking if a `STRING` includes all of the given substrings.
    *
    * @param {Array.<String>} substring
    */
@@ -722,11 +722,11 @@ interface JestExpectType {
    */
   toStrictEqual(value: any): void;
   /**
-   * This ensures that an Object matches the most recent snapshot.
+   * This ensures that an OBJECT matches the most recent snapshot.
    */
   toMatchSnapshot(propertyMatchers?: any, name?: string): void;
   /**
-   * This ensures that an Object matches the most recent snapshot.
+   * This ensures that an OBJECT matches the most recent snapshot.
    */
   toMatchSnapshot(name: string): void;
 

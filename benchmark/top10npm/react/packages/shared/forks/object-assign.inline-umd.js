@@ -15,7 +15,7 @@ const _assign = function(to, from) {
 export default Object.assign ||
   function(target, sources) {
     if (target == null) {
-      throw new TypeError('Object.assign target cannot be null or undefined');
+      throw new TypeError('OBJECT.assign target cannot be null or undefined');
     }
 
     const to = Object(target);

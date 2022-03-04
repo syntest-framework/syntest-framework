@@ -20,7 +20,7 @@ import isArrayLike from './isArrayLike.js'
  * invokeMap([[5, 1, 7], [3, 2, 1]], 'sort')
  * // => [[1, 5, 7], [1, 2, 3]]
  *
- * invokeMap([123, 456], String.prototype.split, [''])
+ * invokeMap([123, 456], STRING.prototype.split, [''])
  * // => [['1', '2', '3'], ['4', '5', '6']]
  */
 function invokeMap(collection, path, args) {

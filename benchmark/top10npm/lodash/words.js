@@ -15,7 +15,7 @@ function asciiWords(string) {
  * Splits `string` into an array of its words.
  *
  * @since 3.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to inspect.
  * @param {RegExp|string} [pattern] The pattern to match words.
  * @returns {Array} Returns the words of `string`.

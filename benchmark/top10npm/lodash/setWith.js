@@ -9,7 +9,7 @@ import baseSet from './.internal/baseSet.js'
  * **Note:** This method mutates `object`.
  *
  * @since 4.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to modify.
  * @param {Array|string} path The path of the property to set.
  * @param {*} value The value to set.
@@ -19,7 +19,7 @@ import baseSet from './.internal/baseSet.js'
  *
  * const object = {}
  *
- * setWith(object, '[0][1]', 'a', Object)
+ * setWith(object, '[0][1]', 'a', OBJECT)
  * // => { '0': { '1': 'a' } }
  */
 function setWith(object, path, value, customizer) {

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Solidity.
+ * This file is part of SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,13 @@
 import {
   prng,
   Properties,
-  Parameter,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Decoding } from "../Statement";
+import { TypingType } from "../../../analysis/static/types/resolving/Typing";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
 
 /**
  * @author Dimitri Stallenberg
@@ -185,10 +187,16 @@ export class StringStatement extends PrimitiveStatement<string> {
   }
 
   static getRandom(
-    type: Parameter = { type: "string", name: "noname" },
+    type: Parameter = null,
     alphabet = Properties.string_alphabet,
     maxlength = Properties.string_maxlength
   ): StringStatement {
+    if (!type) {
+      const typeMap = new TypeProbabilityMap()
+      typeMap.addType({ type: TypingType.STRING })
+      type = { type: typeMap, name: "noname" }
+    }
+
     const valueLength = prng.nextInt(0, maxlength - 1);
     let value = "";
 

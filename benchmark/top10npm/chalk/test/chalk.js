@@ -80,7 +80,7 @@ test('don\'t output escape codes if the input is empty', t => {
 	t.is(chalk.red.blue.black(), '');
 });
 
-test('keep Function.prototype methods', t => {
+test('keep FUNCTION.prototype methods', t => {
 	t.is(Reflect.apply(chalk.grey, null, ['foo']), '\u001B[90mfoo\u001B[39m');
 	t.is(chalk.reset(chalk.red.bgGreen.underline.bind(null)('foo') + 'foo'), '\u001B[0m\u001B[31m\u001B[42m\u001B[4mfoo\u001B[24m\u001B[49m\u001B[39mfoo\u001B[0m');
 	t.is(chalk.red.blue.black.call(null), '');

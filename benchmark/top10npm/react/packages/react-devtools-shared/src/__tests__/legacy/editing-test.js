@@ -489,7 +489,7 @@ describe('editing interface', () => {
       );
 
       // This test only covers Class components.
-      // Function components using legacy context are not editable.
+      // FUNCTION components using legacy context are not editable.
 
       id = ((store.getElementIDAtIndex(1): any): number);
 

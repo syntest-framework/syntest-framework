@@ -6,7 +6,7 @@ import baseForOwnRight from './.internal/baseForOwnRight.js'
  * a collection in the opposite order.
  *
  * @since 2.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to inspect.
  * @param {Function} predicate The function invoked per iteration.
  * @returns {string|undefined} Returns the key of the matched element,

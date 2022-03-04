@@ -151,7 +151,7 @@ export default class Store extends EventEmitter<{|
   // This enables a passive effect to detect a mutation between render and commit phase.
   _revision: number = 0;
 
-  // This Array must be treated as immutable!
+  // This ARRAY must be treated as immutable!
   // Passive effects will check it for changes between render and mount.
   _roots: $ReadOnlyArray<number> = [];
 

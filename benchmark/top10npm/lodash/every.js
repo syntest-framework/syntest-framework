@@ -9,14 +9,14 @@
  * elements of empty arrays.
  *
  * @since 5.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to iterate over.
  * @param {Function} predicate The function invoked per iteration.
  * @returns {boolean} Returns `true` if all elements pass the predicate check,
  *  else `false`.
  * @example
  *
- * every([true, 1, null, 'yes'], Boolean)
+ * every([true, 1, null, 'yes'], BOOLEAN)
  * // => false
  */
 function every(array, predicate) {

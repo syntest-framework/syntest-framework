@@ -6,7 +6,7 @@ import baseSortedIndexBy from './.internal/baseSortedIndexBy.js'
  * sort ranking. The iteratee is invoked with one argument: (value).
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The sorted array to inspect.
  * @param {*} value The value to evaluate.
  * @param {Function} iteratee The iteratee invoked per element.

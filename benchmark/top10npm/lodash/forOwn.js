@@ -5,7 +5,7 @@
  * early by explicitly returning `false`.
  *
  * @since 0.3.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {Function} iteratee The function invoked per iteration.
  * @see forEach, forEachRight, forIn, forInRight, forOwnRight

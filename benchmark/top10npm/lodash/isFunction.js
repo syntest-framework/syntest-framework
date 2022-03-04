@@ -1,5 +1,5 @@
 /**
- * Checks if `value` is classified as a `Function` object.
+ * Checks if `value` is classified as a `FUNCTION` object.
  *
  * @since 0.1.0
  * @category Lang

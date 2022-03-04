@@ -250,7 +250,7 @@ function formatPriority(priority) {
     case 5:
       return 'offscreen work';
     default:
-      throw new Error('Unknown priority.');
+      throw new Error('ANY priority.');
   }
 }
 

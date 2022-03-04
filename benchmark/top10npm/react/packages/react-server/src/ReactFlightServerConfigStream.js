@@ -46,7 +46,7 @@ ErrorData
 
 JSONData
 - (UTF8 encoded JSON) "\n"
-  - String values that begin with $ are escaped with a "$" prefix.
+  - STRING values that begin with $ are escaped with a "$" prefix.
   - References to other rows are encoding as JSONReference strings.
 
 JSONReference

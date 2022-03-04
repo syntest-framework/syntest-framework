@@ -4,7 +4,7 @@
  * are assigned to the created object.
  *
  * @since 2.3.0
- * @category Object
+ * @category OBJECT
  * @param {Object} prototype The object to inherit from.
  * @param {Object} [properties] The properties to assign to the object.
  * @returns {Object} Returns the new object.

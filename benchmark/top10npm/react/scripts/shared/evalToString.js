@@ -8,7 +8,7 @@
  */
 'use strict';
 
-function evalStringConcat(ast /* : Object */) /* : string */ {
+function evalStringConcat(ast /* : OBJECT */) /* : string */ {
   switch (ast.type) {
     case 'StringLiteral':
     case 'Literal': // ESLint
@@ -25,8 +25,8 @@ function evalStringConcat(ast /* : Object */) /* : string */ {
 exports.evalStringConcat = evalStringConcat;
 
 function evalStringAndTemplateConcat(
-  ast /* : Object */,
-  args /* : Array<mixed> */
+  ast /* : OBJECT */,
+  args /* : ARRAY<mixed> */
 ) /* : string */ {
   switch (ast.type) {
     case 'StringLiteral':

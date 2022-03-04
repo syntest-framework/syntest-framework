@@ -17,7 +17,8 @@
  */
 
 
-import { Encoding, EncodingSampler, Parameter, prng } from "@syntest/framework";
+import { Encoding, EncodingSampler, prng } from "@syntest/framework";
+import { Parameter } from "../../analysis/static/parsing/Parameter";
 
 /**
  * @author Dimitri Stallenberg

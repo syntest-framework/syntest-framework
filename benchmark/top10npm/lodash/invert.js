@@ -6,7 +6,7 @@ const toString = Object.prototype.toString
  * property assignments of previous values.
  *
  * @since 0.7.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to invert.
  * @returns {Object} Returns the new inverted object.
  * @example

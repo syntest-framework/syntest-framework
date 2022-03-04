@@ -23,7 +23,7 @@ The `config` object may contain:
 * `port: number` (defaults to `8097`) - Websocket will connect to this port.
 * `useHttps: boolean` (defaults to `false`) - Websocket should use a secure protocol (wss).
 * `websocket: Websocket` - Custom websocket to use. Overrides `host` and `port` settings if provided.
-* `resolveRNStyle: (style: number) => ?Object` - Used by the React Native style plug-in.
+* `resolveRNStyle: (style: number) => ?OBJECT` - Used by the React Native style plug-in.
 * `retryConnectionDelay: number` (defaults to `2000`) - Milliseconds delay to wait between retrying a failed Websocket connection.
 * `isAppActive: () => boolean` - If provided, DevTools will poll this method and wait until it returns true before connecting to React.
 

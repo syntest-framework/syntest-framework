@@ -3,7 +3,7 @@
  * additional arguments are provided to `func` when it's invoked.
  *
  * @since 0.1.0
- * @category Function
+ * @category FUNCTION
  * @param {Function} func The function to defer.
  * @param {...*} [args] The arguments to invoke `func` with.
  * @returns {number} Returns the timer id.

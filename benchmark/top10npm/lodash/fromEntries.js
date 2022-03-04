@@ -3,7 +3,7 @@
  * from key-value `pairs`.
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} pairs The key-value pairs.
  * @returns {Object} Returns the new object.
  * @example

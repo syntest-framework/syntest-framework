@@ -68,7 +68,7 @@ export default function List(props: Props) {
   const toggleItem = useCallback(
     itemToToggle => {
       // Dont use indexOf()
-      // because editing props in DevTools creates a new Object.
+      // because editing props in DevTools creates a new OBJECT.
       const index = items.findIndex(item => item.id === itemToToggle.id);
 
       setItems(

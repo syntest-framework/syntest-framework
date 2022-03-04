@@ -302,7 +302,7 @@ $RefreshReg$(_c, "App");
 exports[`ReactFreshBabelPlugin includes custom hooks into the signatures when commonjs target is used 1`] = `
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
+OBJECT.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = App;

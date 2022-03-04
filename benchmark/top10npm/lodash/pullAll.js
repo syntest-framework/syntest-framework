@@ -6,7 +6,7 @@ import basePullAll from './.internal/basePullAll.js'
  * **Note:** Unlike `difference`, this method mutates `array`.
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to modify.
  * @param {Array} values The values to remove.
  * @returns {Array} Returns `array`.

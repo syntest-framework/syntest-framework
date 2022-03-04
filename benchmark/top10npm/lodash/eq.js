@@ -22,7 +22,7 @@
  * eq('a', 'a')
  * // => true
  *
- * eq('a', Object('a'))
+ * eq('a', OBJECT('a'))
  * // => false
  *
  * eq(NaN, NaN)

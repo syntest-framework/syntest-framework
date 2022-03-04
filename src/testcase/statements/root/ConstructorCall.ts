@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2022 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Solidity.
+ * This file is part of SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-import {
-  prng,
-  Parameter, Properties,
-} from "@syntest/framework";
+import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./RootStatement";
 import { Decoding, Statement } from "../Statement";
 import { MethodCall } from "../action/MethodCall";
 import * as path from "path";
+import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { JavaScriptSubject } from "../../../search/JavaScriptSubject";
+import { ActionType } from "../../../analysis/static/parsing/ActionType";
 
 /**
  * @author Dimitri Stallenberg
@@ -75,13 +75,19 @@ export class ConstructorCall extends RootStatement {
       // go over each arg
       for (let i = 0; i < args.length; i++) {
         if (prng.nextBoolean(1 / args.length)) {
-          args[i] = args[i].mutate(sampler, depth + 1)
+          if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
+            args[i] = sampler.sampleArgument(depth + 1, args[i].type)
+          } else {
+            args[i] = args[i].mutate(sampler, depth + 1);
+          }
         }
       }
     }
 
+    const methodsAvailable = !!(<JavaScriptSubject>sampler.subject).getPossibleActions(ActionType.METHOD).length
+
     const finalCalls = []
-    if (calls.length === 0) {
+    if (calls.length === 0 && methodsAvailable) {
       // add a call
       finalCalls.push(sampler.sampleMethodCall(depth + 1))
     } else {
@@ -90,13 +96,14 @@ export class ConstructorCall extends RootStatement {
         if (prng.nextBoolean(1 / calls.length)) {
           // Mutate this position
           const choice = prng.nextDouble()
-          if (choice < 0.1) {
+
+          if (choice < 0.1 && methodsAvailable) {
             // 10% chance to add a call on this position
             finalCalls.push(sampler.sampleMethodCall(depth + 1))
             finalCalls.push(calls[i])
-          } else if (choice < 0.1) {
+          } else if (choice < 0.2) {
             // 10% chance to delete the call
-          } else if (choice < 0.3) {
+          } else if (choice < 0.5) {
             // 30% chance to replace the call
             finalCalls.push(sampler.sampleMethodCall(depth + 1))
           } else {

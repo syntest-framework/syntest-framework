@@ -58,7 +58,7 @@ describe('ReactCompositeComponentDOMMinimalism', () => {
 
   it('should not render extra nodes for non-interpolated text', () => {
     let instance = (
-      <MyCompositeComponent>{'Interpolated String Child'}</MyCompositeComponent>
+      <MyCompositeComponent>{'Interpolated STRING Child'}</MyCompositeComponent>
     );
     instance = ReactTestUtils.renderIntoDocument(instance);
     expectSingleChildlessDiv(instance);

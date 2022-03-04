@@ -71,7 +71,7 @@ function assertOptions(options, schema, allowUnknown) {
       continue;
     }
     if (allowUnknown !== true) {
-      throw Error('Unknown option ' + opt);
+      throw Error('ANY option ' + opt);
     }
   }
 }

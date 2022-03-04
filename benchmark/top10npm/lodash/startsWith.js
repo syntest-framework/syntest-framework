@@ -2,7 +2,7 @@
  * Checks if `string` starts with the given target string.
  *
  * @since 3.0.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to inspect.
  * @param {string} [target] The string to search for.
  * @param {number} [position=0] The position to search from.

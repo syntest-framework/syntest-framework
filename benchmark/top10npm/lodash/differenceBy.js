@@ -13,7 +13,7 @@ import last from './last.js'
  * **Note:** Unlike `pullAllBy`, this method returns a new array.
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to inspect.
  * @param {...Array} [values] The values to exclude.
  * @param {Function} iteratee The iteratee invoked per element.

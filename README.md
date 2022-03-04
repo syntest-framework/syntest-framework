@@ -48,14 +48,33 @@ $ cd syntest-javascript; npm run build
 
 ## Local development
 
-To be able to make quick changes to the syntest-framework and then test it in the syntest-javascript project use `npm link`:
+Currently you need to be on the `remove-parsing-from-framework` branch of the syntest-framework.
 
 ```bash
-cd <PATH_TO_SYNTEST_FRAMEWORK>; npm link
-cd <PATH_TO_SYNTEST_JAVASCRIPT>; npm link @syntest/framework
+cd <PATH_TO_SYNTEST_FRAMEWORK>; git checkout remove-parsing-from-framework; git pull
 ```
 
-This creates a symbolic link to the local syntest-framework instance in the node modules folder of syntest-javascript.
+Rebuild the framework
+
+```bash
+cd <PATH_TO_SYNTEST_FRAMEWORK>; npm run build
+```
+
+Now install the framework into syntest-javascript
+
+```bash
+cd <PATH_TO_SYNTEST_JAVASCRIPT>; npm install --save <PATH_TO_SYNTEST_JAVASCRIPT>
+```
+
+You can edit `.syntest.js` to change the way the tool behaves.
+
+Finally run the tool
+
+```bash
+cd <PATH_TO_SYNTEST_JAVASCRIPT>; npm run run-ts
+```
+
+The results can be found in the `syntest` folder
 
 ## Usage
 

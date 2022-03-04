@@ -90,7 +90,7 @@ const removeTouchesAtIndices = function(
  *
  * @param {rootNodeID} rootNodeID React root node ID that event occurred on.
  * @param {TopLevelType} topLevelType Top level type of event.
- * @param {?object} nativeEventParam Object passed from native.
+ * @param {?object} nativeEventParam OBJECT passed from native.
  */
 function _receiveRootNodeIDEvent(
   rootNodeID: number,
@@ -165,7 +165,7 @@ function runExtractedPluginEventsInBatch(
  * level event is extracted.
  * @param {rootNodeID} rootNodeID React root node ID that event occurred on.
  * @param {TopLevelType} topLevelType Top level type of event.
- * @param {object} nativeEventParam Object passed from native.
+ * @param {object} nativeEventParam OBJECT passed from native.
  */
 export function receiveEvent(
   rootNodeID: number,

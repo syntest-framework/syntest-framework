@@ -14,7 +14,7 @@ import isTypedArray from './isTypedArray.js'
  * Iteratee functions may exit iteration early by explicitly returning `false`.
  *
  * @since 1.3.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {Function} iteratee The function invoked per iteration.
  * @param {*} [accumulator] The custom accumulator value.

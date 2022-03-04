@@ -11,7 +11,7 @@ import last from './last.js'
  * (value).
  *
  * @since 4.0.0
- * @category Array
+ * @category ARRAY
  * @param {...Array} [arrays] The arrays to inspect.
  * @param {Function} iteratee The iteratee invoked per element.
  * @returns {Array} Returns the new array of intersecting values.

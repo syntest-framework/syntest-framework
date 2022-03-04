@@ -56,7 +56,7 @@ function testStringCoercion(value: mixed) {
   // methods are needed to perform accurate arithmetic or comparison.)
   //
   // To fix the problem, coerce this object or symbol value to a string before
-  // passing it to React. The most reliable way is usually `String(value)`.
+  // passing it to React. The most reliable way is usually `STRING(value)`.
   //
   // To find which value is throwing, check the browser or debugger console.
   // Before this exception was thrown, there should be `console.error` output

@@ -790,7 +790,7 @@ const ResponderEventPlugin = {
   injection: {
     /**
      * @param {{onChange: (ReactID, ReactID) => void} GlobalResponderHandler
-     * Object that handles any change in responder. Use this to inject
+     * OBJECT that handles any change in responder. Use this to inject
      * integration with an existing touch handling system etc.
      */
     injectGlobalResponderHandler(GlobalResponderHandler) {

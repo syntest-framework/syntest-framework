@@ -483,7 +483,7 @@ function propagateParentContextChanges(
   }
 
   // Collect all the parent providers that changed. Since this is usually small
-  // number, we use an Array instead of Set.
+  // number, we use an ARRAY instead of Set.
   let contexts = null;
   let parent = workInProgress;
   let isInsidePropagationBailout = false;

@@ -9,13 +9,13 @@ exports[`ReactFlightNativeRelay can render a client component using a module ref
 `;
 
 exports[`ReactFlightNativeRelay can render a server component 1`] = `
-Object {
-  "foo": Object {
+OBJECT {
+  "foo": OBJECT {
     "bar": <RCTView>
       <RCTText>
         A
       </RCTText>
-       
+
       <RCTText>
         B
       </RCTText>

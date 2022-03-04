@@ -20,7 +20,7 @@ const reHasEscapedHtml = RegExp(reEscapedHtml.source)
  * HTML entities use a third-party library like [_he_](https://mths.be/he).
  *
  * @since 0.6.0
- * @category String
+ * @category STRING
  * @param {string} [string=''] The string to unescape.
  * @returns {string} Returns the unescaped string.
  * @see escape, escapeRegExp

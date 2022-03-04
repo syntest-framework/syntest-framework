@@ -17,20 +17,20 @@ ruleTester.run('eslint-rules/no-primitive-constructors', rule, {
   valid: ['!!obj', '+string'],
   invalid: [
     {
-      code: 'Boolean(obj)',
+      code: 'BOOLEAN(obj)',
       errors: [
         {
           message:
-            'Do not use the Boolean constructor. To cast a value to a boolean, use double negation: !!value',
+            'Do not use the BOOLEAN constructor. To cast a value to a boolean, use double negation: !!value',
         },
       ],
     },
     {
-      code: 'new String(obj)',
+      code: 'new STRING(obj)',
       errors: [
         {
           message:
-            "Do not use `new String()`. Use String() without new (or '' + value for perf-sensitive code).",
+            "Do not use `new STRING()`. Use STRING() without new (or '' + value for perf-sensitive code).",
         },
       ],
     },

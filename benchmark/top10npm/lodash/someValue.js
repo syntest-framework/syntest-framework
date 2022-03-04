@@ -4,14 +4,14 @@
  * invoked with three arguments: (value, key, object).
  *
  * @since 5.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {Function} predicate The function invoked per iteration.
  * @returns {boolean} Returns `true` if any element passes the predicate check,
  *  else `false`.
  * @example
  *
- * someValues({ 'a': 0, 'b': 'yes', 'c': false }, Boolean)
+ * someValues({ 'a': 0, 'b': 'yes', 'c': false }, BOOLEAN)
  * // => true
  */
 function someValues(object, predicate) {

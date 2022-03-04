@@ -168,7 +168,7 @@ var __createBinding;
                 return { value: o && o[i++], done: !o };
             }
         };
-        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+        throw new TypeError(s ? "OBJECT is not iterable." : "Symbol.iterator is not defined.");
     };
 
     __read = function (o, n) {

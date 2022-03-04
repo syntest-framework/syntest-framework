@@ -10,4 +10,11 @@ function test (x) {
   return '' + x
 }
 
-module.exports = {test}
+
+function test_func (func) {
+  if (func() > 10) {
+    return '0'
+  }
+  return '1'
+}
+module.exports = {test, test_func}

@@ -1,19 +1,35 @@
-import {
-  PublicVisibility,
-  PrivateVisibility,
-  TargetMetaData,
-} from "@syntest/framework";
-import { JavaScriptFunction, ProtectedVisibility } from "./JavaScriptFunction";
-import { JavaScriptTargetMetaData } from "../JavaScriptTargetPool";
+/*
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest JavaScript.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { TargetMetaData } from "@syntest/framework";
+import { TypeProbabilityMap } from "../types/resolving/TypeProbabilityMap";
+import { ActionType } from "../parsing/ActionType";
+import { ActionVisibility } from "../parsing/ActionVisibility";
+import { ActionDescription } from "../parsing/ActionDescription";
 
 // TODO check if exported (and how)
 export class TargetVisitor {
   private _targetMap: Map<string, TargetMetaData>;
-  private _functionMap: Map<string, Map<string, JavaScriptFunction>>;
+  private _functionMap: Map<string, Map<string, ActionDescription>>;
+
 
   constructor() {
     this._targetMap = new Map<string, TargetMetaData>();
-    this._functionMap = new Map<string, Map<string, JavaScriptFunction>>();
+    this._functionMap = new Map<string, Map<string, ActionDescription>>();
   }
 
   _createMaps(targetName) {
@@ -22,7 +38,7 @@ export class TargetVisitor {
         name: targetName,
       });
 
-      this._functionMap.set(targetName, new Map<string, JavaScriptFunction>());
+      this._functionMap.set(targetName, new Map<string, ActionDescription>());
     }
   }
 
@@ -35,26 +51,23 @@ export class TargetVisitor {
     const targetName = path.parentPath.parentPath.node.id.name;
     const functionName = path.node.key.name;
 
-    let visibility = PublicVisibility;
+    let visibility = ActionVisibility.PUBLIC;
     if (path.node.access === "private") {
-      visibility = PrivateVisibility;
+      visibility = ActionVisibility.PRIVATE;
     } else if (path.node.access === "protected") {
-      visibility = ProtectedVisibility;
+      visibility = ActionVisibility.PROTECTED;
     }
 
     this._functionMap.get(targetName).set(functionName, {
       name: functionName,
-      type: functionName === "constructor" ? "constructor" : "method",
+      type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
       visibility: visibility,
       isConstructor: functionName === "constructor",
       parameters: path.node.params.map(this._extractParam),
-      returnParameters: [
-        {
-          name: "unknown",
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
-        }
-        // TODO unknown because javascript! (check how this looks in typescript)
-      ],
+      returnParameter: {
+        name: "unknown",
+        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+      },
       isStatic: path.node.static,
       isAsync: path.node.async,
     });
@@ -64,23 +77,19 @@ export class TargetVisitor {
   public FunctionDeclaration: (path) => void = (path) => {
     const targetName = path.node.id.name;
     const functionName = targetName;
-    let visibility = PublicVisibility;
 
     this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
       name: functionName,
-      type: "function",
-      visibility: visibility,
+      type: ActionType.FUNCTION,
+      visibility: ActionVisibility.PUBLIC,
       isConstructor: false,
       parameters: path.node.params.map(this._extractParam),
-      returnParameters: [
-        {
-          name: "unknown",
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
-        }
-        // TODO unknown because javascript! (check how this looks in typescript)
-      ],
+      returnParameter: {
+        name: "unknown",
+        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+      },
       isStatic: path.node.static,
       isAsync: path.node.async,
     });
@@ -94,23 +103,19 @@ export class TargetVisitor {
         ? path.parent.id.name
         : 'anonymous');
     const functionName = targetName;
-    let visibility = PublicVisibility;
 
     this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
       name: functionName,
-      type: "function",
-      visibility: visibility,
+      type: ActionType.FUNCTION,
+      visibility: ActionVisibility.PUBLIC,
       isConstructor: false,
       parameters: path.node.params.map(this._extractParam),
-      returnParameters: [
-        {
-          name: "unknown",
-          type: "any", // TODO unknown because javascript! (check how this looks in typescript)
-        }
-        // TODO unknown because javascript! (check how this looks in typescript)
-      ],
+      returnParameter: {
+        name: "unknown",
+        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+      },
       isStatic: path.node.static,
       isAsync: path.node.async,
     });
@@ -123,7 +128,7 @@ export class TargetVisitor {
 
       return {
         name: param.name || "unknown",
-        type: "any", // TODO unknown because javascript! (check how this looks in typescript)
+        type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
       };
 
   }

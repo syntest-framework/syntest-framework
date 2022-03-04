@@ -6,7 +6,7 @@ import stringToArray from './stringToArray.js'
  * Creates a function like `lowerFirst`.
  *
  * @private
- * @param {string} methodName The name of the `String` case method to use.
+ * @param {string} methodName The name of the `STRING` case method to use.
  * @returns {Function} Returns the new case function.
  */
 function createCaseFirst(methodName) {

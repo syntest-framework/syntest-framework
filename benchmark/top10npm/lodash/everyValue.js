@@ -9,14 +9,14 @@
  * elements of empty objects.
  *
  * @since 5.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {Function} predicate The function invoked per iteration.
  * @returns {boolean} Returns `true` if all properties pass the predicate check,
  *  else `false`.
  * @example
  *
- * everyValue({ 'a': 0, 'b': 'yes', 'c': false }, Boolean)
+ * everyValue({ 'a': 0, 'b': 'yes', 'c': false }, BOOLEAN)
  * // => false
  */
 function everyValue(object, predicate) {

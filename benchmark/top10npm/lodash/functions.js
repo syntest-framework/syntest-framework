@@ -3,7 +3,7 @@
  * of `object`.
  *
  * @since 0.1.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to inspect.
  * @returns {Array} Returns the function names.
  * @see functionsIn

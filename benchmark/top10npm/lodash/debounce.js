@@ -27,7 +27,7 @@ import root from './.internal/root.js'
  * for details over the differences between `debounce` and `throttle`.
  *
  * @since 0.1.0
- * @category Function
+ * @category FUNCTION
  * @param {Function} func The function to debounce.
  * @param {number} [wait=0]
  *  The number of milliseconds to delay; if omitted, `requestAnimationFrame` is

@@ -541,7 +541,7 @@ const capitalize = token => token[1].toUpperCase();
   );
 });
 
-// String SVG attributes with the xlink namespace.
+// STRING SVG attributes with the xlink namespace.
 [
   'xlink:actuate',
   'xlink:arcrole',
@@ -566,7 +566,7 @@ const capitalize = token => token[1].toUpperCase();
   );
 });
 
-// String SVG attributes with the xml namespace.
+// STRING SVG attributes with the xml namespace.
 [
   'xml:base',
   'xml:lang',

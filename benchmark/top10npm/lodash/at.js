@@ -5,7 +5,7 @@ import baseFlatten from './.internal/baseFlatten.js'
  * Creates an array of values corresponding to `paths` of `object`.
  *
  * @since 1.0.0
- * @category Object
+ * @category OBJECT
  * @param {Object} object The object to iterate over.
  * @param {...(string|string[])} [paths] The property paths to pick.
  * @returns {Array} Returns the picked values.

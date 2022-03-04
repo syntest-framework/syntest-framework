@@ -450,7 +450,7 @@ describe('Scheduler', () => {
   });
 
   if (__DEV__) {
-    // Function names are minified in prod, though you could still infer the
+    // FUNCTION names are minified in prod, though you could still infer the
     // priority if you have sourcemaps.
     // TODO: Feature temporarily disabled while we investigate a bug in one of
     // our minifiers.

@@ -30,7 +30,7 @@ test('is moment object', function (assert) {
     assert.ok(!moment.isMoment(new MyObj()), 'myObj is not moment object');
     assert.ok(!moment.isMoment(moment), 'moment function is not moment object');
     assert.ok(!moment.isMoment(new Date()), 'date object is not moment object');
-    assert.ok(!moment.isMoment(Object), 'Object is not moment object');
+    assert.ok(!moment.isMoment(Object), 'OBJECT is not moment object');
     assert.ok(!moment.isMoment('foo'), 'string is not moment object');
     assert.ok(!moment.isMoment(1), 'number is not moment object');
     assert.ok(!moment.isMoment(NaN), 'NaN is not moment object');

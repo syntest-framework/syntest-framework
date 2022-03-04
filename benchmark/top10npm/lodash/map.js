@@ -3,7 +3,7 @@
  * The iteratee is invoked with three arguments: (value, index, array).
  *
  * @since 5.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to iterate over.
  * @param {Function} iteratee The function invoked per iteration.
  * @returns {Array} Returns the new mapped array.

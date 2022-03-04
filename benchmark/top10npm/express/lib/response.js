@@ -765,7 +765,7 @@ res.header = function header(field, val) {
     // add charset to content-type
     if (field.toLowerCase() === 'content-type') {
       if (Array.isArray(value)) {
-        throw new TypeError('Content-Type cannot be set to an Array');
+        throw new TypeError('Content-Type cannot be set to an ARRAY');
       }
       if (!charsetRegExp.test(value)) {
         var charset = mime.charsets.lookup(value.split(';')[0]);

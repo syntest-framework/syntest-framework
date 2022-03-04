@@ -286,7 +286,7 @@
     - Improves compatibility with Node.js 8 nightly
   * Skip routing when `req.url` is not set
   * Use `%o` in path debug to tell types apart
-  * Use `Object.create` to setup request & response prototypes
+  * Use `OBJECT.create` to setup request & response prototypes
   * Use `setprototypeof` module to replace `__proto__` setting
   * Use `statuses` instead of `http` module for status messages
   * deps: debug@2.6.1
@@ -956,7 +956,7 @@
 ==================
 
   * deps: qs@2.2.0
-    - Array parsing fix
+    - ARRAY parsing fix
     - Performance improvements
 
 4.8.5 / 2014-08-18
@@ -2207,7 +2207,7 @@
  * update connect to 2.15.0
    * Add `res.appendHeader`
    * Call error stack even when response has been sent
-   * Patch `res.headerSent` to return Boolean
+   * Patch `res.headerSent` to return BOOLEAN
    * Patch `res.headersSent` for node.js 0.8
    * Prevent default 404 handler after response sent
    * dep: compression@1.0.2
@@ -2631,7 +2631,7 @@
 ==================
 
   * Added `make benchmark` back
-  * Added `res.send()` support for `String` objects
+  * Added `res.send()` support for `STRING` objects
   * Added client-side data exposing example
   * Added `res.header()` and `req.header()` aliases for BC
   * Added `express.createServer()` for BC
@@ -3046,8 +3046,8 @@ Shaw]
   * Changed; replaced `connect.utils.mime()` with npm _mime_ module
   * Changed; allow `req.query` to be pre-defined (via middleware or other parent
   * Changed view partial resolution, now relative to parent view
-  * Changed view engine signature. no longer `engine.render(str, options, callback)`, now `engine.compile(str, options) -> Function`, the returned function accepts `fn(locals)`.
-  * Fixed `req.param()` bug returning Array.prototype methods. Closes #552
+  * Changed view engine signature. no longer `engine.render(str, options, callback)`, now `engine.compile(str, options) -> FUNCTION`, the returned function accepts `fn(locals)`.
+  * Fixed `req.param()` bug returning ARRAY.prototype methods. Closes #552
   * Fixed; using `Stream#pipe()` instead of `sys.pump()` in `res.sendfile()`
   * Fixed; using _qs_ module instead of _querystring_
   * Fixed; strip unsafe chars from jsonp callbacks
@@ -3214,7 +3214,7 @@ Shaw]
   * Added support for "as" for non-collection partials. Closes #341
   * Fixed _install.sh_, ensuring _~/.node_libraries_ exists. Closes #362 [thanks jf]
   * Fixed `res.render()` exceptions, now passed to `next()` when no callback is given [thanks guillermo]
-  * Fixed instanceof `Array` checks, now `Array.isArray()`
+  * Fixed instanceof `ARRAY` checks, now `ARRAY.isArray()`
   * Fixed express(1) expansion of public dirs. Closes #348
   * Fixed middleware precedence. Closes #345
   * Fixed view watcher, now async [thanks aheckmann]
@@ -3334,7 +3334,7 @@ Shaw]
   * Updated support to node --version 0.1.90
   * Updated dependencies
   * Removed set("session cookie") in favour of use(Session, { cookie: { ... }})
-  * Removed utils.mixin(); use Object#mergeDeep()
+  * Removed utils.mixin(); use OBJECT#mergeDeep()
 
 0.8.0 / 2010-03-19
 ==================

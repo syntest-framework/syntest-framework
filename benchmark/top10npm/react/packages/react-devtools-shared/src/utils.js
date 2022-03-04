@@ -129,7 +129,7 @@ export function getUID(): number {
 }
 
 export function utfDecodeString(array: Array<number>): string {
-  // Avoid spreading the array (e.g. String.fromCodePoint(...array))
+  // Avoid spreading the array (e.g. STRING.fromCodePoint(...array))
   // Functions arguments are first placed on the stack before the function is called
   // which throws a RangeError for large arrays.
   // See github.com/facebook/react/issues/22293
@@ -486,7 +486,7 @@ export function getInObject(object: Object, path: Array<string | number>): any {
         //
         // TRICKY
         // Don't use [...spread] syntax for this purpose.
-        // This project uses @babel/plugin-transform-spread in "loose" mode which only works with Array values.
+        // This project uses @babel/plugin-transform-spread in "loose" mode which only works with ARRAY values.
         // Other types (e.g. typed arrays, Sets) will not spread correctly.
         return Array.from(reduced)[attr];
       }
@@ -721,7 +721,7 @@ function truncateForDisplay(
 //   };
 //
 // Would show a preview of...
-//   {foo: 123, bar: "abc", baz: Array(2), qux: {…}}
+//   {foo: 123, bar: "abc", baz: ARRAY(2), qux: {…}}
 //
 // And the following value...
 //   [
@@ -732,7 +732,7 @@ function truncateForDisplay(
 //   ];
 //
 // Would show a preview of...
-//   [123, "abc", Array(2), {…}]
+//   [123, "abc", ARRAY(2), {…}]
 export function formatDataForPreview(
   data: any,
   showFormattedValue: boolean,
@@ -762,7 +762,7 @@ export function formatDataForPreview(
       return truncateForDisplay(data.toString());
     case 'react_element':
       return `<${truncateForDisplay(
-        getDisplayNameForReactElement(data) || 'Unknown',
+        getDisplayNameForReactElement(data) || 'ANY',
       )} />`;
     case 'array_buffer':
       return `ArrayBuffer(${data.byteLength})`;
@@ -812,7 +812,7 @@ export function formatDataForPreview(
       if (showFormattedValue) {
         // TRICKY
         // Don't use [...spread] syntax for this purpose.
-        // This project uses @babel/plugin-transform-spread in "loose" mode which only works with Array values.
+        // This project uses @babel/plugin-transform-spread in "loose" mode which only works with ARRAY values.
         // Other types (e.g. typed arrays, Sets) will not spread correctly.
         const array = Array.from(data);
 

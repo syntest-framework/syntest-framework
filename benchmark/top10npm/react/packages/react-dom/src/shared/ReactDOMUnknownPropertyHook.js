@@ -66,7 +66,7 @@ if (__DEV__) {
       }
       if (EVENT_NAME_REGEX.test(name)) {
         console.error(
-          'Unknown event handler property `%s`. It will be ignored.',
+          'ANY event handler property `%s`. It will be ignored.',
           name,
         );
         warnedProperties[name] = true;
@@ -151,7 +151,7 @@ if (__DEV__) {
         return true;
       }
     } else if (!isReserved && name !== lowerCasedName) {
-      // Unknown attributes should have lowercase casing since that's how they
+      // ANY attributes should have lowercase casing since that's how they
       // will be cased anyway with server rendering.
       console.error(
         'React does not recognize the `%s` prop on a DOM element. If you ' +

@@ -333,7 +333,7 @@ export function jsxWithValidation(
       } else if (isArray(type)) {
         typeString = 'array';
       } else if (type !== undefined && type.$$typeof === REACT_ELEMENT_TYPE) {
-        typeString = `<${getComponentNameFromType(type.type) || 'Unknown'} />`;
+        typeString = `<${getComponentNameFromType(type.type) || 'ANY'} />`;
         info =
           ' Did you accidentally export a JSX literal instead of a component?';
       } else {

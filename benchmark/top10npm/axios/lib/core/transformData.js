@@ -8,7 +8,7 @@ var defaults = require('./../defaults');
  *
  * @param {Object|String} data The data to be transformed
  * @param {Array} headers The headers for the request or response
- * @param {Array|Function} fns A single function or Array of functions
+ * @param {Array|Function} fns A single function or ARRAY of functions
  * @returns {*} The resulting transformed data
  */
 module.exports = function transformData(data, headers, fns) {

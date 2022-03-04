@@ -9,7 +9,7 @@ import pullAll from './pullAll.js'
  * to remove elements from an array by predicate.
  *
  * @since 2.0.0
- * @category Array
+ * @category ARRAY
  * @param {Array} array The array to modify.
  * @param {...*} [values] The values to remove.
  * @returns {Array} Returns `array`.

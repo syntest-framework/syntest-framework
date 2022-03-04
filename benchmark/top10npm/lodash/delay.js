@@ -3,7 +3,7 @@
  * provided to `func` when it's invoked.
  *
  * @since 0.1.0
- * @category Function
+ * @category FUNCTION
  * @param {Function} func The function to delay.
  * @param {number} wait The number of milliseconds to delay invocation.
  * @param {...*} [args] The arguments to invoke `func` with.
