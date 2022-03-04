@@ -1,6 +1,29 @@
+/*
+ * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest JavaScript.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { Typing, TypingType } from "./Typing";
 import { prng, Properties } from "@syntest/framework";
 
+/**
+ * Type Probability Map
+ * Stores information about the probability a certain element/relation is a certain type
+ *
+ * @author Dimitri Stallenberg
+ */
 export class TypeProbabilityMap {
 
   private typeMap: Map<Typing, number>
@@ -9,6 +32,9 @@ export class TypeProbabilityMap {
 
   private probabilityMap: Map<Typing, number>
 
+  /**
+   * Constructor
+   */
   constructor() {
     this.typeMap = new Map()
     this.probabilityMap = new Map()
@@ -16,6 +42,11 @@ export class TypeProbabilityMap {
     this.changed = true
   }
 
+  /**
+   * Add a (new) type to the probability map
+   * @param type the (new) type
+   * @param value the score of type (higher score means higher probability)
+   */
   addType(type: Typing, value: number = 1) {
     if (value <= 0) {
       throw new Error("Type must be compatible")
@@ -24,10 +55,11 @@ export class TypeProbabilityMap {
     this.typeMap.set(type, value)
     this.total += value
     this.changed = true
-
-    // TODO maybe the values should stack when done multiple times
   }
 
+  /**
+   * Calculates the actual probabilities for each type based on the given scores
+   */
   calculateProbabilities() {
     if (!this.changed) {
       return
@@ -41,6 +73,7 @@ export class TypeProbabilityMap {
     let total = this.total
     this.probabilityMap = new Map()
 
+    // this ensures that there is a chance of trying a random other type
     if (true) { // Properties.alsotryrandom) { TODO property
       total = total / 0.9
       this.probabilityMap.set({ type: TypingType.ANY }, 0.1)
@@ -54,12 +87,19 @@ export class TypeProbabilityMap {
     this.changed = false
   }
 
+  /**
+   * Gets the probability of the given type
+   * @param type the type
+   */
   getProbability(type: Typing): number {
     this.calculateProbabilities()
 
     return this.probabilityMap.get(type)
   }
 
+  /**
+   * Gets a random type from the probability map based on their likelyhood
+   */
   getRandomType(): Typing {
     this.calculateProbabilities()
 
