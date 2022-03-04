@@ -22,6 +22,9 @@ module.exports = {
     // logging
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
+
+    use_type_inference: true,
+
     include: [
         "./benchmark/top10npm/lodash/result.js",
         "./benchmark/top10npm/lodash/slice.js",

@@ -68,6 +68,7 @@ import { Runner } from "mocha";
 import { TypeResolverInference } from "./analysis/static/types/resolving/logic/TypeResolverInference";
 import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
 import { ScopeType } from "./analysis/static/types/discovery/Scope";
+import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
 
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
@@ -92,7 +93,13 @@ export class Launcher {
 
   private async setup(): Promise<JavaScriptTargetPool> {
     // Filesystem & Compiler Re-configuration
-    const additionalOptions = {}; // TODO
+    const additionalOptions = {
+      use_type_inference: {
+        description: "The type inference mode",
+        type: "boolean",
+        default: true,
+      },
+    };
     setupOptions(this._program, additionalOptions);
 
     const programArgs = process.argv.filter(
@@ -128,8 +135,13 @@ export class Launcher {
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
 
-    // const typeResolver = new TypeResolverUnknown() // TODO make switch for the type of resolver
-    const typeResolver = new TypeResolverInference() // TODO make switch for the type of resolver
+    let typeResolver: TypeResolver
+
+    if (Properties['use_type_inference']) {
+      typeResolver = new TypeResolverInference()
+    } else {
+      typeResolver = new TypeResolverUnknown()
+    }
 
     const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
     const importGenerator = new ImportGenerator()
@@ -503,7 +515,7 @@ export class Launcher {
         'function': summary['function'] + ' / ' + Object.keys(data.f).length
       }, false])
 
-      console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
+      // console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
     }
 
     overall['statement'] /= totalStatements

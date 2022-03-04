@@ -1,7 +1,7 @@
 import {
   Node,
   BranchNode,
-  CFG, NodeType, RootNode, Parameter, PublicVisibility,
+  CFG, NodeType, RootNode,
 } from "@syntest/framework";
 
 export class ControlFlowGraphVisitor {
@@ -76,12 +76,6 @@ export class ControlFlowGraphVisitor {
   //   return paramType;
   // }
   //
-  private parseParameter(parameter): Parameter {
-    return {
-      name: parameter.name,
-      type: 'unknown'// good question...
-    };
-  }
 
   public ClassMethod = {
     enter: (path) => {
