@@ -99,4 +99,8 @@ export class NumericStatement extends PrimitiveStatement<number> {
       prng.nextDouble(min, max),
     );
   }
+
+  getFlatTypes(): string[] {
+    return ["number"]
+  }
 }

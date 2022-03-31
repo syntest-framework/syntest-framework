@@ -22,6 +22,7 @@ function genVar(filename) {
 // and is the `this` for the individual coverage visitors.
 export class VisitState {
   public varName: string;
+  public metaVarName: string;
   public attrs: any;
   public nextIgnore: any;
   public cov: any;
@@ -39,6 +40,7 @@ export class VisitState {
     reportLogic = false
   ) {
     this.varName = genVar(sourceFilePath);
+    this.metaVarName = this.varName.replace('cov_', 'meta_')
     this.attrs = {};
     this.nextIgnore = null;
     this.cov = new SourceCoverage(sourceFilePath);
@@ -227,6 +229,7 @@ export class VisitState {
 
   insertCounter(path, increment) {
     const T = this.types;
+
     if (path.isBlockStatement()) {
       path.node.body.unshift(T.expressionStatement(increment));
     } else if (path.isStatement()) {
@@ -312,6 +315,26 @@ export class VisitState {
     return this.increase("b", branchName, index);
   }
 
+  getBranchMetaTracker(path, branchName, loc) {
+    const index = this.cov.addBranchPath(branchName, loc);
+
+    const T = this.types
+
+    const metaTracker = T.callExpression(T.identifier(this.metaVarName), [
+      T.numericLiteral(branchName),
+      T.numericLiteral(index),
+      T.objectExpression([
+        T.objectProperty(
+          T.stringLiteral('condition_ast'),
+          T.stringLiteral(JSON.stringify(path.parent.test))
+        )
+        // TODO variable values
+      ])
+    ])
+
+    return metaTracker
+  }
+
   getBranchLogicIncrement(path, branchName, loc) {
     const index = this.cov.addBranchPath(branchName, loc);
     return [
@@ -322,7 +345,9 @@ export class VisitState {
 
   insertBranchCounter(path, branchName, loc) {
     const increment = this.getBranchIncrement(branchName, loc || path.node.loc);
+    const metaTracker = this.getBranchMetaTracker(path, branchName, loc || path.node.loc)
     this.insertCounter(path, increment);
+    this.insertCounter(path, metaTracker);
   }
 
   findLeaves(node, accumulator, parent, property) {

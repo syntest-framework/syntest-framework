@@ -99,6 +99,12 @@ export class Launcher {
         type: "boolean",
         default: true,
       },
+      // TODO maybe remove the first one and add a type inference mode called "none"
+      type_inference_mode: {
+        description: "The type inference mode: [roulette, elitist, dynamic]",
+        type: "string",
+        default: "dynamic",
+      },
     };
     setupOptions(this._program, additionalOptions);
 

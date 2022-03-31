@@ -85,6 +85,8 @@ export abstract class Statement {
    * Decodes the statement
    */
   abstract decode(addLogs: boolean): Decoding[];
+
+  abstract getFlatTypes(): string[]
 }
 
 export interface Decoding {

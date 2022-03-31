@@ -61,11 +61,11 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     let runner: Runner = null
 
-    // Finally, run mocha.
     process.on("unhandledRejection", reason => {
       throw reason;
     });
 
+    // Finally, run mocha.
     await new Promise((resolve) => {
       runner = mocha.run((failures) => {
         resolve(failures)
@@ -80,11 +80,18 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // If one of the executions failed, log it
     if (stats.failures > 0) {
+      subject.recordTypeScore(testCase.getFlatTypes(), true)
       getUserInterface().error("Test case has failed!");
+    } else {
+      subject.recordTypeScore(testCase.getFlatTypes(), false)
     }
+
+    // TODO maybe this should be done not after each testcase
+    subject.reevaluateTypes()
 
     // Retrieve execution traces
     const instrumentationData = _.cloneDeep(global.__coverage__)
+    const metaData = _.cloneDeep(global.__meta__) // TODO use this
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {

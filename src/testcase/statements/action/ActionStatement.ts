@@ -57,4 +57,10 @@ export abstract class ActionStatement extends Statement {
   get args(): Statement[] {
     return this._args;
   }
+
+  getFlatTypes(): string[] {
+    return [
+      ...this.args.flatMap((a) => a.getFlatTypes())
+    ]
+  }
 }

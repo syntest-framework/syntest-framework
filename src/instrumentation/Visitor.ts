@@ -98,6 +98,14 @@ export class Visitor {
       INITIAL: coverageNode,
       HASH: this.types.stringLiteral(hash),
     });
+
+    const meta = metaTemplate({
+      GLOBAL_META_VAR: "\"__meta__\"",
+      META_FUNCTION: this.types.identifier(this.visitState.metaVarName),
+      PATH: this.types.stringLiteral(this.sourceFilePath),
+      HASH: this.types.stringLiteral(hash),
+    });
+
     // explicitly call this.varName to ensure coverage is always initialized
     path.node.body.unshift(
       this.types.expressionStatement(
@@ -108,6 +116,7 @@ export class Visitor {
       )
     );
     path.node.body.unshift(cv);
+    path.node.body.unshift(meta)
     return {
       fileCoverage: coverageData,
       sourceMappingURL: this.visitState.sourceMappingURL,
@@ -371,6 +380,31 @@ const coverageTemplate = template(
             }
         }
         return actualCoverage;
+    }
+`,
+  { preserveComments: true }
+);
+
+const metaTemplate = template(
+  `
+    function META_FUNCTION (branch, index, metaInformation) {
+        var path = PATH;
+        var hash = HASH;
+        var gmv = GLOBAL_META_VAR;
+        var meta = global[gmv] || (global[gmv] = {});
+                
+        if (!meta[path] || meta[path].hash !== hash) {
+            meta[path] = {
+              hash: hash,
+              meta: {}
+            };
+        }
+        
+        if (!meta[path].meta[branch]) {
+          meta[path].meta[branch] = {}
+        }
+        
+        meta[path].meta[branch][index] = metaInformation
     }
 `,
   { preserveComments: true }

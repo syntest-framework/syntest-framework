@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { Typing, TypingType } from "./Typing";
-import { prng, Properties } from "@syntest/framework";
+import { prng } from "@syntest/framework";
 
 /**
  * Type Probability Map
@@ -117,6 +117,30 @@ export class TypeProbabilityMap {
     }
 
     return this.probabilityMap.keys().next().value
+  }
+
+  getEliteType(): Typing {
+    this.calculateProbabilities()
+
+    let best: Typing = this.probabilityMap.keys().next().value
+
+    for (const obj of this.probabilityMap.keys()) {
+      if (this.probabilityMap.get(obj) > this.probabilityMap.get(best)) {
+        best = obj
+      }
+    }
+
+    return best
+  }
+
+  getDynamicType(): Typing {
+    this.calculateProbabilities()
+
+    const best: Typing = this.probabilityMap.keys().next().value
+
+    // TODO
+
+    return best
   }
 
   keys = () => this.typeMap.keys()

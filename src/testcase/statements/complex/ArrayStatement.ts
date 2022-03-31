@@ -135,4 +135,11 @@ export class ArrayStatement extends Statement {
   get children(): Statement[] {
     return this._children;
   }
+
+  getFlatTypes(): string[] {
+    return [
+      "array",
+      ...this.children.flatMap((a) => a.getFlatTypes())
+    ]
+  }
 }

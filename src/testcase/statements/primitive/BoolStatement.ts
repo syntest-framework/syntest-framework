@@ -58,4 +58,8 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
 
     return new BoolStatement(type, prng.uniqueId(), prng.nextBoolean());
   }
+
+  getFlatTypes(): string[] {
+    return ["bool"]
+  }
 }

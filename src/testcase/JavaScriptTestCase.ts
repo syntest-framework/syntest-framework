@@ -71,4 +71,8 @@ export class JavaScriptTestCase extends Encoding {
   get root(): RootStatement {
     return this._root;
   }
+
+  getFlatTypes(): string[] {
+    return this._root.getFlatTypes()
+  }
 }

@@ -73,4 +73,11 @@ export abstract class RootStatement extends ActionStatement {
       this.children[index] = newChild
     }
   }
+
+  getFlatTypes(): string[] {
+    return [
+      ...this.args.flatMap((a) => a.getFlatTypes()),
+      ...this.children.flatMap((a) => a.getFlatTypes())
+    ]
+  }
 }

@@ -231,4 +231,8 @@ export class StringStatement extends PrimitiveStatement<string> {
       }
     ]
   }
+
+  getFlatTypes(): string[] {
+    return ["string"]
+  }
 }

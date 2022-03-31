@@ -15,7 +15,7 @@ import { ActionDescription } from "../../analysis/static/parsing/ActionDescripti
 import { ActionType } from "../../analysis/static/parsing/ActionType";
 import { Parameter } from "../../analysis/static/parsing/Parameter";
 import { TypeProbabilityMap } from "../../analysis/static/types/resolving/TypeProbabilityMap";
-import { TypingType } from "../../analysis/static/types/resolving/Typing";
+import { Typing, TypingType } from "../../analysis/static/types/resolving/Typing";
 import { ArrayStatement } from "../statements/complex/ArrayStatement";
 
 
@@ -134,7 +134,17 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
     }
 
-    const chosenType = type.type.getRandomType()
+    let chosenType: Typing
+
+    if (Properties['type_inference_mode'] === 'roulette') {
+      chosenType = type.type.getRandomType()
+    } else if (Properties['type_inference_mode'] === 'elitist') {
+      chosenType = type.type.getEliteType()
+    } else if (Properties['type_inference_mode'] === 'dynamic') {
+      chosenType = type.type.getDynamicType()
+    } else {
+      throw new Error("Invalid type inference mode selected")
+    }
 
     if (chosenType.type === "function") {
       // TODO expectation of return value

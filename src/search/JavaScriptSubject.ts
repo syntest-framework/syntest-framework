@@ -12,16 +12,38 @@ import { ActionDescription } from "../analysis/static/parsing/ActionDescription"
 import { Parameter } from "../analysis/static/parsing/Parameter";
 import { ActionVisibility } from "../analysis/static/parsing/ActionVisibility";
 import { ActionType } from "../analysis/static/parsing/ActionType";
+import { fail } from "assert";
 
 export enum SubjectType {
   class,
   function
 }
 
+export interface TypeScore {
+  types: string[],
+  failed: boolean
+}
+
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
   private _functions: ActionDescription[]
   private _type: SubjectType
+
+  private _typeScores: Map<string, TypeScore[]>
+
+  reevaluateTypes() {
+    // console.log(this._typeScores)
+
+    // TODO find correlations
+    // maybe look at bayesian inference
+  }
+
+  recordTypeScore(types: string[], failed: boolean) {
+    this._typeScores[types.join(",")] = {
+      types: types,
+      failed: failed
+    }
+  }
 
 
   get functions(): ActionDescription[] {
@@ -38,6 +60,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     // TODO SearchSubject should just use the targeMetaData
     this._type = targetMeta.type
     this._functions = functions
+    this._typeScores = new Map()
   }
 
   protected _extractObjectives(): void {

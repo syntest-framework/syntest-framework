@@ -23,14 +23,15 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    use_type_inference: true,
+    use_type_inference: false,
+    type_inference_mode: 'dynamic',
 
     include: [
-        "./benchmark/top10npm/lodash/result.js",
-        "./benchmark/top10npm/lodash/slice.js",
+        // "./benchmark/top10npm/lodash/result.js",
+        // "./benchmark/top10npm/lodash/slice.js",
         "./benchmark/top10npm/lodash/split.js",
-        "./benchmark/top10npm/lodash/uniq.js",
-        "./benchmark/top10npm/lodash/unzip.js",
+        // "./benchmark/top10npm/lodash/uniq.js",
+        // "./benchmark/top10npm/lodash/unzip.js",
 
         // "./benchmark/top10npm/lodash/**/a*.js",
         // "./benchmark/top10npm/commanderjs/lib/*.js",
