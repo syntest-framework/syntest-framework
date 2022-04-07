@@ -10,8 +10,8 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 5,
-    total_time: 5,
+    search_time: 10,
+    total_time: 60,
     iteration_budget: 1000,
 
     probe_objective: true,
@@ -23,18 +23,19 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    use_type_inference: false,
-    type_inference_mode: 'dynamic',
+    // use_type_inference: true,
+    // type_inference_mode: 'roulette',
 
     include: [
         // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
-        "./benchmark/top10npm/lodash/split.js",
+        // "./benchmark/top10npm/lodash/split.js",
         // "./benchmark/top10npm/lodash/uniq.js",
         // "./benchmark/top10npm/lodash/unzip.js",
 
         // "./benchmark/top10npm/lodash/**/a*.js",
-        // "./benchmark/top10npm/commanderjs/lib/*.js",
+        "./benchmark/top10npm/commanderjs/lib/*.js",
+        // "./benchmark/top10npm/commanderjs/lib/help.js",
 
         // "./benchmark/top10npm/lodash/.internal/**/*.js",
         // "./benchmark/top10npm/lodash/.internal/baseClone.js"
@@ -77,7 +78,7 @@ module.exports = {
 
         "./benchmark/top10npm/commanderjs/lib/argument.js",
         "./benchmark/top10npm/commanderjs/lib/command.js",
-        "./benchmark/top10npm/commanderjs/lib/error.js",
+        // "./benchmark/top10npm/commanderjs/lib/error.js",
 
     ]
 }

@@ -103,7 +103,7 @@ export class Launcher {
       type_inference_mode: {
         description: "The type inference mode: [roulette, elitist, dynamic]",
         type: "string",
-        default: "dynamic",
+        default: "roulette",
       },
     };
     setupOptions(this._program, additionalOptions);

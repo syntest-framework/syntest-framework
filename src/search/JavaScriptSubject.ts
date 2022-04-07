@@ -12,7 +12,6 @@ import { ActionDescription } from "../analysis/static/parsing/ActionDescription"
 import { Parameter } from "../analysis/static/parsing/Parameter";
 import { ActionVisibility } from "../analysis/static/parsing/ActionVisibility";
 import { ActionType } from "../analysis/static/parsing/ActionType";
-import { fail } from "assert";
 
 export enum SubjectType {
   class,
@@ -30,6 +29,8 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
   private _type: SubjectType
 
   private _typeScores: Map<string, TypeScore[]>
+
+
 
   reevaluateTypes() {
     // console.log(this._typeScores)

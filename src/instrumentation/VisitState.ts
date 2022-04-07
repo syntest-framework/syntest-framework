@@ -326,7 +326,7 @@ export class VisitState {
       T.objectExpression([
         T.objectProperty(
           T.stringLiteral('condition_ast'),
-          T.stringLiteral(JSON.stringify(path.parent.test))
+          T.stringLiteral(path.parent.test ? JSON.stringify(path.parent.test) : "") // TODO this is weird (goes wrong on command.js (commanderjs))
         )
         // TODO variable values
       ])

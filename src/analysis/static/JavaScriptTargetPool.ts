@@ -236,7 +236,21 @@ export class JavaScriptTargetPool extends TargetPool {
       const libraries: Export[] = [];
       imports.forEach((importPath: string) => {
         // Full path to the imported file
-        const pathLib = path.join(path.dirname(targetPath), importPath);
+        let pathLib = path.join(path.dirname(targetPath), importPath);
+
+        // External libraries have a different path!
+        try {
+          this.getSource(pathLib)
+        } catch (e) {
+          if (e.message.includes('Cannot find source')) {
+            // TODO would be nice if we could get the actual path! (node modules)
+            return
+            // pathLib = path.join
+          } else {
+            throw e
+          }
+        }
+
 
         // Scan for libraries with public or external functions
         const exports = this.getExports(pathLib)
@@ -325,10 +339,36 @@ export class JavaScriptTargetPool extends TargetPool {
     //   functions: new Set([])
     // })
 
+    // TODO best would be to do all files in the directory (instead of only the targets)
+
+
+
+    for (const target of [
+      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/argument.js',
+      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/command.js',
+      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/argument.js',
+      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/error.js',
+      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/help.js',
+      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/option.js',
+      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/suggestSimilar.js',
+
+    ]) {
+      const objectGenerator = new ObjectGenerator()
+      objects.push(...objectGenerator.generate(target, this.getAST(target)))
+    }
+
+
+    // for (const target of this.targets) {
+    //   const objectGenerator = new ObjectGenerator()
+    //   objects.push(...objectGenerator.generate(target.canonicalPath, this.getAST(target.canonicalPath)))
+    // }
+
     for (const dependency of dependencies) {
       const objectGenerator = new ObjectGenerator()
       objects.push(...objectGenerator.generate(dependency.filePath, this.getAST(dependency.filePath)))
     }
+
+    // TODO get rid of duplicates
 
     const generator = new VariableGenerator()
     const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(targetPath, ast)

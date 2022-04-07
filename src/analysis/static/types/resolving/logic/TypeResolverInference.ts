@@ -44,7 +44,6 @@ export class TypeResolverInference extends TypeResolver {
     return somethingSolved
   }
 
-  // TODO should be setting probabilities instead of exact typings
   resolveComplexElements(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]): boolean {
     let somethingSolved = false
 
