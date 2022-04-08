@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { TypeResolver } from "../TypeResolver";
-import { elementTypeToTypingType, Typing, TypingType } from "../Typing";
+import { elementTypeToTypingType, TypingType } from "../Typing";
 import { Relation, RelationType } from "../../discovery/Relation";
 import { Scope, ScopeType } from "../../discovery/Scope";
 import { Element, isInstanceOfElement } from "../../discovery/Element";
@@ -27,6 +27,10 @@ export class TypeResolverInference extends TypeResolver {
 
   private wrapperElementIsRelation: Map<string, Relation>
 
+  /**
+   * This function resolves constant elements such as numerical constants or other primitives
+   * @param elements the elements to resolve
+   */
   resolvePrimitiveElements(elements: Element[]): boolean {
     let somethingSolved = false
     for (const element of elements) {
@@ -44,11 +48,60 @@ export class TypeResolverInference extends TypeResolver {
     return somethingSolved
   }
 
+  resolveRelations(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>): boolean {
+    let somethingSolved = false
+    for (const relation of relations) {
+      if (this.relationFullyResolved.has(relation)) {
+        continue
+      }
+      // try to resolve elements that are involved in the relation
+      const resolveInvolved = (e: Element) => {
+        if (this.elementTyping.has(e)) {
+          return this.elementTyping.get(e)
+        } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
+          // if the element is a relation try to find the typing based on the wrapper element of the relation
+          return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
+        }
+        // if we cannot resolve the element return it
+        return e
+      }
+
+      const involved: (Element | TypeProbabilityMap)[] = relation.involved
+        .map(resolveInvolved)
+
+      const allResolved = this.resolveRelationElements(relation.relation, involved)
+
+      // TODO TODO FALSE can also resolve the result of a relation without its elements
+      if (allResolved) {
+        const resolveInvolved = (e: Element) => {
+          if (this.elementTyping.has(e)) {
+            return this.elementTyping.get(e)
+          } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
+            return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
+          }
+          throw new Error("Should all be resolved!!!")
+        }
+
+        const involved: TypeProbabilityMap[] = relation.involved
+          .map(resolveInvolved)
+
+        const relationResolved = this.resolveRelation(relation, involved)
+
+        if (relationResolved) {
+          somethingSolved = true
+          this.relationFullyResolved.add(relation)
+        }
+      }
+    }
+    return somethingSolved
+  }
+
   resolveComplexElements(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]): boolean {
     let somethingSolved = false
 
     // filter relations by property accessors
     const propertyAccessors = relations.filter((r) => r.relation === RelationType.PropertyAccessor)
+
 
     for (const element of elements) {
       if (this.elementTyping.has(element)) {
@@ -58,6 +111,7 @@ export class TypeResolverInference extends TypeResolver {
       if (element.type !== 'identifier') {
         continue
       }
+
 
       // TODO should also have same scope
       const relevantAccessors = propertyAccessors.filter((r) => r.involved[0].value === element.value)
@@ -69,8 +123,8 @@ export class TypeResolverInference extends TypeResolver {
 
       // TODO find out wether function property or regular property
 
+      // TODO can be improved by comparing property types
       // find best matching object
-      let total = 0
       for (const object of objects) {
         let score = 0
         for (const prop of properties) {
@@ -81,25 +135,37 @@ export class TypeResolverInference extends TypeResolver {
 
         // atleast score of one
         if (score > 0) {
+          let type: TypingType
+
           if (object.name === 'function') {
-            this.setElementType(element, { type: TypingType.FUNCTION }, score)
+            type = TypingType.FUNCTION
           } else if (object.name === 'string') {
-            this.setElementType(element, { type: TypingType.STRING }, score)
+            type = TypingType.STRING
           } else if (object.name === 'array') {
-            this.setElementType(element, { type: TypingType.ARRAY }, score)
-          }else {
-            this.setElementType(element, {
-              type: TypingType.OBJECT,
-              name: object.name,
-              import: object.import,
-            }, score)
+            type = TypingType.ARRAY
+          } else {
+            type = TypingType.OBJECT
           }
 
-          total += score
+          const propertyTypings: Map<string, TypeProbabilityMap> = new Map()
+
+          properties.forEach((p) => {
+            if (this.elementTyping.has(p)) {
+              propertyTypings.set(p.value, this.elementTyping.get(p))
+            } else {
+              propertyTypings.set(p.value, new TypeProbabilityMap())
+            }
+          })
+
+          this.setElementType(element, {
+            type: type,
+            object: object,
+            propertyTypings: propertyTypings
+          }, score)
+
+          somethingSolved = true // TODO should be here right?
         }
       }
-
-      somethingSolved = true
     }
 
     return somethingSolved
@@ -116,60 +182,23 @@ export class TypeResolverInference extends TypeResolver {
       somethingSolved = false
       rounds += 1 // TODO remove this
 
-      // TODO maybe this is only needed once
       somethingSolved = this.resolvePrimitiveElements(elements) || somethingSolved
+      somethingSolved = this.resolveRelations(scopes, elements, relations, wrapperElementIsRelation) || somethingSolved
       somethingSolved = this.resolveComplexElements(scopes, elements, relations, wrapperElementIsRelation, objects) || somethingSolved
-
-
-      for (const relation of relations) {
-        if (this.relationFullyResolved.has(relation)) {
-          continue
-        }
-        const resolveInvolved = (e: Element) => {
-          if (this.elementTyping.has(e)) {
-            return this.elementTyping.get(e)
-          } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
-            return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
-          }
-          return e
-        }
-
-        const involved: (Element | TypeProbabilityMap)[] = relation.involved
-          .map(resolveInvolved)
-
-        const allResolved = this.resolveRelationElements(relation.relation, involved)
-
-        // TODO TODO FALSE can also resolve the result of a relation without its elements
-        if (allResolved) {
-          const resolveInvolved = (e: Element) => {
-            if (this.elementTyping.has(e)) {
-              return this.elementTyping.get(e)
-            } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
-              return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
-            }
-            throw new Error("Should all be resolved!!!")
-          }
-
-          const involved: TypeProbabilityMap[] = relation.involved
-            .map(resolveInvolved)
-
-          const relationResolved = this.resolveRelation(relation, involved)
-
-          if (relationResolved) {
-            somethingSolved = true
-            this.relationFullyResolved.add(relation)
-          }
-        }
-      }
     }
   }
 
   getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbabilityMap {
-    const element = [...this.elementTyping.keys()].find((e) => e.scope.name === scopeName && e.scope.type === scopeType && e.value === variableName)
+    const element = [...this.elementTyping.keys()].find((e) => {
+      return e.scope.name === scopeName
+        && e.scope.type === scopeType
+        && e.value === variableName
+    })
 
     if (!element) {
       return new TypeProbabilityMap()
     }
+
     return this.elementTyping.get(element);
   }
 

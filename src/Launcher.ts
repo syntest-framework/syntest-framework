@@ -69,6 +69,7 @@ import { TypeResolverInference } from "./analysis/static/types/resolving/logic/T
 import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
 import { ScopeType } from "./analysis/static/types/discovery/Scope";
 import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
+import { ActionType } from "./analysis/static/parsing/ActionType";
 
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
@@ -310,7 +311,13 @@ export class Launcher {
     for (const key of functionMap.keys()) {
       const func = functionMap.get(key)
       for (const param of func.parameters) {
-        param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
+        if (func.type === ActionType.FUNCTION) {
+          param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
+        } else if (func.type === ActionType.METHOD) {
+          param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Method, param.name)
+        } else {
+          throw new Error("Unimplemented action type")
+        }
       }
     // TODO return types
     }

@@ -17,6 +17,8 @@ import { Parameter } from "../../analysis/static/parsing/Parameter";
 import { TypeProbabilityMap } from "../../analysis/static/types/resolving/TypeProbabilityMap";
 import { Typing, TypingType } from "../../analysis/static/types/resolving/Typing";
 import { ArrayStatement } from "../statements/complex/ArrayStatement";
+import { ObjectStatement } from "../statements/complex/ObjectStatement";
+import { ScopeType } from "../../analysis/static/types/discovery/Scope";
 
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
@@ -61,8 +63,12 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const typeMap = new TypeProbabilityMap()
     typeMap.addType({
       type: TypingType.OBJECT,
-      name: this.subject.name,
-      import: '' // TODO
+      object: {
+        name: this.subject.name,
+        import: '', // TODO
+        properties: new Set(),
+        functions: new Set()
+      }
     }, 1)
 
     if (constructors.length > 0) {
@@ -154,8 +160,33 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         this.sampleArgument(depth + 1)
       )
     } else if (chosenType.type === 'object') {
-      // TODO
-      // return
+      const keys: StringStatement[] = []
+      const values: Statement[] = []
+
+      if (chosenType.object) {
+        chosenType.object.properties.forEach((p) => {
+          const typeMap = new TypeProbabilityMap()
+          typeMap.addType({ type: TypingType.STRING })
+          type = { type: typeMap, name: p }
+
+          keys.push(new StringStatement(type, prng.uniqueId(), p, Properties.string_alphabet, Properties.string_maxlength))
+
+          if (chosenType.propertyTypings.has(p)) {
+            values.push(this.sampleArgument(depth + 1, { name: p, type: chosenType.propertyTypings.get(p) }))
+          } else {
+            values.push(this.sampleArgument(depth + 1))
+          }
+        })
+      } else {
+        // TODO random properties or none
+      }
+
+      return new ObjectStatement(
+        type,
+        prng.uniqueId(),
+        keys,
+        values
+      )
     } else if (chosenType.type === 'array') {
       const children = []
 

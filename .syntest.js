@@ -34,8 +34,8 @@ module.exports = {
         // "./benchmark/top10npm/lodash/unzip.js",
 
         // "./benchmark/top10npm/lodash/**/a*.js",
-        "./benchmark/top10npm/commanderjs/lib/*.js",
-        // "./benchmark/top10npm/commanderjs/lib/help.js",
+        // "./benchmark/top10npm/commanderjs/lib/*.js",
+        "./benchmark/top10npm/commanderjs/lib/help.js",
 
         // "./benchmark/top10npm/lodash/.internal/**/*.js",
         // "./benchmark/top10npm/lodash/.internal/baseClone.js"

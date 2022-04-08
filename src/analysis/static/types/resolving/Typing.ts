@@ -16,11 +16,13 @@
  * limitations under the License.
  */
 import { ElementType } from "../discovery/Element";
+import { ComplexObject } from "../discovery/object/ComplexObject";
+import { TypeProbabilityMap } from "./TypeProbabilityMap";
 
 export interface Typing {
   type: TypingType
-  name?: string
-  import?: string
+  object?: ComplexObject
+  propertyTypings?: Map<string, TypeProbabilityMap>
 }
 
 export enum TypingType {

@@ -85,12 +85,12 @@ export abstract class TypeResolver {
    */
   setElementType(element: Element, type: Typing, value: number) {
     if (this.elementTyping.has(element)) {
-      const probabilities = this.elementTyping.get(element)
-      probabilities.addType(type, value)
+      const typeMap = this.elementTyping.get(element)
+      typeMap.addType(type, value)
     } else {
-      const probabilities = new TypeProbabilityMap()
-      this.elementTyping.set(element, probabilities)
-      probabilities.addType(type, value)
+      const typeMap = new TypeProbabilityMap()
+      this.elementTyping.set(element, typeMap)
+      typeMap.addType(type, value)
     }
   }
 

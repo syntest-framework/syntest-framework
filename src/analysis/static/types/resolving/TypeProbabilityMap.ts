@@ -26,10 +26,11 @@ import { prng } from "@syntest/framework";
  */
 export class TypeProbabilityMap {
 
-  private typeMap: Map<Typing, number>
+  private typeMap: Map<string, Typing>
   private total: number
   private changed: boolean
 
+  private scoreMap: Map<string, number>
   private probabilityMap: Map<Typing, number>
 
   /**
@@ -37,9 +38,20 @@ export class TypeProbabilityMap {
    */
   constructor() {
     this.typeMap = new Map()
+    this.scoreMap = new Map()
     this.probabilityMap = new Map()
     this.total = 0
     this.changed = true
+  }
+
+  getIdentifier(type: Typing): string {
+    let identifier = `${type.type}`
+
+    if (type.object) {
+      identifier += '-' + type.object.name
+    }
+
+    return identifier
   }
 
   /**
@@ -47,12 +59,21 @@ export class TypeProbabilityMap {
    * @param type the (new) type
    * @param value the score of type (higher score means higher probability)
    */
-  addType(type: Typing, value: number = 1) {
+  addType(type: Typing, value = 1) {
     if (value <= 0) {
       throw new Error("Type must be compatible")
     }
 
-    this.typeMap.set(type, value)
+    const identifier = this.getIdentifier(type)
+
+    if (!this.scoreMap.has(identifier)) {
+      this.scoreMap.set(identifier, 0)
+    }
+
+    this.scoreMap.set(identifier, this.scoreMap.get(identifier) + value)
+    // override with latest type
+    this.typeMap.set(identifier, type)
+
     this.total += value
     this.changed = true
   }
@@ -80,8 +101,8 @@ export class TypeProbabilityMap {
     }
 
       // recalculate probabilityMap
-    for (const obj of this.typeMap.keys()) {
-      this.probabilityMap.set(obj, (this.typeMap.get(obj) / total))
+    for (const identifier of this.typeMap.keys()) {
+      this.probabilityMap.set(this.typeMap.get(identifier), (this.scoreMap.get(identifier) / total))
     }
 
     this.changed = false

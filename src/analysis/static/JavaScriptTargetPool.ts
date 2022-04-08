@@ -357,7 +357,6 @@ export class JavaScriptTargetPool extends TargetPool {
       objects.push(...objectGenerator.generate(target, this.getAST(target)))
     }
 
-
     // for (const target of this.targets) {
     //   const objectGenerator = new ObjectGenerator()
     //   objects.push(...objectGenerator.generate(target.canonicalPath, this.getAST(target.canonicalPath)))

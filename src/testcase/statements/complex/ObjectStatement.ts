@@ -98,13 +98,13 @@ export class ObjectStatement extends Statement {
 
   decode(addLogs: boolean): Decoding[] {
     const children = this._values
-      .map((a, i) => `"\t${this._keys[i].value}": ${a.varName}`)
-      .join(',\n')
+      .map((a, i) => `\t"${this._keys[i].value}": ${a.varName}`)
+      .join(',\n\t')
 
     const childStatements: Decoding[] = this._values
       .flatMap((a) => a.decode(addLogs))
 
-    let decoded = `const ${this.varName} = {\n${children}\n}`
+    let decoded = `const ${this.varName} = {\n${children}\n\t}`
 
     if (addLogs) {
       const logDir = path.join(
