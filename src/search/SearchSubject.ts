@@ -35,7 +35,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Path to the subject.
    * @protected
    */
-  protected readonly _path: string;
+  private readonly _path: string;
 
   /**
    * Name of the subject.
@@ -149,5 +149,10 @@ export abstract class SearchSubject<T extends Encoding> {
 
   get cfg(): CFG {
     return this._cfg;
+  }
+
+
+  get path(): string {
+    return this._path;
   }
 }

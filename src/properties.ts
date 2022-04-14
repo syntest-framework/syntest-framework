@@ -17,6 +17,7 @@
  */
 
 export class Properties {
+  public static target_root_directory: string
   public static include: string[];
   public static exclude: string[];
 
@@ -78,6 +79,13 @@ export class Properties {
 
 export const properties = {
   // Files
+  // This is used to do resolving of dependencies and possible type inference
+  target_root_directory: {
+    description: "The root directory where all targets are in",
+    type: "string",
+    required: true
+  },
+
   include: {
     description: "Files/Directories to include",
     type: "array",
