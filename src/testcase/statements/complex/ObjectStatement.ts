@@ -19,10 +19,11 @@
 import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import * as path from "path";
 import { StringStatement } from "../primitive/StringStatement";
 import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
+import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -32,8 +33,8 @@ export class ObjectStatement extends Statement {
   private _keys: StringStatement[];
   private _values: Statement[];
 
-  constructor(type: Parameter, uniqueId: string, keys: StringStatement[], values: Statement[]) {
-    super(type, uniqueId);
+  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, keys: StringStatement[], values: Statement[]) {
+    super(identifierDescription, type, uniqueId);
     this._keys = keys
     this._values = values
     this._classType = 'ObjectStatement'
@@ -47,7 +48,7 @@ export class ObjectStatement extends Statement {
     // if (children.length !== 0) {
     //   const index = prng.nextInt(0, children.length - 1);
     //   if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-    //     children[index] = sampler.sampleArgument(depth + 1, children[index].type)
+    //     children[index] = sampler.sampleArgument(depth + 1, children[index].identifierDescription)
     //   } else {
     //     children[index] = children[index].mutate(sampler, depth + 1);
     //   }
@@ -57,11 +58,11 @@ export class ObjectStatement extends Statement {
     const finalValues = []
 
     if (finalKeys.length === 0) {
-      // add a call
-      finalKeys.push(sampler.sampleArgument(depth + 1, {name : 'key', type: new TypeProbabilityMap()}))
+      // add a child
+      finalKeys.push(sampler.sampleString())
       finalValues.push(sampler.sampleArgument(depth + 1, null))
     } else {
-      // go over each call
+      // go over each child
       for (let i = 0; i < finalKeys.length; i++) {
         if (prng.nextBoolean(1 / finalKeys.length)) {
           // Mutate this position
@@ -69,18 +70,22 @@ export class ObjectStatement extends Statement {
 
           if (choice < 0.1) {
             // 10% chance to add a call on this position
-            finalKeys.push(sampler.sampleArgument(depth + 1, {name : 'key', type: new TypeProbabilityMap()}))
+
+            // TODO should also look if we can add back one of the deleted ones
+
+            finalKeys.push(sampler.sampleString())
             finalValues.push(sampler.sampleArgument(depth + 1, null))
             finalKeys.push(keys[i])
             finalValues.push(values[i])
           } else if (choice < 0.2) {
             // 10% chance to delete the call
           } else {
+            // 80% chance to just mutate the call
+
             finalKeys.push(keys[i])
 
-            // 80% chance to just mutate the call
             if (Properties.resample_gene_probability) {
-              finalValues.push(sampler.sampleArgument(depth + 1, null))
+              finalValues.push(sampler.sampleArgument(depth + 1, {name: keys[i].varName, typeProbabilityMap: this.type.propertyTypings.get(keys[i].varName)}))
             } else {
               finalValues.push(values[i].mutate(sampler, depth + 1))
             }
@@ -89,11 +94,11 @@ export class ObjectStatement extends Statement {
       }
     }
 
-    return new ObjectStatement(this.type, prng.uniqueId(), finalKeys, finalValues);
+    return new ObjectStatement(this.identifierDescription, this.type, prng.uniqueId(), finalKeys, finalValues);
   }
 
   copy(): ObjectStatement {
-    return new ObjectStatement(this.type, this.id, this._keys.map(a => a.copy()), this._values.map(a => a.copy()));
+    return new ObjectStatement(this.identifierDescription, this.type, this.id, this._keys.map(a => a.copy()), this._values.map(a => a.copy()));
   }
 
   decode(addLogs: boolean): Decoding[] {

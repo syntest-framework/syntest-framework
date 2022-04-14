@@ -269,7 +269,7 @@ function findRenderedDOMComponentWithTag(root, tagName) {
 }
 
 /**
- * Finds all instances of components with type equal to `componentType`.
+ * Finds all instances of components with identifierDescription equal to `componentType`.
  * @return {array} an array of all the matches.
  */
 function scryRenderedComponentsWithType(root, componentType) {

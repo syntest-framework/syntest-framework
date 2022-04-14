@@ -9,7 +9,7 @@
 
 import type {ReactFabricType} from './src/ReactNativeTypes';
 import * as ReactFabric from './src/ReactFabric';
-// Assert that the exports line up with the type we're going to expose.
+// Assert that the exports line up with the identifierDescription we're going to expose.
 // eslint-disable-next-line no-unused-expressions
 (ReactFabric: ReactFabricType);
 

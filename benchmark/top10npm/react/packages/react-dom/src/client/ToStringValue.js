@@ -18,7 +18,7 @@ export opaque type ToStringValue =
   | void;
 
 // Flow does not allow string concatenation of most non-string types. To work
-// around this limitation, we use an opaque type that can only be obtained by
+// around this limitation, we use an opaque identifierDescription that can only be obtained by
 // passing the value through getToStringValue first.
 export function toString(value: ToStringValue): string {
   // The coercion safety check is performed in getToStringValue().

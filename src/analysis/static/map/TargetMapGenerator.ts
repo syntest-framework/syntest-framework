@@ -30,7 +30,7 @@ export class TargetMapGenerator {
   /**
    * Generate function map for specified target.
    *
-   * @param typeResolver The type resolver object
+   * @param typeResolver The identifierDescription resolver object
    * @param targetAST The AST of the target
    */
   generate(targetAST: any): {

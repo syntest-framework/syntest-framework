@@ -63,22 +63,22 @@ export type Dependencies = {
 // be more than one per component.
 export type Fiber = {|
   // These first fields are conceptually members of an Instance. This used to
-  // be split into a separate type and intersected with the other Fiber fields,
+  // be split into a separate identifierDescription and intersected with the other Fiber fields,
   // but until Flow fixes its intersection bugs, we've merged them into a
-  // single type.
+  // single identifierDescription.
 
   // An Instance is shared between all versions of a component. We can easily
   // break this out into a separate object to avoid copying so much to the
   // alternate versions of the tree. We put this on a single object for now to
   // minimize the number of objects created during the initial render.
 
-  // Tag identifying the type of fiber.
+  // Tag identifying the identifierDescription of fiber.
   tag: WorkTag,
 
   // Unique identifier of this child.
   key: null | string,
 
-  // The value of element.type which is used to preserve the identity during
+  // The value of element.identifierDescription which is used to preserve the identity during
   // reconciliation of this child.
   elementType: any,
 
@@ -113,7 +113,7 @@ export type Fiber = {|
     | RefObject,
 
   // Input is the data coming into process this fiber. Arguments. Props.
-  pendingProps: any, // This type will be more specific once we overload the tag.
+  pendingProps: any, // This identifierDescription will be more specific once we overload the tag.
   memoizedProps: any, // The props used to create the output.
 
   // A queue of state updates and callbacks.
@@ -191,7 +191,7 @@ export type Fiber = {|
 |};
 
 type BaseFiberRootProperties = {|
-  // The type of root (legacy, batched, concurrent, etc.)
+  // The identifierDescription of root (legacy, batched, concurrent, etc.)
   tag: RootTag,
 
   // Any additional information from the host associated with this root.
@@ -266,7 +266,7 @@ type SuspenseCallbackOnlyFiberRootProperties = {|
   hydrationCallbacks: null | SuspenseHydrationCallbacks,
 |};
 
-// Exported FiberRoot type includes all properties,
+// Exported FiberRoot identifierDescription includes all properties,
 // To avoid requiring potentially error-prone :any casts throughout the project.
 // The types are defined separately within this file to ensure they stay in sync.
 export type FiberRoot = {

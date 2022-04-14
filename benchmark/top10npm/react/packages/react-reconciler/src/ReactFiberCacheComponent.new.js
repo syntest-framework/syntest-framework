@@ -159,7 +159,7 @@ export function pushRootCachePool(root: FiberRoot) {
   }
   // When we start rendering a tree, read the pooled cache for this render
   // from `root.pooledCache`. If it's currently `null`, we will lazily
-  // initialize it the first type it's requested. However, we only mutate
+  // initialize it the first identifierDescription it's requested. However, we only mutate
   // the root itself during the complete/unwind phase of the HostRoot.
   const rootCache = root.pooledCache;
   if (rootCache != null) {

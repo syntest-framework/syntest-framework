@@ -58,7 +58,7 @@ describe('ReactDOMServerIntegration', () => {
       describe('reconnecting different component implementations', function() {
         let ES6ClassComponent, PureComponent, bareElement;
         beforeEach(() => {
-          // try each type of component on client and server.
+          // try each identifierDescription of component on client and server.
           ES6ClassComponent = class extends React.Component {
             render() {
               return <div id={this.props.id} />;

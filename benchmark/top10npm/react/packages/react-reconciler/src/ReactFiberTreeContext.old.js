@@ -117,7 +117,7 @@ export function pushTreeFork(
   // In the Fizz implementation this is much simpler because the child is
   // rendered in the same callstack as the parent.
   //
-  // It might be better to just add a `forks` field to the Fiber type. It would
+  // It might be better to just add a `forks` field to the Fiber identifierDescription. It would
   // make this module simpler.
 
   warnIfNotHydrating();

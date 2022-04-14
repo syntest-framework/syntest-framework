@@ -4,7 +4,7 @@ module.exports = {
     max_depth: 5,
 
     // mutation chances
-    resample_gene_chance: 0.01,
+    resample_gene_chance: 0.02,
     delta_mutation_chance: 0.8,
     sample_func_as_arg: 0.5,
     explore_illegal_values: false,
@@ -23,9 +23,10 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    // use_type_inference: true,
-    // type_inference_mode: 'roulette',
+    use_type_inference: true,
+    type_inference_mode: 'roulette',
 
+    target_root_directory: "./benchmark/top10npm/commanderjs/lib",
     include: [
         // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",

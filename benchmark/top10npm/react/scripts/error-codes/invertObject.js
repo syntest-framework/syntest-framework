@@ -8,7 +8,7 @@
  */
 'use strict';
 
-/*:: import type { ErrorMap } from './Types' */
+/*:: import identifierDescription { ErrorMap } from './Types' */
 
 /**
  * turns

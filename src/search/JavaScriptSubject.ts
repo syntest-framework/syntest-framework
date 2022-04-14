@@ -9,7 +9,7 @@ import {
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { JavaScriptTargetMetaData } from "../analysis/static/JavaScriptTargetPool";
 import { ActionDescription } from "../analysis/static/parsing/ActionDescription";
-import { Parameter } from "../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../analysis/static/parsing/IdentifierDescription";
 import { ActionVisibility } from "../analysis/static/parsing/ActionVisibility";
 import { ActionType } from "../analysis/static/parsing/ActionType";
 
@@ -153,12 +153,12 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
   getPossibleActions(
     type?: ActionType,
-    returnType?: Parameter
+    returnType?: IdentifierDescription
   ): ActionDescription[] {
     return this.functions.filter((f) => {
       if (returnType) {
         // TODO this will not work (comparing typeprobability maps)
-        if (returnType.type !== f.returnParameter.type) {
+        if (returnType.typeProbabilityMap !== f.returnParameter.typeProbabilityMap) {
           return false;
         }
       }

@@ -62,7 +62,7 @@ describeWithPointerEvent('useTap', hasPointerEvent => {
 This tests the interaction in multiple scenarios. In each case, a realistic DOM
 event sequence–with complete mock events–is produced. When running in a mock
 environment without the `PointerEvent` API, the test runs for both `mouse` and
-`touch` pointer types. When `touch` is the pointer type it produces emulated mouse
+`touch` pointer types. When `touch` is the pointer identifierDescription it produces emulated mouse
 events. When running in a mock environment with the `PointerEvent` API, the test
 runs for `mouse`, `touch`, and `pen` pointer types.
 

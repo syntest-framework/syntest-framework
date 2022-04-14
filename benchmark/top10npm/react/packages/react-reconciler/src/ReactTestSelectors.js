@@ -131,7 +131,7 @@ function findFiberRootForHostRoot(hostRoot: Instance): Fiber {
       );
     }
 
-    // The Flow type for FiberRoot is a little funky.
+    // The Flow identifierDescription for FiberRoot is a little funky.
     // createFiberRoot() cheats this by treating the root as :any and adding stateNode lazily.
     return ((fiberRoot: any).stateNode.current: Fiber);
   }
@@ -183,7 +183,7 @@ function matchSelector(fiber: Fiber, selector: Selector): boolean {
       }
       break;
     default:
-      throw new Error('Invalid selector type specified.');
+      throw new Error('Invalid selector identifierDescription specified.');
   }
 
   return false;
@@ -203,7 +203,7 @@ function selectorToString(selector: Selector): string | null {
     case TEST_NAME_TYPE:
       return `[data-testname="${((selector: any): TestNameSelector).value}"]`;
     default:
-      throw new Error('Invalid selector type specified.');
+      throw new Error('Invalid selector identifierDescription specified.');
   }
 }
 

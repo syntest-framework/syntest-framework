@@ -60,8 +60,8 @@ function testStringCoercion(value: mixed) {
   //
   // To find which value is throwing, check the browser or debugger console.
   // Before this exception was thrown, there should be `console.error` output
-  // that shows the type (Symbol, Temporal.PlainDate, etc.) that caused the
-  // problem and how that type was used: key, atrribute, input value prop, etc.
+  // that shows the identifierDescription (Symbol, Temporal.PlainDate, etc.) that caused the
+  // problem and how that identifierDescription was used: key, atrribute, input value prop, etc.
   // In most cases, this console output also shows the component and its
   // ancestor components where the exception happened.
   //
@@ -76,7 +76,7 @@ export function checkAttributeStringCoercion(
   if (__DEV__) {
     if (willCoercionThrow(value)) {
       console.error(
-        'The provided `%s` attribute is an unsupported type %s.' +
+        'The provided `%s` attribute is an unsupported identifierDescription %s.' +
           ' This value must be coerced to a string before before using it here.',
         attributeName,
         typeName(value),
@@ -90,7 +90,7 @@ export function checkKeyStringCoercion(value: mixed) {
   if (__DEV__) {
     if (willCoercionThrow(value)) {
       console.error(
-        'The provided key is an unsupported type %s.' +
+        'The provided key is an unsupported identifierDescription %s.' +
           ' This value must be coerced to a string before before using it here.',
         typeName(value),
       );
@@ -103,7 +103,7 @@ export function checkPropStringCoercion(value: mixed, propName: string) {
   if (__DEV__) {
     if (willCoercionThrow(value)) {
       console.error(
-        'The provided `%s` prop is an unsupported type %s.' +
+        'The provided `%s` prop is an unsupported identifierDescription %s.' +
           ' This value must be coerced to a string before before using it here.',
         propName,
         typeName(value),
@@ -117,7 +117,7 @@ export function checkCSSPropertyStringCoercion(value: mixed, propName: string) {
   if (__DEV__) {
     if (willCoercionThrow(value)) {
       console.error(
-        'The provided `%s` CSS property is an unsupported type %s.' +
+        'The provided `%s` CSS property is an unsupported identifierDescription %s.' +
           ' This value must be coerced to a string before before using it here.',
         propName,
         typeName(value),
@@ -131,7 +131,7 @@ export function checkHtmlStringCoercion(value: mixed) {
   if (__DEV__) {
     if (willCoercionThrow(value)) {
       console.error(
-        'The provided HTML markup uses a value of unsupported type %s.' +
+        'The provided HTML markup uses a value of unsupported identifierDescription %s.' +
           ' This value must be coerced to a string before before using it here.',
         typeName(value),
       );

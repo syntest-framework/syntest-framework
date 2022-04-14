@@ -445,7 +445,7 @@ describe('ReactTestUtils', () => {
       });
     });
 
-    it('should set the type of the event', () => {
+    it('should set the identifierDescription of the event', () => {
       let event;
       const stub = jest.fn().mockImplementation(e => {
         e.persist();

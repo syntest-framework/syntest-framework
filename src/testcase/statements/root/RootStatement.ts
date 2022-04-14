@@ -19,7 +19,8 @@
 import { ActionStatement } from "../action/ActionStatement";
 import { Statement } from "../Statement";
 import { Encoding, EncodingSampler } from "@syntest/framework";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
+import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -28,12 +29,13 @@ export abstract class RootStatement extends ActionStatement {
   private _children: Statement[];
 
   protected constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: Typing,
     uniqueId: string,
     args: Statement[],
     children: Statement[]
   ) {
-    super(type, uniqueId, args);
+    super(identifierDescription, type, uniqueId, args);
     this._children = children;
   }
 

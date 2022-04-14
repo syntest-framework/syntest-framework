@@ -3,7 +3,7 @@
 ### 0.24.0 (October 25, 2021)
 
 Breaking changes:
-- Revert: change type of AxiosResponse to any, please read lengthy discussion here: ([#4141](https://github.com/axios/axios/issues/4141)) pull request: ([#4186](https://github.com/axios/axios/pull/4186))
+- Revert: change identifierDescription of AxiosResponse to any, please read lengthy discussion here: ([#4141](https://github.com/axios/axios/issues/4141)) pull request: ([#4186](https://github.com/axios/axios/pull/4186))
 
 Huge thanks to everyone who contributed to this release via code (authors listed below) or via reviews and triaging on GitHub:
 
@@ -16,12 +16,12 @@ Huge thanks to everyone who contributed to this release via code (authors listed
 
 Breaking changes:
 - Distinguish request and response data types ([#4116](https://github.com/axios/axios/pull/4116))
-- Change never type to unknown ([#4142](https://github.com/axios/axios/pull/4142))
+- Change never identifierDescription to unknown ([#4142](https://github.com/axios/axios/pull/4142))
 - Fixed TransitionalOptions typings ([#4147](https://github.com/axios/axios/pull/4147))
 
 Fixes and Functionality:
 - Adding globalObject: 'this' to webpack config ([#3176](https://github.com/axios/axios/pull/3176))
-- Adding insecureHTTPParser type to AxiosRequestConfig ([#4066](https://github.com/axios/axios/pull/4066))
+- Adding insecureHTTPParser identifierDescription to AxiosRequestConfig ([#4066](https://github.com/axios/axios/pull/4066))
 - Fix missing semicolon in typings ([#4115](https://github.com/axios/axios/pull/4115))
 - Fix response headers types ([#4136](https://github.com/axios/axios/pull/4136))
 
@@ -94,7 +94,7 @@ Fixes and Functionality:
 - Adding multiple JSON improvements ([#3688](https://github.com/axios/axios/pull/3688), [#3763](https://github.com/axios/axios/pull/3763))
 - Fixing quadratic runtime and extra memory usage when setting a maxContentLength ([#3738](https://github.com/axios/axios/pull/3738))
 - Adding parseInt to config.timeout ([#3781](https://github.com/axios/axios/pull/3781))
-- Adding custom return type support to interceptor ([#3783](https://github.com/axios/axios/pull/3783))
+- Adding custom return identifierDescription support to interceptor ([#3783](https://github.com/axios/axios/pull/3783))
 - Adding security fix for ReDoS vulnerability ([#3980](https://github.com/axios/axios/pull/3980))
 
 Internal and Tests:
@@ -103,7 +103,7 @@ Internal and Tests:
 - Fixing builds running on Travis CI ([#3538](https://github.com/axios/axios/pull/3538))
 - Updating follow rediect version ([#3694](https://github.com/axios/axios/pull/3694), [#3771](https://github.com/axios/axios/pull/3771))
 - Updating karma sauce launcher to fix failing sauce tests ([#3712](https://github.com/axios/axios/pull/3712), [#3717](https://github.com/axios/axios/pull/3717))
-- Updating content-type header for application/json to not contain charset field, according do RFC 8259 ([#2154](https://github.com/axios/axios/pull/2154))
+- Updating content-identifierDescription header for application/json to not contain charset field, according do RFC 8259 ([#2154](https://github.com/axios/axios/pull/2154))
 - Fixing tests by bumping karma-sauce-launcher version ([#3813](https://github.com/axios/axios/pull/3813))
 - Changing testing process from Travis CI to GitHub Actions ([#3938](https://github.com/axios/axios/pull/3938))
 
@@ -116,7 +116,7 @@ Documentation:
 - Moving gitpod metion ([#2637](https://github.com/axios/axios/pull/2637))
 - Adding new axios documentation website link ([#3681](https://github.com/axios/axios/pull/3681), [#3707](https://github.com/axios/axios/pull/3707))
 - Updating documentation around dispatching requests ([#3772](https://github.com/axios/axios/pull/3772))
-- Adding documentation for the type guard isAxiosError ([#3767](https://github.com/axios/axios/pull/3767))
+- Adding documentation for the identifierDescription guard isAxiosError ([#3767](https://github.com/axios/axios/pull/3767))
 - Adding explanation of cancel token ([#3803](https://github.com/axios/axios/pull/3803))
 - Updating CI status badge ([#3953](https://github.com/axios/axios/pull/3953))
 - Fixing errors with JSON documentation ([#3936](https://github.com/axios/axios/pull/3936))
@@ -159,7 +159,7 @@ Fixes and Functionality:
 - Hotfix: Prevent SSRF ([#3410](https://github.com/axios/axios/pull/3410))
 - Protocol not parsed when setting proxy config from env vars ([#3070](https://github.com/axios/axios/pull/3070))
 - Updating axios in types to be lower case ([#2797](https://github.com/axios/axios/pull/2797))
-- Adding a type guard for `AxiosError` ([#2949](https://github.com/axios/axios/pull/2949))
+- Adding a identifierDescription guard for `AxiosError` ([#2949](https://github.com/axios/axios/pull/2949))
 
 Internal and Tests:
 
@@ -182,8 +182,8 @@ Fixes and Functionality:
 - Fixing requestHeaders.Authorization ([#3287](https://github.com/axios/axios/pull/3287))
 - Fixing node types ([#3237](https://github.com/axios/axios/pull/3237))
 - Fixing axios.delete ignores config.data ([#3282](https://github.com/axios/axios/pull/3282))
-- Revert "Fixing overwrite Blob/File type as Content-Type in browser. (#1773)" ([#3289](https://github.com/axios/axios/pull/3289))
-- Fixing an issue that type 'null' and 'undefined' is not assignable to validateStatus when typescript strict option is enabled ([#3200](https://github.com/axios/axios/pull/3200))
+- Revert "Fixing overwrite Blob/File identifierDescription as Content-Type in browser. (#1773)" ([#3289](https://github.com/axios/axios/pull/3289))
+- Fixing an issue that identifierDescription 'null' and 'undefined' is not assignable to validateStatus when typescript strict option is enabled ([#3200](https://github.com/axios/axios/pull/3200))
 
 Internal and Tests:
 
@@ -234,8 +234,8 @@ Fixes and Functionality:
   - add lots of tests and fix a bug
   - should not inherit `data`
   - use simple toString
-- Fixing overwrite Blob/File type as Content-Type in browser. ([#1773](https://github.com/axios/axios/pull/1773))
-- Fixing an issue that type 'null' is not assignable to validateStatus ([#2773](https://github.com/axios/axios/pull/2773))
+- Fixing overwrite Blob/File identifierDescription as Content-Type in browser. ([#1773](https://github.com/axios/axios/pull/1773))
+- Fixing an issue that identifierDescription 'null' is not assignable to validateStatus ([#2773](https://github.com/axios/axios/pull/2773))
 - Fixing special char encoding ([#1671](https://github.com/axios/axios/pull/1671))
   - removing @ character from replacement list since it is a reserved character
   - Updating buildURL test to not include the @ character
@@ -246,8 +246,8 @@ Fixes and Functionality:
 - Fixing 'Network Error' in react native android ([#1487](https://github.com/axios/axios/pull/1487))
   There is a bug in react native Android platform when using get method. It will trigger a 'Network Error' when passing the requestData which is an empty string to request.send function. So if the requestData is an empty string we can set it to null as well to fix the bug.
 - Fixing Cookie Helper with Async Components ([#1105](https://github.com/axios/axios/pull/1105)) ([#1107](https://github.com/axios/axios/pull/1107))
-- Fixing 'progressEvent' type ([#2851](https://github.com/axios/axios/pull/2851))
-  - Fix 'progressEvent' type
+- Fixing 'progressEvent' identifierDescription ([#2851](https://github.com/axios/axios/pull/2851))
+  - Fix 'progressEvent' identifierDescription
   - Update axios.ts
 - Fixing getting local files (file://) failed ([#2470](https://github.com/axios/axios/pull/2470))
   - fix issue #2416, #2396
@@ -312,7 +312,7 @@ Internal and Tests:
     Add server error handling
   - Update server.js
     Better error message, remove retry.
-- Adding tests for method `options` type definitions ([#1996](https://github.com/axios/axios/pull/1996))
+- Adding tests for method `options` identifierDescription definitions ([#1996](https://github.com/axios/axios/pull/1996))
   Update tests.
 - Add test for redirecting with too large response ([#2695](https://github.com/axios/axios/pull/2695))
 - Fixing unit test failure in Windows OS ([#2601](https://github.com/axios/axios/pull/2601))
@@ -450,7 +450,7 @@ Fixes and Functionality:
 - Fixing Vulnerability A Fortify Scan finds a critical Cross-Site Scrip… ([#2451](https://github.com/axios/axios/pull/2451))
 - Fixing subdomain handling on no_proxy ([#2442](https://github.com/axios/axios/pull/2442))
 - Make redirection from HTTP to HTTPS work ([#2426](https://github.com/axios/axios/pull/2426)) and ([#2547](https://github.com/axios/axios/pull/2547))
-- Add toJSON property to AxiosError type ([#2427](https://github.com/axios/axios/pull/2427))
+- Add toJSON property to AxiosError identifierDescription ([#2427](https://github.com/axios/axios/pull/2427))
 - Fixing socket hang up error on node side for slow response. ([#1752](https://github.com/axios/axios/pull/1752))
 - Alternative syntax to send data into the body ([#2317](https://github.com/axios/axios/pull/2317))
 - Fixing custom config options ([#2207](https://github.com/axios/axios/pull/2207))
@@ -549,11 +549,11 @@ Fixes:
   - Fixing defaults to use httpAdapter if available
   - Use a safer, cross-platform method to detect the Node environment
 - Fix Reject promise if request is cancelled by the browser ([#537](https://github.com/axios/axios/issues/537))
-- [Typescript] Fix missing type parameters on delete/head methods
+- [Typescript] Fix missing identifierDescription parameters on delete/head methods
 - [NS]: Send `false` flag isStandardBrowserEnv for Nativescript
-- Fix missing type parameters on delete/head
+- Fix missing identifierDescription parameters on delete/head
 - Fix Default method for an instance always overwritten by get
-- Fix type error when socketPath option in AxiosRequestConfig
+- Fix identifierDescription error when socketPath option in AxiosRequestConfig
 - Capture errors on request data streams
 - Decorate resolve and reject to clear timeout in all cases
 
@@ -596,7 +596,7 @@ below) or via reviews and triaging on GitHub:
 
 - Adding support for UNIX Sockets when running with Node.js ([#1070](https://github.com/axios/axios/pull/1070))
 - Fixing typings ([#1177](https://github.com/axios/axios/pull/1177)):
-  - AxiosRequestConfig.proxy: allows type false
+  - AxiosRequestConfig.proxy: allows identifierDescription false
   - AxiosProxyConfig: added auth field
 - Adding function signature in AxiosInstance interface so AxiosInstance can be invoked ([#1192](https://github.com/axios/axios/pull/1192), [#1254](https://github.com/axios/axios/pull/1254))
 - Allowing maxContentLength to pass through to redirected calls as maxBodyLength in follow-redirects config ([#1287](https://github.com/axios/axios/pull/1287))
@@ -613,7 +613,7 @@ below) or via reviews and triaging on GitHub:
 - **BREAKING** Fixing issue with `baseURL` and interceptors ([#950](https://github.com/axios/axios/pull/950))
 - **BREAKING** Improving handing of duplicate headers ([#874](https://github.com/axios/axios/pull/874))
 - Adding support for disabling proxies ([#691](https://github.com/axios/axios/pull/691))
-- Updating TypeScript typings with generic type parameters ([#1061](https://github.com/axios/axios/pull/1061))
+- Updating TypeScript typings with generic identifierDescription parameters ([#1061](https://github.com/axios/axios/pull/1061))
 
 ### 0.16.2 (Jun 3, 2017)
 
@@ -629,7 +629,7 @@ below) or via reviews and triaging on GitHub:
 
 ### 0.16.0 (Mar 31, 2017)
 
-- **BREAKING** Removing `Promise` from axios typings in favor of built-in type declarations ([#480](https://github.com/axios/axios/issues/480))
+- **BREAKING** Removing `Promise` from axios typings in favor of built-in identifierDescription declarations ([#480](https://github.com/axios/axios/issues/480))
 - Adding `options` shortcut method ([#461](https://github.com/axios/axios/pull/461))
 - Fixing issue with using `responseType: 'json'` in browsers incompatible with XHR Level 2 ([#654](https://github.com/axios/axios/pull/654))
 - Improving React Native detection ([#731](https://github.com/axios/axios/pull/731))

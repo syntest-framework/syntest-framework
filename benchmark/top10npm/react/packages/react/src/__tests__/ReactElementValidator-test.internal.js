@@ -224,8 +224,8 @@ describe('ReactElementValidator', () => {
     expect(() => {
       ReactTestUtils.renderIntoDocument(React.createElement(ParentComp));
     }).toErrorDev(
-      'Warning: Failed prop type: ' +
-        'Invalid prop `color` of type `number` supplied to `MyComp`, ' +
+      'Warning: Failed prop identifierDescription: ' +
+        'Invalid prop `color` of identifierDescription `number` supplied to `MyComp`, ' +
         'expected `string`.\n' +
         '    in MyComp (at **)\n' +
         '    in ParentComp (at **)',
@@ -246,38 +246,38 @@ describe('ReactElementValidator', () => {
       React.createElement({$$typeof: 'non-react-thing'});
     }).toErrorDev(
       [
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: undefined. You likely forgot to export your ' +
           "component from the file it's defined in, or you might have mixed up " +
           'default and named imports.',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: null.',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: boolean.',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: object.',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: object. You likely forgot to export your ' +
           "component from the file it's defined in, or you might have mixed up " +
           'default and named imports.',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: <div />. Did you accidentally export a JSX literal ' +
           'instead of a component?',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: <Foo />. Did you accidentally export a JSX literal ' +
           'instead of a component?',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: <Context.Consumer />. Did you accidentally ' +
           'export a JSX literal instead of a component?',
-        'Warning: React.createElement: type is invalid -- expected a string ' +
+        'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function (for composite ' +
           'components) but got: object.',
       ],
@@ -297,12 +297,12 @@ describe('ReactElementValidator', () => {
       expect(() => {
         ReactTestUtils.renderIntoDocument(React.createElement(ParentComp));
       }).toThrowError(
-        'Element type is invalid: expected a string (for built-in components) ' +
+        'Element identifierDescription is invalid: expected a string (for built-in components) ' +
           'or a class/function (for composite components) but got: null.' +
           (__DEV__ ? '\n\nCheck the render method of `ParentComp`.' : ''),
       );
     }).toErrorDev(
-      'Warning: React.createElement: type is invalid -- expected a string ' +
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
         '(for built-in components) or a class/function (for composite ' +
         'components) but got: null.' +
         '\n\nCheck the render method of `ParentComp`.\n    in ParentComp',
@@ -321,7 +321,7 @@ describe('ReactElementValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(React.createElement(Component)),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `prop` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `prop` is marked as required in ' +
         '`Component`, but its value is `null`.\n' +
         '    in Component',
     );
@@ -341,7 +341,7 @@ describe('ReactElementValidator', () => {
         React.createElement(Component, {prop: null}),
       );
     }).toErrorDev(
-      'Warning: Failed prop type: The prop `prop` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `prop` is marked as required in ' +
         '`Component`, but its value is `null`.\n' +
         '    in Component',
     );
@@ -363,12 +363,12 @@ describe('ReactElementValidator', () => {
         React.createElement(Component, {prop: 42}),
       );
     }).toErrorDev([
-      'Warning: Failed prop type: ' +
+      'Warning: Failed prop identifierDescription: ' +
         'The prop `prop` is marked as required in `Component`, but its value ' +
         'is `undefined`.\n' +
         '    in Component',
-      'Warning: Failed prop type: ' +
-        'Invalid prop `prop` of type `number` supplied to ' +
+      'Warning: Failed prop identifierDescription: ' +
+        'Invalid prop `prop` of identifierDescription `number` supplied to ' +
         '`Component`, expected `string`.\n' +
         '    in Component',
     ]);
@@ -394,10 +394,10 @@ describe('ReactElementValidator', () => {
         React.createElement(Component, {myProp: {value: 'hi'}}),
       );
     }).toErrorDev(
-      'Warning: Component: type specification of prop `myProp` is invalid; ' +
-        'the type checker function must return `null` or an `Error` but ' +
+      'Warning: Component: identifierDescription specification of prop `myProp` is invalid; ' +
+        'the identifierDescription checker function must return `null` or an `Error` but ' +
         'returned a function. You may have forgotten to pass an argument to ' +
-        'the type checker creator (arrayOf, instanceOf, objectOf, oneOf, ' +
+        'the identifierDescription checker creator (arrayOf, instanceOf, objectOf, oneOf, ' +
         'oneOfType, and shape all require an argument).',
     );
   });
@@ -439,7 +439,7 @@ describe('ReactElementValidator', () => {
   });
 
   if (!__EXPERIMENTAL__) {
-    it('should warn when accessing .type on an element factory', () => {
+    it('should warn when accessing .identifierDescription on an element factory', () => {
       function TestComponent() {
         return <div />;
       }
@@ -458,7 +458,7 @@ describe('ReactElementValidator', () => {
       expect(
         () => TestFactory.type,
       ).toWarnDev(
-        'Warning: Factory.type is deprecated. Access the class directly before ' +
+        'Warning: Factory.identifierDescription is deprecated. Access the class directly before ' +
           'passing it to createFactory.',
         {withoutStack: true},
       );
@@ -519,12 +519,12 @@ describe('ReactElementValidator', () => {
     void (<div>{[child]}</div>);
   });
 
-  it('does not blow up on key warning with undefined type', () => {
+  it('does not blow up on key warning with undefined identifierDescription', () => {
     const Foo = undefined;
     expect(() => {
       void (<Foo>{[<div />]}</Foo>);
     }).toErrorDev(
-      'Warning: React.createElement: type is invalid -- expected a string ' +
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
         '(for built-in components) or a class/function (for composite ' +
         'components) but got: undefined. You likely forgot to export your ' +
         "component from the file it's defined in, or you might have mixed up " +

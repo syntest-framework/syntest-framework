@@ -72,7 +72,7 @@ describe('ReactTestRendererTraversal', () => {
     const render = ReactTestRenderer.create(<Example />);
     const hasFooProp = node => node.props.hasOwnProperty('foo');
 
-    // assert .props, .type and .parent attributes
+    // assert .props, .identifierDescription and .parent attributes
     const foo = render.root.find(hasFooProp);
     expect(foo.props.children).toHaveLength(9);
     expect(foo.type).toBe(View);

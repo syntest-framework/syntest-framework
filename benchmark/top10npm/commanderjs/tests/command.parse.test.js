@@ -69,7 +69,7 @@ describe('.parse() args from', () => {
   });
 });
 
-describe('return type', () => {
+describe('return identifierDescription', () => {
   test('when call .parse then returns program', () => {
     const program = new commander.Command();
     program

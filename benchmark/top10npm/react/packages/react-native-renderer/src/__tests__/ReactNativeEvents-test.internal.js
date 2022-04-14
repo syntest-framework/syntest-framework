@@ -137,7 +137,7 @@ it('fails if unknown/unsupported event types are dispatched', () => {
       [{target, identifier: 17}],
       [0],
     );
-  }).toThrow('Unsupported top level event type "unspecifiedEvent" dispatched');
+  }).toThrow('Unsupported top level event identifierDescription "unspecifiedEvent" dispatched');
 });
 
 it('handles events', () => {

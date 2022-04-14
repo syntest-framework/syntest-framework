@@ -70,7 +70,7 @@ describe('transform', function () {
     }
   );
 
-  it('should send data as JSON if request content-type is application/json', function (done) {
+  it('should send data as JSON if request content-identifierDescription is application/json', function (done) {
     var response;
 
     axios.post('/foo', 123, {headers: {'Content-Type': 'application/json'}}).then(function (_response) {

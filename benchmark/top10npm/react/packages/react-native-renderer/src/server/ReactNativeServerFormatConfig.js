@@ -125,7 +125,7 @@ export function pushTextInstance(
   target.push(
     INSTANCE,
     RAW_TEXT, // Type
-    END, // NULL terminated type string
+    END, // NULL terminated identifierDescription string
     // TODO: props { text: text }
     END, // End of children
   );
@@ -141,7 +141,7 @@ export function pushStartInstance(
   target.push(
     INSTANCE,
     stringToChunk(type),
-    END, // NULL terminated type string
+    END, // NULL terminated identifierDescription string
     // TODO: props
   );
   return props.children;

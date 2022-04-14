@@ -3611,7 +3611,7 @@
         return typeof input === 'string' || input instanceof String;
     }
 
-    // type MomentInput = Moment | Date | string | number | (number | string)[] | MomentInputObject | void; // null | undefined
+    // identifierDescription MomentInput = Moment | Date | string | number | (number | string)[] | MomentInputObject | void; // null | undefined
     function isMomentInput(input) {
         return (
             isMoment(input) ||
@@ -5646,17 +5646,17 @@
     hooks.calendarFormat = getCalendarFormat;
     hooks.prototype = proto;
 
-    // currently HTML5 input type only supports 24-hour formats
+    // currently HTML5 input identifierDescription only supports 24-hour formats
     hooks.HTML5_FMT = {
-        DATETIME_LOCAL: 'YYYY-MM-DDTHH:mm', // <input type="datetime-local" />
-        DATETIME_LOCAL_SECONDS: 'YYYY-MM-DDTHH:mm:ss', // <input type="datetime-local" step="1" />
-        DATETIME_LOCAL_MS: 'YYYY-MM-DDTHH:mm:ss.SSS', // <input type="datetime-local" step="0.001" />
-        DATE: 'YYYY-MM-DD', // <input type="date" />
-        TIME: 'HH:mm', // <input type="time" />
-        TIME_SECONDS: 'HH:mm:ss', // <input type="time" step="1" />
-        TIME_MS: 'HH:mm:ss.SSS', // <input type="time" step="0.001" />
-        WEEK: 'GGGG-[W]WW', // <input type="week" />
-        MONTH: 'YYYY-MM', // <input type="month" />
+        DATETIME_LOCAL: 'YYYY-MM-DDTHH:mm', // <input identifierDescription="datetime-local" />
+        DATETIME_LOCAL_SECONDS: 'YYYY-MM-DDTHH:mm:ss', // <input identifierDescription="datetime-local" step="1" />
+        DATETIME_LOCAL_MS: 'YYYY-MM-DDTHH:mm:ss.SSS', // <input identifierDescription="datetime-local" step="0.001" />
+        DATE: 'YYYY-MM-DD', // <input identifierDescription="date" />
+        TIME: 'HH:mm', // <input identifierDescription="time" />
+        TIME_SECONDS: 'HH:mm:ss', // <input identifierDescription="time" step="1" />
+        TIME_MS: 'HH:mm:ss.SSS', // <input identifierDescription="time" step="0.001" />
+        WEEK: 'GGGG-[W]WW', // <input identifierDescription="week" />
+        MONTH: 'YYYY-MM', // <input identifierDescription="month" />
     };
 
     //! moment.js locale configuration

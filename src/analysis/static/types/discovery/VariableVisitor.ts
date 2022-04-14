@@ -244,7 +244,7 @@ export class VariableVisitor {
   //
   //   variable.usage.push(
   //     {
-  //       type: UsageType.Assignment,
+  //       identifierDescription: UsageType.Assignment,
   //       operation: '=',
   //       usedVariable: `${path.node.init.start}-${path.node.init.end}`
   //     }
@@ -254,12 +254,12 @@ export class VariableVisitor {
     // operations
   // public ReturnStatement: (path) => void = (path) => {
   //   // get the name of the function that we are returning
-  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.type === ScopeType.Method || s.type === ScopeType.FUNCTION)
+  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.identifierDescription === ScopeType.Method || s.identifierDescription === ScopeType.FUNCTION)
   //   // get the corresponding variable of the function
   //   const variable = this._getVariableInScope(functionScope.name)
   //
   //   variable.usage.push({
-  //     type: UsageType.Return,
+  //     identifierDescription: UsageType.Return,
   //     operation: "",
   //     usedVariable: `${path.node.argument.start}-${path.node.argument.end}`
   //   })

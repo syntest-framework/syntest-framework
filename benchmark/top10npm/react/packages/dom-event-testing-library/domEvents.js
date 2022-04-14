@@ -19,7 +19,7 @@ import {
 /**
  * Native event object mocks for higher-level events.
  *
- * 1. Each event type defines the exact object that it accepts. This ensures
+ * 1. Each event identifierDescription defines the exact object that it accepts. This ensures
  * that no arbitrary properties can be assigned to events, and the properties
  * that don't exist on specific event types (e.g., 'pointerType') are not added
  * to the respective native event.

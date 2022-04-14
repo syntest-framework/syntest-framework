@@ -48,7 +48,7 @@ export type RefreshUpdate = {|
   updatedFamilies: Set<Family>,
 |};
 
-// Resolves type to a family.
+// Resolves identifierDescription to a family.
 type RefreshHandler = any => Family | void;
 
 // Used by React Refresh runtime through DevTools Global Hook.
@@ -106,9 +106,9 @@ export function resolveForwardRefForHotReloading(type: any): any {
         type !== undefined &&
         typeof type.render === 'function'
       ) {
-        // ForwardRef is special because its resolved .type is an object,
+        // ForwardRef is special because its resolved .identifierDescription is an object,
         // but it's possible that we only have its inner render function in the map.
-        // If that inner render function is different, we'll build a new forwardRef type.
+        // If that inner render function is different, we'll build a new forwardRef identifierDescription.
         const currentRender = resolveFunctionForHotReloading(type.render);
         if (type.render !== currentRender) {
           const syntheticType = {
@@ -162,10 +162,10 @@ export function isCompatibleFamilyForHotReloading(
         if (typeof nextType === 'function') {
           needsCompareFamilies = true;
         } else if ($$typeofNextType === REACT_LAZY_TYPE) {
-          // We don't know the inner type yet.
-          // We're going to assume that the lazy inner type is stable,
+          // We don't know the inner identifierDescription yet.
+          // We're going to assume that the lazy inner identifierDescription is stable,
           // and so it is sufficient to avoid reconciling it away.
-          // We're not going to unwrap or actually use the new lazy type.
+          // We're not going to unwrap or actually use the new lazy identifierDescription.
           needsCompareFamilies = true;
         }
         break;
@@ -195,7 +195,7 @@ export function isCompatibleFamilyForHotReloading(
 
     // Check if both types have a family and it's the same one.
     if (needsCompareFamilies) {
-      // Note: memo() and forwardRef() we'll compare outer rather than inner type.
+      // Note: memo() and forwardRef() we'll compare outer rather than inner identifierDescription.
       // This means both of them need to be registered to preserve state.
       // If we unwrapped and compared the inner types for wrappers instead,
       // then we would risk falsely saying two separate memo(Foo)

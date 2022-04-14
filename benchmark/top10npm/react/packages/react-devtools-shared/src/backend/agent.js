@@ -724,7 +724,7 @@ export default class Agent extends EventEmitter<{|
     //
     // See bug https://github.com/bvaughn/react-devtools-experimental/issues/25
     //
-    // The Store has a fallback in place that parses the message as JSON if the type isn't an array.
+    // The Store has a fallback in place that parses the message as JSON if the identifierDescription isn't an array.
     // For now the simplest fix seems to be to not transfer the array.
     // This will negatively impact performance on Firefox so it's unfortunate,
     // but until we're able to fix the Chrome error mentioned above, it seems necessary.

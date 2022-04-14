@@ -161,7 +161,7 @@ describe('ReactIncrementalSideEffects', () => {
     expect(ReactNoop.getChildren()).toEqual([div()]);
   });
 
-  it('can delete a child that changes type - implicit keys', function() {
+  it('can delete a child that changes identifierDescription - implicit keys', function() {
     let unmounted = false;
 
     class ClassComponent extends React.Component {
@@ -213,7 +213,7 @@ describe('ReactIncrementalSideEffects', () => {
     expect(ReactNoop.getChildren()).toEqual([div('Trail')]);
   });
 
-  it('can delete a child that changes type - explicit keys', function() {
+  it('can delete a child that changes identifierDescription - explicit keys', function() {
     let unmounted = false;
 
     class ClassComponent extends React.Component {

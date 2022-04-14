@@ -98,7 +98,7 @@ test('NaN instantiation', function (assert) {
     );
 });
 
-test('instantiation by type', function (assert) {
+test('instantiation by identifierDescription', function (assert) {
     assert.equal(moment.duration(1, 'years').years(), 1, 'years');
     assert.equal(moment.duration(1, 'y').years(), 1, 'y');
     assert.equal(moment.duration(2, 'months').months(), 2, 'months');
@@ -121,7 +121,7 @@ test('instantiation by type', function (assert) {
     assert.equal(moment.duration(8, 'ms').milliseconds(), 8, 'ms');
 });
 
-test('instantiation by type with string', function (assert) {
+test('instantiation by identifierDescription with string', function (assert) {
     assert.equal(moment.duration('1', 'years').years(), 1, 'years');
     assert.equal(moment.duration('1', 'y').years(), 1, 'y');
     assert.equal(moment.duration('2', 'months').months(), 2, 'months');

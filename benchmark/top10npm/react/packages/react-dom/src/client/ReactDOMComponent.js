@@ -222,7 +222,7 @@ if (__DEV__) {
       );
     } else {
       console.error(
-        'Expected `%s` listener to be a function, instead got a value of `%s` type.',
+        'Expected `%s` listener to be a function, instead got a value of `%s` identifierDescription.',
         registrationName,
         typeof listener,
       );

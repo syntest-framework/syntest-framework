@@ -13,13 +13,11 @@ import { JavaScriptSubject, SubjectType } from "../../search/JavaScriptSubject";
 import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionStatement";
 import { ActionDescription } from "../../analysis/static/parsing/ActionDescription";
 import { ActionType } from "../../analysis/static/parsing/ActionType";
-import { Parameter } from "../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
 import { TypeProbabilityMap } from "../../analysis/static/types/resolving/TypeProbabilityMap";
 import { Typing, TypingType } from "../../analysis/static/types/resolving/Typing";
 import { ArrayStatement } from "../statements/complex/ArrayStatement";
 import { ObjectStatement } from "../statements/complex/ObjectStatement";
-import { ScopeType } from "../../analysis/static/types/discovery/Scope";
-
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
@@ -51,6 +49,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     return new FunctionCall(
       action.returnParameter,
+      action.returnParameter.typeProbabilityMap.getRandomType(),
       prng.uniqueId(),
       action.name,
       args
@@ -61,7 +60,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const constructors = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.CONSTRUCTOR);
 
     const typeMap = new TypeProbabilityMap()
-    typeMap.addType({
+    const type: Typing = {
       type: TypingType.OBJECT,
       object: {
         name: this.subject.name,
@@ -69,7 +68,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         properties: new Set(),
         functions: new Set()
       }
-    }, 1)
+    }
+    typeMap.addType(type, 1)
 
     if (constructors.length > 0) {
       const action = <ActionDescription>(
@@ -86,7 +86,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
 
       return new ConstructorCall(
-        { type: typeMap, name: "class" },
+        { typeProbabilityMap: typeMap, name: "class" },
+        type,
         prng.uniqueId(),
         args,
         calls,
@@ -103,7 +104,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
 
       return new ConstructorCall(
-        { type: typeMap, name: "class" },
+        { typeProbabilityMap: typeMap, name: "class" },
+        type,
         prng.uniqueId(),
         [],
         calls,
@@ -121,91 +123,54 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     return new MethodCall(
       action.returnParameter,
+      action.returnParameter.typeProbabilityMap.getRandomType(),
       prng.uniqueId(),
       action.name,
       args
     );
   }
 
-  sampleArgument(depth: number, type: Parameter = null): Statement {
-
-    // TODO sampling arrays or objects
+  sampleArgument(depth: number, identifierDescription: IdentifierDescription = null): Statement {
     // TODO more complex sampling of function return values
     // Take regular primitive value
 
-    if (!type) {
-      type = {
+    if (!identifierDescription) {
+      identifierDescription = {
         name: "unnamed",
-        type: new TypeProbabilityMap()
+        typeProbabilityMap: new TypeProbabilityMap()
       }
     }
 
     let chosenType: Typing
 
     if (Properties['type_inference_mode'] === 'roulette') {
-      chosenType = type.type.getRandomType()
+      chosenType = identifierDescription.typeProbabilityMap.getRandomType()
     } else if (Properties['type_inference_mode'] === 'elitist') {
-      chosenType = type.type.getEliteType()
+      chosenType = identifierDescription.typeProbabilityMap.getEliteType()
     } else if (Properties['type_inference_mode'] === 'dynamic') {
-      chosenType = type.type.getDynamicType()
+      chosenType = identifierDescription.typeProbabilityMap.getDynamicType()
     } else {
-      throw new Error("Invalid type inference mode selected")
+      throw new Error("Invalid identifierDescription inference mode selected")
     }
 
     if (chosenType.type === "function") {
       // TODO expectation of return value
       return new ArrowFunctionStatement(
-        type,
+        identifierDescription,
+        chosenType,
         prng.uniqueId(),
         this.sampleArgument(depth + 1)
       )
     } else if (chosenType.type === 'object') {
-      const keys: StringStatement[] = []
-      const values: Statement[] = []
-
-      if (chosenType.object) {
-        chosenType.object.properties.forEach((p) => {
-          const typeMap = new TypeProbabilityMap()
-          typeMap.addType({ type: TypingType.STRING })
-          type = { type: typeMap, name: p }
-
-          keys.push(new StringStatement(type, prng.uniqueId(), p, Properties.string_alphabet, Properties.string_maxlength))
-
-          if (chosenType.propertyTypings.has(p)) {
-            values.push(this.sampleArgument(depth + 1, { name: p, type: chosenType.propertyTypings.get(p) }))
-          } else {
-            values.push(this.sampleArgument(depth + 1))
-          }
-        })
-      } else {
-        // TODO random properties or none
-      }
-
-      return new ObjectStatement(
-        type,
-        prng.uniqueId(),
-        keys,
-        values
-      )
+      return this.sampleObject(identifierDescription, chosenType, depth)
     } else if (chosenType.type === 'array') {
-      const children = []
-
-      for (let i = 0; i < prng.nextInt(0, 5); i++) {
-        children.push(
-          this.sampleArgument(depth + 1)
-        )
-      }
-      return new ArrayStatement(
-        type,
-        prng.uniqueId(),
-        children
-      )
+      return this.sampleArray(identifierDescription, chosenType, depth)
     }else if (chosenType.type === "boolean") {
-      return BoolStatement.getRandom(type);
+      return this.sampleBool(identifierDescription, chosenType);
     } else if (chosenType.type === "string") {
-      return StringStatement.getRandom(type);
+      return this.sampleString(identifierDescription, chosenType);
     } else if (chosenType.type === "numeric") {
-      return NumericStatement.getRandom(type);
+      return this.sampleNumber(identifierDescription, chosenType);
       // TODO null
       // TODO REGEX
       // TODO
@@ -213,20 +178,144 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // TODO
       const choice = prng.nextInt(0, 3)
       if (choice === 0) {
-        return BoolStatement.getRandom(type);
+        return this.sampleBool(identifierDescription, chosenType);
       } else if (choice === 1) {
-        return StringStatement.getRandom(type);
+        return this.sampleString(identifierDescription, chosenType);
       } else if (choice === 2) {
-        return NumericStatement.getRandom(type);
+        return this.sampleNumber(identifierDescription, chosenType);
       } else if (choice === 3) {
         return new ArrowFunctionStatement(
-          type,
+          identifierDescription,
+          chosenType,
           prng.uniqueId(),
-          this.sampleArgument(depth + 1, {type: new TypeProbabilityMap(), name: 'noname'})
+          this.sampleArgument(depth + 1, {typeProbabilityMap: new TypeProbabilityMap(), name: 'noname'})
         )
       }
     }
 
     throw new Error(`Unknown type!\n${JSON.stringify(chosenType, null, 2)}`);
+  }
+
+  sampleObject(identifierDescription: IdentifierDescription, type: Typing, depth: number) {
+    const keys: StringStatement[] = []
+    const values: Statement[] = []
+
+    if (type.object) {
+      type.object.properties.forEach((p) => {
+        const typeMap = new TypeProbabilityMap()
+        const keyType = { type: TypingType.STRING }
+        typeMap.addType(keyType)
+        identifierDescription = { typeProbabilityMap: typeMap, name: p }
+
+        keys.push(new StringStatement(identifierDescription, keyType, prng.uniqueId(), p, Properties.string_alphabet, Properties.string_maxlength))
+
+        if (type.propertyTypings.has(p)) {
+          values.push(this.sampleArgument(depth + 1, { name: p, typeProbabilityMap: type.propertyTypings.get(p) }))
+        } else {
+          values.push(this.sampleArgument(depth + 1))
+        }
+      })
+    } else {
+      // TODO random properties or none
+    }
+
+    return new ObjectStatement(
+      identifierDescription,
+      type,
+      prng.uniqueId(),
+      keys,
+      values
+    )
+  }
+
+  sampleArray(identifierDescription: IdentifierDescription, type: Typing, depth: number) {
+    const children = []
+
+    for (let i = 0; i < prng.nextInt(0, 5); i++) {
+      children.push(
+        this.sampleArgument(depth + 1)
+      )
+    }
+    return new ArrayStatement(
+      identifierDescription,
+      type,
+      prng.uniqueId(),
+      children
+    )
+  }
+
+  sampleString(
+    identifierDescription: IdentifierDescription = null,
+    type: Typing = null,
+    alphabet = Properties.string_alphabet,
+    maxlength = Properties.string_maxlength
+  ): StringStatement {
+    if (!type) {
+      type = { type: TypingType.STRING }
+    }
+
+    if (!identifierDescription) {
+      const typeMap = new TypeProbabilityMap()
+      typeMap.addType(type)
+      identifierDescription = { typeProbabilityMap: typeMap, name: "noname" }
+    }
+
+    const valueLength = prng.nextInt(0, maxlength - 1);
+    let value = "";
+
+    for (let i = 0; i < valueLength; i++) {
+      value += prng.pickOne(alphabet);
+    }
+
+    return new StringStatement(
+      identifierDescription,
+      type,
+      prng.uniqueId(),
+      value,
+      alphabet,
+      maxlength
+    );
+  }
+
+  sampleBool(
+    identifierDescription: IdentifierDescription = null,
+    type: Typing = null
+  ): BoolStatement {
+    if (!type) {
+      type = { type: TypingType.BOOLEAN }
+    }
+
+    if (!identifierDescription) {
+      const typeMap = new TypeProbabilityMap()
+      typeMap.addType(type)
+      identifierDescription = { typeProbabilityMap: typeMap, name: "noname" }
+    }
+
+    return new BoolStatement(identifierDescription, type, prng.uniqueId(), prng.nextBoolean());
+  }
+
+  sampleNumber(
+    identifierDescription: IdentifierDescription = null,
+    type: Typing = null
+  ): NumericStatement {
+    if (!type) {
+      type = { type: TypingType.NUMERIC }
+    }
+
+    if (!identifierDescription) {
+      const typeMap = new TypeProbabilityMap()
+      typeMap.addType(type)
+      identifierDescription = { typeProbabilityMap: typeMap, name: "noname" }
+    }
+    // by default we create small numbers (do we need very large numbers?)
+    const max = Number.MAX_SAFE_INTEGER
+    const min = Number.MIN_SAFE_INTEGER
+
+    return new NumericStatement(
+      identifierDescription,
+      type,
+      prng.uniqueId(),
+      prng.nextDouble(min, max),
+    );
   }
 }

@@ -8,7 +8,7 @@
 /**
  * TypeScript Definition File for React.
  *
- * Full type definitions are not yet officially supported. These are mostly
+ * Full identifierDescription definitions are not yet officially supported. These are mostly
  * just helpers for the unit test.
  */
 

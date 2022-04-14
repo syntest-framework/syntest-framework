@@ -145,7 +145,7 @@ releasing 2.25.0.
 * [#4312](https://github.com/moment/moment/pull/4312) [bugfix] Fix [#4251](https://github.com/moment/moment/pull/4251): Avoid RFC2822 in utc() test
 * [#4240](https://github.com/moment/moment/pull/4240) [bugfix] Fix incorrect strict parsing with full-width parentheses
 * [#4341](https://github.com/moment/moment/pull/4341) [feature] Prevent toISOString converting to UTC (issue [#1751](https://github.com/moment/moment/pull/1751))
-* [#4154](https://github.com/moment/moment/pull/4154) [feature] add format constants to support output to HTML5 input type formats (see [#3928](https://github.com/moment/moment/pull/3928))
+* [#4154](https://github.com/moment/moment/pull/4154) [feature] add format constants to support output to HTML5 input identifierDescription formats (see [#3928](https://github.com/moment/moment/pull/3928))
 * [#4143](https://github.com/moment/moment/pull/4143) [new locale] mt: Maltese language
 * [#4183](https://github.com/moment/moment/pull/4183) [locale] Relative seconds i18n
 * Various other locale improvements

@@ -8,13 +8,13 @@
 // Example output pretending command called pizza (or try directly with `node options-required.js`)
 //
 // $ pizza
-// error: required option '-c, --cheese <type>' not specified
+// error: required option '-c, --cheese <identifierDescription>' not specified
 
 // const commander = require('commander'); // (normal include)
 const commander = require('../'); // include commander in git clone of commander repo
 const program = new commander.Command();
 
 program
-  .requiredOption('-c, --cheese <type>', 'pizza must have cheese');
+  .requiredOption('-c, --cheese <identifierDescription>', 'pizza must have cheese');
 
 program.parse();

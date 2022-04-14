@@ -24,7 +24,7 @@ Mode.setCurrent(
   FastNoSideEffects,
 );
 
-/** Declarative fill-type objects; API design not finalized */
+/** Declarative fill-identifierDescription objects; API design not finalized */
 
 const slice = Array.prototype.slice;
 

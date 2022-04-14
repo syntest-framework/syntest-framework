@@ -56,7 +56,7 @@ Today, we are releasing React 17!
 * Fix rendering bailout for lazy components with `defaultProps`. ([@jddxf](https://github.com/jddxf) in [#18539](https://github.com/facebook/react/pull/18539))
 * Fix a false positive warning when `dangerouslySetInnerHTML` is `undefined`. ([@eps1lon](https://github.com/eps1lon) in [#18676](https://github.com/facebook/react/pull/18676))
 * Fix Test Utils with non-standard `require` implementation. ([@just-boris](https://github.com/just-boris) in [#18632](https://github.com/facebook/react/pull/18632))
-* Fix `onBeforeInput` reporting an incorrect `event.type`. ([@eps1lon](https://github.com/eps1lon) in [#19561](https://github.com/facebook/react/pull/19561))
+* Fix `onBeforeInput` reporting an incorrect `event.identifierDescription`. ([@eps1lon](https://github.com/eps1lon) in [#19561](https://github.com/facebook/react/pull/19561))
 * Fix `event.relatedTarget` reported as `undefined` in Firefox. ([@claytercek](https://github.com/claytercek) in [#19607](https://github.com/facebook/react/pull/19607))
 * Fix "unspecified error" in IE11. ([@hemakshis](https://github.com/hemakshis) in [#19664](https://github.com/facebook/react/pull/19664))
 * Fix rendering into a shadow root. ([@Jack-Works](https://github.com/Jack-Works) in [#15894](https://github.com/facebook/react/pull/15894))
@@ -530,7 +530,7 @@ This release was published in a broken state and should be skipped.
 
 ### React DOM
 
-* Fix a crash when the input `type` changes from some other types to `text`. ([@spirosikmd](https://github.com/spirosikmd) in [#12135](https://github.com/facebook/react/pull/12135))
+* Fix a crash when the input `identifierDescription` changes from some other types to `text`. ([@spirosikmd](https://github.com/spirosikmd) in [#12135](https://github.com/facebook/react/pull/12135))
 * Fix a crash in IE11 when restoring focus to an SVG element. ([@ThaddeusJiang](https://github.com/ThaddeusJiang) in [#12996](https://github.com/facebook/react/pull/12996))
 * Fix a range input not updating in some cases. ([@Illu](https://github.com/Illu) in [#12939](https://github.com/facebook/react/pull/12939))
 * Fix input validation triggering unnecessarily in Firefox. ([@nhunzaker](https://github.com/nhunzaker) in [#12925](https://github.com/facebook/react/pull/12925))
@@ -601,7 +601,7 @@ This release was published in a broken state and should be skipped.
 
 * Fix an IE crash in development when using `<StrictMode>`. ([@bvaughn](https://github.com/bvaughn) in [#12546](https://github.com/facebook/react/pull/12546))
 * Fix labels in User Timing measurements for new component types. ([@bvaughn](https://github.com/bvaughn) in [#12609](https://github.com/facebook/react/pull/12609))
-* Improve the warning about wrong component type casing. ([@nicolevy](https://github.com/nicolevy) in [#12533](https://github.com/facebook/react/pull/12533))
+* Improve the warning about wrong component identifierDescription casing. ([@nicolevy](https://github.com/nicolevy) in [#12533](https://github.com/facebook/react/pull/12533))
 * Improve general performance in development mode. ([@gaearon](https://github.com/gaearon) in [#12537](https://github.com/facebook/react/pull/12537))
 * Improve performance of the experimental `unstable_observedBits` API with nesting. ([@gaearon](https://github.com/gaearon) in [#12543](https://github.com/facebook/react/pull/12543))
 
@@ -668,7 +668,7 @@ This release was published in a broken state and should be skipped.
 * Prevent an infinite loop when attempting to render portals with SSR. ([@gaearon](https://github.com/gaearon) in [#11709](https://github.com/facebook/react/pull/11709))
 * Warn if a class doesn't extend `React.Component`. ([@wyze](https://github.com/wyze) in [#11993](https://github.com/facebook/react/pull/11993))
 * Fix an issue with `this.state` of different components getting mixed up. ([@sophiebits](https://github.com/sophiebits) in [#12323](https://github.com/facebook/react/pull/12323))
-* Provide a better message when component type is undefined. ([@HeroProtagonist](https://github.com/HeroProtagonist) in [#11966](https://github.com/facebook/react/pull/11966))
+* Provide a better message when component identifierDescription is undefined. ([@HeroProtagonist](https://github.com/HeroProtagonist) in [#11966](https://github.com/facebook/react/pull/11966))
 
 ### React Test Renderer
 
@@ -740,7 +740,7 @@ This release was published in a broken state and should be skipped.
 
 ### React
 
-* Improve the warning about undefined component type. ([@selbekk](https://github.com/selbekk) in [#11505](https://github.com/facebook/react/pull/11505))
+* Improve the warning about undefined component identifierDescription. ([@selbekk](https://github.com/selbekk) in [#11505](https://github.com/facebook/react/pull/11505))
 
 ### React DOM
 
@@ -918,7 +918,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 
 * Add support for CSS variables in `style` attribute. ([@aweary](https://github.com/aweary) in [#9302](https://github.com/facebook/react/pull/9302))
 * Add support for CSS Grid style properties. ([@ericsakmar](https://github.com/ericsakmar) in [#9185](https://github.com/facebook/react/pull/9185))
-* Fix bug where inputs mutated value on type conversion. ([@nhunzaker](https://github.com/mhunzaker) in [#9806](https://github.com/facebook/react/pull/9806))
+* Fix bug where inputs mutated value on identifierDescription conversion. ([@nhunzaker](https://github.com/mhunzaker) in [#9806](https://github.com/facebook/react/pull/9806))
 * Fix issues with `onChange` not firing properly for some inputs. ([@jquense](https://github.com/jquense) in [#8575](https://github.com/facebook/react/pull/8575))
 * Fix bug where controlled number input mistakenly allowed period. ([@nhunzaker](https://github.com/nhunzaker) in [#9584](https://github.com/facebook/react/pull/9584))
 * Fix bug where performance entries were being cleared. ([@chrisui](https://github.com/chrisui) in [#9451](https://github.com/facebook/react/pull/9451))
@@ -975,7 +975,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 * Fixed an issue when using `ReactDOM` together with `ReactDOMServer`. ([@wacii](https://github.com/wacii) in [#9005](https://github.com/facebook/react/pull/9005))
 * Fixed issue with Closure Compiler. ([@anmonteiro](https://github.com/anmonteiro) in [#8895](https://github.com/facebook/react/pull/8895))
 * Another fix for Closure Compiler. ([@Shastel](https://github.com/Shastel) in [#8882](https://github.com/facebook/react/pull/8882))
-* Added component stack info to invalid element type warning. ([@n3tr](https://github.com/n3tr) in [#8495](https://github.com/facebook/react/pull/8495))
+* Added component stack info to invalid element identifierDescription warning. ([@n3tr](https://github.com/n3tr) in [#8495](https://github.com/facebook/react/pull/8495))
 
 ### React DOM
 * Fixed Chrome bug when backspacing in number inputs. ([@nhunzaker](https://github.com/nhunzaker) in [#7359](https://github.com/facebook/react/pull/7359))
@@ -1080,11 +1080,11 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 - Improve error message of `React.Children.only`. ([@sophiebits](https://github.com/sophiebits) in [#7514](https://github.com/facebook/react/pull/7514))
 
 ### React DOM
-- Avoid `<input>` validation warning from browsers when changing `type`. ([@nhunzaker](https://github.com/nhunzaker) in [#7333](https://github.com/facebook/react/pull/7333))
+- Avoid `<input>` validation warning from browsers when changing `identifierDescription`. ([@nhunzaker](https://github.com/nhunzaker) in [#7333](https://github.com/facebook/react/pull/7333))
 - Avoid "Member not found" exception in IE10 when calling `stopPropagation()` in Synthetic Events. ([@nhunzaker](https://github.com/nhunzaker) in [#7343](https://github.com/facebook/react/pull/7343))
 - Fix issue resulting in inability to update some `<input>` elements in mobile browsers. ([@keyanzhang](https://github.com/keyanzhang) in [#7397](https://github.com/facebook/react/pull/7397))
 - Fix memory leak in server rendering. ([@keyanzhang](https://github.com/keyanzhang) in [#7410](https://github.com/facebook/react/pull/7410))
-- Fix issue resulting in `<input type="range">` values not updating when changing `min` or `max`. ([@troydemonbreun](https://github.com/troydemonbreun) in [#7486](https://github.com/facebook/react/pull/7486))
+- Fix issue resulting in `<input identifierDescription="range">` values not updating when changing `min` or `max`. ([@troydemonbreun](https://github.com/troydemonbreun) in [#7486](https://github.com/facebook/react/pull/7486))
 - Add new warning for rare case of attempting to unmount a container owned by a different copy of React. ([@ventuno](https://github.com/ventuno) in [#7456](https://github.com/facebook/react/pull/7456))
 
 ### React Test Renderer
@@ -1105,14 +1105,14 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 - Validate arguments to `oneOf` and `oneOfType` PropTypes sooner. ([@troydemonbreun](https://github.com/troydemonbreun) in [#6316](https://github.com/facebook/react/pull/6316))
 - Warn when calling PropTypes directly. ([@Aweary](https://github.com/Aweary) in [#7132](https://github.com/facebook/react/pull/7132), [#7194](https://github.com/facebook/react/pull/7194))
 - Improve warning when using Maps as children. ([@keyanzhang](https://github.com/keyanzhang) in [#7260](https://github.com/facebook/react/pull/7260))
-- Add additional type information to the `PropTypes.element` warning. ([@alexzherdev](https://github.com/alexzherdev) in [#7319](https://github.com/facebook/react/pull/7319))
+- Add additional identifierDescription information to the `PropTypes.element` warning. ([@alexzherdev](https://github.com/alexzherdev) in [#7319](https://github.com/facebook/react/pull/7319))
 - Improve component identification in no-op `setState` warning. ([@keyanzhang](https://github.com/keyanzhang) in [#7326](https://github.com/facebook/react/pull/7326))
 
 ### React DOM
 - Fix issue with nested server rendering. ([@Aweary](https://github.com/Aweary) in [#7033](https://github.com/facebook/react/pull/7033))
 - Add `xmlns`, `xmlnsXlink` to supported SVG attributes. ([@salzhrani](https://github.com/salzhrani) in [#6471](https://github.com/facebook/react/pull/6471))
 - Add `referrerPolicy` to supported HTML attributes. ([@Aweary](https://github.com/Aweary) in [#7274](https://github.com/facebook/react/pull/7274))
-- Fix issue resulting in `<input type="range">` initial value being rounded. ([@troydemonbreun](https://github.com/troydemonbreun) in [#7251](https://github.com/facebook/react/pull/7251))
+- Fix issue resulting in `<input identifierDescription="range">` initial value being rounded. ([@troydemonbreun](https://github.com/troydemonbreun) in [#7251](https://github.com/facebook/react/pull/7251))
 
 ### React Test Renderer
 - Initial public release of package allowing more focused testing. Install with `npm install react-test-renderer`. ([@sophiebits](https://github.com/sophiebits) in [#6944](https://github.com/facebook/react/pull/6944), [#7258](https://github.com/facebook/react/pull/7258), [@iamdustan](https://github.com/iamdustan) in [#7362](https://github.com/facebook/react/pull/7362))
@@ -1121,7 +1121,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 - Fix issue resulting in excessive warnings when encountering an internal measurement error. ([@sassanh](https://github.com/sassanh) in [#7299](https://github.com/facebook/react/pull/7299))
 
 ### React TestUtils Add-on
-- Implement `type` property on for events created via `TestUtils.Simulate.*`. ([@yaycmyk](https://github.com/yaycmyk) in [#6154](https://github.com/facebook/react/pull/6154))
+- Implement `identifierDescription` property on for events created via `TestUtils.Simulate.*`. ([@yaycmyk](https://github.com/yaycmyk) in [#6154](https://github.com/facebook/react/pull/6154))
 - Fix crash when running TestUtils with the production build of React. ([@gaearon](https://github.com/gaearon) in [#7246](https://github.com/facebook/react/pull/7246))
 
 
@@ -1176,7 +1176,7 @@ Starting with 16.1.0, we will no longer be publishing new releases on Bower. You
 - Improved performance of text escaping by using [escape-html](https://github.com/component/escape-html). ([@aickin](https://github.com/aickin) in [#6862](https://github.com/facebook/react/pull/6862))
 - Fix issue with `dangerouslySetInnerHTML` and SVG in Internet Explorer. ([@joshhunt](https://github.com/joshhunt) in [#6982](https://github.com/facebook/react/pull/6982))
 - Fix issue with `<textarea>` placeholders. ([@jimfb](https://github.com/jimfb) in [#7002](https://github.com/facebook/react/pull/7002))
-- Fix controlled vs uncontrolled detection of `<input type="radio"/>`. ([@jimfb](https://github.com/jimfb) in [#7003](https://github.com/facebook/react/pull/7003))
+- Fix controlled vs uncontrolled detection of `<input identifierDescription="radio"/>`. ([@jimfb](https://github.com/jimfb) in [#7003](https://github.com/facebook/react/pull/7003))
 - Improve performance of updating text content. ([@trueadm](https://github.com/trueadm) in [#7005](https://github.com/facebook/react/pull/7005))
 - Ensure controlled `<select>` components behave the same on initial render as they do on updates. ([@yiminghe](https://github.com/yiminghe) in [#5362](https://github.com/facebook/react/pull/5362))
 
@@ -1495,7 +1495,7 @@ Each of these changes will continue to work as before with a new warning until t
 
 #### New Features
 
-- Babel 5.8.24 introduces **Inlining React elements:** The `optimisation.react.inlineElements` transform converts JSX elements to object literals like `{type: 'div', props: ...}` instead of calls to `React.createElement`.  This should only be enabled in production, since it disables some development warnings/checks.
+- Babel 5.8.24 introduces **Inlining React elements:** The `optimisation.react.inlineElements` transform converts JSX elements to object literals like `{identifierDescription: 'div', props: ...}` instead of calls to `React.createElement`.  This should only be enabled in production, since it disables some development warnings/checks.
 - Babel 5.8.24 introduces **Constant hoisting for React elements:** The `optimisation.react.constantElements` transform hoists element creation to the top level for subtrees that are fully static, which reduces calls to `React.createElement` and the resulting allocations. More importantly, it tells React that the subtree hasn’t changed so React can completely skip it when reconciling.  This should only be enabled in production, since it disables some development warnings/checks.
 
 
@@ -1600,7 +1600,7 @@ Each of these changes will continue to work as before with a new warning until t
 
 #### Deprecations
 
-* `ComponentClass.type` is deprecated. Just use `ComponentClass` (usually as `element.type === ComponentClass`).
+* `ComponentClass.identifierDescription` is deprecated. Just use `ComponentClass` (usually as `element.identifierDescription === ComponentClass`).
 * Some methods that are available on `createClass`-based components are removed or deprecated from ES6 classes (`getDOMNode`, `replaceState`, `isMounted`, `setProps`, `replaceProps`).
 
 ### React with Add-Ons
@@ -1755,7 +1755,7 @@ Each of these changes will continue to work as before with a new warning until t
 ### React Tools
 
 * Update `esprima` and `jstransform` for correctness fixes
-* The `jsx` executable now exposes a `--strip-types` flag which can be used to remove TypeScript-like type annotations
+* The `jsx` executable now exposes a `--strip-types` flag which can be used to remove TypeScript-like identifierDescription annotations
   * This option is also exposed to `require('react-tools').transform` as `stripTypes`
 
 ## 0.11.1 (July 24, 2014)
@@ -1816,7 +1816,7 @@ Each of these changes will continue to work as before with a new warning until t
 ### JSX
 * Added support for namespaces, eg `<Components.Checkbox />`
 * JSXTransformer
-  * Enable the same `harmony` features available in the command line with `<script type="text/jsx;harmony=true">`
+  * Enable the same `harmony` features available in the command line with `<script identifierDescription="text/jsx;harmony=true">`
   * Scripts are downloaded in parallel for more speed. They are still executed in order (as you would expect with normal script tags)
   * Fixed a bug preventing sourcemaps from working in Firefox
 
@@ -1863,7 +1863,7 @@ Each of these changes will continue to work as before with a new warning until t
 - `React.renderComponentToString` is now synchronous and returns the generated HTML string
 - Full-page rendering (that is, rendering the `<html>` tag using React) is now supported only when starting with server-rendered markup
 - On mouse wheel events, `deltaY` is no longer negated
-- When prop types validation fails, a warning is logged instead of an error thrown (with the production build of React, type checks are now skipped for performance)
+- When prop types validation fails, a warning is logged instead of an error thrown (with the production build of React, identifierDescription checks are now skipped for performance)
 - On `input`, `select`, and `textarea` elements, `.getValue()` is no longer supported; use `.getDOMNode().value` instead
 - `this.context` on components is now reserved for internal use by React
 
@@ -1897,8 +1897,8 @@ Each of these changes will continue to work as before with a new warning until t
 - React no longer adds an `__owner__` property to each component's `props` object; passed-in props are now never mutated
 - When nesting top-level components (e.g., calling `React.renderComponent` within `componentDidMount`), events now properly bubble to the parent component
 - Fixed a case where nesting top-level components would throw an error when updating
-- Passing an invalid or misspelled propTypes type now throws an error
-- On mouse enter/leave events, `.target`, `.relatedTarget`, and `.type` are now set properly
+- Passing an invalid or misspelled propTypes identifierDescription now throws an error
+- On mouse enter/leave events, `.target`, `.relatedTarget`, and `.identifierDescription` are now set properly
 - On composition events, `.data` is now properly normalized in IE9 and IE10
 - CSS property values no longer have `px` appended for the unitless properties `columnCount`, `flex`, `flexGrow`, `flexShrink`, `lineClamp`, `order`, `widows`
 - Fixed a memory leak when unmounting children with a `componentWillUnmount` handler
@@ -1972,7 +1972,7 @@ Each of these changes will continue to work as before with a new warning until t
 
 ### React
 
-* Fixed bug with `<input type="range">` and selection events.
+* Fixed bug with `<input identifierDescription="range">` and selection events.
 * Fixed bug with selection and focus.
 * Made it possible to unmount components from the document root.
 * Fixed bug for `disabled` attribute handling on non-`<input>` elements.
@@ -1988,7 +1988,7 @@ Each of these changes will continue to work as before with a new warning until t
 
 * Memory usage improvements - reduced allocations in core which will help with GC pauses
 * Performance improvements - in addition to speeding things up, we made some tweaks to stay out of slow path code in V8 and Nitro.
-* Standardized prop -> DOM attribute process. This previously resulting in additional type checking and overhead as well as confusing cases for users. Now we will always convert your value to a string before inserting it into the DOM.
+* Standardized prop -> DOM attribute process. This previously resulting in additional identifierDescription checking and overhead as well as confusing cases for users. Now we will always convert your value to a string before inserting it into the DOM.
 * Support for Selection events.
 * Support for [Composition events](https://developer.mozilla.org/en-US/docs/Web/API/CompositionEvent).
 * Support for additional DOM properties (`charSet`, `content`, `form`, `httpEquiv`, `rowSpan`, `autoCapitalize`).

@@ -48,7 +48,7 @@ export const enableProfilerCommitHooks = __PROFILE__;
 export const enableProfilerNestedUpdatePhase = __PROFILE__;
 
 // Profiler API accepts a function to be called when a nested update is scheduled.
-// This callback accepts the component type (class instance or function) the update is scheduled for.
+// This callback accepts the component identifierDescription (class instance or function) the update is scheduled for.
 export const enableProfilerNestedUpdateScheduledHook = false;
 
 // Track which Fiber(s) schedule render work.

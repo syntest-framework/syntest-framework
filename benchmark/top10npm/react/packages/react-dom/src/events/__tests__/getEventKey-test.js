@@ -74,7 +74,7 @@ describe('getEventKey', () => {
   });
 
   describe('when key is not implemented in a browser', () => {
-    describe('when event type is keypress', () => {
+    describe('when event identifierDescription is keypress', () => {
       describe('when charCode is 13', () => {
         it('returns "Enter"', () => {
           let key = null;
@@ -118,7 +118,7 @@ describe('getEventKey', () => {
       });
     });
 
-    describe('when event type is keydown or keyup', () => {
+    describe('when event identifierDescription is keydown or keyup', () => {
       describe('when keyCode is recognized', () => {
         it('returns a translated key', () => {
           let key = null;

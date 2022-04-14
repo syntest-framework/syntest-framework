@@ -174,7 +174,7 @@ test('warns in DEV if return pointer is inconsistent', async () => {
     useLayoutEffect(() => {
       if (text === 'B') {
         // Mutate the return pointer of the div to point to the wrong alternate.
-        // This simulates the most common type of return pointer inconsistency.
+        // This simulates the most common identifierDescription of return pointer inconsistency.
         const current = ref.current.fiber;
         const workInProgress = current.alternate;
         workInProgress.return = current.return;

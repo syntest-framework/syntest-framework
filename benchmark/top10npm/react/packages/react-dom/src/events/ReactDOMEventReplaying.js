@@ -107,7 +107,7 @@ const queuedDiscreteEvents: Array<QueuedReplayableEvent> = [];
 
 // Indicates if any continuous event targets are non-null for early bailout.
 const hasAnyQueuedContinuousEvents: boolean = false;
-// The last of each continuous event type. We only need to replay the last one
+// The last of each continuous event identifierDescription. We only need to replay the last one
 // if the last target was dehydrated.
 let queuedFocus: null | QueuedReplayableEvent = null;
 let queuedDrag: null | QueuedReplayableEvent = null;
@@ -229,7 +229,7 @@ export function queueDiscreteEvent(
   }
 }
 
-// Resets the replaying for this type of continuous event to no event.
+// Resets the replaying for this identifierDescription of continuous event to no event.
 export function clearIfContinuousEvent(
   domEventName: DOMEventName,
   nativeEvent: AnyNativeEvent,
@@ -429,7 +429,7 @@ function attemptExplicitHydrationTarget(
 export function queueExplicitHydrationTarget(target: Node): void {
   if (enableSelectiveHydration) {
     // TODO: This will read the priority if it's dispatched by the React
-    // event system but not native events. Should read window.event.type, like
+    // event system but not native events. Should read window.event.identifierDescription, like
     // we do for updates (getCurrentEventPriority).
     const updatePriority = getCurrentUpdatePriority();
     const queuedTarget: QueuedHydrationTarget = {

@@ -5,7 +5,7 @@ describe('option with optional value, no default', () => {
   test('when option not specified then value is undefined', () => {
     const program = new commander.Command();
     program
-      .option('--cheese [type]', 'cheese type');
+      .option('--cheese [identifierDescription]', 'cheese identifierDescription');
     program.parse(['node', 'test']);
     expect(program.opts().cheese).toBeUndefined();
   });
@@ -13,7 +13,7 @@ describe('option with optional value, no default', () => {
   test('when option specified then value is as specified', () => {
     const program = new commander.Command();
     program
-      .option('--cheese [type]', 'cheese type');
+      .option('--cheese [identifierDescription]', 'cheese identifierDescription');
     const cheeseType = 'blue';
     program.parse(['node', 'test', '--cheese', cheeseType]);
     expect(program.opts().cheese).toBe(cheeseType);
@@ -22,7 +22,7 @@ describe('option with optional value, no default', () => {
   test('when option specified without value then value is true', () => {
     const program = new commander.Command();
     program
-      .option('--cheese [type]', 'cheese type');
+      .option('--cheese [identifierDescription]', 'cheese identifierDescription');
     program.parse(['node', 'test', '--cheese']);
     expect(program.opts().cheese).toBe(true);
   });
@@ -31,7 +31,7 @@ describe('option with optional value, no default', () => {
     // optional options do not eat values with dashes
     const program = new commander.Command();
     program
-      .option('--cheese [type]', 'cheese type')
+      .option('--cheese [identifierDescription]', 'cheese identifierDescription')
       .option('--some-option');
     program.parse(['node', 'test', '--cheese', '--some-option']);
     expect(program.opts().cheese).toBe(true);
@@ -44,7 +44,7 @@ describe('option with optional value, with default', () => {
     const defaultValue = 'default';
     const program = new commander.Command();
     program
-      .option('--cheese [type]', 'cheese type', defaultValue);
+      .option('--cheese [identifierDescription]', 'cheese identifierDescription', defaultValue);
     program.parse(['node', 'test']);
     expect(program.opts().cheese).toBe(defaultValue);
   });
@@ -53,7 +53,7 @@ describe('option with optional value, with default', () => {
     const defaultValue = 'default';
     const program = new commander.Command();
     program
-      .option('--cheese [type]', 'cheese type', defaultValue);
+      .option('--cheese [identifierDescription]', 'cheese identifierDescription', defaultValue);
     const cheeseType = 'blue';
     program.parse(['node', 'test', '--cheese', cheeseType]);
     expect(program.opts().cheese).toBe(cheeseType);
@@ -63,7 +63,7 @@ describe('option with optional value, with default', () => {
     const defaultValue = 'default';
     const program = new commander.Command();
     program
-      .option('--cheese [type]', 'cheese type', defaultValue);
+      .option('--cheese [identifierDescription]', 'cheese identifierDescription', defaultValue);
     program.parse(['node', 'test', '--cheese']);
     expect(program.opts().cheese).toBe(defaultValue);
   });

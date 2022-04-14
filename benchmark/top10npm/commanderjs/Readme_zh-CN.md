@@ -117,7 +117,7 @@ Commander 使用`.option()`方法来定义选项，同时可以附加选项的�
 program
   .option('-d, --debug', 'output extra debugging')
   .option('-s, --small', 'small pizza size')
-  .option('-p, --pizza-type <type>', 'flavour of pizza');
+  .option('-p, --pizza-identifierDescription <identifierDescription>', 'flavour of pizza');
 
 program.parse(process.argv);
 
@@ -130,13 +130,13 @@ if (options.pizzaType) console.log(`- ${options.pizzaType}`);
 
 ```bash
 $ pizza-options -p
-error: option '-p, --pizza-type <type>' argument missing
+error: option '-p, --pizza-identifierDescription <identifierDescription>' argument missing
 $ pizza-options -d -s -p vegetarian
 { debug: true, small: true, pizzaType: 'vegetarian' }
 pizza details:
 - small pizza size
 - vegetarian
-$ pizza-options --pizza-type=cheese
+$ pizza-options --pizza-identifierDescription=cheese
 pizza details:
 - cheese
 ```
@@ -151,7 +151,7 @@ pizza details:
 
 ```js
 program
-  .option('-c, --cheese <type>', 'add the specified type of cheese', 'blue');
+  .option('-c, --cheese <identifierDescription>', 'add the specified identifierDescription of cheese', 'blue');
 
 program.parse();
 
@@ -203,14 +203,14 @@ You ordered a pizza with no sauce and no cheese
 
 ```js
 program
-  .option('-c, --cheese [type]', 'Add cheese with optional type');
+  .option('-c, --cheese [identifierDescription]', 'Add cheese with optional identifierDescription');
 
 program.parse(process.argv);
 
 const options = program.opts();
 if (options.cheese === undefined) console.log('no cheese');
 else if (options.cheese === true) console.log('add cheese');
-else console.log(`add cheese type ${options.cheese}`);
+else console.log(`add cheese identifierDescription ${options.cheese}`);
 ```
 
 ```bash
@@ -219,7 +219,7 @@ no cheese
 $ pizza-options --cheese
 add cheese
 $ pizza-options --cheese mozzarella
-add cheese type mozzarella
+add cheese identifierDescription mozzarella
 ```
 
 关于可能有歧义的用例，请见[可变参数的选项](./docs/zh-CN/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E7%9A%84%E9%80%89%E9%A1%B9.md)。
@@ -232,14 +232,14 @@ add cheese type mozzarella
 
 ```js
 program
-  .requiredOption('-c, --cheese <type>', 'pizza must have cheese');
+  .requiredOption('-c, --cheese <identifierDescription>', 'pizza must have cheese');
 
 program.parse();
 ```
 
 ```bash
 $ pizza
-error: required option '-c, --cheese <type>' not specified
+error: required option '-c, --cheese <identifierDescription>' not specified
 ```
 
 ### 变长参数选项
@@ -586,7 +586,7 @@ An application for pizza ordering
 
 Options:
   -p, --peppers        Add peppers
-  -c, --cheese <type>  Add the specified type of cheese (default: "marble")
+  -c, --cheese <identifierDescription>  Add the specified identifierDescription of cheese (default: "marble")
   -C, --no-cheese      You do not want any cheese
   -h, --help           display help for command
 ```
@@ -891,7 +891,7 @@ const { program } = require('commander');
 program
   .description('An application for pizza ordering')
   .option('-p, --peppers', 'Add peppers')
-  .option('-c, --cheese <type>', 'Add the specified type of cheese', 'marble')
+  .option('-c, --cheese <identifierDescription>', 'Add the specified identifierDescription of cheese', 'marble')
   .option('-C, --no-cheese', 'You do not want any cheese');
 
 program.parse();

@@ -19,7 +19,7 @@
 import {
   getUserInterface,
   Encoding,
-  Decoder,
+  Decoder, Properties,
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./statements/root/RootStatement";
@@ -44,9 +44,13 @@ export class JavaScriptTestCase extends Encoding {
 
   mutate(sampler: JavaScriptTestCaseSampler) {
     getUserInterface().debug(`Mutating test case: ${this._id}`);
-    return new JavaScriptTestCase(
-      this._root.mutate(sampler, 0)
-    );
+    if (Properties.resample_gene_probability) {
+      return sampler.sample()
+    } else {
+      return new JavaScriptTestCase(
+        this._root.mutate(sampler, 0)
+      );
+    }
   }
 
   hashCode(decoder: Decoder<Encoding, string>): number {

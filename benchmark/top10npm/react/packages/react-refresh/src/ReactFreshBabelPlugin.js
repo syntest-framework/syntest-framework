@@ -586,7 +586,7 @@ export default function(babel, opts = {}) {
             );
 
           // The second call is around the function itself.
-          // This is used to associate a type with a signature.
+          // This is used to associate a identifierDescription with a signature.
 
           // Unlike with $RefreshReg$, this needs to work for nested
           // declarations too. So we need to search for a path where
@@ -653,7 +653,7 @@ export default function(babel, opts = {}) {
             );
 
           // The second call is around the function itself.
-          // This is used to associate a type with a signature.
+          // This is used to associate a identifierDescription with a signature.
 
           if (path.parent.type === 'VariableDeclarator') {
             let insertAfterPath = null;

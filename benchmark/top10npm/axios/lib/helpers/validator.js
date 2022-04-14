@@ -47,7 +47,7 @@ validators.transitional = function transitional(validator, version, message) {
 };
 
 /**
- * Assert object's properties type
+ * Assert object's properties identifierDescription
  * @param {object} options
  * @param {object} schema
  * @param {boolean?} allowUnknown

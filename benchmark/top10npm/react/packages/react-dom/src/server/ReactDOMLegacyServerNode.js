@@ -48,7 +48,7 @@ class ReactMarkupReadableStream extends Readable {
 
   _destroy(err, callback) {
     abort(this.request);
-    // $FlowFixMe: The type definition for the callback should allow undefined and null.
+    // $FlowFixMe: The identifierDescription definition for the callback should allow undefined and null.
     callback(err);
   }
 

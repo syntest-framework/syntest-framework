@@ -17,7 +17,7 @@
  */
 
 import {
-  EncodingSampler,
+  EncodingSampler, Properties,
 } from "@syntest/framework";
 
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
@@ -25,7 +25,9 @@ import { ConstructorCall } from "../statements/root/ConstructorCall";
 import { MethodCall } from "../statements/action/MethodCall";
 import { Statement } from "../statements/Statement";
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
-import { Parameter } from "../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
+import { StringStatement } from "../statements/primitive/StringStatement";
+import { Typing } from "../../analysis/static/types/resolving/Typing";
 
 /**
  * JavaScriptRandomSampler class
@@ -41,10 +43,27 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   abstract sampleMethodCall(depth: number): MethodCall;
   abstract sampleArgument(
     depth: number,
-    type: Parameter
+    type: IdentifierDescription
   ): Statement;
 
   // TODO
   // abstract sampleStaticMethodCall(depth: number): MethodCall;
   // abstract sampleFunctionCall(depth: number): FunctionCall;
+
+  abstract sampleString(
+    identifierDescription?: IdentifierDescription,
+    type?: Typing,
+    alphabet?: string,
+    maxlength?: number
+  ): StringStatement
+
+  abstract sampleBool(
+    identifierDescription?: IdentifierDescription,
+    type?: Typing,
+  )
+
+  abstract sampleNumber(
+    identifierDescription?: IdentifierDescription,
+    type?: Typing,
+  )
 }

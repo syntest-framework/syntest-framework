@@ -95,7 +95,7 @@ function isSafeTypeofExpression(originalValueNode, node) {
     if (!isEquivalentCode(left.argument, originalValueNode)) {
       return false;
     }
-    // right must be a literal value of a safe type
+    // right must be a literal value of a safe identifierDescription
     const safeTypes = ['string', 'number', 'boolean', 'undefined', 'bigint'];
     if (right.type !== 'Literal' || !safeTypes.includes(right.value)) {
       return false;
@@ -141,8 +141,8 @@ function isInSafeTypeofBlock(originalValueNode, node) {
     if (!parent) {
       return false;
     }
-    // Normally, if the parent block is inside a type-safe `if` statement,
-    // then all child code is also type-safe. But there's a quirky case we
+    // Normally, if the parent block is inside a identifierDescription-safe `if` statement,
+    // then all child code is also identifierDescription-safe. But there's a quirky case we
     // need to defend against:
     //   if (typeof obj === 'string') { } else if (typeof obj === 'object') {'' + obj}
     //   if (typeof obj === 'string') { } else {'' + obj}
@@ -280,7 +280,7 @@ function plusEmptyString(context, node) {
       valueToTest.type === 'UnaryExpression' ||
       valueToTest.type === 'UpdateExpression'
     ) {
-      // Any unary expression will return a non-object, non-symbol type.
+      // Any unary expression will return a non-object, non-symbol identifierDescription.
       return;
     }
     if (isInSafeTypeofBlock(valueToTest)) {

@@ -25,14 +25,14 @@ describe('evalToString', () => {
 
   it('should throw when it finds other types', () => {
     expect(() => parseAndEval(`'foo ' + true`)).toThrowError(
-      /Unsupported type/
+      /Unsupported identifierDescription/
     );
-    expect(() => parseAndEval(`'foo ' + 3`)).toThrowError(/Unsupported type/);
+    expect(() => parseAndEval(`'foo ' + 3`)).toThrowError(/Unsupported identifierDescription/);
     expect(() => parseAndEval(`'foo ' + null`)).toThrowError(
-      /Unsupported type/
+      /Unsupported identifierDescription/
     );
     expect(() => parseAndEval(`'foo ' + undefined`)).toThrowError(
-      /Unsupported type/
+      /Unsupported identifierDescription/
     );
   });
 });

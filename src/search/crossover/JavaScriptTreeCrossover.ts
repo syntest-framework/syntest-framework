@@ -138,7 +138,7 @@ export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
         throw new Error("All statements require a classType!")
       }
 
-      if (wanted.type === pair.child.type) { // && wanted.classType === pair.child.classType) { TODO this might be necessary
+      if (wanted.identifierDescription === pair.child.type) { // && wanted.classType === pair.child.classType) { TODO this might be necessary
         similar.push(pair);
       }
     }

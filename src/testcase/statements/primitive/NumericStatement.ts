@@ -19,9 +19,8 @@
 import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
-import { TypingType } from "../../../analysis/static/types/resolving/Typing";
-import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
+import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * Generic number class
@@ -29,28 +28,29 @@ import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/Typ
  * @author Dimitri Stallenberg
  */
 export class NumericStatement extends PrimitiveStatement<number> {
-  constructor(
-    type: Parameter,
-    uniqueId: string,
-    value: number
-  ) {
-    super(type, uniqueId, value);
+  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, value: number) {
+    super(identifierDescription, type, uniqueId, value);
     this._classType = 'NumericStatement'
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): NumericStatement {
+    if (prng.nextBoolean(Properties.resample_gene_probability)) {
+      return sampler.sampleNumber(this.identifierDescription, this.type);
+    }
+
     if (prng.nextBoolean(Properties.delta_mutation_probability)) {
       return this.deltaMutation();
     }
 
-    return NumericStatement.getRandom(
+    return sampler.sampleNumber(
+      this.identifierDescription,
       this.type
     );
   }
 
   deltaMutation(): NumericStatement {
     // small mutation
-    let change = prng.nextGaussian(0, 20);
+    const change = prng.nextGaussian(0, 20);
 
     let newValue = this.value + change;
 
@@ -67,6 +67,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
     }
 
     return new NumericStatement(
+      this.identifierDescription,
       this.type,
       prng.uniqueId(),
       newValue
@@ -75,28 +76,10 @@ export class NumericStatement extends PrimitiveStatement<number> {
 
   copy(): NumericStatement {
     return new NumericStatement(
+      this.identifierDescription,
       this.type,
       prng.uniqueId(),
       this.value
-    );
-  }
-
-  static getRandom(
-    type: Parameter = null
-  ): NumericStatement {
-    if (!type) {
-      const typeMap = new TypeProbabilityMap()
-      typeMap.addType({ type: TypingType.NUMERIC })
-      type = { type: typeMap, name: "noname" }
-    }
-    // by default we create small numbers (do we need very large numbers?)
-    const max = Number.MAX_SAFE_INTEGER
-    const min = Number.MIN_SAFE_INTEGER
-
-    return new NumericStatement(
-      type,
-      prng.uniqueId(),
-      prng.nextDouble(min, max),
     );
   }
 

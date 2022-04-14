@@ -119,7 +119,7 @@ describe('forwardRef', () => {
     expect(() =>
       ReactNoop.render(<RefForwardingComponent ref={ref} optional="foo" />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `required` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
         '`ForwardRef(NamedFunction)`, but its value is `undefined`.\n' +
         '    in NamedFunction (at **)',
     );
@@ -238,7 +238,7 @@ describe('forwardRef', () => {
     expect(() =>
       ReactNoop.render(<RefForwardingComponent ref={ref} optional="foo" />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `required` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
         '`ForwardRef`, but its value is `undefined`.',
       // There's no component stack in this warning because the inner function is anonymous.
       // If we wanted to support this (for the Error frames / source location)
@@ -269,7 +269,7 @@ describe('forwardRef', () => {
     expect(() =>
       ReactNoop.render(<RefForwardingComponent ref={ref} optional="foo" />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `required` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
         '`Custom`, but its value is `undefined`.\n' +
         '    in Inner (at **)',
     );
@@ -297,7 +297,7 @@ describe('forwardRef', () => {
     expect(() =>
       ReactNoop.render(<RefForwardingComponent ref={ref} optional="foo" />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `required` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
         '`Custom`, but its value is `undefined`.\n' +
         '    in Custom (at **)',
     );
@@ -324,7 +324,7 @@ describe('forwardRef', () => {
     expect(() =>
       ReactNoop.render(<RefForwardingComponent ref={ref} optional="foo" />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `required` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
         '`ForwardRef(Inner)`, but its value is `undefined`.\n' +
         '    in Inner (at **)',
     );
@@ -352,7 +352,7 @@ describe('forwardRef', () => {
     expect(() =>
       ReactNoop.render(<RefForwardingComponent ref={ref} optional="foo" />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `required` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
         '`Outer`, but its value is `undefined`.\n' +
         '    in Inner (at **)',
     );

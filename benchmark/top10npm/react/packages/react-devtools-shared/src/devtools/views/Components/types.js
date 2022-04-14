@@ -15,7 +15,7 @@ import type {
 import type {ElementType, Plugins} from 'react-devtools-shared/src/types';
 
 // Each element on the frontend corresponds to a Fiber on the backend.
-// Some of its information (e.g. id, type, displayName) come from the backend.
+// Some of its information (e.g. id, identifierDescription, displayName) come from the backend.
 // Other bits (e.g. weight and depth) are computed on the frontend for windowing and display purposes.
 // Elements are updated on a push basis– meaning the backend pushes updates to the frontend when needed.
 export type Element = {|
@@ -123,7 +123,7 @@ export type InspectedElement = {|
   plugins: Plugins,
 |};
 
-// TODO: Add profiling type
+// TODO: Add profiling identifierDescription
 
 export type DehydratedData = {|
   cleaned: Array<Array<string | number>>,

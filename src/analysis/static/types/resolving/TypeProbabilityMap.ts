@@ -20,7 +20,7 @@ import { prng } from "@syntest/framework";
 
 /**
  * Type Probability Map
- * Stores information about the probability a certain element/relation is a certain type
+ * Stores information about the probability a certain element/relation is a certain identifierDescription
  *
  * @author Dimitri Stallenberg
  */
@@ -55,9 +55,9 @@ export class TypeProbabilityMap {
   }
 
   /**
-   * Add a (new) type to the probability map
-   * @param type the (new) type
-   * @param value the score of type (higher score means higher probability)
+   * Add a (new) identifierDescription to the probability map
+   * @param type the (new) identifierDescription
+   * @param value the score of identifierDescription (higher score means higher probability)
    */
   addType(type: Typing, value = 1) {
     if (value <= 0) {
@@ -71,7 +71,7 @@ export class TypeProbabilityMap {
     }
 
     this.scoreMap.set(identifier, this.scoreMap.get(identifier) + value)
-    // override with latest type
+    // override with latest identifierDescription
     this.typeMap.set(identifier, type)
 
     this.total += value
@@ -79,7 +79,7 @@ export class TypeProbabilityMap {
   }
 
   /**
-   * Calculates the actual probabilities for each type based on the given scores
+   * Calculates the actual probabilities for each identifierDescription based on the given scores
    */
   calculateProbabilities() {
     if (!this.changed) {
@@ -94,7 +94,7 @@ export class TypeProbabilityMap {
     let total = this.total
     this.probabilityMap = new Map()
 
-    // this ensures that there is a chance of trying a random other type
+    // this ensures that there is a chance of trying a random other identifierDescription
     if (true) { // Properties.alsotryrandom) { TODO property
       total = total / 0.9
       this.probabilityMap.set({ type: TypingType.ANY }, 0.1)
@@ -109,8 +109,8 @@ export class TypeProbabilityMap {
   }
 
   /**
-   * Gets the probability of the given type
-   * @param type the type
+   * Gets the probability of the given identifierDescription
+   * @param type the identifierDescription
    */
   getProbability(type: Typing): number {
     this.calculateProbabilities()
@@ -119,7 +119,7 @@ export class TypeProbabilityMap {
   }
 
   /**
-   * Gets a random type from the probability map based on their likelyhood
+   * Gets a random identifierDescription from the probability map based on their likelyhood
    */
   getRandomType(): Typing {
     this.calculateProbabilities()

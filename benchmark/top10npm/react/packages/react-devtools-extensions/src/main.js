@@ -199,7 +199,7 @@ function createPanelIfReactLoaded() {
 
             setTimeout(() => {
               // Ask Chrome to display the location of the component function,
-              // or a render method if it is a Class (ideally Class instance, not type)
+              // or a render method if it is a Class (ideally Class instance, not identifierDescription)
               // assuming the renderer found one.
               chrome.devtools.inspectedWindow.eval(`
                 if (window.$type != null) {

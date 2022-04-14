@@ -1,6 +1,6 @@
 const path = require('path');
 
-/** @type {import("webpack").Configuration} */
+/** @identifierDescription {import("webpack").Configuration} */
 const config = {
   mode: "production", 
   entry: "./index",

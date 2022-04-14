@@ -5,7 +5,7 @@ describe('option with required value, no default', () => {
   test('when option not specified then value is undefined', () => {
     const program = new commander.Command();
     program
-      .option('--cheese <type>', 'cheese type');
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription');
     program.parse(['node', 'test']);
     expect(program.opts().cheese).toBeUndefined();
   });
@@ -13,7 +13,7 @@ describe('option with required value, no default', () => {
   test('when option specified then value is as specified', () => {
     const program = new commander.Command();
     program
-      .option('--cheese <type>', 'cheese type');
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription');
     const cheeseType = 'blue';
     program.parse(['node', 'test', '--cheese', cheeseType]);
     expect(program.opts().cheese).toBe(cheeseType);
@@ -27,7 +27,7 @@ describe('option with required value, no default', () => {
     const program = new commander.Command();
     program.optionMissingArgument = mockOptionMissingArgument;
     program
-      .option('--cheese <type>', 'cheese type');
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription');
 
     // Act. The throw is due to the above mock, and not default behaviour.
     expect(() => {
@@ -45,7 +45,7 @@ describe('option with required value, with default', () => {
     const defaultValue = 'default';
     const program = new commander.Command();
     program
-      .option('--cheese <type>', 'cheese type', defaultValue);
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription', defaultValue);
     program.parse(['node', 'test']);
     expect(program.opts().cheese).toBe(defaultValue);
   });
@@ -54,7 +54,7 @@ describe('option with required value, with default', () => {
     const defaultValue = 'default';
     const program = new commander.Command();
     program
-      .option('--cheese <type>', 'cheese type', defaultValue);
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription', defaultValue);
     const cheeseType = 'blue';
     program.parse(['node', 'test', '--cheese', cheeseType]);
     expect(program.opts().cheese).toBe(cheeseType);
@@ -69,7 +69,7 @@ describe('option with required value, with default', () => {
     const program = new commander.Command();
     program.optionMissingArgument = mockOptionMissingArgument;
     program
-      .option('--cheese <type>', 'cheese type', defaultValue);
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription', defaultValue);
 
     // Act. The throw is due to the above mock, and not default behaviour.
     expect(() => {

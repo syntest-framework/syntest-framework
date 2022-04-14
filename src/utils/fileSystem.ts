@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import * as path from "path";
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync, statSync } from "fs";
 
 export function readFile(absolutePath: string): string {
   if (!path.isAbsolute(absolutePath)) {
@@ -24,3 +24,26 @@ export function readFile(absolutePath: string): string {
   }
   return readFileSync(absolutePath).toString("utf-8");
 }
+
+export function getAllFiles(dir: string, extn: string, files: string[] = null, result: string[] = null, regex: RegExp = null) {
+  files = files || readdirSync(dir);
+  result = result || [];
+  regex = regex || new RegExp(`\\${extn}$`)
+
+  for (let i = 0; i < files.length; i++) {
+    const file = path.join(dir, files[i]);
+    if (statSync(file).isDirectory()) {
+      try {
+        result = getAllFiles(file, extn, readdirSync(file), result, regex);
+      } catch (error) {
+        continue;
+      }
+    } else {
+      if (regex.test(file)) {
+        result.push(file);
+      }
+    }
+  }
+  return result;
+}
+

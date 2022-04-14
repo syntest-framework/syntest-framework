@@ -342,7 +342,7 @@ describe('memo', () => {
           ReactNoop.render(<Fn inner="2" />);
           expect(Scheduler).toFlushWithoutYielding();
         }).toErrorDev(
-          'Invalid prop `inner` of type `string` supplied to `FnInner`, expected `number`.',
+          'Invalid prop `inner` of identifierDescription `string` supplied to `FnInner`, expected `number`.',
         );
 
         // Update
@@ -350,7 +350,7 @@ describe('memo', () => {
           ReactNoop.render(<Fn inner={false} />);
           expect(Scheduler).toFlushWithoutYielding();
         }).toErrorDev(
-          'Invalid prop `inner` of type `boolean` supplied to `FnInner`, expected `number`.',
+          'Invalid prop `inner` of identifierDescription `boolean` supplied to `FnInner`, expected `number`.',
         );
       });
 
@@ -367,7 +367,7 @@ describe('memo', () => {
           expect(Scheduler).toFlushWithoutYielding();
         }).toErrorDev(
           // Outer props are checked in createElement
-          'Invalid prop `outer` of type `string` supplied to `FnInner`, expected `number`.',
+          'Invalid prop `outer` of identifierDescription `string` supplied to `FnInner`, expected `number`.',
         );
 
         // Update
@@ -376,7 +376,7 @@ describe('memo', () => {
           expect(Scheduler).toFlushWithoutYielding();
         }).toErrorDev(
           // Outer props are checked in createElement
-          'Invalid prop `outer` of type `boolean` supplied to `FnInner`, expected `number`.',
+          'Invalid prop `outer` of identifierDescription `boolean` supplied to `FnInner`, expected `number`.',
         );
       });
 
@@ -410,9 +410,9 @@ describe('memo', () => {
           );
           expect(Scheduler).toFlushWithoutYielding();
         }).toErrorDev([
-          'Invalid prop `outer` of type `string` supplied to `Inner`, expected `number`.',
-          'Invalid prop `middle` of type `string` supplied to `Inner`, expected `number`.',
-          'Invalid prop `inner` of type `string` supplied to `Inner`, expected `number`.',
+          'Invalid prop `outer` of identifierDescription `string` supplied to `Inner`, expected `number`.',
+          'Invalid prop `middle` of identifierDescription `string` supplied to `Inner`, expected `number`.',
+          'Invalid prop `inner` of identifierDescription `string` supplied to `Inner`, expected `number`.',
         ]);
 
         // Update
@@ -424,9 +424,9 @@ describe('memo', () => {
           );
           expect(Scheduler).toFlushWithoutYielding();
         }).toErrorDev([
-          'Invalid prop `outer` of type `boolean` supplied to `Inner`, expected `number`.',
-          'Invalid prop `middle` of type `boolean` supplied to `Inner`, expected `number`.',
-          'Invalid prop `inner` of type `boolean` supplied to `Inner`, expected `number`.',
+          'Invalid prop `outer` of identifierDescription `boolean` supplied to `Inner`, expected `number`.',
+          'Invalid prop `middle` of identifierDescription `boolean` supplied to `Inner`, expected `number`.',
+          'Invalid prop `inner` of identifierDescription `boolean` supplied to `Inner`, expected `number`.',
         ]);
       });
 
@@ -509,7 +509,7 @@ describe('memo', () => {
       expect(() =>
         ReactNoop.render(<MemoComponent optional="foo" />),
       ).toErrorDev(
-        'Warning: Failed prop type: The prop `required` is marked as required in ' +
+        'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
           '`Memo`, but its value is `undefined`.',
         // There's no component stack in this warning because the inner function is anonymous.
         // If we wanted to support this (for the Error frames / source location)
@@ -531,7 +531,7 @@ describe('memo', () => {
       expect(() =>
         ReactNoop.render(<MemoComponent optional="foo" />),
       ).toErrorDev(
-        'Warning: Failed prop type: The prop `required` is marked as required in ' +
+        'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
           '`Inner`, but its value is `undefined`.\n' +
           '    in Inner (at **)',
       );
@@ -549,7 +549,7 @@ describe('memo', () => {
       expect(() =>
         ReactNoop.render(<MemoComponent optional="foo" />),
       ).toErrorDev(
-        'Warning: Failed prop type: The prop `required` is marked as required in ' +
+        'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
           '`Outer`, but its value is `undefined`.\n' +
           '    in Component (at **)',
       );
@@ -567,7 +567,7 @@ describe('memo', () => {
       expect(() =>
         ReactNoop.render(<MemoComponent optional="foo" />),
       ).toErrorDev(
-        'Warning: Failed prop type: The prop `required` is marked as required in ' +
+        'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
           '`Memo`, but its value is `undefined`.\n' +
           '    in Memo (at **)',
       );
@@ -588,7 +588,7 @@ describe('memo', () => {
       expect(() =>
         ReactNoop.render(<MemoComponent optional="foo" />),
       ).toErrorDev(
-        'Warning: Failed prop type: The prop `required` is marked as required in ' +
+        'Warning: Failed prop identifierDescription: The prop `required` is marked as required in ' +
           '`Outer`, but its value is `undefined`.\n' +
           '    in Inner (at **)',
       );

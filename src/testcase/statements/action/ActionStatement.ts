@@ -18,7 +18,8 @@
 
 import { Statement } from "../Statement";
 import { Encoding, EncodingSampler } from "@syntest/framework";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
+import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -27,11 +28,12 @@ export abstract class ActionStatement extends Statement {
   private _args: Statement[];
 
   protected constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: Typing,
     uniqueId: string,
     args: Statement[]
   ) {
-    super(type, uniqueId);
+    super(identifierDescription, type, uniqueId);
     this._args = args;
   }
 

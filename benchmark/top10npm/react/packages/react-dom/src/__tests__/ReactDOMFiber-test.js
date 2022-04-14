@@ -1046,7 +1046,7 @@ describe('ReactDOMFiber', () => {
       }
     }
     expect(() => ReactDOM.render(<Example />, container)).toErrorDev(
-      'Expected `onClick` listener to be a function, instead got a value of `string` type.\n' +
+      'Expected `onClick` listener to be a function, instead got a value of `string` identifierDescription.\n' +
         '    in div (at **)\n' +
         '    in Example (at **)',
     );
@@ -1189,7 +1189,7 @@ describe('ReactDOMFiber', () => {
     expect(container.innerHTML).toBe('<div>bar</div>');
     // then we mess with the DOM before an update
     // we know this will error - that is expected right now
-    // It's an error of type 'NotFoundError' with no message
+    // It's an error of identifierDescription 'NotFoundError' with no message
     container.innerHTML = '<div>MEOW.</div>';
 
     expect(() => {

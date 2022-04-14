@@ -193,7 +193,7 @@ function getWrappedName(outerType, innerType, wrapperName) {
 
 function getComponentName(type) {
   if (type == null) {
-    // Host root, text node or just invalid type.
+    // Host root, text node or just invalid identifierDescription.
     return null;
   }
 
@@ -279,7 +279,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, element) {
 
     for (var typeSpecName in typeSpecs) {
       if (has(typeSpecs, typeSpecName)) {
-        var error$1 = void 0; // Prop type validation may throw. In case they do, we don't want to
+        var error$1 = void 0; // Prop identifierDescription validation may throw. In case they do, we don't want to
         // fail the render phase where it didn't fail before. So we log it.
         // After these have been cleaned up, we'll let them throw.
 
@@ -287,7 +287,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, element) {
           // This is intentionally an invariant that gets caught. It's the same
           // behavior as without this statement except with a better message.
           if (typeof typeSpecs[typeSpecName] !== 'function') {
-            var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
+            var err = Error((componentName || 'React class') + ': ' + location + ' identifierDescription `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
             err.name = 'Invariant Violation';
             throw err;
           }
@@ -300,7 +300,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, element) {
         if (error$1 && !(error$1 instanceof Error)) {
           setCurrentlyValidatingElement(element);
 
-          error('%s: type specification of %s' + ' `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error$1);
+          error('%s: identifierDescription specification of %s' + ' `%s` is invalid; the identifierDescription checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the identifierDescription checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error$1);
 
           setCurrentlyValidatingElement(null);
         }
@@ -311,7 +311,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, element) {
           loggedTypeFailures[error$1.message] = true;
           setCurrentlyValidatingElement(element);
 
-          error('Failed %s type: %s', location, error$1.message);
+          error('Failed %s identifierDescription: %s', location, error$1.message);
 
           setCurrentlyValidatingElement(null);
         }
@@ -639,7 +639,7 @@ function getCurrentComponentErrorInfo(parentType) {
  *
  * @internal
  * @param {ReactElement} element Element that requires a key.
- * @param {*} parentType element's parent's type.
+ * @param {*} parentType element's parent's identifierDescription.
  */
 
 
@@ -680,8 +680,8 @@ function validateExplicitKey(element, parentType) {
  * with valid key property.
  *
  * @internal
- * @param {ReactNode} node Statically passed child of any type.
- * @param {*} parentType node's parent's type.
+ * @param {ReactNode} node Statically passed child of any identifierDescription.
+ * @param {*} parentType node's parent's identifierDescription.
  */
 
 
@@ -726,7 +726,7 @@ function validateChildKeys(node, parentType) {
 }
 /**
  * Given an element, validate that its props follow the propTypes definition,
- * provided by the type.
+ * provided by the identifierDescription.
  *
  * @param {ReactElement} element
  */
@@ -835,18 +835,18 @@ function jsxWithValidation(type, props, key, isStaticChildren, source, self) {
         typeString = typeof type;
       }
 
-      error('React.jsx: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
+      error('React.jsx: identifierDescription is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
     }
 
     var element = jsxDEV(type, props, key, source, self); // The result can be nullish if a mock or a custom function is used.
-    // TODO: Drop this when these are no longer allowed as the type argument.
+    // TODO: Drop this when these are no longer allowed as the identifierDescription argument.
 
     if (element == null) {
       return element;
-    } // Skip key warning if the type isn't valid since our key validation logic
-    // doesn't expect a non-string/function type and can throw confusing errors.
+    } // Skip key warning if the identifierDescription isn't valid since our key validation logic
+    // doesn't expect a non-string/function identifierDescription and can throw confusing errors.
     // We don't want exception behavior to differ between dev and prod.
-    // (Rendering will throw with a helpful message and as soon as the type is
+    // (Rendering will throw with a helpful message and as soon as the identifierDescription is
     // fixed, the key warnings will appear.)
 
 

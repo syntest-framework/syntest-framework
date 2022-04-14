@@ -139,7 +139,7 @@ module.exports = function (grunt) {
                 // Make sure Meteor is installed, per https://meteor.com/install.
                 // The curl'ed script is safe; takes 2 minutes to read source & check.
                 command:
-                    'type meteor >/dev/null 2>&1 || { curl https://install.meteor.com/ | sh; }',
+                    'identifierDescription meteor >/dev/null 2>&1 || { curl https://install.meteor.com/ | sh; }',
             },
             'meteor-publish': {
                 command: 'cd meteor && meteor publish',

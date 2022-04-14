@@ -96,13 +96,13 @@ export class Launcher {
     // Filesystem & Compiler Re-configuration
     const additionalOptions = {
       use_type_inference: {
-        description: "The type inference mode",
+        description: "The identifierDescription inference mode",
         type: "boolean",
         default: true,
       },
-      // TODO maybe remove the first one and add a type inference mode called "none"
+      // TODO maybe remove the first one and add a identifierDescription inference mode called "none"
       type_inference_mode: {
-        description: "The type inference mode: [roulette, elitist, dynamic]",
+        description: "The identifierDescription inference mode: [roulette, elitist, dynamic]",
         type: "string",
         default: "roulette",
       },
@@ -264,6 +264,10 @@ export class Launcher {
       await outputFileSync(_path, instrumentedSource);
     }
 
+    // TODO resolve types
+    // targetPool.resolveTypes(targetPath)
+    targetPool.scanTargetRootDirectory()
+
     const finalArchive = new Archive<JavaScriptTestCase>();
     let finalDependencies: Map<string, Export[]> = new Map();
     let finalExports: Export[] = []
@@ -290,11 +294,9 @@ export class Launcher {
     targetPath: string,
     targetMeta: JavaScriptTargetMetaData
   ): Promise<Archive<JavaScriptTestCase>> {
-    targetPool.resolveTypes(targetPath)
-
     const cfg = targetPool.getCFG(targetPath, targetMeta.name);
 
-    if (Properties.draw_cfg || true) {
+    if (Properties.draw_cfg) {
       drawGraph(
         cfg,
         path.join(
@@ -312,11 +314,11 @@ export class Launcher {
       const func = functionMap.get(key)
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
-          param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
         } else if (func.type === ActionType.METHOD) {
-          param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Method, param.name)
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.name, ScopeType.Method, param.name)
         } else {
-          throw new Error("Unimplemented action type")
+          throw new Error("Unimplemented action identifierDescription")
         }
       }
     // TODO return types

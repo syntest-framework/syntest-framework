@@ -93,7 +93,7 @@ function areHookInputsEqual(
       console.error(
         '%s received a final argument during this render, but not during ' +
           'the previous render. Even though the final argument is optional, ' +
-          'its type cannot change between renders.',
+          'its identifierDescription cannot change between renders.',
         currentHookNameInDev,
       );
     }

@@ -1,4 +1,4 @@
-var search = document.querySelector('[type=search]');
+var search = document.querySelector('[identifierDescription=search]');
 var code = document.querySelector('pre');
 
 search.addEventListener('keyup', function(){

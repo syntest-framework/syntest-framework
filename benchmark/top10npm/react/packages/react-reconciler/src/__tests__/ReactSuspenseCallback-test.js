@@ -46,7 +46,7 @@ describe('ReactSuspense', () => {
 
   if (__DEV__) {
     // @gate www
-    it('check type', () => {
+    it('check identifierDescription', () => {
       const {PromiseComp} = createThenable();
 
       const elementBadType = (
@@ -57,7 +57,7 @@ describe('ReactSuspense', () => {
 
       ReactNoop.render(elementBadType);
       expect(() => Scheduler.unstable_flushAll()).toErrorDev([
-        'Warning: Unexpected type for suspenseCallback.',
+        'Warning: Unexpected identifierDescription for suspenseCallback.',
       ]);
 
       const elementMissingCallback = (

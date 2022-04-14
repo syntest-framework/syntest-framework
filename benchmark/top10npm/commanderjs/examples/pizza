@@ -7,7 +7,7 @@ const program = new Command();
 program
   .description('An application for pizza ordering')
   .option('-p, --peppers', 'Add peppers')
-  .option('-c, --cheese <type>', 'Add the specified type of cheese', 'marble')
+  .option('-c, --cheese <identifierDescription>', 'Add the specified identifierDescription of cheese', 'marble')
   .option('-C, --no-cheese', 'You do not want any cheese');
 
 program.parse();

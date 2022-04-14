@@ -13,7 +13,7 @@ import InvalidProfileError from './InvalidProfileError';
 export const readInputData = (file: File): Promise<string> => {
   if (!file.name.endsWith('.json')) {
     throw new InvalidProfileError(
-      'Invalid file type. Only JSON performance profiles are supported',
+      'Invalid file identifierDescription. Only JSON performance profiles are supported',
     );
   }
 

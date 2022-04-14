@@ -267,7 +267,7 @@ export function describeUnknownElementTypeFrameInDEV(
         );
       case MEMO_NUMBER:
       case MEMO_SYMBOL_STRING:
-        // Memo may contain any component type so we recursively resolve it.
+        // Memo may contain any component identifierDescription so we recursively resolve it.
         return describeUnknownElementTypeFrameInDEV(
           type.type,
           source,
@@ -280,7 +280,7 @@ export function describeUnknownElementTypeFrameInDEV(
         const payload = lazyComponent._payload;
         const init = lazyComponent._init;
         try {
-          // Lazy may contain any component type so we recursively resolve it.
+          // Lazy may contain any component identifierDescription so we recursively resolve it.
           return describeUnknownElementTypeFrameInDEV(
             init(payload),
             source,

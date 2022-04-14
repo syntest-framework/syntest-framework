@@ -3,7 +3,7 @@ var express = require('../')
   , request = require('supertest');
 
 describe('req', function(){
-  describe('.accepts(type)', function(){
+  describe('.accepts(identifierDescription)', function(){
     it('should return true when Accept is not present', function(done){
       var app = express();
 
@@ -43,7 +43,7 @@ describe('req', function(){
     })
   })
 
-  it('should accept an argument list of type names', function(done){
+  it('should accept an argument list of identifierDescription names', function(done){
     var app = express();
 
     app.use(function(req, res, next){
@@ -69,7 +69,7 @@ describe('req', function(){
       .expect('json', done);
     })
 
-    it('should return the first acceptable type', function(done){
+    it('should return the first acceptable identifierDescription', function(done){
       var app = express();
 
       app.use(function(req, res, next){
@@ -108,7 +108,7 @@ describe('req', function(){
       .expect('application/json', done);
     })
 
-    it('should return the first acceptable type with canonical mime types', function(done){
+    it('should return the first acceptable identifierDescription with canonical mime types', function(done){
       var app = express();
 
       app.use(function(req, res, next){

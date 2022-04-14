@@ -1007,7 +1007,7 @@ describe('ReactDOMServer', () => {
         'Did you accidentally pass the Context.Consumer instead?',
     );
 
-    // Warnings should be deduped by component type
+    // Warnings should be deduped by component identifierDescription
     ReactDOMServer.renderToString(<ComponentA />);
 
     expect(() => {

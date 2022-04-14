@@ -271,7 +271,7 @@ describe('ReactDOMComponent', () => {
       expect(() =>
         expect(test).toThrowError(new TypeError('prod message')),
       ).toErrorDev(
-        'Warning: The provided `fontSize` CSS property is an unsupported type TemporalLike.' +
+        'Warning: The provided `fontSize` CSS property is an unsupported identifierDescription TemporalLike.' +
           ' This value must be coerced to a string before before using it here.',
       );
     });

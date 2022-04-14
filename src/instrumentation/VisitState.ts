@@ -255,7 +255,7 @@ export class VisitState {
     } /* istanbul ignore else: not expected */ else if (path.isExpression()) {
       path.replaceWith(T.sequenceExpression([increment, path.node]));
     } else {
-      console.error("Unable to insert counter for node type:", path.node.type);
+      console.error("Unable to insert counter for node identifierDescription:", path.node.type);
     }
   }
 
@@ -304,7 +304,7 @@ export class VisitState {
       body.node.body.unshift(T.expressionStatement(increment));
     } else {
       console.error(
-        "Unable to process function body node type:",
+        "Unable to process function body node identifierDescription:",
         path.node.type
       );
     }

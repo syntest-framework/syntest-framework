@@ -183,7 +183,7 @@ export class ExportVisitor {
       return this._identifiers.get(name)
     }
 
-    throw new Error("ANY export type: " + type)
+    throw new Error("ANY export identifierDescription: " + type)
   }
 
   // getters

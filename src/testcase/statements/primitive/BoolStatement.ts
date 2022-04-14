@@ -22,41 +22,29 @@ import {
 } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
-import { TypingType } from "../../../analysis/static/types/resolving/Typing";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
+import { Typing, TypingType } from "../../../analysis/static/types/resolving/Typing";
 import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
 
 /**
  * @author Dimitri Stallenberg
  */
 export class BoolStatement extends PrimitiveStatement<boolean> {
-  constructor(type: Parameter, uniqueId: string, value: boolean) {
-    super(type, uniqueId, value);
+  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, value: boolean) {
+    super(identifierDescription, type, uniqueId, value);
     this._classType = 'BoolStatement'
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): BoolStatement {
     if (prng.nextBoolean(Properties.resample_gene_probability)) {
-      return BoolStatement.getRandom(this.type);
+      return sampler.sampleBool(this.identifierDescription, this.type);
     }
 
-    return new BoolStatement(this.type, prng.uniqueId(), !this.value);
+    return new BoolStatement(this.identifierDescription, this.type, prng.uniqueId(), !this.value);
   }
 
   copy(): BoolStatement {
-    return new BoolStatement(this.type, this.id, this.value);
-  }
-
-  static getRandom(
-    type: Parameter = null
-  ): BoolStatement {
-    if (!type) {
-      const typeMap = new TypeProbabilityMap()
-      typeMap.addType({ type: TypingType.BOOLEAN })
-      type = { type: typeMap, name: "noname" }
-    }
-
-    return new BoolStatement(type, prng.uniqueId(), prng.nextBoolean());
+    return new BoolStatement(this.identifierDescription, this.type, this.id, this.value);
   }
 
   getFlatTypes(): string[] {

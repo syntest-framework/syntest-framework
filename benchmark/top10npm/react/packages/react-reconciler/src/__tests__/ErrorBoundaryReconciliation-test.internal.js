@@ -75,16 +75,16 @@ describe('ErrorBoundaryReconciliation', () => {
     }
 
     describe(isConcurrent ? 'concurrent' : 'sync', () => {
-      it('componentDidCatch can recover by rendering an element of the same type', () =>
+      it('componentDidCatch can recover by rendering an element of the same identifierDescription', () =>
         sharedTest(DidCatchErrorBoundary, 'span'));
 
-      it('componentDidCatch can recover by rendering an element of a different type', () =>
+      it('componentDidCatch can recover by rendering an element of a different identifierDescription', () =>
         sharedTest(DidCatchErrorBoundary, 'div'));
 
-      it('getDerivedStateFromError can recover by rendering an element of the same type', () =>
+      it('getDerivedStateFromError can recover by rendering an element of the same identifierDescription', () =>
         sharedTest(GetDerivedErrorBoundary, 'span'));
 
-      it('getDerivedStateFromError can recover by rendering an element of a different type', () =>
+      it('getDerivedStateFromError can recover by rendering an element of a different identifierDescription', () =>
         sharedTest(GetDerivedErrorBoundary, 'div'));
     });
   });

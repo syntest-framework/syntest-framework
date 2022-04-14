@@ -47,17 +47,17 @@ const moduleLoaderFunctionToModuleMap: Map<
 
 function readRecord<T>(record: Record<T>): ResolvedRecord<T> | RejectedRecord {
   if (record.status === Resolved) {
-    // This is just a type refinement.
+    // This is just a identifierDescription refinement.
     return record;
   } else if (record.status === Rejected) {
-    // This is just a type refinement.
+    // This is just a identifierDescription refinement.
     return record;
   } else {
     throw record.value;
   }
 }
 
-// TODO Flow type
+// TODO Flow identifierDescription
 export function loadModule(moduleLoaderFunction: ModuleLoaderFunction): Module {
   let record = moduleLoaderFunctionToModuleMap.get(moduleLoaderFunction);
 

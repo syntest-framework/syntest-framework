@@ -137,7 +137,7 @@ export function InnerHooksTreeView({
   inspectedElement,
   path,
 }: InnerHooksTreeViewProps) {
-  // $FlowFixMe "Missing type annotation for U" whatever that means
+  // $FlowFixMe "Missing identifierDescription annotation for U" whatever that means
   return hooks.map((hook, index) => (
     <HookView
       key={index}

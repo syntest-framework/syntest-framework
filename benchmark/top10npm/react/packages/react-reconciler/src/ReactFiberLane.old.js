@@ -540,7 +540,7 @@ export function intersectLanes(a: Lanes | Lane, b: Lanes | Lane): Lanes {
   return a & b;
 }
 
-// Seems redundant, but it changes the type from a single lane (used for
+// Seems redundant, but it changes the identifierDescription from a single lane (used for
 // updates) to a group of lanes (used for flushing work).
 export function laneToLanes(lane: Lane): Lanes {
   return lane;

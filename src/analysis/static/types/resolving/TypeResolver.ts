@@ -53,18 +53,18 @@ export abstract class TypeResolver {
   abstract resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[])
 
   /**
-   * Returns the type of the variable in the given scope
+   * Returns the identifierDescription of the variable in the given scope
    * @param scopeName the name of the scope the variable is in
-   * @param scopeType the type of the scope the varaiable is in (function, class, global, etc.)
+   * @param scopeType the identifierDescription of the scope the varaiable is in (function, class, global, etc.)
    * @param variableName the name of the variable
    */
   abstract getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbabilityMap
 
   /**
-   * Sets the type of the specified relation
-   * @param relation the relation to set the type of
-   * @param type the type of the relation
-   * @param value the score of type (higher score means higher probability)
+   * Sets the identifierDescription of the specified relation
+   * @param relation the relation to set the identifierDescription of
+   * @param type the identifierDescription of the relation
+   * @param value the score of identifierDescription (higher score means higher probability)
    */
   setRelationType(relation: Relation, type: Typing, value: number) {
     if (this.relationTyping.has(relation)) {
@@ -78,10 +78,10 @@ export abstract class TypeResolver {
   }
 
   /**
-   * Sets the type of the specified element
-   * @param element the element to set the type of
-   * @param type the type of the element
-   * @param value the score of type (higher score means higher probability)
+   * Sets the identifierDescription of the specified element
+   * @param element the element to set the identifierDescription of
+   * @param type the identifierDescription of the element
+   * @param value the score of identifierDescription (higher score means higher probability)
    */
   setElementType(element: Element, type: Typing, value: number) {
     if (this.elementTyping.has(element)) {

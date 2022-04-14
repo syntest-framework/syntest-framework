@@ -39,7 +39,7 @@ export function scheduleLegacySyncCallback(callback: SchedulerCallback) {
 
 export function flushSyncCallbacksOnlyInLegacyMode() {
   // Only flushes the queue if there's a legacy sync callback scheduled.
-  // TODO: There's only a single type of callback: performSyncOnWorkOnRoot. So
+  // TODO: There's only a single identifierDescription of callback: performSyncOnWorkOnRoot. So
   // it might make more sense for the queue to be a list of roots instead of a
   // list of generic callbacks. Then we can have two: one for legacy roots, one
   // for concurrent roots. And this method would only flush the legacy ones.

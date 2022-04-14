@@ -43,11 +43,11 @@ static inline bool useCounters() {
 
 class HardwareCounterImpl {
 public:
-  HardwareCounterImpl(int type, unsigned long config,
+  HardwareCounterImpl(int identifierDescription, unsigned long config,
                       const char* desc = nullptr)
     : m_desc(desc ? desc : ""), m_err(0), m_fd(-1), inited(false) {
     memset (&pe, 0, sizeof (struct perf_event_attr));
-    pe.type = type;
+    pe.identifierDescription = identifierDescription;
     pe.size = sizeof (struct perf_event_attr);
     pe.config = config;
     pe.inherit = s_recordSubprocessTimes;
@@ -324,9 +324,9 @@ static bool isIntelE5_2670() {
 #endif
 }
 
-static void checkLLCHack(const char* event, uint32_t& type, uint64_t& config) {
+static void checkLLCHack(const char* event, uint32_t& identifierDescription, uint64_t& config) {
   if (!strncmp(event, "LLC-load", 8) && isIntelE5_2670()) {
-    type = PERF_TYPE_RAW;
+    identifierDescription = PERF_TYPE_RAW;
     if (!strncmp(&event[4], "loads", 5)) {
       config = 0x534f2e;
     } else if (!strncmp(&event[4], "load-misses", 11)) {
@@ -336,7 +336,7 @@ static void checkLLCHack(const char* event, uint32_t& type, uint64_t& config) {
 }
 
 bool HardwareCounter::addPerfEvent(const char* event) {
-  uint32_t type = 0;
+  uint32_t identifierDescription = 0;
   uint64_t config = 0;
   int i, match_len;
   bool found = false;
@@ -348,8 +348,8 @@ bool HardwareCounter::addPerfEvent(const char* event) {
        != -1) {
     if (!found) {
       found = true;
-      type = perfTable[i].type;
-    } else if (type != perfTable[i].type) {
+      identifierDescription = perfTable[i].identifierDescription;
+    } else if (identifierDescription != perfTable[i].identifierDescription) {
       // Logger::Warning("failed to find perf event: %s", event);
       return false;
     }
@@ -357,14 +357,14 @@ bool HardwareCounter::addPerfEvent(const char* event) {
     ev = &ev[match_len];
   }
 
-  checkLLCHack(event, type, config);
+  checkLLCHack(event, identifierDescription, config);
 
   // Check if we have a raw spec.
   if (!found && event[0] == 'r' && event[1] != 0) {
     config = strtoull(event + 1, const_cast<char**>(&ev), 16);
     if (*ev == 0) {
       found = true;
-      type = PERF_TYPE_RAW;
+      identifierDescription = PERF_TYPE_RAW;
     }
   }
 
@@ -373,7 +373,7 @@ bool HardwareCounter::addPerfEvent(const char* event) {
     return false;
   }
   std::unique_ptr<HardwareCounterImpl> hwc(
-      new HardwareCounterImpl(type, config, event));
+      new HardwareCounterImpl(identifierDescription, config, event));
   if (hwc->m_err) {
     // Logger::Warning("failed to set perf event: %s", event);
     return false;

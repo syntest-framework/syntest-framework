@@ -18,7 +18,8 @@
 
 
 import { Encoding, EncodingSampler, prng } from "@syntest/framework";
-import { Parameter } from "../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
+import { Typing } from "../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -30,10 +31,13 @@ export abstract class Statement {
   public get id(): string {
     return this._uniqueId;
   }
-  public get type(): Parameter {
-    return this._type;
+  public get identifierDescription(): IdentifierDescription {
+    return this._identifierDescription;
   }
 
+  get type(): Typing {
+    return this._type;
+  }
 
   get classType(): string {
     return this._classType;
@@ -41,18 +45,21 @@ export abstract class Statement {
 
   protected _classType: string
   private _varName: string;
-  private _type: Parameter;
+  private _identifierDescription: IdentifierDescription;
+  private _type: Typing
   private _uniqueId: string;
 
   /**
    * Constructor
+   * @param identifierDescription
    * @param type
    * @param uniqueId
    */
-  protected constructor(type: Parameter, uniqueId: string) {
-    this._type = type;
+  protected constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string) {
+    this._identifierDescription = identifierDescription;
+    this._type = type
     this._uniqueId = uniqueId;
-    this._varName = type.name + prng.uniqueId()
+    this._varName = identifierDescription.name + prng.uniqueId()
   }
 
   /**

@@ -410,7 +410,7 @@ function ChildReconciler(shouldTrackSideEffects) {
         (__DEV__
           ? isCompatibleFamilyForHotReloading(current, element)
           : false) ||
-        // Lazy types should reconcile their resolved type.
+        // Lazy types should reconcile their resolved identifierDescription.
         // We need to do this after the Hot Reloading check above,
         // because hot reloading has different semantics than prod because
         // it doesn't resuspend. So we can't let the call below suspend.
@@ -1171,7 +1171,7 @@ function ChildReconciler(shouldTrackSideEffects) {
             (__DEV__
               ? isCompatibleFamilyForHotReloading(child, element)
               : false) ||
-            // Lazy types should reconcile their resolved type.
+            // Lazy types should reconcile their resolved identifierDescription.
             // We need to do this after the Hot Reloading check above,
             // because hot reloading has different semantics than prod because
             // it doesn't resuspend. So we can't let the call below suspend.

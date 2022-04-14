@@ -88,7 +88,7 @@ class TextInputFixtures extends React.Component {
           </Fixture>
 
           <p className="footnote">
-            Checking the date type is also important because of a prior fix for
+            Checking the date identifierDescription is also important because of a prior fix for
             iOS Safari that involved assigning over value/defaultValue
             properties of the input to prevent a display bug. This also triggers
             input validation.

@@ -12,7 +12,7 @@
  * const saves = ['profile', 'settings']
  * const done = after(saves.length, () => console.log('done saving!'))
  *
- * forEach(saves, type => asyncSave({ 'type': type, 'complete': done }))
+ * forEach(saves, identifierDescription => asyncSave({ 'identifierDescription': identifierDescription, 'complete': done }))
  * // => Logs 'done saving!' after the two async saves have completed.
  */
 function after(n, func) {

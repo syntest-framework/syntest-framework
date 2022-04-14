@@ -984,7 +984,7 @@ describe('ReactDOMServerIntegration', () => {
           expect(() => {
             EmptyComponent = <EmptyComponent />;
           }).toErrorDev(
-            'Warning: React.createElement: type is invalid -- expected a string ' +
+            'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
               '(for built-in components) or a class/function (for composite ' +
               'components) but got: object. You likely forgot to export your ' +
               "component from the file it's defined in, or you might have mixed up " +
@@ -993,7 +993,7 @@ describe('ReactDOMServerIntegration', () => {
           );
           await render(EmptyComponent);
         },
-        'Element type is invalid: expected a string (for built-in components) or a class/function ' +
+        'Element identifierDescription is invalid: expected a string (for built-in components) or a class/function ' +
           '(for composite components) but got: object.' +
           (__DEV__
             ? " You likely forgot to export your component from the file it's defined in, " +
@@ -1008,14 +1008,14 @@ describe('ReactDOMServerIntegration', () => {
           expect(() => {
             NullComponent = <NullComponent />;
           }).toErrorDev(
-            'Warning: React.createElement: type is invalid -- expected a string ' +
+            'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
               '(for built-in components) or a class/function (for composite ' +
               'components) but got: null.',
             {withoutStack: true},
           );
           await render(NullComponent);
         },
-        'Element type is invalid: expected a string (for built-in components) or a class/function ' +
+        'Element identifierDescription is invalid: expected a string (for built-in components) or a class/function ' +
           '(for composite components) but got: null',
       );
 
@@ -1026,7 +1026,7 @@ describe('ReactDOMServerIntegration', () => {
           expect(() => {
             UndefinedComponent = <UndefinedComponent />;
           }).toErrorDev(
-            'Warning: React.createElement: type is invalid -- expected a string ' +
+            'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
               '(for built-in components) or a class/function (for composite ' +
               'components) but got: undefined. You likely forgot to export your ' +
               "component from the file it's defined in, or you might have mixed up " +
@@ -1036,7 +1036,7 @@ describe('ReactDOMServerIntegration', () => {
 
           await render(UndefinedComponent);
         },
-        'Element type is invalid: expected a string (for built-in components) or a class/function ' +
+        'Element identifierDescription is invalid: expected a string (for built-in components) or a class/function ' +
           '(for composite components) but got: undefined.' +
           (__DEV__
             ? " You likely forgot to export your component from the file it's defined in, " +

@@ -23,8 +23,8 @@ import {
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Decoding } from "../Statement";
-import { TypingType } from "../../../analysis/static/types/resolving/Typing";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { Typing, TypingType } from "../../../analysis/static/types/resolving/Typing";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
 
 /**
@@ -36,13 +36,14 @@ export class StringStatement extends PrimitiveStatement<string> {
   private readonly maxlength: number;
 
   constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: Typing,
     uniqueId: string,
     value: string,
     alphabet: string,
     maxlength: number
   ) {
-    super(type, uniqueId, value);
+    super(identifierDescription, type, uniqueId, value);
     this._classType = 'StringStatement'
 
     this.alphabet = alphabet;
@@ -51,7 +52,7 @@ export class StringStatement extends PrimitiveStatement<string> {
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): StringStatement {
     if (prng.nextBoolean(Properties.resample_gene_probability)) {
-      return StringStatement.getRandom();
+      return sampler.sampleString(this.identifierDescription, this.type, this.alphabet, this.maxlength);
     }
 
     if (this.value.length > 0 && this.value.length < this.maxlength) {
@@ -97,8 +98,9 @@ export class StringStatement extends PrimitiveStatement<string> {
     }
 
     return new StringStatement(
+      this.identifierDescription,
       this.type,
-      this.id,
+      prng.uniqueId(),
       newValue,
       this.alphabet,
       this.maxlength
@@ -118,8 +120,9 @@ export class StringStatement extends PrimitiveStatement<string> {
     }
 
     return new StringStatement(
+      this.identifierDescription,
       this.type,
-      this.id,
+      prng.uniqueId(),
       newValue,
       this.alphabet,
       this.maxlength
@@ -141,8 +144,9 @@ export class StringStatement extends PrimitiveStatement<string> {
     }
 
     return new StringStatement(
+      this.identifierDescription,
       this.type,
-      this.id,
+      prng.uniqueId(),
       newValue,
       this.alphabet,
       this.maxlength
@@ -168,6 +172,7 @@ export class StringStatement extends PrimitiveStatement<string> {
     }
 
     return new StringStatement(
+      this.identifierDescription,
       this.type,
       prng.uniqueId(),
       newValue,
@@ -178,48 +183,12 @@ export class StringStatement extends PrimitiveStatement<string> {
 
   copy(): StringStatement {
     return new StringStatement(
+      this.identifierDescription,
       this.type,
       this.id,
       this.value,
       this.alphabet,
       this.maxlength
-    );
-  }
-
-  static getRandom(
-    type: Parameter = null,
-    alphabet = Properties.string_alphabet,
-    maxlength = Properties.string_maxlength
-  ): StringStatement {
-    if (!type) {
-      const typeMap = new TypeProbabilityMap()
-      typeMap.addType({ type: TypingType.STRING })
-      type = { type: typeMap, name: "noname" }
-    }
-
-    const valueLength = prng.nextInt(0, maxlength - 1);
-    let value = "";
-
-    for (let i = 0; i < valueLength; i++) {
-      value += prng.pickOne(alphabet);
-    }
-
-    return new StringStatement(
-      type,
-      prng.uniqueId(),
-      value,
-      alphabet,
-      maxlength
-    );
-  }
-
-  static createWithValue(type: Parameter, value: string): StringStatement {
-    return new StringStatement(
-      type,
-      prng.uniqueId(),
-      value,
-      Properties.string_alphabet,
-      Properties.string_maxlength
     );
   }
 

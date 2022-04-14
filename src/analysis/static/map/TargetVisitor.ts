@@ -65,8 +65,8 @@ export class TargetVisitor {
       isConstructor: functionName === "constructor",
       parameters: path.node.params.map(this._extractParam),
       returnParameter: {
-        name: "unknown",
-        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
       },
       isStatic: path.node.static,
       isAsync: path.node.async,
@@ -87,8 +87,8 @@ export class TargetVisitor {
       isConstructor: false,
       parameters: path.node.params.map(this._extractParam),
       returnParameter: {
-        name: "unknown",
-        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
       },
       isStatic: path.node.static,
       isAsync: path.node.async,
@@ -113,8 +113,8 @@ export class TargetVisitor {
       isConstructor: false,
       parameters: path.node.params.map(this._extractParam),
       returnParameter: {
-        name: "unknown",
-        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
       },
       isStatic: path.node.static,
       isAsync: path.node.async,
@@ -126,8 +126,17 @@ export class TargetVisitor {
         // TODO this can actually be an infinite amount of arguments...
       }
 
+      if (param.type === "AssignmentPattern") {
+        param = param.left
+      }
+
+      if (!param.name) {
+        console.log(param)
+        throw new Error("Unknown param")
+      }
+
       return {
-        name: param.name || "unknown",
+        name: param.name,
         type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
       };
 

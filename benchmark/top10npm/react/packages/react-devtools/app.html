@@ -77,7 +77,7 @@
         padding: 1rem;
         margin-top: 1rem;
       }
-      .box:first-of-type {
+      .box:first-of-identifierDescription {
         margin-top: 0;
       }
 
@@ -182,9 +182,9 @@
       const server = defaultPort ? `${protocol}://${host}` : `${protocol}://${host}:${port}`;
       const serverIp = defaultPort ? `${protocol}://${localIp}` : `${protocol}://${localIp}:${port}`;
       const $ = document.querySelector.bind(document);
-      
+
       let timeoutID;
-      
+
       function selectAllAndCopy(event) {
         const element = event.target;
         if (window.getSelection) {
@@ -194,7 +194,7 @@
           selection.removeAllRanges();
           selection.addRange(range);
           clipboard.writeText(event.target.textContent);
-          
+
           const $promptDiv = $("#box-content-prompt");
           const $confirmationDiv = $("#box-content-confirmation");
           $promptDiv.classList.add('hidden');
@@ -223,17 +223,17 @@
           event.preventDefault();
           require('electron').shell.openExternal(link.href);
         });
-  
+
         const $localhost = $("#localhost");
         $localhost.innerText = `<script src="${server}"></` + 'script>';
         $localhost.addEventListener('click', selectAllAndCopy);
         $localhost.addEventListener('focus', selectAllAndCopy);
-  
+
         const $byIp = $("#byip");
         $byIp.innerText = `<script src="${serverIp}"></` + 'script>';
         $byIp.addEventListener('click', selectAllAndCopy);
         $byIp.addEventListener('focus', selectAllAndCopy);
-  
+
         const $profiler = $("#profiler");
         $profiler.addEventListener('click', openProfiler);
       };

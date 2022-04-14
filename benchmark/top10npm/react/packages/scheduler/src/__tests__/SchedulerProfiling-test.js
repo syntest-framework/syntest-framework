@@ -188,7 +188,7 @@ describe('Scheduler', () => {
           break;
         }
         default: {
-          throw Error('ANY instruction type: ' + instruction);
+          throw Error('ANY instruction identifierDescription: ' + instruction);
         }
       }
     }

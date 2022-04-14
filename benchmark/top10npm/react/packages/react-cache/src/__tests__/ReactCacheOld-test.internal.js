@@ -180,7 +180,7 @@ describe('ReactCache', () => {
       expect(() => {
         expect(Scheduler).toFlushAndYield(['App', 'Loading...']);
       }).toErrorDev([
-        'Invalid key type. Expected a string, number, symbol, or ' +
+        'Invalid key identifierDescription. Expected a string, number, symbol, or ' +
           'boolean, but instead received: Hi,100\n\n' +
           'To use non-primitive values as keys, you must pass a hash ' +
           'function as the second argument to createResource().',

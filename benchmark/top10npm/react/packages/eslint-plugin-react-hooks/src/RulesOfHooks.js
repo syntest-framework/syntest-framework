@@ -511,7 +511,7 @@ export default {
 
       // Missed opportunity...We could visit all `Identifier`s instead of all
       // `CallExpression`s and check that _every use_ of a hook name is valid.
-      // But that gets complicated and enters type-system territory, so we're
+      // But that gets complicated and enters identifierDescription-system territory, so we're
       // only being strict about hook calls for now.
       CallExpression(node) {
         if (isHook(node.callee)) {

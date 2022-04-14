@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 import * as path from "path";
-import { readFile } from "../../utils/fileSystem";
+import { getAllFiles, readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
-import { CFG, Target, TargetMetaData, TargetPool } from "@syntest/framework";
+import { CFG, Properties, TargetMetaData, TargetPool } from "@syntest/framework";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
@@ -31,6 +31,10 @@ import { VariableGenerator } from "./types/discovery/VariableGenerator";
 import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
 import { ComplexObject } from "./types/discovery/object/ComplexObject";
 import { ActionDescription } from "./parsing/ActionDescription";
+import { Scope } from "./types/discovery/Scope";
+import { Relation } from "./types/discovery/Relation";
+import { Element } from "./types/discovery/Element";
+import { Typing, TypingType } from "./types/resolving/Typing";
 
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
@@ -288,6 +292,92 @@ export class JavaScriptTargetPool extends TargetPool {
     }
 
     return paths
+  }
+
+  scanTargetRootDirectory(): void {
+    const absoluteRootPath = path.resolve(Properties.target_root_directory)
+
+    const files = getAllFiles(absoluteRootPath, ".js")
+
+    // console.log(absoluteRootPath)
+    // console.log(files)
+
+    const objects: ComplexObject[] = []
+    const objectGenerator = new ObjectGenerator()
+
+    for (const file of files) {
+      objects.push(...objectGenerator.generate(file, this.getAST(file)))
+    }
+
+    // standard stuff
+    // function https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
+    objects.push({
+      import: "",
+      name: "function",
+      properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
+      functions: new Set(['apply', 'bind', 'call', 'toString']),
+      propertyType: new Map<string, Typing>([
+        ['arguments', { type: TypingType.ARRAY }],
+        ['caller', { type: TypingType.FUNCTION }],
+        ['displayName', { type: TypingType.STRING }],
+        ['length', { type: TypingType.NUMERIC }],
+        ['name', { type: TypingType.STRING }]
+      ])
+    })
+
+    // array https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+    objects.push({
+      import: "",
+      name: "array",
+      properties: new Set(['length']),
+      functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values']),
+      propertyType: new Map<string, Typing>([
+        ['length', { type: TypingType.NUMERIC }]
+      ])
+    })
+
+    // string
+    objects.push({
+      import: "",
+      name: "string",
+      properties: new Set(['length']),
+      functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf']),
+      propertyType: new Map<string, Typing>([
+        ['length', { type: TypingType.NUMERIC }]
+      ])
+    })
+
+    // object
+    // TODO
+    // this._objects.push({
+    //   import: "",
+    //   name: "object",
+    //   properties: new Set([]),
+    //   functions: new Set([])
+    // })
+
+    // TODO npm dependencies
+    // TODO get rid of duplicates
+
+    const generator = new VariableGenerator()
+    const scopes: Scope[] = []
+    const elements: Element[] = []
+    const relations: Relation[] = []
+    const wrapperElementIsRelation: Map<string, Relation> = new Map()
+
+    for (const file of files) {
+      const [_scopes, _elements, _relations, _wrapperElementIsRelation] = generator.generate(file, this.getAST(file))
+
+      scopes.push(..._scopes)
+      elements.push(..._elements)
+      relations.push(..._relations)
+
+      for (const key of _wrapperElementIsRelation.keys()) {
+        wrapperElementIsRelation.set(key, _wrapperElementIsRelation.get(key))
+      }
+    }
+
+    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation, objects)
   }
 
   resolveTypes(targetPath: string): void {

@@ -121,7 +121,7 @@ Example file: [options-common.js](./examples/options-common.js)
 program
   .option('-d, --debug', 'output extra debugging')
   .option('-s, --small', 'small pizza size')
-  .option('-p, --pizza-type <type>', 'flavour of pizza');
+  .option('-p, --pizza-identifierDescription <identifierDescription>', 'flavour of pizza');
 
 program.parse(process.argv);
 
@@ -134,13 +134,13 @@ if (options.pizzaType) console.log(`- ${options.pizzaType}`);
 
 ```bash
 $ pizza-options -p
-error: option '-p, --pizza-type <type>' argument missing
+error: option '-p, --pizza-identifierDescription <identifierDescription>' argument missing
 $ pizza-options -d -s -p vegetarian
 { debug: true, small: true, pizzaType: 'vegetarian' }
 pizza details:
 - small pizza size
 - vegetarian
-$ pizza-options --pizza-type=cheese
+$ pizza-options --pizza-identifierDescription=cheese
 pizza details:
 - cheese
 ```
@@ -155,7 +155,7 @@ Example file: [options-defaults.js](./examples/options-defaults.js)
 
 ```js
 program
-  .option('-c, --cheese <type>', 'add the specified type of cheese', 'blue');
+  .option('-c, --cheese <identifierDescription>', 'add the specified identifierDescription of cheese', 'blue');
 
 program.parse();
 
@@ -210,14 +210,14 @@ Example file: [options-boolean-or-value.js](./examples/options-boolean-or-value.
 
 ```js
 program
-  .option('-c, --cheese [type]', 'Add cheese with optional type');
+  .option('-c, --cheese [identifierDescription]', 'Add cheese with optional identifierDescription');
 
 program.parse(process.argv);
 
 const options = program.opts();
 if (options.cheese === undefined) console.log('no cheese');
 else if (options.cheese === true) console.log('add cheese');
-else console.log(`add cheese type ${options.cheese}`);
+else console.log(`add cheese identifierDescription ${options.cheese}`);
 ```
 
 ```bash
@@ -226,7 +226,7 @@ no cheese
 $ pizza-options --cheese
 add cheese
 $ pizza-options --cheese mozzarella
-add cheese type mozzarella
+add cheese identifierDescription mozzarella
 ```
 
 For information about possible ambiguous cases, see [options taking varying arguments](./docs/options-taking-varying-arguments.md).
@@ -239,14 +239,14 @@ Example file: [options-required.js](./examples/options-required.js)
 
 ```js
 program
-  .requiredOption('-c, --cheese <type>', 'pizza must have cheese');
+  .requiredOption('-c, --cheese <identifierDescription>', 'pizza must have cheese');
 
 program.parse();
 ```
 
 ```bash
 $ pizza
-error: required option '-c, --cheese <type>' not specified
+error: required option '-c, --cheese <identifierDescription>' not specified
 ```
 
 ### Variadic option
@@ -340,7 +340,7 @@ Options:  { timeout: 60, port: '80' }
 You may specify a function to do custom processing of option-arguments. The callback function receives two parameters,
 the user specified option-argument and the previous value for the option. It returns the new value for the option.
 
-This allows you to coerce the option-argument to the desired type, or accumulate values, or do entirely custom processing.
+This allows you to coerce the option-argument to the desired identifierDescription, or accumulate values, or do entirely custom processing.
 
 You can optionally specify the default/starting value for the option after the function parameter.
 
@@ -617,7 +617,7 @@ An application for pizza ordering
 
 Options:
   -p, --peppers        Add peppers
-  -c, --cheese <type>  Add the specified type of cheese (default: "marble")
+  -c, --cheese <identifierDescription>  Add the specified identifierDescription of cheese (default: "marble")
   -C, --no-cheese      You do not want any cheese
   -h, --help           display help for command
 ```
@@ -948,7 +948,7 @@ const { program } = require('commander');
 program
   .description('An application for pizza ordering')
   .option('-p, --peppers', 'Add peppers')
-  .option('-c, --cheese <type>', 'Add the specified type of cheese', 'marble')
+  .option('-c, --cheese <identifierDescription>', 'Add the specified identifierDescription of cheese', 'marble')
   .option('-C, --no-cheese', 'You do not want any cheese');
 
 program.parse();

@@ -274,7 +274,7 @@ if (supportsMutation) {
       rootContainerInstance,
       currentHostContext,
     );
-    // TODO: Type this specific to this type of component.
+    // TODO: Type this specific to this identifierDescription of component.
     workInProgress.updateQueue = (updatePayload: any);
     // If the update payload indicates that there is a change or if there
     // is a new ref we mark this as an update. All the work is done in commitWork.
@@ -1041,7 +1041,7 @@ function completeWork(
                   // Don't count time spent in a timed out Suspense subtree as part of the base duration.
                   const primaryChildFragment = workInProgress.child;
                   if (primaryChildFragment !== null) {
-                    // $FlowFixMe Flow doesn't support type casting in combination with the -= operator
+                    // $FlowFixMe Flow doesn't support identifierDescription casting in combination with the -= operator
                     workInProgress.treeBaseDuration -= ((primaryChildFragment.treeBaseDuration: any): number);
                   }
                 }
@@ -1070,7 +1070,7 @@ function completeWork(
                   // Don't count time spent in a timed out Suspense subtree as part of the base duration.
                   const primaryChildFragment = workInProgress.child;
                   if (primaryChildFragment !== null) {
-                    // $FlowFixMe Flow doesn't support type casting in combination with the -= operator
+                    // $FlowFixMe Flow doesn't support identifierDescription casting in combination with the -= operator
                     workInProgress.treeBaseDuration -= ((primaryChildFragment.treeBaseDuration: any): number);
                   }
                 }
@@ -1198,7 +1198,7 @@ function completeWork(
             // Don't count time spent in a timed out Suspense subtree as part of the base duration.
             const primaryChildFragment = workInProgress.child;
             if (primaryChildFragment !== null) {
-              // $FlowFixMe Flow doesn't support type casting in combination with the -= operator
+              // $FlowFixMe Flow doesn't support identifierDescription casting in combination with the -= operator
               workInProgress.treeBaseDuration -= ((primaryChildFragment.treeBaseDuration: any): number);
             }
           }

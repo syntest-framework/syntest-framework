@@ -1079,7 +1079,7 @@ function renderElement(
   }
 
   throw new Error(
-    'Element type is invalid: expected a string (for built-in ' +
+    'Element identifierDescription is invalid: expected a string (for built-in ' +
       'components) or a class/function (for composite components) ' +
       `but got: ${type == null ? type : typeof type}.${info}`,
   );

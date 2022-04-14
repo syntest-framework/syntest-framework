@@ -22,9 +22,10 @@ import { RootStatement } from "./RootStatement";
 import { Decoding, Statement } from "../Statement";
 import { MethodCall } from "../action/MethodCall";
 import * as path from "path";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import { JavaScriptSubject } from "../../../search/JavaScriptSubject";
 import { ActionType } from "../../../analysis/static/parsing/ActionType";
+import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -35,33 +36,34 @@ export class ConstructorCall extends RootStatement {
 
   /**
    * Constructor
-   * @param type the return type of the constructor
+   * @param type the return identifierDescription of the constructor
    * @param uniqueId optional argument
    * @param args the arguments of the constructor
    * @param calls the child calls on the object
    * @param constructorName the name of the constructor
    */
   constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: Typing,
     uniqueId: string,
     args: Statement[],
     calls: Statement[],
     constructorName: string,
   ) {
-    super(type, uniqueId, args, calls);
+    super(identifierDescription, type, uniqueId, args, calls);
     this._classType = 'ConstructorCall'
 
     this._constructorName = constructorName;
 
     for (const arg of args) {
       if (arg instanceof MethodCall) {
-        throw new Error("Constructor args cannot be of type MethodCall")
+        throw new Error("Constructor args cannot be of identifierDescription MethodCall")
       }
     }
 
     for (const call of calls) {
       if (!(call instanceof MethodCall)) {
-        throw new Error("Constructor children must be of type MethodCall")
+        throw new Error("Constructor children must be of identifierDescription MethodCall")
       }
     }
   }
@@ -76,7 +78,7 @@ export class ConstructorCall extends RootStatement {
       for (let i = 0; i < args.length; i++) {
         if (prng.nextBoolean(1 / args.length)) {
           if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-            args[i] = sampler.sampleArgument(depth + 1, args[i].type)
+            args[i] = sampler.sampleArgument(depth + 1, args[i].identifierDescription)
           } else {
             args[i] = args[i].mutate(sampler, depth + 1);
           }
@@ -103,12 +105,13 @@ export class ConstructorCall extends RootStatement {
             finalCalls.push(calls[i])
           } else if (choice < 0.2) {
             // 10% chance to delete the call
-          } else if (choice < 0.5) {
-            // 30% chance to replace the call
-            finalCalls.push(sampler.sampleMethodCall(depth + 1))
           } else {
-            // 50% chance to just mutate the call
-            finalCalls.push(calls[i].mutate(sampler, depth + 1))
+            // 80% chance to just mutate the call
+            if (Properties.resample_gene_probability) {
+              finalCalls.push(sampler.sampleMethodCall(depth + 1))
+            } else {
+              finalCalls.push(calls[i].mutate(sampler, depth + 1))
+            }
           }
         }
       }
@@ -120,7 +123,7 @@ export class ConstructorCall extends RootStatement {
     //     args[index] = args[index].mutate(sampler, depth + 1);
     // }
 
-    return new ConstructorCall(this.type, prng.uniqueId(), args, finalCalls, this.constructorName);
+    return new ConstructorCall(this.identifierDescription, this.type, prng.uniqueId(), args, finalCalls, this.constructorName);
   }
 
   copy(): ConstructorCall {
@@ -128,6 +131,7 @@ export class ConstructorCall extends RootStatement {
     const deepCopyChildren = [...this.children.map((a: Statement) => a.copy())];
 
     return new ConstructorCall(
+      this.identifierDescription,
       this.type,
       this.id,
       deepCopyArgs,

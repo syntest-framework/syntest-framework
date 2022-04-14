@@ -246,19 +246,19 @@ describe('ReactMount', () => {
       calls++;
     });
 
-    // Update, no type change
+    // Update, no identifierDescription change
     ReactDOM.render(<div />, container, function() {
       expect(this.nodeName).toBe('DIV');
       calls++;
     });
 
-    // Update, type change
+    // Update, identifierDescription change
     ReactDOM.render(<span />, container, function() {
       expect(this.nodeName).toBe('SPAN');
       calls++;
     });
 
-    // Batched update, no type change
+    // Batched update, no identifierDescription change
     ReactDOM.unstable_batchedUpdates(function() {
       ReactDOM.render(<span />, container, function() {
         expect(this.nodeName).toBe('SPAN');
@@ -266,7 +266,7 @@ describe('ReactMount', () => {
       });
     });
 
-    // Batched update, type change
+    // Batched update, identifierDescription change
     ReactDOM.unstable_batchedUpdates(function() {
       ReactDOM.render(<article />, container, function() {
         expect(this.nodeName).toBe('ARTICLE');

@@ -178,7 +178,7 @@ describe('ReactLazy', () => {
 
     await Promise.resolve();
 
-    expect(Scheduler).toFlushAndThrow('Element type is invalid');
+    expect(Scheduler).toFlushAndThrow('Element identifierDescription is invalid');
     if (__DEV__) {
       expect(console.error).toHaveBeenCalledTimes(3);
       expect(console.error.calls.argsFor(0)[0]).toContain(
@@ -663,7 +663,7 @@ describe('ReactLazy', () => {
     expect(root).toMatchRenderedOutput('Friends Bye');
   });
 
-  it('throws with a useful error when wrapping invalid type with lazy()', async () => {
+  it('throws with a useful error when wrapping invalid identifierDescription with lazy()', async () => {
     const BadLazy = lazy(() => fakeImport(42));
 
     const root = ReactTestRenderer.create(
@@ -684,8 +684,8 @@ describe('ReactLazy', () => {
       </Suspense>,
     );
     expect(Scheduler).toFlushAndThrow(
-      'Element type is invalid. Received a promise that resolves to: 42. ' +
-        'Lazy element type must resolve to a class or function.',
+      'Element identifierDescription is invalid. Received a promise that resolves to: 42. ' +
+        'Lazy element identifierDescription must resolve to a class or function.',
     );
   });
 
@@ -712,8 +712,8 @@ describe('ReactLazy', () => {
       </Suspense>,
     );
     expect(Scheduler).toFlushAndThrow(
-      'Element type is invalid. Received a promise that resolves to: [object OBJECT]. ' +
-        'Lazy element type must resolve to a class or function.' +
+      'Element identifierDescription is invalid. Received a promise that resolves to: [object OBJECT]. ' +
+        'Lazy element identifierDescription must resolve to a class or function.' +
         (__DEV__
           ? ' Did you wrap a component in React.lazy() more than once?'
           : ''),
@@ -760,7 +760,7 @@ describe('ReactLazy', () => {
     expect(() => {
       Scheduler.unstable_flushAll();
     }).toErrorDev([
-      'Invalid prop `inner` of type `string` supplied to `Add`, expected `number`.',
+      'Invalid prop `inner` of identifierDescription `string` supplied to `Add`, expected `number`.',
     ]);
     expect(root).toMatchRenderedOutput('22');
 
@@ -773,7 +773,7 @@ describe('ReactLazy', () => {
       );
       expect(Scheduler).toFlushWithoutYielding();
     }).toErrorDev(
-      'Invalid prop `inner` of type `boolean` supplied to `Add`, expected `number`.',
+      'Invalid prop `inner` of identifierDescription `boolean` supplied to `Add`, expected `number`.',
     );
     expect(root).toMatchRenderedOutput('0');
   }

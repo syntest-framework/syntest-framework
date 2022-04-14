@@ -370,7 +370,7 @@ These are the available config options for making requests. Only the `url` is re
     password: 's00pers3cret'
   },
 
-  // `responseType` indicates the type of data that the server will respond with
+  // `responseType` indicates the identifierDescription of data that the server will respond with
   // options are: 'arraybuffer', 'document', 'json', 'text', 'stream'
   //   browser only: 'blob'
   responseType: 'json', // default
@@ -503,7 +503,7 @@ The response for a request contains the following information.
 
   // `headers` the HTTP headers that the server responded with
   // All header names are lower cased and can be accessed using the bracket notation.
-  // Example: `response.headers['content-type']`
+  // Example: `response.headers['content-identifierDescription']`
   headers: {},
 
   // `config` is the config that was provided to `axios` for the request
@@ -800,7 +800,7 @@ import qs from 'qs';
 const data = { 'bar': 123 };
 const options = {
   method: 'POST',
-  headers: { 'content-type': 'application/x-www-form-urlencoded' },
+  headers: { 'content-identifierDescription': 'application/x-www-form-urlencoded' },
   data: qs.stringify(data),
   url,
 };
@@ -868,7 +868,7 @@ If your environment doesn't support ES6 Promises, you can [polyfill](https://git
 
 ## TypeScript
 
-axios includes [TypeScript](http://typescriptlang.org) definitions and a type guard for axios errors.
+axios includes [TypeScript](http://typescriptlang.org) definitions and a identifierDescription guard for axios errors.
 
 ```typescript
 let user: User = null;

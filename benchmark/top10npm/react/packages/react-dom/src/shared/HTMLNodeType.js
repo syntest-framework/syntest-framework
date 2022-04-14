@@ -8,7 +8,7 @@
  */
 
 /**
- * HTML nodeType values that represent the type of the node
+ * HTML nodeType values that represent the identifierDescription of the node
  */
 
 export const ELEMENT_NODE = 1;

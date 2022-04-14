@@ -23,7 +23,7 @@ module.exports = [
       'react-server-dom-webpack/writer',
       'react-server-dom-webpack/writer.node.server',
       'react-server-dom-webpack/src/ReactFlightDOMServerNode.js', // react-server-dom-webpack/writer.node.server
-      'react-client/src/ReactFlightClientStream.js', // We can only type check this in streaming configurations.
+      'react-client/src/ReactFlightClientStream.js', // We can only identifierDescription check this in streaming configurations.
       'react-interactions',
     ],
     isFlowTyped: true,
@@ -45,7 +45,7 @@ module.exports = [
       'react-server-dom-webpack',
       'react-server-dom-webpack/writer.browser.server',
       'react-server-dom-webpack/src/ReactFlightDOMServerBrowser.js', // react-server-dom-webpack/writer.browser.server
-      'react-client/src/ReactFlightClientStream.js', // We can only type check this in streaming configurations.
+      'react-client/src/ReactFlightClientStream.js', // We can only identifierDescription check this in streaming configurations.
     ],
     isFlowTyped: true,
     isServerSupported: true,
@@ -61,7 +61,7 @@ module.exports = [
       'react-server-dom-webpack',
       'react-dom/src/server/ReactDOMLegacyServerBrowser.js', // react-dom/server.browser
       'react-dom/src/server/ReactDOMLegacyServerNode.js', // react-dom/server.node
-      'react-client/src/ReactFlightClientStream.js', // We can only type check this in streaming configurations.
+      'react-client/src/ReactFlightClientStream.js', // We can only identifierDescription check this in streaming configurations.
     ],
     isFlowTyped: true,
     isServerSupported: true,
@@ -70,7 +70,7 @@ module.exports = [
     shortName: 'art',
     entryPoints: ['react-art'],
     paths: ['react-art'],
-    isFlowTyped: false, // TODO: type it.
+    isFlowTyped: false, // TODO: identifierDescription it.
     isServerSupported: false,
   },
   {
@@ -132,7 +132,7 @@ module.exports = [
     paths: [
       'react-client/flight',
       'react-server/flight',
-      'react-client/src/ReactFlightClientStream.js', // We can only type check this in streaming configurations.
+      'react-client/src/ReactFlightClientStream.js', // We can only identifierDescription check this in streaming configurations.
     ],
     isFlowTyped: true,
     isServerSupported: true,

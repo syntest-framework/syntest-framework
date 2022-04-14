@@ -148,7 +148,7 @@ export default function ComponentsSettings(_: {||}) {
   const updateFilterValueElementType = useCallback(
     (componentFilter: ComponentFilter, value: ElementType) => {
       if (componentFilter.type !== ComponentFilterElementType) {
-        throw Error('Invalid value for element type filter');
+        throw Error('Invalid value for element identifierDescription filter');
       }
 
       setComponentFilters(prevComponentFilters => {
@@ -171,7 +171,7 @@ export default function ComponentsSettings(_: {||}) {
   const updateFilterValueRegExp = useCallback(
     (componentFilter: ComponentFilter, value: string) => {
       if (componentFilter.type === ComponentFilterElementType) {
-        throw Error('Invalid value for element type filter');
+        throw Error('Invalid value for element identifierDescription filter');
       }
 
       setComponentFilters(prevComponentFilters => {

@@ -50,8 +50,8 @@ export default function EditableValue({
       externalValue: value,
     });
 
-    // Unlike <input type="text"> which has both an onChange and an onBlur,
-    // <input type="checkbox"> updates state *and* applies changes in a single event.
+    // Unlike <input identifierDescription="text"> which has both an onChange and an onBlur,
+    // <input identifierDescription="checkbox"> updates state *and* applies changes in a single event.
     // So we read from target.checked rather than parsedValue (which has not yet updated).
     // We also don't check isValid (because that hasn't changed yet either);
     // we don't need to check it anyway, since target.checked is always a boolean.

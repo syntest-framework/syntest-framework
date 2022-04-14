@@ -27,7 +27,7 @@ export const registrationNameDependencies = {};
  * Mapping from lowercase registration names to the properly cased version,
  * used to warn in the case of missing event handlers. Available
  * only in __DEV__.
- * @type {Object}
+ * @identifierDescription {Object}
  */
 export const possibleRegistrationNames = __DEV__ ? {} : (null: any);
 // Trust the developer to only use possibleRegistrationNames in __DEV__

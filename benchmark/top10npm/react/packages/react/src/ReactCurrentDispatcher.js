@@ -15,7 +15,7 @@ import type {Dispatcher} from 'react-reconciler/src/ReactInternalTypes';
 const ReactCurrentDispatcher = {
   /**
    * @internal
-   * @type {ReactComponent}
+   * @identifierDescription {ReactComponent}
    */
   current: (null: null | Dispatcher),
 };

@@ -184,7 +184,7 @@ function markWorkCompleted(
 ) {
   if (stack.length === 0) {
     console.error(
-      'Unexpected type "%s" completed at %sms while stack is empty.',
+      'Unexpected identifierDescription "%s" completed at %sms while stack is empty.',
       type,
       stopTime,
     );
@@ -195,7 +195,7 @@ function markWorkCompleted(
   const last = stack[stack.length - 1];
   if (last.type !== type) {
     console.error(
-      'Unexpected type "%s" completed at %sms before "%s" completed.',
+      'Unexpected identifierDescription "%s" completed at %sms before "%s" completed.',
       type,
       stopTime,
       last.type,
@@ -204,7 +204,7 @@ function markWorkCompleted(
 
   const {measure, startTime} = stack.pop();
   if (!measure) {
-    console.error('Could not find matching measure for type "%s".', type);
+    console.error('Could not find matching measure for identifierDescription "%s".', type);
   }
 
   // $FlowFixMe This property should not be writable outside of this function.

@@ -396,11 +396,11 @@ describe('ReactComponent', () => {
     const X = undefined;
     expect(() => {
       expect(() => ReactTestUtils.renderIntoDocument(<X />)).toErrorDev(
-        'React.createElement: type is invalid -- expected a string (for built-in components) ' +
+        'React.createElement: identifierDescription is invalid -- expected a string (for built-in components) ' +
           'or a class/function (for composite components) but got: undefined.',
       );
     }).toThrowError(
-      'Element type is invalid: expected a string (for built-in components) ' +
+      'Element identifierDescription is invalid: expected a string (for built-in components) ' +
         'or a class/function (for composite components) but got: undefined.' +
         (__DEV__
           ? " You likely forgot to export your component from the file it's " +
@@ -411,11 +411,11 @@ describe('ReactComponent', () => {
     const Y = null;
     expect(() => {
       expect(() => ReactTestUtils.renderIntoDocument(<Y />)).toErrorDev(
-        'React.createElement: type is invalid -- expected a string (for built-in components) ' +
+        'React.createElement: identifierDescription is invalid -- expected a string (for built-in components) ' +
           'or a class/function (for composite components) but got: null.',
       );
     }).toThrowError(
-      'Element type is invalid: expected a string (for built-in components) ' +
+      'Element identifierDescription is invalid: expected a string (for built-in components) ' +
         'or a class/function (for composite components) but got: null.',
     );
   });
@@ -441,11 +441,11 @@ describe('ReactComponent', () => {
 
     expect(() => {
       expect(() => ReactTestUtils.renderIntoDocument(<Foo />)).toErrorDev(
-        'React.createElement: type is invalid -- expected a string (for built-in components) ' +
+        'React.createElement: identifierDescription is invalid -- expected a string (for built-in components) ' +
           'or a class/function (for composite components) but got: undefined.',
       );
     }).toThrowError(
-      'Element type is invalid: expected a string (for built-in components) ' +
+      'Element identifierDescription is invalid: expected a string (for built-in components) ' +
         'or a class/function (for composite components) but got: undefined.' +
         (__DEV__
           ? " You likely forgot to export your component from the file it's " +
@@ -589,7 +589,7 @@ describe('ReactComponent', () => {
       expect(container.innerHTML).toBe('Hello');
     });
 
-    it('deduplicates function type warnings based on component type', () => {
+    it('deduplicates function identifierDescription warnings based on component identifierDescription', () => {
       class Foo extends React.PureComponent {
         constructor() {
           super();

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Parameter } from "./Parameter";
+import { IdentifierDescription } from "./IdentifierDescription";
 import { ActionType } from "./ActionType";
 import { ActionVisibility } from "./ActionVisibility";
 
@@ -34,6 +34,6 @@ export interface ActionDescription {
   isStatic: boolean;
   isAsync: boolean;
 
-  parameters: Parameter[];
-  returnParameter: Parameter;
+  parameters: IdentifierDescription[];
+  returnParameter: IdentifierDescription;
 }

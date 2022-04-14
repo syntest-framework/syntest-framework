@@ -69,7 +69,7 @@ describe('ReactTestRenderer', () => {
     expect(renderer.toJSON()).toEqual(null);
   });
 
-  it('exposes a type flag', () => {
+  it('exposes a identifierDescription flag', () => {
     function Link() {
       return <a role="link" />;
     }

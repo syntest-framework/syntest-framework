@@ -45,7 +45,7 @@ export default function checkPropTypes(
     for (const typeSpecName in typeSpecs) {
       if (has(typeSpecs, typeSpecName)) {
         let error;
-        // Prop type validation may throw. In case they do, we don't want to
+        // Prop identifierDescription validation may throw. In case they do, we don't want to
         // fail the render phase where it didn't fail before. So we log it.
         // After these have been cleaned up, we'll let them throw.
         try {
@@ -57,7 +57,7 @@ export default function checkPropTypes(
               (componentName || 'React class') +
                 ': ' +
                 location +
-                ' type `' +
+                ' identifierDescription `' +
                 typeSpecName +
                 '` is invalid; ' +
                 'it must be a function, usually from the `prop-types` package, but received `' +
@@ -82,10 +82,10 @@ export default function checkPropTypes(
         if (error && !(error instanceof Error)) {
           setCurrentlyValidatingElement(element);
           console.error(
-            '%s: type specification of %s' +
-              ' `%s` is invalid; the type checker ' +
+            '%s: identifierDescription specification of %s' +
+              ' `%s` is invalid; the identifierDescription checker ' +
               'function must return `null` or an `Error` but returned a %s. ' +
-              'You may have forgotten to pass an argument to the type checker ' +
+              'You may have forgotten to pass an argument to the identifierDescription checker ' +
               'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
               'shape all require an argument).',
             componentName || 'React class',
@@ -100,7 +100,7 @@ export default function checkPropTypes(
           // same error.
           loggedTypeFailures[error.message] = true;
           setCurrentlyValidatingElement(element);
-          console.error('Failed %s type: %s', location, error.message);
+          console.error('Failed %s identifierDescription: %s', location, error.message);
           setCurrentlyValidatingElement(null);
         }
       }

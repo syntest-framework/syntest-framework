@@ -164,7 +164,7 @@ const DevTools = initialize(contentWindow);
 iframe.onload = () => {
   contentWindow.postMessage(
     {
-      type: "activate-backend"
+      identifierDescription: "activate-backend"
     },
     "*"
   );

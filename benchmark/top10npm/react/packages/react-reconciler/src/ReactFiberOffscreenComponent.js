@@ -12,7 +12,7 @@ import type {Lanes} from './ReactFiberLane.old';
 import type {SpawnedCachePool} from './ReactFiberCacheComponent.new';
 
 export type OffscreenProps = {|
-  // TODO: Pick an API before exposing the Offscreen type. I've chosen an enum
+  // TODO: Pick an API before exposing the Offscreen identifierDescription. I've chosen an enum
   // for now, since we might have multiple variants. For example, hiding the
   // content without changing the layout.
   //

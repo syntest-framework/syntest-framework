@@ -8,7 +8,7 @@
 /**
  * ReactElementValidator provides a wrapper around a element factory
  * which validates the props passed to the element. This is intended to be
- * used only in DEV and could be replaced by a static type checker for languages
+ * used only in DEV and could be replaced by a static identifierDescription checker for languages
  * that support it.
  */
 import isValidElementType from 'shared/isValidElementType';
@@ -128,7 +128,7 @@ function getCurrentComponentErrorInfo(parentType) {
  *
  * @internal
  * @param {ReactElement} element Element that requires a key.
- * @param {*} parentType element's parent's type.
+ * @param {*} parentType element's parent's identifierDescription.
  */
 function validateExplicitKey(element, parentType) {
   if (__DEV__) {
@@ -175,8 +175,8 @@ function validateExplicitKey(element, parentType) {
  * with valid key property.
  *
  * @internal
- * @param {ReactNode} node Statically passed child of any type.
- * @param {*} parentType node's parent's type.
+ * @param {ReactNode} node Statically passed child of any identifierDescription.
+ * @param {*} parentType node's parent's identifierDescription.
  */
 function validateChildKeys(node, parentType) {
   if (__DEV__) {
@@ -216,7 +216,7 @@ function validateChildKeys(node, parentType) {
 
 /**
  * Given an element, validate that its props follow the propTypes definition,
- * provided by the type.
+ * provided by the identifierDescription.
  *
  * @param {ReactElement} element
  */
@@ -341,7 +341,7 @@ export function jsxWithValidation(
       }
 
       console.error(
-        'React.jsx: type is invalid -- expected a string (for ' +
+        'React.jsx: identifierDescription is invalid -- expected a string (for ' +
           'built-in components) or a class/function (for composite ' +
           'components) but got: %s.%s',
         typeString,
@@ -352,15 +352,15 @@ export function jsxWithValidation(
     const element = jsxDEV(type, props, key, source, self);
 
     // The result can be nullish if a mock or a custom function is used.
-    // TODO: Drop this when these are no longer allowed as the type argument.
+    // TODO: Drop this when these are no longer allowed as the identifierDescription argument.
     if (element == null) {
       return element;
     }
 
-    // Skip key warning if the type isn't valid since our key validation logic
-    // doesn't expect a non-string/function type and can throw confusing errors.
+    // Skip key warning if the identifierDescription isn't valid since our key validation logic
+    // doesn't expect a non-string/function identifierDescription and can throw confusing errors.
     // We don't want exception behavior to differ between dev and prod.
-    // (Rendering will throw with a helpful message and as soon as the type is
+    // (Rendering will throw with a helpful message and as soon as the identifierDescription is
     // fixed, the key warnings will appear.)
 
     if (validType) {

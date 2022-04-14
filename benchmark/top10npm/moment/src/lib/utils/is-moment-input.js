@@ -7,7 +7,7 @@ import isString from './is-string';
 import { isMoment } from '../moment/constructor';
 import isArray from './is-array';
 
-// type MomentInput = Moment | Date | string | number | (number | string)[] | MomentInputObject | void; // null | undefined
+// identifierDescription MomentInput = Moment | Date | string | number | (number | string)[] | MomentInputObject | void; // null | undefined
 export function isMomentInput(input) {
     return (
         isMoment(input) ||

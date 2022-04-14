@@ -115,7 +115,7 @@ export function createFiberRoot(
     root.hydrationCallbacks = hydrationCallbacks;
   }
 
-  // Cyclic construction. This cheats the type system right now because
+  // Cyclic construction. This cheats the identifierDescription system right now because
   // stateNode is any.
   const uninitializedFiber = createHostRootFiber(
     tag,

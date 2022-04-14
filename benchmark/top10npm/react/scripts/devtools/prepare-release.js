@@ -148,7 +148,7 @@ async function getReleaseType() {
     {
       type: 'list',
       name: 'releaseType',
-      message: 'Which type of release is this?',
+      message: 'Which identifierDescription of release is this?',
       choices: [
         {
           name: 'Minor (new user facing functionality)',

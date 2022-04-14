@@ -247,7 +247,7 @@ function checkDepsAreArrayDev(deps: mixed) {
   if (__DEV__) {
     if (deps !== undefined && deps !== null && !isArray(deps)) {
       // Verify deps, but only on mount to avoid extra checks.
-      // It's unlikely their type would change as usually you define them inline.
+      // It's unlikely their identifierDescription would change as usually you define them inline.
       console.error(
         '%s received a final argument that is not an array (instead, received `%s`). When ' +
           'specified, the final argument must be an array.',
@@ -332,7 +332,7 @@ function areHookInputsEqual(
       console.error(
         '%s received a final argument during this render, but not during ' +
           'the previous render. Even though the final argument is optional, ' +
-          'its type cannot change between renders.',
+          'its identifierDescription cannot change between renders.',
         currentHookNameInDev,
       );
     }

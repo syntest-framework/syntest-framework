@@ -22,7 +22,7 @@ describe('validator::assertOptions', function() {
     }).not.toThrow(new Error('ANY option x'));
   });
 
-  it('should throw TypeError only if option type doesn\'t match', function() {
+  it('should throw TypeError only if option identifierDescription doesn\'t match', function() {
     expect(function() {
       validator.assertOptions({
         x: 123

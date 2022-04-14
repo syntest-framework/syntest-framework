@@ -102,20 +102,32 @@ export class TypeResolverInference extends TypeResolver {
     // filter relations by property accessors
     const propertyAccessors = relations.filter((r) => r.relation === RelationType.PropertyAccessor)
 
-
     for (const element of elements) {
-      if (this.elementTyping.has(element)) {
+      // if (this.elementTyping.has(element)) {
+      //   continue
+      // }
+
+      if (element.type !== 'identifier' || element.value === 'this') { // TODO this
         continue
       }
 
-      if (element.type !== 'identifier') {
-        continue
-      }
-
-
-      // TODO should also have same scope
-      const relevantAccessors = propertyAccessors.filter((r) => r.involved[0].value === element.value)
-      const properties = relevantAccessors.map((r) => r.involved[1])
+      const properties = propertyAccessors
+        .filter((r) => r.involved[0].scope.name === element.scope.name && r.involved[0].scope.type === element.scope.type)
+        .filter((r) => r.involved[0].value === element.value)
+        .map((r) => r.involved[1])
+        // remove duplicates
+        .reduce((unique: Element[], item) => {
+          const found = unique.find((uniqueItem: Element) => {
+            return uniqueItem.value === item.value
+            && uniqueItem.scope.name === item.scope.name
+            && uniqueItem.scope.type === item.scope.type
+          })
+          if (found) {
+            return unique
+          } else {
+            return [...unique, item]
+          }
+        }, [])
 
       if (!properties.length) {
         continue
@@ -149,13 +161,59 @@ export class TypeResolverInference extends TypeResolver {
 
           const propertyTypings: Map<string, TypeProbabilityMap> = new Map()
 
-          properties.forEach((p) => {
-            if (this.elementTyping.has(p)) {
-              propertyTypings.set(p.value, this.elementTyping.get(p))
-            } else {
-              propertyTypings.set(p.value, new TypeProbabilityMap())
-            }
+          let found = 0
+
+          object.functions.forEach((func) => {
+            const typeMap = new TypeProbabilityMap()
+
+            found += 1
+            typeMap.addType({
+              type: TypingType.FUNCTION
+            })
+
+            propertyTypings.set(func, typeMap)
           })
+
+          object.properties.forEach((prop) => {
+            if (object.propertyType && object.propertyType.has(prop)) {
+              const typeMap = new TypeProbabilityMap()
+              found += 1
+              typeMap.addType(object.propertyType.get(prop))
+              propertyTypings.set(prop, typeMap)
+              return
+            }
+            const element = properties.find((p) => p.value === prop)
+
+            if (element && this.elementTyping.has(element)) {
+              found += 1
+              propertyTypings.set(element.value, this.elementTyping.get(element))
+              return
+            }
+
+            // TODO get type info from the object definition
+            // const element [...this.elementTyping.keys()].filter()
+          })
+
+          // properties.forEach((p) => {
+          //   if (this.elementTyping.has(p)) {
+          //     found += 1
+          //     propertyTypings.set(p.value, this.elementTyping.get(p))
+          //   } else {
+          //     const typeMap = new TypeProbabilityMap()
+          //     // standard types
+          //     if (object.functions.has(p.value)) {
+          //       found += 1
+          //       typeMap.addType({
+          //         type: TypingType.FUNCTION
+          //       })
+          //     } else if (object.propertyType && object.propertyType.has(p.value)) {
+          //       found += 1
+          //       typeMap.addType(object.propertyType.get(p.value))
+          //     }
+          //
+          //     propertyTypings.set(p.value, typeMap)
+          //   }
+          // })
 
           this.setElementType(element, {
             type: type,
@@ -189,13 +247,35 @@ export class TypeResolverInference extends TypeResolver {
   }
 
   getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbabilityMap {
-    const element = [...this.elementTyping.keys()].find((e) => {
-      return e.scope.name === scopeName
-        && e.scope.type === scopeType
-        && e.value === variableName
-    })
+
+    const elements = [...this.elementTyping.keys()]
+
+    const correctScopeName = elements.filter((e) => e.scope.name === scopeName)
+
+    const correctScopeType = correctScopeName.filter((e) => e.scope.type === scopeType)
+
+    const correctVariable = correctScopeType.filter((e) => e.value === variableName)
+
+    const element = correctVariable[0]
+    // const element = [...this.elementTyping.keys()].find((e) => {
+    //   return e.scope.name === scopeName
+    //     && e.scope.type === scopeType
+    //     && e.value === variableName
+    // })
+
+
 
     if (!element) {
+      // console.log(scopeName)
+      // console.log(scopeType)
+      // console.log(variableName)
+      // console.log(correctScopeName)
+      // console.log(correctScopeType)
+      // console.log(correctVariable)
+      //
+      // console.log(elements.filter((e) => e.value === variableName))
+      // throw new Error("Invalid!")
+
       return new TypeProbabilityMap()
     }
 
@@ -301,11 +381,11 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Assignment: // must be the same
         // TODO not sure if this works, this will propogate changed to either element to the other
         if (isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          // this.setElementType(involved[0], { type: involved[1].type }, 1)
+          // this.setElementType(involved[0], { identifierDescription: involved[1].identifierDescription }, 1)
           this.elementTyping.set(involved[0], involved[1])
           return true
         } else if (!isInstanceOfElement(involved[0]) && isInstanceOfElement(involved[1])) {
-          // this.setElementType(involved[1], { type: involved[0].type }, 1)
+          // this.setElementType(involved[1], { identifierDescription: involved[0].identifierDescription }, 1)
           this.elementTyping.set(involved[1], involved[0])
           return true
         }
@@ -360,7 +440,7 @@ export class TypeResolverInference extends TypeResolver {
 
     switch (relation.relation) {
       // Unary
-      case RelationType.PropertyAccessor: // must be equal to the type of the member element
+      case RelationType.PropertyAccessor: // must be equal to the identifierDescription of the member element
         this.relationTyping.set(relation, involved[1])
         return true
       case RelationType.New: //
@@ -398,10 +478,10 @@ export class TypeResolverInference extends TypeResolver {
 
       // binary
       case RelationType.Addition:
-        // if (involved[0].g === TypingType.STRING || involved[1].type === TypingType.STRING) {
-        //   this.relationTyping.set(relation, { type: TypingType.STRING })
-        // } else if (involved[0].type === TypingType.NUMERIC || involved[1].type === TypingType.NUMERIC) {
-        //   this.relationTyping.set(relation, { type: TypingType.NUMERIC })
+        // if (involved[0].g === TypingType.STRING || involved[1].identifierDescription === TypingType.STRING) {
+        //   this.relationTyping.set(relation, { identifierDescription: TypingType.STRING })
+        // } else if (involved[0].identifierDescription === TypingType.NUMERIC || involved[1].identifierDescription === TypingType.NUMERIC) {
+        //   this.relationTyping.set(relation, { identifierDescription: TypingType.NUMERIC })
         // } else {
         //   return false // TODO maybe its always NaN?
         // }
@@ -445,10 +525,10 @@ export class TypeResolverInference extends TypeResolver {
         this.setRelationType(relation, { type: TypingType.NUMERIC }, 1)
         return true
 
-      case RelationType.LogicalOr: // can be the type of the first or second one depending on if the first is not false/null/undefined
-      case RelationType.LogicalAnd: //can be the boolean or the type of the second one depending on if the first and second are not false/null/undefined
+      case RelationType.LogicalOr: // can be the identifierDescription of the first or second one depending on if the first is not false/null/undefined
+      case RelationType.LogicalAnd: //can be the boolean or the identifierDescription of the second one depending on if the first and second are not false/null/undefined
       case RelationType.NullishCoalescing: //??
-        // this.relationTyping.set(relation, { type: involved[1].type })
+        // this.relationTyping.set(relation, { identifierDescription: involved[1].identifierDescription })
         return false
 
       // ternary
@@ -456,32 +536,32 @@ export class TypeResolverInference extends TypeResolver {
         // TODO
         return false
 
-      case RelationType.Assignment: // no relation type
-      case RelationType.MultiplicationAssignment: // no relation type
-      case RelationType.ExponentiationAssignment: // no relation type
-      case RelationType.DivisionAssignment: // no relation type
-      case RelationType.RemainderAssigment: // no relation type
-      case RelationType.AdditionAssignment: // no relation type
-      case RelationType.SubtractionAssignment: // no relation type
-      case RelationType.LeftShiftAssignment: // no relation type
-      case RelationType.RightShiftAssignment: // no relation type
-      case RelationType.UnSignedRightShiftAssignment: // no relation type
-      case RelationType.BitwiseAndAssignment: // no relation type
-      case RelationType.BitwiseXorAssignment: // no relation type
-      case RelationType.BitwiseOrAssignment: // no relation type
-      case RelationType.LogicalAndAssignment: // no relation type
-      case RelationType.LogicalOrAssignment: // no relation type
-      case RelationType.LogicalNullishAssignment: // no relation type
+      case RelationType.Assignment: // no relation identifierDescription
+      case RelationType.MultiplicationAssignment: // no relation identifierDescription
+      case RelationType.ExponentiationAssignment: // no relation identifierDescription
+      case RelationType.DivisionAssignment: // no relation identifierDescription
+      case RelationType.RemainderAssigment: // no relation identifierDescription
+      case RelationType.AdditionAssignment: // no relation identifierDescription
+      case RelationType.SubtractionAssignment: // no relation identifierDescription
+      case RelationType.LeftShiftAssignment: // no relation identifierDescription
+      case RelationType.RightShiftAssignment: // no relation identifierDescription
+      case RelationType.UnSignedRightShiftAssignment: // no relation identifierDescription
+      case RelationType.BitwiseAndAssignment: // no relation identifierDescription
+      case RelationType.BitwiseXorAssignment: // no relation identifierDescription
+      case RelationType.BitwiseOrAssignment: // no relation identifierDescription
+      case RelationType.LogicalAndAssignment: // no relation identifierDescription
+      case RelationType.LogicalOrAssignment: // no relation identifierDescription
+      case RelationType.LogicalNullishAssignment: // no relation identifierDescription
 
         // TODO
-        // this.relationTyping.set(relation, { type: TypingType.NULL })
+        // this.relationTyping.set(relation, { identifierDescription: TypingType.NULL })
         return false
 
       // TODO
 
-      case RelationType.Return: // must be equal to the type of the returned element
+      case RelationType.Return: // must be equal to the identifierDescription of the returned element
       case RelationType.Parameters: // could be multiple things
-      case RelationType.Call: // must be the return type of the called function
+      case RelationType.Call: // must be the return identifierDescription of the called function
       case RelationType.Object: // could be multiple things
       case RelationType.Array: // could be multiple things
         return false

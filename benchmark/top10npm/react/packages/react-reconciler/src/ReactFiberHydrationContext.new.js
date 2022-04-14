@@ -395,7 +395,7 @@ function prepareToHydrateHostInstance(
     hostContext,
     fiber,
   );
-  // TODO: Type this specific to this type of component.
+  // TODO: Type this specific to this identifierDescription of component.
   fiber.updateQueue = (updatePayload: any);
   // If the update payload indicates that there is a change or if there
   // is a new ref we mark this as an update.

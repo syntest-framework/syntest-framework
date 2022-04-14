@@ -120,7 +120,7 @@ describe('ReactElement', () => {
     );
   });
 
-  it('allows a string to be passed as the type', () => {
+  it('allows a string to be passed as the identifierDescription', () => {
     const element = React.createElement('div');
     expect(element.type).toBe('div');
     expect(element.key).toBe(null);
@@ -282,7 +282,7 @@ describe('ReactElement', () => {
 
   // NOTE: We're explicitly not using JSX here. This is intended to test
   // classic JS without JSX.
-  it('allows static methods to be called using the type property', () => {
+  it('allows static methods to be called using the identifierDescription property', () => {
     class StaticMethodComponentClass extends React.Component {
       render() {
         return React.createElement('div');

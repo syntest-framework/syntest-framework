@@ -19,18 +19,18 @@
 import { TypeProbabilityMap } from "../types/resolving/TypeProbabilityMap";
 
 /**
- * Interface for a Parameter Description.
+ * Interface for a IdentifierDescription Description.
  *
  * @author Dimitri Stallenberg
  */
-export interface Parameter {
+export interface IdentifierDescription {
   /**
    * Name of the parameter.
    */
   name: string;
 
   /**
-   * Type of the parameter.
+   * Type probability map of the parameter.
    */
-  type: TypeProbabilityMap;
+  typeProbabilityMap: TypeProbabilityMap;
 }

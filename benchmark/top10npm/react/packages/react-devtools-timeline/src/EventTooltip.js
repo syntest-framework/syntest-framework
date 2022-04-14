@@ -285,7 +285,7 @@ const TooltipSchedulingEvent = ({
   if (!label) {
     if (__DEV__) {
       console.warn(
-        'Unexpected schedulingEvent type "%s"',
+        'Unexpected schedulingEvent identifierDescription "%s"',
         schedulingEvent.type,
       );
     }
@@ -439,7 +439,7 @@ const TooltipReactMeasure = ({
   const label = getReactMeasureLabel(measure.type);
   if (!label) {
     if (__DEV__) {
-      console.warn('Unexpected measure type "%s"', measure.type);
+      console.warn('Unexpected measure identifierDescription "%s"', measure.type);
     }
     return null;
   }

@@ -67,7 +67,7 @@ function getPrimitiveStackCache(): Map<string, Array<any>> {
       Dispatcher.useReducer((s, a) => s, null);
       Dispatcher.useRef(null);
       if (typeof Dispatcher.useCacheRefresh === 'function') {
-        // This type check is for Flow only.
+        // This identifierDescription check is for Flow only.
         Dispatcher.useCacheRefresh();
       }
       Dispatcher.useLayoutEffect(() => {});

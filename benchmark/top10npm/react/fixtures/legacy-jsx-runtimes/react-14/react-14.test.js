@@ -54,7 +54,7 @@ it('returns a complete element according to spec', () => {
   expect(element.props).toEqual(expectation);
 });
 
-it('allows a lower-case to be passed as the string type', () => {
+it('allows a lower-case to be passed as the string identifierDescription', () => {
   const element = <div />;
   expect(element.type).toBe('div');
   expect(element.key).toBe(null);
@@ -64,7 +64,7 @@ it('allows a lower-case to be passed as the string type', () => {
   expect(element.props).toEqual(expectation);
 });
 
-it('allows a string to be passed as the type', () => {
+it('allows a string to be passed as the identifierDescription', () => {
   const TagName = 'div';
   const element = <TagName />;
   expect(element.type).toBe('div');
@@ -154,7 +154,7 @@ it('merges JSX children onto the children prop in an array', () => {
   expect(element.props.children).toEqual([1, 2, 3]);
 });
 
-it('allows static methods to be called using the type property', () => {
+it('allows static methods to be called using the identifierDescription property', () => {
   class StaticMethodComponent {
     static someStaticMethod() {
       return 'someReturnValue';
@@ -322,8 +322,8 @@ it('should give context for PropType errors in nested components.', () => {
   expect(() =>
     ReactTestUtils.renderIntoDocument(<ParentComp />)
   ).toErrorDev(
-    'Warning: Failed prop type: ' +
-      'Invalid prop `color` of type `number` supplied to `MyComp`, ' +
+    'Warning: Failed prop identifierDescription: ' +
+      'Invalid prop `color` of identifierDescription `number` supplied to `MyComp`, ' +
       'expected `string`.',
     {withoutStack: true}
   );
@@ -337,7 +337,7 @@ it('gives a helpful error when passing null, undefined, or boolean', () => {
   expect(
     () => void (<Undefined />)
   ).toErrorDev(
-    'Warning: React.jsx: type is invalid -- expected a string ' +
+    'Warning: React.jsx: identifierDescription is invalid -- expected a string ' +
       '(for built-in components) or a class/function (for composite ' +
       'components) but got: undefined. You likely forgot to export your ' +
       "component from the file it's defined in, or you might have mixed up " +
@@ -350,7 +350,7 @@ it('gives a helpful error when passing null, undefined, or boolean', () => {
   expect(
     () => void (<Null />)
   ).toErrorDev(
-    'Warning: React.jsx: type is invalid -- expected a string ' +
+    'Warning: React.jsx: identifierDescription is invalid -- expected a string ' +
       '(for built-in components) or a class/function (for composite ' +
       'components) but got: null.' +
       (process.env.BABEL_ENV === 'development'
@@ -361,7 +361,7 @@ it('gives a helpful error when passing null, undefined, or boolean', () => {
   expect(
     () => void (<True />)
   ).toErrorDev(
-    'Warning: React.jsx: type is invalid -- expected a string ' +
+    'Warning: React.jsx: identifierDescription is invalid -- expected a string ' +
       '(for built-in components) or a class/function (for composite ' +
       'components) but got: boolean.' +
       (process.env.BABEL_ENV === 'development'
@@ -379,7 +379,7 @@ it('should check default prop values', () => {
   expect(() =>
     ReactTestUtils.renderIntoDocument(<RequiredPropComponent />)
   ).toErrorDev(
-    'Warning: Failed prop type: Required prop `prop` was not specified in ' +
+    'Warning: Failed prop identifierDescription: Required prop `prop` was not specified in ' +
       '`RequiredPropComponent`.',
     {withoutStack: true}
   );
@@ -401,7 +401,7 @@ it('should warn on invalid prop types', () => {
   expect(() =>
     ReactTestUtils.renderIntoDocument(<NullPropTypeComponent />)
   ).toErrorDev(
-    'NullPropTypeComponent: prop type `prop` is invalid; it must be a ' +
+    'NullPropTypeComponent: prop identifierDescription `prop` is invalid; it must be a ' +
       'function, usually from the `prop-types` package,',
     {withoutStack: true}
   );
@@ -419,7 +419,7 @@ xit('should warn on invalid context types', () => {
   expect(() =>
     ReactTestUtils.renderIntoDocument(<NullContextTypeComponent />)
   ).toErrorDev(
-    'NullContextTypeComponent: type `prop` is invalid; it must ' +
+    'NullContextTypeComponent: identifierDescription `prop` is invalid; it must ' +
       'be a function, usually from the `prop-types` package,'
   );
 });

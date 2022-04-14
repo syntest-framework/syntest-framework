@@ -56,10 +56,10 @@ describe('escapeTextForBrowser', () => {
 
   it('escape text content representing a script tag', () => {
     const response = ReactDOMServer.renderToString(
-      <span>{'<script type=\'\' src=""></script>'}</span>,
+      <span>{'<script identifierDescription=\'\' src=""></script>'}</span>,
     );
     expect(response).toMatch(
-      '<span>&lt;script type=&#x27;&#x27; ' +
+      '<span>&lt;script identifierDescription=&#x27;&#x27; ' +
         'src=&quot;&quot;&gt;&lt;/script&gt;</span>',
     );
   });

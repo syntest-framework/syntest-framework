@@ -8,7 +8,7 @@ describe('option with regular expression instead of custom processing function',
   test('when option not given then value is default', () => {
     const program = new commander.Command();
     program
-      .option('--cheese <type>', 'cheese type', /mild|tasty/, 'mild');
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription', /mild|tasty/, 'mild');
     program.parse([], { from: 'user' });
     expect(program.opts().cheese).toEqual('mild');
   });
@@ -16,7 +16,7 @@ describe('option with regular expression instead of custom processing function',
   test('when argument matches regexp then value is as specified', () => {
     const program = new commander.Command();
     program
-      .option('--cheese <type>', 'cheese type', /mild|tasty/, 'mild');
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription', /mild|tasty/, 'mild');
     program.parse(['--cheese', 'tasty'], { from: 'user' });
     expect(program.opts().cheese).toEqual('tasty');
   });
@@ -24,7 +24,7 @@ describe('option with regular expression instead of custom processing function',
   test('when argument does mot matches regexp then value is default', () => {
     const program = new commander.Command();
     program
-      .option('--cheese <type>', 'cheese type', /mild|tasty/, 'mild');
+      .option('--cheese <identifierDescription>', 'cheese identifierDescription', /mild|tasty/, 'mild');
     program.parse(['--cheese', 'other'], { from: 'user' });
     expect(program.opts().cheese).toEqual('mild');
   });

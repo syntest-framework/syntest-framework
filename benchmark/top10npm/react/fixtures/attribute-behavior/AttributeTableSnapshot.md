@@ -11298,55 +11298,55 @@
 | `transform=(null)`| (initial)| `[]` |
 | `transform=(undefined)`| (initial)| `[]` |
 
-## `type` (on `<button>` inside `<div>`)
+## `identifierDescription` (on `<button>` inside `<div>`)
 | Test Case | Flags | Result |
 | --- | --- | --- |
-| `type=(string)`| (changed)| `"reset"` |
-| `type=(empty string)`| (initial)| `"submit"` |
-| `type=(array with string)`| (changed)| `"reset"` |
-| `type=(empty array)`| (initial)| `"submit"` |
-| `type=(object)`| (initial)| `"submit"` |
-| `type=(numeric string)`| (initial)| `"submit"` |
-| `type=(-1)`| (initial)| `"submit"` |
-| `type=(0)`| (initial)| `"submit"` |
-| `type=(integer)`| (initial)| `"submit"` |
-| `type=(NaN)`| (initial, warning)| `"submit"` |
-| `type=(float)`| (initial)| `"submit"` |
-| `type=(true)`| (initial, warning)| `"submit"` |
-| `type=(false)`| (initial, warning)| `"submit"` |
-| `type=(string 'true')`| (initial)| `"submit"` |
-| `type=(string 'false')`| (initial)| `"submit"` |
-| `type=(string 'on')`| (initial)| `"submit"` |
-| `type=(string 'off')`| (initial)| `"submit"` |
-| `type=(symbol)`| (initial, warning)| `"submit"` |
-| `type=(function)`| (initial, warning)| `"submit"` |
-| `type=(null)`| (initial)| `"submit"` |
-| `type=(undefined)`| (initial)| `"submit"` |
+| `identifierDescription=(string)`| (changed)| `"reset"` |
+| `identifierDescription=(empty string)`| (initial)| `"submit"` |
+| `identifierDescription=(array with string)`| (changed)| `"reset"` |
+| `identifierDescription=(empty array)`| (initial)| `"submit"` |
+| `identifierDescription=(object)`| (initial)| `"submit"` |
+| `identifierDescription=(numeric string)`| (initial)| `"submit"` |
+| `identifierDescription=(-1)`| (initial)| `"submit"` |
+| `identifierDescription=(0)`| (initial)| `"submit"` |
+| `identifierDescription=(integer)`| (initial)| `"submit"` |
+| `identifierDescription=(NaN)`| (initial, warning)| `"submit"` |
+| `identifierDescription=(float)`| (initial)| `"submit"` |
+| `identifierDescription=(true)`| (initial, warning)| `"submit"` |
+| `identifierDescription=(false)`| (initial, warning)| `"submit"` |
+| `identifierDescription=(string 'true')`| (initial)| `"submit"` |
+| `identifierDescription=(string 'false')`| (initial)| `"submit"` |
+| `identifierDescription=(string 'on')`| (initial)| `"submit"` |
+| `identifierDescription=(string 'off')`| (initial)| `"submit"` |
+| `identifierDescription=(symbol)`| (initial, warning)| `"submit"` |
+| `identifierDescription=(function)`| (initial, warning)| `"submit"` |
+| `identifierDescription=(null)`| (initial)| `"submit"` |
+| `identifierDescription=(undefined)`| (initial)| `"submit"` |
 
-## `type` (on `<feFuncA>` inside `<svg>`)
+## `identifierDescription` (on `<feFuncA>` inside `<svg>`)
 | Test Case | Flags | Result |
 | --- | --- | --- |
-| `type=(string)`| (changed)| `<number: 3>` |
-| `type=(empty string)`| (initial)| `<number: 1>` |
-| `type=(array with string)`| (changed)| `<number: 3>` |
-| `type=(empty array)`| (initial)| `<number: 1>` |
-| `type=(object)`| (initial)| `<number: 1>` |
-| `type=(numeric string)`| (initial)| `<number: 1>` |
-| `type=(-1)`| (initial)| `<number: 1>` |
-| `type=(0)`| (initial)| `<number: 1>` |
-| `type=(integer)`| (initial)| `<number: 1>` |
-| `type=(NaN)`| (initial, warning)| `<number: 1>` |
-| `type=(float)`| (initial)| `<number: 1>` |
-| `type=(true)`| (initial, warning)| `<number: 1>` |
-| `type=(false)`| (initial, warning)| `<number: 1>` |
-| `type=(string 'true')`| (initial)| `<number: 1>` |
-| `type=(string 'false')`| (initial)| `<number: 1>` |
-| `type=(string 'on')`| (initial)| `<number: 1>` |
-| `type=(string 'off')`| (initial)| `<number: 1>` |
-| `type=(symbol)`| (initial, warning)| `<number: 1>` |
-| `type=(function)`| (initial, warning)| `<number: 1>` |
-| `type=(null)`| (initial)| `<number: 1>` |
-| `type=(undefined)`| (initial)| `<number: 1>` |
+| `identifierDescription=(string)`| (changed)| `<number: 3>` |
+| `identifierDescription=(empty string)`| (initial)| `<number: 1>` |
+| `identifierDescription=(array with string)`| (changed)| `<number: 3>` |
+| `identifierDescription=(empty array)`| (initial)| `<number: 1>` |
+| `identifierDescription=(object)`| (initial)| `<number: 1>` |
+| `identifierDescription=(numeric string)`| (initial)| `<number: 1>` |
+| `identifierDescription=(-1)`| (initial)| `<number: 1>` |
+| `identifierDescription=(0)`| (initial)| `<number: 1>` |
+| `identifierDescription=(integer)`| (initial)| `<number: 1>` |
+| `identifierDescription=(NaN)`| (initial, warning)| `<number: 1>` |
+| `identifierDescription=(float)`| (initial)| `<number: 1>` |
+| `identifierDescription=(true)`| (initial, warning)| `<number: 1>` |
+| `identifierDescription=(false)`| (initial, warning)| `<number: 1>` |
+| `identifierDescription=(string 'true')`| (initial)| `<number: 1>` |
+| `identifierDescription=(string 'false')`| (initial)| `<number: 1>` |
+| `identifierDescription=(string 'on')`| (initial)| `<number: 1>` |
+| `identifierDescription=(string 'off')`| (initial)| `<number: 1>` |
+| `identifierDescription=(symbol)`| (initial, warning)| `<number: 1>` |
+| `identifierDescription=(function)`| (initial, warning)| `<number: 1>` |
+| `identifierDescription=(null)`| (initial)| `<number: 1>` |
+| `identifierDescription=(undefined)`| (initial)| `<number: 1>` |
 
 ## `typeof` (on `<div>` inside `<div>`)
 | Test Case | Flags | Result |
@@ -13073,30 +13073,30 @@
 | `xlink:title=(null)`| (initial, warning)| `<null>` |
 | `xlink:title=(undefined)`| (initial, warning)| `<null>` |
 
-## `xlink:type` (on `<div>` inside `<div>`)
+## `xlink:identifierDescription` (on `<div>` inside `<div>`)
 | Test Case | Flags | Result |
 | --- | --- | --- |
-| `xlink:type=(string)`| (changed, warning)| `"a string"` |
-| `xlink:type=(empty string)`| (changed, warning)| `<empty string>` |
-| `xlink:type=(array with string)`| (changed, warning)| `"string"` |
-| `xlink:type=(empty array)`| (changed, warning)| `<empty string>` |
-| `xlink:type=(object)`| (changed, warning)| `"result of toString()"` |
-| `xlink:type=(numeric string)`| (changed, warning)| `"42"` |
-| `xlink:type=(-1)`| (changed, warning)| `"-1"` |
-| `xlink:type=(0)`| (changed, warning)| `"0"` |
-| `xlink:type=(integer)`| (changed, warning)| `"1"` |
-| `xlink:type=(NaN)`| (changed, warning)| `"NaN"` |
-| `xlink:type=(float)`| (changed, warning)| `"99.99"` |
-| `xlink:type=(true)`| (initial, warning)| `<null>` |
-| `xlink:type=(false)`| (initial, warning)| `<null>` |
-| `xlink:type=(string 'true')`| (changed, warning)| `"true"` |
-| `xlink:type=(string 'false')`| (changed, warning)| `"false"` |
-| `xlink:type=(string 'on')`| (changed, warning)| `"on"` |
-| `xlink:type=(string 'off')`| (changed, warning)| `"off"` |
-| `xlink:type=(symbol)`| (initial, warning)| `<null>` |
-| `xlink:type=(function)`| (initial, warning)| `<null>` |
-| `xlink:type=(null)`| (initial, warning)| `<null>` |
-| `xlink:type=(undefined)`| (initial, warning)| `<null>` |
+| `xlink:identifierDescription=(string)`| (changed, warning)| `"a string"` |
+| `xlink:identifierDescription=(empty string)`| (changed, warning)| `<empty string>` |
+| `xlink:identifierDescription=(array with string)`| (changed, warning)| `"string"` |
+| `xlink:identifierDescription=(empty array)`| (changed, warning)| `<empty string>` |
+| `xlink:identifierDescription=(object)`| (changed, warning)| `"result of toString()"` |
+| `xlink:identifierDescription=(numeric string)`| (changed, warning)| `"42"` |
+| `xlink:identifierDescription=(-1)`| (changed, warning)| `"-1"` |
+| `xlink:identifierDescription=(0)`| (changed, warning)| `"0"` |
+| `xlink:identifierDescription=(integer)`| (changed, warning)| `"1"` |
+| `xlink:identifierDescription=(NaN)`| (changed, warning)| `"NaN"` |
+| `xlink:identifierDescription=(float)`| (changed, warning)| `"99.99"` |
+| `xlink:identifierDescription=(true)`| (initial, warning)| `<null>` |
+| `xlink:identifierDescription=(false)`| (initial, warning)| `<null>` |
+| `xlink:identifierDescription=(string 'true')`| (changed, warning)| `"true"` |
+| `xlink:identifierDescription=(string 'false')`| (changed, warning)| `"false"` |
+| `xlink:identifierDescription=(string 'on')`| (changed, warning)| `"on"` |
+| `xlink:identifierDescription=(string 'off')`| (changed, warning)| `"off"` |
+| `xlink:identifierDescription=(symbol)`| (initial, warning)| `<null>` |
+| `xlink:identifierDescription=(function)`| (initial, warning)| `<null>` |
+| `xlink:identifierDescription=(null)`| (initial, warning)| `<null>` |
+| `xlink:identifierDescription=(undefined)`| (initial, warning)| `<null>` |
 
 ## `xlinkActuate` (on `<div>` inside `<div>`)
 | Test Case | Flags | Result |

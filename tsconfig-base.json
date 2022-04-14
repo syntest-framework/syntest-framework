@@ -25,13 +25,13 @@
     //"isolatedModules": true /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */,
 
     /* Strict Type-Checking Options */
-    "strict": false /* Enable all strict type-checking options. */,
-    //"noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
+    "strict": false /* Enable all strict identifierDescription-checking options. */,
+    //"noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' identifierDescription. */,
     //"strictNullChecks": true /* Enable strict null checks. */,
     //"strictFunctionTypes": true /* Enable strict checking of function types. */,
     //"strictBindCallApply": true /* Enable strict 'bind', 'call', and 'apply' methods on functions. */,
     //"strictPropertyInitialization": true /* Enable strict checking of property initialization in classes. */,
-    //"noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
+    //"noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' identifierDescription. */,
     //"alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
 
     /* Additional Checks */
@@ -47,7 +47,7 @@
     //"baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
     //"paths": {} /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
     //"rootDirs": [] /* List of root folders whose combined content represents the structure of the project at runtime. */,
-    //"typeRoots": [] /* List of folders to include type definitions from. */,
+    //"typeRoots": [] /* List of folders to include identifierDescription definitions from. */,
     //"types": [] /* Type declaration files to be included in compilation. */,
     //"allowSyntheticDefaultImports": true /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */,
     //"esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
@@ -62,10 +62,10 @@
 
     /* Experimental Options */
     //"experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
-    //"emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
+    //"emitDecoratorMetadata": true /* Enables experimental support for emitting identifierDescription metadata for decorators. */,
 
     /* Advanced Options */
-    "skipLibCheck": true /* Skip type checking of declaration files. */,
+    "skipLibCheck": true /* Skip identifierDescription checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   }
 }

@@ -210,14 +210,14 @@ function validateOptions() {
 
   if (argv.env && argv.env !== 'production' && argv.prod) {
     logError(
-      'Build type does not match --prod. Update these options to continue.'
+      'Build identifierDescription does not match --prod. Update these options to continue.'
     );
     success = false;
   }
 
   if (argv.env && argv.env !== 'development' && argv.dev) {
     logError(
-      'Build type does not match --dev. Update these options to continue.'
+      'Build identifierDescription does not match --dev. Update these options to continue.'
     );
     success = false;
   }

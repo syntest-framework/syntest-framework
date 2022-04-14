@@ -1237,7 +1237,7 @@ describe('ReactShallowRendererMemo', () => {
 
     const shallowRenderer = createRenderer();
     expect(() => shallowRenderer.render(<SimpleComponent />)).toErrorDev(
-      'Warning: Failed context type: The context `name` is marked as ' +
+      'Warning: Failed context identifierDescription: The context `name` is marked as ' +
         'required in `SimpleComponent`, but its value is `undefined`.\n' +
         '    in SimpleComponent (at **)',
     );
@@ -1260,7 +1260,7 @@ describe('ReactShallowRendererMemo', () => {
     expect(() =>
       shallowRenderer.render(React.createElement(SimpleComponent, {name: 123})),
     ).toErrorDev(
-      'Warning: Failed prop type: Invalid prop `name` of type `number` ' +
+      'Warning: Failed prop identifierDescription: Invalid prop `name` of identifierDescription `number` ' +
         'supplied to `SimpleComponent`, expected `string`.\n' +
         '    in SimpleComponent',
     );
@@ -1396,7 +1396,7 @@ describe('ReactShallowRendererMemo', () => {
     const renderAndVerifyWarningAndError = (Component, typeString) => {
       expect(() => {
         expect(() => shallowRenderer.render(<Component />)).toErrorDev(
-          'React.createElement: type is invalid -- expected a string ' +
+          'React.createElement: identifierDescription is invalid -- expected a string ' +
             '(for built-in components) or a class/function (for composite components) ' +
             `but got: ${typeString}.`,
         );

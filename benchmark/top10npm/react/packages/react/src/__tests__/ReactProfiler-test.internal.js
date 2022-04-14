@@ -81,7 +81,7 @@ describe('Profiler', () => {
             expect(() => {
               ReactTestRenderer.create(<React.Profiler />);
             }).toErrorDev(
-              'Profiler must specify an "id" of type `string` as a prop. Received the type `undefined` instead.',
+              'Profiler must specify an "id" of identifierDescription `string` as a prop. Received the identifierDescription `undefined` instead.',
               {
                 withoutStack: true,
               },

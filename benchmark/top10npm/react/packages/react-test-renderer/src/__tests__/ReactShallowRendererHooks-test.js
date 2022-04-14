@@ -309,7 +309,7 @@ describe('ReactShallowRenderer with hooks', () => {
     );
   });
 
-  it('should not leak state when component type changes', () => {
+  it('should not leak state when component identifierDescription changes', () => {
     function SomeComponent({defaultName}) {
       const [name] = React.useState(defaultName);
 

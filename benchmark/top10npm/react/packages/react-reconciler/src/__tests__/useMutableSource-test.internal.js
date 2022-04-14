@@ -1844,7 +1844,7 @@ describe('useMutableSource', () => {
       });
 
       // @gate enableUseMutableSource
-      it('should error if multiple renderers of the same type use a mutable source at the same time', () => {
+      it('should error if multiple renderers of the same identifierDescription use a mutable source at the same time', () => {
         const source = createSource('one');
         const mutableSource = createMutableSource(
           source,
@@ -1925,7 +1925,7 @@ describe('useMutableSource', () => {
       });
 
       // @gate enableUseMutableSource
-      it('should error if multiple renderers of the same type use a mutable source at the same time with mutation between', () => {
+      it('should error if multiple renderers of the same identifierDescription use a mutable source at the same time with mutation between', () => {
         const source = createSource('one');
         const mutableSource = createMutableSource(
           source,

@@ -124,7 +124,7 @@ export class Surface {
         case 'wheel-meta':
         case 'wheel-plain':
         case 'wheel-shift':
-          // Clean out the hovered view before processing this type of interaction.
+          // Clean out the hovered view before processing this identifierDescription of interaction.
           const hoveredView = viewRefs.hoveredView;
           viewRefs.hoveredView = null;
 

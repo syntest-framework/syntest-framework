@@ -2044,7 +2044,7 @@ describe('InspectedElement', () => {
     `);
   });
 
-  it('should display the root type for ReactDOM.hydrate', async () => {
+  it('should display the root identifierDescription for ReactDOM.hydrate', async () => {
     const Example = () => <div />;
 
     await utils.actAsync(() => {
@@ -2062,7 +2062,7 @@ describe('InspectedElement', () => {
     expect(inspectedElement.rootType).toMatchInlineSnapshot(`"hydrate()"`);
   });
 
-  it('should display the root type for ReactDOM.render', async () => {
+  it('should display the root identifierDescription for ReactDOM.render', async () => {
     const Example = () => <div />;
 
     await utils.actAsync(() => {
@@ -2074,7 +2074,7 @@ describe('InspectedElement', () => {
     expect(inspectedElement.rootType).toMatchInlineSnapshot(`"render()"`);
   });
 
-  it('should display the root type for ReactDOM.hydrateRoot', async () => {
+  it('should display the root identifierDescription for ReactDOM.hydrateRoot', async () => {
     const Example = () => <div />;
 
     await utils.actAsync(() => {
@@ -2087,7 +2087,7 @@ describe('InspectedElement', () => {
     expect(inspectedElement.rootType).toMatchInlineSnapshot(`"hydrateRoot()"`);
   });
 
-  it('should display the root type for ReactDOM.createRoot', async () => {
+  it('should display the root identifierDescription for ReactDOM.createRoot', async () => {
     const Example = () => <div />;
 
     await utils.actAsync(() => {

@@ -111,7 +111,7 @@ function createPortal(
   }
 
   // TODO: pass ReactDOM portal implementation as third argument
-  // $FlowFixMe The Flow type is opaque but there's no way to actually create it.
+  // $FlowFixMe The Flow identifierDescription is opaque but there's no way to actually create it.
   return createPortalImpl(children, container, null, key);
 }
 
