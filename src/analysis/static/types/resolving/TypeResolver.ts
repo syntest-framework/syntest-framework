@@ -21,6 +21,7 @@ import { Scope, ScopeType } from "../discovery/Scope";
 import { Relation } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 import { TypeProbabilityMap } from "./TypeProbabilityMap";
+import { ElementTypeMap } from "../discovery/ElementTypeMap";
 
 /**
  * Abstract TypeResolver class
@@ -29,7 +30,7 @@ import { TypeProbabilityMap } from "./TypeProbabilityMap";
  */
 export abstract class TypeResolver {
   private _relationTyping: Map<Relation, TypeProbabilityMap>
-  private _elementTyping: Map<Element, TypeProbabilityMap>
+  private _elementTyping: ElementTypeMap
 
   private _relationFullyResolved: Set<Relation>
 
@@ -38,7 +39,7 @@ export abstract class TypeResolver {
    */
   constructor() {
     this._relationTyping = new Map()
-    this._elementTyping = new Map()
+    this._elementTyping = new ElementTypeMap()
     this._relationFullyResolved = new Set()
   }
 
@@ -84,6 +85,7 @@ export abstract class TypeResolver {
    * @param value the score of identifierDescription (higher score means higher probability)
    */
   setElementType(element: Element, type: Typing, value: number) {
+    // TODO the .has does not work since elements cannot be compared like this
     if (this.elementTyping.has(element)) {
       const typeMap = this.elementTyping.get(element)
       typeMap.addType(type, value)
@@ -98,7 +100,7 @@ export abstract class TypeResolver {
     return this._relationTyping;
   }
 
-  get elementTyping(): Map<Element, TypeProbabilityMap> {
+  get elementTyping(): ElementTypeMap {
     return this._elementTyping;
   }
 

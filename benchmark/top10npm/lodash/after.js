@@ -30,9 +30,3 @@ function after(n, func) {
 }
 
 export default after
-
-element -> {
-  number: 25%,
-  string: 50%,
-  boolean: 25%
-}

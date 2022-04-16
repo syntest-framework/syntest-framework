@@ -18,7 +18,6 @@
 import { Element, ElementType, getElement, getElementId } from "./Element";
 import { getRelationType, Relation, RelationType } from "./Relation";
 import { Scope, ScopeType } from "./Scope";
-import { ComplexObject } from "./object/ComplexObject";
 
 // TODO functionexpression
 // TODO return
@@ -148,14 +147,15 @@ export class VariableVisitor {
             value: param.name
           })
         } else if (param.type === "RestElement"
-          || param.type === "AssignmentPattern") {
+          || param.type === "AssignmentPattern"
+          || param.type === "ObjectPattern") {
           involved.push({
             scope: scope,
             type: ElementType.Relation,
             value: `%${path.node.start}-${path.node.end}`
           })
         } else {
-          throw new Error("unsupported")
+          throw new Error(`Unsupported parameter type: ${param.type}`)
         }
       }
 
@@ -310,10 +310,16 @@ export class VariableVisitor {
 
   public ArrayExpression: (path) => void = (path) => {
     const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: RelationType.Array,
       involved: path.node.elements.map((e) => {
+        if (!e) {
+          return {
+            scope: scope,
+            type: ElementType.NullConstant,
+            value: null
+          }
+        }
         return getElement(scope, e)
       })
     }
@@ -383,7 +389,18 @@ export class VariableVisitor {
   }
 
   public MemberExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
+    let scope = this._getCurrentScope()
+
+    if (path.node.object.type === "ThisExpression") {
+      // set the scope to the first "thisable" scope
+      scope = this._scopes
+        .reverse()
+        .find((s) =>
+          s.type === ScopeType.Object
+          || s.type === ScopeType.Class
+          || s.type === ScopeType.Function
+        )
+    }
 
     const relation: Relation = {
       relation: RelationType.PropertyAccessor,

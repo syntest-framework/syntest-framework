@@ -23,6 +23,7 @@ export interface Element {
   value: string
 }
 
+
 export function isInstanceOfElement(object: any): object is Element {
   return 'scope' in object && 'type' in object && 'value' in object
 }
@@ -38,8 +39,14 @@ export enum ElementType {
 }
 
 export function getElement(scope: Scope, node): Element {
-  if (node.type === "StringLiteral"
-  || node.type === "TemplateLiteral") {
+  if (node.type === "NullLiteral") {
+    return {
+      scope: scope,
+      type: ElementType.NullConstant,
+      value: null
+    }
+  } else if (node.type === "StringLiteral"
+    || node.type === "TemplateLiteral") {
     return {
       scope: scope,
       type: ElementType.StringConstant,
@@ -62,12 +69,6 @@ export function getElement(scope: Scope, node): Element {
       scope: scope,
       type: ElementType.RegexConstant,
       value: node.pattern
-    }
-  } else if (node.type === "NullLiteral") {
-    return {
-      scope: scope,
-      type: ElementType.NullConstant,
-      value: node.value
     }
   } else if (node.type === "Identifier") {
     return {

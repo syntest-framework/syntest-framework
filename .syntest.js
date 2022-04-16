@@ -1,10 +1,10 @@
 module.exports = {
     // seed: 'test',
-    population_size: 10,
+    population_size: 30,
     max_depth: 5,
 
     // mutation chances
-    resample_gene_chance: 0.02,
+    resample_gene_chance: 0.01,
     delta_mutation_chance: 0.8,
     sample_func_as_arg: 0.5,
     explore_illegal_values: false,
@@ -12,7 +12,7 @@ module.exports = {
     algorithm: "DynaMOSA",
     search_time: 10,
     total_time: 60,
-    iteration_budget: 1000,
+    iteration_budget: 100000,
 
     probe_objective: true,
     modifier_extraction: true,
@@ -26,6 +26,7 @@ module.exports = {
     use_type_inference: true,
     type_inference_mode: 'roulette',
 
+    // target_root_directory: "./benchmark/top10npm/lodash",
     target_root_directory: "./benchmark/top10npm/commanderjs/lib",
     include: [
         // "./benchmark/top10npm/lodash/result.js",

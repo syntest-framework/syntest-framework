@@ -297,10 +297,9 @@ export class JavaScriptTargetPool extends TargetPool {
   scanTargetRootDirectory(): void {
     const absoluteRootPath = path.resolve(Properties.target_root_directory)
 
-    const files = getAllFiles(absoluteRootPath, ".js")
+    // TODO remove the filters
+    const files = getAllFiles(absoluteRootPath, ".js").filter((x) => !x.includes('/test/') && !x.includes('.test.js'))
 
-    // console.log(absoluteRootPath)
-    // console.log(files)
 
     const objects: ComplexObject[] = []
     const objectGenerator = new ObjectGenerator()

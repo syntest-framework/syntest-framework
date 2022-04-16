@@ -190,8 +190,35 @@ export class TypeResolverInference extends TypeResolver {
               return
             }
 
-            // TODO get type info from the object definition
-            // const element [...this.elementTyping.keys()].filter()
+            // get type info from the object definition
+            const relevantRelations = relations
+              .filter((r) => r.relation === RelationType.PropertyAccessor)
+              .filter((r) => r.involved[1].scope.filePath === object.import)
+              .filter((r) => r.involved[1].scope.name === object.name)
+              .filter((r) => r.involved[0].value === 'this')
+              .filter((r) => r.involved[1].value === prop)
+              .filter((r) => r.involved[1].type === 'identifier')
+
+            elements = relevantRelations.map((r) => r.involved[1])
+
+            // if (elements.length > 2) {
+            //   const el1 = elements[0]
+            //
+            //   for (const el2 of elements) {
+            //     if (el1 !== el2) {
+            //       console.log(object)
+            //       console.log(elements)
+            //       process.exit()
+            //     }
+            //   }
+            // }
+
+            if (elements.length && this.elementTyping.has(elements[0])) {
+              // console.log(elements.length)
+              found += 1
+              propertyTypings.set(elements[0].value, this.elementTyping.get(elements[0]))
+              return
+            }
           })
 
           // properties.forEach((p) => {
@@ -236,7 +263,7 @@ export class TypeResolverInference extends TypeResolver {
     // TODO remove this
     let rounds = 0
     let somethingSolved = true
-    while (somethingSolved && rounds < 1000) {
+    while (somethingSolved && rounds < 100) {
       somethingSolved = false
       rounds += 1 // TODO remove this
 
@@ -529,6 +556,12 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.LogicalAnd: //can be the boolean or the identifierDescription of the second one depending on if the first and second are not false/null/undefined
       case RelationType.NullishCoalescing: //??
         // this.relationTyping.set(relation, { identifierDescription: involved[1].identifierDescription })
+
+        // TODO
+        // if (!isInstanceOfElement(involved[0])) {
+        //   this.setRelationType(relation, involved[0], 1)
+        //   this.setElementType(involved[0], { type: TypingType.FUNCTION }, 1)
+        // }
         return false
 
       // ternary

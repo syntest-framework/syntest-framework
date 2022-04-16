@@ -31,7 +31,7 @@ export class TypeProbabilityMap {
   private changed: boolean
 
   private scoreMap: Map<string, number>
-  private probabilityMap: Map<Typing, number>
+  private probabilityMap: Map<Typing | TypeProbabilityMap, number>
 
   /**
    * Constructor
@@ -157,11 +157,11 @@ export class TypeProbabilityMap {
   getDynamicType(): Typing {
     this.calculateProbabilities()
 
-    const best: Typing = this.probabilityMap.keys().next().value
+    const first: Typing = this.probabilityMap.keys().next().value
 
     // TODO
 
-    return best
+    return first
   }
 
   keys = () => this.typeMap.keys()
