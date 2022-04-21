@@ -27,7 +27,9 @@ describe("Tournament selection", function () {
     await guessCWD(null);
     await setupOptions("", "");
     await loadConfig();
-    await processConfig({}, "");
+    await processConfig({
+      target_root_directory: "./"
+    }, "");
     await setupLogger();
 
     setUserInterface(
