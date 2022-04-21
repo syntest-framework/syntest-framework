@@ -151,7 +151,6 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._cfg;
   }
 
-
   get path(): string {
     return this._path;
   }

@@ -17,7 +17,7 @@
  */
 
 export class Properties {
-  public static target_root_directory: string
+  public static target_root_directory: string;
   public static include: string[];
   public static exclude: string[];
 
@@ -83,7 +83,7 @@ export const properties = {
   target_root_directory: {
     description: "The root directory where all targets are in",
     type: "string",
-    required: true
+    required: true,
   },
 
   include: {
