@@ -25,7 +25,6 @@ import { Decoding, Statement } from "../Statement";
 import { RootStatement } from "./RootStatement";
 import * as path from "path";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -42,7 +41,7 @@ export class FunctionCall extends RootStatement {
    */
   constructor(
     identifierDescription: IdentifierDescription,
-    type: Typing,
+    type: string,
     uniqueId: string,
     functionName: string,
     args: Statement[]

@@ -20,7 +20,6 @@
 import { Decoding, Statement } from "../Statement";
 import { EncodingSampler } from "@syntest/framework";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -31,7 +30,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
   }
   private _value: any;
 
-  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, value: T) {
+  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, value: T) {
     super(identifierDescription, type, uniqueId);
     this._value = value;
   }

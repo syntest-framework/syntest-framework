@@ -20,7 +20,6 @@ import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * Generic number class
@@ -28,7 +27,7 @@ import { Typing } from "../../../analysis/static/types/resolving/Typing";
  * @author Dimitri Stallenberg
  */
 export class NumericStatement extends PrimitiveStatement<number> {
-  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, value: number) {
+  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, value: number) {
     super(identifierDescription, type, uniqueId, value);
     this._classType = 'NumericStatement'
   }

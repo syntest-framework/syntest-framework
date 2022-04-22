@@ -1,14 +1,14 @@
 import { Element } from "./Element";
-import { TypeProbabilityMap } from "../resolving/TypeProbabilityMap";
+import { TypeProbability } from "../resolving/TypeProbability";
 
 export class ElementTypeMap {
 
   private elementMap: Map<string, Element>
-  private typeMap: Map<string, TypeProbabilityMap>
+  private typeMap: Map<string, TypeProbability>
 
   constructor() {
     this.elementMap = new Map<string, Element>()
-    this.typeMap = new Map<string, TypeProbabilityMap>()
+    this.typeMap = new Map<string, TypeProbability>()
   }
 
   elementAsString(element: Element) {
@@ -21,11 +21,11 @@ export class ElementTypeMap {
     value=${element.value}`
   }
 
-  set(element: Element, typeProbabilityMap: TypeProbabilityMap) {
+  set(element: Element, typeProbability: TypeProbability) {
     const elString = this.elementAsString(element)
 
     this.elementMap.set(elString, element)
-    this.typeMap.set(elString, typeProbabilityMap)
+    this.typeMap.set(elString, typeProbability)
   }
 
   has(element: Element): boolean {
@@ -34,7 +34,7 @@ export class ElementTypeMap {
     return this.elementMap.has(elString)
   }
 
-  get(element: Element): TypeProbabilityMap {
+  get(element: Element): TypeProbability {
     const elString = this.elementAsString(element)
 
     return this.typeMap.get(elString)
@@ -44,7 +44,7 @@ export class ElementTypeMap {
     return this.elementMap.values()
   }
 
-  values (): IterableIterator<TypeProbabilityMap> {
+  values (): IterableIterator<TypeProbability> {
     return this.typeMap.values()
   }
 }

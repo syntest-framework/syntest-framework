@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 import { TargetMetaData } from "@syntest/framework";
-import { TypeProbabilityMap } from "../types/resolving/TypeProbabilityMap";
 import { ActionType } from "../parsing/ActionType";
 import { ActionVisibility } from "../parsing/ActionVisibility";
 import { ActionDescription } from "../parsing/ActionDescription";
+import { TypeProbability } from "../types/resolving/TypeProbability";
 
 // TODO check if exported (and how)
 export class TargetVisitor {
@@ -66,7 +66,7 @@ export class TargetVisitor {
       parameters: path.node.params.map(this._extractParam),
       returnParameter: {
         name: "returnValue",
-        typeProbabilityMap: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
       },
       isStatic: path.node.static,
       isAsync: path.node.async,
@@ -88,7 +88,7 @@ export class TargetVisitor {
       parameters: path.node.params.map(this._extractParam),
       returnParameter: {
         name: "returnValue",
-        typeProbabilityMap: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
       },
       isStatic: path.node.static,
       isAsync: path.node.async,
@@ -114,7 +114,7 @@ export class TargetVisitor {
       parameters: path.node.params.map(this._extractParam),
       returnParameter: {
         name: "returnValue",
-        typeProbabilityMap: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
       },
       isStatic: path.node.static,
       isAsync: path.node.async,

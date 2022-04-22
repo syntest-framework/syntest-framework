@@ -23,9 +23,7 @@ import {
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Decoding } from "../Statement";
-import { Typing, TypingType } from "../../../analysis/static/types/resolving/Typing";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
 
 /**
  * @author Dimitri Stallenberg
@@ -37,7 +35,7 @@ export class StringStatement extends PrimitiveStatement<string> {
 
   constructor(
     identifierDescription: IdentifierDescription,
-    type: Typing,
+    type: string,
     uniqueId: string,
     value: string,
     alphabet: string,

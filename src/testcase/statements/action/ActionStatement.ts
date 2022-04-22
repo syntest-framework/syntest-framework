@@ -19,7 +19,6 @@
 import { Statement } from "../Statement";
 import { Encoding, EncodingSampler } from "@syntest/framework";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -29,7 +28,7 @@ export abstract class ActionStatement extends Statement {
 
   protected constructor(
     identifierDescription: IdentifierDescription,
-    type: Typing,
+    type: string,
     uniqueId: string,
     args: Statement[]
   ) {

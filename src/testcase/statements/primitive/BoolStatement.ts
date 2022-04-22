@@ -23,14 +23,12 @@ import {
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing, TypingType } from "../../../analysis/static/types/resolving/Typing";
-import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
 
 /**
  * @author Dimitri Stallenberg
  */
 export class BoolStatement extends PrimitiveStatement<boolean> {
-  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, value: boolean) {
+  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, value: boolean) {
     super(identifierDescription, type, uniqueId, value);
     this._classType = 'BoolStatement'
   }

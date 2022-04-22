@@ -24,7 +24,6 @@ import { ActionStatement } from "./ActionStatement";
 import { Decoding, Statement } from "../Statement";
 import * as path from "path";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -42,7 +41,7 @@ export class MethodCall extends ActionStatement {
    */
   constructor(
     identifierDescription: IdentifierDescription,
-    type: Typing,
+    type: string,
     uniqueId: string,
     functionName: string,
     args: Statement[]

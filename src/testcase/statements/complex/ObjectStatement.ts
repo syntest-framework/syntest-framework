@@ -22,8 +22,6 @@ import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import * as path from "path";
 import { StringStatement } from "../primitive/StringStatement";
-import { TypeProbabilityMap } from "../../../analysis/static/types/resolving/TypeProbabilityMap";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -33,7 +31,7 @@ export class ObjectStatement extends Statement {
   private _keys: StringStatement[];
   private _values: Statement[];
 
-  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, keys: StringStatement[], values: Statement[]) {
+  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, keys: StringStatement[], values: Statement[]) {
     super(identifierDescription, type, uniqueId);
     this._keys = keys
     this._values = values
@@ -85,7 +83,8 @@ export class ObjectStatement extends Statement {
             finalKeys.push(keys[i])
 
             if (Properties.resample_gene_probability) {
-              finalValues.push(sampler.sampleArgument(depth + 1, {name: keys[i].varName, typeProbabilityMap: this.type.propertyTypings.get(keys[i].varName)}))
+              const propertyType = this.identifierDescription.typeProbabilityMap.getPropertyTypes(this.type).get(keys[i].varName)
+              finalValues.push(sampler.sampleArgument(depth + 1, {name: keys[i].varName, typeProbabilityMap: propertyType}))
             } else {
               finalValues.push(values[i].mutate(sampler, depth + 1))
             }

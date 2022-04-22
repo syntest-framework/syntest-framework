@@ -21,7 +21,6 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import * as path from "path";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -30,7 +29,7 @@ import { Typing } from "../../../analysis/static/types/resolving/Typing";
 export class ArrayStatement extends Statement {
   private _children: Statement[];
 
-  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, children: Statement[]) {
+  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, children: Statement[]) {
     super(identifierDescription, type, uniqueId);
     this._children = children
     this._classType = 'ArrayStatement'

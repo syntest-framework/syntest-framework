@@ -21,7 +21,6 @@ import { prng, Properties } from "@syntest/framework";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -29,7 +28,7 @@ import { Typing } from "../../../analysis/static/types/resolving/Typing";
 export class ArrowFunctionStatement extends Statement {
   private _returnValue: Statement;
 
-  constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string, returnValue: Statement) {
+  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, returnValue: Statement) {
     super(identifierDescription, type, uniqueId);
     this._returnValue = returnValue
     this._classType = 'ArrowFunctionStatement'

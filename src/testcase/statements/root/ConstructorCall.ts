@@ -25,7 +25,6 @@ import * as path from "path";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import { JavaScriptSubject } from "../../../search/JavaScriptSubject";
 import { ActionType } from "../../../analysis/static/parsing/ActionType";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -44,7 +43,7 @@ export class ConstructorCall extends RootStatement {
    */
   constructor(
     identifierDescription: IdentifierDescription,
-    type: Typing,
+    type: string,
     uniqueId: string,
     args: Statement[],
     calls: Statement[],

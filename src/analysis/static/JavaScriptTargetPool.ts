@@ -34,7 +34,8 @@ import { ActionDescription } from "./parsing/ActionDescription";
 import { Scope } from "./types/discovery/Scope";
 import { Relation } from "./types/discovery/Relation";
 import { Element } from "./types/discovery/Element";
-import { Typing, TypingType } from "./types/resolving/Typing";
+import { TypeEnum } from "./types/resolving/TypeEnum";
+import { TypeProbability } from "./types/resolving/TypeProbability";
 
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
@@ -240,7 +241,7 @@ export class JavaScriptTargetPool extends TargetPool {
       const libraries: Export[] = [];
       imports.forEach((importPath: string) => {
         // Full path to the imported file
-        let pathLib = path.join(path.dirname(targetPath), importPath);
+        const pathLib = path.join(path.dirname(targetPath), importPath);
 
         // External libraries have a different path!
         try {
@@ -315,12 +316,12 @@ export class JavaScriptTargetPool extends TargetPool {
       name: "function",
       properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
       functions: new Set(['apply', 'bind', 'call', 'toString']),
-      propertyType: new Map<string, Typing>([
-        ['arguments', { type: TypingType.ARRAY }],
-        ['caller', { type: TypingType.FUNCTION }],
-        ['displayName', { type: TypingType.STRING }],
-        ['length', { type: TypingType.NUMERIC }],
-        ['name', { type: TypingType.STRING }]
+      propertyType: new Map<string, TypeProbability>([
+        ['arguments', new TypeProbability([[TypeEnum.ARRAY, 1, null]])],
+        ['caller', new TypeProbability([[TypeEnum.FUNCTION, 1, null]])],
+        ['displayName', new TypeProbability([[TypeEnum.STRING, 1, null]])],
+        ['length', new TypeProbability([[TypeEnum.NUMERIC, 1, null]])],
+        ['name', new TypeProbability([[TypeEnum.STRING, 1, null]])]
       ])
     })
 
@@ -330,8 +331,8 @@ export class JavaScriptTargetPool extends TargetPool {
       name: "array",
       properties: new Set(['length']),
       functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values']),
-      propertyType: new Map<string, Typing>([
-        ['length', { type: TypingType.NUMERIC }]
+      propertyType: new Map<string, TypeProbability>([
+        ['length', new TypeProbability([[TypeEnum.NUMERIC, 1, null]])]
       ])
     })
 
@@ -341,8 +342,8 @@ export class JavaScriptTargetPool extends TargetPool {
       name: "string",
       properties: new Set(['length']),
       functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf']),
-      propertyType: new Map<string, Typing>([
-        ['length', { type: TypingType.NUMERIC }]
+      propertyType: new Map<string, TypeProbability>([
+        ['length', new TypeProbability([[TypeEnum.NUMERIC, 1, null]])]
       ])
     })
 

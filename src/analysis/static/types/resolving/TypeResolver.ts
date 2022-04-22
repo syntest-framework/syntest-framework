@@ -15,13 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Typing } from "./Typing";
 import { Element } from "../discovery/Element";
 import { Scope, ScopeType } from "../discovery/Scope";
 import { Relation } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
-import { TypeProbabilityMap } from "./TypeProbabilityMap";
 import { ElementTypeMap } from "../discovery/ElementTypeMap";
+import { TypeProbability } from "./TypeProbability";
 
 /**
  * Abstract TypeResolver class
@@ -29,7 +28,7 @@ import { ElementTypeMap } from "../discovery/ElementTypeMap";
  * @author Dimitri Stallenberg
  */
 export abstract class TypeResolver {
-  private _relationTyping: Map<Relation, TypeProbabilityMap>
+  private _relationTyping: Map<Relation, TypeProbability>
   private _elementTyping: ElementTypeMap
 
   private _relationFullyResolved: Set<Relation>
@@ -59,7 +58,7 @@ export abstract class TypeResolver {
    * @param scopeType the identifierDescription of the scope the varaiable is in (function, class, global, etc.)
    * @param variableName the name of the variable
    */
-  abstract getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbabilityMap
+  abstract getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbability
 
   /**
    * Sets the identifierDescription of the specified relation
@@ -67,12 +66,12 @@ export abstract class TypeResolver {
    * @param type the identifierDescription of the relation
    * @param value the score of identifierDescription (higher score means higher probability)
    */
-  setRelationType(relation: Relation, type: Typing, value: number) {
+  setRelationType(relation: Relation, type: string | TypeProbability, value: number) {
     if (this.relationTyping.has(relation)) {
       const probabilities = this.relationTyping.get(relation)
       probabilities.addType(type, value)
     } else {
-      const probabilities = new TypeProbabilityMap()
+      const probabilities = new TypeProbability()
       this.relationTyping.set(relation, probabilities)
       probabilities.addType(type, value)
     }
@@ -81,22 +80,22 @@ export abstract class TypeResolver {
   /**
    * Sets the identifierDescription of the specified element
    * @param element the element to set the identifierDescription of
-   * @param type the identifierDescription of the element
-   * @param value the score of identifierDescription (higher score means higher probability)
+   * @param type the type of the element
+   * @param value the score of type (higher score means higher probability)
    */
-  setElementType(element: Element, type: Typing, value: number) {
+  setElementType(element: Element, type: string | TypeProbability, value: number, object: ComplexObject = null, propertyTypings: Map<string, TypeProbability> = null) {
     // TODO the .has does not work since elements cannot be compared like this
     if (this.elementTyping.has(element)) {
       const typeMap = this.elementTyping.get(element)
-      typeMap.addType(type, value)
+      typeMap.addType(type, value, object, propertyTypings)
     } else {
-      const typeMap = new TypeProbabilityMap()
+      const typeMap = new TypeProbability()
       this.elementTyping.set(element, typeMap)
-      typeMap.addType(type, value)
+      typeMap.addType(type, value, object, propertyTypings)
     }
   }
 
-  get relationTyping(): Map<Relation, TypeProbabilityMap> {
+  get relationTyping(): Map<Relation, TypeProbability> {
     return this._relationTyping;
   }
 

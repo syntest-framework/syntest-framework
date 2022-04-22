@@ -19,7 +19,6 @@
 
 import { Encoding, EncodingSampler, prng } from "@syntest/framework";
 import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../analysis/static/types/resolving/Typing";
 
 /**
  * @author Dimitri Stallenberg
@@ -35,7 +34,7 @@ export abstract class Statement {
     return this._identifierDescription;
   }
 
-  get type(): Typing {
+  get type(): string {
     return this._type;
   }
 
@@ -46,7 +45,7 @@ export abstract class Statement {
   protected _classType: string
   private _varName: string;
   private _identifierDescription: IdentifierDescription;
-  private _type: Typing
+  private _type: string
   private _uniqueId: string;
 
   /**
@@ -55,7 +54,7 @@ export abstract class Statement {
    * @param type
    * @param uniqueId
    */
-  protected constructor(identifierDescription: IdentifierDescription, type: Typing, uniqueId: string) {
+  protected constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string) {
     this._identifierDescription = identifierDescription;
     this._type = type
     this._uniqueId = uniqueId;

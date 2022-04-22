@@ -23,7 +23,6 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 import { ActionStatement } from "./ActionStatement";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
-import { Typing } from "../../../analysis/static/types/resolving/Typing";
 
 
 // TODO maybe delete?
@@ -44,7 +43,7 @@ export class StaticMethodCall extends ActionStatement {
    */
   constructor(
     identifierDescription: IdentifierDescription,
-    type: Typing,
+    type: string,
     uniqueId: string,
     args: Statement[],
     functionName: string

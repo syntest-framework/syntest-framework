@@ -27,7 +27,6 @@ import { Statement } from "../statements/Statement";
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
 import { StringStatement } from "../statements/primitive/StringStatement";
-import { Typing } from "../../analysis/static/types/resolving/Typing";
 
 /**
  * JavaScriptRandomSampler class
@@ -52,18 +51,18 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
 
   abstract sampleString(
     identifierDescription?: IdentifierDescription,
-    type?: Typing,
+    type?: string,
     alphabet?: string,
     maxlength?: number
   ): StringStatement
 
   abstract sampleBool(
     identifierDescription?: IdentifierDescription,
-    type?: Typing,
+    type?: string,
   )
 
   abstract sampleNumber(
     identifierDescription?: IdentifierDescription,
-    type?: Typing,
+    type?: string,
   )
 }
