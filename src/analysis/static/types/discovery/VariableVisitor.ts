@@ -84,6 +84,9 @@ export class VariableVisitor {
   }
 
   private _getCurrentScope(): Scope {
+    if (!this._currentScopeStack.length) {
+      throw new Error("No scope available")
+    }
     return this._currentScopeStack[this._currentScopeStack.length - 1]
   }
 
@@ -170,6 +173,50 @@ export class VariableVisitor {
   }
 
   public ArrowFunctionExpression = {
+    enter: (path) => {
+      const functionScope = this._getCurrentScope()
+      const functionName = `%${path.node.start}-${path.node.end}`
+
+      this._enterScope(functionName, ScopeType.Function)
+
+      const scope = this._getCurrentScope()
+
+      const involved: Element[] = [{
+        scope: functionScope,
+        type: ElementType.Identifier,
+        value: functionName
+      }]
+
+      for (const param of path.node.params) {
+        if (param.type === "Identifier") {
+          involved.push({
+            scope: scope,
+            type: ElementType.Identifier,
+            value: param.name
+          })
+        } else if (param.type === "RestElement") {
+          involved.push({
+            scope: scope,
+            type: ElementType.Relation,
+            value: `%${path.node.start}-${path.node.end}`
+          })
+        } else {
+          throw new Error("unsupported")
+        }
+      }
+
+      this.relations.push({
+        relation: RelationType.Parameters,
+        involved: involved
+      })
+    },
+    exit: (path) => {
+      const functionName = `%${path.node.start}-${path.node.end}`
+      this._exitScope(functionName)
+    }
+  }
+
+  public FunctionExpression = {
     enter: (path) => {
       const functionScope = this._getCurrentScope()
       const functionName = `%${path.node.start}-${path.node.end}`

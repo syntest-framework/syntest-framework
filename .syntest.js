@@ -27,7 +27,13 @@ module.exports = {
     type_inference_mode: 'roulette',
 
     // target_root_directory: "./benchmark/top10npm/lodash",
-    target_root_directory: "./benchmark/top10npm/commanderjs/lib",
+    // target_root_directory: "./benchmark/top10npm/commanderjs/lib",
+
+    target_root_directory: "./benchmark/top10npm/axios/lib",
+    // target_root_directory: "./benchmark/top10npm/chalk/source",
+    // target_root_directory: "./benchmark/top10npm/express/lib",
+    // target_root_directory: "./benchmark/top10npm/moment/src",
+
     include: [
         // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
@@ -35,16 +41,16 @@ module.exports = {
         // "./benchmark/top10npm/lodash/uniq.js",
         // "./benchmark/top10npm/lodash/unzip.js",
 
-        // "./benchmark/top10npm/lodash/**/a*.js",
-        // "./benchmark/top10npm/commanderjs/lib/*.js",
-        "./benchmark/top10npm/commanderjs/lib/help.js",
+        // "./benchmark/top10npm/commanderjs/lib/help.js",
 
-        // "./benchmark/top10npm/lodash/.internal/**/*.js",
-        // "./benchmark/top10npm/lodash/.internal/baseClone.js"
-        // './benchmark/top10npm/lodash/b*.js',
-        // "./benchmark/custom/tests.js",
-        // "./benchmark/top10npm/lodash/sampleSize.js",
-        // "./benchmark/top10npm/lodash/before.js",
+
+        "./benchmark/top10npm/axios/lib/**/*.js",
+        // "./benchmark/top10npm/chalk/source/**/*.js",
+        // "./benchmark/top10npm/commanderjs/lib/**/*.js",
+        // "./benchmark/top10npm/express/lib/**/*.js",
+        // "./benchmark/top10npm/lodash/**/*.js",
+        // "./benchmark/top10npm/moment/src/**/*.js",
+
 
     ],
     exclude: [

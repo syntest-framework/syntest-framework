@@ -40,13 +40,17 @@ export class ObjectVisitor {
   }
 
   private _exitObject(node) {
-    if (node.id.name !== this._currentObject().name) {
+    if ((node.id ? node.id.name : 'anon') !== this._currentObject().name) {
       throw new Error("Exiting wrong object!")
     }
     this._objectStack.pop()
   }
 
   private _currentObject() {
+    if (!this._objectStack.length) {
+      throw new Error("No current object available!")
+    }
+
     return this._objectStack[this._objectStack.length - 1]
   }
 
@@ -91,7 +95,24 @@ export class ObjectVisitor {
     exit: (path) => this._exitObject(path.node)
   }
 
+  public FunctionExpression = {
+    enter: (path) => {
+      // TODO find the object where we are assigning to if its an assignment
+      const _object: ComplexObject = {
+        import: this._filePath,
+        name: path.node.id ? path.node.id.name : 'anon',
+        properties: new Set(),
+        functions: new Set()
+      }
+
+      this._objects.push(_object)
+      this._enterObject(_object)
+    },
+    exit: (path) => this._exitObject(path.node)
+  }
+
   public MemberExpression: (path) => void = (path) => {
+    // TODO prototyping shizzle  (./axios/lib/cancel/Cancel.js)
     if (path.node.object.type === "ThisExpression") {
       const _object = this._currentObject()
 

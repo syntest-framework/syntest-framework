@@ -181,6 +181,13 @@ export class ExportVisitor {
       }
 
       return this._identifiers.get(name)
+    } else if (type === 'StringLiteral'
+      || type === 'TemplateLiteral'
+      || type === 'NumericLiteral'
+      || type === 'BooleanLiteral'
+      || type === 'RegExpLiteral'
+      || type === 'NullLiteral') {
+      return ExportType.const
     }
 
     throw new Error("ANY export identifierDescription: " + type)

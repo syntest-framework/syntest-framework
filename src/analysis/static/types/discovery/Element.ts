@@ -102,6 +102,7 @@ export function getElement(scope: Scope, node): Element {
     || node.type === 'MemberExpression'
 
     || node.type === 'ArrowFunctionExpression'
+    || node.type === 'FunctionExpression'
 
     // TODO
 
