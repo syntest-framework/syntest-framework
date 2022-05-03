@@ -1,7 +1,4 @@
-import {
-  ObjectiveFunction,
-  SearchSubject,
-} from "../../src";
+import { ObjectiveFunction, SearchSubject } from "../../src";
 import { DummyCFG } from "./DummyCFG.mock";
 
 export class DummySearchSubject extends SearchSubject<any> {

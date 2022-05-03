@@ -23,9 +23,12 @@ describe("Fast non-dominated sorting", function () {
     await guessCWD(null);
     await setupOptions("", "");
     await loadConfig();
-    await processConfig({
-      target_root_directory: "./"
-    }, "");
+    await processConfig(
+      {
+        target_root_directory: "./",
+      },
+      ""
+    );
     await setupLogger();
 
     setUserInterface(
