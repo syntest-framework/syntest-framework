@@ -84,8 +84,8 @@ module.exports = {
         // './benchmark/top10npm/lodash/y*.js',
         // './benchmark/top10npm/lodash/z*.js',
 
-        "./benchmark/top10npm/commanderjs/lib/argument.js",
-        "./benchmark/top10npm/commanderjs/lib/command.js",
+        // "./benchmark/top10npm/commanderjs/lib/argument.js",
+        // "./benchmark/top10npm/commanderjs/lib/command.js",
         // "./benchmark/top10npm/commanderjs/lib/error.js",
 
     ]
