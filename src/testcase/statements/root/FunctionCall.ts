@@ -97,7 +97,7 @@ export class FunctionCall extends RootStatement {
     const argStatements: Decoding[] = this.args
       .flatMap((a) => a.decode(addLogs))
 
-    let decoded = `const ${this.varName} = ${this.functionName}(${args})`
+    let decoded = `const ${this.varName} = await ${this.functionName}(${args})`
 
     if (addLogs) {
       const logDir = path.join(

@@ -18,10 +18,9 @@
 
 import { Archive, getUserInterface, Properties } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
-import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
+import { rmSync, readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
-import * as ts from "typescript"
 import { Runner } from "mocha";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
@@ -92,32 +91,35 @@ export class JavaScriptSuiteBuilder {
       spec: paths
     }
 
-    const mocha = new Mocha(argv)
-
     for (const testPath of paths) {
+      console.log('testing', testPath)
+      const mocha = new Mocha(argv)
+
       delete originalrequire.cache[testPath];
       mocha.addFile(testPath);
+
+
+      // By replacing the global log function we disable the output of the truffle test framework
+      const old = console.log;
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      console.log = () => {};
+
+      let runner: Runner = null
+
+      // Finally, run mocha.
+      process.on("unhandledRejection", reason => {
+        throw reason;
+      });
+
+      await new Promise((resolve) => {
+        runner = mocha.run((failures) => {
+          resolve(failures)
+        })
+      })
+      console.log = old;
     }
 
 
-    // By replacing the global log function we disable the output of the truffle test framework
-    const old = console.log;
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    console.log = () => {};
-
-    let runner: Runner = null
-
-    // Finally, run mocha.
-    process.on("unhandledRejection", reason => {
-      throw reason;
-    });
-
-    await new Promise((resolve) => {
-      runner = mocha.run((failures) => {
-        resolve(failures)
-      })
-    })
-    console.log = old;
 
     // Create final tests files with assertions
     await this.clearDirectory(Properties.temp_test_directory);

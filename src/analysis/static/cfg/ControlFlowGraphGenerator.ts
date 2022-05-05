@@ -369,6 +369,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "BreakStatement":
         return this.visitBreakStatement(child, parents)
+      case "ContinueStatement":
+        return this.visitContinueStatement(child, parents)
+
 
       case "SwitchStatement":
         return this.visitSwitchStatement(child, parents)
@@ -877,6 +880,17 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     return {
       childNodes: [],
       breakNodes: [node],
+    };
+  }
+
+  // TODO currently incorrect is passthrough now
+  private visitContinueStatement(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createNode([ast.loc.start.line], []);
+    this.connectParents(parents, [node]);
+
+    return {
+      childNodes: [],
+      breakNodes: [],
     };
   }
 

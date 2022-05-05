@@ -101,7 +101,7 @@ export class MethodCall extends ActionStatement {
     const argStatements: Decoding[] = this.args
       .flatMap((a) => a.decode(addLogs))
 
-    let decoded = `const ${this.varName} = ${objectVariable}.${this.functionName}(${args})`
+    let decoded = `const ${this.varName} = await ${objectVariable}.${this.functionName}(${args})`
 
     if (addLogs) {
       const logDir = path.join(

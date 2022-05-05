@@ -194,14 +194,16 @@ export class VariableVisitor {
             type: ElementType.Identifier,
             value: param.name
           })
-        } else if (param.type === "RestElement") {
+        } else if (param.type === "RestElement"
+          || param.type === "AssignmentPattern"
+          || param.type === "ObjectPattern") {
           involved.push({
             scope: scope,
             type: ElementType.Relation,
             value: `%${path.node.start}-${path.node.end}`
           })
         } else {
-          throw new Error("unsupported")
+          throw new Error(`Unsupported param type: ${param.type}`)
         }
       }
 

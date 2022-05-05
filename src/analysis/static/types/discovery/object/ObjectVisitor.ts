@@ -33,6 +33,16 @@ export class ObjectVisitor {
 
     this._objects = []
     this._objectStack = []
+
+    const object = {
+      import: "",
+      name: "global",
+      properties: new Set<string>(),
+      functions: new Set<string>()
+    }
+
+    this._objects.push(object)
+    this._objectStack.push(object)
   }
 
   private _enterObject(_object) {
@@ -48,6 +58,7 @@ export class ObjectVisitor {
 
   private _currentObject() {
     if (!this._objectStack.length) {
+      console.log(this._filePath)
       throw new Error("No current object available!")
     }
 
@@ -111,8 +122,34 @@ export class ObjectVisitor {
     exit: (path) => this._exitObject(path.node)
   }
 
+  public ObjectExpression = {
+    enter: (path) => {
+      // TODO find the object where we are assigning to if its an assignment
+      const _object: ComplexObject = {
+        import: this._filePath,
+        name: path.node.id ? path.node.id.name : 'anon',
+        properties: new Set(),
+        functions: new Set()
+      }
+
+      for (const prop of path.node.properties) {
+        if (prop.type === 'ObjectMethod') {
+          _object.functions.add(prop.key.name)
+        } else if (prop.type === 'ObjectProperty') {
+          _object.properties.add(prop.key.name)
+        } else {
+          // TODO spread element
+        }
+      }
+
+      this._objects.push(_object)
+      this._enterObject(_object)
+    },
+    exit: (path) => this._exitObject(path.node)
+  }
+
   public MemberExpression: (path) => void = (path) => {
-    // TODO prototyping shizzle  (./axios/lib/cancel/Cancel.js)
+    // TODO support for prototyping  (./axios/lib/cancel/Cancel.js)
     if (path.node.object.type === "ThisExpression") {
       const _object = this._currentObject()
 

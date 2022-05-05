@@ -114,6 +114,7 @@ export function getElement(scope: Scope, node): Element {
     || node.type === 'ObjectExpression'
 
     || node.type === 'ObjectProperty' // TODO not sure about this one
+    || node.type === 'ObjectMethod'// TODO not sure about this one
 
     || node.type === 'AssignmentExpression') {
     return {

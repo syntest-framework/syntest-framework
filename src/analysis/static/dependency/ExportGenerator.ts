@@ -18,6 +18,7 @@
 
 import { traverse } from "@babel/core";
 import { Export, ExportVisitor } from "./ExportVisitor";
+import { IdentifierVisitor } from "./IdentifierVisitor";
 
 /**
  * Exports generator for targets.
@@ -32,7 +33,10 @@ export class ExportGenerator {
    * @param targetAST The AST of the target
    */
   generate(targetPath: string, targetAST: any): Export[] {
-    const visitor = new ExportVisitor(targetPath);
+    const identifierVisitor = new IdentifierVisitor(targetPath)
+    traverse(targetAST, identifierVisitor)
+
+    const visitor = new ExportVisitor(targetPath, identifierVisitor.identifiers);
 
     traverse(targetAST, visitor);
 

@@ -32,7 +32,8 @@ export class ImportVisitor {
       if (path.node.arguments[0].type === 'StringLiteral') {
         this._imports.add(path.node.arguments[0].value)
       } else {
-        throw new Error("This tool does not support dynamic require statements.")
+        // This tool does not support dynamic require statements.
+        // throw new Error("This tool does not support dynamic require statements.")
       }
     }
   };

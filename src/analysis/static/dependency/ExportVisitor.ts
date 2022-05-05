@@ -15,11 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum ExportType {
-  function,
-  class,
-  const,
-}
+
+
+import { ExportType } from "./IdentifierVisitor";
 
 export interface Export {
   name: string,
@@ -36,22 +34,36 @@ export class ExportVisitor {
   private _exports: Export[];
   private _identifiers: Map<string, ExportType>
 
-  constructor(targetPath: string) {
+  constructor(targetPath: string, identifiers: Map<string, ExportType>) {
     this._targetPath = targetPath
     this._exports = [];
-    this._identifiers = new Map<string, ExportType>()
+    this._identifiers = identifiers
   }
 
   // exports
   public ExportNamedDeclaration: (path) => void = (path) => {
     if (path.node.declaration) {
-      this._exports.push({
-        name: path.node.declaration.id.name,
-        type: this._getType(path.node.declaration.type, path.node.declaration.name),
-        default: false,
-        module: false,
-        filePath: this._targetPath
-      })
+      if (path.node.declaration.declarations) {
+        for (const declaration of path.node.declaration.declarations) {
+          this._exports.push({
+            name: declaration.id.name,
+            type: this._getType(declaration.init.type, declaration.name),
+            default: false,
+            module: false,
+            filePath: this._targetPath
+          })
+        }
+      }
+       else {
+        this._exports.push({
+          name: path.node.declaration.id.name,
+          type: this._getType(path.node.declaration.type, path.node.declaration.name),
+          default: false,
+          module: false,
+          filePath: this._targetPath
+        })
+       }
+
     } else if (path.node.specifiers) {
 
       if (path.node.source) {
@@ -63,14 +75,15 @@ export class ExportVisitor {
         this._exports.push({
           name: specifier.local.name,
           type: this._getType(specifier.local.type, specifier.local.name),
-          default: specifier.local.name === 'default',
+          default: specifier.local.name === 'default' || specifier.exported.name === 'default',
           module: false,
           filePath: this._targetPath
         })
       }
     }
 
-    throw new Error('ANY named export')
+    // console.log(this._targetPath)
+    // throw new Error('ANY named export')
   };
 
   public ExportDefaultDeclaration: (path) => void = (path) => {
@@ -117,6 +130,14 @@ export class ExportVisitor {
               filePath: this._targetPath
             })
           }
+        } else if (path.node.expression.right.type === 'FunctionExpression') {
+          this._exports.push({
+            name: path.node.expression.right.id.name,
+            type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
+            default: true,
+            module: true,
+            filePath: this._targetPath
+          })
         }
       } else if (path.node.expression.left.object.name === 'exports') {
         if (path.node.expression.right.type === 'Identifier') {
@@ -142,34 +163,13 @@ export class ExportVisitor {
     }
   };
 
-  // identifiable stuff
-  public FunctionDeclaration: (path) => void = (path) => {
-    const identifier = path.node.id.name;
-    this._identifiers.set(identifier, ExportType.function)
-  }
-
-  public ClassDeclaration: (path) => void = (path) => {
-    const identifier = path.node.id.name;
-    this._identifiers.set(identifier, ExportType.class)
-  }
-
-  public VariableDeclaration: (path) => void = (path) => {
-    for (const declaration of path.node.declarations) {
-      const identifier = declaration.id.name;
-
-      if (declaration.init && declaration.init.type === "ArrowFunctionExpression") {
-        this._identifiers.set(identifier, ExportType.function) // not always the case
-      } else {
-        this._identifiers.set(identifier, ExportType.const) // not always the case
-      }
-    }
-  }
-
   // util function
   _getType(type: string, name?: string): ExportType {
-    if (type === 'FunctionDeclaration') {
+    if (type === 'FunctionDeclaration'
+      || type === 'FunctionExpression') {
       return ExportType.function
-    } else if (type === 'VariableDeclaration') {
+    } else if (type === 'VariableDeclaration'
+      || type === 'VariableDeclarator') {
       return ExportType.const
     }  else if (type === 'NewExpression') {
       return ExportType.const
@@ -177,7 +177,9 @@ export class ExportVisitor {
       return ExportType.class
     } else if (type === 'Identifier') {
       if (!this._identifiers.has(name)) {
-        throw new Error("Cannot find identifier that is exported: " + name + " - " + type)
+        // TODO for now we just assume const when we have not found such an identifier
+        return ExportType.const
+        // throw new Error("Cannot find identifier that is exported: " + name + " - " + type)
       }
 
       return this._identifiers.get(name)
@@ -188,8 +190,17 @@ export class ExportVisitor {
       || type === 'RegExpLiteral'
       || type === 'NullLiteral') {
       return ExportType.const
+    } else if (type === 'CallExpression'
+      || type === 'MemberExpression'
+      || type === 'ObjectExpression') {
+      // we dont know what this returns
+      return ExportType.const
     }
 
+    // default is const
+    // return ExportType.const
+
+    console.log(this._targetPath)
     throw new Error("ANY export identifierDescription: " + type)
   }
 

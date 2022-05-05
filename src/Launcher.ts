@@ -48,7 +48,6 @@ import {
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
 import { JavaScriptTargetMetaData, JavaScriptTargetPool } from "./analysis/static/JavaScriptTargetPool";
 import { AbstractSyntaxTreeGenerator } from "./analysis/static/ast/AbstractSyntaxTreeGenerator";
-import { Instrumenter } from "./instrumentation/Instrumenter";
 import * as path from "path";
 import { TargetMapGenerator } from "./analysis/static/map/TargetMapGenerator";
 import { JavaScriptSubject } from "./search/JavaScriptSubject";
@@ -70,10 +69,10 @@ import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResol
 import { ScopeType } from "./analysis/static/types/discovery/Scope";
 import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
 import { ActionType } from "./analysis/static/parsing/ActionType";
+import { rmSync } from "fs";
 
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
-const { outputFileSync } = require("fs-extra");
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -237,32 +236,7 @@ export class Launcher {
   ): Promise<
     [Archive<JavaScriptTestCase>, Map<string, Export[]>, Export[]]
   > {
-    const targetPaths= new Set<string>();
-
-    for (const target of targetPool.targets) {
-      targetPool.getInstrumentationTargets(target.canonicalPath)
-        .forEach((path) => {
-          targetPaths.add(path)
-        })
-    }
-
-    const instrumenter = new Instrumenter();
-
-    for (const targetPath of targetPaths) {
-      const source = targetPool.getSource(targetPath)
-      const instrumentedSource = await instrumenter.instrument(
-        source,
-        targetPath
-      );
-
-      const _path = path
-        .normalize(targetPath)
-        .replace(
-          process.cwd(),
-          Properties.temp_instrumented_directory
-        );
-      await outputFileSync(_path, instrumentedSource);
-    }
+    await targetPool.prepareAndInstrument()
 
     // TODO resolve types
     // targetPool.resolveTypes(targetPath)
@@ -315,10 +289,11 @@ export class Launcher {
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
           param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
-        } else if (func.type === ActionType.METHOD) {
+        } else if (func.type === ActionType.METHOD
+          || func.type === ActionType.CONSTRUCTOR) {
           param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.name, ScopeType.Method, param.name)
         } else {
-          throw new Error("Unimplemented action identifierDescription")
+          throw new Error(`Unimplemented action identifierDescription ${func.type}`)
         }
       }
     // TODO return types
@@ -342,7 +317,7 @@ export class Launcher {
     const exports = targetPool.getExports(targetPath)
 
 
-    const decoder = new JavaScriptDecoder(dependencyMap, exports)
+    const decoder = new JavaScriptDecoder(targetPool, dependencyMap, exports)
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
     const runner = new JavaScriptRunner(suiteBuilder)
 
@@ -424,6 +399,7 @@ export class Launcher {
     await clearDirectory(testDir);
 
     const decoder = new JavaScriptDecoder(
+      targetPool,
       dependencies,
       exports,
       '../../.syntest/instrumented'

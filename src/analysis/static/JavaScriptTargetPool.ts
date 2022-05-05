@@ -23,8 +23,8 @@ import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
 import { ExportGenerator } from "./dependency/ExportGenerator";
-import { existsSync } from "fs";
-import { Export, ExportType } from "./dependency/ExportVisitor";
+import { existsSync, lstatSync } from "fs";
+import { Export } from "./dependency/ExportVisitor";
 import { SubjectType } from "../../search/JavaScriptSubject";
 import { TypeResolver } from "./types/resolving/TypeResolver";
 import { VariableGenerator } from "./types/discovery/VariableGenerator";
@@ -36,6 +36,9 @@ import { Relation } from "./types/discovery/Relation";
 import { Element } from "./types/discovery/Element";
 import { TypeEnum } from "./types/resolving/TypeEnum";
 import { TypeProbability } from "./types/resolving/TypeProbability";
+import { Instrumenter } from "../../instrumentation/Instrumenter";
+import { ExportType } from "./dependency/IdentifierVisitor";
+const { outputFileSync, copySync } = require("fs-extra");
 
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
@@ -106,20 +109,32 @@ export class JavaScriptTargetPool extends TargetPool {
   }
 
   getSource(targetPath: string) {
-    const absoluteTargetPath = path.resolve(targetPath);
+    let absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._sources.has(absoluteTargetPath)) {
-      if (existsSync(absoluteTargetPath)) {
-        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
-
-      } else if (existsSync(absoluteTargetPath + '.js')) {
-        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath + '.js'));
-
-      } else if (existsSync(absoluteTargetPath + '.ts')) {
-        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath + '.ts'));
-      } else {
-        throw new Error("Cannot find source: " + absoluteTargetPath)
+      if (!existsSync(absoluteTargetPath)) {
+        if (existsSync(absoluteTargetPath + '.js')) {
+          absoluteTargetPath += '.js'
+        } else if (existsSync(absoluteTargetPath + '.ts')) {
+          absoluteTargetPath += '.ts'
+        } else {
+          throw new Error("Cannot find source: " + absoluteTargetPath)
+        }
       }
+
+      const stats = lstatSync(absoluteTargetPath)
+
+      if (stats.isDirectory()) {
+        if (existsSync(absoluteTargetPath + '/index.js')) {
+          absoluteTargetPath += '/index.js'
+        } else if (existsSync(absoluteTargetPath + '/index.ts')) {
+          absoluteTargetPath += '/index.ts'
+        } else {
+          throw new Error("Cannot find source: " + absoluteTargetPath)
+        }
+      }
+
+      this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
     }
 
     return this._sources.get(absoluteTargetPath);
@@ -182,15 +197,30 @@ export class JavaScriptTargetPool extends TargetPool {
         }
 
         if(export_.type === ExportType.const) {
+          console.log(targetPath)
+          console.log(targetMap)
+          console.log(export_)
           throw new Error("Target cannot be constant!")
         }
 
+        let isPrototypeClass = false
+        for (const func of functionMap.get(key).values()) {
+          if (func.isConstructor) {
+            isPrototypeClass = true
+            break
+          }
+        }
+
+        // threat everything as a function if we don't know
         finalTargetMap.set(key, {
           name: name,
-          type: export_.type === ExportType.function ? SubjectType.function : SubjectType.class,
+          type: export_.type === ExportType.class || isPrototypeClass ? SubjectType.class : SubjectType.function,
           export: export_
         })
       }
+
+      console.log(finalTargetMap)
+      console.log(functionMap)
 
       this._targetMap.set(absoluteTargetPath, finalTargetMap);
       this._functionMaps.set(absoluteTargetPath, functionMap);
@@ -272,34 +302,48 @@ export class JavaScriptTargetPool extends TargetPool {
     return this._dependencyMaps.get(absoluteTargetPath)
   }
 
-  getInstrumentationTargets(targetPath: string, paths: Set<string> = null): Set<string> {
-    const absoluteTargetPath = path.resolve(targetPath);
+  async prepareAndInstrument(): Promise<void> {
+    const absoluteRootPath = path.resolve(Properties.target_root_directory)
 
-    if (paths === null) {
-      paths = new Set<string>()
+    const destinationPath = path.normalize(absoluteRootPath)
+      .replace(
+        process.cwd(),
+        Properties.temp_instrumented_directory
+      );
+
+    // copy everything
+    await copySync(absoluteRootPath, destinationPath)
+
+    // overwrite the stuff that needs instrumentation
+    const instrumenter = new Instrumenter();
+
+    const targetPaths = this.targets.map((x) => x.canonicalPath)
+
+    for (const targetPath of targetPaths) {
+      const source = this.getSource(targetPath)
+      const instrumentedSource = await instrumenter.instrument(
+        source,
+        targetPath
+      );
+
+      const _path = path
+        .normalize(targetPath)
+        .replace(
+          process.cwd(),
+          Properties.temp_instrumented_directory
+        );
+      await outputFileSync(_path, instrumentedSource);
     }
-
-    paths.add(absoluteTargetPath);
-
-    const dependencies = this.getDependencies(absoluteTargetPath);
-
-    for (const dependency of dependencies) {
-      if (paths.has(dependency.filePath)) {
-        continue
-      }
-      this.getInstrumentationTargets(dependency.filePath, paths).forEach((path) => {
-        paths.add(path)
-      })
-    }
-
-    return paths
   }
 
   scanTargetRootDirectory(): void {
     const absoluteRootPath = path.resolve(Properties.target_root_directory)
 
     // TODO remove the filters
-    const files = getAllFiles(absoluteRootPath, ".js").filter((x) => !x.includes('/test/') && !x.includes('.test.js'))
+    const files = getAllFiles(absoluteRootPath, ".js")
+      .filter((x) => !x.includes('/test/')
+        && !x.includes('.test.js')
+        && !x.includes('node_modules')) // maybe we should also take those into account
 
 
     const objects: ComplexObject[] = []

@@ -210,7 +210,6 @@ export class TypeResolverInference extends TypeResolver {
             // }
 
             if (elements.length && this.elementTyping.has(elements[0])) {
-              // console.log(elements.length)
               found += 1
               propertyTypings.set(elements[0].value, this.elementTyping.get(elements[0]))
               return

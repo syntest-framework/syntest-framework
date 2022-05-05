@@ -10,9 +10,7 @@ import * as path from "path";
 import { JavaScriptExecutionResult, JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
 import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
-import { handleRequires } from "mocha/lib/cli/run-helpers"
 import * as _ from 'lodash'
-import { spawn } from "child_process";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
