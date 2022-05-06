@@ -406,6 +406,8 @@ export class VariableVisitor {
     this.relations.push(relation)
   }
 
+
+
   // binary
   public BinaryExpression: (path) => void = (path) => {
     const scope = this._getCurrentScope()
@@ -413,8 +415,8 @@ export class VariableVisitor {
     const relation: Relation = {
       relation: getRelationType("binary", path.node.operator),
       involved: [
-        getElement(scope, path.node.left),
-        getElement(scope, path.node.right)
+        getElement(path, path.node.left),
+        getElement(path, path.node.right)
       ]
     }
 
@@ -428,8 +430,8 @@ export class VariableVisitor {
     const relation: Relation = {
       relation: getRelationType("binary", path.node.operator),
       involved: [
-        getElement(scope, path.node.left),
-        getElement(scope, path.node.right)
+        getElement(path, path.node.left),
+        getElement(path, path.node.right)
       ]
     }
 

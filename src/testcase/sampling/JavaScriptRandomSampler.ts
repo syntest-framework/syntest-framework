@@ -114,7 +114,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       prng.pickOne((<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD))
     );
 
-    const args: Statement[] = action.parameters.map((param) => this.sampleArgument(depth + 1, param));
+    const args: Statement[] = action.parameters.map((param) => {
+      return this.sampleArgument(depth + 1, param)
+    });
 
     return new MethodCall(
       action.returnParameter,

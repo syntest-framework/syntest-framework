@@ -219,9 +219,6 @@ export class JavaScriptTargetPool extends TargetPool {
         })
       }
 
-      console.log(finalTargetMap)
-      console.log(functionMap)
-
       this._targetMap.set(absoluteTargetPath, finalTargetMap);
       this._functionMaps.set(absoluteTargetPath, functionMap);
     }
@@ -423,92 +420,6 @@ export class JavaScriptTargetPool extends TargetPool {
 
     this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation, objects)
   }
-
-  resolveTypes(targetPath: string): void {
-    const absoluteTargetPath = path.resolve(targetPath);
-
-    const ast = this.getAST(absoluteTargetPath)
-
-    const dependencies = this.getDependencies(absoluteTargetPath);
-
-    // TODO first look at dependencies to extract other variables?
-
-    const objects: ComplexObject[] = []
-
-    //TODO the entire project should be searched for complex object types instead of dependencies only
-    const objectGenerator = new ObjectGenerator()
-    objects.push(...objectGenerator.generate(absoluteTargetPath, ast))
-
-    // standard stuff
-    // function https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
-    objects.push({
-      import: "",
-      name: "function",
-      properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
-      functions: new Set(['apply', 'bind', 'call', 'toString'])
-    })
-
-    // array https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
-    objects.push({
-      import: "",
-      name: "array",
-      properties: new Set(['length']),
-      functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values'])
-    })
-
-    // string
-    objects.push({
-      import: "",
-      name: "string",
-      properties: new Set(['length']),
-      functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf'])
-    })
-
-    // object
-    // TODO
-    // this._objects.push({
-    //   import: "",
-    //   name: "object",
-    //   properties: new Set([]),
-    //   functions: new Set([])
-    // })
-
-    // TODO best would be to do all files in the directory (instead of only the targets)
-
-
-
-    for (const target of [
-      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/argument.js',
-      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/command.js',
-      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/argument.js',
-      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/error.js',
-      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/help.js',
-      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/option.js',
-      '/home/dimitri/Documents/git/university/syntest/syntest-javascript/benchmark/top10npm/commanderjs/lib/suggestSimilar.js',
-
-    ]) {
-      const objectGenerator = new ObjectGenerator()
-      objects.push(...objectGenerator.generate(target, this.getAST(target)))
-    }
-
-    // for (const target of this.targets) {
-    //   const objectGenerator = new ObjectGenerator()
-    //   objects.push(...objectGenerator.generate(target.canonicalPath, this.getAST(target.canonicalPath)))
-    // }
-
-    for (const dependency of dependencies) {
-      const objectGenerator = new ObjectGenerator()
-      objects.push(...objectGenerator.generate(dependency.filePath, this.getAST(dependency.filePath)))
-    }
-
-    // TODO get rid of duplicates
-
-    const generator = new VariableGenerator()
-    const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(targetPath, ast)
-
-    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation, objects)
-  }
-
 
   get typeResolver(): TypeResolver {
     return this._typeResolver;

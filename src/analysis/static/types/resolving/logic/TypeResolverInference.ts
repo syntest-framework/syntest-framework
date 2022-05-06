@@ -112,9 +112,16 @@ export class TypeResolverInference extends TypeResolver {
       }
 
       const properties = propertyAccessors
-        .filter((r) => r.involved[0].scope.name === element.scope.name && r.involved[0].scope.type === element.scope.type)
-        .filter((r) => r.involved[0].value === element.value)
-        .map((r) => r.involved[1])
+        .filter((r) => {
+          return r.involved[0].value === element.value
+        })
+        .filter((r) => {
+          // console.log(r)
+          return r.involved[0].scope.name === element.scope.name && r.involved[0].scope.type === element.scope.type
+        })
+        .map((r) => {
+          return r.involved[1]
+        })
         // remove duplicates
         .reduce((unique: Element[], item) => {
           const found = unique.find((uniqueItem: Element) => {
@@ -136,14 +143,35 @@ export class TypeResolverInference extends TypeResolver {
       // TODO find out wether function property or regular property
 
       // TODO can be improved by comparing property types
-      // find best matching object
-      for (const object of objects) {
+
+
+      const anonObject: ComplexObject = {
+        import: "",
+        name: "anon",
+        properties: new Set<string>(),
+        functions: new Set<string>(),
+        propertyType: new Map<string, TypeProbability>()
+      }
+
+      properties.forEach((p) => {
+        anonObject.properties.add(p.value)
+        if (this.elementTyping.has(p)) {
+          anonObject.propertyType.set(p.value, this.elementTyping.get(p))
+        }
+      })
+
+      const objects_ = [anonObject, ...objects, ]
+
+      // find matching objects
+      for (const object of objects_) {
         let score = 0
         for (const prop of properties) {
           if (object.properties.has(prop.value) || object.functions.has(prop.value)) {
             score += 1
           }
         }
+
+
 
         // atleast score of one
         if (score > 0) {
@@ -242,6 +270,8 @@ export class TypeResolverInference extends TypeResolver {
           somethingSolved = true // TODO should be here right?
         }
       }
+
+
     }
 
     return somethingSolved

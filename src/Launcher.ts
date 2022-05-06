@@ -238,8 +238,6 @@ export class Launcher {
   > {
     await targetPool.prepareAndInstrument()
 
-    // TODO resolve types
-    // targetPool.resolveTypes(targetPath)
     targetPool.scanTargetRootDirectory()
 
     const finalArchive = new Archive<JavaScriptTestCase>();

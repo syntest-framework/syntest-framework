@@ -10,8 +10,8 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 60,
-    total_time: 60,
+    search_time: 5,
+    total_time: 5,
     iteration_budget: 100000,
 
     probe_objective: true,
@@ -26,8 +26,10 @@ module.exports = {
     use_type_inference: true,
     type_inference_mode: 'roulette',
 
+    target_root_directory: "./benchmark/custom/simple",
 
-    target_root_directory: "./benchmark/top10npm/axios",
+
+    // target_root_directory: "./benchmark/top10npm/axios",
     // target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
@@ -37,7 +39,7 @@ module.exports = {
 
     include: [
         // "./benchmark/top10npm/axios/lib/core/buildFullPath.js",
-        "./benchmark/top10npm/axios/lib/core/Axios.js",
+        // "./benchmark/top10npm/axios/lib/core/Axios.js",
 
         // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
@@ -56,6 +58,8 @@ module.exports = {
         // "./benchmark/top10npm/lodash/**/*.js",
 
         // "./benchmark/top10npm/moment/src/**/*.js",
+
+        "./benchmark/custom/simple/tests.js"
 
 
     ],
