@@ -93,7 +93,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {
-      if (instrumentationData[key].path.includes(subject.name))
         for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
           const fn = instrumentationData[key].fnMap[functionKey]
           const hits = instrumentationData[key].f[functionKey]
@@ -113,10 +112,10 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           const hits = instrumentationData[key].s[statementKey]
 
           traces.push({
-            id: `f-${statement.line}`,
+            id: `s-${statement.start.line}`,
             type: "statement",
             path: key,
-            line: statement.line,
+            line: statement.start.line,
 
             hits: hits,
           })
