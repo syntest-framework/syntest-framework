@@ -400,16 +400,40 @@ export class JavaScriptTargetPool extends TargetPool {
     // TODO npm dependencies
     // TODO get rid of duplicates
 
+    const finalObjects = []
+
+    function eqSet(as, bs) {
+      if (as.size !== bs.size) return false;
+      for (var a of as) if (!bs.has(a)) return false;
+      return true;
+    }
+
+    objects.forEach((o) => {
+      if (!o.properties.size && !o.functions.size) {
+        return
+      }
+
+      const found = finalObjects.find((o2) => {
+        return o.import === o2.import
+          && o.name === o2.name
+          && eqSet(o.properties, o2.properties)
+          && eqSet(o.functions, o2.functions)
+      })
+
+      if (!found) {
+        finalObjects.push(o)
+      }
+    })
+
+
     const generator = new VariableGenerator()
-    const scopes: Scope[] = []
     const elements: Element[] = []
     const relations: Relation[] = []
     const wrapperElementIsRelation: Map<string, Relation> = new Map()
 
     for (const file of files) {
-      const [_scopes, _elements, _relations, _wrapperElementIsRelation] = generator.generate(file, this.getAST(file))
+      const [_elements, _relations, _wrapperElementIsRelation] = generator.generate(file, this.getAST(file))
 
-      scopes.push(..._scopes)
       elements.push(..._elements)
       relations.push(..._relations)
 
@@ -418,7 +442,7 @@ export class JavaScriptTargetPool extends TargetPool {
       }
     }
 
-    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation, objects)
+    this._typeResolver.resolveTypes(elements, relations, wrapperElementIsRelation, finalObjects)
   }
 
   get typeResolver(): TypeResolver {

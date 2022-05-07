@@ -229,7 +229,6 @@ export class VisitState {
 
   insertCounter(path, increment) {
     const T = this.types;
-
     if (path.isBlockStatement()) {
       path.node.body.unshift(T.expressionStatement(increment));
     } else if (path.isStatement()) {
@@ -345,9 +344,10 @@ export class VisitState {
 
   insertBranchCounter(path, branchName, loc) {
     const increment = this.getBranchIncrement(branchName, loc || path.node.loc);
-    const metaTracker = this.getBranchMetaTracker(path, branchName, loc || path.node.loc)
+    // TODO this somehow fucks up the branch count
+    // const metaTracker = this.getBranchMetaTracker(path, branchName, loc || path.node.loc)
     this.insertCounter(path, increment);
-    this.insertCounter(path, metaTracker);
+    // this.insertCounter(path, metaTracker);
   }
 
   findLeaves(node, accumulator, parent, property) {

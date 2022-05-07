@@ -199,16 +199,19 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const values: Statement[] = []
 
     const object = identifierDescription.typeProbabilityMap.getObjectDescription(type)
-
+    if (identifierDescription.name.includes("%")) {
+      throw new Error("XXX")
+    }
     if (object) {
       object.properties.forEach((p) => {
         const typeMap = new TypeProbability()
         typeMap.addType(TypeEnum.STRING, 1, null)
-        identifierDescription = { typeProbabilityMap: typeMap, name: p }
 
-        keys.push(new StringStatement(identifierDescription, TypeEnum.STRING, prng.uniqueId(), p, Properties.string_alphabet, Properties.string_maxlength))
+        const identifierDescriptionKey = { typeProbabilityMap: typeMap, name: p }
+        keys.push(new StringStatement(identifierDescriptionKey, TypeEnum.STRING, prng.uniqueId(), p, Properties.string_alphabet, Properties.string_maxlength))
 
         const propertyTypings = identifierDescription.typeProbabilityMap.getPropertyTypes(type)
+
         if (propertyTypings && propertyTypings.has(p)) {
           values.push(this.sampleArgument(depth + 1, { name: p, typeProbabilityMap: propertyTypings.get(p) }))
         } else {
@@ -217,6 +220,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       })
     } else {
       // TODO random properties or none
+    }
+
+    if (identifierDescription.name.includes("%")) {
+      throw new Error("XXX")
     }
 
     return new ObjectStatement(

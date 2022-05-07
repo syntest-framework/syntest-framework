@@ -18,7 +18,6 @@
 import { TypeResolver } from "../TypeResolver";
 import { elementTypeToTypingType, TypeEnum } from "../TypeEnum";
 import { Relation, RelationType } from "../../discovery/Relation";
-import { Scope, ScopeType } from "../../discovery/Scope";
 import { Element, isInstanceOfElement } from "../../discovery/Element";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 import { TypeProbability } from "../TypeProbability";
@@ -48,7 +47,7 @@ export class TypeResolverInference extends TypeResolver {
     return somethingSolved
   }
 
-  resolveRelations(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>): boolean {
+  resolveRelations(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>): boolean {
     let somethingSolved = false
     for (const relation of relations) {
       if (this.relationFullyResolved.has(relation)) {
@@ -79,6 +78,9 @@ export class TypeResolverInference extends TypeResolver {
           } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
             return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
           }
+          console.log(e)
+          console.log(wrapperElementIsRelation.get(e.value))
+          console.log(relation)
           throw new Error("Should all be resolved!!!")
         }
 
@@ -96,7 +98,7 @@ export class TypeResolverInference extends TypeResolver {
     return somethingSolved
   }
 
-  resolveComplexElements(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]): boolean {
+  resolveComplexElements(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]): boolean {
     let somethingSolved = false
 
     // filter relations by property accessors
@@ -117,7 +119,7 @@ export class TypeResolverInference extends TypeResolver {
         })
         .filter((r) => {
           // console.log(r)
-          return r.involved[0].scope.name === element.scope.name && r.involved[0].scope.type === element.scope.type
+          return r.involved[0].scope.uid === element.scope.uid
         })
         .map((r) => {
           return r.involved[1]
@@ -126,8 +128,8 @@ export class TypeResolverInference extends TypeResolver {
         .reduce((unique: Element[], item) => {
           const found = unique.find((uniqueItem: Element) => {
             return uniqueItem.value === item.value
-            && uniqueItem.scope.name === item.scope.name
-            && uniqueItem.scope.type === item.scope.type
+            && uniqueItem.scope.uid === item.scope.uid
+            // && uniqueItem.scope.type === item.scope.type
           })
           if (found) {
             return unique
@@ -218,7 +220,7 @@ export class TypeResolverInference extends TypeResolver {
             const relevantRelations = relations
               .filter((r) => r.relation === RelationType.PropertyAccessor)
               .filter((r) => r.involved[1].scope.filePath === object.import)
-              .filter((r) => r.involved[1].scope.name === object.name)
+              // .filter((r) => r.involved[1].scope.uid === object.uid) // todo
               .filter((r) => r.involved[0].value === 'this')
               .filter((r) => r.involved[1].value === prop)
               .filter((r) => r.involved[1].type === 'identifier')
@@ -277,7 +279,7 @@ export class TypeResolverInference extends TypeResolver {
     return somethingSolved
   }
 
-  resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]) {
+  resolveTypes(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]) {
     this.wrapperElementIsRelation = wrapperElementIsRelation
 
 
@@ -289,20 +291,20 @@ export class TypeResolverInference extends TypeResolver {
       rounds += 1 // TODO remove this
 
       somethingSolved = this.resolvePrimitiveElements(elements) || somethingSolved
-      somethingSolved = this.resolveRelations(scopes, elements, relations, wrapperElementIsRelation) || somethingSolved
-      somethingSolved = this.resolveComplexElements(scopes, elements, relations, wrapperElementIsRelation, objects) || somethingSolved
+      somethingSolved = this.resolveRelations(elements, relations, wrapperElementIsRelation) || somethingSolved
+      somethingSolved = this.resolveComplexElements(elements, relations, wrapperElementIsRelation, objects) || somethingSolved
     }
   }
 
-  getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbability {
-
+  getTyping(scopeName: string, variableName: string): TypeProbability {
     const elements = [...this.elementTyping.keys()]
+      .filter((e) => !!e.scope)
 
-    const correctScopeName = elements.filter((e) => e.scope.name === scopeName)
+    const correctScopeName = elements.filter((e) => e.scope.uid === scopeName)
 
-    const correctScopeType = correctScopeName.filter((e) => e.scope.type === scopeType)
+    // const correctScopeType = correctScopeName.filter((e) => e.scope.type === scopeType)
 
-    const correctVariable = correctScopeType.filter((e) => e.value === variableName)
+    const correctVariable = correctScopeName.filter((e) => e.value === variableName)
 
     const element = correctVariable[0]
     // const element = [...this.elementTyping.keys()].find((e) => {
@@ -322,12 +324,12 @@ export class TypeResolverInference extends TypeResolver {
       // console.log(correctVariable)
       //
       // console.log(elements.filter((e) => e.value === variableName))
-      // throw new Error("Invalid!")
+      throw new Error("Invalid!")
 
-      return new TypeProbability()
+      // return new TypeProbability()
     }
 
-    return this.elementTyping.get(element);
+    return this.elementTyping.get(element)
   }
 
   resolveRelationElements(relation: RelationType, involved: (Element | TypeProbability)[]): boolean {

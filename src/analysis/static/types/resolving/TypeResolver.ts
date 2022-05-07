@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { Element } from "../discovery/Element";
-import { Scope, ScopeType } from "../discovery/Scope";
+import { Scope } from "../discovery/Scope";
 import { Relation } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 import { ElementTypeMap } from "../discovery/ElementTypeMap";
@@ -29,7 +29,7 @@ import { TypeProbability } from "./TypeProbability";
  */
 export abstract class TypeResolver {
   private _relationTyping: Map<Relation, TypeProbability>
-  private _elementTyping: ElementTypeMap
+  private _elementTyping: Map<Element, TypeProbability>
 
   private _relationFullyResolved: Set<Relation>
 
@@ -38,7 +38,7 @@ export abstract class TypeResolver {
    */
   constructor() {
     this._relationTyping = new Map()
-    this._elementTyping = new ElementTypeMap()
+    this._elementTyping = new Map()
     this._relationFullyResolved = new Set()
   }
 
@@ -50,15 +50,14 @@ export abstract class TypeResolver {
    * @param wrapperElementIsRelation a map that specifies which elements are which relations
    * @param objects the user defined objects that are available to the file under evaluation
    */
-  abstract resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[])
+  abstract resolveTypes(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[])
 
   /**
    * Returns the identifierDescription of the variable in the given scope
    * @param scopeName the name of the scope the variable is in
-   * @param scopeType the identifierDescription of the scope the varaiable is in (function, class, global, etc.)
    * @param variableName the name of the variable
    */
-  abstract getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbability
+  abstract getTyping(scopeName: string, variableName: string): TypeProbability
 
   /**
    * Sets the identifierDescription of the specified relation
@@ -99,7 +98,7 @@ export abstract class TypeResolver {
     return this._relationTyping;
   }
 
-  get elementTyping(): ElementTypeMap {
+  get elementTyping(): Map<Element, TypeProbability> {
     return this._elementTyping;
   }
 

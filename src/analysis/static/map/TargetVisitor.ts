@@ -88,6 +88,7 @@ export class TargetVisitor {
     this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
+      uid: path.scope.uid,
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -106,6 +107,7 @@ export class TargetVisitor {
     for (const key of Object.keys(path.scope.bindings)) {
       const binding = path.scope.bindings[key]
 
+      const newScopeUid = binding.path.scope.uid
       const node = binding.path.node
 
       if (node.type === 'VariableDeclarator') {
@@ -115,7 +117,6 @@ export class TargetVisitor {
           continue
         }
 
-        // console.log(init.type)
         //
         // while (init.type === 'Identifier') {
         //   if (!path.scope.hasBinding(init.name)) {
@@ -127,7 +128,7 @@ export class TargetVisitor {
         if (init.type === "ArrowFunctionExpression") {
           const targetName = binding.identifier.name
           this._createMaps(targetName)
-          this._createFunction(targetName, targetName, init)
+          this._createFunction(newScopeUid, targetName, targetName, init)
         }
 
       } else if (node.type === 'ClassDeclaration') {
@@ -136,7 +137,7 @@ export class TargetVisitor {
       } else if (node.type === 'FunctionDeclaration') {
         const targetName = node.id.name;
         this._createMaps(targetName)
-        this._createFunction(targetName, targetName, node)
+        this._createFunction(newScopeUid, targetName, targetName, node)
       }
     }
   }
@@ -152,7 +153,10 @@ export class TargetVisitor {
       visibility = ActionVisibility.PROTECTED;
     }
 
+
+
     this._functionMap.get(targetName).set(functionName, {
+      uid: path.scope.uid,
       name: functionName,
       type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
       visibility: visibility,
@@ -201,7 +205,10 @@ export class TargetVisitor {
         this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
         this._functionMap.get(targetName).get(targetName).isConstructor = true
 
+        // TODO this one is probably wrong
+
         this._functionMap.get(targetName).set(functionName, {
+          uid: path.scope.uid,
           name: functionName,
           type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
           visibility: ActionVisibility.PUBLIC,
@@ -227,7 +234,12 @@ export class TargetVisitor {
       throw new Error("unknown function expression name")
     }
 
+    console.log(path)
+
+    // TODO this one is probably wrong
+
     this._functionMap.get(targetName).set(targetName, {
+      uid: path.scope.uid,
       name: targetName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -243,8 +255,9 @@ export class TargetVisitor {
   }
 
     // functions
-  public _createFunction (targetName, functionName, node) {
+  public _createFunction (newScopeUid: string, targetName: string, functionName: string, node) {
     this._functionMap.get(targetName).set(functionName, {
+      uid: newScopeUid,
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,

@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 export interface Scope {
-  uid: string,
-  filePath: string
+  uid: string;
+  filePath: string;
 }

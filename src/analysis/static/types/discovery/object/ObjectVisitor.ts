@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 import { ComplexObject } from "./ComplexObject";
-import { ScopeType } from "../Scope";
 
 export class ObjectVisitor {
 

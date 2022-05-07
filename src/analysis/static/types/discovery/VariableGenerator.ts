@@ -36,6 +36,6 @@ export class VariableGenerator {
 
     traverse(targetAST, visitor);
 
-    return [visitor.scopes, visitor.elements, visitor.relations, visitor.wrapperElementIsRelation];
+    return [visitor.elements, visitor.relations, visitor.wrapperElementIsRelation];
   }
 }

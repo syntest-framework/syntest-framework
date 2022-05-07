@@ -43,6 +43,7 @@ export class TargetMapGenerator {
 
     const targetMap = visitor.targetMap;
     const functionMap = visitor.functionMap;
+
     return { targetMap, functionMap };
   }
 }

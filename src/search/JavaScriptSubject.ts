@@ -33,8 +33,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
 
   reevaluateTypes() {
-    // console.log(this._typeScores)
-
     // TODO find correlations
     // maybe look at bayesian inference
   }

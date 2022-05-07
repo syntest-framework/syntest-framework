@@ -66,10 +66,8 @@ import { Export } from "./analysis/static/dependency/ExportVisitor";
 import { Runner } from "mocha";
 import { TypeResolverInference } from "./analysis/static/types/resolving/logic/TypeResolverInference";
 import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
-import { ScopeType } from "./analysis/static/types/discovery/Scope";
 import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
 import { ActionType } from "./analysis/static/parsing/ActionType";
-import { rmSync } from "fs";
 
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
@@ -286,10 +284,10 @@ export class Launcher {
       const func = functionMap.get(key)
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
-          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.uid, param.name)
         } else if (func.type === ActionType.METHOD
           || func.type === ActionType.CONSTRUCTOR) {
-          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.name, ScopeType.Method, param.name)
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.uid, param.name)
         } else {
           throw new Error(`Unimplemented action identifierDescription ${func.type}`)
         }

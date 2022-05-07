@@ -12,9 +12,13 @@ export class ElementTypeMap {
   }
 
   elementAsString(element: Element) {
+    if (!element.scope) {
+      return `scope=null;
+    type=${element.type};
+    value=${element.value}`
+    }
     return `scope={
-    name=${element.scope.name};
-    type=${element.scope.type};
+    name=${element.scope.uid};
     filePath=${element.scope.filePath}
     };
     type=${element.type};

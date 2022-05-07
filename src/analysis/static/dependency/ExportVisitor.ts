@@ -82,7 +82,6 @@ export class ExportVisitor {
       }
     }
 
-    // console.log(this._targetPath)
     // throw new Error('ANY named export')
   };
 

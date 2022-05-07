@@ -25,6 +25,7 @@ import { ActionVisibility } from "./ActionVisibility";
  * @author Dimitri Stallenberg
  */
 export interface ActionDescription {
+  uid: string;
   name: string;
   type: ActionType;
 
