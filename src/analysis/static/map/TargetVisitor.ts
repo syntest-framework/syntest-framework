@@ -223,20 +223,22 @@ export class TargetVisitor {
         });
         return
       } else {
-        targetName = path.parent.left.property.name
-
+        targetName = path.node.left.property.name
       }
 
-    } else if (path.parent.left.type === 'Identifier') {
-        targetName = path.parent.left.name
+    } else if (path.node.left.type === 'Identifier') {
+        targetName = path.node.left.name
     } else {
-      console.log(path.parent)
+      console.log(path.node)
       throw new Error("unknown function expression name")
     }
 
     console.log(path)
 
     // TODO this one is probably wrong
+    if (!this._targetMap.has(targetName)) {
+      this._createMaps(targetName)
+    }
 
     this._functionMap.get(targetName).set(targetName, {
       uid: path.scope.uid,
@@ -244,7 +246,7 @@ export class TargetVisitor {
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
       isConstructor: false,
-      parameters: path.node.params.map(this._extractParam),
+      parameters: path.node.right.params.map(this._extractParam),
       returnParameter: {
         name: "returnValue",
         typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)

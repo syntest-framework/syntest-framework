@@ -16,10 +16,8 @@
  * limitations under the License.
  */
 import { Element } from "../discovery/Element";
-import { Scope } from "../discovery/Scope";
 import { Relation } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
-import { ElementTypeMap } from "../discovery/ElementTypeMap";
 import { TypeProbability } from "./TypeProbability";
 
 /**

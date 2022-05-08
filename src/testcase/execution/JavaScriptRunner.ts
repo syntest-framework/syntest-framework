@@ -93,76 +93,74 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {
-       for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
-        const fn = instrumentationData[key].fnMap[functionKey]
-        const hits = instrumentationData[key].f[functionKey]
+        for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
+          const fn = instrumentationData[key].fnMap[functionKey]
+          const hits = instrumentationData[key].f[functionKey]
 
-        traces.push({
-          id: `f-${fn.line}`,
-          type: "function",
-          path: key,
-          line: fn.line,
+          traces.push({
+            id: `f-${fn.line}`,
+            type: "function",
+            path: key,
+            line: fn.line,
 
-          hits: hits,
-        })
-      }
+            hits: hits,
+          })
+        }
 
-      for (const statementKey of Object.keys(instrumentationData[key].statementMap)) {
-        const statement = instrumentationData[key].statementMap[statementKey]
-        const hits = instrumentationData[key].s[statementKey]
+        for (const statementKey of Object.keys(instrumentationData[key].statementMap)) {
+          const statement = instrumentationData[key].statementMap[statementKey]
+          const hits = instrumentationData[key].s[statementKey]
 
-        traces.push({
-          id: `s-${statement.start.line}`,
-          type: "statement",
-          path: key,
-          line: statement.start.line,
+          traces.push({
+            id: `s-${statement.start.line}`,
+            type: "statement",
+            path: key,
+            line: statement.start.line,
 
-          hits: hits,
-        })
-      }
+            hits: hits,
+          })
+        }
 
-      for (const branchKey of Object.keys(instrumentationData[key].branchMap)) {
-        const branch = instrumentationData[key].branchMap[branchKey]
-        const hits = instrumentationData[key].b[branchKey]
+        for (const branchKey of Object.keys(instrumentationData[key].branchMap)) {
+          const branch = instrumentationData[key].branchMap[branchKey]
+          const hits = instrumentationData[key].b[branchKey]
 
-        traces.push({
-          id: `b-${branch.line}`,
-          path: key,
-          type: "branch",
-          line: branch.line,
+          traces.push({
+            id: `b-${branch.line}`,
+            path: key,
+            type: "branch",
+            line: branch.line,
 
-          locationIdx: 0,
-          branchType: true,
+            locationIdx: 0,
+            branchType: true,
 
-          hits: hits[0],
+            hits: hits[0],
 
-          // TODO
-          left: [],
-          opcode: "",
-          right: [],
-        });
+            // TODO
+            left: [],
+            opcode: "",
+            right: [],
+          });
 
-        traces.push({
-          id: `b-${branch.line}`,
-          path: key,
-          type: "branch",
-          line: branch.line,
+          traces.push({
+            id: `b-${branch.line}`,
+            path: key,
+            type: "branch",
+            line: branch.line,
 
-          locationIdx: 1,
-          branchType: false,
+            locationIdx: 1,
+            branchType: false,
 
-          hits: hits[1],
+            hits: hits[1],
 
-          // TODO
-          left: [],
-          opcode: "",
-          right: [],
-        });
-      }
-
+            // TODO
+            left: [],
+            opcode: "",
+            right: [],
+          });
+        }
     }
 
-    console.log(traces)
     // Retrieve execution information
     let executionResult: JavaScriptExecutionResult;
     if (

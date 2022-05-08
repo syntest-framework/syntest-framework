@@ -18,7 +18,7 @@
 
 import { Archive, getUserInterface, Properties } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
-import { rmSync, readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
+import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
 import { Runner } from "mocha";

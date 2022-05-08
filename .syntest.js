@@ -23,17 +23,16 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    use_type_inference: true,
+    use_type_inference: false,
     type_inference_mode: 'roulette',
 
     // target_root_directory: "./benchmark/custom/simple",
 
-
-    // target_root_directory: "./benchmark/top10npm/axios",
+    target_root_directory: "./benchmark/top10npm/axios",
     // target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
-    target_root_directory: "./benchmark/top10npm/lodash",
+    // target_root_directory: "./benchmark/top10npm/lodash",
 
     // target_root_directory: "./benchmark/top10npm/moment",
 
@@ -41,7 +40,7 @@ module.exports = {
         // "./benchmark/top10npm/axios/lib/core/buildFullPath.js",
         // "./benchmark/top10npm/axios/lib/core/Axios.js",
 
-        "./benchmark/top10npm/lodash/result.js",
+        // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
         // "./benchmark/top10npm/lodash/split.js",
         // "./benchmark/top10npm/lodash/uniq.js",
@@ -51,7 +50,7 @@ module.exports = {
 
         // "./benchmark/top10npm/axios/lib/core/*.js",
 
-        // "./benchmark/top10npm/axios/lib/**/*.js",
+        "./benchmark/top10npm/axios/lib/**/*.js",
         // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/top10npm/commanderjs/lib/**/*.js",
         // "./benchmark/top10npm/express/lib/**/*.js",

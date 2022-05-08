@@ -134,6 +134,7 @@ export class JavaScriptTargetPool extends TargetPool {
         }
       }
 
+      // return readFile(absoluteTargetPath)
       this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
     }
 
@@ -143,14 +144,20 @@ export class JavaScriptTargetPool extends TargetPool {
   getAST(targetPath: string) {
     const absoluteTargetPath = path.resolve(targetPath);
 
+
+    // this takes up too much memory we should do some kind of garbage collection if we want to save it all
     if (!this._abstractSyntaxTrees.has(absoluteTargetPath)) {
-      this._abstractSyntaxTrees.set(
-        absoluteTargetPath,
-        this.abstractSyntaxTreeGenerator.generate(
-          this.getSource(targetPath),
-          absoluteTargetPath
-        )
-      );
+      // this._abstractSyntaxTrees.set(
+      //   absoluteTargetPath,
+      //   this.abstractSyntaxTreeGenerator.generate(
+      //     this.getSource(targetPath),
+      //     absoluteTargetPath
+      //   )
+      // );
+      return this.abstractSyntaxTreeGenerator.generate(
+        this.getSource(targetPath),
+        absoluteTargetPath
+      )
     }
 
     return this._abstractSyntaxTrees.get(absoluteTargetPath);
