@@ -128,3 +128,4 @@ temp/
 .syntest/
 syntest/
 benchmark/
+experiments/results/*
