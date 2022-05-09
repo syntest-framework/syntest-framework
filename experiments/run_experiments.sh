@@ -1,4 +1,4 @@
-experiment_names=( "old" "new" )
+experiment_names=( "new" )
 times=( 5 10 20 )
 inferences=( 0 1 )
 modes=( "roulette" "elitist" "dynamic" )
@@ -18,8 +18,8 @@ for experiment_name in "${experiment_names[@]}"; do
           for i in {1..10}; do
             echo "running experiment ex=${experiment_name}time=${time},inference${inference},mode=${mode} trial ${i} for ${benchmarks[$x]} with files ${benchmark_files[$x]}"
             docker rm experiment
-            docker run --name experiment --env target_root_directory="./benchmark/top10npm/${benchmarks[$x]}" --env include="./benchmark/top10npm/${benchmark_files[$x]}" syntest/javascript:${experiment_name}-t${time}-inference${inference}-mode${mode}
-            docker cp experiment:/app/syntest-javascript/syntest "./results/${experiment_name}-${time}-${inference}-${mode}-${benchmarks[$x]}-${i}"
+            docker run --name experiment --env time_per_target=${time} --env use_type_inference=${inference} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/top10npm/${benchmarks[$x]}" --env include="./benchmark/top10npm/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
+            docker cp experiment:/app/syntest-javascript/syntest "./results/${experiment_name}-${time}-${inference}-${mode}-${benchmarks[$x]}-${x}-${i}"
           done
         done
 
