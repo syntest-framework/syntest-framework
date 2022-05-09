@@ -1,5 +1,5 @@
-experiment_names=( "new" )
-times=( 5 10 20 )
+experiment_names=( "old" "new" )
+times=( 20 )
 inferences=( 0 1 )
 modes=( "roulette" "elitist" "dynamic" )
 
