@@ -236,7 +236,7 @@ export class TargetVisitor {
     console.log(path)
 
     // TODO this one is probably wrong
-    if (!this._targetMap.has(targetName)) {
+    if (!this.targetMap.has(targetName)) {
       this._createMaps(targetName)
     }
 
@@ -251,8 +251,8 @@ export class TargetVisitor {
         name: "returnValue",
         typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
       },
-      isStatic: path.node.static,
-      isAsync: path.node.async,
+      isStatic: path.node.right.static,
+      isAsync: path.node.right.async,
     });
   }
 

@@ -10,8 +10,8 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 10,
-    total_time: 60,
+    search_time: 5,
+    total_time: 6000,
     iteration_budget: 100000,
 
     probe_objective: true,
@@ -28,8 +28,8 @@ module.exports = {
 
     // target_root_directory: "./benchmark/custom/simple",
 
-    target_root_directory: "./benchmark/top10npm/axios",
-    // target_root_directory: "./benchmark/top10npm/chalk",
+    // target_root_directory: "./benchmark/top10npm/axios",
+    target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
     // target_root_directory: "./benchmark/top10npm/lodash",

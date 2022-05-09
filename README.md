@@ -46,6 +46,15 @@ $ cd syntest-javascript; npm install
 $ cd syntest-javascript; npm run build
 ```
 
+## Building the docker container
+```bash
+docker build --build-arg time_per_target=5 --build-arg use_type_inference=1 --build-arg type_inference_mode="roulette" --tag="syntest/javascript:t5-inference1-moderoulette" .
+```
+
+```bash
+docker run --env target_root_directory="./benchmark/top10npm/axios" --env include="./benchmark/top10npm/axios/lib/**/*.js" syntest/javascript:t5-inference1-moderoulette
+```
+
 ## Local development
 
 Currently you need to be on the `remove-parsing-from-framework` branch of the syntest-framework.

@@ -129,3 +129,4 @@ temp/
 syntest/
 benchmark/
 profiling/
+experiments/results/*
