@@ -244,6 +244,19 @@ function coverIfBranches(path) {
   }
 }
 
+function coverLoopBranch(path) {
+  const n = path.node;
+  const branch = this.cov.newBranch("loop", n.loc);
+
+  console.log(path)
+  this.insertBranchCounter(path.get("body"), branch, n.loc);
+
+  const T = this.types;
+
+  const increment = this.getBranchIncrement(branch, path.node.loc);
+  path.insertAfter(T.expressionStatement(increment));
+}
+
 function createSwitchBranch(path) {
   const b = this.cov.newBranch("switch", path.node.loc);
   this.setAttr(path.node, "branchName", b);
@@ -335,11 +348,26 @@ const codeVisitor = {
     coverStatement,
     coverIfBranches
   ),
-  ForStatement: entries(blockProp("body"), coverStatement),
-  ForInStatement: entries(blockProp("body"), coverStatement),
-  ForOfStatement: entries(blockProp("body"), coverStatement),
-  WhileStatement: entries(blockProp("body"), coverStatement),
-  DoWhileStatement: entries(blockProp("body"), coverStatement),
+  ForStatement: entries(blockProp("body"),
+    coverStatement,
+    coverLoopBranch
+  ),
+  ForInStatement: entries(blockProp("body"),
+    coverStatement,
+    coverLoopBranch
+  ),
+  ForOfStatement: entries(blockProp("body"),
+    coverStatement,
+    coverLoopBranch
+  ),
+  WhileStatement: entries(blockProp("body"),
+    coverStatement,
+    coverLoopBranch
+  ),
+  DoWhileStatement: entries(blockProp("body"),
+    coverStatement,
+    coverLoopBranch
+  ),
   SwitchStatement: entries(createSwitchBranch, coverStatement),
   SwitchCase: entries(coverSwitchCase),
   WithStatement: entries(blockProp("body"), coverStatement),
