@@ -248,7 +248,6 @@ function coverLoopBranch(path) {
   const n = path.node;
   const branch = this.cov.newBranch("loop", n.loc);
 
-  console.log(path)
   this.insertBranchCounter(path.get("body"), branch, n.loc);
 
   const T = this.types;
