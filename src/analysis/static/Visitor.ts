@@ -85,7 +85,6 @@ export abstract class Visitor {
     } else if (object.type === 'MemberExpression') {
       return this._getOriginalObjectIdentifier(object.object)
     } else {
-      // console.log(object)
       // throw new Error(`${object.type}`)
 
       return 'anon'

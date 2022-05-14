@@ -92,7 +92,6 @@ export class JavaScriptSuiteBuilder {
     }
 
     for (const testPath of paths) {
-      console.log('testing', testPath)
       const mocha = new Mocha(argv)
 
       delete originalrequire.cache[testPath];

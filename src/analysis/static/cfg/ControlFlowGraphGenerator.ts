@@ -410,8 +410,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       //   return this.BreakStatement(cfg, child, parents);
 
       default:
-        console.log(child);
-        console.log(`ast type: ${child.type} is not supported currently!`)
         throw new Error(`ast type: ${child.type} is not supported currently!`);
     }
   }

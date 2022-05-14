@@ -64,7 +64,6 @@ export class TargetVisitor extends Visitor {
       if (path.parent.key.type === 'Identifier') {
         targetName = path.parent.key.name
       } else {
-        console.log(path.parent)
         throw new Error("unknown function expression name")
       }
 
@@ -73,12 +72,10 @@ export class TargetVisitor extends Visitor {
       if (path.parent.id.type === 'Identifier') {
         targetName = path.parent.id.name
       } else {
-        console.log(path.parent)
         throw new Error("unknown function expression name")
       }
 
     } else {
-      console.log(path.parent)
       throw new Error("unknown function expression name")
     }
 
@@ -145,10 +142,6 @@ export class TargetVisitor extends Visitor {
       }
     }
   }
-  // public Scope: (path) => void = (path) => {
-  //   console.log(path)
-  //   console.log()
-  // }
 
   public ClassMethod: (path) => void = (path) => {
     const targetName = path.parentPath.parentPath.node.id.name;

@@ -288,7 +288,6 @@ export class Launcher {
     // couple types to parameters
     for (const key of functionMap.keys()) {
       const func = functionMap.get(key)
-      console.log(func)
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
           param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)

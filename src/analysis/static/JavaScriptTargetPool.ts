@@ -204,9 +204,6 @@ export class JavaScriptTargetPool extends TargetPool {
         }
 
         if(export_.type === ExportType.const) {
-          console.log(targetPath)
-          console.log(targetMap)
-          console.log(export_)
           throw new Error("Target cannot be constant!")
         }
 
