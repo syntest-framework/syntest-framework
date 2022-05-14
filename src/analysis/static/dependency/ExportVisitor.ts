@@ -18,6 +18,7 @@
 
 
 import { ExportType } from "./IdentifierVisitor";
+import { Visitor } from "../Visitor";
 
 export interface Export {
   name: string,
@@ -27,15 +28,14 @@ export interface Export {
   filePath: string
 }
 
-export class ExportVisitor {
+export class ExportVisitor extends Visitor {
   // TODO other export types such as module.export or exports.
 
-  private _targetPath: string
   private _exports: Export[];
   private _identifiers: Map<string, ExportType>
 
-  constructor(targetPath: string, identifiers: Map<string, ExportType>) {
-    this._targetPath = targetPath
+  constructor(filePath: string, identifiers: Map<string, ExportType>) {
+    super(filePath)
     this._exports = [];
     this._identifiers = identifiers
   }
@@ -50,7 +50,7 @@ export class ExportVisitor {
             type: this._getType(declaration.init.type, declaration.name),
             default: false,
             module: false,
-            filePath: this._targetPath
+            filePath: this.filePath
           })
         }
       }
@@ -60,7 +60,7 @@ export class ExportVisitor {
           type: this._getType(path.node.declaration.type, path.node.declaration.name),
           default: false,
           module: false,
-          filePath: this._targetPath
+          filePath: this.filePath
         })
        }
 
@@ -77,7 +77,7 @@ export class ExportVisitor {
           type: this._getType(specifier.local.type, specifier.local.name),
           default: specifier.local.name === 'default' || specifier.exported.name === 'default',
           module: false,
-          filePath: this._targetPath
+          filePath: this.filePath
         })
       }
     }
@@ -91,7 +91,7 @@ export class ExportVisitor {
       type: this._getType(path.node.declaration.type, path.node.declaration.name),
       default: true,
       module: false,
-      filePath: this._targetPath
+      filePath: this.filePath
     })
   };
 
@@ -108,7 +108,7 @@ export class ExportVisitor {
             type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
             default: true,
             module: true,
-            filePath: this._targetPath
+            filePath: this.filePath
           })
         } else if (path.node.expression.right.type === 'Literal'
           || path.node.expression.right.type === 'ArrayExpression') {
@@ -117,7 +117,7 @@ export class ExportVisitor {
             type: ExportType.const,
             default: true,
             module: true,
-            filePath: this._targetPath
+            filePath: this.filePath
           })
         } else if (path.node.expression.right.type === 'ObjectExpression') {
           for (const property of path.node.expression.right.properties) {
@@ -126,7 +126,7 @@ export class ExportVisitor {
               type: this._getType(property.key.type, property.key.name),
               default: false,
               module: true,
-              filePath: this._targetPath
+              filePath: this.filePath
             })
           }
         } else if (path.node.expression.right.type === 'FunctionExpression') {
@@ -135,7 +135,7 @@ export class ExportVisitor {
             type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
             default: true,
             module: true,
-            filePath: this._targetPath
+            filePath: this.filePath
           })
         }
       } else if (path.node.expression.left.object.name === 'exports') {
@@ -145,7 +145,7 @@ export class ExportVisitor {
             type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
             default: false,
             module: false,
-            filePath: this._targetPath
+            filePath: this.filePath
           })
         } else if (path.node.expression.right.type === 'Literal'
           || path.node.expression.right.type === 'ArrayExpression'
@@ -155,7 +155,7 @@ export class ExportVisitor {
             type: ExportType.const,
             default: false,
             module: false,
-            filePath: this._targetPath
+            filePath: this.filePath
           })
         }
       }
@@ -199,8 +199,7 @@ export class ExportVisitor {
     // default is const
     // return ExportType.const
 
-    console.log(this._targetPath)
-    throw new Error("ANY export identifierDescription: " + type)
+    throw new Error("ANY export identifierDescription: " + type + " in target file: " + this.filePath)
   }
 
   // getters

@@ -134,8 +134,8 @@ export class JavaScriptTargetPool extends TargetPool {
         }
       }
 
-      // return readFile(absoluteTargetPath)
-      this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
+      return readFile(absoluteTargetPath)
+      // this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
     }
 
     return this._sources.get(absoluteTargetPath);
@@ -188,7 +188,7 @@ export class JavaScriptTargetPool extends TargetPool {
     if (!this._targetMap.has(absoluteTargetPath)) {
       const targetAST = this.getAST(absoluteTargetPath);
       const { targetMap, functionMap } =
-        this.targetMapGenerator.generate(targetAST);
+        this.targetMapGenerator.generate(absoluteTargetPath, targetAST);
 
       const exports = this.getExports(targetPath)
 
@@ -269,7 +269,7 @@ export class JavaScriptTargetPool extends TargetPool {
 
     if (!this._dependencyMaps.has(absoluteTargetPath)) {
       // Find all external imports in the file under test
-      const imports = this.importGenerator.generate(this.getAST(targetPath))
+      const imports = this.importGenerator.generate(absoluteTargetPath, this.getAST(targetPath))
 
       // For each external import scan the file for libraries with exported functions
       const libraries: Export[] = [];

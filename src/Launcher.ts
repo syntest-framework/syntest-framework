@@ -68,6 +68,7 @@ import { TypeResolverInference } from "./analysis/static/types/resolving/logic/T
 import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
 import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
 import { ActionType } from "./analysis/static/parsing/ActionType";
+import { existsSync } from "fs";
 
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
@@ -115,6 +116,11 @@ export class Launcher {
     const config = loadConfig(args);
     processConfig(config, args);
     setupLogger();
+
+    if (existsSync('.syntest')) {
+      await deleteTempDirectories();
+    }
+
     await createDirectoryStructure();
     await createTempDirectoryStructure();
 
@@ -282,12 +288,13 @@ export class Launcher {
     // couple types to parameters
     for (const key of functionMap.keys()) {
       const func = functionMap.get(key)
+      console.log(func)
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
-          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.uid, param.name)
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
         } else if (func.type === ActionType.METHOD
           || func.type === ActionType.CONSTRUCTOR) {
-          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.uid, param.name)
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
         } else {
           throw new Error(`Unimplemented action identifierDescription ${func.type}`)
         }

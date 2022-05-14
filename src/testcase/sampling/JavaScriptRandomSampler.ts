@@ -44,6 +44,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const action = <ActionDescription>(
       prng.pickOne((<JavaScriptSubject>this._subject).getPossibleActions(ActionType.FUNCTION))
     );
+    console.log(action.name)
 
     const args: Statement[] = action.parameters.map((param) => this.sampleArgument(depth + 1, param));
 
@@ -113,6 +114,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const action = <ActionDescription>(
       prng.pickOne((<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD))
     );
+    console.log(action.name)
 
     const args: Statement[] = action.parameters.map((param) => {
       return this.sampleArgument(depth + 1, param)
@@ -136,6 +138,11 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         name: "unnamed",
         typeProbabilityMap: new TypeProbability()
       }
+    }
+
+    if (identifierDescription.name === 'cmd') {
+      console.log(identifierDescription)
+      console.log()
     }
 
     let chosenType: string

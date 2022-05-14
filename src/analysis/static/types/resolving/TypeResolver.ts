@@ -19,6 +19,7 @@ import { Element } from "../discovery/Element";
 import { Relation } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 import { TypeProbability } from "./TypeProbability";
+import { Scope } from "../discovery/Scope";
 
 /**
  * Abstract TypeResolver class
@@ -52,10 +53,10 @@ export abstract class TypeResolver {
 
   /**
    * Returns the identifierDescription of the variable in the given scope
-   * @param scopeName the name of the scope the variable is in
+   * @param scope the scope the variable is in
    * @param variableName the name of the variable
    */
-  abstract getTyping(scopeName: string, variableName: string): TypeProbability
+  abstract getTyping(scope: Scope, variableName: string): TypeProbability
 
   /**
    * Sets the identifierDescription of the specified relation

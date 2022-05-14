@@ -19,10 +19,11 @@ import { TypeResolver } from "./TypeResolver";
 import { Element } from "../discovery/Element";
 import { Relation } from "../discovery/Relation";
 import { TypeProbability } from "./TypeProbability";
+import { Scope } from "../discovery/Scope";
 
 export class TypeResolverUnknown extends TypeResolver{
 
-  getTyping(scopeName: string, variableName: string): TypeProbability {
+  getTyping(scope: Scope, variableName: string): TypeProbability {
     return new TypeProbability()
   }
 

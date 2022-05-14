@@ -20,13 +20,15 @@ import { ActionType } from "../parsing/ActionType";
 import { ActionVisibility } from "../parsing/ActionVisibility";
 import { ActionDescription } from "../parsing/ActionDescription";
 import { TypeProbability } from "../types/resolving/TypeProbability";
+import { Visitor } from "../Visitor";
 
 // TODO only top level functions should be targettet
-export class TargetVisitor {
+export class TargetVisitor extends Visitor {
   private _targetMap: Map<string, TargetMetaData>;
   private _functionMap: Map<string, Map<string, ActionDescription>>;
 
-  constructor() {
+  constructor(filePath: string) {
+    super(filePath)
     this._targetMap = new Map<string, TargetMetaData>();
     this._functionMap = new Map<string, Map<string, ActionDescription>>();
   }
@@ -40,9 +42,6 @@ export class TargetVisitor {
       this._functionMap.set(targetName, new Map<string, ActionDescription>());
     }
   }
-
-
-
 
   // classic function declarations
   public FunctionExpression: (path) => void = (path) => {
@@ -88,7 +87,7 @@ export class TargetVisitor {
     this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
-      uid: path.scope.uid,
+      scope: this._getScope(path, targetName),
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -103,11 +102,16 @@ export class TargetVisitor {
     });
   }
 
-  public Program: (path) => void = (path) => {
+  Program: (path) => void = (path) => {
+    if (this.scopeIdOffset === undefined) {
+      this.scopeIdOffset = path.scope.uid
+    }
+
     for (const key of Object.keys(path.scope.bindings)) {
       const binding = path.scope.bindings[key]
 
       const newScopeUid = binding.path.scope.uid
+
       const node = binding.path.node
 
       if (node.type === 'VariableDeclarator') {
@@ -141,6 +145,10 @@ export class TargetVisitor {
       }
     }
   }
+  // public Scope: (path) => void = (path) => {
+  //   console.log(path)
+  //   console.log()
+  // }
 
   public ClassMethod: (path) => void = (path) => {
     const targetName = path.parentPath.parentPath.node.id.name;
@@ -153,10 +161,8 @@ export class TargetVisitor {
       visibility = ActionVisibility.PROTECTED;
     }
 
-
-
     this._functionMap.get(targetName).set(functionName, {
-      uid: path.scope.uid,
+      scope: this._getScope(path, functionName),
       name: functionName,
       type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
       visibility: visibility,
@@ -208,7 +214,7 @@ export class TargetVisitor {
         // TODO this one is probably wrong
 
         this._functionMap.get(targetName).set(functionName, {
-          uid: path.scope.uid,
+          scope: this._getScope(path, functionName),
           name: functionName,
           type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
           visibility: ActionVisibility.PUBLIC,
@@ -241,7 +247,7 @@ export class TargetVisitor {
     }
 
     this._functionMap.get(targetName).set(targetName, {
-      uid: path.scope.uid,
+      scope: this._getScope(path, targetName),
       name: targetName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -257,9 +263,12 @@ export class TargetVisitor {
   }
 
     // functions
-  public _createFunction (newScopeUid: string, targetName: string, functionName: string, node) {
+  public _createFunction (newScopeUid, targetName: string, functionName: string, node) {
     this._functionMap.get(targetName).set(functionName, {
-      uid: newScopeUid,
+      scope: {
+        uid: `${newScopeUid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,

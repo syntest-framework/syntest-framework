@@ -1,10 +1,10 @@
 experiment_names=( "old" "new" )
 times=( 20 )
 inferences=( 0 1 )
-modes=( "roulette" "elitist" "dynamic" )
+modes=( "roulette" "elitist" ) # "dynamic" )
 
-benchmarks=( "axios" "commanderjs" )
-benchmark_files=( "axios/lib/**/*.js" "commanderjs/lib/**/*.js" )
+benchmarks=( "axios" "commanderjs" "lodash" "lodash" "lodash" "lodash" "lodash")
+benchmark_files=( "axios/lib/**/*.js" "commanderjs/lib/**/*.js" "lodash/result.js" "lodash/slice.js" "lodash/split.js" "lodash/uniq.js" "lodash/unzip.js")
 
 for experiment_name in "${experiment_names[@]}"; do
   for time in "${times[@]}"; do
@@ -14,7 +14,7 @@ for experiment_name in "${experiment_names[@]}"; do
           break
         fi
 
-        for x in {0..1}; do
+        for x in {0..6}; do
           for i in {1..10}; do
             echo "running experiment ex=${experiment_name}time=${time},inference${inference},mode=${mode} trial ${i} for ${benchmarks[$x]} with files ${benchmark_files[$x]}"
             docker rm experiment

@@ -29,8 +29,8 @@ module.exports = {
     // target_root_directory: "./benchmark/custom/simple",
 
     // target_root_directory: "./benchmark/top10npm/axios",
-    target_root_directory: "./benchmark/top10npm/chalk",
-    // target_root_directory: "./benchmark/top10npm/commanderjs",
+    // target_root_directory: "./benchmark/top10npm/chalk",
+    target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
     // target_root_directory: "./benchmark/top10npm/lodash",
 
@@ -50,9 +50,9 @@ module.exports = {
 
         // "./benchmark/top10npm/axios/lib/core/*.js",
 
-        "./benchmark/top10npm/axios/lib/**/*.js",
+        // "./benchmark/top10npm/axios/lib/**/*.js",
         // "./benchmark/top10npm/chalk/source/**/*.js",
-        // "./benchmark/top10npm/commanderjs/lib/**/*.js",
+        "./benchmark/top10npm/commanderjs/lib/**/*.js",
         // "./benchmark/top10npm/express/lib/**/*.js",
         // "./benchmark/top10npm/lodash/**/*.js",
 

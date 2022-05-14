@@ -18,6 +18,7 @@
 import { IdentifierDescription } from "./IdentifierDescription";
 import { ActionType } from "./ActionType";
 import { ActionVisibility } from "./ActionVisibility";
+import { Scope } from "../types/discovery/Scope";
 
 /**
  * Interface for a Action Description.
@@ -25,7 +26,7 @@ import { ActionVisibility } from "./ActionVisibility";
  * @author Dimitri Stallenberg
  */
 export interface ActionDescription {
-  uid: string;
+  scope: Scope;
   name: string;
   type: ActionType;
 

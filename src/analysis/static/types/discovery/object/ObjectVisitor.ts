@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 import { ComplexObject } from "./ComplexObject";
+import { Visitor } from "../../../Visitor";
 
-export class ObjectVisitor {
+export class ObjectVisitor extends Visitor {
 
-  private _filePath: string;
   private _objects: ComplexObject[]
   private _objectStack: ComplexObject[]
 
@@ -28,7 +28,7 @@ export class ObjectVisitor {
   }
 
   constructor(filePath: string) {
-    this._filePath = filePath
+    super(filePath)
 
     this._objects = []
     this._objectStack = []
@@ -57,8 +57,7 @@ export class ObjectVisitor {
 
   private _currentObject() {
     if (!this._objectStack.length) {
-      console.log(this._filePath)
-      throw new Error("No current object available!")
+      throw new Error("No current object available! " + this.filePath)
     }
 
     return this._objectStack[this._objectStack.length - 1]
@@ -68,7 +67,7 @@ export class ObjectVisitor {
   public ClassDeclaration = {
     enter: (path) => {
       const _object: ComplexObject = {
-        import: this._filePath,
+        import: this.filePath,
         name: path.node.id.name,
         properties: new Set(),
         functions: new Set()
@@ -93,7 +92,7 @@ export class ObjectVisitor {
   public FunctionDeclaration = {
     enter: (path) => {
       const _object: ComplexObject = {
-        import: this._filePath,
+        import: this.filePath,
         name: path.node.id.name,
         properties: new Set(),
         functions: new Set()
@@ -109,7 +108,7 @@ export class ObjectVisitor {
     enter: (path) => {
       // TODO find the object where we are assigning to if its an assignment
       const _object: ComplexObject = {
-        import: this._filePath,
+        import: this.filePath,
         name: path.node.id ? path.node.id.name : 'anon',
         properties: new Set(),
         functions: new Set()
@@ -125,7 +124,7 @@ export class ObjectVisitor {
     enter: (path) => {
       // TODO find the object where we are assigning to if its an assignment
       const _object: ComplexObject = {
-        import: this._filePath,
+        import: this.filePath,
         name: path.node.id ? path.node.id.name : 'anon',
         properties: new Set(),
         functions: new Set()

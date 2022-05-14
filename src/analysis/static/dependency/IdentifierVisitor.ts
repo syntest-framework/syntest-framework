@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Visitor } from "../Visitor";
+
 export enum ExportType {
   function,
   class,
@@ -22,16 +24,15 @@ export enum ExportType {
   unknown
 }
 
-export class IdentifierVisitor {
-  private _targetPath: string
+export class IdentifierVisitor extends Visitor {
   private _identifiers: Map<string, ExportType>
 
   get identifiers(): Map<string, ExportType> {
     return this._identifiers;
   }
 
-  constructor(targetPath: string) {
-    this._targetPath = targetPath
+  constructor(filePath: string) {
+    super(filePath)
     this._identifiers = new Map<string, ExportType>()
   }
 

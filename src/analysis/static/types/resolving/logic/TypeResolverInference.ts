@@ -21,6 +21,7 @@ import { Relation, RelationType } from "../../discovery/Relation";
 import { Element, isInstanceOfElement } from "../../discovery/Element";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 import { TypeProbability } from "../TypeProbability";
+import { Scope } from "../../discovery/Scope";
 
 export class TypeResolverInference extends TypeResolver {
 
@@ -105,10 +106,6 @@ export class TypeResolverInference extends TypeResolver {
     const propertyAccessors = relations.filter((r) => r.relation === RelationType.PropertyAccessor)
 
     for (const element of elements) {
-      // if (this.elementTyping.has(element)) {
-      //   continue
-      // }
-
       if (element.type !== 'identifier' || element.value === 'this') { // TODO this
         continue
       }
@@ -118,8 +115,8 @@ export class TypeResolverInference extends TypeResolver {
           return r.involved[0].value === element.value
         })
         .filter((r) => {
-          // console.log(r)
           return r.involved[0].scope.uid === element.scope.uid
+          && r.involved[0].scope.filePath === element.scope.filePath
         })
         .map((r) => {
           return r.involved[1]
@@ -137,6 +134,8 @@ export class TypeResolverInference extends TypeResolver {
             return [...unique, item]
           }
         }, [])
+
+
 
       if (!properties.length) {
         continue
@@ -296,24 +295,17 @@ export class TypeResolverInference extends TypeResolver {
     }
   }
 
-  getTyping(scopeName: string, variableName: string): TypeProbability {
+  getTyping(scope: Scope, variableName: string): TypeProbability {
     const elements = [...this.elementTyping.keys()]
       .filter((e) => !!e.scope)
 
-    const correctScopeName = elements.filter((e) => e.scope.uid === scopeName)
+    const correctFile = elements.filter((e) => e.scope.filePath === scope.filePath)
 
-    // const correctScopeType = correctScopeName.filter((e) => e.scope.type === scopeType)
+    const correctVariable = correctFile.filter((e) => e.value === variableName)
 
-    const correctVariable = correctScopeName.filter((e) => e.value === variableName)
+    const correctScope = correctVariable.filter((e) => `${e.scope.uid}` === `${scope.uid}`)
 
-    const element = correctVariable[0]
-    // const element = [...this.elementTyping.keys()].find((e) => {
-    //   return e.scope.name === scopeName
-    //     && e.scope.type === scopeType
-    //     && e.value === variableName
-    // })
-
-
+    const element = correctScope[0]
 
     if (!element) {
       // console.log(scopeName)
