@@ -18,6 +18,7 @@ import { ArrayStatement } from "../statements/complex/ArrayStatement";
 import { ObjectStatement } from "../statements/complex/ObjectStatement";
 import { TypeProbability } from "../../analysis/static/types/resolving/TypeProbability";
 import { TypeEnum } from "../../analysis/static/types/resolving/TypeEnum";
+import { NullStatement } from "../statements/primitive/NullStatement";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
@@ -169,9 +170,11 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // TODO null
       // TODO REGEX
       // TODO
+    } else if (chosenType === "null") {
+      return this.sampleNull(identifierDescription, chosenType)
     } else if (chosenType === "any") {
-      // TODO
-      const choice = prng.nextInt(0, 3)
+      // TODO literreally any type
+      const choice = prng.nextInt(0, 4)
       if (choice === 0) {
         return this.sampleBool(identifierDescription, chosenType);
       } else if (choice === 1) {
@@ -185,6 +188,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
           prng.uniqueId(),
           this.sampleArgument(depth + 1, {typeProbabilityMap: new TypeProbability(), name: 'noname'})
         )
+      } else if (choice === 4) {
+        return this.sampleNull(identifierDescription, chosenType)
       }
     } else {
       // must be object
@@ -282,6 +287,23 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       alphabet,
       maxlength
     );
+  }
+
+  sampleNull(
+    identifierDescription: IdentifierDescription = null,
+    type: string = null
+  ): NullStatement {
+    if (!type) {
+      type = TypeEnum.NULL
+    }
+
+    if (!identifierDescription) {
+      const typeMap = new TypeProbability()
+      typeMap.addType(type, 1, null)
+      identifierDescription = { typeProbabilityMap: typeMap, name: "noname" }
+    }
+
+    return new NullStatement(identifierDescription, type, prng.uniqueId());
   }
 
   sampleBool(

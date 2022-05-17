@@ -317,7 +317,6 @@ export class TypeResolverInference extends TypeResolver {
       //
       // console.log(elements.filter((e) => e.value === variableName))
       // throw new Error("Invalid!")
-
       return new TypeProbability()
     }
 

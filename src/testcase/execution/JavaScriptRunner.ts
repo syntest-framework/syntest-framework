@@ -125,6 +125,13 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           const branch = instrumentationData[key].branchMap[branchKey]
           const hits = instrumentationData[key].b[branchKey]
 
+          if (!hits.find((h) => h !== 0)) {
+            // if there are no hits the meta object is not created and thus we cannot query it
+            continue
+          }
+
+          const meta = metaData[key].meta[branchKey]
+
           traces.push({
             id: `b-${branch.line}`,
             path: key,
@@ -136,10 +143,9 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
             hits: hits[0],
 
-            // TODO
-            left: [],
-            opcode: "",
-            right: [],
+            condition_ast: meta.condition_ast,
+            condition: meta.condition,
+            variables: meta.variables
           });
 
           traces.push({
@@ -153,10 +159,9 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
             hits: hits[1],
 
-            // TODO
-            left: [],
-            opcode: "",
-            right: [],
+            condition_ast: meta.condition_ast,
+            condition: meta.condition,
+            variables: meta.variables
           });
         }
     }

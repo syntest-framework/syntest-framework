@@ -508,7 +508,8 @@ export class Launcher {
         'function': summary['function'] + ' / ' + Object.keys(data.f).length
       }, false])
 
-      // console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
+      console.log(data.b)
+      console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
     }
 
     overall['statement'] /= totalStatements

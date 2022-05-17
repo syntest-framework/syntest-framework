@@ -1,5 +1,4 @@
 import {
-  BranchObjectiveFunction,
   CFG,
   FunctionObjectiveFunction,
   NodeType,
@@ -12,6 +11,7 @@ import { ActionDescription } from "../analysis/static/parsing/ActionDescription"
 import { IdentifierDescription } from "../analysis/static/parsing/IdentifierDescription";
 import { ActionVisibility } from "../analysis/static/parsing/ActionVisibility";
 import { ActionType } from "../analysis/static/parsing/ActionType";
+import { JavaScriptBranchObjectiveFunction } from "../criterion/JavaScriptBranchObjectiveFunction";
 
 export enum SubjectType {
   class,
@@ -80,7 +80,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
               .forEach((childNode) => {
                 // Add objective function
                 this._objectives.set(
-                  new BranchObjectiveFunction(
+                  new JavaScriptBranchObjectiveFunction(
                     this,
                     childNode.id,
                     branchNode.lines[0],

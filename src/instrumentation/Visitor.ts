@@ -242,6 +242,19 @@ function coverIfBranches(path) {
   } else {
     this.insertBranchCounter(path.get("alternate"), branch);
   }
+
+  const T = this.types;
+  const test = path.get('test')
+  const variables = []
+  test.traverse({
+    Identifier: {
+      enter: (p) => {
+        variables.push(p.node.name)
+      }
+    }
+  }, test)
+  const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
+  path.insertBefore(T.expressionStatement(metaTracker));
 }
 
 function coverLoopBranch(path) {
@@ -254,6 +267,18 @@ function coverLoopBranch(path) {
 
   const increment = this.getBranchIncrement(branch, path.node.loc);
   path.insertAfter(T.expressionStatement(increment));
+
+  const test = path.get('test')
+  const variables = []
+  test.traverse({
+    Identifier: {
+      enter: (p) => {
+        variables.push(p.node.name)
+      }
+    }
+  }, test)
+  const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
+  path.insertBefore(T.expressionStatement(metaTracker));
 }
 
 function createSwitchBranch(path) {
@@ -284,41 +309,57 @@ function coverTernary(path) {
   if (aHint !== "next") {
     this.insertBranchCounter(path.get("alternate"), branch);
   }
+
+  const T = this.types;
+  const test = path.get('test')
+  const variables = []
+  test.traverse({
+    Identifier: {
+      enter: (p) => {
+        variables.push(p.node.name)
+      }
+    }
+  }, test)
+  const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
+  test.replaceWith(T.sequenceExpression([metaTracker, test.node]));
 }
 
+// TODO not sure how to handle the metatracker for this
+// TODO also unhandy since a chain of statements will be seen as a multi-sides branch
 function coverLogicalExpression(path) {
-  const T = this.types;
-  if (path.parentPath.node.type === "LogicalExpression") {
-    return; // already processed
-  }
-  const leaves = [];
-  this.findLeaves(path.node, leaves);
-  const b = this.cov.newBranch("binary-expr", path.node.loc, this.reportLogic);
-  for (let i = 0; i < leaves.length; i += 1) {
-    const leaf = leaves[i];
-    const hint = this.hintFor(leaf.node);
-    if (hint === "next") {
-      continue;
-    }
-
-    if (this.reportLogic) {
-      const increment = this.getBranchLogicIncrement(leaf, b, leaf.node.loc);
-      if (!increment[0]) {
-        continue;
-      }
-      leaf.parent[leaf.property] = T.sequenceExpression([
-        increment[0],
-        increment[1],
-      ]);
-      continue;
-    }
-
-    const increment = this.getBranchIncrement(b, leaf.node.loc);
-    if (!increment) {
-      continue;
-    }
-    leaf.parent[leaf.property] = T.sequenceExpression([increment, leaf.node]);
-  }
+//   const T = this.types;
+//   if (path.parentPath.node.type === "LogicalExpression") {
+//     return; // already processed
+//   }
+//
+//   const leaves = [];
+//   this.findLeaves(path.node, leaves);
+//   const b = this.cov.newBranch("binary-expr", path.node.loc, this.reportLogic);
+//   for (let i = 0; i < leaves.length; i += 1) {
+//     const leaf = leaves[i];
+//     const hint = this.hintFor(leaf.node);
+//     if (hint === "next") {
+//       continue;
+//     }
+//
+//     if (this.reportLogic) {
+//       const increment = this.getBranchLogicIncrement(leaf, b, leaf.node.loc);
+//       if (!increment[0]) {
+//         continue;
+//       }
+//       leaf.parent[leaf.property] = T.sequenceExpression([
+//         increment[0],
+//         increment[1],
+//       ]);
+//       continue;
+//     }
+//
+//     const increment = this.getBranchIncrement(b, leaf.node.loc);
+//     if (!increment) {
+//       continue;
+//     }
+//     leaf.parent[leaf.property] = T.sequenceExpression([increment, leaf.node]);
+//   }
 }
 
 const codeVisitor = {
@@ -414,7 +455,7 @@ const coverageTemplate = template(
 
 const metaTemplate = template(
   `
-    function META_FUNCTION (branch, index, metaInformation) {
+    function META_FUNCTION (branch, metaInformation) {
         var path = PATH;
         var hash = HASH;
         var gmv = GLOBAL_META_VAR;
@@ -431,7 +472,7 @@ const metaTemplate = template(
           meta[path].meta[branch] = {}
         }
         
-        meta[path].meta[branch][index] = metaInformation
+        meta[path].meta[branch] = metaInformation
     }
 `,
   { preserveComments: true }

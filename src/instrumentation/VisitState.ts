@@ -314,20 +314,27 @@ export class VisitState {
     return this.increase("b", branchName, index);
   }
 
-  getBranchMetaTracker(path, branchName, loc) {
-    const index = this.cov.addBranchPath(branchName, loc);
+  getBranchMetaTracker(branchName, testAsAst, testAsCode: string, variables: string[]) {
 
     const T = this.types
 
     const metaTracker = T.callExpression(T.identifier(this.metaVarName), [
       T.numericLiteral(branchName),
-      T.numericLiteral(index),
       T.objectExpression([
         T.objectProperty(
           T.stringLiteral('condition_ast'),
-          T.stringLiteral(path.parent.test ? JSON.stringify(path.parent.test) : "") // TODO this is weird (goes wrong on command.js (commanderjs))
+          T.stringLiteral(JSON.stringify(testAsAst))
+        ),
+        T.objectProperty(
+          T.stringLiteral('condition'),
+          T.stringLiteral(testAsCode)
+        ),
+        T.ObjectProperty(
+          T.stringLiteral('variables'),
+          T.ObjectExpression([
+            ...variables.map((v) => T.objectProperty(T.stringLiteral(v), T.identifier(v)))
+          ])
         )
-        // TODO variable values
       ])
     ])
 
@@ -344,10 +351,8 @@ export class VisitState {
 
   insertBranchCounter(path, branchName, loc) {
     const increment = this.getBranchIncrement(branchName, loc || path.node.loc);
-    // TODO this somehow fucks up the branch count
-    // const metaTracker = this.getBranchMetaTracker(path, branchName, loc || path.node.loc)
+
     this.insertCounter(path, increment);
-    // this.insertCounter(path, metaTracker);
   }
 
   findLeaves(node, accumulator, parent, property) {
