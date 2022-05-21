@@ -18,14 +18,13 @@
 import { TypeResolver } from "../TypeResolver";
 import { elementTypeToTypingType, TypeEnum } from "../TypeEnum";
 import { Relation, RelationType } from "../../discovery/Relation";
-import { Element, isInstanceOfElement } from "../../discovery/Element";
+import { Element, ElementType, isInstanceOfElement } from "../../discovery/Element";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 import { TypeProbability } from "../TypeProbability";
 import { Scope } from "../../discovery/Scope";
 
 export class TypeResolverInference extends TypeResolver {
 
-  private wrapperElementIsRelation: Map<string, Relation>
 
   /**
    * This function resolves constant elements such as numerical constants or other primitives
@@ -172,8 +171,6 @@ export class TypeResolverInference extends TypeResolver {
           }
         }
 
-
-
         // atleast score of one
         if (score > 0) {
           let type: TypeEnum
@@ -207,6 +204,7 @@ export class TypeResolverInference extends TypeResolver {
               propertyTypings.set(prop, typeMap)
               return
             }
+            // TODO scope?
             const element = properties.find((p) => p.value === prop)
 
             if (element && this.elementTyping.has(element)) {
@@ -219,24 +217,22 @@ export class TypeResolverInference extends TypeResolver {
             const relevantRelations = relations
               .filter((r) => r.relation === RelationType.PropertyAccessor)
               .filter((r) => r.involved[1].scope.filePath === object.import)
-              // .filter((r) => r.involved[1].scope.uid === object.uid) // todo
+              .filter((r) => r.involved[1].scope.uid.includes(object.name))
               .filter((r) => r.involved[0].value === 'this')
               .filter((r) => r.involved[1].value === prop)
               .filter((r) => r.involved[1].type === 'identifier')
 
             elements = relevantRelations.map((r) => r.involved[1])
 
-            // if (elements.length > 2) {
-            //   const el1 = elements[0]
-            //
-            //   for (const el2 of elements) {
-            //     if (el1 !== el2) {
-            //       console.log(object)
-            //       console.log(elements)
-            //       process.exit()
-            //     }
-            //   }
-            // }
+            if (elements.length > 2) {
+              const el1 = elements[0]
+
+              for (const el2 of elements) {
+                if (el1 !== el2) {
+                  throw new Error(`Elements are not equal! \n${JSON.stringify(el1)} \n${JSON.stringify(el2)}`)
+                }
+              }
+            }
 
             if (elements.length && this.elementTyping.has(elements[0])) {
               found += 1
@@ -325,6 +321,12 @@ export class TypeResolverInference extends TypeResolver {
 
   resolveRelationElements(relation: RelationType, involved: (Element | TypeProbability)[]): boolean {
     switch (relation) {
+      case RelationType.Object: // could be multiple things
+      case RelationType.ObjectProperty: // could be multiple things
+      case RelationType.Array: // could be multiple things
+      case RelationType.Sequence: // could be multiple things
+        return false
+
       case RelationType.PropertyAccessor: // could be multiple things
         // although the first has to an object/array/function
         return false
@@ -422,13 +424,15 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Assignment: // must be the same
         // TODO not sure if this works, this will propogate changed to either element to the other
         if (isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          // this.setElementType(involved[0], { identifierDescription: involved[1].identifierDescription }, 1)
-          this.elementTyping.set(involved[0], involved[1])
+          // this.setElementType(involved[0], involved[1], 1)
+          this.setEqualTypeMaps(involved[0], involved[1])
           return true
         } else if (!isInstanceOfElement(involved[0]) && isInstanceOfElement(involved[1])) {
-          // this.setElementType(involved[1], { identifierDescription: involved[0].identifierDescription }, 1)
-          this.elementTyping.set(involved[1], involved[0])
+          // this.setElementType(involved[1], involved[0], 1)
+          this.setEqualTypeMaps(involved[1], involved[0])
           return true
+        } else if (!isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
+          // TODO merge them
         }
         return false
       case RelationType.MultiplicationAssignment: // must be numeric
@@ -466,10 +470,6 @@ export class TypeResolverInference extends TypeResolver {
         if (isInstanceOfElement(involved[0])) {
           this.setElementType(involved[0], TypeEnum.FUNCTION, 1)
         }
-        return false
-
-      case RelationType.Object: // could be multiple things
-      case RelationType.Array: // could be multiple things
         return false
     }
 

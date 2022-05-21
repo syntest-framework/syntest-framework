@@ -25,9 +25,11 @@ export class BranchDistance {
     variables: any,
     target: boolean
   ): number {
-    const ast = JSON.parse(condition_ast)
+    if (condition === undefined || condition_ast === undefined || variables === undefined) {
+      return 1
+    }
 
-    // console.log(ast)
+    const ast = JSON.parse(condition_ast)
 
     const branchDistance = new BranchDistance();
 
@@ -72,8 +74,11 @@ export class BranchDistance {
         // TODO check if this is actually primitive?
         return [value, true]
 
+      case "UpdateExpression":
+        return this.resolve(ast.argument, variables)
+
       // TODO not sure how to handle this
-        // TODO the result would be cool but functions that alter state (side-effects) ruin the idea
+      // TODO the result would be cool but functions that alter state (side-effects) ruin the idea
       case "CallExpression":
         return [0, true]
     }

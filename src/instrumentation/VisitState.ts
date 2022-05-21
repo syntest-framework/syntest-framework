@@ -332,7 +332,9 @@ export class VisitState {
         T.ObjectProperty(
           T.stringLiteral('variables'),
           T.ObjectExpression([
-            ...variables.map((v) => T.objectProperty(T.stringLiteral(v), T.identifier(v)))
+            ...variables
+              .filter((v, i, a) => a.indexOf(v) === i)
+              .map((v) => T.objectProperty(T.stringLiteral(v), T.identifier(v)))
           ])
         )
       ])

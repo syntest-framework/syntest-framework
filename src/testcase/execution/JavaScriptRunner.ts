@@ -89,7 +89,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // Retrieve execution traces
     const instrumentationData = _.cloneDeep(global.__coverage__)
-    const metaData = _.cloneDeep(global.__meta__) // TODO use this
+    const metaData = _.cloneDeep(global.__meta__)
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {
@@ -125,12 +125,20 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           const branch = instrumentationData[key].branchMap[branchKey]
           const hits = instrumentationData[key].b[branchKey]
 
-          if (!hits.find((h) => h !== 0)) {
-            // if there are no hits the meta object is not created and thus we cannot query it
-            continue
-          }
+          // if (!hits.find((h) => h !== 0)) {
+          //   // if there are no hits the meta object is not created and thus we cannot query it
+          //   continue
+          // }
+          //
+          // if (!metaData[key] || !metaData[key].meta || !metaData[key].meta[branchKey]) {
+          //   console.log(instrumentationData)
+          //   console.log(metaData)
+          //   console.log(key)
+          //   console.log(branchKey)
+          //   continue
+          // }
 
-          const meta = metaData[key].meta[branchKey]
+          const meta = metaData?.[key]?.meta?.[branchKey]
 
           traces.push({
             id: `b-${branch.line}`,
@@ -143,9 +151,9 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
             hits: hits[0],
 
-            condition_ast: meta.condition_ast,
-            condition: meta.condition,
-            variables: meta.variables
+            condition_ast: meta?.condition_ast,
+            condition: meta?.condition,
+            variables: meta?.variables
           });
 
           traces.push({
@@ -159,9 +167,9 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
             hits: hits[1],
 
-            condition_ast: meta.condition_ast,
-            condition: meta.condition,
-            variables: meta.variables
+            condition_ast: meta?.condition_ast,
+            condition: meta?.condition,
+            variables: meta?.variables
           });
         }
     }

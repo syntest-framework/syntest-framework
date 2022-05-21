@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Element } from "../discovery/Element";
-import { Relation } from "../discovery/Relation";
+import { Element, ElementType } from "../discovery/Element";
+import { Relation, RelationType } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 import { TypeProbability } from "./TypeProbability";
 import { Scope } from "../discovery/Scope";
@@ -31,6 +31,8 @@ export abstract class TypeResolver {
   private _elementTyping: Map<Element, TypeProbability>
 
   private _relationFullyResolved: Set<Relation>
+
+  private _wrapperElementIsRelation: Map<string, Relation>
 
   /**
    * Constructor
@@ -65,6 +67,10 @@ export abstract class TypeResolver {
    * @param value the score of identifierDescription (higher score means higher probability)
    */
   setRelationType(relation: Relation, type: string | TypeProbability, value: number) {
+    if (relation.relation === RelationType.PropertyAccessor) {
+      this.setElementType(relation.involved[1], type, 1)
+    }
+
     if (this.relationTyping.has(relation)) {
       const probabilities = this.relationTyping.get(relation)
       probabilities.addType(type, value)
@@ -82,7 +88,18 @@ export abstract class TypeResolver {
    * @param value the score of type (higher score means higher probability)
    */
   setElementType(element: Element, type: string | TypeProbability, value: number, object: ComplexObject = null, propertyTypings: Map<string, TypeProbability> = null) {
-    // TODO the .has does not work since elements cannot be compared like this
+    if (element.type === ElementType.Relation) {
+      const relation = this._wrapperElementIsRelation.get(element.value)
+
+      if (!relation) {
+        throw new Error(`Cannot find relation: ${element.value}`)
+      }
+
+      if (relation.relation === RelationType.PropertyAccessor) {
+        this.setElementType(relation.involved[1], type, 1)
+      }
+    }
+
     if (this.elementTyping.has(element)) {
       const typeMap = this.elementTyping.get(element)
       typeMap.addType(type, value, object, propertyTypings)
@@ -91,6 +108,23 @@ export abstract class TypeResolver {
       this.elementTyping.set(element, typeMap)
       typeMap.addType(type, value, object, propertyTypings)
     }
+  }
+
+  setEqualTypeMaps(element: Element, typeMap: TypeProbability) {
+    if (element.type === ElementType.Relation) {
+      const relation = this._wrapperElementIsRelation.get(element.value)
+
+      if (!relation) {
+        throw new Error(`Cannot find relation: ${element.value}`)
+      }
+
+      if (relation.relation === RelationType.PropertyAccessor) {
+        this.setEqualTypeMaps(relation.involved[1], typeMap)
+      }
+    }
+
+    // todo maybe add the entire checks and merge functionality here too
+    this.elementTyping.set(element, typeMap)
   }
 
   get relationTyping(): Map<Relation, TypeProbability> {
@@ -103,5 +137,14 @@ export abstract class TypeResolver {
 
   get relationFullyResolved(): Set<Relation> {
     return this._relationFullyResolved;
+  }
+
+
+  get wrapperElementIsRelation(): Map<string, Relation> {
+    return this._wrapperElementIsRelation;
+  }
+
+  set wrapperElementIsRelation(value: Map<string, Relation>) {
+    this._wrapperElementIsRelation = value;
   }
 }

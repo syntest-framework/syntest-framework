@@ -26,7 +26,21 @@ export interface Relation {
 }
 
 export enum RelationType {
-  // Left-hand-side expressions
+  // Primary Expressions
+  // TODO others
+  // object
+  Object="{L}", // TODO not correct L doesnt matter
+  ObjectProperty="L:R",
+
+  // array
+  Array="[L]",
+  Sequence="(L,R)",
+
+
+
+
+
+  // Left-hand-side Expressions
   PropertyAccessor="L.R",
   New="new L()",
   // TODO new.target
@@ -114,7 +128,6 @@ export enum RelationType {
   // TODO destructuring assignment
 
 
-
   // function
   Return="L->R",
 
@@ -122,11 +135,6 @@ export enum RelationType {
   // function
   Parameters="L_R",
   Call="L(R)",
-  // object
-  Object="{L:R}", // TODO not correct L doesnt matter
-  // array
-  Array="[L]",
-
 }
 
 

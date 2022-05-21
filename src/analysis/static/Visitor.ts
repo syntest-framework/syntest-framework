@@ -5,18 +5,74 @@ export abstract class Visitor {
   private _filePath: string;
   private _scopeIdOffset: number = undefined
 
+  // TODO functionExpression has no id
+  private _thisScopes: string[] = ['ClassDeclaration', 'FunctionDeclaration']
+  private _thisScopeStack: number[]
+  private _thisScopeStackNames: string[]
+
   constructor(filePath: string) {
     this._filePath = filePath
+    this._thisScopeStack = []
+    this._thisScopeStackNames = []
   }
 
   Program: (path) => void = (path) => {
     // this is required because babel does not reset its uid counter
     if (this._scopeIdOffset === undefined) {
       this._scopeIdOffset = path.scope.uid
+      this._thisScopeStack.push(path.scope.uid)
+      this._thisScopeStackNames.push('global')
+    }
+  }
+
+  Scope= {
+    enter: (path) => {
+      if (!this._thisScopes.includes(path.node.type)) {
+        return
+      }
+
+      this._thisScopeStack.push(path.scope.uid)
+      this._thisScopeStackNames.push(path.node.id.name)
+    },
+    exit: (path) => {
+      if (!this._thisScopes.includes(path.node.type)) {
+        return
+      }
+
+      this._thisScopeStack.pop()
+      this._thisScopeStackNames.pop()
     }
   }
 
   _getScope(path, name): Scope {
+    if (name === 'this') {
+      if (!this._thisScopeStack.length) {
+        throw new Error("Invalid scope stack!")
+      }
+
+      return {
+        uid: `${this._thisScopeStack[this._thisScopeStack.length - 1] - this.scopeIdOffset}`,
+        filePath: this.filePath,
+      }
+    }
+
+    if (path.type === 'MemberExpression') { // TODO we should check if we are the property currently (doesnt work when object === property, car.car)
+      if (path.node.property.name === name) {
+        // TODO test if this recursive scoping works correctly
+        let objectIdentifier = this._getOriginalObjectIdentifier(path.node.object)
+
+        const objectScope: Scope = this._getScope(path, objectIdentifier)
+
+        if (objectIdentifier === 'this') {
+          objectIdentifier = this._thisScopeStackNames[this._thisScopeStackNames.length - 1]
+        }
+
+        objectScope.uid += '-' + objectIdentifier
+
+        return objectScope
+      }
+    }
+
     if (path.scope.hasGlobal(name)) {
       return {
         uid: 'global',
@@ -42,24 +98,15 @@ export abstract class Visitor {
     //   }
     // }
 
-    if (path.type === 'MemberExpression') { // TODO we should check if we are the property currently (doesnt work when object === property, car.car)
-      if (path.node.property.name === name) {
-        const objectIdentifier = this._getOriginalObjectIdentifier(path.node.object)
-
-        const objectScope: Scope = this._getScope(path, objectIdentifier)
-
-        objectScope.uid += '-' + objectIdentifier
-
-        return objectScope
-      }
-    } else if (path.type === 'ClassMethod') {
+    if (path.type === 'ClassMethod'
+      || path.type === 'ObjectProperty') {
       return {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
         filePath: this.filePath,
       }
     }
 
-    if (name === 'this' || name === 'anon') {
+    if (name === 'anon') {
       return {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
         filePath: this.filePath,
@@ -94,7 +141,7 @@ export abstract class Visitor {
   _getElement(path, node): Element {
     const scope: Scope = {
       filePath: this.filePath,
-      uid: path.scope.uid
+      uid: `${path.scope.uid}`
     }
 
     if (node.type === "NullLiteral") {
@@ -129,6 +176,14 @@ export abstract class Visitor {
         value: node.pattern
       }
     } else if (node.type === "Identifier") {
+      if (node.name === 'undefined') {
+        return {
+          scope: scope,
+          type: ElementType.UndefinedConstant,
+          value: node.name
+        }
+      }
+
       return {
         scope: this._getScope(path, node.name),
         type: ElementType.Identifier,
@@ -184,7 +239,7 @@ export abstract class Visitor {
       return {
         scope: scope,
         type: ElementType.Relation,
-        value: `%${node.start}-${node.end}`
+        value: `%-${this.filePath}-${node.start}-${node.end}`
       }
     }
     throw new Error(`Cannot get element: "${node.name}" -> ${node.type}`)

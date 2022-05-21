@@ -57,7 +57,6 @@ export class VariableVisitor extends Visitor {
     this._elementStore = new Map<string, Element>()
   }
 
-
   // context
   public ClassDeclaration: (path) => void = (path) => {
   }
@@ -74,10 +73,13 @@ export class VariableVisitor extends Visitor {
       involved.push(this._getElement(path, param))
     }
 
-    this.relations.push({
+    const relation: Relation = {
       relation: RelationType.Parameters,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public FunctionDeclaration: (path) => void = (path) => {
@@ -87,10 +89,13 @@ export class VariableVisitor extends Visitor {
       involved.push(this._getElement(path, param))
     }
 
-    this.relations.push({
+    const relation: Relation = {
       relation: RelationType.Parameters,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public ArrowFunctionExpression: (path) => void = (path) => {
@@ -100,10 +105,13 @@ export class VariableVisitor extends Visitor {
       involved.push(this._getElement(path, param))
     }
 
-    this.relations.push({
+    const relation: Relation = {
       relation: RelationType.Parameters,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public FunctionExpression: (path) => void = (path) => {
@@ -113,10 +121,13 @@ export class VariableVisitor extends Visitor {
       involved.push(this._getElement(path, param))
     }
 
-    this.relations.push({
+    const relation: Relation = {
       relation: RelationType.Parameters,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public CallExpression: (path) => void = (path) => {
@@ -130,7 +141,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -147,7 +158,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -174,7 +185,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -186,7 +197,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -198,7 +209,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -216,7 +227,7 @@ export class VariableVisitor extends Visitor {
       })
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -228,7 +239,7 @@ export class VariableVisitor extends Visitor {
       })
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -241,7 +252,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -255,7 +266,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -268,7 +279,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -292,7 +303,7 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -307,7 +318,118 @@ export class VariableVisitor extends Visitor {
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public SpreadElement: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Spread,
+      involved: [
+        this._getElement(path, path.node.argument)
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public NewExpression: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.New,
+      involved: [
+        this._getElement(path, path.node.callee),
+        ...path.node.arguments.map((a) => this._getElement(path, a))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public SequenceExpression: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Sequence,
+      involved: [
+        ...path.node.expressions.map((a) => this._getElement(path, a))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ObjectProperty: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.ObjectProperty,
+      involved: [
+        this._getElement(path, path.node.key),
+        this._getElement(path, path.node.value)
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ObjectMethod: (path) => void = (path) => {
+    const involved: Element[] = [this._getElement(path, path.node.key)]
+
+    for (const param of path.node.params) {
+      involved.push(this._getElement(path, param))
+    }
+
+    const relation: Relation = {
+      relation: RelationType.Parameters,
+      involved: involved
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public AssignmentPattern: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Assignment,
+      involved: [
+        this._getElement(path, path.node.left),
+        this._getElement(path, path.node.right)
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ObjectPattern: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Object,
+      involved: [
+        ...path.node.properties.map((a) => this._getElement(path, a))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ArrayPattern: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Array,
+      involved: [
+        ...path.node.elements.map((a) => {
+          if (!a) {
+            return {
+              type: ElementType.NullConstant,
+              value: null
+            }
+          }
+          return this._getElement(path, a)
+        })
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
