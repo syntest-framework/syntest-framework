@@ -133,6 +133,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     // TODO more complex sampling of function return values
     // Take regular primitive value
 
+    console.log(identifierDescription)
+
     if (!identifierDescription) {
       identifierDescription = {
         name: "unnamed",
@@ -160,13 +162,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     // TODO REGEX
     if (chosenType === "function") {
-      // TODO expectation of return value
-      return new ArrowFunctionStatement(
-        identifierDescription,
-        chosenType,
-        prng.uniqueId(),
-        this.sampleArgument(depth + 1, { name: 'returnValue', typeProbabilityMap: new TypeProbability() })
-      )
+      return this.sampleArrowFunction(identifierDescription, chosenType, depth)
     } else if (chosenType === 'array') {
       return this.sampleArray(identifierDescription, chosenType, depth)
     }else if (chosenType === "boolean") {
@@ -194,7 +190,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const object = identifierDescription.typeProbabilityMap.getObjectDescription(type)
 
     if (identifierDescription.name.includes("%")) {
-      throw new Error("XXX")
+      throw new Error(`Identifiers should not include % in their names: ${identifierDescription.name}`)
     }
     if (object) {
       if (object.import && object.import.length) {
@@ -202,10 +198,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         const constructor = constructors.find((c) => c.name === object.name && c.scope.filePath === object.import)
 
         // TODO constructors are only available of the current subject/file
-        console.log(constructors)
-        console.log(constructors.find((c) => c.scope.filePath === object.import))
-        console.log(constructors.find((c) => c.name === object.name))
-        console.log(constructor)
+        // console.log(constructors)
+        // console.log(constructors.find((c) => c.scope.filePath === object.import))
+        // console.log(constructors.find((c) => c.name === object.name))
+        // console.log(constructor)
 
         if (constructor) {
           const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
@@ -228,7 +224,13 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         }
       }
 
+      let count = 0
       object.properties.forEach((p) => {
+        if (object.functions.has(p)) {
+          // prefer functions over property types
+          return
+        }
+
         const typeMap = new TypeProbability()
         typeMap.addType(TypeEnum.STRING, 1, null)
 
@@ -238,9 +240,26 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         const propertyTypings = identifierDescription.typeProbabilityMap.getPropertyTypes(type)
 
         if (propertyTypings && propertyTypings.has(p)) {
+          count += 1
           values.push(this.sampleArgument(depth + 1, { name: p, typeProbabilityMap: propertyTypings.get(p) }))
         } else {
           values.push(this.sampleArgument(depth + 1, { name: p, typeProbabilityMap: new TypeProbability() }))
+        }
+      })
+      object.functions.forEach((f) => {
+        const typeMap = new TypeProbability()
+        typeMap.addType(TypeEnum.STRING, 1, null)
+
+        const identifierDescriptionKey = { typeProbabilityMap: typeMap, name: f }
+        keys.push(new StringStatement(identifierDescriptionKey, TypeEnum.STRING, prng.uniqueId(), f, Properties.string_alphabet, Properties.string_maxlength))
+
+        const propertyTypings = identifierDescription.typeProbabilityMap.getPropertyTypes(type)
+
+        if (propertyTypings && propertyTypings.has(f)) {
+          count += 1
+          values.push(this.sampleArgument(depth + 1, { name: f, typeProbabilityMap: propertyTypings.get(f) }))
+        } else {
+          values.push(this.sampleArrowFunction({ name: f, typeProbabilityMap: new TypeProbability() }, null, depth + 1))
         }
       })
     } else {
@@ -324,6 +343,29 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     }
 
     return new NullStatement(identifierDescription, type, prng.uniqueId());
+  }
+
+  sampleArrowFunction(
+    identifierDescription: IdentifierDescription = null,
+    type: string = null,
+    depth: number
+  ): ArrowFunctionStatement {
+    if (!type) {
+      type = TypeEnum.FUNCTION
+    }
+    if (!identifierDescription) {
+      const typeMap = new TypeProbability()
+      typeMap.addType(type, 1, null)
+      identifierDescription = { typeProbabilityMap: typeMap, name: "noname" }
+    }
+
+    // TODO expectation of return value
+    return new ArrowFunctionStatement(
+      identifierDescription,
+      type,
+      prng.uniqueId(),
+      this.sampleArgument(depth + 1, { name: 'returnValue', typeProbabilityMap: new TypeProbability() })
+    )
   }
 
   sampleUndefined(

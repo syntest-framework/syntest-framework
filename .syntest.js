@@ -10,7 +10,7 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 5,
+    search_time: 10,
     total_time: 6000,
     iteration_budget: 100000,
 
@@ -30,9 +30,9 @@ module.exports = {
 
     // target_root_directory: "./benchmark/top10npm/axios",
     // target_root_directory: "./benchmark/top10npm/chalk",
-    target_root_directory: "./benchmark/top10npm/commanderjs",
+    // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
-    // target_root_directory: "./benchmark/top10npm/lodash",
+    target_root_directory: "./benchmark/top10npm/lodash",
 
     // target_root_directory: "./benchmark/top10npm/moment",
 
@@ -40,13 +40,13 @@ module.exports = {
         // "./benchmark/top10npm/axios/lib/core/buildFullPath.js",
         // "./benchmark/top10npm/axios/lib/core/Axios.js",
 
-        // "./benchmark/top10npm/lodash/result.js",
+        "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
         // "./benchmark/top10npm/lodash/split.js",
         // "./benchmark/top10npm/lodash/uniq.js",
         // "./benchmark/top10npm/lodash/unzip.js",
 
-        "./benchmark/top10npm/commanderjs/lib/help.js",
+        // "./benchmark/top10npm/commanderjs/lib/help.js",
 
         // "./benchmark/top10npm/axios/lib/core/*.js",
 

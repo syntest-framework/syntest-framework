@@ -154,6 +154,26 @@ export class TypeResolverInference extends TypeResolver {
       }
 
       properties.forEach((p) => {
+        if (p.type === ElementType.Relation) {
+          if (wrapperElementIsRelation.has(p.value)) {
+            const relation: Relation = wrapperElementIsRelation.get(p.value)
+
+            if (relation.relation === RelationType.Call) {
+              const call = relation.involved[0]
+              anonObject.functions.add(call.value)
+              if (this.elementTyping.has(call)) {
+                anonObject.propertyType.set(call.value, this.elementTyping.get(call))
+              } else {
+                anonObject.propertyType.set(call.value, new TypeProbability([[TypeEnum.FUNCTION, 1, null]]))
+              }
+            } else {
+              return
+            }
+          }
+
+          return
+        }
+
         anonObject.properties.add(p.value)
         if (this.elementTyping.has(p)) {
           anonObject.propertyType.set(p.value, this.elementTyping.get(p))
@@ -395,6 +415,18 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.InEquality: // could be multiple things
       case RelationType.StrictEquality: // could be multiple things
       case RelationType.StrictInequality: // could be multiple things
+        // TODO not sure if this works, this will propogate changed to either element to the other
+        if (isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
+          this.setElementType(involved[0], involved[1], 1)
+          // this.setEqualTypeMaps(involved[0], involved[1])
+          return true
+        } else if (!isInstanceOfElement(involved[0]) && isInstanceOfElement(involved[1])) {
+          this.setElementType(involved[1], involved[0], 1)
+          // this.setEqualTypeMaps(involved[1], involved[0])
+          return true
+        } else if (!isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
+          // TODO merge them
+        }
         return false
 
       case RelationType.BitwiseLeftShift: // must be numeric
