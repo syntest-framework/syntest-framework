@@ -347,7 +347,10 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       case "MemberExpression":
       case "AssignmentExpression":
       case "ArrowFunctionExpression":
+      case "FunctionExpression":
       case "ArrayExpression":
+      case "ThisExpression":
+      case "ObjectExpression":
         return this.visitGeneralExpression(child, parents);
 
       case "VariableDeclaration":
@@ -439,7 +442,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   private visitProgram(ast: any): ReturnValue {
     for (const child of ast.body) {
       // TODO add more probably
-      if (!['FunctionDeclaration', 'ClassDeclaration'].includes(child.type)) {
+      if (!['FunctionDeclaration', 'ClassDeclaration', 'ExpressionStatement'].includes(child.type)) {
         continue
       }
       this.visitChild(child, []);
@@ -513,10 +516,10 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     ast: any,
     parents: Node[]
   ): ReturnValue {
-    const node: Node = this.createPlaceholderNode([ast.loc.start.line], []);
-    this.connectParents(parents, [node]);
-
     if (['LogicalExpression', 'BinaryExpression', 'AssignmentExpression'].includes(ast.type)) {
+      const node: Node = this.createPlaceholderNode([ast.loc.start.line], []);
+      this.connectParents(parents, [node]);
+
       const left = this.visitChild(ast.left, [node]);
       const right = this.visitChild(ast.right, [node]);
 
@@ -525,13 +528,33 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         breakNodes: [...left.breakNodes, ...right.breakNodes],
       };
     } else if (ast.type === 'UnaryExpression') {
+      const node: Node = this.createPlaceholderNode([ast.loc.start.line], []);
+      this.connectParents(parents, [node]);
+
       const { childNodes, breakNodes } = this.visitChild(ast.argument, [node]);
 
       return {
         childNodes: childNodes,
         breakNodes: breakNodes,
       };
+    } else if (ast.type === 'FunctionExpression') {
+      const node: RootNode = this.createRootNode(
+        [ast.loc.start.line],
+        [],
+      );
+      this.connectParents(parents, [node]);
+
+      if (ast.body) {
+        this.visitChild(ast.body, [node]);
+      }
+
+      return {
+        childNodes: [],
+        breakNodes: [],
+      };
     } else {
+      const node: Node = this.createPlaceholderNode([ast.loc.start.line], []);
+      this.connectParents(parents, [node]);
       return {
         childNodes: [node],
         breakNodes: [],

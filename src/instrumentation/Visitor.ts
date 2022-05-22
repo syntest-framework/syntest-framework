@@ -300,6 +300,7 @@ function coverLoopBranch(path) {
       }
     }
   }, test)
+  console.log(test)
   const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
   path.insertBefore(T.expressionStatement(metaTracker));
 }
@@ -430,11 +431,11 @@ const codeVisitor = {
   ),
   ForInStatement: entries(blockProp("body"),
     coverStatement,
-    coverLoopBranch
+    // coverLoopBranch
   ),
   ForOfStatement: entries(blockProp("body"),
     coverStatement,
-    coverLoopBranch
+    // coverLoopBranch
   ),
   WhileStatement: entries(blockProp("body"),
     coverStatement,

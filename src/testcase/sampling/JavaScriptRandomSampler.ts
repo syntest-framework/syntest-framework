@@ -152,6 +152,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       throw new Error("Invalid identifierDescription inference mode selected")
     }
 
+    console.log(chosenType)
+    console.log(identifierDescription)
+
     // this ensures that there is a chance of trying a random other identifierDescription
     if (true) { // Properties.alsotryrandom) { TODO property
       if (prng.nextBoolean(0.1)) {

@@ -69,21 +69,20 @@ export class BranchDistance {
       case "NullLiteral":
         return [null, true]
 
+      case "Identifier":
+        const value = variables[ast.name]
+        // TODO check if this is actually primitive?
+        return [value, true]
+      case "UpdateExpression":
+        return this.resolve(ast.argument, variables)
+
       case "MemberExpression":
         if (ast.object.type === 'Identifier' && ast.property.type === 'Identifier') {
           const value = variables[`${ast.object.name}.${ast.property.name}`]
           return [value, true]
         }
 
-        return [undefined, true]
-      case "Identifier":
-        const value = variables[ast.name]
-        // TODO check if this is actually primitive?
-        return [value, true]
-
-      case "UpdateExpression":
-        return this.resolve(ast.argument, variables)
-
+      case "ThisExpression":
       // TODO not sure how to handle this
       // TODO the result would be cool but functions that alter state (side-effects) ruin the idea
       case "CallExpression":
@@ -126,19 +125,18 @@ export class BranchDistance {
     const [left, lDirect] = this.resolve(ast.left, variables)
     const [right, rDirect] = this.resolve(ast.right, variables)
 
+    if (!lDirect) {
+      throw new Error("left should be direct")
+    }
+    if (!rDirect) {
+      throw new Error("right not be direct")
+    }
+
     switch (ast.operator) {
       // should both be direct : returns direct
       case "+":
         return [left + right, true]
     }
-
-    if (!lDirect) {
-      throw new Error("left should not be direct")
-    }
-    if (!rDirect) {
-      throw new Error("right should not be direct")
-    }
-
 
     switch (ast.operator) {
       // should both be direct : returns not direct
@@ -169,6 +167,9 @@ export class BranchDistance {
         return [left > right ? 0 : BranchDistance.normalize(right - left + this.K), false]
       case ">=":
         return [left >= right ? 0 : BranchDistance.normalize(right - left), false]
+
+      case "instanceof":
+        return [left instanceof right ? 0 : 1, false]
     }
 
     throw new Error(`Unknown binary operator: ${ast.operator}`)

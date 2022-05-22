@@ -323,14 +323,6 @@ export class TypeResolverInference extends TypeResolver {
     const element = correctScope[0]
 
     if (!element) {
-      // console.log(scopeName)
-      // console.log(scopeType)
-      // console.log(variableName)
-      // console.log(correctScopeName)
-      // console.log(correctScopeType)
-      // console.log(correctVariable)
-      //
-      // console.log(elements.filter((e) => e.value === variableName))
       // throw new Error("Invalid!")
       return new TypeProbability()
     }
@@ -575,24 +567,15 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.LogicalOr: // can be the identifierDescription of the first or second one depending on if the first is not false/null/undefined
         // TODO maybe should also do if just one is not element
         // TODO
-        if (!isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          this.setRelationType(relation, involved[0], 1)
-          this.setRelationType(relation, involved[1], 1)
-          return true
-        }
+        this.setRelationType(relation, involved[0], 1)
+        this.setRelationType(relation, involved[1], 1)
+        return true
 
-        return false
       case RelationType.LogicalAnd: //can be the boolean or the identifierDescription of the second one depending on if the first and second are not false/null/undefined
+        this.setRelationType(relation, involved[0], 1)
+        this.setRelationType(relation, involved[1], 1)
+        return true
       case RelationType.NullishCoalescing: //??
-        // this.relationTyping.set(relation, { identifierDescription: involved[1].identifierDescription })
-
-        // TODO
-        // if (!isInstanceOfElement(involved[0])) {
-        //   this.setRelationType(relation, involved[0], 0.5)
-        //   this.setRelationType(relation, involved[0], 0.5)
-        //
-        //   this.setElementType(involved[0], { type: TypeEnum.FUNCTION }, 1)
-        // }
         return false
 
       // ternary

@@ -99,6 +99,8 @@ export abstract class Visitor {
     // }
 
     if (path.type === 'ClassMethod'
+      || path.type === 'AssignmentExpression'
+      || path.type === 'FunctionExpression'
       || path.type === 'ObjectProperty') {
       return {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
@@ -112,7 +114,6 @@ export abstract class Visitor {
         filePath: this.filePath,
       }
     }
-
 
     throw new Error(`Cannot find scope of element ${name} of type ${path.type} in ${this.filePath}`)
   }

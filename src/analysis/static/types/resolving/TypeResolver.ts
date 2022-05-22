@@ -89,7 +89,19 @@ export abstract class TypeResolver {
     if (!this.elementTyping.has(typeElement)) {
       this.elementTyping.set(typeElement, new TypeProbability())
     }
-    this.setElementType(relation, element, this.elementTyping.get(typeElement), value)
+
+    if (typeElement.type === ElementType.Relation) {
+      const relation = this._wrapperElementIsRelation.get(typeElement.value)
+
+      if (!relation) {
+        throw new Error(`Cannot find relation: ${typeElement.value}`)
+      }
+
+      this.setElementType(relation, element, this.relationTyping.get(relation), value)
+
+    } else {
+      this.setElementType(relation, element, this.elementTyping.get(typeElement), value)
+    }
   }
 
   setElementType(relation: Relation, element: Element, type: string | TypeProbability, value: number, object: ComplexObject = null, propertyTypings: Map<string, TypeProbability> = null) {

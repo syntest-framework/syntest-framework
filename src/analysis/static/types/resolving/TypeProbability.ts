@@ -165,8 +165,7 @@ export class TypeProbability {
     for (const key of this.probabilities.keys()) {
       totalProb += this.probabilities.get(key)
     }
-    console.log(this.probabilities)
-    console.log(totalProb)
+
     if (totalProb) {
       for (const key of this.probabilities.keys()) {
         this.probabilities.set(key, this.probabilities.get(key) / totalProb)

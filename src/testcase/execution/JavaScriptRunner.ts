@@ -131,10 +131,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           // }
           //
           // if (!metaData[key] || !metaData[key].meta || !metaData[key].meta[branchKey]) {
-          //   console.log(instrumentationData)
-          //   console.log(metaData)
-          //   console.log(key)
-          //   console.log(branchKey)
           //   continue
           // }
 

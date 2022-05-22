@@ -228,13 +228,9 @@ export class TargetVisitor extends Visitor {
     } else if (path.node.left.type === 'Identifier') {
         targetName = path.node.left.name
     } else {
-      console.log(path.node)
       throw new Error("unknown function expression name")
     }
 
-    console.log(path)
-
-    // TODO this one is probably wrong
     if (!this.targetMap.has(targetName)) {
       this._createMaps(targetName)
     }
@@ -293,8 +289,7 @@ export class TargetVisitor extends Visitor {
     }
 
       if (!param.name) {
-        console.log(param)
-        throw new Error("Unknown param")
+        throw new Error(`Unknown param`)
       }
 
       return {
