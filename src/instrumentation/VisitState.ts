@@ -334,7 +334,15 @@ export class VisitState {
           T.ObjectExpression([
             ...variables
               .filter((v, i, a) => a.indexOf(v) === i)
-              .map((v) => T.objectProperty(T.stringLiteral(v), T.identifier(v)))
+              .map((v) => {
+                if (v.includes(".")) {
+                  const split = v.split(".")
+
+                  return T.objectProperty(T.stringLiteral(v), T.optionalMemberExpression(T.identifier(split[0]), T.identifier(split[1]), false, true))
+                } else {
+                  return T.objectProperty(T.stringLiteral(v), T.identifier(v))
+                }
+              })
           ])
         )
       ])

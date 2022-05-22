@@ -249,9 +249,21 @@ function coverIfBranches(path) {
   test.traverse({
     Identifier: {
       enter: (p) => {
+        if (p.parent.type === "MemberExpression") {
+          return
+        }
         variables.push(p.node.name)
       }
+    },
+    MemberExpression: {
+      enter: (p) => {
+        // calls and such are possible but are problamatic because they could have side effects changing the behaviour
+        if (p.node.object.type === 'Identifier' && p.node.property.type === 'Identifier') {
+          variables.push(p.getSource())
+        }
+      }
     }
+    // calls and such are possible but are problamatic because they could have side effects changing the behaviour
   }, test)
   const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
   path.insertBefore(T.expressionStatement(metaTracker));
@@ -273,7 +285,18 @@ function coverLoopBranch(path) {
   test.traverse({
     Identifier: {
       enter: (p) => {
+        if (p.parent.type === "MemberExpression") {
+          return
+        }
         variables.push(p.node.name)
+      }
+    },
+    MemberExpression: {
+      enter: (p) => {
+        // calls and such are possible but are problamatic because they could have side effects changing the behaviour
+        if (p.node.object.type === 'Identifier' && p.node.property.type === 'Identifier') {
+          variables.push(p.getSource())
+        }
       }
     }
   }, test)
@@ -316,7 +339,18 @@ function coverTernary(path) {
   test.traverse({
     Identifier: {
       enter: (p) => {
+        if (p.parent.type === "MemberExpression") {
+          return
+        }
         variables.push(p.node.name)
+      }
+    },
+    MemberExpression: {
+      enter: (p) => {
+        // calls and such are possible but are problamatic because they could have side effects changing the behaviour
+        if (p.node.object.type === 'Identifier' && p.node.property.type === 'Identifier') {
+          variables.push(p.getSource())
+        }
       }
     }
   }, test)

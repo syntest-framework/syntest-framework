@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Element, ElementType } from "../discovery/Element";
+import { Element, ElementType, isInstanceOfElement } from "../discovery/Element";
 import { Relation, RelationType } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 import { TypeProbability } from "./TypeProbability";
@@ -34,6 +34,8 @@ export abstract class TypeResolver {
 
   private _wrapperElementIsRelation: Map<string, Relation>
 
+  private processed: Map<Relation, Set<Element>>
+
   /**
    * Constructor
    */
@@ -41,6 +43,8 @@ export abstract class TypeResolver {
     this._relationTyping = new Map()
     this._elementTyping = new Map()
     this._relationFullyResolved = new Set()
+
+    this.processed = new Map<Relation, Set<Element>>()
   }
 
   /**
@@ -68,7 +72,7 @@ export abstract class TypeResolver {
    */
   setRelationType(relation: Relation, type: string | TypeProbability, value: number) {
     if (relation.relation === RelationType.PropertyAccessor) {
-      this.setElementType(relation.involved[1], type, 1)
+      this.setElementType(relation, relation.involved[1], type, 1)
     }
 
     if (this.relationTyping.has(relation)) {
@@ -81,13 +85,33 @@ export abstract class TypeResolver {
     }
   }
 
-  /**
+  setElementTypeToElement(relation: Relation, element: Element, typeElement: Element, value: number) {
+    if (!this.elementTyping.has(typeElement)) {
+      this.elementTyping.set(typeElement, new TypeProbability())
+    }
+    this.setElementType(relation, element, this.elementTyping.get(typeElement), value)
+  }
+
+  setElementType(relation: Relation, element: Element, type: string | TypeProbability, value: number, object: ComplexObject = null, propertyTypings: Map<string, TypeProbability> = null) {
+    if (!this.processed.has(relation)) {
+      this.processed.set(relation, new Set<Element>())
+    }
+
+    if (this.processed.get(relation).has(element)) {
+      return
+    }
+
+    this.processed.get(relation).add(element)
+    this._setElementType(element, type, value, object, propertyTypings)
+  }
+
+    /**
    * Sets the identifierDescription of the specified element
    * @param element the element to set the identifierDescription of
    * @param type the type of the element
    * @param value the score of type (higher score means higher probability)
    */
-  setElementType(element: Element, type: string | TypeProbability, value: number, object: ComplexObject = null, propertyTypings: Map<string, TypeProbability> = null) {
+  _setElementType(element: Element, type: string | TypeProbability, value: number, object: ComplexObject = null, propertyTypings: Map<string, TypeProbability> = null) {
     if (element.type === ElementType.Relation) {
       const relation = this._wrapperElementIsRelation.get(element.value)
 
@@ -95,19 +119,15 @@ export abstract class TypeResolver {
         throw new Error(`Cannot find relation: ${element.value}`)
       }
 
-      if (relation.relation === RelationType.PropertyAccessor) {
-        this.setElementType(relation.involved[1], type, 1)
-      }
+      this.setRelationType(relation, type, 1)
     }
 
-    if (this.elementTyping.has(element)) {
-      const typeMap = this.elementTyping.get(element)
-      typeMap.addType(type, value, object, propertyTypings)
-    } else {
-      const typeMap = new TypeProbability()
-      this.elementTyping.set(element, typeMap)
-      typeMap.addType(type, value, object, propertyTypings)
+    if (!this.elementTyping.has(element)) {
+      this.elementTyping.set(element, new TypeProbability())
     }
+
+    const typeMap = this.elementTyping.get(element)
+    typeMap.addType(type, value, object, propertyTypings)
   }
 
   setEqualTypeMaps(element: Element, typeMap: TypeProbability) {

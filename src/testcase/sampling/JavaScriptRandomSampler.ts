@@ -20,13 +20,13 @@ import { TypeProbability } from "../../analysis/static/types/resolving/TypeProba
 import { TypeEnum } from "../../analysis/static/types/resolving/TypeEnum";
 import { NullStatement } from "../statements/primitive/NullStatement";
 import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
+import { ActionVisibility } from "../../analysis/static/parsing/ActionVisibility";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   constructor(subject: JavaScriptSubject) {
     super(subject);
   }
-
 
   sample(): JavaScriptTestCase {
     let root: RootStatement
@@ -133,8 +133,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     // TODO more complex sampling of function return values
     // Take regular primitive value
 
-    console.log(identifierDescription)
-
     if (!identifierDescription) {
       identifierDescription = {
         name: "unnamed",
@@ -154,6 +152,12 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       throw new Error("Invalid identifierDescription inference mode selected")
     }
 
+    // this ensures that there is a chance of trying a random other identifierDescription
+    if (true) { // Properties.alsotryrandom) { TODO property
+      if (prng.nextBoolean(0.1)) {
+        chosenType = "any"
+      }
+    }
 
     if (chosenType === 'any') {
       // TODO other types would also be nice (complex type especially)
@@ -193,36 +197,25 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       throw new Error(`Identifiers should not include % in their names: ${identifierDescription.name}`)
     }
     if (object) {
-      if (object.import && object.import.length) {
-        const constructors = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.CONSTRUCTOR);
-        const constructor = constructors.find((c) => c.name === object.name && c.scope.filePath === object.import)
-
-        // TODO constructors are only available of the current subject/file
-        // console.log(constructors)
-        // console.log(constructors.find((c) => c.scope.filePath === object.import))
-        // console.log(constructors.find((c) => c.name === object.name))
-        // console.log(constructor)
-
-        if (constructor) {
-          const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
-
-          const calls: Statement[] = []
-          const methods = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
-          const nCalls = methods.length && prng.nextInt(1, Math.min(Properties.max_action_statements, methods.length));
-          for (let i = 0; i < nCalls; i++) {
-            calls.push(this.sampleMethodCall(depth + 1))
-          }
-
-          return new ConstructorCall(
-            identifierDescription,
-            this.subject.name,
-            prng.uniqueId(),
-            args,
-            calls,
-            `${this.subject.name}`
-          );
-        }
-      }
+      // if (object.import && object.import.length) {
+      //   const constructors = this.actionDescriptions.filter((a) => a.type === ActionType.CONSTRUCTOR && a.visibility === ActionVisibility.PUBLIC);
+      //   const constructor = constructors.find((c) => c.name === object.name && c.scope.filePath === object.import)
+      //
+      //   if (constructor) {
+      //     const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
+      //
+      //     const calls: Statement[] = []
+      //
+      //     return new ConstructorCall(
+      //       identifierDescription,
+      //       object.name,
+      //       prng.uniqueId(),
+      //       args,
+      //       calls,
+      //       `${object.name}`
+      //     );
+      //   }
+      // }
 
       let count = 0
       object.properties.forEach((p) => {

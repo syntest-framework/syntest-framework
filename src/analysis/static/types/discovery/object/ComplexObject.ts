@@ -17,6 +17,7 @@
  */
 
 import { TypeProbability } from "../../resolving/TypeProbability";
+import { IdentifierDescription } from "../../../parsing/IdentifierDescription";
 
 export interface ComplexObject {
   import: string,

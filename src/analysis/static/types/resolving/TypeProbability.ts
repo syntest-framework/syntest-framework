@@ -28,6 +28,8 @@ import { ComplexObject } from "../discovery/object/ComplexObject";
 
   // TODO make recursive possible (typeProbability)
 export class TypeProbability {
+
+  private id: string
   private objectDescription: Map<string, ComplexObject>
   private objectPropertyTypes: Map<string, Map<string, TypeProbability>>
 
@@ -51,6 +53,8 @@ export class TypeProbability {
    * Constructor
    */
   constructor(initialTypes?: ([string | TypeProbability, number, (ComplexObject | null)])[]) {
+    this.id = prng.uniqueId()
+
     this.objectDescription = new Map()
     this.objectPropertyTypes = new Map()
     this.scores = new Map()
@@ -115,31 +119,59 @@ export class TypeProbability {
       return
     }
 
-    let total = this.totalScores
+    const total = this.totalScores
     this.probabilities = new Map()
 
-    // this ensures that there is a chance of trying a random other identifierDescription
-    if (true) { // Properties.alsotryrandom) { TODO property
-      total = total / 0.9
-      this.probabilities.set(TypeEnum.ANY, 0.1)
-    }
-
+    const preliminaryProbabilities = new Map()
       // recalculate probabilityMap
     for (const identifier of this.scores.keys()) {
-      this.probabilities.set(identifier, (this.scores.get(identifier) / total))
+      preliminaryProbabilities.set(identifier, (this.scores.get(identifier) / total))
+    }
+    this.scoresChanged = false
+
+
+    // return
+
+    for (const identifier of this.scores.keys()) {
+      if (this.typeIsTypeProbability.has(identifier)) {
+        this.typeIsTypeProbability.get(identifier).calculateProbabilities()
+        const probs = this.typeIsTypeProbability.get(identifier).probabilities
+
+        let divider = 1
+        if (probs.has(this.id)) {
+          divider = 1 - probs.get(this.id)
+        }
+
+        for (const key of probs.keys()) {
+          if (this.id === key) {
+            continue
+          }
+          if (!this.probabilities.has(key)) {
+            this.probabilities.set(key, 0)
+          }
+
+          this.probabilities.set(key, this.probabilities.get(key) + preliminaryProbabilities.get(identifier) * (probs.get(key) / divider))
+        }
+      } else {
+        if (!this.probabilities.has(identifier)) {
+          this.probabilities.set(identifier, 0)
+        }
+
+        this.probabilities.set(identifier, this.probabilities.get(identifier) + preliminaryProbabilities.get(identifier))
+      }
     }
 
-    this.scoresChanged = false
-  }
-
-  /**
-   * Gets the probability of the given identifierDescription
-   * @param type the type
-   */
-  getProbability(type: TypeEnum | string): number {
-    this.calculateProbabilities()
-
-    return this.probabilities.get(type)
+    let totalProb = 0
+    for (const key of this.probabilities.keys()) {
+      totalProb += this.probabilities.get(key)
+    }
+    console.log(this.probabilities)
+    console.log(totalProb)
+    if (totalProb) {
+      for (const key of this.probabilities.keys()) {
+        this.probabilities.set(key, this.probabilities.get(key) / totalProb)
+      }
+    }
   }
 
   /**
@@ -147,6 +179,10 @@ export class TypeProbability {
    */
   getRandomType(): string {
     this.calculateProbabilities()
+
+    if (!this.probabilities.size) {
+      return TypeEnum.ANY
+    }
 
     const choice = prng.nextDouble(0, 1)
     let index = 0
@@ -176,6 +212,10 @@ export class TypeProbability {
   getEliteType(): string {
     this.calculateProbabilities()
 
+    if (!this.probabilities.size) {
+      return TypeEnum.ANY
+    }
+
     let best: string = this.probabilities.keys().next().value
 
     for (const obj of this.probabilities.keys()) {
@@ -194,6 +234,10 @@ export class TypeProbability {
   getDynamicType(): string {
     this.calculateProbabilities()
 
+    if (!this.probabilities.size) {
+      return TypeEnum.ANY
+    }
+
     const first: string = this.probabilities.keys().next().value
 
     // TODO
@@ -208,17 +252,6 @@ export class TypeProbability {
   keys = () => this.scores.keys()
 
   getIdentifier(): string {
-    let id = ''
-
-    // TODO check ordering
-    for (const key of this.scores.keys()) {
-      if (this.typeIsTypeProbability.has(key)) {
-        id += this.typeIsTypeProbability.get(key).getIdentifier()
-      } else {
-        id += key
-      }
-    }
-
-    return id
+    return this.id
   }
 }

@@ -24,8 +24,6 @@ import { TypeProbability } from "../TypeProbability";
 import { Scope } from "../../discovery/Scope";
 
 export class TypeResolverInference extends TypeResolver {
-
-
   /**
    * This function resolves constant elements such as numerical constants or other primitives
    * @param elements the elements to resolve
@@ -40,7 +38,7 @@ export class TypeResolverInference extends TypeResolver {
       const typingsType = elementTypeToTypingType(element.type)
 
       if (typingsType) {
-        this.setElementType(element, typingsType, 1)
+        this._setElementType(element, typingsType, 1)
         somethingSolved = true
       }
     }
@@ -68,9 +66,10 @@ export class TypeResolverInference extends TypeResolver {
       const involved: (Element | TypeProbability)[] = relation.involved
         .map(resolveInvolved)
 
-      const allResolved = this.resolveRelationElements(relation.relation, involved)
 
-      // TODO TODO FALSE can also resolve the result of a relation without its elements
+      const allResolved = this.resolveRelationElements(relation)
+
+      // TODO FALSE can also resolve the result of a relation without its elements
       if (allResolved) {
         const resolveInvolved = (e: Element) => {
           if (this.elementTyping.has(e)) {
@@ -78,9 +77,7 @@ export class TypeResolverInference extends TypeResolver {
           } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
             return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
           }
-          console.log(e)
-          console.log(wrapperElementIsRelation.get(e.value))
-          console.log(relation)
+
           throw new Error("Should all be resolved!!!")
         }
 
@@ -282,7 +279,7 @@ export class TypeResolverInference extends TypeResolver {
           //   }
           // })
 
-          this.setElementType(element, type, score, object, propertyTypings)
+          this._setElementType(element, type, score, object, propertyTypings)
 
           somethingSolved = true // TODO should be here right?
         }
@@ -301,14 +298,16 @@ export class TypeResolverInference extends TypeResolver {
     // TODO remove this
     let rounds = 0
     let somethingSolved = true
+    this.resolvePrimitiveElements(elements)
     while (somethingSolved && rounds < 100) {
       somethingSolved = false
       rounds += 1 // TODO remove this
 
-      somethingSolved = this.resolvePrimitiveElements(elements) || somethingSolved
       somethingSolved = this.resolveRelations(elements, relations, wrapperElementIsRelation) || somethingSolved
-      somethingSolved = this.resolveComplexElements(elements, relations, wrapperElementIsRelation, objects) || somethingSolved
     }
+
+    // TODO this should be in the while loop
+    this.resolveComplexElements(elements, relations, wrapperElementIsRelation, objects)
   }
 
   getTyping(scope: Scope, variableName: string): TypeProbability {
@@ -339,7 +338,10 @@ export class TypeResolverInference extends TypeResolver {
     return this.elementTyping.get(element)
   }
 
-  resolveRelationElements(relation: RelationType, involved: (Element | TypeProbability)[]): boolean {
+  resolveRelationElements(rel: Relation): boolean {
+    const relation: RelationType = rel.relation
+    const involved: Element[] = rel.involved
+
     switch (relation) {
       case RelationType.Object: // could be multiple things
       case RelationType.ObjectProperty: // could be multiple things
@@ -348,7 +350,10 @@ export class TypeResolverInference extends TypeResolver {
         return false
 
       case RelationType.PropertyAccessor: // could be multiple things
-        // although the first has to an object/array/function
+        // although the first has to an object/array
+        this.setElementType(rel, involved[0], TypeEnum.OBJECT, 1)
+        this.setElementType(rel, involved[0], TypeEnum.ARRAY, 1)
+        this.setElementType(rel, involved[0], TypeEnum.FUNCTION, 1)
         return false
       case RelationType.New: //
         return false
@@ -359,9 +364,7 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.MinusMinusPrefix: // must be numerical
       case RelationType.PlusPlusPostFix: // must be numerical
       case RelationType.MinusMinusPostFix: // must be numerical
-        if (isInstanceOfElement(involved[0])) {
-          this.setElementType(involved[0], TypeEnum.NUMERIC, 1)
-        }
+        this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
         return true
 
       // Unary
@@ -383,18 +386,19 @@ export class TypeResolverInference extends TypeResolver {
 
       // binary
       case RelationType.Addition:
+        this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[0], TypeEnum.STRING, 1)
+        this.setElementType(rel, involved[1], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[1], TypeEnum.STRING, 1)
         return false // could be multiple things
       case RelationType.Subtraction: // must be numerical
       case RelationType.Division: // must be numerical
       case RelationType.Multiplication: // must be numerical
       case RelationType.Remainder: // must be numerical
       case RelationType.Exponentiation: // must be numerical
-        if (isInstanceOfElement(involved[0])) {
-          this.setElementType(involved[0], TypeEnum.NUMERIC, 1)
-        }
-        if (isInstanceOfElement(involved[1])) {
-          this.setElementType(involved[1], TypeEnum.NUMERIC, 1)
-        }
+        this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[1], TypeEnum.NUMERIC, 1)
+
         return true
 
       case RelationType.In: // could be multiple things
@@ -403,31 +407,19 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Greater: // must be numeric
       case RelationType.LessOrEqual: // must be numeric
       case RelationType.GreaterOrEqual: // must be numeric
-        if (isInstanceOfElement(involved[0])) {
-          this.setElementType(involved[0], TypeEnum.NUMERIC, 1)
-        }
-        if (isInstanceOfElement(involved[1])) {
-          this.setElementType(involved[1], TypeEnum.NUMERIC, 1)
-        }
+        this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[1], TypeEnum.NUMERIC, 1)
+
         return true
 
       case RelationType.Equality: // could be multiple things
       case RelationType.InEquality: // could be multiple things
       case RelationType.StrictEquality: // could be multiple things
       case RelationType.StrictInequality: // could be multiple things
-        // TODO not sure if this works, this will propogate changed to either element to the other
-        if (isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          this.setElementType(involved[0], involved[1], 1)
-          // this.setEqualTypeMaps(involved[0], involved[1])
-          return true
-        } else if (!isInstanceOfElement(involved[0]) && isInstanceOfElement(involved[1])) {
-          this.setElementType(involved[1], involved[0], 1)
-          // this.setEqualTypeMaps(involved[1], involved[0])
-          return true
-        } else if (!isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          // TODO merge them
-        }
-        return false
+        this.setElementTypeToElement(rel, involved[0], involved[1], 1)
+        this.setElementTypeToElement(rel, involved[1], involved[0], 1)
+
+        return true
 
       case RelationType.BitwiseLeftShift: // must be numeric
       case RelationType.BitwiseRightShift: // must be numeric
@@ -436,12 +428,8 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.BitwiseAnd: // must be numeric
       case RelationType.BitwiseOr: // must be numeric
       case RelationType.BitwiseXor: // must be numeric
-        if (isInstanceOfElement(involved[0])) {
-          this.setElementType(involved[0], TypeEnum.NUMERIC, 1)
-        }
-        if (isInstanceOfElement(involved[1])) {
-          this.setElementType(involved[1], TypeEnum.NUMERIC, 1)
-        }
+        this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[1], TypeEnum.NUMERIC, 1)
         return true
 
       case RelationType.LogicalAnd: // could be multiple things
@@ -454,19 +442,9 @@ export class TypeResolverInference extends TypeResolver {
         return false
 
       case RelationType.Assignment: // must be the same
-        // TODO not sure if this works, this will propogate changed to either element to the other
-        if (isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          // this.setElementType(involved[0], involved[1], 1)
-          this.setEqualTypeMaps(involved[0], involved[1])
-          return true
-        } else if (!isInstanceOfElement(involved[0]) && isInstanceOfElement(involved[1])) {
-          // this.setElementType(involved[1], involved[0], 1)
-          this.setEqualTypeMaps(involved[1], involved[0])
-          return true
-        } else if (!isInstanceOfElement(involved[0]) && !isInstanceOfElement(involved[1])) {
-          // TODO merge them
-        }
-        return false
+        this.setElementTypeToElement(rel, involved[0], involved[1], 1)
+        this.setElementTypeToElement(rel, involved[1], involved[0], 1)
+        return true
       case RelationType.MultiplicationAssignment: // must be numeric
       case RelationType.ExponentiationAssignment: // must be numeric
       case RelationType.DivisionAssignment: // must be numeric
@@ -478,12 +456,9 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.BitwiseAndAssignment: // must be numeric
       case RelationType.BitwiseXorAssignment: // must be numeric
       case RelationType.BitwiseOrAssignment: // must be numeric
-        if (isInstanceOfElement(involved[0])) {
-          this.setElementType(involved[0], TypeEnum.NUMERIC, 1)
-        }
-        if (isInstanceOfElement(involved[1])) {
-          this.setElementType(involved[1], TypeEnum.NUMERIC, 1)
-        }
+        this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[1], TypeEnum.NUMERIC, 1)
+
         return true
       case RelationType.AdditionAssignment: // must be numeric or string
         return false
@@ -499,9 +474,8 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Parameters: // could be multiple things
       case RelationType.Call: // could be multiple things
         // but we do know that the first involved element is a function
-        if (isInstanceOfElement(involved[0])) {
-          this.setElementType(involved[0], TypeEnum.FUNCTION, 1)
-        }
+        this.setElementType(rel, involved[0], TypeEnum.FUNCTION, 1)
+
         return false
     }
 

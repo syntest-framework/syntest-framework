@@ -311,7 +311,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     const skipable: string[] = [
       "ImportDeclaration",
       "ClassProperty",
-      "EmptyStatement"
+      "EmptyStatement",
     ];
 
     if (skipable.includes(child.type)) {
@@ -332,6 +332,24 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       case "ExpressionStatement":
         return this.visitExpressionStatement(child, parents);
 
+      case "Identifier":
+      case "NumericLiteral":
+      case "BooleanLiteral":
+      case "StringLiteral":
+      case "NullLiteral":
+      case "TemplateLiteral":
+      case "RegExpLiteral":
+
+      case "CallExpression":
+      case "UnaryExpression":
+      case "BinaryExpression":
+      case "LogicalExpression":
+      case "MemberExpression":
+      case "AssignmentExpression":
+      case "ArrowFunctionExpression":
+      case "ArrayExpression":
+        return this.visitGeneralExpression(child, parents);
+
       case "VariableDeclaration":
         return this.visitVariableDeclaration(child, parents)
 
@@ -350,6 +368,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "IfStatement":
         return this.visitIfStatement(child, parents);
+      case "ConditionalExpression":
+        return this.visitConditional(child, parents);
+
       case "TryStatement":
         return this.visitTryStatement(child, parents)
 
@@ -375,6 +396,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "SwitchStatement":
         return this.visitSwitchStatement(child, parents)
+
+
+
       // case "SourceUnit":
       //   return this.SourceUnit(cfg, child);
       // case "ContractDefinition":
@@ -390,9 +414,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       //
       // case "IfStatement":
       //   return this.IfStatement(cfg, child, parents);
-      // case "Conditional":
-      //   return this.Conditional(cfg, child, parents);
-      //
+
 
       // case "WhileStatement":
       //   return this.WhileStatement(cfg, child, parents);
@@ -479,12 +501,43 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
 
-    // const { childNodes, breakNodes } = this.visitChild(ast.expression, [node]);
+    const { childNodes, breakNodes } = this.visitChild(ast.expression, [node]);
 
     return {
-      childNodes: [node],
-      breakNodes: [],
+      childNodes: childNodes,
+      breakNodes: breakNodes,
     };
+  }
+
+  private visitGeneralExpression(
+    ast: any,
+    parents: Node[]
+  ): ReturnValue {
+    const node: Node = this.createPlaceholderNode([ast.loc.start.line], []);
+    this.connectParents(parents, [node]);
+
+    if (['LogicalExpression', 'BinaryExpression', 'AssignmentExpression'].includes(ast.type)) {
+      const left = this.visitChild(ast.left, [node]);
+      const right = this.visitChild(ast.right, [node]);
+
+      return {
+        childNodes: [...left.childNodes, ...right.childNodes],
+        breakNodes: [...left.breakNodes, ...right.breakNodes],
+      };
+    } else if (ast.type === 'UnaryExpression') {
+      const { childNodes, breakNodes } = this.visitChild(ast.argument, [node]);
+
+      return {
+        childNodes: childNodes,
+        breakNodes: breakNodes,
+      };
+    } else {
+      return {
+        childNodes: [node],
+        breakNodes: [],
+      };
+    }
+
   }
 
   private visitBlockStatement(ast: any, parents: Node[]): ReturnValue {
@@ -654,6 +707,97 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         [ast.loc.end.line],
         []
       );
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: falseNode.id,
+        branchType: false,
+      });
+
+      return {
+        childNodes: [...trueNodes, falseNode],
+        breakNodes: totalBreakNodes,
+      };
+    }
+  }
+
+
+  private visitConditional(ast: any, parents: Node[]): ReturnValue {
+    const node: BranchNode = this.createBranchNode(
+      [ast.loc.start.line],
+      [],
+      {
+        type: ast.test.type,
+        operator: ast.test.operator,
+      });
+    this.connectParents(parents, [node]);
+
+    // Store all break points
+    const totalBreakNodes = [];
+
+    // Visit true flow
+    let count = this.cfg.edges.length;
+    const { childNodes, breakNodes } = this.visitChild(ast.consequent,
+      [node]
+    );
+    const trueNodes = childNodes;
+    totalBreakNodes.push(...breakNodes);
+
+    // Check if a child node was created
+    if (this.cfg.edges[count]) {
+      // Add edge type to first added edge
+      this.cfg.edges[count].branchType = true;
+    } else {
+      // Add empty placeholder node
+      const emptyChildNode = this.createPlaceholderNode(
+        [ast.consequent.loc.start.line],
+        []
+      );
+      trueNodes.push(emptyChildNode);
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: emptyChildNode.id,
+        branchType: true,
+      });
+    }
+
+    // Visit false flow
+    if (ast.alternate) {
+      count = this.cfg.edges.length;
+      const { childNodes, breakNodes } = this.visitChild(
+        ast.alternate,
+        [node]
+      );
+      const falseNodes = childNodes;
+      totalBreakNodes.push(...breakNodes);
+
+      // Check if a child node was created
+      if (this.cfg.edges[count]) {
+        // Add edge type to first added edge
+        this.cfg.edges[count].branchType = false;
+      } else {
+        // Add empty placeholder node
+        const emptyChildNode = this.createPlaceholderNode(
+          [ast.alternate.loc.start.line],
+          []
+        );
+        falseNodes.push(emptyChildNode);
+
+        this.cfg.edges.push({
+          from: node.id,
+          to: emptyChildNode.id,
+          branchType: false,
+        });
+      }
+
+      return {
+        childNodes: [...trueNodes, ...falseNodes],
+        breakNodes: totalBreakNodes,
+      };
+    } else {
+      // Add empty placeholder node
+      const falseNode = this.createPlaceholderNode([ast.loc.end.line], []);
 
       this.cfg.edges.push({
         from: node.id,

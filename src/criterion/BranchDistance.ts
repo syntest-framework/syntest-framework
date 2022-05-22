@@ -33,7 +33,7 @@ export class BranchDistance {
 
     const branchDistance = new BranchDistance();
 
-    let [distance, direct] = branchDistance.evaluate(ast, variables)
+    let [distance, direct] = branchDistance.resolve(ast, variables)
 
     if (direct) {
       distance = distance ? 0 : 1
@@ -69,6 +69,13 @@ export class BranchDistance {
       case "NullLiteral":
         return [null, true]
 
+      case "MemberExpression":
+        if (ast.object.type === 'Identifier' && ast.property.type === 'Identifier') {
+          const value = variables[`${ast.object.name}.${ast.property.name}`]
+          return [value, true]
+        }
+
+        return [undefined, true]
       case "Identifier":
         const value = variables[ast.name]
         // TODO check if this is actually primitive?
@@ -80,7 +87,7 @@ export class BranchDistance {
       // TODO not sure how to handle this
       // TODO the result would be cool but functions that alter state (side-effects) ruin the idea
       case "CallExpression":
-        return [0, true]
+        return [undefined, true]
     }
 
     return this.evaluate(ast, variables)
@@ -99,15 +106,20 @@ export class BranchDistance {
           }
         case "typeof":
           return [typeof arg, true]
+        case "-":
+          return [-arg, true]
+        case "+":
+          return [+arg, true]
       }
     } else {
       switch (ast.operator) {
         case "!":
           return [1 - arg, false]
+
       }
     }
 
-    throw new Error(`Unknown unary operator: ${ast.operator}`)
+    throw new Error(`Unknown unary operator: "${ast.operator}" for direct=${direct}`)
   }
 
   BinaryExpression(ast: any, variables: any): [any, boolean] {
