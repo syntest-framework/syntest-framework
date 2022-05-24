@@ -21,11 +21,15 @@ import { TypeEnum } from "../../analysis/static/types/resolving/TypeEnum";
 import { NullStatement } from "../statements/primitive/NullStatement";
 import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
 import { ActionVisibility } from "../../analysis/static/parsing/ActionVisibility";
+import { JavaScriptTargetPool } from "../../analysis/static/JavaScriptTargetPool";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
-  constructor(subject: JavaScriptSubject) {
+  private targetPool: JavaScriptTargetPool
+
+  constructor(subject: JavaScriptSubject, targetPool: JavaScriptTargetPool) {
     super(subject);
+    this.targetPool = targetPool
   }
 
   sample(): JavaScriptTestCase {
@@ -200,25 +204,47 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       throw new Error(`Identifiers should not include % in their names: ${identifierDescription.name}`)
     }
     if (object) {
-      // if (object.import && object.import.length) {
-      //   const constructors = this.actionDescriptions.filter((a) => a.type === ActionType.CONSTRUCTOR && a.visibility === ActionVisibility.PUBLIC);
-      //   const constructor = constructors.find((c) => c.name === object.name && c.scope.filePath === object.import)
-      //
-      //   if (constructor) {
-      //     const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
-      //
-      //     const calls: Statement[] = []
-      //
-      //     return new ConstructorCall(
-      //       identifierDescription,
-      //       object.name,
-      //       prng.uniqueId(),
-      //       args,
-      //       calls,
-      //       `${object.name}`
-      //     );
-      //   }
-      // }
+    //  TODO WIP
+
+    //   if (object.import && object.import.length) {
+    //     const functionMap = this.targetPool.getFunctionMap(object.import, object.name)
+    //
+    //     for (const key of functionMap.keys()) {
+    //       const func = functionMap.get(key)
+    //       for (const param of func.parameters) {
+    //         if (func.type === ActionType.FUNCTION) {
+    //           param.typeProbabilityMap = this.targetPool.typeResolver.getTyping(func.scope, param.name)
+    //         } else if (func.type === ActionType.METHOD
+    //           || func.type === ActionType.CONSTRUCTOR) {
+    //           param.typeProbabilityMap = this.targetPool.typeResolver.getTyping(func.scope, param.name)
+    //         } else {
+    //           throw new Error(`Unimplemented action identifierDescription ${func.type}`)
+    //         }
+    //       }
+    //       // TODO return types
+    //     }
+    //
+    //     const constructors = [...functionMap.values()].filter((a) => a.type === ActionType.CONSTRUCTOR && a.visibility === ActionVisibility.PUBLIC);
+    //     const constructor = constructors.find((c) => c.scope.filePath === object.import)
+    //     // console.log(actionDescriptions)
+    //     // console.log(constructors)
+    //     console.log(constructor)
+    //
+    //     if (constructor) {
+    //       const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
+    //
+    //       const calls: Statement[] = []
+    //
+    //       return new ConstructorCall(
+    //         identifierDescription,
+    //         object.name,
+    //         prng.uniqueId(),
+    //         args,
+    //         calls,
+    //         `${object.name}`
+    //       );
+    //     }
+    //   }
 
       let count = 0
       object.properties.forEach((p) => {

@@ -325,7 +325,7 @@ export class Launcher {
 
     // TODO constant pool
 
-    const sampler = new JavaScriptRandomSampler(currentSubject)
+    const sampler = new JavaScriptRandomSampler(currentSubject, targetPool)
     const crossover = new JavaScriptTreeCrossover()
     const algorithm = createAlgorithmFromConfig(sampler, runner, crossover);
 
