@@ -58,7 +58,8 @@ export class IdentifierVisitor extends Visitor {
 
       if (!declaration.init) {
         this._identifiers.set(identifier, ExportType.unknown)
-      } else if (declaration.init.type === "ArrowFunctionExpression") {
+      } else if (declaration.init.type === "ArrowFunctionExpression"
+        || declaration.init.type === "FunctionExpression") {
         this._identifiers.set(identifier, ExportType.function) // not always the case
       } else {
         this._identifiers.set(identifier, ExportType.const) // not always the case

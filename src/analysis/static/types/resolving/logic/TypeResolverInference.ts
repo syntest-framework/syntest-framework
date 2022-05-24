@@ -18,7 +18,7 @@
 import { TypeResolver } from "../TypeResolver";
 import { elementTypeToTypingType, TypeEnum } from "../TypeEnum";
 import { Relation, RelationType } from "../../discovery/Relation";
-import { Element, ElementType, isInstanceOfElement } from "../../discovery/Element";
+import { Element, ElementType } from "../../discovery/Element";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 import { TypeProbability } from "../TypeProbability";
 import { Scope } from "../../discovery/Scope";
@@ -234,7 +234,7 @@ export class TypeResolverInference extends TypeResolver {
             const relevantRelations = relations
               .filter((r) => r.relation === RelationType.PropertyAccessor)
               .filter((r) => r.involved[1].scope.filePath === object.import)
-              .filter((r) => r.involved[1].scope.uid.includes(object.name))
+              .filter((r) => r.involved[1].scope.uid.split('-').includes(object.name))
               .filter((r) => r.involved[0].value === 'this')
               .filter((r) => r.involved[1].value === prop)
               .filter((r) => r.involved[1].type === 'identifier')
@@ -335,6 +335,19 @@ export class TypeResolverInference extends TypeResolver {
     const involved: Element[] = rel.involved
 
     switch (relation) {
+      case RelationType.Await:
+        // often function?
+        this.setElementType(rel, involved[0], TypeEnum.FUNCTION, 1)
+        return false
+
+      case RelationType.FunctionDefinition: // could be multiple things
+        // but we do know that the first involved element is a function
+        this.setElementType(rel, involved[0], TypeEnum.FUNCTION, 1)
+        return false
+      case RelationType.ClassDefinition:
+        this.setElementType(rel, involved[0], TypeEnum.OBJECT, 1)
+        return true
+
       case RelationType.Object: // could be multiple things
       case RelationType.ObjectProperty: // could be multiple things
       case RelationType.Array: // could be multiple things
@@ -463,28 +476,35 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Return: // could be multiple things
 
       // multi
-      case RelationType.Parameters: // could be multiple things
       case RelationType.Call: // could be multiple things
         // but we do know that the first involved element is a function
         this.setElementType(rel, involved[0], TypeEnum.FUNCTION, 1)
+        return false
 
+      case RelationType.PrivateName:
         return false
     }
 
-    throw new Error("not implemented")
+    throw new Error(`Unimplemented relation type: ${relation}`)
   }
 
   resolveRelation(relation: Relation, involved: TypeProbability[]): boolean {
     // TODO
 
     switch (relation.relation) {
+      case RelationType.FunctionDefinition:
+        this.setRelationType(relation, TypeEnum.FUNCTION, 1)
+        return true
+      case RelationType.ClassDefinition:
+        this.setRelationType(relation, TypeEnum.OBJECT, 1)
+        return true
       // Unary
       case RelationType.PropertyAccessor: // must be equal to the identifierDescription of the member element
         this.relationTyping.set(relation, involved[1])
         return true
-      case RelationType.New: //
-        // TODO
-        return false
+      case RelationType.New: // always an object
+        this.setRelationType(relation, TypeEnum.OBJECT, 1)
+        return true
       case RelationType.Spread: // must be array i think
         this.setRelationType(relation, TypeEnum.ARRAY, 1)
         return true
@@ -496,12 +516,13 @@ export class TypeResolverInference extends TypeResolver {
         this.setRelationType(relation, TypeEnum.NUMERIC, 1)
         return true
 
-      case RelationType.Delete: // must be string
-        // TODO
-        return false
+      case RelationType.Delete: // must be void
+        this.setRelationType(relation, TypeEnum.UNDEFINED, 1)
+        return true
       case RelationType.Void: // must be void
-        // TODO
-        return false
+        this.setRelationType(relation, TypeEnum.UNDEFINED, 1)
+        return true
+
       case RelationType.TypeOf: // must be string
         this.setRelationType(relation, TypeEnum.STRING, 1)
         return true
@@ -509,7 +530,9 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.MinusUnary: // must be numerical
         this.setRelationType(relation, TypeEnum.NUMERIC, 1)
         return true
-      case RelationType.BitwiseNotUnary: // must be boolean
+      case RelationType.BitwiseNotUnary:
+        // todo
+        return false
       case RelationType.LogicalNotUnary: // must be boolean
         this.setRelationType(relation, TypeEnum.BOOLEAN, 1)
         return true
@@ -517,13 +540,6 @@ export class TypeResolverInference extends TypeResolver {
 
       // binary
       case RelationType.Addition:
-        // if (involved[0].g === TypeEnum.STRING || involved[1].identifierDescription === TypeEnum.STRING) {
-        //   this.relationTyping.set(relation, { identifierDescription: TypeEnum.STRING })
-        // } else if (involved[0].identifierDescription === TypeEnum.NUMERIC || involved[1].identifierDescription === TypeEnum.NUMERIC) {
-        //   this.relationTyping.set(relation, { identifierDescription: TypeEnum.NUMERIC })
-        // } else {
-        //   return false // TODO maybe its always NaN?
-        // }
         // TODO no clue
         return false
       case RelationType.Subtraction: // must be numerical
@@ -532,11 +548,9 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Remainder: // must be numerical
       case RelationType.Exponentiation: // must be numerical
         this.setRelationType(relation, TypeEnum.NUMERIC, 1)
-        return true
+        return true // todo
 
-      case RelationType.In: //
-        // TODO
-        return false
+      case RelationType.In: // must be boolean
       case RelationType.InstanceOf: // must be boolean
       case RelationType.Less: // must be boolean
       case RelationType.Greater: // must be boolean
@@ -576,12 +590,13 @@ export class TypeResolverInference extends TypeResolver {
         this.setRelationType(relation, involved[1], 1)
         return true
       case RelationType.NullishCoalescing: //??
-        return false
+        return false // todo
 
       // ternary
       case RelationType.Conditional: // could be multiple things
-        // TODO
-        return false
+        this.setRelationType(relation, involved[0], 1)
+        this.setRelationType(relation, involved[1], 1)
+        return true
 
       case RelationType.Assignment: // no relation identifierDescription
       case RelationType.MultiplicationAssignment: // no relation identifierDescription
@@ -599,22 +614,21 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.LogicalAndAssignment: // no relation identifierDescription
       case RelationType.LogicalOrAssignment: // no relation identifierDescription
       case RelationType.LogicalNullishAssignment: // no relation identifierDescription
-
-        // TODO
-        // this.relationTyping.set(relation, { identifierDescription: TypeEnum.NULL })
-        return false
+        this.setRelationType(relation, TypeEnum.UNDEFINED, 1)
+        return true
 
       // TODO
 
       case RelationType.Return: // must be equal to the identifierDescription of the returned element
-      case RelationType.Parameters: // could be multiple things
       case RelationType.Call: // must be the return identifierDescription of the called function
       case RelationType.Object: // could be multiple things
       case RelationType.Array: // could be multiple things
         return false
+      case RelationType.PrivateName:
+        return false
     }
 
-    throw new Error("not implemented")
+    throw new Error(`Unimplemented relation type: ${relation}`)
   }
 
 }

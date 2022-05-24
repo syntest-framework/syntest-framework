@@ -31,8 +31,9 @@ export abstract class Visitor {
         return
       }
 
+      const id: string = path.node.id?.name || 'anon'
       this._thisScopeStack.push(path.scope.uid)
-      this._thisScopeStackNames.push(path.node.id.name)
+      this._thisScopeStackNames.push(id)
     },
     exit: (path) => {
       if (!this._thisScopes.includes(path.node.type)) {
@@ -56,12 +57,16 @@ export abstract class Visitor {
       }
     }
 
+    if (path.type === 'PrivateName') {
+
+    }
+
     if (path.type === 'MemberExpression') { // TODO we should check if we are the property currently (doesnt work when object === property, car.car)
       if (path.node.property.name === name) {
         // TODO test if this recursive scoping works correctly
         let objectIdentifier = this._getOriginalObjectIdentifier(path.node.object)
 
-        const objectScope: Scope = this._getScope(path, objectIdentifier)
+        const objectScope: Scope = this._getScope(path.get('object'), objectIdentifier)
 
         if (objectIdentifier === 'this') {
           objectIdentifier = this._thisScopeStackNames[this._thisScopeStackNames.length - 1]
@@ -98,7 +103,9 @@ export abstract class Visitor {
     //   }
     // }
 
+    // TODO thes might be wrong
     if (path.type === 'ClassMethod'
+      || path.type === 'ObjectMethod'
       || path.type === 'AssignmentExpression'
       || path.type === 'FunctionExpression'
       || path.type === 'ObjectProperty') {
@@ -115,7 +122,7 @@ export abstract class Visitor {
       }
     }
 
-    throw new Error(`Cannot find scope of element ${name} of type ${path.type} in ${this.filePath}`)
+    throw new Error(`Cannot find scope of element ${name} of type ${path.type}\n${this.filePath}\n${path.getSource()}`)
   }
 
   _getOriginalObjectIdentifier(object): string {
@@ -143,6 +150,28 @@ export abstract class Visitor {
     const scope: Scope = {
       filePath: this.filePath,
       uid: `${path.scope.uid}`
+    }
+
+    if (!node) {
+      // TODO should be done differently maybe
+      if (path.node.type === "FunctionDeclaration") {
+        return {
+          scope: scope,
+          type: ElementType.Identifier,
+          value: `anon`
+        }
+      }
+
+      throw new Error("something is wrong")
+    }
+
+    if (path.node.type === "PrivateName") {
+      // TODO should be done differently maybe
+      return {
+        scope: scope,
+        type: ElementType.Identifier,
+        value: '#' + node.name
+      }
     }
 
     if (node.type === "NullLiteral") {
@@ -184,7 +213,6 @@ export abstract class Visitor {
           value: node.name
         }
       }
-
       return {
         scope: this._getScope(path, node.name),
         type: ElementType.Identifier,
@@ -217,8 +245,7 @@ export abstract class Visitor {
 
       || node.type === 'ArrowFunctionExpression'
       || node.type === 'FunctionExpression'
-
-      // TODO
+      || node.type === 'ClassExpression'
 
       || node.type === 'SpreadElement'
       || node.type === 'NewExpression'
@@ -228,13 +255,15 @@ export abstract class Visitor {
 
       || node.type === 'ArrayExpression'
       || node.type === 'ObjectExpression'
+      || node.type === 'AwaitExpression'
 
       || node.type === 'ObjectProperty' // TODO not sure about this one
       || node.type === 'ObjectMethod'// TODO not sure about this one
 
       || node.type === 'AssignmentExpression'
       || node.type === 'AssignmentPattern'
-      || node.type === 'ArrayPattern') {
+      || node.type === 'ArrayPattern'
+      || node.type === 'PrivateName') {
 
       // TODO should be default
       return {
@@ -243,7 +272,7 @@ export abstract class Visitor {
         value: `%-${this.filePath}-${node.start}-${node.end}`
       }
     }
-    throw new Error(`Cannot get element: "${node.name}" -> ${node.type}`)
+    throw new Error(`Cannot get element: "${node.name}" -> ${node.type}\n${this.filePath}`)
   }
 
 

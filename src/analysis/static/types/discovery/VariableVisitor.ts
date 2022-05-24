@@ -74,7 +74,7 @@ export class VariableVisitor extends Visitor {
     }
 
     const relation: Relation = {
-      relation: RelationType.Parameters,
+      relation: RelationType.FunctionDefinition,
       involved: involved
     }
 
@@ -90,7 +90,7 @@ export class VariableVisitor extends Visitor {
     }
 
     const relation: Relation = {
-      relation: RelationType.Parameters,
+      relation: RelationType.FunctionDefinition,
       involved: involved
     }
 
@@ -106,7 +106,7 @@ export class VariableVisitor extends Visitor {
     }
 
     const relation: Relation = {
-      relation: RelationType.Parameters,
+      relation: RelationType.FunctionDefinition,
       involved: involved
     }
 
@@ -122,7 +122,19 @@ export class VariableVisitor extends Visitor {
     }
 
     const relation: Relation = {
-      relation: RelationType.Parameters,
+      relation: RelationType.FunctionDefinition,
+      involved: involved
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+  }
+
+  public ClassExpression: (path) => void = (path) => {
+    const involved: Element[] = [this._getElement(path, path.node)]
+
+    const relation: Relation = {
+      relation: RelationType.ClassDefinition,
       involved: involved
     }
 
@@ -256,6 +268,18 @@ export class VariableVisitor extends Visitor {
     this.relations.push(relation)
   }
 
+  public AwaitExpression: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Await,
+      involved: [
+        this._getElement(path, path.node.argument)
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
   // binary
   public BinaryExpression: (path) => void = (path) => {
     const relation: Relation = {
@@ -380,7 +404,7 @@ export class VariableVisitor extends Visitor {
     }
 
     const relation: Relation = {
-      relation: RelationType.Parameters,
+      relation: RelationType.FunctionDefinition,
       involved: involved
     }
 
@@ -432,6 +456,20 @@ export class VariableVisitor extends Visitor {
     this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
+
+  public PrivateName: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.PrivateName,
+      involved: [
+        this._getElement(path, path.node.id)
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+
 
   _getElement(path, node) {
     const element = super._getElement(path, node)

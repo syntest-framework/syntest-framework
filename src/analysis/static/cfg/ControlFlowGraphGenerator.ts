@@ -351,6 +351,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       case "ArrayExpression":
       case "ThisExpression":
       case "ObjectExpression":
+      case "NewExpression":
+      case "AwaitExpression":
         return this.visitGeneralExpression(child, parents);
 
       case "VariableDeclaration":

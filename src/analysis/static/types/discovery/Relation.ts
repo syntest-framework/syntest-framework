@@ -28,6 +28,12 @@ export interface Relation {
 export enum RelationType {
   // Primary Expressions
   // TODO others
+  FunctionDefinition="L_R",
+  ClassDefinition="class L",
+
+
+  Await="await L",
+
   // object
   Object="{L}", // TODO not correct L doesnt matter
   ObjectProperty="L:R",
@@ -133,8 +139,9 @@ export enum RelationType {
 
   // MULTI
   // function
-  Parameters="L_R",
   Call="L(R)",
+
+  PrivateName="#L"
 }
 
 

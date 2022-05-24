@@ -69,6 +69,7 @@
   "dependencies": {
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
+    "@babel/preset-flow": "^7.17.12",
     "@babel/preset-react": "^7.16.7",
     "@babel/register": "^7.16.5",
     "@istanbuljs/schema": "^0.1.3",

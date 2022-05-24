@@ -74,12 +74,13 @@ export class ObjectVisitor extends Visitor {
       }
 
       for (const classElement of path.node.body.body) {
-        if (classElement.type === 'ClassProperty') {
+        if (classElement.type === 'ClassProperty'
+          || classElement.type === 'ClassPrivateProperty') {
           _object.properties.add(classElement.key.name)
         } else if (classElement.type === 'ClassMethod') {
           _object.functions.add(classElement.key.name)
         } else {
-          throw new Error("unsupported class element: " + classElement.type)
+          throw new Error(`unsupported class element: ${classElement.type}\n${this.filePath}`)
         }
       }
 
@@ -93,7 +94,7 @@ export class ObjectVisitor extends Visitor {
     enter: (path) => {
       const _object: ComplexObject = {
         import: this.filePath,
-        name: path.node.id.name,
+        name: path.node.id?.name || 'anon',
         properties: new Set(),
         functions: new Set()
       }
@@ -109,7 +110,7 @@ export class ObjectVisitor extends Visitor {
       // TODO find the object where we are assigning to if its an assignment
       const _object: ComplexObject = {
         import: this.filePath,
-        name: path.node.id ? path.node.id.name : 'anon',
+        name: path.node.id?.name || 'anon',
         properties: new Set(),
         functions: new Set()
       }
@@ -125,7 +126,7 @@ export class ObjectVisitor extends Visitor {
       // TODO find the object where we are assigning to if its an assignment
       const _object: ComplexObject = {
         import: this.filePath,
-        name: path.node.id ? path.node.id.name : 'anon',
+        name: path.node.id?.name || 'anon',
         properties: new Set(),
         functions: new Set()
       }

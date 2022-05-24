@@ -31,16 +31,20 @@ module.exports = {
     // target_root_directory: "./benchmark/custom/simple",
 
     // target_root_directory: "./benchmark/top10npm/axios",
-    target_root_directory: "./benchmark/top10npm/chalk",
-    // target_root_directory: "./benchmark/top10npm/commanderjs",
+    // target_root_directory: "./benchmark/top10npm/chalk",
+    target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
     // target_root_directory: "./benchmark/top10npm/lodash",
+    // target_root_directory: "./benchmark/top10npm/moment/src",
 
-    // target_root_directory: "./benchmark/top10npm/moment",
+    // target_root_directory: "./benchmark/large_projects/jquery",
+    // target_root_directory: "./benchmark/large_projects/npm_cli",
 
     include: [
         // "./benchmark/top10npm/axios/lib/core/buildFullPath.js",
         // "./benchmark/top10npm/axios/lib/core/Axios.js",
+
+        "./benchmark/top10npm/commanderjs/lib/help.js",
 
         // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
@@ -48,17 +52,17 @@ module.exports = {
         // "./benchmark/top10npm/lodash/uniq.js",
         // "./benchmark/top10npm/lodash/unzip.js",
 
-        // "./benchmark/top10npm/commanderjs/lib/help.js",
-
         // "./benchmark/top10npm/express/lib/view.js",
 
         // "./benchmark/top10npm/axios/lib/**/*.js",
-        "./benchmark/top10npm/chalk/source/**/*.js",
+        // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/top10npm/commanderjs/lib/**/*.js",
         // "./benchmark/top10npm/express/lib/**/*.js",
         // "./benchmark/top10npm/lodash/**/*.js",
+        // "./benchmark/top10npm/moment/src/lib/create/**/*.js",
 
-        // "./benchmark/top10npm/moment/src/**/*.js",
+        // "./benchmark/large_projects/jquery/src/core/**/*.js",
+        // "./benchmark/large_projects/npm_cli/lib/auth/*.js",
 
         // "./benchmark/custom/simple/tests.js"
 
@@ -73,5 +77,6 @@ module.exports = {
         // "./benchmark/top10npm/commanderjs/lib/error.js",
 
       "./benchmark/top10npm/chalk/source/vendor/supports-color/*.*",
+
     ]
 }

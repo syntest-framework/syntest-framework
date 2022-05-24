@@ -300,7 +300,6 @@ function coverLoopBranch(path) {
       }
     }
   }, test)
-  console.log(test)
   const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
   path.insertBefore(T.expressionStatement(metaTracker));
 }

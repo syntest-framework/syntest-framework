@@ -65,9 +65,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // Finally, run mocha.
     await new Promise((resolve) => {
-      runner = mocha.run((failures) => {
-        resolve(failures)
-      })
+      runner = mocha.run((failures) => resolve(failures))
     })
 
     levels.forEach((level, index) => {

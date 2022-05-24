@@ -204,7 +204,7 @@ export class JavaScriptTargetPool extends TargetPool {
         }
 
         if(export_.type === ExportType.const) {
-          throw new Error("Target cannot be constant!")
+          throw new Error(`Target cannot be constant: ${name} -> ${JSON.stringify(export_)}`)
         }
 
         let isPrototypeClass = false

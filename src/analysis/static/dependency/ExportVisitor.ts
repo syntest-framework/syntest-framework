@@ -47,7 +47,7 @@ export class ExportVisitor extends Visitor {
         for (const declaration of path.node.declaration.declarations) {
           this._exports.push({
             name: declaration.id.name,
-            type: this._getType(declaration.init.type, declaration.name),
+            type: this._getType(declaration.init?.type, declaration.name),
             default: false,
             module: false,
             filePath: this.filePath
@@ -189,17 +189,11 @@ export class ExportVisitor extends Visitor {
       || type === 'RegExpLiteral'
       || type === 'NullLiteral') {
       return ExportType.const
-    } else if (type === 'CallExpression'
-      || type === 'MemberExpression'
-      || type === 'ObjectExpression') {
-      // we dont know what this returns
-      return ExportType.const
     }
 
+    // we dont know what this returns
     // default is const
-    // return ExportType.const
-
-    throw new Error("ANY export identifierDescription: " + type + " in target file: " + this.filePath)
+    return ExportType.const
   }
 
   // getters

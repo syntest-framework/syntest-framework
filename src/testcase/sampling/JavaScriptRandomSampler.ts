@@ -152,8 +152,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       throw new Error("Invalid identifierDescription inference mode selected")
     }
 
-    console.log(chosenType)
-    console.log(identifierDescription)
+    // console.log(chosenType)
+    // console.log(identifierDescription)
 
     // this ensures that there is a chance of trying a random other identifierDescription
     if (true) { // Properties.alsotryrandom) { TODO property
@@ -411,9 +411,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       typeMap.addType(type, 1, null)
       identifierDescription = { typeProbabilityMap: typeMap, name: "noname" }
     }
+
     // by default we create small numbers (do we need very large numbers?)
-    const max = Number.MAX_SAFE_INTEGER
-    const min = Number.MIN_SAFE_INTEGER
+    const max = 10
+    const min = -10
 
     return new NumericStatement(
       identifierDescription,
