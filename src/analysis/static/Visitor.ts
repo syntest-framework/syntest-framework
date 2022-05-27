@@ -25,7 +25,7 @@ export abstract class Visitor {
     }
   }
 
-  Scope= {
+  Scope = {
     enter: (path) => {
       if (!this._thisScopes.includes(path.node.type)) {
         return

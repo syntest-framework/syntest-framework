@@ -64,11 +64,13 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
   protected _extractObjectives(): void {
     // Branch objectives
-    this._cfg.nodes
-      // Find all branch nodes
+    // Find all branch nodes
+    const branches = this._cfg.nodes
       .filter(
         (node) => node.type === NodeType.Branch
       )
+
+    branches
       .forEach((branchNode) => {
         this._cfg.edges
           // Find all edges from the branch node
@@ -92,7 +94,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
           });
       });
 
-    // Add children for branches and probe objectives
     for (const objective of this._objectives.keys()) {
       const childrenObj = this.findChildren(objective);
       this._objectives.get(objective).push(...childrenObj);
