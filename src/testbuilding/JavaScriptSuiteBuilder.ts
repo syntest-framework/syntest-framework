@@ -22,6 +22,7 @@ import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from 
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
 import { Runner } from "mocha";
+import { SilentMochaReporter } from "../testcase/execution/SilentMochaReporter";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
@@ -88,7 +89,8 @@ export class JavaScriptSuiteBuilder {
       // ui: 'bdd',
       // 'watch-ignore': [ 'node_modules', '.git' ],
       // watchIgnore: [ 'node_modules', '.git' ]
-      spec: paths
+      spec: paths,
+      reporter: SilentMochaReporter
     }
 
     for (const testPath of paths) {

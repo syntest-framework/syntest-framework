@@ -11,62 +11,9 @@ import { JavaScriptExecutionResult, JavaScriptExecutionStatus } from "../../sear
 import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
 import * as _ from 'lodash'
+import { SilentMochaReporter } from "./SilentMochaReporter";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
-
-const {
-  EVENT_RUN_BEGIN,
-  EVENT_RUN_END,
-  EVENT_TEST_FAIL,
-  EVENT_TEST_PASS,
-  EVENT_SUITE_BEGIN,
-  EVENT_SUITE_END
-} = Mocha.Runner.constants;
-
-class MyReporter {
-  private _indents: number
-
-  constructor(runner) {
-    this._indents = 0;
-    const stats = runner.stats;
-
-    runner
-      .once(EVENT_RUN_BEGIN, () => {
-        console.log('start');
-      })
-      .on(EVENT_SUITE_BEGIN, () => {
-        this.increaseIndent();
-      })
-      .on(EVENT_SUITE_END, () => {
-        this.decreaseIndent();
-      })
-      .on(EVENT_TEST_PASS, test => {
-        // Test#fullTitle() returns the suite name(s)
-        // prepended to the test title
-        console.log(`${this.indent()}pass: ${test.fullTitle()}`);
-      })
-      .on(EVENT_TEST_FAIL, (test, err) => {
-        console.log(
-          `${this.indent()}fail: ${test.fullTitle()} - error: ${err.message}`
-        );
-      })
-      .once(EVENT_RUN_END, () => {
-        console.log(`end: ${stats.passes}/${stats.passes + stats.failures} ok`);
-      });
-  }
-
-  indent() {
-    return Array(this._indents).join('  ');
-  }
-
-  increaseIndent() {
-    this._indents++;
-  }
-
-  decreaseIndent() {
-    this._indents--;
-  }
-}
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   protected suiteBuilder: JavaScriptSuiteBuilder;
@@ -85,19 +32,12 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // TODO make this running in memory
 
-
-
-
     let argv = {
       spec: testPath,
-      // reporter: MyReporter
+      reporter: SilentMochaReporter
     }
 
-
-
-    const mocha = new Mocha(argv)
-
-    // require('ts-node/register')
+    const mocha = new Mocha(argv)// require('ts-node/register')
 
     require("regenerator-runtime/runtime");
     require('@babel/register')({
