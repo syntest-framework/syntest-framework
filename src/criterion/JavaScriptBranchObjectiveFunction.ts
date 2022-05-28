@@ -22,6 +22,11 @@ export class JavaScriptBranchObjectiveFunction<T extends Encoding> extends Branc
             trace.branchType === this._type
         );
 
+      if (!branchTrace) {
+        // TODO fix this should not happen
+        return Number.MAX_VALUE
+      }
+
       if (branchTrace.hits > 0) {
         return 0;
       } else {

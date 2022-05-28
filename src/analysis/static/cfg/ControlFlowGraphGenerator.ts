@@ -597,7 +597,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     // const node: Node = this.createNode([ast.loc.start.line], []);
     // this.connectParents(parents, [node]);
 
-    this.visitChild(ast.argument, parents)
+    if (ast.argument) {
+      this.visitChild(ast.argument, parents)
+    }
 
     return {
       childNodes: [],

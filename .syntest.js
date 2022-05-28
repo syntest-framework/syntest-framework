@@ -10,7 +10,7 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 60,
+    search_time: 5,
     total_time: 6000,
     iteration_budget: 100000,
 
@@ -23,16 +23,16 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    use_type_inference: false,
+    use_type_inference: true,
     type_inference_mode: 'roulette',
 
     draw_cfg: true,
 
     // target_root_directory: "./benchmark/custom/simple",
 
-    // target_root_directory: "./benchmark/top10npm/axios",
+    target_root_directory: "./benchmark/top10npm/axios",
     // target_root_directory: "./benchmark/top10npm/chalk",
-    target_root_directory: "./benchmark/top10npm/commanderjs",
+    // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
     // target_root_directory: "./benchmark/top10npm/lodash",
     // target_root_directory: "./benchmark/top10npm/moment/src",
@@ -44,7 +44,7 @@ module.exports = {
         // "./benchmark/top10npm/axios/lib/core/buildFullPath.js",
         // "./benchmark/top10npm/axios/lib/core/Axios.js",
 
-        "./benchmark/top10npm/commanderjs/lib/help.js",
+        // "./benchmark/top10npm/commanderjs/lib/help.js",
 
         // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
@@ -54,7 +54,7 @@ module.exports = {
 
         // "./benchmark/top10npm/express/lib/view.js",
 
-        // "./benchmark/top10npm/axios/lib/**/*.js",
+        "./benchmark/top10npm/axios/lib/core/*.js",
         // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/top10npm/commanderjs/lib/**/*.js",
         // "./benchmark/top10npm/express/lib/**/*.js",

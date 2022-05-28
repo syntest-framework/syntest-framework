@@ -137,7 +137,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     // If one of the executions failed, log it
     if (stats.failures > 0) {
       const test = runner.suite.suites[0].tests[0];
-      console.log(test)
+      // console.log(test)
 
       subject.recordTypeScore(testCase.getFlatTypes(), true)
       getUserInterface().error("Test case has failed!");

@@ -38,6 +38,7 @@ import { TypeEnum } from "./types/resolving/TypeEnum";
 import { TypeProbability } from "./types/resolving/TypeProbability";
 import { Instrumenter } from "../../instrumentation/Instrumenter";
 import { ExportType } from "./dependency/IdentifierVisitor";
+import exp = require("constants");
 const { outputFileSync, copySync } = require("fs-extra");
 
 
@@ -191,6 +192,8 @@ export class JavaScriptTargetPool extends TargetPool {
         this.targetMapGenerator.generate(absoluteTargetPath, targetAST);
 
       const exports = this.getExports(targetPath)
+      console.log(targetMap)
+      console.log(exports)
 
       const finalTargetMap = new Map<string, JavaScriptTargetMetaData>()
 

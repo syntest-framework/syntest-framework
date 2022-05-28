@@ -250,7 +250,16 @@ export class TargetVisitor extends Visitor {
     let targetName
 
     if (path.node.left.type === "MemberExpression") {
-      if (path.node.left.object.type === 'MemberExpression'
+      if (path.node.left.object.name === 'module'
+        && path.node.left.property.name === 'exports'
+      ) {
+        targetName = path.node.right.id?.name
+
+        if (!targetName) {
+          targetName = 'anon'
+        }
+
+      } else if (path.node.left.object.type === 'MemberExpression'
         && path.node.left.object.property.name === 'prototype') {
         targetName = path.node.left.object.object.name
         const functionName = path.node.left.property.name

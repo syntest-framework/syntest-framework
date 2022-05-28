@@ -131,7 +131,7 @@ export class ExportVisitor extends Visitor {
           }
         } else if (path.node.expression.right.type === 'FunctionExpression') {
           this._exports.push({
-            name: path.node.expression.right.id.name,
+            name: path.node.expression.right.id?.name || 'anon',
             type: this._getType(path.node.expression.right.type, path.node.expression.right.name),
             default: true,
             module: true,

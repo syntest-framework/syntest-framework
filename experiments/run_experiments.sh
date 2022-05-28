@@ -1,10 +1,10 @@
 experiment_names=( "new2" )
 times=( 60 )
 inferences=( 0 1 )
-modes=( "roulette" "elitist" ) # "dynamic" )
+modes=( "roulette" ) #"elitist" ) # "dynamic" )
 
 benchmarks=( "axios" "commanderjs" "lodash" "lodash" "lodash" "lodash" "lodash")
-benchmark_files=( "axios/lib/**/*.js" "commanderjs/lib/**/*.js" "lodash/result.js" "lodash/slice.js" "lodash/split.js" "lodash/uniq.js" "lodash/unzip.js")
+benchmark_files=( "axios/lib/core/*.js" "commanderjs/lib/**/*.js" "lodash/result.js" "lodash/slice.js" "lodash/split.js" "lodash/uniq.js" "lodash/unzip.js")
 
 for experiment_name in "${experiment_names[@]}"; do
   for time in "${times[@]}"; do
