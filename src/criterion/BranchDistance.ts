@@ -136,6 +136,12 @@ export class BranchDistance {
       // should both be direct : returns direct
       case "+":
         return [left + right, true]
+      case "-":
+        return [left - right, true]
+      case "*":
+        return [left * right, true]
+      case "/":
+        return [left / right, true]
     }
 
     switch (ast.operator) {

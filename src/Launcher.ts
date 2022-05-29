@@ -318,7 +318,6 @@ export class Launcher {
     dependencyMap.set(targetMeta.name, dependencies)
     const exports = targetPool.getExports(targetPath)
 
-
     const decoder = new JavaScriptDecoder(targetPool, dependencyMap, exports)
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
     const runner = new JavaScriptRunner(suiteBuilder)
@@ -510,6 +509,8 @@ export class Launcher {
 
       // console.log(data.b)
       // console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
+      // console.log(data.f)
+      // console.log()
     }
 
     overall['statement'] /= totalStatements

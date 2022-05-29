@@ -280,12 +280,26 @@ function coverLoopBranch(path) {
   const increment = this.getBranchIncrement(branch, path.node.loc);
   path.insertAfter(T.expressionStatement(increment));
 
+  // TODO we should actually print what the just defined variable is set to
+  const justDefinedVariables = []
+
+  path.get('init').traverse({
+    VariableDeclarator: {
+      enter: (p) => {
+        justDefinedVariables.push(p.node.id.name)
+      }
+    }
+  })
+
   const test = path.get('test')
   const variables = []
   test.traverse({
     Identifier: {
       enter: (p) => {
         if (p.parent.type === "MemberExpression") {
+          return
+        }
+        if (justDefinedVariables.includes(p.node.name)) {
           return
         }
         variables.push(p.node.name)

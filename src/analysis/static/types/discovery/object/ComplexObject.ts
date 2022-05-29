@@ -17,10 +17,10 @@
  */
 
 import { TypeProbability } from "../../resolving/TypeProbability";
-import { IdentifierDescription } from "../../../parsing/IdentifierDescription";
+import { Export } from "../../../dependency/ExportVisitor";
 
 export interface ComplexObject {
-  import: string,
+  export?: Export,
   name: string,
   properties: Set<string>
   functions: Set<string>

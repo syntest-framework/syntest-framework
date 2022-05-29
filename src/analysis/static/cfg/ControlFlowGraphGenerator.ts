@@ -324,17 +324,28 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     }
 
     switch (child.type) {
+      // passthrough
       case "File":
         return this.visitChild(child.program, parents)
+      case "ExportDefaultDeclaration":
+        return this.visitChild(child.declaration, parents)
+      case "UnaryExpression":
+        return this.visitChild(child.argument, parents);
+      case "ExpressionStatement":
+        return this.visitChild(child.expression, parents);
+
+      //
       case "Program":
         return this.visitProgram(child)
       case "FunctionDeclaration":
         return this.visitFunctionDeclaration(child)
-
-      case "ExpressionStatement":
-        return this.visitExpressionStatement(child, parents);
+      case "CallExpression":
+        return this.visitCallExpression(child, parents);
+      case "ExportNamedDeclaration":
+        return this.visitExportNamedDeclaration(child, parents);
 
       case "Identifier":
+
       case "NumericLiteral":
       case "BooleanLiteral":
       case "StringLiteral":
@@ -342,8 +353,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       case "TemplateLiteral":
       case "RegExpLiteral":
 
-      case "CallExpression":
-      case "UnaryExpression":
+      case "SpreadElement":
+
       case "BinaryExpression":
       case "LogicalExpression":
       case "MemberExpression":
@@ -448,9 +459,11 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   private visitProgram(ast: any): ReturnValue {
     for (const child of ast.body) {
       // TODO add more probably
-      if (!['FunctionDeclaration', 'ClassDeclaration', 'ExpressionStatement'].includes(child.type)) {
-        continue
-      }
+      // if (!['FunctionDeclaration', 'ClassDeclaration', 'ExpressionStatement'].includes(child.type)) {
+
+      // if (['ImportDeclaration', 'ClassDeclaration', 'ExpressionStatement'].includes(child.type)) {
+      //   continue
+      // }
       this.visitChild(child, []);
     }
 
@@ -503,15 +516,43 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitExpressionStatement(
+  private visitCallExpression(
     ast: any,
     parents: Node[]
   ): ReturnValue {
-    const {childNodes, breakNodes} = this.visitChild(ast.expression, parents);
+    const node: Node = this.createNode([ast.loc.start.line], []);
+    this.connectParents(parents, [node]);
+    let nodes = [node]
+    for (const arg of ast.arguments) {
+      const result = this.visitChild(arg, nodes);
+
+      nodes = result.childNodes
+    }
 
     return {
-      childNodes: childNodes,
-      breakNodes: breakNodes
+      childNodes: [node],
+      breakNodes: []
+    }
+  }
+
+  private visitExportNamedDeclaration(
+    ast: any,
+    parents: Node[]
+  ): ReturnValue {
+    if (ast.specifiers && ast.specifiers.length) {
+      let nodes = parents
+      for (const specifier of ast.specifiers) {
+        const result = this.visitChild(specifier, nodes);
+
+        nodes = result.childNodes
+      }
+
+      return {
+        childNodes: nodes,
+        breakNodes: []
+      }
+    } else {
+      return this.visitChild(ast.declaration, parents)
     }
   }
 
@@ -542,9 +583,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         childNodes: [node],
         breakNodes: [],
       };
-    } else if (ast.type === 'UnaryExpression') {
-      return this.visitChild(ast.argument, parents);
-    } else if (ast.type === 'FunctionExpression') {
+    } else if (ast.type === 'FunctionExpression'
+    || ast.type === 'ArrowFunctionExpression') {
       const node: RootNode = this.createRootNode(
         [ast.loc.start.line],
         [],

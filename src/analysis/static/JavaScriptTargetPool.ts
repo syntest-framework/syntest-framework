@@ -347,18 +347,17 @@ export class JavaScriptTargetPool extends TargetPool {
         && !x.includes('.test.js')
         && !x.includes('node_modules')) // maybe we should also take those into account
 
-
     const objects: ComplexObject[] = []
     const objectGenerator = new ObjectGenerator()
 
     for (const file of files) {
-      objects.push(...objectGenerator.generate(file, this.getAST(file)))
+      const exports = this.getExports(file)
+      objects.push(...objectGenerator.generate(file, this.getAST(file), exports))
     }
 
     // standard stuff
     // function https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
     objects.push({
-      import: "",
       name: "function",
       properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
       functions: new Set(['apply', 'bind', 'call', 'toString']),
@@ -373,7 +372,6 @@ export class JavaScriptTargetPool extends TargetPool {
 
     // array https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
     objects.push({
-      import: "",
       name: "array",
       properties: new Set(['length']),
       functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values']),
@@ -384,7 +382,6 @@ export class JavaScriptTargetPool extends TargetPool {
 
     // string
     objects.push({
-      import: "",
       name: "string",
       properties: new Set(['length']),
       functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf']),
@@ -392,15 +389,6 @@ export class JavaScriptTargetPool extends TargetPool {
         ['length', new TypeProbability([[TypeEnum.NUMERIC, 1, null]])]
       ])
     })
-
-    // object
-    // TODO
-    // this._objects.push({
-    //   import: "",
-    //   name: "object",
-    //   properties: new Set([]),
-    //   functions: new Set([])
-    // })
 
     // TODO npm dependencies
     // TODO get rid of duplicates
@@ -419,7 +407,7 @@ export class JavaScriptTargetPool extends TargetPool {
       }
 
       const found = finalObjects.find((o2) => {
-        return o.import === o2.import
+        return o.export === o2.export // TODO not sure if you can compare exports like this
           && o.name === o2.name
           && eqSet(o.properties, o2.properties)
           && eqSet(o.functions, o2.functions)

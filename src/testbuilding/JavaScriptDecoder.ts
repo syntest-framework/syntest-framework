@@ -134,7 +134,8 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
     for (const gene of importableGenes) {
       const importName = gene instanceof FunctionCall ? gene.functionName : (gene instanceof ConstructorCall ? gene.constructorName : null);
-      const export_: Export = this.exports.find((x) => x.name === importName)
+      const complexObject = gene.identifierDescription.typeProbabilityMap.getObjectDescription(importName)
+      const export_: Export = complexObject?.export || this.exports.find((x) => x.name === importName)
       if (!export_) {
         throw new Error('Cannot find an export corresponding to the importable gene: ' + importName)
       }
@@ -158,29 +159,29 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
       imports.push(importString);
 
-      let count = 0;
-      for (const dependency of this.dependencies.get(importName)) {
-        // no duplicates
-        if (importedDependencies.has(dependency.name)) {
-          continue
-        }
-        importedDependencies.add(dependency.name)
-
-        // skip non-used imports
-        if (!testStrings.find((s) => s.includes(dependency.name))) {
-          continue
-        }
-
-        const importString: string = this.getImport(dependency);
-
-        if (imports.includes(importString) || importString.length === 0) {
-          continue;
-        }
-
-        imports.push(importString);
-
-        count += 1;
-      }
+      // let count = 0;
+      // for (const dependency of this.dependencies.get(importName)) {
+      //   // no duplicates
+      //   if (importedDependencies.has(dependency.name)) {
+      //     continue
+      //   }
+      //   importedDependencies.add(dependency.name)
+      //
+      //   // skip non-used imports
+      //   if (!testStrings.find((s) => s.includes(dependency.name))) {
+      //     continue
+      //   }
+      //
+      //   const importString: string = this.getImport(dependency);
+      //
+      //   if (imports.includes(importString) || importString.length === 0) {
+      //     continue;
+      //   }
+      //
+      //   imports.push(importString);
+      //
+      //   count += 1;
+      // }
     }
 
     return imports;

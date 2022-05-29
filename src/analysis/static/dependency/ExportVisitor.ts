@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-
 import { ExportType } from "./IdentifierVisitor";
 import { Visitor } from "../Visitor";
 
@@ -86,9 +85,23 @@ export class ExportVisitor extends Visitor {
   };
 
   public ExportDefaultDeclaration: (path) => void = (path) => {
+    let name: string
+
+    if (path.node.declaration.type === 'Identifier') {
+      name = path.node.declaration.name
+    } else if (path.node.declaration.type === 'NewExpression') {
+      name = path.node.declaration.callee.name
+    } else {
+      name = path.node.declaration.id?.name
+    }
+
+    if (!name) {
+      return
+    }
+
     this._exports.push({
-      name: path.node.declaration.name,
-      type: this._getType(path.node.declaration.type, path.node.declaration.name),
+      name: name,
+      type: this._getType(path.node.declaration.type, name),
       default: true,
       module: false,
       filePath: this.filePath
@@ -165,7 +178,8 @@ export class ExportVisitor extends Visitor {
   // util function
   _getType(type: string, name?: string): ExportType {
     if (type === 'FunctionDeclaration'
-      || type === 'FunctionExpression') {
+      || type === 'FunctionExpression'
+      || type === 'ArrowFunctionExpression') {
       return ExportType.function
     } else if (type === 'VariableDeclaration'
       || type === 'VariableDeclarator') {
@@ -193,7 +207,7 @@ export class ExportVisitor extends Visitor {
 
     // we dont know what this returns
     // default is const
-    return ExportType.const
+    return ExportType.unknown
   }
 
   // getters

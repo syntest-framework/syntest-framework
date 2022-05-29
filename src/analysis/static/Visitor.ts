@@ -57,10 +57,6 @@ export abstract class Visitor {
       }
     }
 
-    if (path.type === 'PrivateName') {
-
-    }
-
     if (path.type === 'MemberExpression') { // TODO we should check if we are the property currently (doesnt work when object === property, car.car)
       if (path.node.property.name === name) {
         // TODO test if this recursive scoping works correctly
@@ -103,12 +99,13 @@ export abstract class Visitor {
     //   }
     // }
 
-    // TODO thes might be wrong
+    // TODO these might be wrong
     if (path.type === 'ClassMethod'
       || path.type === 'ObjectMethod'
       || path.type === 'AssignmentExpression'
       || path.type === 'FunctionExpression'
-      || path.type === 'ObjectProperty') {
+      || path.type === 'ObjectProperty'
+      || path.type === 'MetaProperty') {
       return {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
         filePath: this.filePath,
@@ -263,7 +260,8 @@ export abstract class Visitor {
       || node.type === 'AssignmentExpression'
       || node.type === 'AssignmentPattern'
       || node.type === 'ArrayPattern'
-      || node.type === 'PrivateName') {
+      || node.type === 'PrivateName'
+      || node.type === 'MetaProperty') {
 
       // TODO should be default
       return {

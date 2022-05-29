@@ -10,7 +10,7 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 5,
+    search_time: 10,
     total_time: 6000,
     iteration_budget: 100000,
 
@@ -23,20 +23,22 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    use_type_inference: true,
+    use_type_inference: false,
     type_inference_mode: 'roulette',
 
     draw_cfg: true,
 
     // target_root_directory: "./benchmark/custom/simple",
 
-    target_root_directory: "./benchmark/top10npm/axios",
-    // target_root_directory: "./benchmark/top10npm/chalk",
+    // target_root_directory: "./benchmark/top10npm/axios",
     // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
     // target_root_directory: "./benchmark/top10npm/lodash",
     // target_root_directory: "./benchmark/top10npm/moment/src",
 
+    target_root_directory: "./benchmark/large_projects/javascript-algorithms",
+
+    // target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/large_projects/jquery",
     // target_root_directory: "./benchmark/large_projects/npm_cli",
 
@@ -54,13 +56,16 @@ module.exports = {
 
         // "./benchmark/top10npm/express/lib/view.js",
 
-        "./benchmark/top10npm/axios/lib/core/*.js",
-        // "./benchmark/top10npm/chalk/source/**/*.js",
+        // "./benchmark/top10npm/axios/lib/core/*.js",
         // "./benchmark/top10npm/commanderjs/lib/**/*.js",
         // "./benchmark/top10npm/express/lib/**/*.js",
         // "./benchmark/top10npm/lodash/**/*.js",
         // "./benchmark/top10npm/moment/src/lib/create/**/*.js",
 
+        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sorting/**/*.js",
+        "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/**/*.js",
+
+        // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/large_projects/jquery/src/core/**/*.js",
         // "./benchmark/large_projects/npm_cli/lib/auth/*.js",
 

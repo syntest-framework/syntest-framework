@@ -469,7 +469,18 @@ export class VariableVisitor extends Visitor {
     this.relations.push(relation)
   }
 
+  public MetaProperty: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.PropertyAccessor,
+      involved: [
+        this._getElement(path, path.node.meta),
+        this._getElement(path, path.node.property)
+      ]
+    }
 
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
 
   _getElement(path, node) {
     const element = super._getElement(path, node)

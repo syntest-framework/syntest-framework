@@ -73,6 +73,7 @@ export abstract class TypeResolver {
   setRelationType(relation: Relation, type: string | TypeProbability, value: number) {
     if (relation.relation === RelationType.PropertyAccessor) {
       this.setElementType(relation, relation.involved[1], type, 1)
+      this.setProcessed(relation, relation.involved[1])
     }
 
     if (this.relationTyping.has(relation)) {
@@ -113,8 +114,15 @@ export abstract class TypeResolver {
       return
     }
 
-    this.processed.get(relation).add(element)
     this._setElementType(element, type, value, object, propertyTypings)
+  }
+
+  setProcessed(relation: Relation, element: Element) {
+    if (!this.processed.has(relation)) {
+      this.processed.set(relation, new Set<Element>())
+    }
+
+    this.processed.get(relation).add(element)
   }
 
     /**
@@ -140,23 +148,6 @@ export abstract class TypeResolver {
 
     const typeMap = this.elementTyping.get(element)
     typeMap.addType(type, value, object, propertyTypings)
-  }
-
-  setEqualTypeMaps(element: Element, typeMap: TypeProbability) {
-    if (element.type === ElementType.Relation) {
-      const relation = this._wrapperElementIsRelation.get(element.value)
-
-      if (!relation) {
-        throw new Error(`Cannot find relation: ${element.value}`)
-      }
-
-      if (relation.relation === RelationType.PropertyAccessor) {
-        this.setEqualTypeMaps(relation.involved[1], typeMap)
-      }
-    }
-
-    // todo maybe add the entire checks and merge functionality here too
-    this.elementTyping.set(element, typeMap)
   }
 
   get relationTyping(): Map<Relation, TypeProbability> {

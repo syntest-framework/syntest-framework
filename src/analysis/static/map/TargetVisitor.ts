@@ -163,11 +163,11 @@ export class TargetVisitor extends Visitor {
     this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
-      // scope: {
-      //   uid: `${newScopeUid - this.scopeIdOffset}`,
-      //   filePath: this.filePath
-      // },
-      scope: this._getScope(path, functionName),
+      scope: {
+        uid: `${path.scope.uid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
+      // scope: this._getScope(path, functionName),
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,

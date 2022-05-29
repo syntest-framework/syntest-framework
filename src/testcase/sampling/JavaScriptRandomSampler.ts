@@ -65,9 +65,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   sampleConstructor(depth: number): ConstructorCall {
     const constructors = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.CONSTRUCTOR);
 
+    // TODO
     const typeMap = new TypeProbability([[this.subject.name, 1, {
       name: this.subject.name,
-      import: '', // TODO
       properties: new Set(), // TODO
       functions: new Set() // tODO
     }]])
@@ -134,9 +134,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleArgument(depth: number, identifierDescription: IdentifierDescription): Statement {
-    // TODO more complex sampling of function return values
-    // Take regular primitive value
-
     if (!identifierDescription) {
       identifierDescription = {
         name: "unnamed",
@@ -155,9 +152,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     } else {
       throw new Error("Invalid identifierDescription inference mode selected")
     }
-
-    // console.log(chosenType)
-    // console.log(identifierDescription)
 
     // this ensures that there is a chance of trying a random other identifierDescription
     if (true) { // Properties.alsotryrandom) { TODO property
@@ -206,45 +200,42 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     if (object) {
     //  TODO WIP
 
-    //   if (object.import && object.import.length) {
-    //     const functionMap = this.targetPool.getFunctionMap(object.import, object.name)
-    //
-    //     for (const key of functionMap.keys()) {
-    //       const func = functionMap.get(key)
-    //       for (const param of func.parameters) {
-    //         if (func.type === ActionType.FUNCTION) {
-    //           param.typeProbabilityMap = this.targetPool.typeResolver.getTyping(func.scope, param.name)
-    //         } else if (func.type === ActionType.METHOD
-    //           || func.type === ActionType.CONSTRUCTOR) {
-    //           param.typeProbabilityMap = this.targetPool.typeResolver.getTyping(func.scope, param.name)
-    //         } else {
-    //           throw new Error(`Unimplemented action identifierDescription ${func.type}`)
-    //         }
-    //       }
-    //       // TODO return types
-    //     }
-    //
-    //     const constructors = [...functionMap.values()].filter((a) => a.type === ActionType.CONSTRUCTOR && a.visibility === ActionVisibility.PUBLIC);
-    //     const constructor = constructors.find((c) => c.scope.filePath === object.import)
-    //     // console.log(actionDescriptions)
-    //     // console.log(constructors)
-    //     console.log(constructor)
-    //
-    //     if (constructor) {
-    //       const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
-    //
-    //       const calls: Statement[] = []
-    //
-    //       return new ConstructorCall(
-    //         identifierDescription,
-    //         object.name,
-    //         prng.uniqueId(),
-    //         args,
-    //         calls,
-    //         `${object.name}`
-    //       );
-    //     }
-    //   }
+      if (object.export) {
+        const functionMap = this.targetPool.getFunctionMap(object.export.filePath, object.name)
+
+        for (const key of functionMap.keys()) {
+          const func = functionMap.get(key)
+          for (const param of func.parameters) {
+            if (func.type === ActionType.FUNCTION) {
+              param.typeProbabilityMap = this.targetPool.typeResolver.getTyping(func.scope, param.name)
+            } else if (func.type === ActionType.METHOD
+              || func.type === ActionType.CONSTRUCTOR) {
+              param.typeProbabilityMap = this.targetPool.typeResolver.getTyping(func.scope, param.name)
+            } else {
+              throw new Error(`Unimplemented action identifierDescription ${func.type}`)
+            }
+          }
+          // TODO return types
+        }
+
+        const constructors = [...functionMap.values()].filter((a) => a.type === ActionType.CONSTRUCTOR && a.visibility === ActionVisibility.PUBLIC);
+        const constructor = constructors.find((c) => c.scope.filePath === object.export.filePath)
+
+        if (constructor) {
+          const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
+
+          const calls: Statement[] = []
+
+          return new ConstructorCall(
+            identifierDescription,
+            object.name,
+            prng.uniqueId(),
+            args,
+            calls,
+            `${object.name}`
+          );
+        }
+      }
 
       let count = 0
       object.properties.forEach((p) => {
@@ -263,9 +254,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
         if (propertyTypings && propertyTypings.has(p)) {
           count += 1
-          values.push(this.sampleArgument(depth + 1, { name: p, typeProbabilityMap: propertyTypings.get(p) }))
+          values.push(this.sampleArgument(depth + 1, { name: `${p}`, typeProbabilityMap: propertyTypings.get(p) }))
         } else {
-          values.push(this.sampleArgument(depth + 1, { name: p, typeProbabilityMap: new TypeProbability() }))
+          values.push(this.sampleArgument(depth + 1, { name: `${p}`, typeProbabilityMap: new TypeProbability() }))
         }
       })
       object.functions.forEach((f) => {
