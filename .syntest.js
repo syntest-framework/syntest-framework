@@ -23,10 +23,10 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    use_type_inference: false,
+    use_type_inference: true,
     type_inference_mode: 'roulette',
 
-    draw_cfg: true,
+    draw_cfg: false,
 
     // target_root_directory: "./benchmark/custom/simple",
 

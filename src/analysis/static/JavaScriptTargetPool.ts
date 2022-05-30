@@ -172,12 +172,15 @@ export class JavaScriptTargetPool extends TargetPool {
     }
 
     if (!this._controlFlowGraphs.get(absoluteTargetPath).has(targetName)) {
-      this._controlFlowGraphs.get(absoluteTargetPath).set(
-        targetName,
-        this.controlFlowGraphGenerator.convertAST(
-          this.getAST(absoluteTargetPath)
-        )
-      );
+      // this._controlFlowGraphs.get(absoluteTargetPath).set(
+      //   targetName,
+      //   this.controlFlowGraphGenerator.convertAST(
+      //     this.getAST(absoluteTargetPath)
+      //   )
+      // );
+      return this.controlFlowGraphGenerator.convertAST(
+        this.getAST(absoluteTargetPath)
+      )
     }
 
     return this._controlFlowGraphs.get(absoluteTargetPath).get(targetName);
@@ -256,7 +259,8 @@ export class JavaScriptTargetPool extends TargetPool {
     if (!this._exportMap.has(absoluteTargetPath)) {
       const exports = this.exportGenerator.generate(absoluteTargetPath, this.getAST(absoluteTargetPath))
 
-      this._exportMap.set(absoluteTargetPath, exports);
+      // this._exportMap.set(absoluteTargetPath, exports);
+      return exports
     }
 
     return this._exportMap.get(absoluteTargetPath)
@@ -297,8 +301,8 @@ export class JavaScriptTargetPool extends TargetPool {
         libraries.push(...exports);
       });
 
-      this._dependencyMaps
-        .set(targetPath, libraries);
+      return libraries
+      // this._dependencyMaps.set(targetPath, libraries);
     }
 
     return this._dependencyMaps.get(absoluteTargetPath)

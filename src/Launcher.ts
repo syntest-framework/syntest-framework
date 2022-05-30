@@ -360,6 +360,8 @@ export class Launcher {
       terminationManager
     );
 
+    console.log(archive.size)
+
     // Gather statistics after the search
     collectStatistics(
       collector,
