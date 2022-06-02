@@ -172,6 +172,13 @@ export class Launcher {
 
     getUserInterface().report("header", ["TARGETS"]);
 
+    getUserInterface().report("property-set", [
+      "Target Settings",
+      [
+        ["Target Root Directory", Properties.target_root_directory],
+      ],
+    ]);
+
     await targetPool.loadTargets();
 
     if (!targetPool.targets.length) {
@@ -229,6 +236,14 @@ export class Launcher {
         ["Explore Illegal Values", Properties.explore_illegal_values],
         ["Sample FUNCTION Result as Argument", Properties.sample_func_as_arg],
         ["Crossover", Properties.crossover_probability],
+      ],
+    ]);
+
+    getUserInterface().report("property-set", [
+      "Type Inference",
+      [
+        ["Use Type Inference", Properties['use_type_inference']],
+        ["Type Inference Mode", Properties['type_inference_mode']],
       ],
     ]);
 
@@ -359,9 +374,6 @@ export class Launcher {
       budgetManager,
       terminationManager
     );
-
-    console.log(archive.size)
-
     // Gather statistics after the search
     collectStatistics(
       collector,

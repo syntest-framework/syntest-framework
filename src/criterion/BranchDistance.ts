@@ -85,6 +85,7 @@ export class BranchDistance {
       case "ThisExpression":
       // TODO not sure how to handle this
       // TODO the result would be cool but functions that alter state (side-effects) ruin the idea
+      case "AssignmentExpression":
       case "CallExpression":
         return [undefined, true]
     }
@@ -142,6 +143,15 @@ export class BranchDistance {
         return [left * right, true]
       case "/":
         return [left / right, true]
+      case "%":
+        return [left % right, true]
+
+      case "&":
+        return [left & right, true]
+      case "|":
+        return [left | right, true]
+      case "^":
+        return [left ^ right, true]
     }
 
     switch (ast.operator) {
@@ -176,6 +186,8 @@ export class BranchDistance {
 
       case "instanceof":
         return [left instanceof right ? 0 : 1, false]
+      case "in":
+        return [left in right ? 0 : 1, false]
     }
 
     throw new Error(`Unknown binary operator: ${ast.operator}`)

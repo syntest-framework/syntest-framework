@@ -22,6 +22,7 @@ import { ActionDescription } from "../parsing/ActionDescription";
 import { TypeProbability } from "../types/resolving/TypeProbability";
 import { Visitor } from "../Visitor";
 import { IdentifierDescription } from "../parsing/IdentifierDescription";
+import { ComplexObject } from "../types/discovery/object/ComplexObject";
 
 // TODO only top level functions should be targettet
 export class TargetVisitor extends Visitor {
@@ -247,6 +248,19 @@ export class TargetVisitor extends Visitor {
       return
     }
 
+    let scope
+    path.traverse({
+      FunctionExpression: {
+        enter: (p) => {
+          scope = {
+            uid: `${p.scope.uid - this.scopeIdOffset}`,
+            filePath: this.filePath
+          }
+        }
+      }
+    })
+
+
     let targetName
 
     if (path.node.left.type === "MemberExpression") {
@@ -272,7 +286,7 @@ export class TargetVisitor extends Visitor {
         }
 
         if (functionName === "method") {
-          process.exit()
+          throw new Error("Invalid functionName")
         }
 
         if (!this._functionMap.has(targetName)) {
@@ -288,7 +302,7 @@ export class TargetVisitor extends Visitor {
         // TODO this one is probably wrong
 
         this._functionMap.get(targetName).set(functionName, {
-          scope: this._getScope(path, functionName),
+          scope: scope,
           name: functionName,
           type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
           visibility: ActionVisibility.PUBLIC,
@@ -364,14 +378,35 @@ export class TargetVisitor extends Visitor {
       }
 
       if (param.type === "ObjectPattern") {
+        const typeProbability = new TypeProbability()
+
+        const object: ComplexObject = {
+          name: "objectPattern",
+          properties: new Set(param.properties.map((x)=> this._extractParam(x.key).name)), // TODO resolve these types
+          functions: new Set()
+        }
+
+        typeProbability.addType('object', 1, object)
         param = {
-          name: `{${param.properties.map((x)=> this._extractParam(x.key).name).join(',')}}`
+          name: `objectPattern`,
+          typeProbabilityMap: typeProbability
         }
       }
 
       if (param.type === "ArrayPattern") {
+        const typeProbability = new TypeProbability()
+
+        const object: ComplexObject = {
+          name: "arrayPattern",
+          properties: new Set(param.elements.map((x) => this._extractParam(x).name)), // TODO resolve these types
+          functions: new Set()
+        }
+
+        typeProbability.addType('array', 1, object)
+
         param = {
-          name: `[${param.elements.map((x) => this._extractParam(x).name).join(',')}]`
+          name: `arrayPattern`,
+          typeProbabilityMap: typeProbability
         }
       }
 

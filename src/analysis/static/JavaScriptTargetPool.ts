@@ -38,7 +38,6 @@ import { TypeEnum } from "./types/resolving/TypeEnum";
 import { TypeProbability } from "./types/resolving/TypeProbability";
 import { Instrumenter } from "../../instrumentation/Instrumenter";
 import { ExportType } from "./dependency/IdentifierVisitor";
-import exp = require("constants");
 const { outputFileSync, copySync } = require("fs-extra");
 
 

@@ -36,7 +36,8 @@ module.exports = {
     // target_root_directory: "./benchmark/top10npm/lodash",
     // target_root_directory: "./benchmark/top10npm/moment/src",
 
-    target_root_directory: "./benchmark/large_projects/javascript-algorithms",
+    // target_root_directory: "./benchmark/large_projects/javascript-algorithms",
+    target_root_directory: "./benchmark/large_projects/cytoscapejs",
 
     // target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/large_projects/jquery",
@@ -48,22 +49,34 @@ module.exports = {
 
         // "./benchmark/top10npm/commanderjs/lib/help.js",
 
+        // "./benchmark/top10npm/lodash/.internal/equalArrays.js",
+        // "./benchmark/top10npm/lodash/hasPath.js",
+        // "./benchmark/top10npm/lodash/random.js",
         // "./benchmark/top10npm/lodash/result.js",
         // "./benchmark/top10npm/lodash/slice.js",
         // "./benchmark/top10npm/lodash/split.js",
-        // "./benchmark/top10npm/lodash/uniq.js",
+        // "./benchmark/top10npm/lodash/toNumber.js",
+        // "./benchmark/top10npm/lodash/transform.js",
+        // "./benchmark/top10npm/lodash/truncate.js",
         // "./benchmark/top10npm/lodash/unzip.js",
+
 
         // "./benchmark/top10npm/express/lib/view.js",
 
         // "./benchmark/top10npm/axios/lib/core/*.js",
         // "./benchmark/top10npm/commanderjs/lib/**/*.js",
-        // "./benchmark/top10npm/express/lib/**/*.js",
+        // "./benchmark/top10npm/express/lib/view.js",
         // "./benchmark/top10npm/lodash/**/*.js",
         // "./benchmark/top10npm/moment/src/lib/create/**/*.js",
+        // "./benchmark/top10npm/moment/src/lib/moment/**/*.js",
 
+        // "./benchmark/large_projects/javascript-algorithms/src/data-structures/tree/red-black-tree/*.js",
+        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/math/matrix/*.js",
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sorting/**/*.js",
-        "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/**/*.js",
+        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/**/*.js",
+
+        "./benchmark/large_projects/cytoscapejs/src/core/*.js",
+
 
         // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/large_projects/jquery/src/core/**/*.js",
@@ -77,9 +90,7 @@ module.exports = {
         './benchmark/top10npm/lodash/test/.internal/*.js',
         './benchmark/top10npm/lodash/test/**/*.js',
 
-        "./benchmark/top10npm/commanderjs/lib/argument.js",
         "./benchmark/top10npm/commanderjs/lib/command.js",
-        // "./benchmark/top10npm/commanderjs/lib/error.js",
 
       "./benchmark/top10npm/chalk/source/vendor/supports-color/*.*",
 

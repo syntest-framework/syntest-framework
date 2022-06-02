@@ -329,6 +329,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         return this.visitChild(child.program, parents)
       case "ExportDefaultDeclaration":
         return this.visitChild(child.declaration, parents)
+      case "ExportSpecifier":
+        return this.visitChild(child.local, parents);
       case "UnaryExpression":
         return this.visitChild(child.argument, parents);
       case "ExpressionStatement":
@@ -416,7 +418,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "SwitchStatement":
         return this.visitSwitchStatement(child, parents)
-
+      case "SwitchCase":
+        return this.visitSwitchCase(child, parents)
 
 
       // case "SourceUnit":
@@ -634,11 +637,16 @@ export class ControlFlowGraphGenerator implements CFGFactory {
    * @private
    */
   private visitReturnStatement(ast: any, parents: Node[]): ReturnValue {
-    // const node: Node = this.createNode([ast.loc.start.line], []);
-    // this.connectParents(parents, [node]);
+    const count = this.cfg.edges.length
 
     if (ast.argument) {
       this.visitChild(ast.argument, parents)
+    }
+
+    if (!this.cfg.edges[count]) {
+      // if no nodes are created we add one
+      const node: Node = this.createNode([ast.loc.start.line], []);
+      this.connectParents(parents, [node]);
     }
 
     return {
@@ -1185,13 +1193,97 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitSwitchStatement(ast: any, parent: Node[]): ReturnValue {
-    // TODO
-    throw new Error("Unimplemented")
-    // return {
-    //   childNodes: [],
-    //   breakNodes: [],
-    // };
+  private visitSwitchStatement(ast: any, parents: Node[]): ReturnValue {
+    // TODO currently incorrect
+    const node: Node = this.createBranchNode([ast.loc.start.line], [], {
+      type: 'Switch',
+      operator: '==',
+    });
+    this.connectParents(parents, [node]);
+
+    // Add empty placeholder node for the false flow
+    const falseNode = this.createPlaceholderNode([ast.loc.end.line], []);
+
+    let nodes = [node]
+    for (const switchCase of ast.cases) {
+      const { childNodes, breakNodes } = this.visitChild(switchCase, nodes);
+      nodes = childNodes
+
+      // Connect break points
+      for (const breakNode of breakNodes) {
+        this.cfg.edges.push({
+          from: breakNode.id,
+          to: falseNode.id,
+        });
+      }
+    }
+
+    for (const breakNode of nodes) {
+      this.cfg.edges.push({
+        from: breakNode.id,
+        to: falseNode.id,
+      });
+    }
+
+    return {
+      childNodes: nodes,
+      breakNodes: [],
+    };
+  }
+
+  private visitSwitchCase(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createBranchNode([ast.loc.start.line], [], {
+      type: 'switchCase',
+      operator: '==',
+    });
+    this.connectParents(parents, [node]);
+
+    const count = this.cfg.edges.length;
+
+    let nodes = [node]
+    const totalBreakNodes = []
+    for (const child of ast.consequent) {
+      const { childNodes, breakNodes } = this.visitChild(child, nodes);
+      nodes = childNodes
+      totalBreakNodes.push(...breakNodes)
+    }
+
+    const trueNodes = nodes;
+    const childNodes = []
+
+    // Check if a child node was created
+    if (this.cfg.edges[count]) {
+      // Add edge identifierDescription to first added edge
+      this.cfg.edges[count].branchType = true;
+    } else {
+      // Add empty placeholder node
+      const emptyChildNode = this.createPlaceholderNode(
+        [ast.loc.start.line],
+        []
+      );
+      trueNodes.push(emptyChildNode);
+
+      this.cfg.edges.push({
+        from: node.id,
+        to: emptyChildNode.id,
+        branchType: true,
+      });
+
+      childNodes.push(emptyChildNode)
+    }
+
+    // Add empty placeholder node for the false flow
+    const falseNode = this.createPlaceholderNode([ast.loc.start.line], []);
+    this.cfg.edges.push({
+      from: node.id,
+      to: falseNode.id,
+      branchType: false,
+    });
+
+    return {
+      childNodes: [...childNodes, falseNode],
+      breakNodes: totalBreakNodes,
+    };
   }
 
   private visitForStatement(ast: any, parents: Node[]): ReturnValue {

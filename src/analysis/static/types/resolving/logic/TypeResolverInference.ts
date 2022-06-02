@@ -18,7 +18,7 @@
 import { TypeResolver } from "../TypeResolver";
 import { elementTypeToTypingType, TypeEnum } from "../TypeEnum";
 import { Relation, RelationType } from "../../discovery/Relation";
-import { Element, ElementType } from "../../discovery/Element";
+import { Element } from "../../discovery/Element";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 import { TypeProbability } from "../TypeProbability";
 import { Scope } from "../../discovery/Scope";

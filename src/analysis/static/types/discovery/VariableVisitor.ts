@@ -19,7 +19,6 @@ import { Element, ElementType, getElementId } from "./Element";
 import { getRelationType, Relation, RelationType } from "./Relation";
 import { Visitor } from "../../Visitor";
 
-// TODO functionexpression
 // TODO return
 export class VariableVisitor extends Visitor {
 
