@@ -81,7 +81,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
       const calls: Statement[] = []
       const methods = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
-      const nCalls = methods.length && prng.nextInt(1, Math.min(Properties.max_action_statements, methods.length));
+      const nCalls = methods.length && prng.nextInt(1, Properties.max_action_statements);
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1))
       }
@@ -99,7 +99,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
       const calls: Statement[] = []
       const methods = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
-      const nCalls = methods.length && prng.nextInt(1, Math.min(Properties.max_action_statements, methods.length));
+      const nCalls = methods.length && prng.nextInt(1, Properties.max_action_statements);
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1))
       }
@@ -225,6 +225,23 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
           const args: Statement[] = constructor.parameters.map((param) => this.sampleArgument(depth + 1, param));
 
           const calls: Statement[] = []
+
+          const methods = [...functionMap.values()].filter((a) => a.type === ActionType.METHOD && a.visibility === ActionVisibility.PUBLIC);
+          const nCalls = methods.length && prng.nextInt(1, Properties.max_action_statements);
+          for (let i = 0; i < nCalls; i++) {
+            const action: ActionDescription = prng.pickOne(methods)
+            const args: Statement[] = action.parameters.map((param) => {
+              return this.sampleArgument(depth + 1, param)
+            });
+
+            calls.push(new MethodCall(
+              action.returnParameter,
+              action.returnParameter.typeProbabilityMap.getRandomType(),
+              prng.uniqueId(),
+              action.name,
+              args
+            ))
+          }
 
           return new ConstructorCall(
             identifierDescription,

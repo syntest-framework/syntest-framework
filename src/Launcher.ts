@@ -374,6 +374,7 @@ export class Launcher {
       budgetManager,
       terminationManager
     );
+
     // Gather statistics after the search
     collectStatistics(
       collector,

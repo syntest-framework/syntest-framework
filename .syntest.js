@@ -10,7 +10,7 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 10,
+    search_time: 100,
     total_time: 6000,
     iteration_budget: 100000,
 
@@ -30,14 +30,13 @@ module.exports = {
 
     // target_root_directory: "./benchmark/custom/simple",
 
-    // target_root_directory: "./benchmark/top10npm/axios",
+    target_root_directory: "./benchmark/top10npm/axios",
     // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
     // target_root_directory: "./benchmark/top10npm/lodash",
     // target_root_directory: "./benchmark/top10npm/moment/src",
 
     // target_root_directory: "./benchmark/large_projects/javascript-algorithms",
-    target_root_directory: "./benchmark/large_projects/cytoscapejs",
 
     // target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/large_projects/jquery",
@@ -63,7 +62,7 @@ module.exports = {
 
         // "./benchmark/top10npm/express/lib/view.js",
 
-        // "./benchmark/top10npm/axios/lib/core/*.js",
+        "./benchmark/top10npm/axios/lib/core/*.js",
         // "./benchmark/top10npm/commanderjs/lib/**/*.js",
         // "./benchmark/top10npm/express/lib/view.js",
         // "./benchmark/top10npm/lodash/**/*.js",
@@ -74,9 +73,6 @@ module.exports = {
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/math/matrix/*.js",
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sorting/**/*.js",
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/**/*.js",
-
-        "./benchmark/large_projects/cytoscapejs/src/core/*.js",
-
 
         // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/large_projects/jquery/src/core/**/*.js",

@@ -150,7 +150,32 @@ export abstract class TypeResolver {
     typeMap.addType(type, value, object, propertyTypings)
   }
 
-  get relationTyping(): Map<Relation, TypeProbability> {
+  getRelationType(relation: Relation) {
+    if (!this.relationTyping.has(relation)) {
+      this.relationTyping.set(relation, new TypeProbability())
+    }
+
+    return this.relationTyping.get(relation)
+  }
+
+  getElementType(element: Element) {
+    if (element.type === 'relation') {
+      const relation: Relation = this.wrapperElementIsRelation.get(element.value)
+      return this.getRelationType(relation)
+    }
+
+    if (!this.elementTyping.has(element)) {
+      this.elementTyping.set(element, new TypeProbability())
+    }
+
+    return this.elementTyping.get(element)
+  }
+
+  get elements() {
+    return [...this.elementTyping.keys()]
+  }
+
+  private get relationTyping(): Map<Relation, TypeProbability> {
     return this._relationTyping;
   }
 

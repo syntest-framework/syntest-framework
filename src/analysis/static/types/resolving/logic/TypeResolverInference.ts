@@ -32,10 +32,6 @@ export class TypeResolverInference extends TypeResolver {
   resolvePrimitiveElements(elements: Element[]): boolean {
     let somethingSolved = false
     for (const element of elements) {
-      if (this.elementTyping.has(element)) {
-        continue
-      }
-
       const typingsType = elementTypeToTypingType(element.type)
 
       if (typingsType) {
@@ -52,45 +48,17 @@ export class TypeResolverInference extends TypeResolver {
       if (this.relationFullyResolved.has(relation)) {
         continue
       }
-      // try to resolve elements that are involved in the relation
-      const resolveInvolved = (e: Element) => {
-        if (this.elementTyping.has(e)) {
-          return this.elementTyping.get(e)
-        } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
-          // if the element is a relation try to find the typing based on the wrapper element of the relation
-          return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
-        }
-        // if we cannot resolve the element return it
-        return e
-      }
 
-      const involved: (Element | TypeProbability)[] = relation.involved
-        .map(resolveInvolved)
+      this.resolveRelationElements(relation)
 
+      const involved: TypeProbability[] = relation.involved
+        .map((e) => this.getElementType(e))
 
-      const allResolved = this.resolveRelationElements(relation)
+      const relationResolved = this.resolveRelation(relation, involved)
 
-      // TODO FALSE can also resolve the result of a relation without its elements
-      if (allResolved) {
-        const resolveInvolved = (e: Element) => {
-          if (this.elementTyping.has(e)) {
-            return this.elementTyping.get(e)
-          } else if (e.type === 'relation' && this.relationTyping.has(wrapperElementIsRelation.get(e.value))) {
-            return this.relationTyping.get(wrapperElementIsRelation.get(e.value))
-          }
-
-          throw new Error("Should all be resolved!!!")
-        }
-
-        const involved: TypeProbability[] = relation.involved
-          .map(resolveInvolved)
-
-        const relationResolved = this.resolveRelation(relation, involved)
-
-        if (relationResolved) {
-          somethingSolved = true
-          this.relationFullyResolved.add(relation)
-        }
+      if (relationResolved) {
+        somethingSolved = true
+        this.relationFullyResolved.add(relation)
       }
     }
     return somethingSolved
@@ -181,9 +149,9 @@ export class TypeResolverInference extends TypeResolver {
             // TODO scope?
             const element = properties.find((p) => p.value === prop)
 
-            if (element && this.elementTyping.has(element)) {
+            if (element) {
               found += 1
-              propertyTypings.set(element.value, this.elementTyping.get(element))
+              propertyTypings.set(element.value, this.getElementType(element))
               return
             }
 
@@ -208,9 +176,9 @@ export class TypeResolverInference extends TypeResolver {
               }
             }
 
-            if (elements.length && this.elementTyping.has(elements[0])) {
+            if (elements.length) {
               found += 1
-              propertyTypings.set(elements[0].value, this.elementTyping.get(elements[0]))
+              propertyTypings.set(elements[0].value, this.getElementType(elements[0]))
               return
             }
           })
@@ -268,7 +236,7 @@ export class TypeResolverInference extends TypeResolver {
   }
 
   getTyping(scope: Scope, variableName: string): TypeProbability {
-    const elements = [...this.elementTyping.keys()]
+    const elements = this.elements
       .filter((e) => !!e.scope)
 
     const correctFile = elements.filter((e) => e.scope.filePath === scope.filePath)
@@ -284,7 +252,7 @@ export class TypeResolverInference extends TypeResolver {
       return new TypeProbability()
     }
 
-    const probabilities = this.elementTyping.get(element)
+    const probabilities = this.getElementType(element)
 
     return probabilities
   }
@@ -321,6 +289,7 @@ export class TypeResolverInference extends TypeResolver {
         this.setElementType(rel, involved[0], TypeEnum.OBJECT, 1)
         this.setElementType(rel, involved[0], TypeEnum.ARRAY, 1)
         this.setElementType(rel, involved[0], TypeEnum.FUNCTION, 1)
+        this.setElementType(rel, involved[0], TypeEnum.STRING, 1)
         this.setProcessed(rel, involved[0])
         return false
       case RelationType.New: //
@@ -377,11 +346,18 @@ export class TypeResolverInference extends TypeResolver {
         return true
 
       case RelationType.In: // could be multiple things
+        this.setElementType(rel, involved[1], TypeEnum.OBJECT, 1)
+        this.setProcessed(rel, involved[1])
+        return false
       case RelationType.InstanceOf: // could be multiple things
+        this.setElementType(rel, involved[1], TypeEnum.STRING, 1)
+        this.setProcessed(rel, involved[1])
+        return false
       case RelationType.Less: // must be numeric
       case RelationType.Greater: // must be numeric
       case RelationType.LessOrEqual: // must be numeric
       case RelationType.GreaterOrEqual: // must be numeric
+        // TODO not actually true this can also be other things
         this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
         this.setElementType(rel, involved[1], TypeEnum.NUMERIC, 1)
         this.setProcessed(rel, involved[0])
@@ -414,10 +390,12 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.LogicalAnd: // could be multiple things
       case RelationType.LogicalOr: // could be multiple things
       case RelationType.NullishCoalescing: // Could be multiple things
+        // left and right are likely booleans though
         return false
 
       // ternary
       case RelationType.Conditional: // could be multiple things
+        // C is probably boolean though
         return false
 
       case RelationType.Assignment: // must be the same
@@ -444,11 +422,22 @@ export class TypeResolverInference extends TypeResolver {
 
         return true
       case RelationType.AdditionAssignment: // must be numeric or string
-        return false
+        this.setElementType(rel, involved[0], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[1], TypeEnum.NUMERIC, 1)
+        this.setElementType(rel, involved[0], TypeEnum.STRING, 1)
+        this.setElementType(rel, involved[1], TypeEnum.STRING, 1)
+        this.setProcessed(rel, involved[0])
+        this.setProcessed(rel, involved[1])
+
+        return true
 
       case RelationType.LogicalAndAssignment: // could be multiple things
       case RelationType.LogicalOrAssignment: // could be multiple things
       case RelationType.LogicalNullishAssignment: // could be multiple things
+        // left is boolean
+        // right is probably boolean
+        this.setElementType(rel, involved[0], TypeEnum.BOOLEAN, 1)
+        this.setProcessed(rel, involved[0])
         return false
 
       case RelationType.Return: // could be multiple things
@@ -482,7 +471,7 @@ export class TypeResolverInference extends TypeResolver {
         return true
       // Unary
       case RelationType.PropertyAccessor: // must be equal to the identifierDescription of the member element
-        this.relationTyping.set(relation, involved[1])
+        this.setRelationType(relation, involved[1], 1)
         return true
       case RelationType.New: // always an object
         this.setRelationType(relation, TypeEnum.OBJECT, 1)
@@ -490,6 +479,10 @@ export class TypeResolverInference extends TypeResolver {
       case RelationType.Spread: // must be array i think
         this.setRelationType(relation, TypeEnum.ARRAY, 1)
         return true
+
+      case RelationType.ObjectProperty: // could be multiple things
+      case RelationType.Sequence: // could be multiple things
+        return false
 
       case RelationType.PlusPlusPostFix: // must be numerical
       case RelationType.MinusMinusPostFix: // must be numerical
@@ -522,8 +515,10 @@ export class TypeResolverInference extends TypeResolver {
 
       // binary
       case RelationType.Addition:
-        // TODO no clue
-        return false
+        // TODO can be more
+        this.setRelationType(relation, TypeEnum.NUMERIC, 1)
+        this.setRelationType(relation, TypeEnum.STRING, 1)
+        return true
       case RelationType.Subtraction: // must be numerical
       case RelationType.Division: // must be numerical
       case RelationType.Multiplication: // must be numerical
@@ -561,8 +556,6 @@ export class TypeResolverInference extends TypeResolver {
         return true
 
       case RelationType.LogicalOr: // can be the identifierDescription of the first or second one depending on if the first is not false/null/undefined
-        // TODO maybe should also do if just one is not element
-        // TODO
         this.setRelationType(relation, involved[0], 1)
         this.setRelationType(relation, involved[1], 1)
         return true
@@ -602,10 +595,17 @@ export class TypeResolverInference extends TypeResolver {
       // TODO
 
       case RelationType.Return: // must be equal to the identifierDescription of the returned element
+        this.setRelationType(relation, involved[1], 1)
+        return true
+
       case RelationType.Call: // must be the return identifierDescription of the called function
-      case RelationType.Object: // could be multiple things
-      case RelationType.Array: // could be multiple things
         return false
+      case RelationType.Object: // could be multiple things
+        this.setRelationType(relation, TypeEnum.OBJECT, 1)
+        return true
+      case RelationType.Array: // could be multiple things
+        this.setRelationType(relation, TypeEnum.ARRAY, 1)
+        return true
       case RelationType.PrivateName:
         return false
     }
