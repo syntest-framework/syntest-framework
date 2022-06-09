@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Element, ElementType, isInstanceOfElement } from "../discovery/Element";
+import { Element, ElementType } from "../discovery/Element";
 import { Relation, RelationType } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 import { TypeProbability } from "./TypeProbability";
@@ -45,6 +45,10 @@ export abstract class TypeResolver {
     this._relationFullyResolved = new Set()
 
     this.processed = new Map<Relation, Set<Element>>()
+  }
+
+  get availableTypes() {
+    return [...this.elementTyping.values()]//, ...this.relationTyping.values()])
   }
 
   /**

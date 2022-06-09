@@ -15,7 +15,8 @@ import { JavaScriptBranchObjectiveFunction } from "../criterion/JavaScriptBranch
 
 export enum SubjectType {
   class,
-  function
+  function,
+  object
 }
 
 export interface TypeScore {
@@ -36,14 +37,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     // TODO find correlations
     // maybe look at bayesian inference
   }
-
-  recordTypeScore(types: string[], failed: boolean) {
-    this._typeScores[types.join(",")] = {
-      types: types,
-      failed: failed
-    }
-  }
-
 
   get functions(): ActionDescription[] {
     return this._functions;

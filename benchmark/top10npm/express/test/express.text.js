@@ -81,7 +81,7 @@ describe('express.text()', function () {
       test.expect(200, '"name is нет"', done)
     })
 
-    it('should honor content-identifierDescription charset', function (done) {
+    it('should honor content-type charset', function (done) {
       var app = createApp({ defaultCharset: 'koi8-r' })
       var test = request(app).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
@@ -176,13 +176,13 @@ describe('express.text()', function () {
     })
   })
 
-  describe('with identifierDescription option', function () {
+  describe('with type option', function () {
     describe('when "text/html"', function () {
       before(function () {
         this.app = createApp({ type: 'text/html' })
       })
 
-      it('should parse for custom identifierDescription', function (done) {
+      it('should parse for custom type', function (done) {
         request(this.app)
           .post('/')
           .set('Content-Type', 'text/html')
@@ -190,7 +190,7 @@ describe('express.text()', function () {
           .expect(200, '"<b>tobi</b>"', done)
       })
 
-      it('should ignore standard identifierDescription', function (done) {
+      it('should ignore standard type', function (done) {
         request(this.app)
           .post('/')
           .set('Content-Type', 'text/plain')
@@ -244,7 +244,7 @@ describe('express.text()', function () {
           .expect(200, '"user is tobi"', done)
       })
 
-      it('should work without content-identifierDescription', function (done) {
+      it('should work without content-type', function (done) {
         var app = createApp({ type: accept })
 
         function accept (req) {

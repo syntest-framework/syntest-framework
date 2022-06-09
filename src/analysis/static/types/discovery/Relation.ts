@@ -23,6 +23,7 @@ import { Element } from "./Element";
 export interface Relation {
   relation: RelationType
   involved: Element[]
+  computed?: boolean
 }
 
 export enum RelationType {

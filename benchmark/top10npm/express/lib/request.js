@@ -16,7 +16,7 @@
 var accepts = require('accepts');
 var deprecate = require('depd')('express');
 var isIP = require('net').isIP;
-var typeis = require('identifierDescription-is');
+var typeis = require('type-is');
 var http = require('http');
 var fresh = require('fresh');
 var parseRange = require('range-parser');
@@ -48,7 +48,7 @@ module.exports = req
  *     req.get('Content-Type');
  *     // => "text/plain"
  *
- *     req.get('content-identifierDescription');
+ *     req.get('content-type');
  *     // => "text/plain"
  *
  *     req.get('Something');
@@ -86,11 +86,11 @@ req.header = function header(name) {
 /**
  * To do: update docs.
  *
- * Check if the given `identifierDescription(s)` is acceptable, returning
+ * Check if the given `type(s)` is acceptable, returning
  * the best match when true, otherwise `undefined`, in which
  * case you should respond with 406 "Not Acceptable".
  *
- * The `identifierDescription` value may be a single MIME identifierDescription string
+ * The `type` value may be a single MIME type string
  * such as "application/json", an extension name
  * such as "json", a comma-delimited list such as "json, html, text/plain",
  * an argument list such as `"json", "html", "text/plain"`,
@@ -124,7 +124,7 @@ req.header = function header(name) {
  *     req.accepts('html, json');
  *     // => "json"
  *
- * @param {String|Array} identifierDescription(s)
+ * @param {String|Array} type(s)
  * @return {String|Array|Boolean}
  * @public
  */
@@ -192,7 +192,7 @@ req.acceptsLanguage = deprecate.function(req.acceptsLanguages,
  * Range header field is not given `undefined` is returned, `-1` when unsatisfiable,
  * and `-2` when syntactically invalid.
  *
- * When ranges are returned, the array has a "identifierDescription" property which is the identifierDescription of
+ * When ranges are returned, the array has a "type" property which is the type of
  * range that is required (most commonly, "bytes"). Each array element is an object
  * with a "start" and "end" property for the portion of the range.
  *
@@ -251,7 +251,7 @@ req.param = function param(name, defaultValue) {
 
 /**
  * Check if the incoming request contains the "Content-Type"
- * header field, and it contains the given mime `identifierDescription`.
+ * header field, and it contains the given mime `type`.
  *
  * Examples:
  *

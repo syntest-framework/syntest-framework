@@ -16,6 +16,22 @@ export abstract class Visitor {
     this._thisScopeStackNames = []
   }
 
+  private _getCurrentThisScopeId() {
+    if (!this._thisScopeStack.length) {
+      throw new Error("Invalid scope stack!")
+    }
+
+    return this._thisScopeStack[this._thisScopeStack.length - 1]
+  }
+
+  private _getCurrentThisScopeName() {
+    if (!this._thisScopeStackNames.length) {
+      throw new Error("Invalid scope stack!")
+    }
+
+    return this._thisScopeStackNames[this._thisScopeStackNames.length - 1]
+  }
+
   Program: (path) => void = (path) => {
     // this is required because babel does not reset its uid counter
     if (this._scopeIdOffset === undefined) {
@@ -45,121 +61,117 @@ export abstract class Visitor {
     }
   }
 
-  _getScope(path, name): Scope {
-    if (name === 'this') {
-      if (!this._thisScopeStack.length) {
-        throw new Error("Invalid scope stack!")
-      }
-
+  _getScope(path): Scope {
+    if (path.node.type === 'ThisExpression') {
       return {
-        uid: `${this._thisScopeStack[this._thisScopeStack.length - 1] - this.scopeIdOffset}`,
+        uid: `${this._getCurrentThisScopeId() - this.scopeIdOffset}`,
         filePath: this.filePath,
       }
     }
 
-    if (path.type === 'MemberExpression') { // TODO we should check if we are the property currently (doesnt work when object === property, car.car)
-      if (path.node.property.name === name) {
-        // TODO test if this recursive scoping works correctly
-        let objectIdentifier = this._getOriginalObjectIdentifier(path.node.object)
+    if (path.node.type === 'MemberExpression') {
+      const propertyName = path.node.property.name
 
-        const objectScope: Scope = this._getScope(path.get('object'), objectIdentifier)
+      const objectScope: Scope = this._getScope(path.get('object'))
 
-        if (objectIdentifier === 'this') {
-          objectIdentifier = this._thisScopeStackNames[this._thisScopeStackNames.length - 1]
+      objectScope.uid += '-' + propertyName
+
+      return objectScope
+    } else if (path.node.type === 'CallExpression') {
+      return this._getScope(path.get('callee'))
+    }
+
+    if (path.parent.type === 'MemberExpression' && path.parentPath.get('property') === path) {
+      const propertyName = path.node.name
+
+      const objectScope: Scope = this._getScope(path.parentPath.get('object'))
+
+      objectScope.uid += '-' + propertyName
+
+      return objectScope
+    }
+
+    if (path.node.type === 'Identifier') {
+      if (path.scope.hasGlobal(path.node.name)) {
+        return {
+          uid: 'global',
+          filePath: this.filePath
         }
-
-        objectScope.uid += '-' + objectIdentifier
-
-        return objectScope
       }
+
+      if (path.scope.hasBinding(path.node.name) && path.scope.getBinding(path.node.name)) {
+        const variableScope = path.scope.getBinding(path.node.name).scope
+
+        return {
+          uid: `${variableScope.uid - this.scopeIdOffset}`,
+          filePath: this.filePath,
+        }
+      }
+
+      // if (path.scope.hasOwnBinding(node.name)) {
+      //   const variableScope = path.scope.getOwnBinding(node.name).scope
+      //
+      //   return {
+      //     uid: variableScope.uid,
+      //     filePath: filePath,
+      //   }
+      // }
+
+      // TODO these might be wrong
+      if (path.parent.type === 'ClassMethod'
+        || path.parent.type === 'ObjectMethod'
+        || path.parent.type === 'AssignmentExpression'
+        || path.parent.type === 'FunctionExpression'
+        || path.parent.type === 'ObjectProperty'
+        || path.parent.type === 'MetaProperty') {
+        const uid = path.scope.getBlockParent()?.uid
+
+        return {
+          filePath: this.filePath,
+          uid: `${uid - this.scopeIdOffset}`
+        }
+      }
+
+      throw new Error(`Cannot find scope of Identifier ${path.node.name}\n${this.filePath}\n${path.getSource()}`)
     }
 
-    if (path.scope.hasGlobal(name)) {
-      return {
-        uid: 'global',
-        filePath: this.filePath
-      }
-    }
-
-    if (path.scope.hasBinding(name) && path.scope.getBinding(name)) {
-      const variableScope = path.scope.getBinding(name).scope
+    // TODO super should be handled like this actually (kind off)
+    if (path.node.type === 'Super'
+      || path.node.type.includes('Expression')
+      || path.node.type.includes('Literal')) {
+      const uid = path.scope.getBlockParent()?.uid
 
       return {
-        uid: `${variableScope.uid - this.scopeIdOffset}`,
         filePath: this.filePath,
+        uid: `${uid - this.scopeIdOffset}`
       }
     }
 
-    // if (path.scope.hasOwnBinding(name)) {
-    //   const variableScope = path.scope.getOwnBinding(name).scope
+
+
+
+    throw new Error(`Cannot find scope of element of type ${path.node.type}\n${this.filePath}\n${path.getSource()}`)
+
+    // const uid = path.scope.getBlockParent()?.uid
     //
-    //   return {
-    //     uid: variableScope.uid,
-    //     filePath: filePath,
-    //   }
+    // return {
+    //   filePath: this.filePath,
+    //   uid: `${uid - this.scopeIdOffset}`
     // }
-
-    // TODO these might be wrong
-    if (path.type === 'ClassMethod'
-      || path.type === 'ObjectMethod'
-      || path.type === 'AssignmentExpression'
-      || path.type === 'FunctionExpression'
-      || path.type === 'ObjectProperty'
-      || path.type === 'MetaProperty') {
-      return {
-        uid: `${path.scope.uid - this.scopeIdOffset}`,
-        filePath: this.filePath,
-      }
-    }
-
-    if (name === 'anon') {
-      return {
-        uid: `${path.scope.uid - this.scopeIdOffset}`,
-        filePath: this.filePath,
-      }
-    }
-
-    throw new Error(`Cannot find scope of element ${name} of type ${path.type}\n${this.filePath}\n${path.getSource()}`)
+    // const uid = path.scope.getBlockParent()?.uid
+    //
+    // return {
+    //   filePath: this.filePath,
+    //   uid: `${uid - this.scopeIdOffset}`
+    // }
   }
 
-  _getOriginalObjectIdentifier(object): string {
-    if (object.type === 'Identifier') {
-      return object.name
-    }
+  _getElement(path): Element {
+    const uid = path.scope.getBlockParent()?.uid
 
-    if (object.type === 'ThisExpression') {
-      return 'this'
-    }
-
-    if (object.type === 'CallExpression'
-      || object.type === 'NewExpression') {
-      return this._getOriginalObjectIdentifier(object.callee)
-    } else if (object.type === 'MemberExpression') {
-      return this._getOriginalObjectIdentifier(object.object)
-    } else {
-      // throw new Error(`${object.type}`)
-
-      return 'anon'
-    }
-  }
-
-  _getElement(path, node): Element {
     const scope: Scope = {
       filePath: this.filePath,
-      uid: `${path.scope.uid}`
-    }
-
-    if (!node) {
-      // TODO should be done differently maybe
-      if (path.node.type === "FunctionDeclaration") {
-        return {
-          scope: scope,
-          type: ElementType.Identifier,
-          value: `anon`
-        }
-      }
-
-      throw new Error("something is wrong")
+      uid: `${uid - this.scopeIdOffset}`
     }
 
     if (path.node.type === "PrivateName") {
@@ -167,110 +179,119 @@ export abstract class Visitor {
       return {
         scope: scope,
         type: ElementType.Identifier,
-        value: '#' + node.name
+        value: '#' + path.node.name
       }
     }
 
-    if (node.type === "NullLiteral") {
-      return {
-        scope: scope,
-        type: ElementType.NullConstant,
-        value: null
-      }
-    } else if (node.type === "StringLiteral"
-      || node.type === "TemplateLiteral") {
-      return {
-        scope: scope,
-        type: ElementType.StringConstant,
-        value: node.value
-      }
-    } else if (node.type === "NumericLiteral") {
-      return {
-        scope: scope,
-        type: ElementType.NumericalConstant,
-        value: node.value
-      }
-    } else if (node.type === "BooleanLiteral") {
-      return {
-        scope: scope,
-        type: ElementType.BooleanConstant,
-        value: node.value
-      }
-    } else if (node.type === "RegExpLiteral") {
-      return {
-        scope: scope,
-        type: ElementType.RegexConstant,
-        value: node.pattern
-      }
-    } else if (node.type === "Identifier") {
-      if (node.name === 'undefined') {
+    switch (path.node.type) {
+      case "NullLiteral":
+        return {
+          scope: scope,
+          type: ElementType.NullConstant,
+          value: null
+        }
+      case "StringLiteral":
+      case "TemplateLiteral":
+        return {
+          scope: scope,
+          type: ElementType.StringConstant,
+          value: path.node.value
+        }
+      case "NumericLiteral":
+        return {
+          scope: scope,
+          type: ElementType.NumericalConstant,
+          value: path.node.value
+        }
+      case "BooleanLiteral":
+        return {
+          scope: scope,
+          type: ElementType.BooleanConstant,
+          value: path.node.value
+        }
+      case "RegExpLiteral":
+        return {
+          scope: scope,
+          type: ElementType.RegexConstant,
+          value: path.node.pattern
+        }
+      case "Super":
+        return {
+          scope: scope,
+          type: ElementType.Identifier,
+          value: 'super'
+        }
+    }
+
+    if (path.node.type === "Identifier") {
+      if (path.node.name === 'undefined') {
         return {
           scope: scope,
           type: ElementType.UndefinedConstant,
-          value: node.name
+          value: path.node.name
         }
       }
       return {
-        scope: this._getScope(path, node.name),
+        scope: this._getScope(path),
         type: ElementType.Identifier,
-        value: node.name
+        value: path.node.name
       }
-    } else if (node.type === "ThisExpression") {
+    } else if (path.node.type === "ThisExpression") {
       // TODO should be done differently maybe
       return {
-        scope: this._getScope(path, 'this'),
+        scope: this._getScope(path),
         type: ElementType.Identifier,
         value: 'this'
       }
-    } else if (node.type === "Super") {
-      // TODO should be done differently maybe
+    } else if (path.node.type === 'MemberExpression') {
       return {
-        scope: scope,
-        type: ElementType.Identifier,
-        value: 'super'
+        scope: this._getScope(path),
+        type: ElementType.Relation,
+        value: `%-${this.filePath}-${path.node.start}-${path.node.end}`
       }
-    } else if (node.type === 'UnaryExpression'
-      || node.type === 'UpdateExpression'
-      || node.type === 'CallExpression'
+    }
 
-      || node.type === 'BinaryExpression'
-      || node.type === 'LogicalExpression'
+    // all relation stuff
+    if (path.node.type === 'UnaryExpression'
+      || path.node.type === 'UpdateExpression'
+      || path.node.type === 'CallExpression'
 
-      || node.type === 'ConditionalExpression'
+      || path.node.type === 'BinaryExpression'
+      || path.node.type === 'LogicalExpression'
 
-      || node.type === 'MemberExpression'
+      || path.node.type === 'ConditionalExpression'
 
-      || node.type === 'ArrowFunctionExpression'
-      || node.type === 'FunctionExpression'
-      || node.type === 'ClassExpression'
+      || path.node.type === 'ArrowFunctionExpression'
+      || path.node.type === 'FunctionExpression'
+      || path.node.type === 'ClassExpression'
 
-      || node.type === 'SpreadElement'
-      || node.type === 'NewExpression'
-      || node.type === 'SequenceExpression'
-      || node.type === 'ObjectPattern'
-      || node.type === 'RestElement'
+      || path.node.type === 'SpreadElement'
+      || path.node.type === 'NewExpression'
+      || path.node.type === 'SequenceExpression'
+      || path.node.type === 'ObjectPattern'
+      || path.node.type === 'RestElement'
 
-      || node.type === 'ArrayExpression'
-      || node.type === 'ObjectExpression'
-      || node.type === 'AwaitExpression'
+      || path.node.type === 'ArrayExpression'
+      || path.node.type === 'ObjectExpression'
+      || path.node.type === 'AwaitExpression'
 
-      || node.type === 'ObjectProperty' // TODO not sure about this one
-      || node.type === 'ObjectMethod'// TODO not sure about this one
+      || path.node.type === 'ObjectProperty'
+      || path.node.type === 'ObjectMethod'
 
-      || node.type === 'AssignmentExpression'
-      || node.type === 'AssignmentPattern'
-      || node.type === 'ArrayPattern'
-      || node.type === 'PrivateName'
-      || node.type === 'MetaProperty') {
+      || path.node.type === 'AssignmentExpression'
+      || path.node.type === 'AssignmentPattern'
+      || path.node.type === 'ArrayPattern'
+      || path.node.type === 'PrivateName'
+      || path.node.type === 'MetaProperty') {
 
       // TODO should be default
       return {
         scope: scope,
         type: ElementType.Relation,
-        value: `%-${this.filePath}-${node.start}-${node.end}`
+        value: `%-${this.filePath}-${path.node.start}-${path.node.end}`
       }
     }
-    throw new Error(`Cannot get element: "${node.name}" -> ${node.type}\n${this.filePath}`)
+    throw new Error(`Cannot get element: "${path.node.name}" -> ${path.node.type}\n${this.filePath}`)
   }
 
 

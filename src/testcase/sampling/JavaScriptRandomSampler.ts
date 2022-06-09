@@ -22,6 +22,7 @@ import { NullStatement } from "../statements/primitive/NullStatement";
 import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
 import { ActionVisibility } from "../../analysis/static/parsing/ActionVisibility";
 import { JavaScriptTargetPool } from "../../analysis/static/JavaScriptTargetPool";
+import { RootObject } from "../statements/root/RootObject";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
@@ -39,9 +40,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       root = this.sampleFunctionCall(0)
     } else if ((<JavaScriptSubject>this._subject).type === SubjectType.class) {
       root = this.sampleConstructor(0)
+    } else if ((<JavaScriptSubject>this._subject).type === SubjectType.object) {
+      root = this.sampleRootObject(0)
     }
-
-    // TODO could also be static access object
 
     return new JavaScriptTestCase(root);
   }
@@ -115,6 +116,53 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     }
   }
 
+  sampleRootObject(depth: number): RootObject {
+    const constructors = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.CONSTRUCTOR);
+
+    // TODO
+    const typeMap = new TypeProbability([[this.subject.name, 1, {
+      name: this.subject.name,
+      properties: new Set(), // TODO
+      functions: new Set() // tODO
+    }]])
+
+    if (constructors.length > 0) {
+      const action = <ActionDescription>(
+        prng.pickOne(constructors)
+      );
+
+
+      const calls: Statement[] = []
+      const methods = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
+      const nCalls = methods.length && prng.nextInt(1, Properties.max_action_statements);
+      for (let i = 0; i < nCalls; i++) {
+        calls.push(this.sampleMethodCall(depth + 1))
+      }
+
+      return new RootObject(
+        { typeProbabilityMap: typeMap, name: this.subject.name },
+        this.subject.name,
+        prng.uniqueId(),
+        calls,
+      );
+    } else {
+      // if no constructors is available, we invoke the default (implicit) constructor
+      const calls: Statement[] = []
+      const methods = (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
+      const nCalls = methods.length && prng.nextInt(1, Properties.max_action_statements);
+      for (let i = 0; i < nCalls; i++) {
+        calls.push(this.sampleMethodCall(depth + 1))
+      }
+
+      return new RootObject(
+        { typeProbabilityMap: typeMap, name: this.subject.name },
+        this.subject.name,
+        prng.uniqueId(),
+        calls,
+      );
+    }
+  }
+
   sampleMethodCall(depth: number): MethodCall {
     const action = <ActionDescription>(
       prng.pickOne((<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD))
@@ -153,16 +201,41 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       throw new Error("Invalid identifierDescription inference mode selected")
     }
 
+    // console.log(chosenType)
+    // console.log(identifierDescription.name)
+    // console.log(identifierDescription.typeProbabilityMap)
+
     // this ensures that there is a chance of trying a random other identifierDescription
     if (true) { // Properties.alsotryrandom) { TODO property
       if (prng.nextBoolean(0.1)) {
+
         chosenType = "any"
       }
     }
 
     if (chosenType === 'any') {
       // TODO other types would also be nice (complex type especially)
-      chosenType = prng.pickOne(['function', 'array', 'boolean', 'string', 'numeric', 'null', 'undefined', 'object'])
+      const typeOptions = ['function', 'array', 'boolean', 'string', 'numeric', 'null', 'undefined', 'object']
+      chosenType = prng.pickOne(typeOptions)
+
+      // if (depth <= Properties.max_depth) {
+      //   const complexObjects = new Map()
+      //
+      //   this.targetPool.typeResolver.availableTypes.forEach((t) => {
+      //     [...t.objectDescription.keys()].forEach((o) => {
+      //       complexObjects.set(o, t)
+      //       typeOptions.push(o)
+      //     })
+      //   })
+      //   chosenType = prng.pickOne(typeOptions)
+      //
+      //   if (complexObjects.has(chosenType)) {
+      //     identifierDescription = {
+      //       name: identifierDescription.name,
+      //       typeProbabilityMap: complexObjects.get(chosenType)
+      //     }
+      //   }
+      // }
     }
 
     // TODO REGEX

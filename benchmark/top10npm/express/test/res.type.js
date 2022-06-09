@@ -3,7 +3,7 @@ var express = require('../')
   , request = require('supertest');
 
 describe('res', function(){
-  describe('.identifierDescription(str)', function(){
+  describe('.type(str)', function(){
     it('should set the Content-Type based on a filename', function(done){
       var app = express();
 
@@ -29,7 +29,7 @@ describe('res', function(){
       .expect('Content-Type', 'application/octet-stream', done);
     })
 
-    it('should set the Content-Type with identifierDescription/subtype', function(done){
+    it('should set the Content-Type with type/subtype', function(done){
       var app = express();
 
       app.use(function(req, res){

@@ -133,7 +133,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     const importedDependencies: Set<string> = new Set<string>()
 
     for (const gene of importableGenes) {
-      const importName = gene instanceof FunctionCall ? gene.functionName : (gene instanceof ConstructorCall ? gene.constructorName : null);
+      const importName = gene instanceof FunctionCall ? gene.functionName : (gene instanceof ConstructorCall ? gene.constructorName : gene.type);
       const complexObject = gene.identifierDescription.typeProbabilityMap.getObjectDescription(importName)
       const export_: Export = complexObject?.export || this.exports.find((x) => x.name === importName)
       if (!export_) {

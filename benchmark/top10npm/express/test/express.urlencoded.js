@@ -312,7 +312,7 @@ describe('express.urlencoded()', function () {
           .expect(413, /too many parameters/, done)
       })
 
-      it('should error with identifierDescription = "parameters.too.many"', function (done) {
+      it('should error with type = "parameters.too.many"', function (done) {
         request(createApp({ extended: false, parameterLimit: 10 }))
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -376,7 +376,7 @@ describe('express.urlencoded()', function () {
           .expect(413, /too many parameters/, done)
       })
 
-      it('should error with identifierDescription = "parameters.too.many"', function (done) {
+      it('should error with type = "parameters.too.many"', function (done) {
         request(createApp({ extended: true, parameterLimit: 10 }))
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -422,13 +422,13 @@ describe('express.urlencoded()', function () {
     })
   })
 
-  describe('with identifierDescription option', function () {
+  describe('with type option', function () {
     describe('when "application/vnd.x-www-form-urlencoded"', function () {
       before(function () {
         this.app = createApp({ type: 'application/vnd.x-www-form-urlencoded' })
       })
 
-      it('should parse for custom identifierDescription', function (done) {
+      it('should parse for custom type', function (done) {
         request(this.app)
           .post('/')
           .set('Content-Type', 'application/vnd.x-www-form-urlencoded')
@@ -436,7 +436,7 @@ describe('express.urlencoded()', function () {
           .expect(200, '{"user":"tobi"}', done)
       })
 
-      it('should ignore standard identifierDescription', function (done) {
+      it('should ignore standard type', function (done) {
         request(this.app)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -492,7 +492,7 @@ describe('express.urlencoded()', function () {
           .expect(200, '{"user":"tobi"}', done)
       })
 
-      it('should work without content-identifierDescription', function (done) {
+      it('should work without content-type', function (done) {
         var app = createApp({ type: accept })
 
         function accept (req) {
@@ -536,7 +536,7 @@ describe('express.urlencoded()', function () {
         .expect(403, 'no leading space', done)
     })
 
-    it('should error with identifierDescription = "entity.verify.failed"', function (done) {
+    it('should error with type = "entity.verify.failed"', function (done) {
       var app = createApp({ verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
       } })
@@ -564,7 +564,7 @@ describe('express.urlencoded()', function () {
         .expect(400, 'no leading space', done)
     })
 
-    it('should allow custom identifierDescription', function (done) {
+    it('should allow custom type', function (done) {
       var app = createApp({ verify: function (req, res, buf) {
         if (buf[0] !== 0x20) return
         var err = new Error('no leading space')

@@ -43,7 +43,7 @@ describe('req', function(){
       .expect(200, '[{"start":0,"end":74}]', done)
     })
 
-    it('should have a .identifierDescription', function (done) {
+    it('should have a .type', function (done) {
       var app = express()
 
       app.use(function (req, res) {
@@ -56,7 +56,7 @@ describe('req', function(){
       .expect(200, '"bytes"', done)
     })
 
-    it('should accept any identifierDescription', function (done) {
+    it('should accept any type', function (done) {
       var app = express()
 
       app.use(function (req, res) {

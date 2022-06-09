@@ -24,7 +24,6 @@ import { Visitor } from "../Visitor";
 import { IdentifierDescription } from "../parsing/IdentifierDescription";
 import { ComplexObject } from "../types/discovery/object/ComplexObject";
 
-// TODO only top level functions should be targettet
 export class TargetVisitor extends Visitor {
   private _targetMap: Map<string, TargetMetaData>;
   private _functionMap: Map<string, Map<string, ActionDescription>>;
@@ -57,15 +56,19 @@ export class TargetVisitor extends Visitor {
       return
     }
 
+    let target;
     let targetName;
 
     if (path.node.id) {
+      target = path.get('id')
       targetName = path.node.id.name;
     } else if (path.parent.type === 'ObjectProperty') {
       // get identifier from assignment expression
       if (path.parent.key.type === 'Identifier') {
+        target = path.get('key')
         targetName = path.parent.key.name
       } else if (path.parent.key.type === 'StringLiteral') {
+        target = path.get('key')
         targetName = path.parent.key.value
       } else {
         console.log(path)
@@ -75,6 +78,7 @@ export class TargetVisitor extends Visitor {
     } else if (path.parent.type === 'VariableDeclarator') {
       // get identifier from assignment expression
       if (path.parent.id.type === 'Identifier') {
+        target = path.parentPath.get('id')
         targetName = path.parent.id.name
       } else {
         throw new Error("unknown function expression name")
@@ -89,7 +93,10 @@ export class TargetVisitor extends Visitor {
     this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
-      scope: this._getScope(path, targetName),
+      scope: {
+        uid: `${path.scope.uid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -152,7 +159,6 @@ export class TargetVisitor extends Visitor {
 
   public ClassDeclaration: (path) => void = (path) => {
     const targetName = path.node.id.name;
-    const functionName = targetName;
 
     this._createMaps(targetName)
   };
@@ -168,7 +174,6 @@ export class TargetVisitor extends Visitor {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
         filePath: this.filePath
       },
-      // scope: this._getScope(path, functionName),
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -195,7 +200,10 @@ export class TargetVisitor extends Visitor {
     }
 
     this._functionMap.get(targetName).set(functionName, {
-      scope: this._getScope(path, functionName),
+      scope: {
+        uid: `${path.scope.uid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
       name: functionName,
       type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
       visibility: visibility,
@@ -226,8 +234,28 @@ export class TargetVisitor extends Visitor {
 
     this._createMaps(targetName)
 
+    let scope
+    path.traverse({
+      ArrowFunctionExpression: {
+        enter: (p) => {
+          scope = {
+            uid: `${p.scope.uid - this.scopeIdOffset}`,
+            filePath: this.filePath
+          }
+        }
+      },
+      FunctionExpression: {
+        enter: (p) => {
+          scope = {
+            uid: `${p.scope.uid - this.scopeIdOffset}`,
+            filePath: this.filePath
+          }
+        }
+      }
+    })
+
     this._functionMap.get(targetName).set(functionName, {
-      scope: this._getScope(path, functionName),
+      scope: scope,
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -317,7 +345,49 @@ export class TargetVisitor extends Visitor {
         });
         return
       } else {
-        targetName = path.node.left.property.name
+        targetName = path.node.left.object.name
+        const functionName = path.node.left.property.name
+
+        if (path.node.left.computed) {
+          // we cannot know the name of computed properties unless we find out what the identifier refers to
+          // see line 136 of Axios.js as example
+          // Axios.prototype[method] = ?
+          return
+        }
+
+        if (functionName === "method") {
+          throw new Error("Invalid functionName")
+        }
+
+        if (!this._functionMap.has(targetName)) {
+          this._createMaps(targetName)
+          // modify original
+          // but there is no original so... no constructor?
+        }
+
+        if (this.functionMap.get(targetName).has(targetName)){
+          // modify original
+          this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
+          this._functionMap.get(targetName).get(targetName).isConstructor = true
+        }
+
+        // TODO this one is probably wrong
+
+        this._functionMap.get(targetName).set(functionName, {
+          scope: scope,
+          name: functionName,
+          type: ActionType.METHOD,
+          visibility: ActionVisibility.PUBLIC,
+          isConstructor: false,
+          parameters: path.node.right.params.map((x) => this._extractParam(x)),
+          returnParameter: {
+            name: "returnValue",
+            typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
+          },
+          isStatic: path.node.right.static,
+          isAsync: path.node.right.async,
+        });
+        return
       }
 
     } else if (path.node.left.type === 'Identifier') {
@@ -331,7 +401,7 @@ export class TargetVisitor extends Visitor {
     }
 
     this._functionMap.get(targetName).set(targetName, {
-      scope: this._getScope(path, targetName),
+      scope: scope,
       name: targetName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
@@ -343,27 +413,6 @@ export class TargetVisitor extends Visitor {
       },
       isStatic: path.node.right.static,
       isAsync: path.node.right.async,
-    });
-  }
-
-    // functions
-  public _createFunction (newScopeUid, targetName: string, functionName: string, node) {
-    this._functionMap.get(targetName).set(functionName, {
-      scope: {
-        uid: `${newScopeUid - this.scopeIdOffset}`,
-        filePath: this.filePath
-      },
-      name: functionName,
-      type: ActionType.FUNCTION,
-      visibility: ActionVisibility.PUBLIC,
-      isConstructor: false,
-      parameters: node.params.map((x) => this._extractParam(x)),
-      returnParameter: {
-        name: "returnValue",
-        typeProbabilityMap: new TypeProbability(),
-      },
-      isStatic: node.static,
-      isAsync: node.async,
     });
   }
 

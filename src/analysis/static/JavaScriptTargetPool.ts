@@ -31,13 +31,13 @@ import { VariableGenerator } from "./types/discovery/VariableGenerator";
 import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
 import { ComplexObject } from "./types/discovery/object/ComplexObject";
 import { ActionDescription } from "./parsing/ActionDescription";
-import { Scope } from "./types/discovery/Scope";
 import { Relation } from "./types/discovery/Relation";
 import { Element } from "./types/discovery/Element";
 import { TypeEnum } from "./types/resolving/TypeEnum";
 import { TypeProbability } from "./types/resolving/TypeProbability";
 import { Instrumenter } from "../../instrumentation/Instrumenter";
 import { ExportType } from "./dependency/IdentifierVisitor";
+
 const { outputFileSync, copySync } = require("fs-extra");
 
 
@@ -206,7 +206,7 @@ export class JavaScriptTargetPool extends TargetPool {
           continue
         }
 
-        if(export_.type === ExportType.const) {
+        if(export_.type === ExportType.const && functionMap.get(key).size === 0) {
           throw new Error(`Target cannot be constant: ${name} -> ${JSON.stringify(export_)}`)
         }
 
@@ -218,10 +218,17 @@ export class JavaScriptTargetPool extends TargetPool {
           }
         }
 
+        // let isClass = false
+        // if (functionMap.get(key).size > 1) {
+        //   isClass = true
+        // }
+
         // threat everything as a function if we don't know
         finalTargetMap.set(key, {
           name: name,
-          type: export_.type === ExportType.class || isPrototypeClass ? SubjectType.class : SubjectType.function,
+          type: export_.type === ExportType.class || isPrototypeClass
+            ? SubjectType.class
+            : (export_.type === ExportType.const ? SubjectType.object : SubjectType.function),
           export: export_
         })
       }

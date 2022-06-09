@@ -455,7 +455,8 @@ Expecting one of '${allowedValues.join("', '")}'`);
       this._exitCallback(new CommanderError(exitCode, code, message));
       // Expecting this line is not reached.
     }
-    process.exit(exitCode);
+    throw new Error('exiting')
+    // process.exit(exitCode);
   };
 
   /**
@@ -1024,7 +1025,8 @@ Expecting one of '${allowedValues.join("', '")}'`);
         throw new Error(`'${bin}' not executable`);
       }
       if (!exitCallback) {
-        process.exit(1);
+        throw new Error('exiting')
+        // process.exit(1);
       } else {
         const wrappedError = new CommanderError(1, 'commander.executeSubCommandAsync', '(error)');
         wrappedError.nestedError = err;

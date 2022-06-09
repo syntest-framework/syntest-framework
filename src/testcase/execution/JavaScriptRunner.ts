@@ -12,14 +12,17 @@ import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
 import * as _ from 'lodash'
 import { SilentMochaReporter } from "./SilentMochaReporter";
+import ErrorProcessor from "./ErrorProcessor";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   protected suiteBuilder: JavaScriptSuiteBuilder;
+  protected errorProcessor: ErrorProcessor
 
   constructor(suiteBuilder: JavaScriptSuiteBuilder) {
     this.suiteBuilder = suiteBuilder
+    this.errorProcessor = new ErrorProcessor()
   }
 
   async execute(
@@ -74,15 +77,14 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     const stats = runner.stats
 
+    const test = runner.suite.suites[0].tests[0];
+
     // If one of the executions failed, log it
     if (stats.failures > 0) {
-      const test = runner.suite.suites[0].tests[0];
-      // console.log(test)
-
-      subject.recordTypeScore(testCase.getFlatTypes(), true)
+      // this.errorProcessor.processError(testCase, test)
       getUserInterface().error("Test case has failed!");
     } else {
-      subject.recordTypeScore(testCase.getFlatTypes(), false)
+      // this.errorProcessor.processSuccess(testCase, test)
     }
 
     // TODO maybe this should be done not after each testcase

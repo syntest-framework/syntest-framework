@@ -3,8 +3,8 @@ var express = require('..')
 var request = require('supertest')
 
 describe('req.is()', function () {
-  describe('when given a mime identifierDescription', function () {
-    it('should return the identifierDescription when matching', function (done) {
+  describe('when given a mime type', function () {
+    it('should return the type when matching', function (done) {
       var app = express()
 
       app.use(function (req, res) {
@@ -47,7 +47,7 @@ describe('req.is()', function () {
     })
   })
 
-  describe('when content-identifierDescription is not present', function(){
+  describe('when content-type is not present', function(){
     it('should return false', function (done) {
       var app = express()
 
@@ -63,7 +63,7 @@ describe('req.is()', function () {
   })
 
   describe('when given an extension', function(){
-    it('should lookup the mime identifierDescription', function (done) {
+    it('should lookup the mime type', function (done) {
       var app = express()
 
       app.use(function (req, res) {
@@ -79,7 +79,7 @@ describe('req.is()', function () {
   })
 
   describe('when given */subtype', function(){
-    it('should return the full identifierDescription when matching', function (done) {
+    it('should return the full type when matching', function (done) {
       var app = express()
 
       app.use(function (req, res) {
@@ -122,8 +122,8 @@ describe('req.is()', function () {
     })
   })
 
-  describe('when given identifierDescription/*', function(){
-    it('should return the full identifierDescription when matching', function (done) {
+  describe('when given type/*', function(){
+    it('should return the full type when matching', function (done) {
       var app = express()
 
       app.use(function (req, res) {

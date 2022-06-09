@@ -68,18 +68,39 @@ export class TypeResolverInference extends TypeResolver {
     let somethingSolved = false
 
     // filter relations by property accessors
-    const propertyAccessors = relations.filter((r) => r.relation === RelationType.PropertyAccessor)
+    // we cannot do anything with computed propertyAccessors since we don't know the computed value
+    const propertyAccessors = relations.filter((r) => r.relation === RelationType.PropertyAccessor && !r.computed)
 
     for (const element of elements) {
-      if (element.type !== 'identifier' || element.value === 'this') { // TODO this
+      const isRelation = element.type === 'relation' && wrapperElementIsRelation.has(element.value)
+      if (isRelation) {
+        const relation = wrapperElementIsRelation.get(element.value)
+
+        if (relation.relation !== RelationType.PropertyAccessor) {
+          continue
+        }
+      } else if (element.type !== 'identifier' || element.value === 'this') {
         continue
       }
 
-      const properties = propertyAccessors
-        .filter((r) => r.involved[0].value === element.value)
-        .filter((r) => r.involved[0].scope.uid === element.scope.uid)
+      let props = propertyAccessors
         .filter((r) => r.involved[0].scope.filePath === element.scope.filePath)
-        .map((r) => r.involved[1])
+
+      props = props.filter((r) => r.involved[0].scope.uid === element.scope.uid)
+
+      props = props.filter((r) => {
+        if (isRelation && r.involved[0].type === 'relation' && wrapperElementIsRelation.has(r.involved[0].value)) {
+          const elRelation = wrapperElementIsRelation.get(element.value)
+          const propRelation = wrapperElementIsRelation.get(r.involved[0].value)
+          if (propRelation.relation === RelationType.PropertyAccessor) {
+            return propRelation.involved[0].value === elRelation.involved[0].value
+              && propRelation.involved[1].value === elRelation.involved[1].value
+          }
+        }
+        return r.involved[0].value === element.value
+      })
+
+      const properties = props.map((r) => r.involved[1])
         // remove duplicates
         .reduce((unique: Element[], item) => {
           const found = unique.find((uniqueItem: Element) => {
@@ -475,6 +496,7 @@ export class TypeResolverInference extends TypeResolver {
         return true
       case RelationType.New: // always an object
         this.setRelationType(relation, TypeEnum.OBJECT, 1)
+        this.setRelationType(relation, involved[0], 1)
         return true
       case RelationType.Spread: // must be array i think
         this.setRelationType(relation, TypeEnum.ARRAY, 1)

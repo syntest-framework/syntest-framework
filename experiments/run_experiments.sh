@@ -1,4 +1,4 @@
-experiment_names=( "new4" )
+experiment_names=( "new7" )
 times=( 60 )
 inferences=( true false )
 modes=( "roulette" ) #"elitist" ) # "dynamic" )
@@ -9,6 +9,7 @@ benchmark_name=(
 "javascript_algorithms_tree"
 "javascript_algorithms_knapsack"
 "javascript_algorithms_graph"
+#"axios"
 "commanderjs"
 "express"
 "moment"
@@ -29,6 +30,7 @@ benchmarks=(
 "large_projects/javascript-algorithms"
 "large_projects/javascript-algorithms"
 "large_projects/javascript-algorithms"
+#"top10npm/axios"
 "top10npm/commanderjs"
 "top10npm/express"
 "top10npm/moment/src"
@@ -49,6 +51,7 @@ benchmark_files=(
 "large_projects/javascript-algorithms/src/data-structures/tree/red-black-tree/*.js"
 "large_projects/javascript-algorithms/src/algorithms/sets/knapsack-problem/*.js"
 "large_projects/javascript-algorithms/src/algorithms/graph/**/*.js"
+#"top10npm/axios/lib/core/*.js"
 "top10npm/commanderjs/lib/**/*.js"
 "top10npm/express/lib/**/*.js"
 "top10npm/moment/src/lib/create/**/*.js"
@@ -78,11 +81,11 @@ for experiment_name in "${experiment_names[@]}"; do
         fi
 
         for x in {0..18}; do
-          for i in {1..10}; do
-            echo "running experiment2 ex=${experiment_name} time=${time} inference=${inference} mode=${mode} trial ${i} for ${benchmark_name[$x]} with files ${benchmark_files[$x]}"
-            docker rm experiment2
-            docker run --name experiment2 --env time_per_target=${time} --env use_type_inference=${inference} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
-            docker cp experiment2:/app/syntest-javascript/syntest "./results/${experiment_name}-${time}-${inference}-${mode}-${benchmark_name[$x]}-${x}-${i}"
+          for i in {6..10}; do
+            echo "running experiment ex=${experiment_name} time=${time} inference=${inference} mode=${mode} trial ${i} for ${benchmark_name[$x]} with files ${benchmark_files[$x]}"
+            docker rm experiment
+            docker run --name experiment --env time_per_target=${time} --env use_type_inference=${inference} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
+            docker cp experiment:/app/syntest-javascript/syntest "./results/${experiment_name}-${time}-${inference}-${mode}-${benchmark_name[$x]}-${x}-${i}"
           done
         done
       done

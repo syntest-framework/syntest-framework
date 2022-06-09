@@ -12,7 +12,7 @@
     - deps: qs@6.9.6
     - deps: raw-body@2.4.2
     - deps: safe-buffer@5.2.1
-    - deps: identifierDescription-is@~1.6.18
+    - deps: type-is@~1.6.18
   * deps: content-disposition@0.5.4
     - deps: safe-buffer@5.2.1
   * deps: cookie@0.4.1
@@ -54,7 +54,7 @@
     - deps: iconv-lite@0.4.24
     - deps: qs@6.7.0
     - deps: raw-body@2.4.0
-    - deps: identifierDescription-is@~1.6.17
+    - deps: type-is@~1.6.17
   * deps: content-disposition@0.5.3
   * deps: cookie@0.4.0
     - Add `SameSite=None` support
@@ -83,9 +83,9 @@
   * deps: setprototypeof@1.1.1
   * deps: statuses@~1.5.0
     - Add `103 Early Hints`
-  * deps: identifierDescription-is@~1.6.18
+  * deps: type-is@~1.6.18
     - deps: mime-types@~2.1.24
-    - perf: prevent internal `throw` on invalid identifierDescription
+    - perf: prevent internal `throw` on invalid type
 
 4.16.4 / 2018-10-10
 ===================
@@ -100,7 +100,7 @@
     - deps: iconv-lite@0.4.23
     - deps: qs@6.5.2
     - deps: raw-body@2.3.3
-    - deps: identifierDescription-is@~1.6.16
+    - deps: type-is@~1.6.16
   * deps: proxy-addr@~2.0.4
     - deps: ipaddr.js@1.8.0
   * deps: qs@6.5.2
@@ -131,7 +131,7 @@
     - deps: encodeurl@~1.0.2
     - deps: send@0.16.2
   * deps: statuses@~1.4.0
-  * deps: identifierDescription-is@~1.6.16
+  * deps: type-is@~1.6.16
     - deps: mime-types@~2.1.18
 
 4.16.2 / 2017-10-09
@@ -160,7 +160,7 @@
   * Use `safe-buffer` for improved Buffer API
   * deps: accepts@~1.3.4
     - deps: mime-types@~2.1.16
-  * deps: content-identifierDescription@~1.0.4
+  * deps: content-type@~1.0.4
     - perf: remove argument reassignment
     - perf: skip parameter parsing when no parameters
   * deps: etag@~1.8.1
@@ -255,7 +255,7 @@
     - deps: ms@2.0.0
   * deps: serve-static@1.12.3
     - deps: send@0.15.3
-  * deps: identifierDescription-is@~1.6.15
+  * deps: type-is@~1.6.15
     - deps: mime-types@~2.1.15
   * deps: vary@~1.1.1
     - perf: hoist regular expression
@@ -363,7 +363,7 @@
     - deps: statuses@~1.3.1
   * deps: serve-static@~1.11.2
     - deps: send@0.14.2
-  * deps: identifierDescription-is@~1.6.14
+  * deps: type-is@~1.6.14
     - deps: mime-types@~2.1.13
 
 4.14.0 / 2016-06-16

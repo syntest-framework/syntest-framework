@@ -26,11 +26,10 @@ import { ComplexObject } from "../discovery/object/ComplexObject";
  * @author Dimitri Stallenberg
  */
 
-  // TODO make recursive possible (typeProbability)
 export class TypeProbability {
 
   private id: string
-  private objectDescription: Map<string, ComplexObject>
+  objectDescription: Map<string, ComplexObject>
   private objectPropertyTypes: Map<string, Map<string, TypeProbability>>
 
   private scores: Map<string, number>
@@ -40,6 +39,8 @@ export class TypeProbability {
 
   totalScores: number
   scoresChanged: boolean
+
+  private executionScores: Map<string, number>
 
   getObjectDescription(type: string): ComplexObject {
     return this.objectDescription.get(type)
@@ -62,6 +63,8 @@ export class TypeProbability {
     this.typeIsTypeProbability = new Map()
     this.totalScores = 0
     this.scoresChanged = true
+
+    this.executionScores = new Map()
 
     if (initialTypes) {
       initialTypes.forEach((x) => this.addType(x[0], x[1], x[2]))
@@ -161,6 +164,34 @@ export class TypeProbability {
       }
     }
 
+    // incorporate execution scores
+    // get min value
+    let minValue = 0
+    for (const key of this.executionScores.keys()) {
+      minValue = Math.min(minValue, this.executionScores.get(key))
+    }
+
+    // calculate total
+    let totalScore = 0
+    for (const key of this.probabilities.keys()) {
+      let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
+      value += minValue
+      totalScore += value
+    }
+
+    if (totalScore) {
+      // calculate probability and incorporate
+      for (const key of this.probabilities.keys()) {
+        let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
+        value += minValue
+
+        const probability = value / totalScore
+
+        this.probabilities.set(key, this.probabilities.get(key) * probability)
+      }
+    }
+
+    // normalize to one
     let totalProb = 0
     for (const key of this.probabilities.keys()) {
       totalProb += this.probabilities.get(key)
@@ -171,6 +202,15 @@ export class TypeProbability {
         this.probabilities.set(key, this.probabilities.get(key) / totalProb)
       }
     }
+  }
+
+  addExecutionScore(type: string, score: number) {
+    if (!this.executionScores.has(type)) {
+      this.executionScores.set(type, score)
+    }
+
+    this.scoresChanged = true
+    this.executionScores.set(type, this.executionScores.get(type) + score)
   }
 
   /**
