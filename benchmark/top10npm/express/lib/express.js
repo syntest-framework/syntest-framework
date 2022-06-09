@@ -25,7 +25,8 @@ var res = require('./response');
  * Expose `createApplication()`.
  */
 
-exports = module.exports = createApplication;
+module.exports = createApplication;
+exports = module.exports
 
 /**
  * Create an express application.

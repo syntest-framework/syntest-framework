@@ -40,7 +40,7 @@ var toString = Object.prototype.toString;
  * @public
  */
 
-var proto = module.exports = function(options) {
+var proto = function(options) {
   var opts = options || {};
 
   function router(req, res, next) {
@@ -666,3 +666,5 @@ function wrap(old, fn) {
     fn.apply(this, args);
   };
 }
+
+module.exports = proto

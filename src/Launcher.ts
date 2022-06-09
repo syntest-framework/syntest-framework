@@ -522,10 +522,10 @@ export class Launcher {
         'function': summary['function'] + ' / ' + Object.keys(data.f).length
       }, false])
 
-      console.log(data.b)
-      console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
-      console.log(data.f)
-      console.log()
+      // console.log(data.b)
+      // console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
+      // console.log(data.f)
+      // console.log()
     }
 
     overall['statement'] /= totalStatements

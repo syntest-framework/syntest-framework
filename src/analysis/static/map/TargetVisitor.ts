@@ -300,7 +300,8 @@ export class TargetVisitor extends Visitor {
         if (!targetName) {
           targetName = 'anon'
         }
-
+      } else if (path.node.left.object.name === 'exports') {
+        targetName = path.node.left.property.name
       } else if (path.node.left.object.type === 'MemberExpression'
         && path.node.left.object.property.name === 'prototype') {
         targetName = path.node.left.object.object.name

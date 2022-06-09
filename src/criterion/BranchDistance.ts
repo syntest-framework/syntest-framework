@@ -110,6 +110,15 @@ export class BranchDistance {
           return [-arg, true]
         case "+":
           return [+arg, true]
+
+        // TODO postfix/prefix
+        case "++":
+          return [++arg, true]
+        case "--":
+          return [--arg, true]
+
+        case "~":
+          return [~arg, true]
       }
     } else {
       switch (ast.operator) {
@@ -145,6 +154,8 @@ export class BranchDistance {
         return [left / right, true]
       case "%":
         return [left % right, true]
+      case "**":
+        return [left ** right, true]
 
       case "&":
         return [left & right, true]

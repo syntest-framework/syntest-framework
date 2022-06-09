@@ -24,19 +24,19 @@ module.exports = {
     log_to_file: ["info", "warn", "error"],
 
     use_type_inference: true,
-    type_inference_mode: 'elitist',
+    type_inference_mode: 'roulette',
 
     draw_cfg: false,
 
     // target_root_directory: "./benchmark/custom/simple",
 
     // target_root_directory: "./benchmark/top10npm/axios",
-    target_root_directory: "./benchmark/top10npm/commanderjs",
+    // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
     // target_root_directory: "./benchmark/top10npm/lodash",
     // target_root_directory: "./benchmark/top10npm/moment/src",
 
-    // target_root_directory: "./benchmark/large_projects/javascript-algorithms",
+    target_root_directory: "./benchmark/large_projects/javascript-algorithms",
 
     // target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/large_projects/jquery",
@@ -63,8 +63,9 @@ module.exports = {
         // "./benchmark/top10npm/express/lib/view.js",
 
         // "./benchmark/top10npm/axios/lib/core/*.js",
-        "./benchmark/top10npm/commanderjs/lib/**/*.js",
-        // "./benchmark/top10npm/express/lib/**.js",
+        // "./benchmark/top10npm/commanderjs/lib/**/*.js",
+
+        // "./benchmark/top10npm/express/lib/**/*.js",
         // "./benchmark/top10npm/lodash/**/*.js",
         // "./benchmark/top10npm/moment/src/lib/create/**/*.js",
         // "./benchmark/top10npm/moment/src/lib/moment/**/*.js",
@@ -73,7 +74,7 @@ module.exports = {
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/math/matrix/*.js",
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sorting/counting-sort/*.js",
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/**/*.js",
-        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sets/knapsack-problem/*.js"
+        "./benchmark/large_projects/javascript-algorithms/src/algorithms/sets/knapsack-problem/*.js"
 
         // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/large_projects/jquery/src/core/**/*.js",
@@ -89,8 +90,20 @@ module.exports = {
 
         "./benchmark/top10npm/commanderjs/lib/argument.js",
         "./benchmark/top10npm/commanderjs/lib/command.js",
+        "./benchmark/top10npm/commanderjs/lib/error.js",
 
-      "./benchmark/top10npm/chalk/source/vendor/supports-color/*.*",
+        "./benchmark/top10npm/express/lib/router/index.js",
+        "./benchmark/top10npm/express/lib/express.js",
+
+        "./benchmark/top10npm/moment/src/lib/create/local.js",
+        "./benchmark/top10npm/moment/src/lib/create/utc.js",
+
+        "./benchmark/top10npm/moment/src/lib/moment/clone.js",
+        "./benchmark/top10npm/moment/src/lib/moment/creation-data.js",
+        "./benchmark/top10npm/moment/src/lib/moment/valid.js",
+        "./benchmark/top10npm/moment/src/lib/moment/moment.js"
+
+        // "./benchmark/top10npm/chalk/source/vendor/supports-color/*.*",
 
     ]
 }
