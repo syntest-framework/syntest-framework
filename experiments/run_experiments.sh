@@ -1,7 +1,8 @@
-experiment_names=( "new8" )
+experiment_names=( "new9" )
 times=( 60 )
-inferences=( true false )
-modes=( "roulette" ) #"elitist" ) # "dynamic" )
+incorporate_execution_information=( true false )
+modes=( "none" "elitist" "roulette" ) #"elitist" ) # "dynamic" ) roulette
+random_type_probability=( 1/10 )
 
 benchmark_name=(
 "javascript_algorithms_matrix"
@@ -70,22 +71,19 @@ x=0
 
 for experiment_name in "${experiment_names[@]}"; do
   for time in "${times[@]}"; do
-    for inference in "${inferences[@]}"; do
+    for incorporate in "${incorporate_execution_information[@]}"; do
       for mode in "${modes[@]}"; do
-        if [[ "$inference" == false && "$mode" == "elitist" ]]; then
+        if [[ "$incorporate" == true && "$mode" == "none" ]]; then
           break
         fi
-
-        if [[ "$inference" == false && "$mode" == "dynamic" ]]; then
-          break
-        fi
-
-        for x in {0..18}; do
-          for i in {6..10}; do
-            echo "running experiment3 ex=${experiment_name} time=${time} inference=${inference} mode=${mode} trial ${i} for ${benchmark_name[$x]} with files ${benchmark_files[$x]}"
-            docker rm experiment3
-            docker run --name experiment3 --env time_per_target=${time} --env use_type_inference=${inference} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
-            docker cp experiment3:/app/syntest-javascript/syntest "./results/${experiment_name}-${time}-${inference}-${mode}-${benchmark_name[$x]}-${x}-${i}"
+        for random_probability in "${random_type_probability[@]}"; do
+          for x in {0..18}; do
+            for i in {1..10}; do
+              echo "running experiment4 ex=${experiment_name} time=${time} inference=${incorporate} mode=${mode} random_type_probability=${random_probability} trial ${i} for ${benchmark_name[$x]} with files ${benchmark_files[$x]}"
+              docker rm experiment4
+              docker run --name experiment4 --env=${random_probability} --env time_per_target=${time} --env incorporate_execution_information=${incorporate} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
+              docker cp experiment4:/app/syntest-javascript/syntest "./results/${experiment_name}-${time}-${incorporate}-${mode}-${benchmark_name[$x]}-${random_probability}-${x}-${i}"
+            done
           done
         done
       done

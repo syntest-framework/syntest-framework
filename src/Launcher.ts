@@ -93,16 +93,21 @@ export class Launcher {
   private async setup(): Promise<JavaScriptTargetPool> {
     // Filesystem & Compiler Re-configuration
     const additionalOptions = {
-      use_type_inference: {
-        description: "The identifierDescription inference mode",
+      incorporate_execution_information: {
+        description: "Incorporate execution information",
         type: "boolean",
         default: true,
       },
       // TODO maybe remove the first one and add a identifierDescription inference mode called "none"
       type_inference_mode: {
-        description: "The identifierDescription inference mode: [roulette, elitist, dynamic]",
+        description: "The type inference mode: [roulette, elitist, dynamic]",
         type: "string",
         default: "roulette",
+      },
+      random_type_probability: {
+        description: "The probability we use a random type regardless of the inferred type",
+        type: "number",
+        default: 0.1,
       },
     };
     setupOptions(this._program, additionalOptions);
@@ -147,10 +152,10 @@ export class Launcher {
 
     let typeResolver: TypeResolver
 
-    if (Properties['use_type_inference']) {
-      typeResolver = new TypeResolverInference()
-    } else {
+    if (Properties['type_inference_mode'] === 'none') {
       typeResolver = new TypeResolverUnknown()
+    } else {
+      typeResolver = new TypeResolverInference()
     }
 
     const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
@@ -242,8 +247,9 @@ export class Launcher {
     getUserInterface().report("property-set", [
       "Type Inference",
       [
-        ["Use Type Inference", Properties['use_type_inference']],
+        ["Incorporate Execution Information", Properties['incorporate_execution_information']],
         ["Type Inference Mode", Properties['type_inference_mode']],
+        ["Random Type Probability", Properties['random_type_probability']],
       ],
     ]);
 

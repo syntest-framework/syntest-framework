@@ -5,24 +5,23 @@ import { Statement } from "../statements/Statement";
 export default class ErrorProcessor {
   processSuccess(testCase: JavaScriptTestCase, testResult: any) {
 
-    const queue: Statement[] = [testCase.root]
-
-    while (queue.length) {
-      const root = queue.pop()
-      const children = root.getChildren()
-
-      for (const child of children) {
-        child.identifierDescription.typeProbabilityMap.addExecutionScore(child.type, 1)
-        queue.push(child)
-      }
-    }
+    // const queue: Statement[] = [testCase.root]
+    //
+    // while (queue.length) {
+    //   const root = queue.pop()
+    //   const children = root.getChildren()
+    //
+    //   for (const child of children) {
+    //     child.identifierDescription.typeProbabilityMap.addExecutionScore(child.type, 1)
+    //     queue.push(child)
+    //   }
+    // }
   }
 
   processError(testCase: JavaScriptTestCase, testResult: any) {
 
-    // console.log(testResult)
     // console.log(testResult.err.name)
-    // console.log(testResult)
+    // console.log(testResult.err.message)
     // console.log()
 
     // if (!testResult.err.stack.split('\n')[2].includes('tempTest.spec.js')) {
@@ -44,7 +43,9 @@ export default class ErrorProcessor {
       const children = root.getChildren()
 
       for (const child of children) {
-        child.identifierDescription.typeProbabilityMap.addExecutionScore(child.type, -1)
+        if (testResult.err.message.includes(child.identifierDescription.name)) {
+          child.identifierDescription.typeProbabilityMap.addExecutionScore(child.type, -1)
+        }
         queue.push(child)
       }
     }

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { TypeEnum } from "./TypeEnum";
-import { prng } from "@syntest/framework";
+import { prng, Properties } from "@syntest/framework";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 
 /**
@@ -171,23 +171,25 @@ export class TypeProbability {
       minValue = Math.min(minValue, this.executionScores.get(key))
     }
 
-    // calculate total
-    let totalScore = 0
-    for (const key of this.probabilities.keys()) {
-      let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
-      value += minValue
-      totalScore += value
-    }
-
-    if (totalScore) {
-      // calculate probability and incorporate
+    if (Properties['type_inference_mode'] === 'dynamic') {
+      // calculate total
+      let totalScore = 0
       for (const key of this.probabilities.keys()) {
         let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
         value += minValue
+        totalScore += value
+      }
 
-        const probability = value / totalScore
+      if (totalScore) {
+        // calculate probability and incorporate
+        for (const key of this.probabilities.keys()) {
+          let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
+          value += minValue
 
-        this.probabilities.set(key, this.probabilities.get(key) * probability)
+          const probability = value / totalScore
+
+          this.probabilities.set(key, this.probabilities.get(key) * probability)
+        }
       }
     }
 
@@ -248,7 +250,7 @@ export class TypeProbability {
     return type
   }
 
-  getEliteType(): string {
+  getHighestProbabilityType(): string {
     this.calculateProbabilities()
 
     if (!this.probabilities.size) {
@@ -264,28 +266,10 @@ export class TypeProbability {
     }
 
     if (this.typeIsTypeProbability.has(best)) {
-      return this.typeIsTypeProbability.get(best).getEliteType()
+      return this.typeIsTypeProbability.get(best).getHighestProbabilityType()
     }
 
     return best
-  }
-
-  getDynamicType(): string {
-    this.calculateProbabilities()
-
-    if (!this.probabilities.size) {
-      return TypeEnum.ANY
-    }
-
-    const first: string = this.probabilities.keys().next().value
-
-    // TODO
-
-    if (this.typeIsTypeProbability.has(first)) {
-      return this.typeIsTypeProbability.get(first).getEliteType()
-    }
-
-    return first
   }
 
   keys = () => this.scores.keys()

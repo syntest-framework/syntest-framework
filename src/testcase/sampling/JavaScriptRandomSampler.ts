@@ -191,26 +191,18 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     let chosenType: string
 
-    if (Properties['type_inference_mode'] === 'roulette') {
+    if (Properties['type_inference_mode'] === 'roulette'
+      || Properties['type_inference_mode'] === 'dynamic') {
       chosenType = identifierDescription.typeProbabilityMap.getRandomType()
     } else if (Properties['type_inference_mode'] === 'elitist') {
-      chosenType = identifierDescription.typeProbabilityMap.getEliteType()
-    } else if (Properties['type_inference_mode'] === 'dynamic') {
-      chosenType = identifierDescription.typeProbabilityMap.getDynamicType()
+      chosenType = identifierDescription.typeProbabilityMap.getHighestProbabilityType()
     } else {
       throw new Error("Invalid identifierDescription inference mode selected")
     }
 
-    // console.log(chosenType)
-    // console.log(identifierDescription.name)
-    // console.log(identifierDescription.typeProbabilityMap)
-
     // this ensures that there is a chance of trying a random other identifierDescription
-    if (true) { // Properties.alsotryrandom) { TODO property
-      if (prng.nextBoolean(0.1)) {
-
-        chosenType = "any"
-      }
+    if (prng.nextBoolean(Properties['random_type_probability'])) {
+      chosenType = "any"
     }
 
     if (chosenType === 'any') {

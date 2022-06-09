@@ -23,8 +23,9 @@ module.exports = {
     console_log_level: "info",
     log_to_file: ["info", "warn", "error"],
 
-    use_type_inference: true,
-    type_inference_mode: 'roulette',
+    incorporate_execution_information: true,
+    type_inference_mode: 'roulette', // none roulette elitist
+    random_type_probability: 0.1,
 
     draw_cfg: false,
 
@@ -33,10 +34,10 @@ module.exports = {
     // target_root_directory: "./benchmark/top10npm/axios",
     // target_root_directory: "./benchmark/top10npm/commanderjs",
     // target_root_directory: "./benchmark/top10npm/express",
-    // target_root_directory: "./benchmark/top10npm/lodash",
+    target_root_directory: "./benchmark/top10npm/lodash",
     // target_root_directory: "./benchmark/top10npm/moment/src",
 
-    target_root_directory: "./benchmark/large_projects/javascript-algorithms",
+    // target_root_directory: "./benchmark/large_projects/javascript-algorithms",
 
     // target_root_directory: "./benchmark/top10npm/chalk",
     // target_root_directory: "./benchmark/large_projects/jquery",
@@ -48,7 +49,7 @@ module.exports = {
 
         // "./benchmark/top10npm/commanderjs/lib/help.js",
 
-        // "./benchmark/top10npm/lodash/.internal/equalArrays.js",
+        "./benchmark/top10npm/lodash/.internal/equalArrays.js",
         // "./benchmark/top10npm/lodash/hasPath.js",
         // "./benchmark/top10npm/lodash/random.js",
         // "./benchmark/top10npm/lodash/result.js",
@@ -74,7 +75,7 @@ module.exports = {
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/math/matrix/*.js",
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sorting/counting-sort/*.js",
         // "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/**/*.js",
-        "./benchmark/large_projects/javascript-algorithms/src/algorithms/sets/knapsack-problem/*.js"
+        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sets/knapsack-problem/*.js"
 
         // "./benchmark/top10npm/chalk/source/**/*.js",
         // "./benchmark/large_projects/jquery/src/core/**/*.js",

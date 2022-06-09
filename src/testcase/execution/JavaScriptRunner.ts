@@ -81,10 +81,10 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // If one of the executions failed, log it
     if (stats.failures > 0) {
-      // this.errorProcessor.processError(testCase, test)
+      this.errorProcessor.processError(testCase, test)
       getUserInterface().error("Test case has failed!");
     } else {
-      // this.errorProcessor.processSuccess(testCase, test)
+      this.errorProcessor.processSuccess(testCase, test)
     }
 
     // TODO maybe this should be done not after each testcase
