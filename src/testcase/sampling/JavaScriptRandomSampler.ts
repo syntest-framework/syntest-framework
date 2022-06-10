@@ -192,7 +192,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     let chosenType: string
 
     if (Properties['type_inference_mode'] === 'roulette'
-      || Properties['type_inference_mode'] === 'dynamic') {
+      || Properties['type_inference_mode'] === 'none') {
       chosenType = identifierDescription.typeProbabilityMap.getRandomType()
     } else if (Properties['type_inference_mode'] === 'elitist') {
       chosenType = identifierDescription.typeProbabilityMap.getHighestProbabilityType()
