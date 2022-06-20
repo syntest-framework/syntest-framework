@@ -123,7 +123,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    */
   iteration(searchAlgorithm: SearchAlgorithm<T>): void {
     if (this._tracking && this._currentIterations < this._maxIterations) {
-      if (searchAlgorithm.progress > this._bestProgress) {
+      if (searchAlgorithm.progress("branch") > this._bestProgress) {
         this._currentIterations = 0;
       } else {
         this._currentIterations++;

@@ -81,7 +81,8 @@ export class StatisticsCollector<T extends Encoding> {
     variable: RuntimeVariable,
     value: any
   ): StatisticsCollector<T> {
-    const eventTime = Math.round(this._timeBudget.getUsedBudget());
+    // 1/10th second accuracy
+    const eventTime = Math.round(this._timeBudget.getUsedBudget()  * 10) / 10;
 
     // If other events already exist on this event time add it, otherwise create a new one
     if (this._eventVariables.has(eventTime)) {

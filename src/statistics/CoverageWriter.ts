@@ -30,7 +30,25 @@ import * as fs from "fs";
 export class CoverageWriter<T extends Encoding> {
   protected VARIABLES: RuntimeVariable[] = [RuntimeVariable.SUBJECT];
 
-  protected EVENT_VARIABLES: RuntimeVariable[] = [RuntimeVariable.COVERAGE];
+  protected EVENT_VARIABLES: RuntimeVariable[] = [
+    RuntimeVariable.COVERED_BRANCHES,
+    RuntimeVariable.TOTAL_BRANCHES,
+    RuntimeVariable.BRANCH_COVERAGE,
+
+    RuntimeVariable.COVERED_FUNCTIONS,
+    RuntimeVariable.TOTAL_FUNCTIONS,
+    RuntimeVariable.FUNCTION_COVERAGE,
+
+    RuntimeVariable.COVERED_EXCEPTIONS,
+
+    RuntimeVariable.COVERED_PROBES,
+    RuntimeVariable.TOTAL_PROBES,
+    RuntimeVariable.PROBE_COVERAGE,
+
+    RuntimeVariable.COVERED_OBJECTIVES,
+    RuntimeVariable.TOTAL_OBJECTIVES,
+    RuntimeVariable.COVERAGE
+  ];
 
   /**
    * Write the coverage statistics to file.
