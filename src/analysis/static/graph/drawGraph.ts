@@ -216,10 +216,10 @@ export function drawGraph(cfg: any, path: string) {
         sweep = 1; // 1 or 0
 
       if (d.type === true) {
-        sweep = 0
+        sweep = 0;
       } else if (d.type === undefined) {
-        drx = 0
-        dry = 0
+        drx = 0;
+        dry = 0;
       }
 
       // Self edge.

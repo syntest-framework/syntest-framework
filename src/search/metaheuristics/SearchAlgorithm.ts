@@ -24,11 +24,11 @@ import { BudgetManager } from "../budget/BudgetManager";
 import { getUserInterface } from "../../ui/UserInterface";
 import { TerminationManager } from "../termination/TerminationManager";
 import { SearchListener } from "../SearchListener";
-import {ExecutionResult} from "../ExecutionResult";
-import {BranchObjectiveFunction} from "../../criterion/BranchObjectiveFunction";
-import {ExceptionObjectiveFunction} from "../../criterion/ExceptionObjectiveFunction";
-import {FunctionObjectiveFunction} from "../../criterion/FunctionObjectiveFunction";
-import {ProbeObjectiveFunction} from "../../criterion/ProbeObjectiveFunction";
+import { ExecutionResult } from "../ExecutionResult";
+import { BranchObjectiveFunction } from "../../criterion/BranchObjectiveFunction";
+import { ExceptionObjectiveFunction } from "../../criterion/ExceptionObjectiveFunction";
+import { FunctionObjectiveFunction } from "../../criterion/FunctionObjectiveFunction";
+import { ProbeObjectiveFunction } from "../../criterion/ProbeObjectiveFunction";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -169,79 +169,76 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     return this._objectiveManager;
   }
 
+  public getCovered(objectiveType = "mixed"): number {
+    const total = new Set();
+    const covered = new Set();
 
-  public getCovered(objectiveType='mixed'): number {
-      const total = new Set();
-      const covered = new Set();
+    for (const key of this._objectiveManager.getArchive().getObjectives()) {
+      const test = this._objectiveManager.getArchive().getEncoding(key);
+      const result: ExecutionResult = test.getExecutionResult();
+      // TODO this does not work when there are files with the same name in different directories!!
+      const paths = key.getSubject().path.split("/");
+      const fileName = paths[paths.length - 1];
 
-      for (const key of this._objectiveManager.getArchive().getObjectives()) {
-          const test = this._objectiveManager.getArchive().getEncoding(key);
-          const result: ExecutionResult = test.getExecutionResult();
-          // TODO this does not work when there are files with the same name in different directories!!
-          const paths = key.getSubject().path.split("/");
-          const fileName = paths[paths.length - 1]
+      result
+        .getTraces()
+        .filter(
+          (element) =>
+            element.type.includes(objectiveType) || objectiveType === "mixed"
+        )
+        .filter((element) => element.path.includes(fileName))
+        .forEach((current) => {
+          total.add(current.id + "_" + current.branchType);
 
-          result
-              .getTraces()
-              .filter((element) => element.type.includes(objectiveType) || objectiveType === 'mixed')
-              .filter((element) => element.path.includes(fileName))
-              .forEach((current) => {
-                  total.add(
-                      current.id + "_" + current.branchType
-                  );
+          if (current.hits > 0)
+            covered.add(current.id + "_" + current.branchType);
+        });
+    }
+    return covered.size;
 
-                  if (current.hits > 0)
-                      covered.add(
-                          current.id + "_" + current.branchType
-                      );
-              });
-      }
-      return covered.size
-
-      // return [...this._objectiveManager.getCoveredObjectives()]
-      //         .filter((x) => {
-      //             switch (objectiveType) {
-      //                 case 'branch':
-      //                     return x instanceof BranchObjectiveFunction
-      //                 case 'exception':
-      //                     return x instanceof ExceptionObjectiveFunction
-      //                 case 'function':
-      //                     return x instanceof FunctionObjectiveFunction
-      //                 case 'probe':
-      //                     return x instanceof ProbeObjectiveFunction
-      //                 default:
-      //                     return true
-      //             }
-      //         }).length;
+    // return [...this._objectiveManager.getCoveredObjectives()]
+    //         .filter((x) => {
+    //             switch (objectiveType) {
+    //                 case 'branch':
+    //                     return x instanceof BranchObjectiveFunction
+    //                 case 'exception':
+    //                     return x instanceof ExceptionObjectiveFunction
+    //                 case 'function':
+    //                     return x instanceof FunctionObjectiveFunction
+    //                 case 'probe':
+    //                     return x instanceof ProbeObjectiveFunction
+    //                 default:
+    //                     return true
+    //             }
+    //         }).length;
   }
 
-  public getUncovered(objectiveType='mixed'): number {
-      const total = new Set();
-      const covered = new Set();
+  public getUncovered(objectiveType = "mixed"): number {
+    const total = new Set();
+    const covered = new Set();
 
-      for (const key of this._objectiveManager.getArchive().getObjectives()) {
-          const test = this._objectiveManager.getArchive().getEncoding(key);
-          const result: ExecutionResult = test.getExecutionResult();
-          // TODO this does not work when there are files with the same name in different directories!!
-          const paths = key.getSubject().path.split("/");
-          const fileName = paths[paths.length - 1]
+    for (const key of this._objectiveManager.getArchive().getObjectives()) {
+      const test = this._objectiveManager.getArchive().getEncoding(key);
+      const result: ExecutionResult = test.getExecutionResult();
+      // TODO this does not work when there are files with the same name in different directories!!
+      const paths = key.getSubject().path.split("/");
+      const fileName = paths[paths.length - 1];
 
-          result
-              .getTraces()
-              .filter((element) => element.type.includes(objectiveType) || objectiveType === 'mixed')
-              .filter((element) => element.path.includes(fileName))
-              .forEach((current) => {
-                  total.add(
-                      current.id + "_" + current.branchType
-                  );
+      result
+        .getTraces()
+        .filter(
+          (element) =>
+            element.type.includes(objectiveType) || objectiveType === "mixed"
+        )
+        .filter((element) => element.path.includes(fileName))
+        .forEach((current) => {
+          total.add(current.id + "_" + current.branchType);
 
-                  if (current.hits > 0)
-                      covered.add(
-                          current.id + "_" + current.branchType
-                      );
-              });
-      }
-      return total.size - covered.size
+          if (current.hits > 0)
+            covered.add(current.id + "_" + current.branchType);
+        });
+    }
+    return total.size - covered.size;
     // return [...this._objectiveManager.getUncoveredObjectives()]
     //       .filter((x) => {
     //           switch (objectiveType) {
@@ -261,9 +258,9 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   /**
    * The progress of the search process.
    */
-  public progress(objectiveType='mixed'): number {
-    const numberOfCoveredObjectives = this.getCovered(objectiveType)
-    const numberOfUncoveredObjectives = this.getUncovered(objectiveType)
+  public progress(objectiveType = "mixed"): number {
+    const numberOfCoveredObjectives = this.getCovered(objectiveType);
+    const numberOfUncoveredObjectives = this.getUncovered(objectiveType);
     const progress =
       (numberOfCoveredObjectives /
         (numberOfCoveredObjectives + numberOfUncoveredObjectives)) *

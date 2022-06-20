@@ -63,76 +63,74 @@ export class StatisticsSearchListener<T extends Encoding>
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     terminationManager: TerminationManager
   ): void {
+    const coveredBranches = searchAlgorithm.getCovered("branch");
+    const totalBranches =
+      coveredBranches + searchAlgorithm.getUncovered("branch");
 
-    const coveredBranches = searchAlgorithm.getCovered('branch')
-    const totalBranches = coveredBranches + searchAlgorithm.getUncovered('branch')
+    const coveredFunctions = searchAlgorithm.getCovered("function");
+    const totalFunctions =
+      coveredBranches + searchAlgorithm.getUncovered("function");
 
-    const coveredFunctions = searchAlgorithm.getCovered('function')
-    const totalFunctions = coveredBranches + searchAlgorithm.getUncovered('function')
+    const coveredExceptions = searchAlgorithm.getCovered("exception");
 
-    const coveredExceptions = searchAlgorithm.getCovered('exception')
+    const coveredProbes = searchAlgorithm.getCovered("probe");
+    const totalProbes = coveredBranches + searchAlgorithm.getUncovered("probe");
 
-    const coveredProbes = searchAlgorithm.getCovered('probe')
-    const totalProbes = coveredBranches + searchAlgorithm.getUncovered('probe')
-
-    const covered = searchAlgorithm.getCovered()
-    const total = coveredBranches + searchAlgorithm.getUncovered()
+    const covered = searchAlgorithm.getCovered();
+    const total = coveredBranches + searchAlgorithm.getUncovered();
 
     this.collector.recordEventVariable(
       RuntimeVariable.COVERED_BRANCHES,
-        coveredBranches
+      coveredBranches
     );
     this.collector.recordEventVariable(
-        RuntimeVariable.TOTAL_BRANCHES,
-        totalBranches
+      RuntimeVariable.TOTAL_BRANCHES,
+      totalBranches
     );
     this.collector.recordEventVariable(
-        RuntimeVariable.BRANCH_COVERAGE,
-        searchAlgorithm.progress('branch')
-    );
-
-    this.collector.recordEventVariable(
-        RuntimeVariable.COVERED_FUNCTIONS,
-        coveredFunctions
-    );
-    this.collector.recordEventVariable(
-        RuntimeVariable.TOTAL_FUNCTIONS,
-        totalFunctions
-    );
-    this.collector.recordEventVariable(
-        RuntimeVariable.FUNCTION_COVERAGE,
-        searchAlgorithm.progress('function')
+      RuntimeVariable.BRANCH_COVERAGE,
+      searchAlgorithm.progress("branch")
     );
 
     this.collector.recordEventVariable(
-        RuntimeVariable.COVERED_EXCEPTIONS,
-        coveredExceptions
+      RuntimeVariable.COVERED_FUNCTIONS,
+      coveredFunctions
+    );
+    this.collector.recordEventVariable(
+      RuntimeVariable.TOTAL_FUNCTIONS,
+      totalFunctions
+    );
+    this.collector.recordEventVariable(
+      RuntimeVariable.FUNCTION_COVERAGE,
+      searchAlgorithm.progress("function")
     );
 
     this.collector.recordEventVariable(
-        RuntimeVariable.COVERED_PROBES,
-        coveredProbes
-    );
-    this.collector.recordEventVariable(
-        RuntimeVariable.TOTAL_PROBES,
-        totalProbes
-    );
-    this.collector.recordEventVariable(
-        RuntimeVariable.PROBE_COVERAGE,
-        searchAlgorithm.progress('probe')
+      RuntimeVariable.COVERED_EXCEPTIONS,
+      coveredExceptions
     );
 
     this.collector.recordEventVariable(
-        RuntimeVariable.COVERED_OBJECTIVES,
-        covered
+      RuntimeVariable.COVERED_PROBES,
+      coveredProbes
     );
     this.collector.recordEventVariable(
-        RuntimeVariable.TOTAL_OBJECTIVES,
-        total
+      RuntimeVariable.TOTAL_PROBES,
+      totalProbes
     );
     this.collector.recordEventVariable(
-        RuntimeVariable.COVERAGE,
-        searchAlgorithm.progress("mixed")
+      RuntimeVariable.PROBE_COVERAGE,
+      searchAlgorithm.progress("probe")
+    );
+
+    this.collector.recordEventVariable(
+      RuntimeVariable.COVERED_OBJECTIVES,
+      covered
+    );
+    this.collector.recordEventVariable(RuntimeVariable.TOTAL_OBJECTIVES, total);
+    this.collector.recordEventVariable(
+      RuntimeVariable.COVERAGE,
+      searchAlgorithm.progress("mixed")
     );
   }
 

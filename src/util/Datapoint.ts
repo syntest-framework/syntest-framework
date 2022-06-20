@@ -27,11 +27,11 @@ export interface Datapoint {
   hits: number;
 
   locationIdx?: number;
-  branchType?: boolean
+  branchType?: boolean;
 
   condition_ast?: string;
   condition?: string;
-  variables?: any
+  variables?: any;
 
   // Deprecated
   opcode?: string;

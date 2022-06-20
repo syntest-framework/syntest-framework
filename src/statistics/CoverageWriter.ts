@@ -47,7 +47,7 @@ export class CoverageWriter<T extends Encoding> {
 
     RuntimeVariable.COVERED_OBJECTIVES,
     RuntimeVariable.TOTAL_OBJECTIVES,
-    RuntimeVariable.COVERAGE
+    RuntimeVariable.COVERAGE,
   ];
 
   /**
