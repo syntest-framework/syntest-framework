@@ -68,6 +68,7 @@ export function collectStatistics(
     RuntimeVariable.COVERED_OBJECTIVES,
     archive.getObjectives().length
   );
+
   collector.recordVariable(
     RuntimeVariable.INITIALIZATION_TIME,
     totalTimeBudget.getUsedBudget() - searchBudget.getUsedBudget()
@@ -122,18 +123,15 @@ export function collectCoverageData(
     result
       .getTraces()
       .filter((element) => element.type.includes(objectiveType))
-      .filter((element) => {
-        const paths = (element as any).path.split("/");
-        return paths[paths.length - 1].includes(fileName);
-      })
+      .filter((element) => element.path.includes(fileName))
       .forEach((current) => {
         total.add(
-          current.type + "_" + current.line + "_" + current.locationIdx
+          current.id + "_" + current.branchType
         );
 
         if (current.hits > 0)
           covered.add(
-            current.type + "_" + current.line + "_" + current.locationIdx
+            current.id + "_" + current.branchType
           );
       });
   }

@@ -49,7 +49,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     functions: ActionDescription[],
   ) {
     super(path, targetMeta.name, cfg);
-    // TODO SearchSubject should just use the targeMetaData
+    // TODO SearchSubject should just use the targetMetaData
     this._type = targetMeta.type
     this._functions = functions
     this._typeScores = new Map()

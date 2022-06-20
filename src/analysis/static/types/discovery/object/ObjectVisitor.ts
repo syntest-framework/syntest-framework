@@ -159,6 +159,10 @@ export class ObjectVisitor extends Visitor {
   }
 
   public MemberExpression: (path) => void = (path) => {
+    if (path.node.computed) {
+      return
+    }
+
     // TODO support for prototyping  (./axios/lib/cancel/Cancel.js)
     if (path.node.object.type === "ThisExpression") {
       const _object = this._currentObject()

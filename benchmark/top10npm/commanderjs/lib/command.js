@@ -933,109 +933,109 @@ Expecting one of '${allowedValues.join("', '")}'`);
    */
 
   _executeSubCommand(subcommand, args) {
-    args = args.slice();
-    let launchWithNode = false; // Use node for source targets so do not need to get permissions correct, and on Windows.
-    const sourceExt = ['.js', '.ts', '.tsx', '.mjs', '.cjs'];
-
-    // Not checking for help first. Unlikely to have mandatory and executable, and can't robustly test for help flags in external command.
-    this._checkForMissingMandatoryOptions();
-
-    // Want the entry script as the reference for command name and directory for searching for other files.
-    let scriptPath = this._scriptPath;
-    // Fallback in case not set, due to how Command created or called.
-    if (!scriptPath && require.main) {
-      scriptPath = require.main.filename;
-    }
-
-    let baseDir;
-    try {
-      const resolvedLink = fs.realpathSync(scriptPath);
-      baseDir = path.dirname(resolvedLink);
-    } catch (e) {
-      baseDir = '.'; // dummy, probably not going to find executable!
-    }
-
-    // name of the subcommand, like `pm-install`
-    let bin = path.basename(scriptPath, path.extname(scriptPath)) + '-' + subcommand._name;
-    if (subcommand._executableFile) {
-      bin = subcommand._executableFile;
-    }
-
-    const localBin = path.join(baseDir, bin);
-    if (fs.existsSync(localBin)) {
-      // prefer local `./<bin>` to bin in the $PATH
-      bin = localBin;
-    } else {
-      // Look for source files.
-      sourceExt.forEach((ext) => {
-        if (fs.existsSync(`${localBin}${ext}`)) {
-          bin = `${localBin}${ext}`;
-        }
-      });
-    }
-    launchWithNode = sourceExt.includes(path.extname(bin));
-
-    let proc;
-    if (process.platform !== 'win32') {
-      if (launchWithNode) {
-        args.unshift(bin);
-        // add executable arguments to spawn
-        args = incrementNodeInspectorPort(process.execArgv).concat(args);
-
-        proc = childProcess.spawn(process.argv[0], args, { stdio: 'inherit' });
-      } else {
-        proc = childProcess.spawn(bin, args, { stdio: 'inherit' });
-      }
-    } else {
-      args.unshift(bin);
-      // add executable arguments to spawn
-      args = incrementNodeInspectorPort(process.execArgv).concat(args);
-      proc = childProcess.spawn(process.execPath, args, { stdio: 'inherit' });
-    }
-
-    const signals = ['SIGUSR1', 'SIGUSR2', 'SIGTERM', 'SIGINT', 'SIGHUP'];
-    signals.forEach((signal) => {
-      // @ts-ignore
-      process.on(signal, () => {
-        if (proc.killed === false && proc.exitCode === null) {
-          proc.kill(signal);
-        }
-      });
-    });
-
-    // By default terminate process when spawned process terminates.
-    // Suppressing the exit if exitCallback defined is a bit messy and of limited use, but does allow process to stay running!
-    const exitCallback = this._exitCallback;
-    if (!exitCallback) {
-      proc.on('close', process.exit.bind(process));
-    } else {
-      proc.on('close', () => {
-        exitCallback(new CommanderError(process.exitCode || 0, 'commander.executeSubCommandAsync', '(close)'));
-      });
-    }
-    proc.on('error', (err) => {
-      // @ts-ignore
-      if (err.code === 'ENOENT') {
-        const executableMissing = `'${bin}' does not exist
- - if '${subcommand._name}' is not meant to be an executable command, remove description parameter from '.command()' and use '.description()' instead
- - if the default executable name is not suitable, use the executableFile option to supply a custom name`;
-        throw new Error(executableMissing);
-      // @ts-ignore
-      } else if (err.code === 'EACCES') {
-        throw new Error(`'${bin}' not executable`);
-      }
-      if (!exitCallback) {
-        throw new Error('exiting')
-        // process.exit(1);
-      } else {
-        const wrappedError = new CommanderError(1, 'commander.executeSubCommandAsync', '(error)');
-        wrappedError.nestedError = err;
-        exitCallback(wrappedError);
-      }
-    });
-
-    // Store the reference to the child process
-    this.runningCommand = proc;
+ //    args = args.slice();
+ //    let launchWithNode = false; // Use node for source targets so do not need to get permissions correct, and on Windows.
+ //    const sourceExt = ['.js', '.ts', '.tsx', '.mjs', '.cjs'];
+ //
+ //    // Not checking for help first. Unlikely to have mandatory and executable, and can't robustly test for help flags in external command.
+ //    this._checkForMissingMandatoryOptions();
+ //
+ //    // Want the entry script as the reference for command name and directory for searching for other files.
+ //    let scriptPath = this._scriptPath;
+ //    // Fallback in case not set, due to how Command created or called.
+ //    if (!scriptPath && require.main) {
+ //      scriptPath = require.main.filename;
+ //    }
+ //
+ //    let baseDir;
+ //    try {
+ //      const resolvedLink = fs.realpathSync(scriptPath);
+ //      baseDir = path.dirname(resolvedLink);
+ //    } catch (e) {
+ //      baseDir = '.'; // dummy, probably not going to find executable!
+ //    }
+ //
+ //    // name of the subcommand, like `pm-install`
+ //    let bin = path.basename(scriptPath, path.extname(scriptPath)) + '-' + subcommand._name;
+ //    if (subcommand._executableFile) {
+ //      bin = subcommand._executableFile;
+ //    }
+ //
+ //    const localBin = path.join(baseDir, bin);
+ //    if (fs.existsSync(localBin)) {
+ //      // prefer local `./<bin>` to bin in the $PATH
+ //      bin = localBin;
+ //    } else {
+ //      // Look for source files.
+ //      sourceExt.forEach((ext) => {
+ //        if (fs.existsSync(`${localBin}${ext}`)) {
+ //          bin = `${localBin}${ext}`;
+ //        }
+ //      });
+ //    }
+ //    launchWithNode = sourceExt.includes(path.extname(bin));
+ //
+ //    let proc;
+ //    if (process.platform !== 'win32') {
+ //      if (launchWithNode) {
+ //        args.unshift(bin);
+ //        // add executable arguments to spawn
+ //        args = incrementNodeInspectorPort(process.execArgv).concat(args);
+ //
+ //        proc = childProcess.spawn(process.argv[0], args, { stdio: 'inherit' });
+ //      } else {
+ //        proc = childProcess.spawn(bin, args, { stdio: 'inherit' });
+ //      }
+ //    } else {
+ //      args.unshift(bin);
+ //      // add executable arguments to spawn
+ //      args = incrementNodeInspectorPort(process.execArgv).concat(args);
+ //      proc = childProcess.spawn(process.execPath, args, { stdio: 'inherit' });
+ //    }
+ //
+ //    const signals = ['SIGUSR1', 'SIGUSR2', 'SIGTERM', 'SIGINT', 'SIGHUP'];
+ //    signals.forEach((signal) => {
+ //      // @ts-ignore
+ //      process.on(signal, () => {
+ //        if (proc.killed === false && proc.exitCode === null) {
+ //          proc.kill(signal);
+ //        }
+ //      });
+ //    });
+ //
+ //    // By default terminate process when spawned process terminates.
+ //    // Suppressing the exit if exitCallback defined is a bit messy and of limited use, but does allow process to stay running!
+ //    const exitCallback = this._exitCallback;
+ //    if (!exitCallback) {
+ //      proc.on('close', process.exit.bind(process));
+ //    } else {
+ //      proc.on('close', () => {
+ //        exitCallback(new CommanderError(process.exitCode || 0, 'commander.executeSubCommandAsync', '(close)'));
+ //      });
+ //    }
+ //    proc.on('error', (err) => {
+ //      // @ts-ignore
+ //      if (err.code === 'ENOENT') {
+ //        const executableMissing = `'${bin}' does not exist
+ // - if '${subcommand._name}' is not meant to be an executable command, remove description parameter from '.command()' and use '.description()' instead
+ // - if the default executable name is not suitable, use the executableFile option to supply a custom name`;
+ //        throw new Error(executableMissing);
+ //      // @ts-ignore
+ //      } else if (err.code === 'EACCES') {
+ //        throw new Error(`'${bin}' not executable`);
+ //      }
+ //      if (!exitCallback) {
+ //        throw new Error('exiting')
+ //        // process.exit(1);
+ //      } else {
+ //        const wrappedError = new CommanderError(1, 'commander.executeSubCommandAsync', '(error)');
+ //        wrappedError.nestedError = err;
+ //        exitCallback(wrappedError);
+ //      }
+ //    });
+ //
+ //    // Store the reference to the child process
+ //    this.runningCommand = proc;
   };
 
   /**

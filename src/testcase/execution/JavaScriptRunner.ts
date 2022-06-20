@@ -23,6 +23,13 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   constructor(suiteBuilder: JavaScriptSuiteBuilder) {
     this.suiteBuilder = suiteBuilder
     this.errorProcessor = new ErrorProcessor()
+
+    process.on("uncaughtException", reason => {
+      throw reason;
+    });
+    process.on("unhandledRejection", reason => {
+      throw reason;
+    });
   }
 
   async execute(
@@ -35,7 +42,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // TODO make this running in memory
 
-    let argv = {
+    const argv = {
       spec: testPath,
       reporter: SilentMochaReporter
     }
@@ -61,10 +68,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     })
 
     let runner: Runner = null
-
-    process.on("unhandledRejection", reason => {
-      throw reason;
-    });
 
     // Finally, run mocha.
     await new Promise((resolve) => {
@@ -96,7 +99,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {
-        for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
+      for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
           const fn = instrumentationData[key].fnMap[functionKey]
           const hits = instrumentationData[key].f[functionKey]
 

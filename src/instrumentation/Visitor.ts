@@ -468,29 +468,29 @@ const codeVisitor = {
   LogicalExpression: entries(coverLogicalExpression),
 };
 const globalTemplateAlteredFunction = template(`
-        var Function = (function(){}).constructor;
-        var global = (new Function(GLOBAL_COVERAGE_SCOPE))();
+        const Function = (function(){}).constructor;
+        const global = (new Function(GLOBAL_COVERAGE_SCOPE))();
 `);
 const globalTemplateFunction = template(`
-        var global = (new Function(GLOBAL_COVERAGE_SCOPE))();
+        const global = (new Function(GLOBAL_COVERAGE_SCOPE))();
 `);
 const globalTemplateVariable = template(`
-        var global = GLOBAL_COVERAGE_SCOPE;
+        const global = GLOBAL_COVERAGE_SCOPE;
 `);
 // the template to insert at the top of the program.
 const coverageTemplate = template(
   `
     function COVERAGE_FUNCTION () {
-        var path = PATH;
-        var hash = HASH;
+        const path = PATH;
+        const hash = HASH;
         GLOBAL_COVERAGE_TEMPLATE
-        var gcv = GLOBAL_COVERAGE_VAR;
-        var coverageData = INITIAL;
-        var coverage = global[gcv] || (global[gcv] = {});
+        const gcv = GLOBAL_COVERAGE_VAR;
+        const coverageData = INITIAL;
+        const coverage = global[gcv] || (global[gcv] = {});
         if (!coverage[path] || coverage[path].hash !== hash) {
             coverage[path] = coverageData;
         }
-        var actualCoverage = coverage[path];
+        const actualCoverage = coverage[path];
         {
             // @ts-ignore
             COVERAGE_FUNCTION = function () {
@@ -506,10 +506,10 @@ const coverageTemplate = template(
 const metaTemplate = template(
   `
     function META_FUNCTION (branch, metaInformation) {
-        var path = PATH;
-        var hash = HASH;
-        var gmv = GLOBAL_META_VAR;
-        var meta = global[gmv] || (global[gmv] = {});
+        const path = PATH;
+        const hash = HASH;
+        const gmv = GLOBAL_META_VAR;
+        const meta = global[gmv] || (global[gmv] = {});
                 
         if (!meta[path] || meta[path].hash !== hash) {
             meta[path] = {

@@ -76,6 +76,8 @@ const Mocha = require('mocha')
 export class Launcher {
   private readonly _program = "syntest-javascript";
 
+  private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>()
+
   public async run() {
     try {
       await guessCWD(null);
@@ -193,7 +195,7 @@ export class Launcher {
       await this.exit();
     }
 
-    let names = [];
+    let names: string[] = [];
 
     targetPool.targets.forEach((target) =>
       names.push(
@@ -266,8 +268,8 @@ export class Launcher {
     targetPool.scanTargetRootDirectory()
 
     const finalArchive = new Archive<JavaScriptTestCase>();
-    let finalDependencies: Map<string, Export[]> = new Map();
-    let finalExports: Export[] = []
+    const finalDependencies: Map<string, Export[]> = new Map();
+    const finalExports: Export[] = []
 
     for (const target of targetPool.targets) {
       const archive = await this.testTarget(
@@ -307,8 +309,7 @@ export class Launcher {
     const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
 
     // couple types to parameters
-    for (const key of functionMap.keys()) {
-      const func = functionMap.get(key)
+    for (const func of functionMap.values()) {
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
           param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
@@ -380,6 +381,13 @@ export class Launcher {
       budgetManager,
       terminationManager
     );
+
+    if (this.coveredInPath.has(targetPath)) {
+      archive.merge(this.coveredInPath.get(targetPath))
+      this.coveredInPath.set(targetPath, archive)
+    } else {
+      this.coveredInPath.set(targetPath, archive)
+    }
 
     // Gather statistics after the search
     collectStatistics(
@@ -455,7 +463,6 @@ export class Launcher {
     //   console[level] = () => {}
     // })
 
-    let runner: Runner = null
 
     // Finally, run mocha.
     process.on("unhandledRejection", reason => {
@@ -463,7 +470,7 @@ export class Launcher {
     });
 
     await new Promise((resolve) => {
-      runner = mocha.run((failures) => {
+      mocha.run((failures: number) => {
         resolve(failures)
       })
     })
