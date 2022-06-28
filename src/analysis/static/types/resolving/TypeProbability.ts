@@ -171,12 +171,12 @@ export class TypeProbability {
       minValue = Math.min(minValue, this.executionScores.get(key))
     }
 
-    if (Properties['type_inference_mode'] === 'dynamic') {
+    if (Properties['incorporate_execution_information'] && this.executionScores.size) {
       // calculate total
       let totalScore = 0
       for (const key of this.probabilities.keys()) {
         let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
-        value += minValue
+        value += -minValue
         totalScore += value
       }
 
@@ -184,7 +184,7 @@ export class TypeProbability {
         // calculate probability and incorporate
         for (const key of this.probabilities.keys()) {
           let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
-          value += minValue
+          value += -minValue
 
           const probability = value / totalScore
 

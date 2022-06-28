@@ -90,9 +90,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       this.errorProcessor.processSuccess(testCase, test)
     }
 
-    // TODO maybe this should be done not after each testcase
-    subject.reevaluateTypes()
-
     // Retrieve execution traces
     const instrumentationData = _.cloneDeep(global.__coverage__)
     const metaData = _.cloneDeep(global.__meta__)
