@@ -78,9 +78,9 @@ func1()
     if [[ "$x" == 5 ]]; then
       continue
     fi
-    docker rm "${experiment_name}"
-    docker run --name "${experiment_name}" --env time_per_target=${time} --env incorporate_execution_information=${incorporate} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
-    docker cp "${experiment_name}:/app/syntest-javascript/syntest" "./results/${experiment_name}-${time}-${incorporate}-${mode}-${benchmark_name[$x]}-${x}-${i}"
+    docker rm "${experiment_name}_${incorporate}_${mode}_${i}"
+    docker run --name "${experiment_name}_${incorporate}_${mode}_${i}" --env time_per_target=${time} --env incorporate_execution_information=${incorporate} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
+    docker cp "${experiment_name}_${incorporate}_${mode}_${i}:/app/syntest-javascript/syntest" "./results/${experiment_name}-${time}-${incorporate}-${mode}-${benchmark_name[$x]}-${x}-${i}"
   done
 }
 
