@@ -1,6 +1,6 @@
 module.exports = {
     // seed: 'test',
-    population_size: 30,
+    population_size: 50,
     max_depth: 5,
 
     // mutation chances
@@ -11,8 +11,8 @@ module.exports = {
 
     algorithm: "DynaMOSA",
     search_time: 5,
-    total_time: 6000,
-    iteration_budget: 100000,
+    total_time: 60000,
+    iteration_budget: 1000000,
 
     probe_objective: true,
     modifier_extraction: true,

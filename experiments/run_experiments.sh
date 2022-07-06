@@ -1,5 +1,6 @@
-experiment_names=( "new11" )
-times=( 60 )
+experiment_name="new11"
+time=120
+
 incorporate_execution_information=( true false ) # false
 modes=( "none" "elitist" "roulette" ) # none elitist roulette  "elitist" "roulette"
 benchmark_name=(
@@ -67,25 +68,31 @@ benchmark_files=(
 "top10npm/lodash/unzip.js" )
 #x=6
 
-for experiment_name in "${experiment_names[@]}"; do
-  for time in "${times[@]}"; do
-    for incorporate in "${incorporate_execution_information[@]}"; do
-      for mode in "${modes[@]}"; do
-        if [[ "$incorporate" == true && "$mode" == "none" ]]; then
-          continue
-        fi
-        for x in {0..19}; do
-          if [[ "$x" == 5 ]]; then
-            continue
-          fi
-          for i in {20..20}; do
-            echo "running experiment2 ex=${experiment_name} time=${time} inference=${incorporate} mode=${mode} trial ${i} for ${benchmark_name[$x]} with files ${benchmark_files[$x]}"
-            docker rm experiment2
-            docker run --name experiment2 --env time_per_target=${time} --env incorporate_execution_information=${incorporate} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
-            docker cp experiment2:/app/syntest-javascript/syntest "./results/${experiment_name}-${time}-${incorporate}-${mode}-${benchmark_name[$x]}-${x}-${i}"
-          done
-        done
-      done
-    done
+func1()
+{
+  incorporate=$1
+  mode=$2
+  i=$3
+
+  for x in {0..19}; do
+    if [[ "$x" == 5 ]]; then
+      continue
+    fi
+    docker rm "${experiment_name}"
+    docker run --name "${experiment_name}" --env time_per_target=${time} --env incorporate_execution_information=${incorporate} --env type_inference_mode=${mode} --env target_root_directory="./benchmark/${benchmarks[$x]}" --env include="./benchmark/${benchmark_files[$x]}" syntest/javascript:${experiment_name}
+    docker cp "${experiment_name}:/app/syntest-javascript/syntest" "./results/${experiment_name}-${time}-${incorporate}-${mode}-${benchmark_name[$x]}-${x}-${i}"
+  done
+}
+
+for incorporate in "${incorporate_execution_information[@]}"; do
+  for mode in "${modes[@]}"; do
+    if [[ "$incorporate" == true && "$mode" == "none" ]]; then
+      continue
+    fi
+
+    for i in {1..1}; do
+      echo "running ${experiment_name} ex=${experiment_name} time=${time} inference=${incorporate} mode=${mode} trial ${i} for ${benchmark_name[$x]} with files ${benchmark_files[$x]}"
+      func1 incorporate mode x i &> "log_${incorporate}_${mode}_${i}" &
+   done
   done
 done
