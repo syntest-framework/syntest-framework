@@ -44,8 +44,8 @@ export default class ErrorProcessor {
 
       for (const child of children) {
         if (testResult.err.message.includes(child.identifierDescription.name)) {
-          console.log(child.identifierDescription.typeProbabilityMap)
-          console.log(testResult.err)
+          // console.log(child.identifierDescription.typeProbabilityMap)
+          // console.log(testResult.err)
           child.identifierDescription.typeProbabilityMap.addExecutionScore(child.type, -1)
         }
         queue.push(child)
