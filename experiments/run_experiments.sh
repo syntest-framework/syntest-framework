@@ -90,9 +90,9 @@ for incorporate in "${incorporate_execution_information[@]}"; do
       continue
     fi
 
-    for i in {1..1}; do
+    for i in {1..20}; do
       echo "running ${experiment_name} ex=${experiment_name} time=${time} inference=${incorporate} mode=${mode} trial ${i} for ${benchmark_name[$x]} with files ${benchmark_files[$x]}"
-      func1 incorporate mode x i &> "log_${incorporate}_${mode}_${i}" &
+      func1 incorporate "$mode" "$x" "$i" &> "log_${incorporate}_${mode}_${i}" &
    done
   done
 done
