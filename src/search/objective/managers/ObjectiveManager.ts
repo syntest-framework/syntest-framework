@@ -160,14 +160,14 @@ export abstract class ObjectiveManager<T extends Encoding> {
         .filter((objective) => objective.getIdentifier() === hash).length;
       if (numOfExceptions === 0) {
         // TODO this makes the archive become too large crashing the tool
-        // this._archive.update(
-        //   new ExceptionObjectiveFunction(
-        //     this._subject,
-        //     hash,
-        //     result.getExceptions()
-        //   ),
-        //   encoding
-        // );
+        this._archive.update(
+          new ExceptionObjectiveFunction(
+            this._subject,
+            hash,
+            result.getExceptions()
+          ),
+          encoding
+        );
       }
     }
   }
