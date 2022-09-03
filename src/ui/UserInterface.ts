@@ -17,8 +17,8 @@
  */
 
 export abstract class UserInterface {
-  protected silent: boolean;
-  protected verbose: boolean;
+  silent: boolean;
+  verbose: boolean;
 
   constructor(silent = false, verbose = false) {
     this.silent = silent;
