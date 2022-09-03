@@ -1,14 +1,8 @@
 import * as chai from "chai";
 import {
-  guessCWD,
-  loadConfig,
-  processConfig,
-  setupLogger,
-  setupOptions,
   setUserInterface,
   CommandLineInterface,
   Properties,
-  Encoding,
   EncodingRunner,
   EncodingSampler,
 } from "../../../src";
@@ -18,7 +12,7 @@ import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import { BranchObjectiveFunction } from "../../../src";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
-import { Test } from "mocha";
+import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -26,19 +20,8 @@ const expect = chai.expect;
  * @author Annibale Panichella
  */
 describe("Test MOSA", function () {
-  before(async () => {
-    await guessCWD(null);
-    await setupOptions("", "");
-    await loadConfig();
-    await processConfig({}, "");
-    await setupLogger();
-
-    setUserInterface(
-      new CommandLineInterface(
-        Properties.console_log_level === "silent",
-        Properties.console_log_level === "verbose"
-      )
-    );
+  before(() => {
+    setUserInterface(createStubInstance(CommandLineInterface));
   });
 
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
@@ -120,6 +103,9 @@ describe("Test MOSA", function () {
   });
 
   it("Test Preference Sorting", () => {
+    // This test requires a defined population size.
+    Properties.population_size = 4;
+
     const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
