@@ -20,7 +20,7 @@ export class SilentMochaReporter {
 
     runner
       .once(EVENT_RUN_BEGIN, () => {
-        console.log('start');
+        // console.log('start');
       })
       .on(EVENT_SUITE_BEGIN, () => {
         this.increaseIndent();
@@ -31,7 +31,7 @@ export class SilentMochaReporter {
       .on(EVENT_TEST_PASS, test => {
         // Test#fullTitle() returns the suite name(s)
         // prepended to the test title
-        console.log(`${this.indent()}pass: ${test.fullTitle()}`);
+        // console.log(`${this.indent()}pass: ${test.fullTitle()}`);
 
         if (test.duration > test.slow()) {
           test.speed = 'slow';
@@ -53,12 +53,12 @@ export class SilentMochaReporter {
         }
         this.failures.push(test);
 
-        console.log(
-          `${this.indent()}fail: ${test.fullTitle()} - error: ${err.message}`
-        );
+        // console.log(
+        //   `${this.indent()}fail: ${test.fullTitle()} - error: ${err.message}`
+        // );
       })
       .once(EVENT_RUN_END, () => {
-        console.log(`end: ${stats.passes}/${stats.passes + stats.failures} ok`);
+        // console.log(`end: ${stats.passes}/${stats.passes + stats.failures} ok`);
       });
   }
 

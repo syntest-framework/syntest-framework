@@ -189,6 +189,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
     }
 
+    // console.log(identifierDescription.name)
+    // console.log(identifierDescription.typeProbabilityMap)
     let chosenType: string
 
     if (Properties['type_inference_mode'] === 'roulette'

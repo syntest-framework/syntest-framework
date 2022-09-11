@@ -59,23 +59,11 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     delete originalrequire.cache[testPath];
     mocha.addFile(testPath);
 
-    // By replacing the global log function we disable the output of the truffle test framework
-    const levels = ['log', 'debug', 'info', 'warn', 'error'];
-    const originalFunctions = levels.map(level => console[level]);
-    levels.forEach((level) => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      console[level] = () => {}
-    })
-
     let runner: Runner = null
 
     // Finally, run mocha.
     await new Promise((resolve) => {
       runner = mocha.run((failures) => resolve(failures))
-    })
-
-    levels.forEach((level, index) => {
-      console[level] = originalFunctions[index]
     })
 
     const stats = runner.stats
@@ -214,6 +202,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // Remove test file
     await this.suiteBuilder.deleteTestCase(testPath);
+
+    await mocha.dispose()
 
     return executionResult;
   }
