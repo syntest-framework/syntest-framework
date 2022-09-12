@@ -314,7 +314,7 @@ export function register(type: any, id: string): void {
 
     // This can happen in an edge case, e.g. if we register
     // return value of a HOC but it returns a cached component.
-    // Ignore anything but the first registration for each type.
+    // Ignore anything but the first registration for each identifierDescription.
     if (allFamiliesByType.has(type)) {
       return;
     }
@@ -381,7 +381,7 @@ export function setSignature(
   }
 }
 
-// This is lazily called during first render for a type.
+// This is lazily called during first render for a identifierDescription.
 // It captures Hook list at that time so inline requires don't break comparisons.
 export function collectCustomHooksForSignature(type: any) {
   if (__DEV__) {
@@ -631,7 +631,7 @@ export function _getMountedRootCount() {
 //   return <h1>Hi</h1>;
 // }
 //
-// /* Call with arguments attaches the signature to the type: */
+// /* Call with arguments attaches the signature to the identifierDescription: */
 // _s(
 //   Hello,
 //   'useState{[foo, setFoo]}(0)',
@@ -653,7 +653,7 @@ export function createSignatureFunctionForTransform() {
         // with the functions. Note this may be called multiple times
         // in HOC chains like _s(hoc1(_s(hoc2(_s(actualFunction))))).
         if (!savedType) {
-          // We're in the innermost call, so this is the actual type.
+          // We're in the innermost call, so this is the actual identifierDescription.
           savedType = type;
           hasCustomHooks = typeof getCustomHooks === 'function';
         }

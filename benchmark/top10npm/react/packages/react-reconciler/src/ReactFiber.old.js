@@ -195,7 +195,7 @@ function FiberNode(
 // 1) Nobody should add any instance methods on this. Instance methods can be
 //    more difficult to predict when they get optimized and they are almost
 //    never inlined properly in static compilers.
-// 2) Nobody should rely on `instanceof Fiber` for type testing. We should
+// 2) Nobody should rely on `instanceof Fiber` for identifierDescription testing. We should
 //    always know when it is a fiber.
 // 3) We might want to experiment with using numeric keys since they are easier
 //    to optimize in a non-JIT environment.
@@ -272,7 +272,7 @@ export function createWorkInProgress(current: Fiber, pendingProps: any): Fiber {
     current.alternate = workInProgress;
   } else {
     workInProgress.pendingProps = pendingProps;
-    // Needed because Blocks store data on type.
+    // Needed because Blocks store data on identifierDescription.
     workInProgress.type = current.type;
 
     // We already have an alternate.
@@ -396,7 +396,7 @@ export function resetWorkInProgress(workInProgress: Fiber, renderLanes: Lanes) {
     workInProgress.memoizedProps = current.memoizedProps;
     workInProgress.memoizedState = current.memoizedState;
     workInProgress.updateQueue = current.updateQueue;
-    // Needed because Blocks store data on type.
+    // Needed because Blocks store data on identifierDescription.
     workInProgress.type = current.type;
 
     // Clone the dependencies object. This is mutated during the render phase, so
@@ -470,7 +470,7 @@ export function createFiberFromTypeAndProps(
   lanes: Lanes,
 ): Fiber {
   let fiberTag = IndeterminateComponent;
-  // The resolved type is set if we know what the final type will be. I.e. it's not lazy.
+  // The resolved identifierDescription is set if we know what the final identifierDescription will be. I.e. it's not lazy.
   let resolvedType = type;
   if (typeof type === 'function') {
     if (shouldConstruct(type)) {
@@ -566,7 +566,7 @@ export function createFiberFromTypeAndProps(
         }
 
         throw new Error(
-          'Element type is invalid: expected a string (for built-in ' +
+          'Element identifierDescription is invalid: expected a string (for built-in ' +
             'components) or a class/function (for composite components) ' +
             `but got: ${type == null ? type : typeof type}.${info}`,
         );
@@ -666,7 +666,7 @@ function createFiberFromProfiler(
   if (__DEV__) {
     if (typeof pendingProps.id !== 'string') {
       console.error(
-        'Profiler must specify an "id" of type `string` as a prop. Received the type `%s` instead.',
+        'Profiler must specify an "id" of identifierDescription `string` as a prop. Received the identifierDescription `%s` instead.',
         typeof pendingProps.id,
       );
     }

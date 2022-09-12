@@ -19,7 +19,7 @@
 
 import { Decoding, Statement } from "../Statement";
 import { EncodingSampler } from "@syntest/framework";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 
 /**
  * @author Dimitri Stallenberg
@@ -30,8 +30,8 @@ export abstract class PrimitiveStatement<T> extends Statement {
   }
   private _value: any;
 
-  constructor(type: Parameter, uniqueId: string, value: T) {
-    super(type, uniqueId);
+  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, value: T) {
+    super(identifierDescription, type, uniqueId);
     this._value = value;
   }
 

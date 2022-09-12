@@ -408,7 +408,7 @@ export function getInternalReactConstants(
     switch (typeSymbol) {
       case MEMO_NUMBER:
       case MEMO_SYMBOL_STRING:
-        // recursively resolving memo type in case of memo(forwardRef(Component))
+        // recursively resolving memo identifierDescription in case of memo(forwardRef(Component))
         return resolveFiberType(type.type);
       case FORWARD_REF_NUMBER:
       case FORWARD_REF_SYMBOL_STRING:
@@ -458,7 +458,7 @@ export function getInternalReactConstants(
         return null;
       case LazyComponent:
         // This display name will not be user visible.
-        // Once a Lazy component loads its inner component, React replaces the tag and type.
+        // Once a Lazy component loads its inner component, React replaces the tag and identifierDescription.
         // This display name will only show up in console logs when DevTools DEBUG mode is on.
         return 'Lazy';
       case MemoComponent:
@@ -497,8 +497,8 @@ export function getInternalReactConstants(
             return `${resolvedContext.displayName || 'Context'}.Provider`;
           case CONTEXT_NUMBER:
           case CONTEXT_SYMBOL_STRING:
-            // 16.3-16.5 read from "type" because the Consumer is the actual context object.
-            // 16.6+ should read from "type._context" because Consumer can be different (in DEV).
+            // 16.3-16.5 read from "identifierDescription" because the Consumer is the actual context object.
+            // 16.6+ should read from "identifierDescription._context" because Consumer can be different (in DEV).
             // NOTE Keep in sync with inspectElementRaw()
             resolvedContext = fiber.type._context || fiber.type;
 
@@ -515,8 +515,8 @@ export function getInternalReactConstants(
           case SCOPE_SYMBOL_STRING:
             return 'Scope';
           default:
-            // ANY element type.
-            // This may mean a new element type that has not yet been added to DevTools.
+            // ANY element identifierDescription.
+            // This may mean a new element identifierDescription that has not yet been added to DevTools.
             return null;
         }
     }
@@ -1155,7 +1155,7 @@ export function attach(
     }
 
     // Untrack Fibers after a slight delay in order to support a Fast Refresh edge case:
-    // 1. Component type is updated and Fast Refresh schedules an update+remount.
+    // 1. Component identifierDescription is updated and Fast Refresh schedules an update+remount.
     // 2. flushPendingErrorsAndWarningsAfterDelay() runs, sees the old Fiber is no longer mounted
     //    (it's been disconnected by Fast Refresh), and calls untrackFiberID() to clear it from the Map.
     // 3. React flushes pending passive effects before it runs the next render,
@@ -3156,8 +3156,8 @@ export function attach(
       typeSymbol === CONTEXT_NUMBER ||
       typeSymbol === CONTEXT_SYMBOL_STRING
     ) {
-      // 16.3-16.5 read from "type" because the Consumer is the actual context object.
-      // 16.6+ should read from "type._context" because Consumer can be different (in DEV).
+      // 16.3-16.5 read from "identifierDescription" because the Consumer is the actual context object.
+      // 16.6+ should read from "identifierDescription._context" because Consumer can be different (in DEV).
       // NOTE Keep in sync with getDisplayNameForFiber()
       const consumerResolvedContext = type._context || type;
 

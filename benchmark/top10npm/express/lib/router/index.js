@@ -63,7 +63,7 @@ var proto = module.exports = function(options) {
 /**
  * Map the given param placeholder `name`(s) to the given callback.
  *
- * Parameter mapping is used to provide pre-conditions to routes
+ * IdentifierDescription mapping is used to provide pre-conditions to routes
  * which use normalized placeholders. For example a _:user_id_ parameter
  * could automatically load a user's information from the database without
  * any additional code,
@@ -554,7 +554,7 @@ function getProtohost(url) {
     : undefined
 }
 
-// get type for error message
+// get identifierDescription for error message
 function gettype(obj) {
   var type = typeof obj;
 

@@ -15,10 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export class ImportVisitor {
+import { Visitor } from "../Visitor";
+
+export class ImportVisitor extends Visitor {
   private _imports: Set<string>;
 
-  constructor() {
+  constructor(filePath) {
+    super(filePath)
     this._imports = new Set<string>();
   }
 
@@ -32,7 +35,8 @@ export class ImportVisitor {
       if (path.node.arguments[0].type === 'StringLiteral') {
         this._imports.add(path.node.arguments[0].value)
       } else {
-        throw new Error("This tool does not support dynamic require statements.")
+        // This tool does not support dynamic require statements.
+        // throw new Error("This tool does not support dynamic require statements.")
       }
     }
   };

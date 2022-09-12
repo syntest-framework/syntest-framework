@@ -2,7 +2,7 @@
 name: "\U0001F914 Support or Usage Question"
 about: Get help using Axios
 title: ''
-labels: 'type:question'
+labels: 'identifierDescription:question'
 assignees: ''
 
 ---

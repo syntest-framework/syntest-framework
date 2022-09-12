@@ -112,7 +112,7 @@ export class SchedulingEventsView extends View {
           break;
         default:
           if (__DEV__) {
-            console.warn('Unexpected event type "%s"', type);
+            console.warn('Unexpected event identifierDescription "%s"', type);
           }
           break;
       }

@@ -19,7 +19,7 @@ function evalStringConcat(ast /* : OBJECT */) /* : string */ {
       }
       return evalStringConcat(ast.left) + evalStringConcat(ast.right);
     default:
-      throw new Error('Unsupported type ' + ast.type);
+      throw new Error('Unsupported identifierDescription ' + ast.type);
   }
 }
 exports.evalStringConcat = evalStringConcat;
@@ -44,7 +44,7 @@ function evalStringAndTemplateConcat(
       for (let i = 0; i < ast.quasis.length; i++) {
         const elementNode = ast.quasis[i];
         if (elementNode.type !== 'TemplateElement') {
-          throw new Error('Unsupported type ' + ast.type);
+          throw new Error('Unsupported identifierDescription ' + ast.type);
         }
         elements.push(elementNode.value.cooked);
       }

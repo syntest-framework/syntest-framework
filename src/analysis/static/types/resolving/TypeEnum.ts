@@ -17,13 +17,7 @@
  */
 import { ElementType } from "../discovery/Element";
 
-export interface Typing {
-  type: TypingType
-  name?: string
-  import?: string
-}
-
-export enum TypingType {
+export enum TypeEnum {
   ANY='any',
   NUMERIC='numeric',
   STRING='string',
@@ -37,17 +31,17 @@ export enum TypingType {
   FUNCTION='function'
 }
 
-export function elementTypeToTypingType(elementType: ElementType): TypingType | void {
+export function elementTypeToTypingType(elementType: ElementType): TypeEnum | void {
   switch (elementType) {
   case ElementType.BooleanConstant:
-    return TypingType.BOOLEAN
+    return TypeEnum.BOOLEAN
   case ElementType.StringConstant:
-    return TypingType.STRING
+    return TypeEnum.STRING
   case ElementType.NumericalConstant:
-    return TypingType.NUMERIC
+    return TypeEnum.NUMERIC
   case ElementType.NullConstant:
-    return TypingType.NULL
+    return TypeEnum.NULL
   case ElementType.RegexConstant:
-    return TypingType.REGEX
+    return TypeEnum.REGEX
   }
 }

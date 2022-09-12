@@ -2,7 +2,7 @@
 
 exports[`error transform handles escaped backticks in template string 1`] = `
 "import _formatProdErrorMessage from \\"shared/formatProdErrorMessage\\";
-Error(_formatProdErrorMessage(231, listener, type));"
+Error(_formatProdErrorMessage(231, listener, identifierDescription));"
 `;
 
 exports[`error transform should not touch other calls or new expressions 1`] = `

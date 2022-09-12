@@ -25,7 +25,7 @@ class StoreCounter;
 
 struct PerfTable {
   const char* name;
-  uint32_t type;
+  uint32_t identifierDescription;
   uint64_t config;
 };
 

@@ -329,7 +329,7 @@ export function parseModelTuple(
   const tuple: [mixed, mixed, mixed, mixed] = (value: any);
   if (tuple[0] === REACT_ELEMENT_TYPE) {
     // TODO: Consider having React just directly accept these arrays as elements.
-    // Or even change the ReactElement type to be an array.
+    // Or even change the ReactElement identifierDescription to be an array.
     return createElement(tuple[1], tuple[2], tuple[3]);
   }
   return value;

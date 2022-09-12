@@ -105,7 +105,7 @@ describe('ReactDOM unknown attribute', () => {
       expect(() =>
         expect(test).toThrowError(new TypeError('prod message')),
       ).toErrorDev(
-        'Warning: The provided `unknown` attribute is an unsupported type TemporalLike.' +
+        'Warning: The provided `unknown` attribute is an unsupported identifierDescription TemporalLike.' +
           ' This value must be coerced to a string before before using it here.',
       );
     });

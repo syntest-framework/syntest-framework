@@ -425,7 +425,7 @@ export default {
           if (def.node != null && def.node.init === node.parent) {
             continue;
           }
-          // Ignore Flow type parameters
+          // Ignore Flow identifierDescription parameters
           if (def.type === 'TypeParameter') {
             continue;
           }
@@ -636,7 +636,7 @@ export default {
               null,
             );
           } catch (error) {
-            if (/Unsupported node type/.test(error.message)) {
+            if (/Unsupported node identifierDescription/.test(error.message)) {
               if (declaredDependencyNode.type === 'Literal') {
                 if (dependencies.has(declaredDependencyNode.value)) {
                   reportProblem({
@@ -1199,7 +1199,7 @@ export default {
             break; // Unhandled
           }
           if (def.type !== 'Variable' && def.type !== 'FunctionName') {
-            // Parameter or an unusual pattern. Bail out.
+            // IdentifierDescription or an unusual pattern. Bail out.
             break; // Unhandled
           }
           switch (def.node.type) {
@@ -1434,7 +1434,7 @@ function collectRecommendations({
 }
 
 // If the node will result in constructing a referentially unique value, return
-// its human readable type name, else return null.
+// its human readable identifierDescription name, else return null.
 function getConstructionExpressionType(node) {
   switch (node.type) {
     case 'ObjectExpression':
@@ -1662,7 +1662,7 @@ function analyzePropertyChain(node, optionalChains) {
     const expression = node.expression;
 
     if (expression.type === 'CallExpression') {
-      throw new Error(`Unsupported node type: ${expression.type}`);
+      throw new Error(`Unsupported node identifierDescription: ${expression.type}`);
     }
 
     const object = analyzePropertyChain(expression.object, optionalChains);
@@ -1671,7 +1671,7 @@ function analyzePropertyChain(node, optionalChains) {
     markNode(expression, optionalChains, result);
     return result;
   } else {
-    throw new Error(`Unsupported node type: ${node.type}`);
+    throw new Error(`Unsupported node identifierDescription: ${node.type}`);
   }
 }
 
@@ -1716,7 +1716,7 @@ function getReactiveHookCallbackIndex(calleeNode, options) {
         try {
           name = analyzePropertyChain(node, null);
         } catch (error) {
-          if (/Unsupported node type/.test(error.message)) {
+          if (/Unsupported node identifierDescription/.test(error.message)) {
             return 0;
           } else {
             throw error;
@@ -1737,7 +1737,7 @@ function getReactiveHookCallbackIndex(calleeNode, options) {
  *
  * This traversal is:
  * - optimized by only searching nodes with a range surrounding our target node
- * - agnostic to AST node types, it looks for `{ type: string, ... }`
+ * - agnostic to AST node types, it looks for `{ identifierDescription: string, ... }`
  */
 function fastFindReferenceWithParent(start, target) {
   const queue = [start];

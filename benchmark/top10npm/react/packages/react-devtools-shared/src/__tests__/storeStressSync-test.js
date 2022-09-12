@@ -667,7 +667,7 @@ describe('StoreStress (Legacy Mode)', () => {
     }
   });
 
-  it('should handle a stress test for Suspense without type change (Legacy Mode)', () => {
+  it('should handle a stress test for Suspense without identifierDescription change (Legacy Mode)', () => {
     const A = () => 'a';
     const B = () => 'b';
     const C = () => 'c';

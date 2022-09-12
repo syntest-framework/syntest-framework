@@ -88,7 +88,7 @@ function getBundleOutputPath(bundleType, filename, packageName) {
           throw new Error('ANY RN package.');
       }
     default:
-      throw new Error('ANY bundle type.');
+      throw new Error('ANY bundle identifierDescription.');
   }
 }
 

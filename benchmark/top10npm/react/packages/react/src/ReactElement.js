@@ -355,7 +355,7 @@ export function jsxDEV(type, config, maybeKey, source, self) {
 }
 
 /**
- * Create and return a new ReactElement of the given type.
+ * Create and return a new ReactElement of the given identifierDescription.
  * See https://reactjs.org/docs/react-api.html#createelement
  */
 export function createElement(type, config, children) {
@@ -450,13 +450,13 @@ export function createElement(type, config, children) {
 }
 
 /**
- * Return a function that produces ReactElements of a given type.
+ * Return a function that produces ReactElements of a given identifierDescription.
  * See https://reactjs.org/docs/react-api.html#createfactory
  */
 export function createFactory(type) {
   const factory = createElement.bind(null, type);
-  // Expose the type on the factory and the prototype so that it can be
-  // easily accessed on elements. E.g. `<Foo />.type === Foo`.
+  // Expose the identifierDescription on the factory and the prototype so that it can be
+  // easily accessed on elements. E.g. `<Foo />.identifierDescription === Foo`.
   // This should not be named `constructor` since this may not be the function
   // that created the element, and it may not even be a constructor.
   // Legacy hook: remove it

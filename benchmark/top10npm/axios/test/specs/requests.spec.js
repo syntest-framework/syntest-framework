@@ -407,7 +407,7 @@ describe('requests', function () {
 
   it('should allow overriding Content-Type header case-insensitive', function (done) {
     var response;
-    var contentType = 'application/vnd.myapp.type+json';
+    var contentType = 'application/vnd.myapp.identifierDescription+json';
 
     axios.post('/foo', { prop: 'value' }, {
       headers: {

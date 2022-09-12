@@ -22,7 +22,7 @@ describe('ReactDOMInput', () => {
   let setUntrackedChecked;
   let container;
 
-  function dispatchEventOnNode(node, type) {
+  function dispatchEventOnNode(node, identifierDescription) {
     node.dispatchEvent(new Event(type, {bubbles: true, cancelable: true}));
   }
 
@@ -713,7 +713,7 @@ describe('ReactDOMInput', () => {
     expect(nodeValueSetter).toHaveBeenCalledTimes(1);
   });
 
-  it('should not incur unnecessary DOM mutations for numeric type conversion', () => {
+  it('should not incur unnecessary DOM mutations for numeric identifierDescription conversion', () => {
     ReactDOM.render(<input value="0" onChange={() => {}} />, container);
 
     const node = container.firstChild;
@@ -732,7 +732,7 @@ describe('ReactDOMInput', () => {
     expect(nodeValueSetter).toHaveBeenCalledTimes(0);
   });
 
-  it('should not incur unnecessary DOM mutations for the boolean type conversion', () => {
+  it('should not incur unnecessary DOM mutations for the boolean identifierDescription conversion', () => {
     ReactDOM.render(<input value="true" onChange={() => {}} />, container);
 
     const node = container.firstChild;
@@ -1319,7 +1319,7 @@ describe('ReactDOMInput', () => {
         container,
       ),
     ).toErrorDev(
-      'A component contains an input of type radio with both checked and defaultChecked props. ' +
+      'A component contains an input of identifierDescription radio with both checked and defaultChecked props. ' +
         'Input elements must be either controlled or uncontrolled ' +
         '(specify either the checked prop, or the defaultChecked prop, but not ' +
         'both). Decide between using a controlled or uncontrolled input ' +
@@ -1346,7 +1346,7 @@ describe('ReactDOMInput', () => {
         container,
       ),
     ).toErrorDev(
-      'A component contains an input of type text with both value and defaultValue props. ' +
+      'A component contains an input of identifierDescription text with both value and defaultValue props. ' +
         'Input elements must be either controlled or uncontrolled ' +
         '(specify either the value prop, or the defaultValue prop, but not ' +
         'both). Decide between using a controlled or uncontrolled input ' +
@@ -1658,10 +1658,10 @@ describe('ReactDOMInput', () => {
     );
   });
 
-  it('sets type, step, min, max before value always', () => {
+  it('sets identifierDescription, step, min, max before value always', () => {
     const log = [];
     const originalCreateElement = document.createElement;
-    spyOnDevAndProd(document, 'createElement').and.callFake(function(type) {
+    spyOnDevAndProd(document, 'createElement').and.callFake(function(identifierDescription) {
       const el = originalCreateElement.apply(this, arguments);
       let value = '';
 
@@ -1695,7 +1695,7 @@ describe('ReactDOMInput', () => {
     );
 
     expect(log).toEqual([
-      'set attribute type',
+      'set attribute identifierDescription',
       'set attribute min',
       'set attribute max',
       'set attribute step',
@@ -1703,7 +1703,7 @@ describe('ReactDOMInput', () => {
     ]);
   });
 
-  it('sets value properly with type coming later in props', () => {
+  it('sets value properly with identifierDescription coming later in props', () => {
     const input = ReactDOM.render(<input value="hi" type="radio" />, container);
     expect(input.value).toBe('hi');
   });
@@ -1721,7 +1721,7 @@ describe('ReactDOMInput', () => {
     const input = ReactDOM.render(<Input />, container);
     const node = ReactDOM.findDOMNode(input);
 
-    // If the value is set before the type, a validation warning will raise and
+    // If the value is set before the identifierDescription, a validation warning will raise and
     // the value will not be assigned.
     input.setState({type: 'text', value: 'Test'});
     expect(node.value).toEqual('Test');
@@ -1734,7 +1734,7 @@ describe('ReactDOMInput', () => {
 
     const log = [];
     const originalCreateElement = document.createElement;
-    spyOnDevAndProd(document, 'createElement').and.callFake(function(type) {
+    spyOnDevAndProd(document, 'createElement').and.callFake(function(identifierDescription) {
       const el = originalCreateElement.apply(this, arguments);
       const getDefaultValue = Object.getOwnPropertyDescriptor(
         HTMLInputElement.prototype,
@@ -1782,14 +1782,14 @@ describe('ReactDOMInput', () => {
 
     if (disableInputAttributeSyncing) {
       expect(log).toEqual([
-        'node.setAttribute("type", "date")',
+        'node.setAttribute("identifierDescription", "date")',
         'node.defaultValue = "1980-01-01"',
         // TODO: it's possible this reintroduces the bug because we don't assign `value` at all.
         // Need to check this on mobile Safari and Chrome.
       ]);
     } else {
       expect(log).toEqual([
-        'node.setAttribute("type", "date")',
+        'node.setAttribute("identifierDescription", "date")',
         // value must be assigned before defaultValue. This fixes an issue where the
         // visually displayed value of date inputs disappears on mobile Safari and Chrome:
         // https://github.com/facebook/react/issues/7233
@@ -1809,7 +1809,7 @@ describe('ReactDOMInput', () => {
           this.setState({value: event.target.value});
         };
         render() {
-          const type = this.props.type;
+          const identifierDescription = this.props.type;
           const value = this.state.value;
 
           return <input type={type} value={value} onChange={this.onChange} />;

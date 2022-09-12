@@ -48,7 +48,6 @@ import {
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
 import { JavaScriptTargetMetaData, JavaScriptTargetPool } from "./analysis/static/JavaScriptTargetPool";
 import { AbstractSyntaxTreeGenerator } from "./analysis/static/ast/AbstractSyntaxTreeGenerator";
-import { Instrumenter } from "./instrumentation/Instrumenter";
 import * as path from "path";
 import { TargetMapGenerator } from "./analysis/static/map/TargetMapGenerator";
 import { JavaScriptSubject } from "./search/JavaScriptSubject";
@@ -67,12 +66,12 @@ import { Export } from "./analysis/static/dependency/ExportVisitor";
 import { Runner } from "mocha";
 import { TypeResolverInference } from "./analysis/static/types/resolving/logic/TypeResolverInference";
 import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
-import { ScopeType } from "./analysis/static/types/discovery/Scope";
 import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
+import { ActionType } from "./analysis/static/parsing/ActionType";
+import { existsSync } from "fs";
 
 const originalrequire = require("original-require");
 const Mocha = require('mocha')
-const { outputFileSync } = require("fs-extra");
 
 export class Launcher {
   private readonly _program = "syntest-javascript";
@@ -95,9 +94,15 @@ export class Launcher {
     // Filesystem & Compiler Re-configuration
     const additionalOptions = {
       use_type_inference: {
-        description: "The type inference mode",
+        description: "The identifierDescription inference mode",
         type: "boolean",
         default: true,
+      },
+      // TODO maybe remove the first one and add a identifierDescription inference mode called "none"
+      type_inference_mode: {
+        description: "The identifierDescription inference mode: [roulette, elitist, dynamic]",
+        type: "string",
+        default: "roulette",
       },
     };
     setupOptions(this._program, additionalOptions);
@@ -111,6 +116,11 @@ export class Launcher {
     const config = loadConfig(args);
     processConfig(config, args);
     setupLogger();
+
+    if (existsSync('.syntest')) {
+      await deleteTempDirectories();
+    }
+
     await createDirectoryStructure();
     await createTempDirectoryStructure();
 
@@ -230,32 +240,9 @@ export class Launcher {
   ): Promise<
     [Archive<JavaScriptTestCase>, Map<string, Export[]>, Export[]]
   > {
-    const targetPaths= new Set<string>();
+    await targetPool.prepareAndInstrument()
 
-    for (const target of targetPool.targets) {
-      targetPool.getInstrumentationTargets(target.canonicalPath)
-        .forEach((path) => {
-          targetPaths.add(path)
-        })
-    }
-
-    const instrumenter = new Instrumenter();
-
-    for (const targetPath of targetPaths) {
-      const source = targetPool.getSource(targetPath)
-      const instrumentedSource = await instrumenter.instrument(
-        source,
-        targetPath
-      );
-
-      const _path = path
-        .normalize(targetPath)
-        .replace(
-          process.cwd(),
-          Properties.temp_instrumented_directory
-        );
-      await outputFileSync(_path, instrumentedSource);
-    }
+    targetPool.scanTargetRootDirectory()
 
     const finalArchive = new Archive<JavaScriptTestCase>();
     let finalDependencies: Map<string, Export[]> = new Map();
@@ -283,11 +270,9 @@ export class Launcher {
     targetPath: string,
     targetMeta: JavaScriptTargetMetaData
   ): Promise<Archive<JavaScriptTestCase>> {
-    targetPool.resolveTypes(targetPath)
-
     const cfg = targetPool.getCFG(targetPath, targetMeta.name);
 
-    if (Properties.draw_cfg || true) {
+    if (Properties.draw_cfg) {
       drawGraph(
         cfg,
         path.join(
@@ -304,7 +289,14 @@ export class Launcher {
     for (const key of functionMap.keys()) {
       const func = functionMap.get(key)
       for (const param of func.parameters) {
-        param.type = targetPool.typeResolver.getTyping(func.name, ScopeType.Function, param.name)
+        if (func.type === ActionType.FUNCTION) {
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
+        } else if (func.type === ActionType.METHOD
+          || func.type === ActionType.CONSTRUCTOR) {
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
+        } else {
+          throw new Error(`Unimplemented action identifierDescription ${func.type}`)
+        }
       }
     // TODO return types
     }
@@ -327,7 +319,7 @@ export class Launcher {
     const exports = targetPool.getExports(targetPath)
 
 
-    const decoder = new JavaScriptDecoder(dependencyMap, exports)
+    const decoder = new JavaScriptDecoder(targetPool, dependencyMap, exports)
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
     const runner = new JavaScriptRunner(suiteBuilder)
 
@@ -409,6 +401,7 @@ export class Launcher {
     await clearDirectory(testDir);
 
     const decoder = new JavaScriptDecoder(
+      targetPool,
       dependencies,
       exports,
       '../../.syntest/instrumented'

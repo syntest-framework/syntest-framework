@@ -1,6 +1,6 @@
 # `react-is`
 
-This package allows you to test arbitrary values and see if they're a particular React element type.
+This package allows you to test arbitrary values and see if they're a particular React element identifierDescription.
 
 ## Installation
 

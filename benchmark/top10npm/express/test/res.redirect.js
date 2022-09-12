@@ -125,7 +125,7 @@ describe('res', function(){
       .expect(302, '<p>Found. Redirecting to <a href="%3Cla&#39;me%3E">%3Cla&#39;me%3E</a></p>', done)
     })
 
-    it('should include the redirect type', function(done){
+    it('should include the redirect identifierDescription', function(done){
       var app = express();
 
       app.use(function(req, res){
@@ -173,7 +173,7 @@ describe('res', function(){
       .expect(302, 'Found. Redirecting to http://example.com/?param=%3Cscript%3Ealert(%22hax%22);%3C/script%3E', done)
     })
 
-    it('should include the redirect type', function(done){
+    it('should include the redirect identifierDescription', function(done){
       var app = express();
 
       app.use(function(req, res){

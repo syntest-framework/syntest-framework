@@ -154,7 +154,7 @@ function test(app) {
     .expect({"message":"hey"}, done);
   })
 
-  it('should allow wildcard type/subtypes', function(done){
+  it('should allow wildcard identifierDescription/subtypes', function(done){
     request(app)
     .get('/')
     .set('Accept', 'text/html; q=.5, application/*, */*; q=.1')

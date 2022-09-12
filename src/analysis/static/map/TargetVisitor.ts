@@ -16,18 +16,19 @@
  * limitations under the License.
  */
 import { TargetMetaData } from "@syntest/framework";
-import { TypeProbabilityMap } from "../types/resolving/TypeProbabilityMap";
 import { ActionType } from "../parsing/ActionType";
 import { ActionVisibility } from "../parsing/ActionVisibility";
 import { ActionDescription } from "../parsing/ActionDescription";
+import { TypeProbability } from "../types/resolving/TypeProbability";
+import { Visitor } from "../Visitor";
 
-// TODO check if exported (and how)
-export class TargetVisitor {
+// TODO only top level functions should be targettet
+export class TargetVisitor extends Visitor {
   private _targetMap: Map<string, TargetMetaData>;
   private _functionMap: Map<string, Map<string, ActionDescription>>;
 
-
-  constructor() {
+  constructor(filePath: string) {
+    super(filePath)
     this._targetMap = new Map<string, TargetMetaData>();
     this._functionMap = new Map<string, Map<string, ActionDescription>>();
   }
@@ -42,10 +43,105 @@ export class TargetVisitor {
     }
   }
 
-  public ClassDeclaration: (path) => void = (path) => {
-    const targetName = path.node.id.name;
+  // classic function declarations
+  public FunctionExpression: (path) => void = (path) => {
+    if (path.parent.type === 'CallExpression'
+      || path.parent.type === 'NewExpression'
+      || path.parent.type === 'ReturnStatement'
+      || path.parent.type === 'LogicalExpression'
+      || path.parent.type === 'ConditionalExpression'
+      || path.parent.type === 'AssignmentExpression') {
+      // anonymous argument function cannot call is not target
+      return
+    }
+
+    let targetName;
+
+    if (path.node.id) {
+      targetName = path.node.id.name;
+    } else if (path.parent.type === 'ObjectProperty') {
+      // get identifier from assignment expression
+      if (path.parent.key.type === 'Identifier') {
+        targetName = path.parent.key.name
+      } else {
+        throw new Error("unknown function expression name")
+      }
+
+    } else if (path.parent.type === 'VariableDeclarator') {
+      // get identifier from assignment expression
+      if (path.parent.id.type === 'Identifier') {
+        targetName = path.parent.id.name
+      } else {
+        throw new Error("unknown function expression name")
+      }
+
+    } else {
+      throw new Error("unknown function expression name")
+    }
+
+    const functionName = targetName;
+
     this._createMaps(targetName)
-  };
+
+    this._functionMap.get(targetName).set(functionName, {
+      scope: this._getScope(path, targetName),
+      name: functionName,
+      type: ActionType.FUNCTION,
+      visibility: ActionVisibility.PUBLIC,
+      isConstructor: false,
+      parameters: path.node.params.map(this._extractParam),
+      returnParameter: {
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
+      },
+      isStatic: path.node.static,
+      isAsync: path.node.async,
+    });
+  }
+
+  Program: (path) => void = (path) => {
+    if (this.scopeIdOffset === undefined) {
+      this.scopeIdOffset = path.scope.uid
+    }
+
+    for (const key of Object.keys(path.scope.bindings)) {
+      const binding = path.scope.bindings[key]
+
+      const newScopeUid = binding.path.scope.uid
+
+      const node = binding.path.node
+
+      if (node.type === 'VariableDeclarator') {
+        let init = node.init
+
+        if (!init) {
+          continue
+        }
+
+        //
+        // while (init.type === 'Identifier') {
+        //   if (!path.scope.hasBinding(init.name)) {
+        //     break
+        //   }
+        //   init = path.scope.bindings[init.name].path.node
+        // }
+        //
+        if (init.type === "ArrowFunctionExpression") {
+          const targetName = binding.identifier.name
+          this._createMaps(targetName)
+          this._createFunction(newScopeUid, targetName, targetName, init)
+        }
+
+      } else if (node.type === 'ClassDeclaration') {
+        const targetName = node.id.name;
+        this._createMaps(targetName)
+      } else if (node.type === 'FunctionDeclaration') {
+        const targetName = node.id.name;
+        this._createMaps(targetName)
+        this._createFunction(newScopeUid, targetName, targetName, node)
+      }
+    }
+  }
 
   public ClassMethod: (path) => void = (path) => {
     const targetName = path.parentPath.parentPath.node.id.name;
@@ -59,75 +155,150 @@ export class TargetVisitor {
     }
 
     this._functionMap.get(targetName).set(functionName, {
+      scope: this._getScope(path, functionName),
       name: functionName,
       type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
       visibility: visibility,
       isConstructor: functionName === "constructor",
       parameters: path.node.params.map(this._extractParam),
       returnParameter: {
-        name: "unknown",
-        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
       },
       isStatic: path.node.static,
       isAsync: path.node.async,
     });
   };
 
-  // classic function declarations
-  public FunctionDeclaration: (path) => void = (path) => {
-    const targetName = path.node.id.name;
-    const functionName = targetName;
+  // prototyping
+  public AssignmentExpression: (path) => void = (path) => {
+    if (path.node.right.type !== "FunctionExpression") {
+      return
+    }
 
-    this._createMaps(targetName)
+    let targetName
 
-    this._functionMap.get(targetName).set(functionName, {
-      name: functionName,
+    if (path.node.left.type === "MemberExpression") {
+      if (path.node.left.object.type === 'MemberExpression'
+        && path.node.left.object.property.name === 'prototype') {
+        targetName = path.node.left.object.object.name
+        const functionName = path.node.left.property.name
+
+        if (path.node.left.computed) {
+          // we cannot know the name of computed properties unless we find out what the identifier refers to
+          // see line 136 of Axios.js as example
+          // Axios.prototype[method] = ?
+          return
+        }
+
+        if (functionName === "method") {
+          console.log(path.node)
+          process.exit()
+        }
+
+        if (!this._functionMap.has(targetName)) {
+          throw new Error("target not discovered yet")
+        }
+
+        // modify original
+        this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
+        this._functionMap.get(targetName).get(targetName).isConstructor = true
+
+        // TODO this one is probably wrong
+
+        this._functionMap.get(targetName).set(functionName, {
+          scope: this._getScope(path, functionName),
+          name: functionName,
+          type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
+          visibility: ActionVisibility.PUBLIC,
+          isConstructor: functionName === "constructor",
+          parameters: path.node.right.params.map(this._extractParam),
+          returnParameter: {
+            name: "returnValue",
+            typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
+          },
+          isStatic: path.node.right.static,
+          isAsync: path.node.right.async,
+        });
+        return
+      } else {
+        targetName = path.node.left.property.name
+      }
+
+    } else if (path.node.left.type === 'Identifier') {
+        targetName = path.node.left.name
+    } else {
+      console.log(path.node)
+      throw new Error("unknown function expression name")
+    }
+
+    console.log(path)
+
+    // TODO this one is probably wrong
+    if (!this.targetMap.has(targetName)) {
+      this._createMaps(targetName)
+    }
+
+    this._functionMap.get(targetName).set(targetName, {
+      scope: this._getScope(path, targetName),
+      name: targetName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
       isConstructor: false,
-      parameters: path.node.params.map(this._extractParam),
+      parameters: path.node.right.params.map(this._extractParam),
       returnParameter: {
-        name: "unknown",
-        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
       },
-      isStatic: path.node.static,
-      isAsync: path.node.async,
+      isStatic: path.node.right.static,
+      isAsync: path.node.right.async,
     });
   }
 
-  // arrow function
-  public ArrowFunctionExpression: (path) => void = (path) => {
-    const targetName = path.node.id
-      ? path.node.id.name
-      : (path.parent.id
-        ? path.parent.id.name
-        : 'anonymous');
-    const functionName = targetName;
-
-    this._createMaps(targetName)
-
+    // functions
+  public _createFunction (newScopeUid, targetName: string, functionName: string, node) {
     this._functionMap.get(targetName).set(functionName, {
+      scope: {
+        uid: `${newScopeUid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
       isConstructor: false,
-      parameters: path.node.params.map(this._extractParam),
+      parameters: node.params.map(this._extractParam),
       returnParameter: {
-        name: "unknown",
-        type: new TypeProbabilityMap(), // TODO unknown because javascript! (check how this looks in typescript)
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbability(),
       },
-      isStatic: path.node.static,
-      isAsync: path.node.async,
+      isStatic: node.static,
+      isAsync: node.async,
     });
   }
 
   _extractParam(param: any) {
       if (param.type === 'RestElement') {
         // TODO this can actually be an infinite amount of arguments...
+        param = param.argument
+      }
+
+      if (param.type === "AssignmentPattern") {
+        param = param.left
+      }
+
+    if (param.type === "ObjectPattern") {
+      param = {
+        name: `{${param.properties.map((x)=> x.key.name).join(',')}}`
+      }
+    }
+
+      if (!param.name) {
+        console.log(param)
+        throw new Error("Unknown param")
       }
 
       return {
-        name: param.name || "unknown",
+        name: param.name,
         type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
       };
 

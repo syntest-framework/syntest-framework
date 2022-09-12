@@ -30,7 +30,7 @@ yarn start
 # 1: Build react from source
 cd /path/to/react
 yarn
-yarn build react-dom/index,react/index,react-cache,scheduler --type=NODE
+yarn build react-dom/index,react/index,react-cache,scheduler --identifierDescription=NODE
 
 # 2: Install fixture dependencies
 cd fixtures/unstable-async/time-slicing/

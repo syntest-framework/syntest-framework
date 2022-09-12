@@ -1190,7 +1190,7 @@ describe('ReactShallowRenderer', () => {
 
     const shallowRenderer = createRenderer();
     expect(() => shallowRenderer.render(<SimpleComponent />)).toErrorDev(
-      'Warning: Failed context type: The context `name` is marked as ' +
+      'Warning: Failed context identifierDescription: The context `name` is marked as ' +
         'required in `SimpleComponent`, but its value is `undefined`.\n' +
         '    in SimpleComponent (at **)',
     );
@@ -1211,7 +1211,7 @@ describe('ReactShallowRenderer', () => {
     expect(() =>
       shallowRenderer.render(React.createElement(SimpleComponent, {name: 123})),
     ).toErrorDev(
-      'Warning: Failed prop type: Invalid prop `name` of type `number` ' +
+      'Warning: Failed prop identifierDescription: Invalid prop `name` of identifierDescription `number` ' +
         'supplied to `SimpleComponent`, expected `string`.\n' +
         '    in SimpleComponent',
     );
@@ -1339,7 +1339,7 @@ describe('ReactShallowRenderer', () => {
     const renderAndVerifyWarningAndError = (Component, typeString) => {
       expect(() => {
         expect(() => shallowRenderer.render(<Component />)).toErrorDev(
-          'React.createElement: type is invalid -- expected a string ' +
+          'React.createElement: identifierDescription is invalid -- expected a string ' +
             '(for built-in components) or a class/function (for composite components) ' +
             `but got: ${typeString}.`,
         );
@@ -1560,7 +1560,7 @@ describe('ReactShallowRenderer', () => {
     );
   });
 
-  it('should let you change type', () => {
+  it('should let you change identifierDescription', () => {
     function Foo({prop}) {
       return <div>Foo {prop}</div>;
     }
@@ -1579,7 +1579,7 @@ describe('ReactShallowRenderer', () => {
     expect(shallowRenderer.getRenderOutput()).toEqual(<div>Bar {'bar2'}</div>);
   });
 
-  it('should let you change class type', () => {
+  it('should let you change class identifierDescription', () => {
     class Foo extends React.Component {
       render() {
         return <div>Foo {this.props.prop}</div>;

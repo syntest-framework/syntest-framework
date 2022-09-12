@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Parameter } from "./Parameter";
+import { IdentifierDescription } from "./IdentifierDescription";
 import { ActionType } from "./ActionType";
 import { ActionVisibility } from "./ActionVisibility";
+import { Scope } from "../types/discovery/Scope";
 
 /**
  * Interface for a Action Description.
@@ -25,6 +26,7 @@ import { ActionVisibility } from "./ActionVisibility";
  * @author Dimitri Stallenberg
  */
 export interface ActionDescription {
+  scope: Scope;
   name: string;
   type: ActionType;
 
@@ -34,6 +36,6 @@ export interface ActionDescription {
   isStatic: boolean;
   isAsync: boolean;
 
-  parameters: Parameter[];
-  returnParameter: Parameter;
+  parameters: IdentifierDescription[];
+  returnParameter: IdentifierDescription;
 }

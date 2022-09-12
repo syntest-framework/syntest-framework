@@ -326,7 +326,7 @@ function releasePooledEvent(event) {
 
   if (!(event instanceof EventConstructor)) {
     throw new Error(
-      'Trying to release an event instance into a pool of a different type.',
+      'Trying to release an event instance into a pool of a different identifierDescription.',
     );
   }
 

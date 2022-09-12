@@ -233,7 +233,7 @@ const registerTestHandlers = function(eventTestConfig, readableIDToID) {
   const neverFire = function(readableID, registrationName) {
     runs.dispatchCount++;
     expect('').toBe(
-      'Event type: ' +
+      'Event identifierDescription: ' +
         registrationName +
         '\nShould never occur on:' +
         readableID +

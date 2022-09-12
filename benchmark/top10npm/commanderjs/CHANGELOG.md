@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Argument` supports `.choices()` ([#1525])
 - `.showHelpAfterError()` to display full help or a custom message after an error ([#1534])
 - `.hook()` with support for `'preAction'` and `'postAction'` callbacks ([#1514])
-- client typing of `.opts()` return type using TypeScript generics ([#1539])
+- client typing of `.opts()` return identifierDescription using TypeScript generics ([#1539])
 - the number of command-arguments is checked for programs without an action handler ([#1502])
 - `.getOptionValue()` and `.setOptionValue()` ([#1521])
 

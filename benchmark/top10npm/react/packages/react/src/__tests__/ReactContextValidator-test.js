@@ -157,7 +157,7 @@ describe('ReactContextValidator', () => {
     };
 
     expect(() => ReactTestUtils.renderIntoDocument(<Component />)).toErrorDev(
-      'Warning: Failed context type: ' +
+      'Warning: Failed context identifierDescription: ' +
         'The context `foo` is marked as required in `Component`, but its value ' +
         'is `undefined`.\n' +
         '    in Component (at **)',
@@ -203,8 +203,8 @@ describe('ReactContextValidator', () => {
         <ComponentInFooNumberContext fooValue={123} />,
       ),
     ).toErrorDev(
-      'Warning: Failed context type: ' +
-        'Invalid context `foo` of type `number` supplied ' +
+      'Warning: Failed context identifierDescription: ' +
+        'Invalid context `foo` of identifierDescription `number` supplied ' +
         'to `Component`, expected `string`.\n' +
         '    in Component (at **)\n' +
         '    in ComponentInFooNumberContext (at **)',
@@ -229,7 +229,7 @@ describe('ReactContextValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<Component testContext={{bar: 123}} />),
     ).toErrorDev(
-      'Warning: Failed child context type: ' +
+      'Warning: Failed child context identifierDescription: ' +
         'The child context `foo` is marked as required in `Component`, but its ' +
         'value is `undefined`.\n' +
         '    in Component (at **)',
@@ -238,8 +238,8 @@ describe('ReactContextValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<Component testContext={{foo: 123}} />),
     ).toErrorDev(
-      'Warning: Failed child context type: ' +
-        'Invalid child context `foo` of type `number` ' +
+      'Warning: Failed child context identifierDescription: ' +
+        'Invalid child context `foo` of identifierDescription `number` ' +
         'supplied to `Component`, expected `string`.\n' +
         '    in Component (at **)',
     );
@@ -268,7 +268,7 @@ describe('ReactContextValidator', () => {
     }
 
     expect(() => ReactTestUtils.renderIntoDocument(<Component />)).toErrorDev(
-      'Warning: Failed prop type: The prop `value` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `value` is marked as required in ' +
         '`Context.Provider`, but its value is `undefined`.\n' +
         '    in Component (at **)',
     );
@@ -300,7 +300,7 @@ describe('ReactContextValidator', () => {
         'getChildContext() on ComponentA or remove childContextTypes from it.',
     );
 
-    // Warnings should be deduped by component type
+    // Warnings should be deduped by component identifierDescription
     ReactTestUtils.renderIntoDocument(<ComponentA />);
 
     expect(() => ReactTestUtils.renderIntoDocument(<ComponentB />)).toErrorDev(
@@ -354,7 +354,7 @@ describe('ReactContextValidator', () => {
       'Warning: MiddleMissingContext.childContextTypes is specified but there is no ' +
         'getChildContext() method on the instance. You can either define getChildContext() ' +
         'on MiddleMissingContext or remove childContextTypes from it.',
-      'Warning: Failed context type: The context `bar` is marked as required ' +
+      'Warning: Failed context identifierDescription: The context `bar` is marked as required ' +
         'in `ChildContextConsumer`, but its value is `undefined`.',
     ]);
     expect(childContext.bar).toBeUndefined();
@@ -519,7 +519,7 @@ describe('ReactContextValidator', () => {
         'The legacy contextTypes property will be ignored.',
     );
 
-    // Warnings should be deduped by component type
+    // Warnings should be deduped by component identifierDescription
     ReactTestUtils.renderIntoDocument(
       <ParentContextProvider>
         <ComponentA />
@@ -563,7 +563,7 @@ describe('ReactContextValidator', () => {
         'Did you accidentally pass the Context.Consumer instead?',
     );
 
-    // Warnings should be deduped by component type
+    // Warnings should be deduped by component identifierDescription
     ReactTestUtils.renderIntoDocument(<ComponentA />);
 
     expect(() => {
@@ -670,7 +670,7 @@ describe('ReactContextValidator', () => {
       'Warning: ComponentA: FUNCTION components do not support contextType.',
     );
 
-    // Warnings should be deduped by component type
+    // Warnings should be deduped by component identifierDescription
     ReactTestUtils.renderIntoDocument(<ComponentA />);
 
     expect(() => ReactTestUtils.renderIntoDocument(<ComponentB />)).toErrorDev(
@@ -678,7 +678,7 @@ describe('ReactContextValidator', () => {
     );
   });
 
-  it('should honor a displayName if set on the context type', () => {
+  it('should honor a displayName if set on the context identifierDescription', () => {
     const Context = React.createContext(null);
     Context.displayName = 'MyContextType';
     function Validator() {
@@ -693,12 +693,12 @@ describe('ReactContextValidator', () => {
         </Context.Provider>,
       );
     }).toErrorDev(
-      'Warning: Failed prop type: The prop `dontPassToSeeErrorStack` is marked as required in `Validator`, but its value is `undefined`.\n' +
+      'Warning: Failed prop identifierDescription: The prop `dontPassToSeeErrorStack` is marked as required in `Validator`, but its value is `undefined`.\n' +
         '    in Validator (at **)',
     );
   });
 
-  it('warns if displayName is set on the consumer type', () => {
+  it('warns if displayName is set on the consumer identifierDescription', () => {
     const Context = React.createContext(null);
 
     expect(() => {

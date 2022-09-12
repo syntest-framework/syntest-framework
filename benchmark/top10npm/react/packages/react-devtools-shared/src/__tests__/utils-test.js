@@ -48,7 +48,7 @@ describe('utils', () => {
   });
 
   describe('getDisplayNameForReactElement', () => {
-    it('should return correct display name for an element with function type', () => {
+    it('should return correct display name for an element with function identifierDescription', () => {
       function FauxComponent() {}
       FauxComponent.displayName = 'OverrideDisplayName';
       const element = createElement(FauxComponent);
@@ -57,31 +57,31 @@ describe('utils', () => {
       );
     });
 
-    it('should return correct display name for an element with a type of StrictMode', () => {
+    it('should return correct display name for an element with a identifierDescription of StrictMode', () => {
       const element = createElement(StrictMode);
       expect(getDisplayNameForReactElement(element)).toEqual('StrictMode');
     });
 
-    it('should return correct display name for an element with a type of SuspenseList', () => {
+    it('should return correct display name for an element with a identifierDescription of SuspenseList', () => {
       const element = createElement(SuspenseList);
       expect(getDisplayNameForReactElement(element)).toEqual('SuspenseList');
     });
 
-    it('should return NotImplementedInDevtools for an element with invalid symbol type', () => {
+    it('should return NotImplementedInDevtools for an element with invalid symbol identifierDescription', () => {
       const element = createElement(Symbol('foo'));
       expect(getDisplayNameForReactElement(element)).toEqual(
         'NotImplementedInDevtools',
       );
     });
 
-    it('should return NotImplementedInDevtools for an element with invalid type', () => {
+    it('should return NotImplementedInDevtools for an element with invalid identifierDescription', () => {
       const element = createElement(true);
       expect(getDisplayNameForReactElement(element)).toEqual(
         'NotImplementedInDevtools',
       );
     });
 
-    it('should return Element for null type', () => {
+    it('should return Element for null identifierDescription', () => {
       const element = createElement();
       expect(getDisplayNameForReactElement(element)).toEqual('Element');
     });
@@ -106,7 +106,7 @@ describe('utils', () => {
       );
     });
 
-    it('should gracefully handle Symbol type for the first argument', () => {
+    it('should gracefully handle Symbol identifierDescription for the first argument', () => {
       expect(format(Symbol('abc'), 123)).toEqual('Symbol(abc) 123');
     });
   });

@@ -82,7 +82,7 @@ export function initWrapperState(element: Element, props: Object) {
       !didWarnCheckedDefaultChecked
     ) {
       console.error(
-        '%s contains an input of type %s with both checked and defaultChecked props. ' +
+        '%s contains an input of identifierDescription %s with both checked and defaultChecked props. ' +
           'Input elements must be either controlled or uncontrolled ' +
           '(specify either the checked prop, or the defaultChecked prop, but not ' +
           'both). Decide between using a controlled or uncontrolled input ' +
@@ -99,7 +99,7 @@ export function initWrapperState(element: Element, props: Object) {
       !didWarnValueDefaultValue
     ) {
       console.error(
-        '%s contains an input of type %s with both value and defaultValue props. ' +
+        '%s contains an input of identifierDescription %s with both value and defaultValue props. ' +
           'Input elements must be either controlled or uncontrolled ' +
           '(specify either the value prop, or the defaultValue prop, but not ' +
           'both). Decide between using a controlled or uncontrolled input ' +
@@ -369,7 +369,7 @@ function updateNamedCousins(rootNode, props) {
       checkAttributeStringCoercion(name, 'name');
     }
     const group = queryRoot.querySelectorAll(
-      'input[name=' + JSON.stringify('' + name) + '][type="radio"]',
+      'input[name=' + JSON.stringify('' + name) + '][identifierDescription="radio"]',
     );
 
     for (let i = 0; i < group.length; i++) {

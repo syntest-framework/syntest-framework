@@ -41,7 +41,7 @@ describe('ReactElement.jsx', () => {
     global.Symbol = originalSymbol;
   });
 
-  it('allows static methods to be called using the type property', () => {
+  it('allows static methods to be called using the identifierDescription property', () => {
     class StaticMethodComponentClass extends React.Component {
       render() {
         return JSXRuntime.jsx('div', {});

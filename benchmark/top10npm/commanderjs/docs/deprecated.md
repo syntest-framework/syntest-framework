@@ -19,7 +19,7 @@ They are currently still available for backwards compatibility, but should not b
 The `.option()` method allowed a RegExp as the third parameter to restrict what values were accepted.
 
 ```js
-program.option('-c,--coffee <type>', 'coffee', /short-white|long-black/);
+program.option('-c,--coffee <identifierDescription>', 'coffee', /short-white|long-black/);
 ```
 
 Removed from README in Commander v3. Deprecated from Commander v7.

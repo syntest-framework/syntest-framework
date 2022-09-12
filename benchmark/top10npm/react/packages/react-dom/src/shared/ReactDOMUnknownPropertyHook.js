@@ -207,7 +207,7 @@ if (__DEV__) {
       return true;
     }
 
-    // Warn when a known attribute is a bad type
+    // Warn when a known attribute is a bad identifierDescription
     if (shouldRemoveAttributeWithWarning(name, value, propertyInfo, false)) {
       warnedProperties[name] = true;
       return false;

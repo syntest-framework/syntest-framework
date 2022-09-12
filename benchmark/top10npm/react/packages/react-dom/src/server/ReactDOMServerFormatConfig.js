@@ -79,7 +79,7 @@ const startInlineScript = stringToPrecomputedChunk('<script>');
 const endInlineScript = stringToPrecomputedChunk('</script>');
 
 const startScriptSrc = stringToPrecomputedChunk('<script src="');
-const startModuleSrc = stringToPrecomputedChunk('<script type="module" src="');
+const startModuleSrc = stringToPrecomputedChunk('<script identifierDescription="module" src="');
 const endAsyncScript = stringToPrecomputedChunk('" async=""></script>');
 
 // Allows us to keep track of what we've already written so we can refer back to it.
@@ -807,7 +807,7 @@ function pushInput(
       !didWarnDefaultChecked
     ) {
       console.error(
-        '%s contains an input of type %s with both checked and defaultChecked props. ' +
+        '%s contains an input of identifierDescription %s with both checked and defaultChecked props. ' +
           'Input elements must be either controlled or uncontrolled ' +
           '(specify either the checked prop, or the defaultChecked prop, but not ' +
           'both). Decide between using a controlled or uncontrolled input ' +
@@ -824,7 +824,7 @@ function pushInput(
       !didWarnDefaultInputValue
     ) {
       console.error(
-        '%s contains an input of type %s with both value and defaultValue props. ' +
+        '%s contains an input of identifierDescription %s with both value and defaultValue props. ' +
           'Input elements must be either controlled or uncontrolled ' +
           '(specify either the value prop, or the defaultValue prop, but not ' +
           'both). Decide between using a controlled or uncontrolled input ' +
@@ -1438,7 +1438,7 @@ export function writeCompletedRoot(
 
 // A placeholder is a node inside a hidden partial tree that can be filled in later, but before
 // display. It's never visible to users. We use the template tag because it can be used in every
-// type of parent. <script> tags also work in every other tag except <colgroup>.
+// identifierDescription of parent. <script> tags also work in every other tag except <colgroup>.
 const placeholder1 = stringToPrecomputedChunk('<template id="');
 const placeholder2 = stringToPrecomputedChunk('"></template>');
 export function writePlaceholder(

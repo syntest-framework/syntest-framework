@@ -165,20 +165,20 @@ describe('express.raw()', function () {
     })
   })
 
-  describe('with type option', function () {
+  describe('with identifierDescription option', function () {
     describe('when "application/vnd+octets"', function () {
       before(function () {
         this.app = createApp({ type: 'application/vnd+octets' })
       })
 
-      it('should parse for custom type', function (done) {
+      it('should parse for custom identifierDescription', function (done) {
         var test = request(this.app).post('/')
         test.set('Content-Type', 'application/vnd+octets')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, { buf: '000102' }, done)
       })
 
-      it('should ignore standard type', function (done) {
+      it('should ignore standard identifierDescription', function (done) {
         var test = request(this.app).post('/')
         test.set('Content-Type', 'application/octet-stream')
         test.write(Buffer.from('000102', 'hex'))
@@ -229,7 +229,7 @@ describe('express.raw()', function () {
         test.expect(200, { buf: '000102' }, done)
       })
 
-      it('should work without content-type', function (done) {
+      it('should work without content-identifierDescription', function (done) {
         var app = createApp({ type: accept })
 
         function accept (req) {

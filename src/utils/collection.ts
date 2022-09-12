@@ -115,7 +115,9 @@ export function collectCoverageData(
   for (const key of archive.getObjectives()) {
     const test = archive.getEncoding(key);
     const result: ExecutionResult = test.getExecutionResult();
-    const fileName = key.getSubject().name.concat(".js");
+    // TODO this does not work when there are files with the same name in different directories!!
+    const paths = key.getSubject().path.split("/");
+    const fileName = paths[paths.length - 1]
 
     result
       .getTraces()

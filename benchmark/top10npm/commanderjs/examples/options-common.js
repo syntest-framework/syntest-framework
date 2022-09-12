@@ -10,7 +10,7 @@ const program = new commander.Command();
 program
   .option('-d, --debug', 'output extra debugging')
   .option('-s, --small', 'small pizza size')
-  .option('-p, --pizza-type <type>', 'flavour of pizza');
+  .option('-p, --pizza-identifierDescription <identifierDescription>', 'flavour of pizza');
 
 program.parse(process.argv);
 
@@ -23,4 +23,4 @@ if (options.pizzaType) console.log(`- ${options.pizzaType}`);
 // Try the following:
 //    node options-common.js -p
 //    node options-common.js -d -s -p vegetarian
-//    node options-common.js --pizza-type=cheese
+//    node options-common.js --pizza-identifierDescription=cheese

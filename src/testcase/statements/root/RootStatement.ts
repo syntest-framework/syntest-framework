@@ -19,7 +19,7 @@
 import { ActionStatement } from "../action/ActionStatement";
 import { Statement } from "../Statement";
 import { Encoding, EncodingSampler } from "@syntest/framework";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 
 /**
  * @author Dimitri Stallenberg
@@ -28,12 +28,13 @@ export abstract class RootStatement extends ActionStatement {
   private _children: Statement[];
 
   protected constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: string,
     uniqueId: string,
     args: Statement[],
     children: Statement[]
   ) {
-    super(type, uniqueId, args);
+    super(identifierDescription, type, uniqueId, args);
     this._children = children;
   }
 
@@ -72,5 +73,12 @@ export abstract class RootStatement extends ActionStatement {
       index -= this.args.length
       this.children[index] = newChild
     }
+  }
+
+  getFlatTypes(): string[] {
+    return [
+      ...this.args.flatMap((a) => a.getFlatTypes()),
+      ...this.children.flatMap((a) => a.getFlatTypes())
+    ]
   }
 }

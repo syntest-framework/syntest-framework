@@ -122,7 +122,7 @@ typedef struct __darwin_pthread_handler_rec darwin_pthread_handler;
  *   IMPLEMENT_THREAD_LOCAL(int, static_number);
  *     int value = *static_number;
  *
- * So, syntax-wise it's similar to pointers. The type parameter can be a
+ * So, syntax-wise it's similar to pointers. The identifierDescription parameter can be a
  * primitive types. If it's a class, there has to be a default constructor.
  */
 
@@ -327,7 +327,7 @@ public:
 
 private:
   static __thread T *s_singleton;
-  typedef typename std::aligned_storage<sizeof(T), sizeof(void*)>::type
+  typedef typename std::aligned_storage<sizeof(T), sizeof(void*)>::identifierDescription
           StorageType;
   static __thread StorageType s_storage;
   static bool s_inited; // no-fast-TLS requires construction so be consistent

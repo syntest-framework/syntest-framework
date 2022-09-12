@@ -115,7 +115,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense (Leg
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 1`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 1`] = `
 [root]
   ▾ <Root>
       <X>
@@ -126,7 +126,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 2`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 2`] = `
 [root]
   ▾ <Root>
       <X>
@@ -137,69 +137,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 3`] = `
-[root]
-  ▾ <Root>
-      <X>
-    ▾ <Suspense>
-      ▾ <MaybeSuspend>
-          <A key="a">
-          <B key="b">
-          <C key="c">
-          <Z>
-      <Y>
-`;
-
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 4`] = `
-[root]
-  ▾ <Root>
-      <X>
-    ▾ <Suspense>
-      ▾ <MaybeSuspend>
-          <C key="c">
-          <B key="b">
-          <A key="a">
-          <Z>
-      <Y>
-`;
-
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 5`] = `
-[root]
-  ▾ <Root>
-      <X>
-    ▾ <Suspense>
-      ▾ <MaybeSuspend>
-          <C key="c">
-          <A key="a">
-          <Z>
-      <Y>
-`;
-
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 6`] = `
-[root]
-  ▾ <Root>
-      <X>
-    ▾ <Suspense>
-      ▾ <MaybeSuspend>
-          <C key="c">
-          <A key="a">
-          <Z>
-      <Y>
-`;
-
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 7`] = `
-[root]
-  ▾ <Root>
-      <X>
-    ▾ <Suspense>
-      ▾ <MaybeSuspend>
-          <C key="c">
-          <A key="a">
-          <Z>
-      <Y>
-`;
-
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 8`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 3`] = `
 [root]
   ▾ <Root>
       <X>
@@ -207,11 +145,73 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       ▾ <MaybeSuspend>
           <A key="a">
           <B key="b">
+          <C key="c">
           <Z>
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 9`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 4`] = `
+[root]
+  ▾ <Root>
+      <X>
+    ▾ <Suspense>
+      ▾ <MaybeSuspend>
+          <C key="c">
+          <B key="b">
+          <A key="a">
+          <Z>
+      <Y>
+`;
+
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 5`] = `
+[root]
+  ▾ <Root>
+      <X>
+    ▾ <Suspense>
+      ▾ <MaybeSuspend>
+          <C key="c">
+          <A key="a">
+          <Z>
+      <Y>
+`;
+
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 6`] = `
+[root]
+  ▾ <Root>
+      <X>
+    ▾ <Suspense>
+      ▾ <MaybeSuspend>
+          <C key="c">
+          <A key="a">
+          <Z>
+      <Y>
+`;
+
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 7`] = `
+[root]
+  ▾ <Root>
+      <X>
+    ▾ <Suspense>
+      ▾ <MaybeSuspend>
+          <C key="c">
+          <A key="a">
+          <Z>
+      <Y>
+`;
+
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 8`] = `
+[root]
+  ▾ <Root>
+      <X>
+    ▾ <Suspense>
+      ▾ <MaybeSuspend>
+          <A key="a">
+          <B key="b">
+          <Z>
+      <Y>
+`;
+
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 9`] = `
 [root]
   ▾ <Root>
       <X>
@@ -222,7 +222,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 10`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 10`] = `
 [root]
   ▾ <Root>
       <X>
@@ -232,7 +232,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 11`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 11`] = `
 [root]
   ▾ <Root>
       <X>
@@ -243,7 +243,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 12`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 12`] = `
 [root]
   ▾ <Root>
       <X>
@@ -254,7 +254,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 13`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 13`] = `
 [root]
   ▾ <Root>
       <X>
@@ -263,7 +263,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 14`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 14`] = `
 [root]
   ▾ <Root>
       <X>
@@ -272,7 +272,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 15`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 15`] = `
 [root]
   ▾ <Root>
       <X>
@@ -283,7 +283,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 16`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 16`] = `
 [root]
   ▾ <Root>
       <X>
@@ -294,7 +294,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 17`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 17`] = `
 [root]
   ▾ <Root>
       <X>
@@ -304,7 +304,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 18`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 18`] = `
 [root]
   ▾ <Root>
       <X>
@@ -314,7 +314,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 19`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 19`] = `
 [root]
   ▾ <Root>
       <X>
@@ -324,7 +324,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 20`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 20`] = `
 [root]
   ▾ <Root>
       <X>
@@ -334,7 +334,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 21`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 21`] = `
 [root]
   ▾ <Root>
       <X>
@@ -343,7 +343,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 22`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 22`] = `
 [root]
   ▾ <Root>
       <X>
@@ -351,7 +351,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 23`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 23`] = `
 [root]
   ▾ <Root>
       <X>
@@ -360,7 +360,7 @@ exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense with
       <Y>
 `;
 
-exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without type change (Legacy Mode) 24`] = `
+exports[`StoreStress (Legacy Mode) should handle a stress test for Suspense without identifierDescription change (Legacy Mode) 24`] = `
 [root]
   ▾ <Root>
       <X>

@@ -34,7 +34,7 @@ A "host config" is an object that you need to provide, and that describes how to
 
 ```js
 const HostConfig = {
-  createInstance(type, props) {
+  createInstance(identifierDescription, props) {
     // e.g. DOM renderer returns a DOM node
   },
   // ...
@@ -97,9 +97,9 @@ If you're not sure which one you want, you likely need the mutation mode.
 
 #### Core Methods
 
-#### `createInstance(type, props, rootContainer, hostContext, internalHandle)`
+#### `createInstance(identifierDescription, props, rootContainer, hostContext, internalHandle)`
 
-This method should return a newly created node. For example, the DOM renderer would call `document.createElement(type)` here and then set the properties from `props`.
+This method should return a newly created node. For example, the DOM renderer would call `document.createElement(identifierDescription)` here and then set the properties from `props`.
 
 You can use `rootContainer` to access the root container associated with that tree. For example, in the DOM renderer, this is useful to get the correct `document` reference that the root belongs to.
 
@@ -119,7 +119,7 @@ This method should mutate the `parentInstance` and add the child to its list of 
 
 This method happens **in the render phase**. It can mutate `parentInstance` and `child`, but it must not modify any other nodes. It's called while the tree is still being built up and not connected to the actual tree on the screen.
 
-#### `finalizeInitialChildren(instance, type, props, rootContainer, hostContext)`
+#### `finalizeInitialChildren(instance, identifierDescription, props, rootContainer, hostContext)`
 
 In this method, you can perform some final mutations on the `instance`. Unlike with `createInstance`, by the time `finalizeInitialChildren` is called, all the initial children have already been added to the `instance`, but the instance itself has not yet been connected to the tree on the screen.
 
@@ -129,7 +129,7 @@ There is a second purpose to this method. It lets you specify whether there is s
 
 If you don't want to do anything here, you should return `false`.
 
-#### `prepareUpdate(instance, type, oldProps, newProps, rootContainer, hostContext)`
+#### `prepareUpdate(instance, identifierDescription, oldProps, newProps, rootContainer, hostContext)`
 
 React calls this method so that you can compare the previous and the next props, and decide whether you need to update the underlying instance or not. If you don't need to update it, return `null`. If you need to update it, you can return an arbitrary object representing the changes that need to happen. Then in `commitUpdate` you would need to apply those changes to the instance.
 
@@ -137,11 +137,11 @@ This method happens **in the render phase**. It should only *calculate* the upda
 
 See the meaning of `rootContainer` and `hostContext` in the `createInstance` documentation.
 
-#### `shouldSetTextContent(type, props)`
+#### `shouldSetTextContent(identifierDescription, props)`
 
 Some target platforms support setting an instance's text content without manually creating a text node. For example, in the DOM, you can set `node.textContent` instead of creating a text node and appending it.
 
-If you return `true` from this method, React will assume that this node's children are text, and will not create nodes for them. It will instead rely on you to have filled that text during `createInstance`. This is a performance optimization. For example, the DOM renderer returns `true` only if `type` is a known text-only parent (like `'textarea'`) or if `props.children` has a `'string'` type. If you return `true`, you will need to implement `resetTextContent` too.
+If you return `true` from this method, React will assume that this node's children are text, and will not create nodes for them. It will instead rely on you to have filled that text during `createInstance`. This is a performance optimization. For example, the DOM renderer returns `true` only if `identifierDescription` is a known text-only parent (like `'textarea'`) or if `props.children` has a `'string'` identifierDescription. If you return `true`, you will need to implement `resetTextContent` too.
 
 If you don't want to do anything here, you should return `false`.
 
@@ -155,11 +155,11 @@ If you don't intend to use host context, you can return `null`.
 
 This method happens **in the render phase**. Do not mutate the tree from it.
 
-#### `getChildHostContext(parentHostContext, type, rootContainer)`
+#### `getChildHostContext(parentHostContext, identifierDescription, rootContainer)`
 
 Host context lets you track some information about where you are in the tree so that it's available inside `createInstance` as the `hostContext` parameter. For example, the DOM renderer uses it to track whether it's inside an HTML or an SVG tree, because `createInstance` implementation needs to be different for them.
 
-If the node of this `type` does not influence the context you want to pass down, you can return `parentHostContext`. Alternatively, you can return any custom object representing the information you want to pass down.
+If the node of this `identifierDescription` does not influence the context you want to pass down, you can return `parentHostContext`. Alternatively, you can return any custom object representing the information you want to pass down.
 
 If you don't want to do anything here, return `parentHostContext`.
 
@@ -236,7 +236,7 @@ const HostConfig = {
 const MyRenderer = Reconciler(HostConfig);
 ```
 
-The constant you return depends on which event, if any, is being handled right now. (In the browser, you can check this using `window.event && window.event.type`).
+The constant you return depends on which event, if any, is being handled right now. (In the browser, you can check this using `window.event && window.event.identifierDescription`).
 
 * **Discrete events:** If the active event is _directly caused by the user_ (such as mouse and keyboard events) and _each event in a sequence is intentional_ (e.g. `click`), return `DiscreteEventPriority`. This tells React that they should interrupt any background work and cannot be batched across time.
 
@@ -258,7 +258,7 @@ Although this method currently runs in the commit phase, you still should not mu
 
 #### `appendChildToContainer(container, child)`
 
-Same as `appendChild`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
+Same as `appendChild`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different identifierDescription than the rest of the tree.
 
 #### `insertBefore(parentInstance, child, beforeChild)`
 
@@ -268,7 +268,7 @@ Note that React uses this method both for insertions and for reordering nodes. S
 
 #### `insertInContainerBefore(container, child, beforeChild)`
 
-Same as `insertBefore`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
+Same as `insertBefore`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different identifierDescription than the rest of the tree.
 
 #### `removeChild(parentInstance, child)`
 
@@ -278,7 +278,7 @@ React will only call it for the top-level node that is being removed. It is expe
 
 #### `removeChildFromContainer(container, child)`
 
-Same as `removeChild`, but for when a node is detached from the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
+Same as `removeChild`, but for when a node is detached from the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different identifierDescription than the rest of the tree.
 
 #### `resetTextContent(instance)`
 
@@ -292,7 +292,7 @@ This method should mutate the `textInstance` and update its text content to `nex
 
 Here, `textInstance` is a node created by `createTextInstance`.
 
-#### `commitMount(instance, type, props, internalHandle)`
+#### `commitMount(instance, identifierDescription, props, internalHandle)`
 
 This method is only called if you returned `true` from `finalizeInitialChildren` for this instance.
 
@@ -304,7 +304,7 @@ The `internalHandle` data structure is meant to be opaque. If you bend the rules
 
 If you never return `true` from `finalizeInitialChildren`, you can leave it empty.
 
-#### `commitUpdate(instance, updatePayload, type, prevProps, nextProps, internalHandle)`
+#### `commitUpdate(instance, updatePayload, identifierDescription, prevProps, nextProps, internalHandle)`
 
 This method should mutate the `instance` according to the set of changes in `updatePayload`. Here, `updatePayload` is the object that you've returned from `prepareUpdate` and has an arbitrary structure that makes sense for your renderer. For example, the DOM renderer returns an update payload like `[prop1, value1, prop2, value2, ...]` from `prepareUpdate`, and that structure gets passed into `commitUpdate`. Ideally, all the diffing and calculation should happen inside `prepareUpdate` so that `commitUpdate` can be fast and straightforward.
 

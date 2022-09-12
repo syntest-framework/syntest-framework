@@ -8,7 +8,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type');
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription');
     program.parse(['node', 'test', '--cheese', 'blue']);
     expect(program.opts().cheese).toBe('blue');
   });
@@ -17,8 +17,8 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese-type <type>', 'cheese type');
-    program.parse(['node', 'test', '--cheese-type', 'blue']);
+      .requiredOption('--cheese-identifierDescription <identifierDescription>', 'cheese identifierDescription');
+    program.parse(['node', 'test', '--cheese-identifierDescription', 'blue']);
     expect(program.opts().cheeseType).toBe('blue');
   });
 
@@ -26,7 +26,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type', 'default');
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription', 'default');
     program.parse(['node', 'test']);
     expect(program.opts().cheese).toBe('default');
   });
@@ -35,7 +35,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese [type]', 'cheese type');
+      .requiredOption('--cheese [identifierDescription]', 'cheese identifierDescription');
     program.parse(['node', 'test', '--cheese']);
     expect(program.opts().cheese).toBe(true);
   });
@@ -44,7 +44,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese [type]', 'cheese type', 'default');
+      .requiredOption('--cheese [identifierDescription]', 'cheese identifierDescription', 'default');
     program.parse(['node', 'test']);
     expect(program.opts().cheese).toBe('default');
   });
@@ -53,7 +53,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type')
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription')
       .requiredOption('--no-cheese', 'no cheese thanks');
     program.parse(['node', 'test', '--cheese', 'blue']);
     expect(program.opts().cheese).toBe('blue');
@@ -63,7 +63,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese', 'cheese type')
+      .requiredOption('--cheese', 'cheese identifierDescription')
       .option('--no-cheese', 'no cheese thanks');
     program.parse(['node', 'test', '--cheese']);
     expect(program.opts().cheese).toBe(true);
@@ -73,7 +73,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese', 'cheese type')
+      .requiredOption('--cheese', 'cheese identifierDescription')
       .requiredOption('--no-cheese', 'no cheese thanks');
     program.parse(['node', 'test', '--cheese']);
     expect(program.opts().cheese).toBe(true);
@@ -83,7 +83,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type')
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription')
       .option('--no-cheese', 'no cheese thanks');
     program.parse(['node', 'test', '--no-cheese']);
     expect(program.opts().cheese).toBe(false);
@@ -93,7 +93,7 @@ describe('required program option with mandatory value specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type')
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription')
       .command('sub')
       .action(() => {});
     program.parse(['node', 'test', '--cheese', 'blue', 'sub']);
@@ -121,7 +121,7 @@ describe('required program option with mandatory value not specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type');
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription');
 
     expect(() => {
       program.parse(['node', 'test']);
@@ -132,7 +132,7 @@ describe('required program option with mandatory value not specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese [type]', 'cheese type');
+      .requiredOption('--cheese [identifierDescription]', 'cheese identifierDescription');
 
     expect(() => {
       program.parse(['node', 'test']);
@@ -143,7 +143,7 @@ describe('required program option with mandatory value not specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese', 'cheese type')
+      .requiredOption('--cheese', 'cheese identifierDescription')
       .option('--no-cheese', 'no cheese thanks');
 
     expect(() => {
@@ -155,7 +155,7 @@ describe('required program option with mandatory value not specified', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type')
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription')
       .command('sub')
       .action(() => {});
 
@@ -172,7 +172,7 @@ describe('required command option with mandatory value specified', () => {
     program
       .exitOverride()
       .command('sub')
-      .requiredOption('--subby <type>', 'description')
+      .requiredOption('--subby <identifierDescription>', 'description')
       .action((options) => {
         cmdOptions = options;
       });
@@ -217,7 +217,7 @@ describe('required command option with mandatory value not specified', () => {
     program
       .exitOverride()
       .command('sub')
-      .requiredOption('--subby <type>', 'description')
+      .requiredOption('--subby <identifierDescription>', 'description')
       .action(() => {});
 
     expect(() => {
@@ -230,7 +230,7 @@ describe('required command option with mandatory value not specified', () => {
     program
       .exitOverride()
       .command('sub')
-      .requiredOption('--subby <type>', 'description')
+      .requiredOption('--subby <identifierDescription>', 'description')
       .action(() => {});
     program
       .command('sub2');
@@ -261,7 +261,7 @@ describe('missing mandatory option but help requested', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type');
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription');
 
     let caughtErr;
     try {
@@ -277,7 +277,7 @@ describe('missing mandatory option but help requested', () => {
     const program = new commander.Command();
     program
       .exitOverride()
-      .requiredOption('--cheese <type>', 'cheese type')
+      .requiredOption('--cheese <identifierDescription>', 'cheese identifierDescription')
       .command('sub')
       .action(() => {});
 

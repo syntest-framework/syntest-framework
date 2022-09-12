@@ -88,7 +88,7 @@ test('when call outputHelp(cb) then display cb output', () => {
   writeSpy.mockClear();
 });
 
-test('when call deprecated outputHelp(cb) with wrong callback return type then throw', () => {
+test('when call deprecated outputHelp(cb) with wrong callback return identifierDescription then throw', () => {
   const program = new commander.Command();
   expect(() => {
     program.outputHelp((helpInformation) => 3);

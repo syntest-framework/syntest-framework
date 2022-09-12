@@ -16,21 +16,21 @@
  * limitations under the License.
  */
 
-import { TypeProbabilityMap } from "../types/resolving/TypeProbabilityMap";
+import { TypeProbability } from "../types/resolving/TypeProbability";
 
 /**
- * Interface for a Parameter Description.
+ * Interface for a IdentifierDescription Description.
  *
  * @author Dimitri Stallenberg
  */
-export interface Parameter {
+export interface IdentifierDescription {
   /**
    * Name of the parameter.
    */
   name: string;
 
   /**
-   * Type of the parameter.
+   * Type probability map of the parameter.
    */
-  type: TypeProbabilityMap;
+  typeProbabilityMap: TypeProbability;
 }

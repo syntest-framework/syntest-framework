@@ -841,7 +841,7 @@ describe('StoreStressConcurrent', () => {
     }
   });
 
-  it('should handle a stress test for Suspense without type change (Concurrent Mode)', async () => {
+  it('should handle a stress test for Suspense without identifierDescription change (Concurrent Mode)', async () => {
     const A = () => 'a';
     const B = () => 'b';
     const C = () => 'c';

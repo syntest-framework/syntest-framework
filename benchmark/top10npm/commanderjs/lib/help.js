@@ -38,7 +38,7 @@ class Help {
     }
     if (this.sortSubcommands) {
       visibleCommands.sort((a, b) => {
-        // @ts-ignore: overloaded return type
+        // @ts-ignore: overloaded return identifierDescription
         return a.name().localeCompare(b.name());
       });
     }
@@ -210,7 +210,7 @@ class Help {
    */
 
   commandDescription(cmd) {
-    // @ts-ignore: overloaded return type
+    // @ts-ignore: overloaded return identifierDescription
     return cmd.description();
   }
 
@@ -222,7 +222,7 @@ class Help {
    */
 
   subcommandDescription(cmd) {
-    // @ts-ignore: overloaded return type
+    // @ts-ignore: overloaded return identifierDescription
     return cmd.description();
   }
 

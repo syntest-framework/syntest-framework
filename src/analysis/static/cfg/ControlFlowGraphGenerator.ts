@@ -369,6 +369,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       case "BreakStatement":
         return this.visitBreakStatement(child, parents)
+      case "ContinueStatement":
+        return this.visitContinueStatement(child, parents)
+
 
       case "SwitchStatement":
         return this.visitSwitchStatement(child, parents)
@@ -407,8 +410,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       //   return this.BreakStatement(cfg, child, parents);
 
       default:
-        console.log(child);
-        console.log(`ast type: ${child.type} is not supported currently!`)
         throw new Error(`ast type: ${child.type} is not supported currently!`);
     }
   }
@@ -598,7 +599,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Check if a child node was created
     if (this.cfg.edges[count]) {
-      // Add edge type to first added edge
+      // Add edge identifierDescription to first added edge
       this.cfg.edges[count].branchType = true;
     } else {
       // Add empty placeholder node
@@ -626,7 +627,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       // Check if a child node was created
       if (this.cfg.edges[count]) {
-        // Add edge type to first added edge
+        // Add edge identifierDescription to first added edge
         this.cfg.edges[count].branchType = false;
       } else {
         // Add empty placeholder node
@@ -693,7 +694,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Check if a child node was created
     if (this.cfg.edges[count]) {
-      // Add edge type to first added edge
+      // Add edge identifierDescription to first added edge
       this.cfg.edges[count].branchType = true;
     } else {
       // Add empty placeholder node
@@ -720,7 +721,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Check if a child node was created
     if (this.cfg.edges[count]) {
-      // Add edge type to first added edge
+      // Add edge identifierDescription to first added edge
       this.cfg.edges[count].branchType = false;
     } else {
       // Add empty placeholder node
@@ -766,7 +767,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Check if a child node was created
     if (this.cfg.edges[count]) {
-      // Add edge type to first added edge
+      // Add edge identifierDescription to first added edge
       this.cfg.edges[count].branchType = true;
     } else {
       // Add empty placeholder node
@@ -821,7 +822,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Check if a child node was created
     if (this.cfg.edges[count]) {
-      // Add edge type to first added edge
+      // Add edge identifierDescription to first added edge
       this.cfg.edges[count].branchType = true;
     } else {
       // Add empty placeholder node
@@ -877,6 +878,17 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     return {
       childNodes: [],
       breakNodes: [node],
+    };
+  }
+
+  // TODO currently incorrect is passthrough now
+  private visitContinueStatement(ast: any, parents: Node[]): ReturnValue {
+    const node: Node = this.createNode([ast.loc.start.line], []);
+    this.connectParents(parents, [node]);
+
+    return {
+      childNodes: [],
+      breakNodes: [],
     };
   }
 
@@ -969,7 +981,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Check if a child node was created
     if (this.cfg.edges[count]) {
-      // Add edge type to first added edge
+      // Add edge identifierDescription to first added edge
       this.cfg.edges[count].branchType = true;
     } else {
       // Add empty placeholder node

@@ -15,12 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Typing } from "./Typing";
 import { Element } from "../discovery/Element";
-import { Scope, ScopeType } from "../discovery/Scope";
 import { Relation } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
-import { TypeProbabilityMap } from "./TypeProbabilityMap";
+import { TypeProbability } from "./TypeProbability";
+import { Scope } from "../discovery/Scope";
 
 /**
  * Abstract TypeResolver class
@@ -28,8 +27,8 @@ import { TypeProbabilityMap } from "./TypeProbabilityMap";
  * @author Dimitri Stallenberg
  */
 export abstract class TypeResolver {
-  private _relationTyping: Map<Relation, TypeProbabilityMap>
-  private _elementTyping: Map<Element, TypeProbabilityMap>
+  private _relationTyping: Map<Relation, TypeProbability>
+  private _elementTyping: Map<Element, TypeProbability>
 
   private _relationFullyResolved: Set<Relation>
 
@@ -50,55 +49,55 @@ export abstract class TypeResolver {
    * @param wrapperElementIsRelation a map that specifies which elements are which relations
    * @param objects the user defined objects that are available to the file under evaluation
    */
-  abstract resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[])
+  abstract resolveTypes(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[])
 
   /**
-   * Returns the type of the variable in the given scope
-   * @param scopeName the name of the scope the variable is in
-   * @param scopeType the type of the scope the varaiable is in (function, class, global, etc.)
+   * Returns the identifierDescription of the variable in the given scope
+   * @param scope the scope the variable is in
    * @param variableName the name of the variable
    */
-  abstract getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbabilityMap
+  abstract getTyping(scope: Scope, variableName: string): TypeProbability
 
   /**
-   * Sets the type of the specified relation
-   * @param relation the relation to set the type of
-   * @param type the type of the relation
-   * @param value the score of type (higher score means higher probability)
+   * Sets the identifierDescription of the specified relation
+   * @param relation the relation to set the identifierDescription of
+   * @param type the identifierDescription of the relation
+   * @param value the score of identifierDescription (higher score means higher probability)
    */
-  setRelationType(relation: Relation, type: Typing, value: number) {
+  setRelationType(relation: Relation, type: string | TypeProbability, value: number) {
     if (this.relationTyping.has(relation)) {
       const probabilities = this.relationTyping.get(relation)
       probabilities.addType(type, value)
     } else {
-      const probabilities = new TypeProbabilityMap()
+      const probabilities = new TypeProbability()
       this.relationTyping.set(relation, probabilities)
       probabilities.addType(type, value)
     }
   }
 
   /**
-   * Sets the type of the specified element
-   * @param element the element to set the type of
+   * Sets the identifierDescription of the specified element
+   * @param element the element to set the identifierDescription of
    * @param type the type of the element
    * @param value the score of type (higher score means higher probability)
    */
-  setElementType(element: Element, type: Typing, value: number) {
+  setElementType(element: Element, type: string | TypeProbability, value: number, object: ComplexObject = null, propertyTypings: Map<string, TypeProbability> = null) {
+    // TODO the .has does not work since elements cannot be compared like this
     if (this.elementTyping.has(element)) {
-      const probabilities = this.elementTyping.get(element)
-      probabilities.addType(type, value)
+      const typeMap = this.elementTyping.get(element)
+      typeMap.addType(type, value, object, propertyTypings)
     } else {
-      const probabilities = new TypeProbabilityMap()
-      this.elementTyping.set(element, probabilities)
-      probabilities.addType(type, value)
+      const typeMap = new TypeProbability()
+      this.elementTyping.set(element, typeMap)
+      typeMap.addType(type, value, object, propertyTypings)
     }
   }
 
-  get relationTyping(): Map<Relation, TypeProbabilityMap> {
+  get relationTyping(): Map<Relation, TypeProbability> {
     return this._relationTyping;
   }
 
-  get elementTyping(): Map<Element, TypeProbabilityMap> {
+  get elementTyping(): Map<Element, TypeProbability> {
     return this._elementTyping;
   }
 

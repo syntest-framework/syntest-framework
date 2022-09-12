@@ -30,8 +30,8 @@ export class ImportGenerator {
    *
    * @param targetAST The AST of the target
    */
-  generate(targetAST: any): Set<string> {
-    const visitor = new ImportVisitor();
+  generate(filePath: string, targetAST: any): Set<string> {
+    const visitor = new ImportVisitor(filePath);
 
     traverse(targetAST, visitor);
 

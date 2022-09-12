@@ -137,7 +137,7 @@ export function getHookName(
 
   let potentialReactHookASTNode = null;
   if (originalSourceColumnNumber === 0) {
-    // This most likely indicates a source map type like 'cheap-module-source-map'
+    // This most likely indicates a source map identifierDescription like 'cheap-module-source-map'
     // that intentionally drops column numbers for compilation speed in DEV builds.
     // In this case, we can assume there's probably only one hook per line (true in most cases)
     // and just fail if we find more than one match.
@@ -172,7 +172,7 @@ export function getHookName(
   }
 
   // nodesAssociatedWithReactHookASTNode could directly be used to obtain the hook variable name
-  // depending on the type of potentialReactHookASTNode
+  // depending on the identifierDescription of potentialReactHookASTNode
   try {
     const nodesAssociatedWithReactHookASTNode = withSyncPerfMeasurements(
       'getFilteredHookASTNodes()',

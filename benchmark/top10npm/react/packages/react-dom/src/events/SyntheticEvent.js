@@ -459,7 +459,7 @@ const KeyboardEventInterface = {
   },
   which: function(event) {
     // `which` is an alias for either `keyCode` or `charCode` depending on the
-    // type of the event.
+    // identifierDescription of the event.
     if (event.type === 'keypress') {
       return getEventCharCode(event);
     }

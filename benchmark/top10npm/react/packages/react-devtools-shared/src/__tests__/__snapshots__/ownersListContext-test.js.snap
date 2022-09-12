@@ -14,21 +14,21 @@ ARRAY [
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
   OBJECT {
     "displayName": "Parent",
     "hocDisplayNames": null,
     "id": 3,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
   OBJECT {
     "displayName": "Child",
     "hocDisplayNames": null,
     "id": 4,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
 ]
 `;
@@ -48,21 +48,21 @@ ARRAY [
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
   OBJECT {
     "displayName": "Parent",
     "hocDisplayNames": null,
     "id": 3,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
   OBJECT {
     "displayName": "Child",
     "hocDisplayNames": null,
     "id": 4,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
 ]
 `;
@@ -74,14 +74,14 @@ ARRAY [
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
   OBJECT {
     "displayName": "Parent",
     "hocDisplayNames": null,
     "id": 3,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
 ]
 `;
@@ -93,7 +93,7 @@ ARRAY [
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
   OBJECT {
     "displayName": "InnerComponent",
@@ -102,7 +102,7 @@ ARRAY [
     ],
     "id": 3,
     "key": null,
-    "type": 8,
+    "identifierDescription": 8,
   },
   OBJECT {
     "displayName": "InnerComponent",
@@ -111,7 +111,7 @@ ARRAY [
     ],
     "id": 4,
     "key": null,
-    "type": 6,
+    "identifierDescription": 6,
   },
 ]
 `;
@@ -128,7 +128,7 @@ ARRAY [
     "hocDisplayNames": null,
     "id": 2,
     "key": null,
-    "type": 5,
+    "identifierDescription": 5,
   },
 ]
 `;

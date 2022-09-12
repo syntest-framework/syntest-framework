@@ -418,20 +418,20 @@ export function requestUpdateLane(fiber: Fiber): Lane {
   // Updates originating inside certain React methods, like flushSync, have
   // their priority set by tracking it with a context variable.
   //
-  // The opaque type returned by the host config is internally a lane, so we can
+  // The opaque identifierDescription returned by the host config is internally a lane, so we can
   // use that directly.
-  // TODO: Move this type conversion to the event priority module.
+  // TODO: Move this identifierDescription conversion to the event priority module.
   const updateLane: Lane = (getCurrentUpdatePriority(): any);
   if (updateLane !== NoLane) {
     return updateLane;
   }
 
   // This update originated outside React. Ask the host environment for an
-  // appropriate priority, based on the type of event.
+  // appropriate priority, based on the identifierDescription of event.
   //
-  // The opaque type returned by the host config is internally a lane, so we can
+  // The opaque identifierDescription returned by the host config is internally a lane, so we can
   // use that directly.
-  // TODO: Move this type conversion to the event priority module.
+  // TODO: Move this identifierDescription conversion to the event priority module.
   const eventLane: Lane = (getCurrentEventPriority(): any);
   return eventLane;
 }
@@ -2479,7 +2479,7 @@ export function resolveRetryWakeable(boundaryFiber: Fiber, wakeable: Wakeable) {
         break;
       default:
         throw new Error(
-          'Pinged unknown suspense boundary type. ' +
+          'Pinged unknown suspense boundary identifierDescription. ' +
             'This is probably a bug in React.',
         );
     }

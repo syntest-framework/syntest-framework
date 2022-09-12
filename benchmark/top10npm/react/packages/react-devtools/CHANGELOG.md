@@ -24,7 +24,7 @@ Because React Native embeds a copy of the React DevTools "backend" ([`react-devt
 * StyleX plug-in for resolving atomic styles to values for props.xstyle ([@bvaughn](https://github.com/bvaughn) in [#22808](https://github.com/facebook/react/pull/22808))
 * Timeline search ([@bvaughn](https://github.com/bvaughn) in [#22799](https://github.com/facebook/react/pull/22799))
 * Timeline: Improved snapshot view ([@bvaughn](https://github.com/bvaughn) in [#22706](https://github.com/facebook/react/pull/22706))
-* Display root type for root updates in "what caused this update?" ([@eps1lon](https://github.com/eps1lon) in [#22599](https://github.com/facebook/react/pull/22599))
+* Display root identifierDescription for root updates in "what caused this update?" ([@eps1lon](https://github.com/eps1lon) in [#22599](https://github.com/facebook/react/pull/22599))
 
 #### Bugfix
 * DevTools should inject itself for XHTML pages too (not just HTML) ([@bvaughn](https://github.com/bvaughn) in [#22932](https://github.com/facebook/react/pull/22932))
@@ -100,7 +100,7 @@ Because React Native embeds a copy of the React DevTools "backend" ([`react-devt
 * Scheduling Profiler marks should include thrown Errors ([bvaughn](https://github.com/bvaughn) in [#22419](https://github.com/facebook/react/pull/22419))
 * Don't patch console during first render in strict mode ([lunaruan](https://github.com/lunaruan) in [#22308](https://github.com/facebook/react/pull/22308))
 * Show which hook indicies changed when profiling for all builds ([bvaughn](https://github.com/bvaughn) in [#22365](https://github.com/facebook/react/pull/22365))
-* Display actual ReactDOM API name in root type ([eps1lon](https://github.com/eps1lon) in [#22363](https://github.com/facebook/react/pull/22363))
+* Display actual ReactDOM API name in root identifierDescription ([eps1lon](https://github.com/eps1lon) in [#22363](https://github.com/facebook/react/pull/22363))
 * Add named hooks support to standalone and inline DevTools ([jstejada](https://github.com/jstejada) in [#22320](https://github.com/facebook/react/pull/22320) and [bvaughn](https://github.com/bvaughn) in [#22263](https://github.com/facebook/react/pull/22263))
 #### Bugfix
 * DevTools encoding supports multibyte characters (e.g. "🟩") ([bvaughn](https://github.com/bvaughn) in [#22424](https://github.com/facebook/react/pull/22424))
@@ -396,7 +396,7 @@ The following features are only enabled when used with (experimental) builds of 
 * Add ⎇ + arrow key navigation ([bvaughn](https://github.com/bvaughn) in [#19741](https://github.com/facebook/react/pull/19741))
 * Add checkbox toggle for boolean values ([mdaj06](https://github.com/mdaj06) in [#19714](https://github.com/facebook/react/pull/19714))
 * Show symbols used as keys in state ([omarsy](https://github.com/omarsy) in [#19786](https://github.com/facebook/react/pull/19786))
-* Add new (unstable) `SuspenseList` component type ([bpernick](https://github.com/bpernick) in [#19684](https://github.com/facebook/react/pull/19684))
+* Add new (unstable) `SuspenseList` component identifierDescription ([bpernick](https://github.com/bpernick) in [#19684](https://github.com/facebook/react/pull/19684))
 
 #### Bugfix
 * Show proper icon/tooltip for restricted browser pages ([sktguha](https://github.com/sktguha) in [#20023](https://github.com/facebook/react/pull/20023))
@@ -539,7 +539,7 @@ New keys can be added to object props/state/hooks now. Existing keys can be rena
 * Improved selection and toggling for inspected element panel ([bvaughn](https://github.com/bvaughn) in [#17588](https://github.com/facebook/react/pull/17588))
 * Copy context menu for inspecting and copying props/state/hooks/context values ([bvaughn](https://github.com/bvaughn) in [#17608](https://github.com/facebook/react/pull/17608))
 #### Bug fixes
-* Fix serialization for `BigInt` type so that it does not break inspection panel. ([nutboltu](https://github.com/nutboltu) in [#17233](https://github.com/facebook/react/pull/17233))
+* Fix serialization for `BigInt` identifierDescription so that it does not break inspection panel. ([nutboltu](https://github.com/nutboltu) in [#17233](https://github.com/facebook/react/pull/17233))
 * Fix display name logic for `forwardRef`s that use `displayName` property ([zthxxx](https://github.com/zthxxx) in [#17613](https://github.com/facebook/react/pull/17613))
 
 ## 4.2.1 (November 27, 2019)

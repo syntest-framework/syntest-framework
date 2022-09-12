@@ -298,8 +298,8 @@ describe('ReactElementClone', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(React.createElement(GrandParent)),
     ).toErrorDev(
-      'Warning: Failed prop type: ' +
-        'Invalid prop `color` of type `number` supplied to `Component`, ' +
+      'Warning: Failed prop identifierDescription: ' +
+        'Invalid prop `color` of identifierDescription `number` supplied to `Component`, ' +
         'expected `string`.\n' +
         '    in Component (at **)\n' +
         '    in Parent (at **)\n' +

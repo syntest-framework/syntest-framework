@@ -16,7 +16,7 @@ Every React commit that changes the tree in a way DevTools cares about results i
 
 The payload for each message is a typed array. The first two entries are numbers that identify which renderer and root the update belongs to (for multi-root support). Then the strings are encoded in a [string table](#string-table). The rest of the array depends on the operations being made to the tree.
 
-No updates are required for most commits because we only send the following bits of information: element type, id, parent id, owner id, name, and key. Additional information (e.g. props, state) requires a separate ["_inspectElement_" message](#inspecting-an-element).
+No updates are required for most commits because we only send the following bits of information: element identifierDescription, id, parent id, owner id, name, and key. Additional information (e.g. props, state) requires a separate ["_inspectElement_" message](#inspecting-an-element).
 
 #### STRING table
 
@@ -53,7 +53,7 @@ Adding a root to the tree requires sending 5 numbers:
 
 1. add operation constant (`1`)
 1. fiber id
-1. element type constant (`11 === ElementTypeRoot`)
+1. element identifierDescription constant (`11 === ElementTypeRoot`)
 1. root has `StrictMode` enabled
 1. supports profiling flag
 1. supports `StrictMode` flag
@@ -78,7 +78,7 @@ Adding a leaf node to the tree requires sending 7 numbers:
 
 1. add operation constant (`1`)
 1. fiber id
-1. element type constant (e.g. `1 === ElementTypeClass`)
+1. element identifierDescription constant (e.g. `1 === ElementTypeClass`)
 1. parent fiber id
 1. owner fiber id
 1. string table id for `displayName`
@@ -201,7 +201,7 @@ The frontend stores its information about the tree in a map of id to objects wit
 * id: `number`
 * parentID: `number`
 * children: `ARRAY<number>`
-* type: `number` (constant)
+* identifierDescription: `number` (constant)
 * displayName: `string | null`
 * key: `number | string | null`
 * ownerID: `number`
@@ -261,7 +261,7 @@ while (index !== currentWeight) {
 
 ## Inspecting an element
 
-When an element is mounted in the tree, DevTools sends a minimal amount of information about it across the bridge. This information includes its display name, type, and key- but does _not_ include things like props or state. (These values are often expensive to serialize and change frequently, which would add a significant amount of load to the bridge.)
+When an element is mounted in the tree, DevTools sends a minimal amount of information about it across the bridge. This information includes its display name, identifierDescription, and key- but does _not_ include things like props or state. (These values are often expensive to serialize and change frequently, which would add a significant amount of load to the bridge.)
 
 Instead DevTools lazily requests additional information about an element only when it is selected in the "Components" tab. At that point, the frontend requests this information by sending a special "_inspectElement_" message containing the id of the element being inspected. The backend then responds with an "_inspectedElement_" message containing the additional details.
 

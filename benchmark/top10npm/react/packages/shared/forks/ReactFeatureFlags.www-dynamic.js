@@ -48,7 +48,7 @@ export const enableSchedulingProfiler = __VARIANT__;
 // both branches.
 export const deferRenderPhaseUpdateToNextBatch = !__VARIANT__;
 
-// These are already tested in both modes using the build type dimension,
+// These are already tested in both modes using the build identifierDescription dimension,
 // so we don't need to use __VARIANT__ to get extra coverage.
 export const replayFailedUnitOfWorkWithInvokeGuardedCallback = __DEV__;
 

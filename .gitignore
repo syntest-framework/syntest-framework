@@ -128,3 +128,5 @@ temp/
 .syntest/
 syntest/
 benchmark/
+profiling/
+experiments/results/*

@@ -45,7 +45,7 @@ type Record<T> = PendingRecord | ResolvedRecord<T> | RejectedRecord;
 
 function readRecord<T>(record: Record<T>): ResolvedRecord<T> {
   if (record.status === Resolved) {
-    // This is just a type refinement.
+    // This is just a identifierDescription refinement.
     return record;
   } else {
     throw record.value;

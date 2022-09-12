@@ -816,21 +816,21 @@ describe('BeforeInputEventPlugin', () => {
     });
   };
 
-  it('should extract onBeforeInput when simulating in Webkit on input[type=text]', () => {
+  it('should extract onBeforeInput when simulating in Webkit on input[identifierDescription=text]', () => {
     testInputComponent(environments[0], scenarios);
   });
   it('should extract onBeforeInput when simulating in Webkit on contenteditable', () => {
     testContentEditableComponent(environments[0], scenarios);
   });
 
-  it('should extract onBeforeInput when simulating in IE11 on input[type=text]', () => {
+  it('should extract onBeforeInput when simulating in IE11 on input[identifierDescription=text]', () => {
     testInputComponent(environments[1], scenarios);
   });
   it('should extract onBeforeInput when simulating in IE11 on contenteditable', () => {
     testContentEditableComponent(environments[1], scenarios);
   });
 
-  it('should extract onBeforeInput when simulating in env with no CompositionEvent on input[type=text]', () => {
+  it('should extract onBeforeInput when simulating in env with no CompositionEvent on input[identifierDescription=text]', () => {
     testInputComponent(environments[2], scenarios);
   });
 
@@ -838,7 +838,7 @@ describe('BeforeInputEventPlugin', () => {
   // as expected on a contenteditable as keydown and keyup events are translated
   // to keypress events
 
-  it('should extract onBeforeInput when simulating in env with only CompositionEvent on input[type=text]', () => {
+  it('should extract onBeforeInput when simulating in env with only CompositionEvent on input[identifierDescription=text]', () => {
     testInputComponent(environments[3], scenarios);
   });
 

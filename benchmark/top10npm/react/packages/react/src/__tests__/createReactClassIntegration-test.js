@@ -64,7 +64,7 @@ describe('create-react-class-integration', () => {
         },
       }),
     ).toErrorDev(
-      'Warning: Component: prop type `prop` is invalid; ' +
+      'Warning: Component: prop identifierDescription `prop` is invalid; ' +
         'it must be a function, usually from React.PropTypes.',
       {withoutStack: true},
     );
@@ -82,7 +82,7 @@ describe('create-react-class-integration', () => {
         },
       }),
     ).toErrorDev(
-      'Warning: Component: context type `prop` is invalid; ' +
+      'Warning: Component: context identifierDescription `prop` is invalid; ' +
         'it must be a function, usually from React.PropTypes.',
       {withoutStack: true},
     );
@@ -100,7 +100,7 @@ describe('create-react-class-integration', () => {
         },
       }),
     ).toErrorDev(
-      'Warning: Component: child context type `prop` is invalid; ' +
+      'Warning: Component: child context identifierDescription `prop` is invalid; ' +
         'it must be a function, usually from React.PropTypes.',
       {withoutStack: true},
     );

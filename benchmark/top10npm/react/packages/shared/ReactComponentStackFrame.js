@@ -309,14 +309,14 @@ export function describeUnknownElementTypeFrameInDEV(
       case REACT_FORWARD_REF_TYPE:
         return describeFunctionComponentFrame(type.render, source, ownerFn);
       case REACT_MEMO_TYPE:
-        // Memo may contain any component type so we recursively resolve it.
+        // Memo may contain any component identifierDescription so we recursively resolve it.
         return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
       case REACT_LAZY_TYPE: {
         const lazyComponent: LazyComponent<any, any> = (type: any);
         const payload = lazyComponent._payload;
         const init = lazyComponent._init;
         try {
-          // Lazy may contain any component type so we recursively resolve it.
+          // Lazy may contain any component identifierDescription so we recursively resolve it.
           return describeUnknownElementTypeFrameInDEV(
             init(payload),
             source,

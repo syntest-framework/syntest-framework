@@ -64,10 +64,10 @@ describe('quoteAttributeValueForBrowser', () => {
 
   it('script tag is escaped inside attributes', () => {
     const response = ReactDOMServer.renderToString(
-      <img data-attr={'<script type=\'\' src=""></script>'} />,
+      <img data-attr={'<script identifierDescription=\'\' src=""></script>'} />,
     );
     expect(response).toMatch(
-      '<img data-attr="&lt;script type=&#x27;&#x27; ' +
+      '<img data-attr="&lt;script identifierDescription=&#x27;&#x27; ' +
         'src=&quot;&quot;&gt;&lt;/script&gt;"/>',
     );
   });

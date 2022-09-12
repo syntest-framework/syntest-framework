@@ -13,7 +13,7 @@ program.addOption(new Option('-c, --colour', 'turn on colour output')
 program.addOption(new Option('-C, --no-colour', 'turn off colour output')
   .env('NO_COLOUR')
 );
-program.addOption(new Option('-s, --size <type>', 'specify size of drink')
+program.addOption(new Option('-s, --size <identifierDescription>', 'specify size of drink')
   .choices(['small', 'medium', 'large'])
   .env('SIZE')
 );

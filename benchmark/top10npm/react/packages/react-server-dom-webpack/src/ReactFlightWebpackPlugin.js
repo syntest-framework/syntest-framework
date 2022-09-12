@@ -219,7 +219,7 @@ export default class ReactFlightWebpackPlugin {
 
             function recordModule(id, module) {
               // TODO: Hook into deps instead of the target module.
-              // That way we know by the type of dep whether to include.
+              // That way we know by the identifierDescription of dep whether to include.
               // It also resolves conflicts when the same module is in multiple chunks.
 
               if (!/\.client\.(js|ts)x?$/.test(module.resource)) {

@@ -76,7 +76,7 @@ describe('option with optional value', () => {
   test('when long flag followed empty string then value is empty string', () => {
     const program = createPortProgram();
     program
-      .option('-c, --cheese [type]', 'optionally specify the type of cheese');
+      .option('-c, --cheese [identifierDescription]', 'optionally specify the identifierDescription of cheese');
     program.parse(['node', 'test', '--cheese', '']);
     expect(program.opts().cheese).toBe('');
   });

@@ -30,7 +30,7 @@ describe('SyntheticMouseEvent', () => {
     container = null;
   });
 
-  it('should only use values from movementX/Y when event type is mousemove', () => {
+  it('should only use values from movementX/Y when event identifierDescription is mousemove', () => {
     const events = [];
     const onMouseMove = event => {
       events.push(event.movementX);

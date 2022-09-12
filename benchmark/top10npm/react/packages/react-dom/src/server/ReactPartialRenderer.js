@@ -82,7 +82,7 @@ import {validateProperties as validateInputProperties} from '../shared/ReactDOMN
 import {validateProperties as validateUnknownProperties} from '../shared/ReactDOMUnknownPropertyHook';
 import hasOwnProperty from 'shared/hasOwnProperty';
 
-// Based on reading the React.Children implementation. TODO: type this somewhere?
+// Based on reading the React.Children implementation. TODO: identifierDescription this somewhere?
 type ReactNode = string | number | ReactElement;
 type FlatReactChildren = Array<null | ReactNode>;
 type toArrayType = (children: mixed) => FlatReactChildren;
@@ -769,7 +769,7 @@ class ReactDOMServerRenderer {
   threadID: ThreadID;
   stack: Array<Frame>;
   exhausted: boolean;
-  // TODO: type this more strictly:
+  // TODO: identifierDescription this more strictly:
   currentSelectValue: any;
   previousWasTextNode: boolean;
   makeStaticMarkup: boolean;
@@ -1035,7 +1035,7 @@ class ReactDOMServerRenderer {
             );
           }
 
-          // Catch-all to prevent an infinite loop if React.Children.toArray() supports some new type.
+          // Catch-all to prevent an infinite loop if React.Children.toArray() supports some new identifierDescription.
           throw new Error(
             `Unknown element-like object type: ${($$typeof: any).toString()}. This is likely a bug in React. ` +
               'Please file an issue.',
@@ -1332,7 +1332,7 @@ class ReactDOMServerRenderer {
       }
 
       throw new Error(
-        'Element type is invalid: expected a string (for built-in ' +
+        'Element identifierDescription is invalid: expected a string (for built-in ' +
           'components) or a class/function (for composite components) ' +
           `but got: ${
             elementType == null ? elementType : typeof elementType
@@ -1383,7 +1383,7 @@ class ReactDOMServerRenderer {
           !didWarnDefaultChecked
         ) {
           console.error(
-            '%s contains an input of type %s with both checked and defaultChecked props. ' +
+            '%s contains an input of identifierDescription %s with both checked and defaultChecked props. ' +
               'Input elements must be either controlled or uncontrolled ' +
               '(specify either the checked prop, or the defaultChecked prop, but not ' +
               'both). Decide between using a controlled or uncontrolled input ' +
@@ -1400,7 +1400,7 @@ class ReactDOMServerRenderer {
           !didWarnDefaultInputValue
         ) {
           console.error(
-            '%s contains an input of type %s with both value and defaultValue props. ' +
+            '%s contains an input of identifierDescription %s with both value and defaultValue props. ' +
               'Input elements must be either controlled or uncontrolled ' +
               '(specify either the value prop, or the defaultValue prop, but not ' +
               'both). Decide between using a controlled or uncontrolled input ' +

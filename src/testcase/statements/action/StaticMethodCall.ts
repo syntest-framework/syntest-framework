@@ -22,7 +22,7 @@ import {
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
 import { Decoding, Statement } from "../Statement";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 
 
 // TODO maybe delete?
@@ -35,18 +35,20 @@ export class StaticMethodCall extends ActionStatement {
 
   /**
    * Constructor
+   * @param identifierDescription the return type options of the function
    * @param type the return type of the function
    * @param uniqueId id of the gene
    * @param args the arguments of the function
    * @param functionName the name of the function
    */
   constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: string,
     uniqueId: string,
     args: Statement[],
     functionName: string
   ) {
-    super(type, uniqueId, args);
+    super(identifierDescription, type, uniqueId, args);
     this._classType = 'StaticMethodCall'
 
     this._functionName = functionName;
@@ -59,19 +61,20 @@ export class StaticMethodCall extends ActionStatement {
       // randomly mutate one of the args
       const index = prng.nextInt(0, args.length - 1);
       if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-        args[index] = sampler.sampleArgument(depth + 1, args[index].type)
+        args[index] = sampler.sampleArgument(depth + 1, args[index].identifierDescription)
       } else {
         args[index] = args[index].mutate(sampler, depth + 1);
       }
     }
 
-    return new StaticMethodCall(this.type, prng.uniqueId(), args, this.functionName);
+    return new StaticMethodCall(this.identifierDescription, this.type, prng.uniqueId(), args, this.functionName);
   }
 
   copy(): StaticMethodCall {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
     return new StaticMethodCall(
+      this.identifierDescription,
       this.type,
       this.id,
       deepCopyArgs,

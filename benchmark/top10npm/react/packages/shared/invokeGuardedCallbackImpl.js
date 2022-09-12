@@ -182,7 +182,7 @@ if (__DEV__) {
         }
       }
 
-      // Create a fake event type.
+      // Create a fake event identifierDescription.
       const evtType = `react-${name ? name : 'invokeguardedcallback'}`;
 
       // Attach our event handlers

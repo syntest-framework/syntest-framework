@@ -26,7 +26,7 @@ describe('SyntheticFocusEvent', () => {
     container = null;
   });
 
-  test('onFocus events have the focus type', () => {
+  test('onFocus events have the focus identifierDescription', () => {
     const log = [];
     ReactDOM.render(
       <button
@@ -47,7 +47,7 @@ describe('SyntheticFocusEvent', () => {
     expect(log).toEqual(['onFocusCapture: focus', 'onFocus: focus']);
   });
 
-  test('onBlur events have the blur type', () => {
+  test('onBlur events have the blur identifierDescription', () => {
     const log = [];
     ReactDOM.render(
       <button

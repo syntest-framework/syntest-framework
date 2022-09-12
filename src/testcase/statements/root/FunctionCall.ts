@@ -24,7 +24,7 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 import { Decoding, Statement } from "../Statement";
 import { RootStatement } from "./RootStatement";
 import * as path from "path";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 
 /**
  * @author Dimitri Stallenberg
@@ -34,18 +34,19 @@ export class FunctionCall extends RootStatement {
 
   /**
    * Constructor
-   * @param type the return type of the function
+   * @param type the return identifierDescription of the function
    * @param uniqueId id of the gene
    * @param functionName the name of the function
    * @param args the arguments of the function
    */
   constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: string,
     uniqueId: string,
     functionName: string,
     args: Statement[]
   ) {
-    super(type, uniqueId, args, []);
+    super(identifierDescription, type, uniqueId, args, []);
     this._classType = 'FunctionCall'
 
     this._functionName = functionName;
@@ -57,13 +58,14 @@ export class FunctionCall extends RootStatement {
     if (args.length !== 0) {
       const index = prng.nextInt(0, args.length - 1);
       if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-        args[index] = sampler.sampleArgument(depth + 1, args[index].type)
+        args[index] = sampler.sampleArgument(depth + 1, args[index].identifierDescription)
       } else {
         args[index] = args[index].mutate(sampler, depth + 1);
       }
     }
 
     return new FunctionCall(
+      this.identifierDescription,
       this.type,
       prng.uniqueId(),
       this.functionName,
@@ -75,6 +77,7 @@ export class FunctionCall extends RootStatement {
     const deepCopyArgs = [...this.args.map((a: Statement) => a.copy())];
 
     return new FunctionCall(
+      this.identifierDescription,
       this.type,
       this.id,
       this.functionName,
@@ -94,7 +97,7 @@ export class FunctionCall extends RootStatement {
     const argStatements: Decoding[] = this.args
       .flatMap((a) => a.decode(addLogs))
 
-    let decoded = `const ${this.varName} = ${this.functionName}(${args})`
+    let decoded = `const ${this.varName} = await ${this.functionName}(${args})`
 
     if (addLogs) {
       const logDir = path.join(

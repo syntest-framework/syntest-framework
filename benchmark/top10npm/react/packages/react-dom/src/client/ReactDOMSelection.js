@@ -24,7 +24,7 @@ export function getOffsets(outerNode) {
   const {anchorNode, anchorOffset, focusNode, focusOffset} = selection;
 
   // In Firefox, anchorNode and focusNode can be "anonymous divs", e.g. the
-  // up/down buttons on an <input type="number">. Anonymous divs do not seem to
+  // up/down buttons on an <input identifierDescription="number">. Anonymous divs do not seem to
   // expose properties, triggering a "Permission denied error" if any of its
   // properties are accessed. The only seemingly possible way to avoid erroring
   // is to access a property that typically works for non-anonymous divs and

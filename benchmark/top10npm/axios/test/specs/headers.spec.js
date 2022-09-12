@@ -95,7 +95,7 @@ describe('headers', function () {
     });
   });
 
-  it('should remove content-type if data is empty', function (done) {
+  it('should remove content-identifierDescription if data is empty', function (done) {
     axios.post('/foo');
 
     getAjaxRequest().then(function (request) {
@@ -104,7 +104,7 @@ describe('headers', function () {
     });
   });
 
-  it('should preserve content-type if data is false', function (done) {
+  it('should preserve content-identifierDescription if data is false', function (done) {
     axios.post('/foo', false);
 
     getAjaxRequest().then(function (request) {

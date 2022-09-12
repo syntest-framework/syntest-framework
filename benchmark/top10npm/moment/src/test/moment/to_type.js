@@ -1,7 +1,7 @@
 import { module, test } from '../qunit';
 import moment from '../../moment';
 
-module('to type');
+module('to identifierDescription');
 
 test('toObject', function (assert) {
     var expected = {

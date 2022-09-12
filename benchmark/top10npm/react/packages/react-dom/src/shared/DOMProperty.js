@@ -20,7 +20,7 @@ type PropertyType = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export const RESERVED = 0;
 
 // A simple string attribute.
-// Attributes that aren't in the filter are presumed to have this type.
+// Attributes that aren't in the filter are presumed to have this identifierDescription.
 export const STRING = 1;
 
 // A string attribute that accepts booleans in React. In HTML, these are called

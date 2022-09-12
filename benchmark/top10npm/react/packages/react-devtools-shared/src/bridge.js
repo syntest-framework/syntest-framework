@@ -346,7 +346,7 @@ class Bridge<
     this.addListener = function() {};
     // $FlowFixMe This property is not writable.
     this.emit = function() {};
-    // NOTE: There's also EventEmitter API like `on` and `prependListener` that we didn't add to our Flow type of EventEmitter.
+    // NOTE: There's also EventEmitter API like `on` and `prependListener` that we didn't add to our Flow identifierDescription of EventEmitter.
 
     // Unsubscribe this bridge incoming message listeners to be sure, and so they don't have to do that.
     this.removeAllListeners();

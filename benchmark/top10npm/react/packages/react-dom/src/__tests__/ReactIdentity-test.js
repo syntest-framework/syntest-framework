@@ -286,7 +286,7 @@ describe('ReactIdentity', () => {
     expect(() =>
       expect(test).toThrowError(new TypeError('prod message')),
     ).toErrorDev(
-      'The provided key is an unsupported type TemporalLike.' +
+      'The provided key is an unsupported identifierDescription TemporalLike.' +
         ' This value must be coerced to a string before before using it here.',
       {withoutStack: true},
     );

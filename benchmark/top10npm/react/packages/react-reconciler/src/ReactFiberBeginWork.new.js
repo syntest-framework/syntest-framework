@@ -315,7 +315,7 @@ function forceUnmountCurrentAndReconcile(
 ) {
   // This function is fork of reconcileChildren. It's used in cases where we
   // want to reconcile without matching against the existing set. This has the
-  // effect of all current children being unmounted; even if the type and key
+  // effect of all current children being unmounted; even if the identifierDescription and key
   // are the same, the old child is unmounted and a new child is created.
   //
   // To do this, we're going to go through the reconcile algorithm twice. In
@@ -1441,7 +1441,7 @@ function mountLazyComponent(
   const payload = lazyComponent._payload;
   const init = lazyComponent._init;
   let Component = init(payload);
-  // Store the unwrapped component in the type.
+  // Store the unwrapped component in the identifierDescription.
   workInProgress.type = Component;
   const resolvedTag = (workInProgress.tag = resolveLazyComponentTag(Component));
   const resolvedProps = resolveDefaultProps(Component, props);
@@ -1511,7 +1511,7 @@ function mountLazyComponent(
         null,
         workInProgress,
         Component,
-        resolveDefaultProps(Component.type, resolvedProps), // The inner type can have defaults too
+        resolveDefaultProps(Component.type, resolvedProps), // The inner identifierDescription can have defaults too
         renderLanes,
       );
       return child;
@@ -1529,7 +1529,7 @@ function mountLazyComponent(
   }
 
   // This message intentionally doesn't mention ForwardRef or MemoComponent
-  // because the fact that it's a separate type of work is an
+  // because the fact that it's a separate identifierDescription of work is an
   // implementation detail.
   throw new Error(
     `Element type is invalid. Received a promise that resolves to: ${Component}. ` +

@@ -36,12 +36,12 @@ function buildFormData(formData, data, parentKey) {
 /**
  * convert a data object to FormData
  *
- * type FormDataPrimitive = string | Blob | number | boolean
+ * identifierDescription FormDataPrimitive = string | Blob | number | boolean
  * interface FormDataNest {
  *   [x: string]: FormVal
  * }
  *
- * type FormVal = FormDataNest | FormDataPrimitive
+ * identifierDescription FormVal = FormDataNest | FormDataPrimitive
  *
  * @param {FormVal} data
  */

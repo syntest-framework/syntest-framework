@@ -12,7 +12,7 @@
     - deps: qs@6.9.6
     - deps: raw-body@2.4.2
     - deps: safe-buffer@5.2.1
-    - deps: type-is@~1.6.18
+    - deps: identifierDescription-is@~1.6.18
   * deps: content-disposition@0.5.4
     - deps: safe-buffer@5.2.1
   * deps: cookie@0.4.1
@@ -54,7 +54,7 @@
     - deps: iconv-lite@0.4.24
     - deps: qs@6.7.0
     - deps: raw-body@2.4.0
-    - deps: type-is@~1.6.17
+    - deps: identifierDescription-is@~1.6.17
   * deps: content-disposition@0.5.3
   * deps: cookie@0.4.0
     - Add `SameSite=None` support
@@ -83,9 +83,9 @@
   * deps: setprototypeof@1.1.1
   * deps: statuses@~1.5.0
     - Add `103 Early Hints`
-  * deps: type-is@~1.6.18
+  * deps: identifierDescription-is@~1.6.18
     - deps: mime-types@~2.1.24
-    - perf: prevent internal `throw` on invalid type
+    - perf: prevent internal `throw` on invalid identifierDescription
 
 4.16.4 / 2018-10-10
 ===================
@@ -100,7 +100,7 @@
     - deps: iconv-lite@0.4.23
     - deps: qs@6.5.2
     - deps: raw-body@2.3.3
-    - deps: type-is@~1.6.16
+    - deps: identifierDescription-is@~1.6.16
   * deps: proxy-addr@~2.0.4
     - deps: ipaddr.js@1.8.0
   * deps: qs@6.5.2
@@ -131,7 +131,7 @@
     - deps: encodeurl@~1.0.2
     - deps: send@0.16.2
   * deps: statuses@~1.4.0
-  * deps: type-is@~1.6.16
+  * deps: identifierDescription-is@~1.6.16
     - deps: mime-types@~2.1.18
 
 4.16.2 / 2017-10-09
@@ -160,7 +160,7 @@
   * Use `safe-buffer` for improved Buffer API
   * deps: accepts@~1.3.4
     - deps: mime-types@~2.1.16
-  * deps: content-type@~1.0.4
+  * deps: content-identifierDescription@~1.0.4
     - perf: remove argument reassignment
     - perf: skip parameter parsing when no parameters
   * deps: etag@~1.8.1
@@ -255,7 +255,7 @@
     - deps: ms@2.0.0
   * deps: serve-static@1.12.3
     - deps: send@0.15.3
-  * deps: type-is@~1.6.15
+  * deps: identifierDescription-is@~1.6.15
     - deps: mime-types@~2.1.15
   * deps: vary@~1.1.1
     - perf: hoist regular expression
@@ -363,7 +363,7 @@
     - deps: statuses@~1.3.1
   * deps: serve-static@~1.11.2
     - deps: send@0.14.2
-  * deps: type-is@~1.6.14
+  * deps: identifierDescription-is@~1.6.14
     - deps: mime-types@~2.1.13
 
 4.14.0 / 2016-06-16
@@ -380,13 +380,13 @@
   * Improve performance for `res.json`/`res.jsonp` in most cases
   * Improve `Range` header handling in `res.sendFile`/`res.sendfile`
   * deps: accepts@~1.3.3
-    - Fix including type extensions in parameters in `Accept` parsing
+    - Fix including identifierDescription extensions in parameters in `Accept` parsing
     - Fix parsing `Accept` parameters with quoted equals
     - Fix parsing `Accept` parameters with quoted semicolons
     - Many performance improvements
     - deps: mime-types@~2.1.11
     - deps: negotiator@0.6.1
-  * deps: content-type@~1.0.2
+  * deps: content-identifierDescription@~1.0.2
     - perf: enable strict mode
   * deps: cookie@0.3.1
     - Add `sameSite` option
@@ -439,8 +439,8 @@
     - Ignore non-byte `Range` headers
     - Use status code 301 for redirects
     - deps: send@0.14.1
-  * deps: type-is@~1.6.13
-    - Fix type error when given invalid type to match against
+  * deps: identifierDescription-is@~1.6.13
+    - Fix identifierDescription error when given invalid identifierDescription to match against
     - deps: mime-types@~2.1.11
   * deps: vary@~1.1.0
     - Only accept valid field names in the `field` argument
@@ -498,7 +498,7 @@
     - perf: enable strict mode
   * deps: path-to-regexp@0.1.7
     - Fix regression with escaped round brackets and matching groups
-  * deps: type-is@~1.6.6
+  * deps: identifierDescription-is@~1.6.6
     - deps: mime-types@~2.1.4
 
 4.13.1 / 2015-07-05
@@ -509,7 +509,7 @@
   * deps: qs@4.0.0
     - Fix dropping parameters like `hasOwnProperty`
     - Fix various parsing edge cases
-  * deps: type-is@~1.6.4
+  * deps: identifierDescription-is@~1.6.4
     - deps: mime-types@~2.1.2
     - perf: enable strict mode
     - perf: remove argument reassignment
@@ -581,7 +581,7 @@
     - deps: send@0.13.0
     - perf: enable strict mode
     - perf: remove argument reassignment
-  * deps: type-is@~1.6.3
+  * deps: identifierDescription-is@~1.6.3
     - deps: mime-types@~2.1.1
     - perf: reduce try block size
     - perf: remove bitwise operations
@@ -624,7 +624,7 @@
     - deps: on-finished@~2.2.1
   * deps: serve-static@~1.9.3
     - deps: send@0.12.3
-  * deps: type-is@~1.6.2
+  * deps: identifierDescription-is@~1.6.2
     - deps: mime-types@~2.0.11
 
 4.12.3 / 2015-03-17
@@ -646,7 +646,7 @@
     - deps: debug@~2.1.3
   * deps: serve-static@~1.9.2
     - deps: send@0.12.2
-  * deps: type-is@~1.6.1
+  * deps: identifierDescription-is@~1.6.1
     - deps: mime-types@~2.0.10
 
 4.12.2 / 2015-03-02
@@ -670,7 +670,7 @@
   * Fix `"trust proxy"` setting to inherit when app is mounted
   * Generate `ETag`s for all request responses
     - No longer restricted to only responses for `GET` and `HEAD` requests
-  * Use `content-type` to parse `Content-Type` headers
+  * Use `content-identifierDescription` to parse `Content-Type` headers
   * deps: accepts@~1.2.4
     - Fix preference sorting to be stable for long acceptable lists
     - deps: mime-types@~2.0.9
@@ -682,10 +682,10 @@
     - deps: mime@1.3.4
   * deps: serve-static@~1.9.1
     - deps: send@0.12.1
-  * deps: type-is@~1.6.0
+  * deps: identifierDescription-is@~1.6.0
     - fix argument reassignment
     - fix false-positives in `hasBody` `Transfer-Encoding` check
-    - support wildcard for both type and subtype (`*/*`)
+    - support wildcard for both identifierDescription and subtype (`*/*`)
     - deps: mime-types@~2.0.9
 
 4.11.2 / 2015-02-01
@@ -696,7 +696,7 @@
     - deps: mime-types@~2.0.8
   * deps: proxy-addr@~1.0.6
     - deps: ipaddr.js@0.1.8
-  * deps: type-is@~1.5.6
+  * deps: identifierDescription-is@~1.5.6
     - deps: mime-types@~2.0.8
 
 4.11.1 / 2015-01-20
@@ -750,7 +750,7 @@
   * deps: on-finished@~2.2.0
   * deps: serve-static@~1.7.2
     - Fix potential open redirect when mounted at root
-  * deps: type-is@~1.5.5
+  * deps: identifierDescription-is@~1.5.5
     - deps: mime-types@~2.0.7
 
 4.10.6 / 2014-12-12
@@ -764,7 +764,7 @@
   * Fix `res.send` double-calling `res.end` for `HEAD` requests
   * deps: accepts@~1.1.4
     - deps: mime-types@~2.0.4
-  * deps: type-is@~1.5.4
+  * deps: identifierDescription-is@~1.5.4
     - deps: mime-types@~2.0.4
 
 4.10.4 / 2014-11-24
@@ -788,7 +788,7 @@
   * Correctly invoke async router callback asynchronously
   * deps: accepts@~1.1.3
     - deps: mime-types@~2.0.3
-  * deps: type-is@~1.5.3
+  * deps: identifierDescription-is@~1.5.3
     - deps: mime-types@~2.0.3
 
 4.10.1 / 2014-10-28
@@ -837,7 +837,7 @@
 
   * Fix `res.redirect` body when redirect status specified
   * deps: accepts@~1.1.2
-    - Fix error when media type has invalid parameter
+    - Fix error when media identifierDescription has invalid parameter
     - deps: negotiator@0.4.9
 
 4.9.7 / 2014-10-10
@@ -853,7 +853,7 @@
     - deps: negotiator@0.4.8
   * deps: serve-static@~1.6.4
     - Fix redirect loop when index file serving disabled
-  * deps: type-is@~1.5.2
+  * deps: identifierDescription-is@~1.5.2
     - deps: mime-types@~2.0.2
 
 4.9.5 / 2014-09-24
@@ -930,7 +930,7 @@
   * deps: serve-static@~1.6.1
     - Add `lastModified` option
     - deps: send@0.9.1
-  * deps: type-is@~1.5.1
+  * deps: identifierDescription-is@~1.5.1
     - fix `hasbody` to be true for `content-length: 0`
     - deps: media-typer@0.3.0
     - deps: mime-types@~2.0.1
@@ -1152,7 +1152,7 @@
  * invoke `router.param()` only when route matches
  * restore `req.params` after invoking router
  * use `finalhandler` for final response handling
- * use `media-typer` to alter content-type charset
+ * use `media-typer` to alter content-identifierDescription charset
  * deps: accepts@~1.0.7
  * deps: send@0.5.0
    - Accept string for `maxage` (converted by `ms`)
@@ -1162,7 +1162,7 @@
    - Add `setHeaders` option
    - Include HTML link in redirect response
    - deps: send@0.5.0
- * deps: type-is@~1.3.2
+ * deps: identifierDescription-is@~1.3.2
 
 4.4.5 / 2014-06-26
 ==================
@@ -1209,7 +1209,7 @@
  * deps: serve-static@1.2.2
    - fix "event emitter leak" warnings
    - deps: send@0.4.2
- * deps: type-is@1.2.1
+ * deps: identifierDescription-is@1.2.1
 
 4.4.1 / 2014-06-02
 ==================
@@ -1269,7 +1269,7 @@
    - `app.set('trust proxy', false)` turn off
    - `app.set('trust proxy', true)` trust everything
  * set proper `charset` in `Content-Type` for `res.send`
- * update type-is to 1.2.0
+ * update identifierDescription-is to 1.2.0
    - support suffix matching
 
 4.2.0 / 2014-05-11
@@ -1333,7 +1333,7 @@
    - Resolve relative paths at middleware setup
    - Use parseurl to parse the URL from request
    - deps: send@0.3.0
- * update type-is to 1.1.0
+ * update identifierDescription-is to 1.1.0
    - add non-array values support
    - add `multipart` as a shorthand
 
@@ -1350,7 +1350,7 @@
    - `req.auth` - use `basic-auth` instead
    - `req.accepted*` - use `req.accepts*()` instead
    - `res.location` - relative URL resolution is removed
-   - `res.charset` - include the charset in the content type when using `res.set()`
+   - `res.charset` - include the charset in the content identifierDescription when using `res.set()`
    - all bundled middleware except `static`
  * change:
    - `app.route` -> `app.mountpath` when mounting an express app in another express app
@@ -1361,7 +1361,7 @@
    - `res.headerSent` -> `res.headersSent` to match node.js ServerResponse object
  * refactor:
    - `req.accepts*` with [accepts](https://github.com/expressjs/accepts)
-   - `req.is` with [type-is](https://github.com/expressjs/type-is)
+   - `req.is` with [identifierDescription-is](https://github.com/expressjs/type-is)
    - [path-to-regexp](https://github.com/component/path-to-regexp)
  * add:
    - `app.router()` - returns the app Router instance
@@ -1377,7 +1377,7 @@
     - deps: errorhandler@~1.4.2
     - deps: method-override@~2.3.5
     - deps: serve-index@~1.7.2
-    - deps: type-is@~1.6.6
+    - deps: identifierDescription-is@~1.6.6
     - deps: vhost@~3.0.1
   * deps: vary@~1.0.1
     - Fix setting empty header from empty `field`
@@ -1396,7 +1396,7 @@
     - deps: pause@0.1.0
     - deps: qs@4.0.0
     - deps: serve-index@~1.7.1
-    - deps: type-is@~1.6.4
+    - deps: identifierDescription-is@~1.6.4
 
 3.21.0 / 2015-06-18
 ===================
@@ -1421,7 +1421,7 @@
     - deps: serve-favicon@~2.3.0
     - deps: serve-index@~1.7.0
     - deps: serve-static@~1.10.0
-    - deps: type-is@~1.6.3
+    - deps: identifierDescription-is@~1.6.3
   * deps: cookie@0.1.3
     - perf: deduce the scope of try-catch deopt
     - perf: remove argument reassignments
@@ -1470,7 +1470,7 @@
     - deps: serve-favicon@~2.2.1
     - deps: serve-index@~1.6.4
     - deps: serve-static@~1.9.3
-    - deps: type-is@~1.6.2
+    - deps: identifierDescription-is@~1.6.2
   * deps: debug@~2.2.0
     - deps: ms@0.7.1
   * deps: depd@~1.0.1
@@ -1499,7 +1499,7 @@
     - deps: qs@2.4.1
     - deps: serve-index@~1.6.3
     - deps: serve-static@~1.9.2
-    - deps: type-is@~1.6.1
+    - deps: identifierDescription-is@~1.6.1
   * deps: debug@~2.1.3
     - Fix high intensity foreground color for bold
     - deps: ms@0.7.0
@@ -1522,9 +1522,9 @@
   * Fix `"trust proxy"` setting to inherit when app is mounted
   * Generate `ETag`s for all request responses
     - No longer restricted to only responses for `GET` and `HEAD` requests
-  * Use `content-type` to parse `Content-Type` headers
+  * Use `content-identifierDescription` to parse `Content-Type` headers
   * deps: connect@2.29.0
-    - Use `content-type` to parse `Content-Type` headers
+    - Use `content-identifierDescription` to parse `Content-Type` headers
     - deps: body-parser@~1.12.0
     - deps: compression@~1.4.1
     - deps: connect-timeout@~1.6.0
@@ -1537,7 +1537,7 @@
     - deps: response-time@~2.3.0
     - deps: serve-index@~1.6.2
     - deps: serve-static@~1.9.1
-    - deps: type-is@~1.6.0
+    - deps: identifierDescription-is@~1.6.0
   * deps: cookie-signature@1.0.6
   * deps: send@0.12.1
     - Always read the stat size from the file
@@ -1553,7 +1553,7 @@
     - deps: errorhandler@~1.3.3
     - deps: express-session@~1.10.2
     - deps: serve-index@~1.6.1
-    - deps: type-is@~1.5.6
+    - deps: identifierDescription-is@~1.5.6
   * deps: proxy-addr@~1.0.6
     - deps: ipaddr.js@0.1.8
 
@@ -1586,7 +1586,7 @@
     - deps: serve-favicon@~2.2.0
     - deps: serve-index@~1.6.0
     - deps: serve-static@~1.8.0
-    - deps: type-is@~1.5.5
+    - deps: identifierDescription-is@~1.5.5
   * deps: debug@~2.1.1
   * deps: methods@~1.1.1
   * deps: proxy-addr@~1.0.5
@@ -1610,7 +1610,7 @@
     - deps: express-session@~1.9.3
     - deps: http-errors@~1.2.8
     - deps: serve-index@~1.5.3
-    - deps: type-is@~1.5.4
+    - deps: identifierDescription-is@~1.5.4
 
 3.18.4 / 2014-11-23
 ===================
@@ -1623,7 +1623,7 @@
     - deps: qs@2.3.3
     - deps: serve-favicon@~2.1.7
     - deps: serve-static@~1.5.1
-    - deps: type-is@~1.5.3
+    - deps: identifierDescription-is@~1.5.3
   * deps: etag@~1.5.1
   * deps: proxy-addr@~1.0.4
     - deps: ipaddr.js@0.1.5
@@ -1708,7 +1708,7 @@
 
   * deps: connect@2.26.4
     - deps: morgan@~1.3.2
-    - deps: type-is@~1.5.2
+    - deps: identifierDescription-is@~1.5.2
 
 3.17.5 / 2014-09-24
 ===================
@@ -1782,7 +1782,7 @@
     - deps: serve-favicon@~2.1.3
     - deps: serve-index@~1.2.1
     - deps: serve-static@~1.6.1
-    - deps: type-is@~1.5.1
+    - deps: identifierDescription-is@~1.5.1
     - deps: vhost@~3.0.0
   * deps: cookie-signature@1.0.5
   * deps: debug@~2.0.0
@@ -2022,14 +2022,14 @@
    - deps: cookie-parser@1.3.2
    - deps: cookie-signature@1.0.4
    - deps: express-session@~1.5.2
-   - deps: type-is@~1.3.2
+   - deps: identifierDescription-is@~1.3.2
  * deps: cookie-signature@1.0.4
    - fix for timing attacks
 
 3.12.0 / 2014-06-21
 ===================
 
- * use `media-typer` to alter content-type charset
+ * use `media-typer` to alter content-identifierDescription charset
  * deps: connect@2.21.0
    - deprecate `connect(middleware)` -- use `app.use(middleware)` instead
    - deprecate `connect.createServer()` -- use `connect()` instead
@@ -2049,7 +2049,7 @@
    - deprecate `verify` option to `urlencoded` -- use `body-parser` npm module instead
    - deprecate things with `depd` module
    - use `finalhandler` for final response handling
-   - use `media-typer` to parse `content-type` for charset
+   - use `media-typer` to parse `content-identifierDescription` for charset
    - deps: body-parser@1.4.3
    - deps: connect-timeout@1.1.1
    - deps: cookie-parser@1.3.1
@@ -2058,7 +2058,7 @@
    - deps: express-session@1.4.0
    - deps: multiparty@3.2.9
    - deps: serve-index@1.1.2
-   - deps: type-is@1.3.1
+   - deps: identifierDescription-is@1.3.1
    - deps: vhost@2.0.0
 
 3.10.5 / 2014-06-11
@@ -2086,7 +2086,7 @@
    - deps: csurf@1.2.1
    - deps: debug@1.0.1
    - deps: serve-static@1.2.2
-   - deps: type-is@1.2.1
+   - deps: identifierDescription-is@1.2.1
  * deps: debug@1.0.1
  * deps: send@0.4.2
    - fix "event emitter leak" warnings
@@ -2164,7 +2164,7 @@
  * keep previous `Content-Type` for `res.jsonp`
  * set proper `charset` in `Content-Type` for `res.send`
  * update connect to 2.17.1
-   - fix `res.charset` appending charset when `content-type` has one
+   - fix `res.charset` appending charset when `content-identifierDescription` has one
    - deps: express-session@1.2.0
    - deps: morgan@1.1.1
    - deps: serve-index@1.0.3
@@ -2682,7 +2682,7 @@
   * Added `express.application` prototype
   * Added `app.path()`
   * Added `app.render()`
-  * Added `res.type()` to replace `res.contentType()`
+  * Added `res.identifierDescription()` to replace `res.contentType()`
   * Changed: `res.redirect()` to add relative support
   * Changed: enable "jsonp callback" by default
   * Changed: renamed "case sensitive routes" to "case sensitive routing"
@@ -3233,7 +3233,7 @@ Shaw]
   * Utilize relative requires
   * Added Static bufferSize option [aheckmann]
   * Fixed caching of view and partial subdirectories [aheckmann]
-  * Fixed mime.type() comments now that ".ext" is not supported
+  * Fixed mime.identifierDescription() comments now that ".ext" is not supported
   * Updated haml submodule
   * Updated class submodule
   * Removed bin/express
@@ -3247,7 +3247,7 @@ Shaw]
   * Fixed not-found page, now using using charset utf-8
   * Fixed show-exceptions page, now using using charset utf-8
   * Fixed view support due to fs.readFile Buffers
-  * Changed; mime.type() no longer accepts ".type" due to node extname() changes
+  * Changed; mime.identifierDescription() no longer accepts ".identifierDescription" due to node extname() changes
 
 0.12.0 / 2010-05-22
 ==================

@@ -210,7 +210,7 @@ function attachWakeableListeners(
 
   // Retry listener
   //
-  // If the fallback does commit, we need to attach a different type of
+  // If the fallback does commit, we need to attach a different identifierDescription of
   // listener. This one schedules an update on the Suspense boundary to turn
   // the fallback state off.
   //
@@ -514,7 +514,7 @@ function throwException(
     }
   }
 
-  // We didn't find a boundary that could handle this type of exception. Start
+  // We didn't find a boundary that could handle this identifierDescription of exception. Start
   // over and traverse parent path again, this time treating the exception
   // as an error.
   renderDidError();

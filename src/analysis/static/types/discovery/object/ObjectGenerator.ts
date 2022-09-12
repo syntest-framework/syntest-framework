@@ -18,6 +18,7 @@
 
 import { traverse } from "@babel/core";
 import { ObjectVisitor } from "./ObjectVisitor";
+import { ComplexObject } from "./ComplexObject";
 
 /**
  * Typing generator for targets.
@@ -31,7 +32,7 @@ export class ObjectGenerator {
    * @param filePath the path of the current file
    * @param targetAST The AST of the target
    */
-  generate(filePath: string, targetAST: any): any {
+  generate(filePath: string, targetAST: any): ComplexObject[] {
     const visitor = new ObjectVisitor(filePath);
 
     traverse(targetAST, visitor);

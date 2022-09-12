@@ -74,7 +74,7 @@ export default function getComponentNameFromFiber(fiber: Fiber): string | null {
     case Fragment:
       return 'Fragment';
     case HostComponent:
-      // Host component type is the display name (e.g. "div", "View")
+      // Host component identifierDescription is the display name (e.g. "div", "View")
       return type;
     case HostPortal:
       return 'Portal';
@@ -83,7 +83,7 @@ export default function getComponentNameFromFiber(fiber: Fiber): string | null {
     case HostText:
       return 'Text';
     case LazyComponent:
-      // Name comes from the type in this case; we don't have a tag.
+      // Name comes from the identifierDescription in this case; we don't have a tag.
       return getComponentNameFromType(type);
     case LegacyHiddenComponent:
       return 'LegacyHidden';
@@ -104,7 +104,7 @@ export default function getComponentNameFromFiber(fiber: Fiber): string | null {
     case SuspenseListComponent:
       return 'SuspenseList';
 
-    // The display name for this tags come from the user-provided type:
+    // The display name for this tags come from the user-provided identifierDescription:
     case ClassComponent:
     case FunctionComponent:
     case IncompleteClassComponent:

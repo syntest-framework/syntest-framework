@@ -2088,7 +2088,7 @@ describe('ReactLegacyErrorBoundaries', () => {
     try {
       const container = document.createElement('div');
       expect(() => ReactDOM.render(<X />, container)).toErrorDev(
-        'React.createElement: type is invalid -- expected a string ' +
+        'React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function ' +
           '(for composite components) but got: null.',
       );
@@ -2098,7 +2098,7 @@ describe('ReactLegacyErrorBoundaries', () => {
     try {
       const container = document.createElement('div');
       expect(() => ReactDOM.render(<Y />, container)).toErrorDev(
-        'React.createElement: type is invalid -- expected a string ' +
+        'React.createElement: identifierDescription is invalid -- expected a string ' +
           '(for built-in components) or a class/function ' +
           '(for composite components) but got: undefined.',
       );

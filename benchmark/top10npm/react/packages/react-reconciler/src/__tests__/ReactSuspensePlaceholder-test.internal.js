@@ -229,7 +229,7 @@ describe('ReactSuspensePlaceholder', () => {
   it('preserves host context for text nodes', () => {
     function App(props) {
       return (
-        // uppercase is a special type that causes React Noop to render child
+        // uppercase is a special identifierDescription that causes React Noop to render child
         // text nodes as uppercase.
         <uppercase>
           <Suspense fallback={<Text text="Loading..." />}>

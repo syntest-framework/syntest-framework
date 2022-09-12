@@ -15,43 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Element, ElementType, getElement, getElementId } from "./Element";
+import { Element, ElementType, getElementId } from "./Element";
 import { getRelationType, Relation, RelationType } from "./Relation";
-import { Scope, ScopeType } from "./Scope";
-import { ComplexObject } from "./object/ComplexObject";
+import { Visitor } from "../../Visitor";
 
 // TODO functionexpression
 // TODO return
-export class VariableVisitor {
+export class VariableVisitor extends Visitor {
 
-  private _filePath: string;
-  // Stack because functions in functions in functions ... etc.
-  private _currentScopeStack: Scope[]
-
-  private _scopes: Scope[]
   private _relations: Relation[]
   private _wrapperElementIsRelation: Map<string, Relation>
 
-  get scopes(): Scope[] {
-    return this._scopes;
-  }
+  private _elementStore: Map<string, Element>
 
   get wrapperElementIsRelation(): Map<string, Relation> {
     return this._wrapperElementIsRelation;
   }
 
   get elements(): Element[] {
-    const _elements: Element[] = []
-    const _idSet: Set<string> = new Set()
+    const _elements: Set<Element> = new Set<Element>()
 
+    // todo maybe not return relation elements
     for (const relation of this.relations) {
       for (const element of relation.involved) {
-        const elementId = getElementId(element)
-        if (_idSet.has(elementId)) {
-          continue
-        }
-        _idSet.add(elementId)
-        _elements.push(element)
+        _elements.add(element)
       }
     }
 
@@ -63,165 +50,82 @@ export class VariableVisitor {
   }
 
   constructor(filePath: string) {
-    this._filePath = filePath
-
-    this._scopes = []
+    super(filePath)
     this._relations = []
-    this._currentScopeStack = []
     this._wrapperElementIsRelation = new Map<string, Relation>()
 
-    this._createGlobalScope()
+    this._elementStore = new Map<string, Element>()
   }
 
-  private _createGlobalScope() {
-    const globalScope: Scope = {
-      name: "global",
-      filePath: this._filePath,
-      type: ScopeType.Global
-    }
-
-    this._currentScopeStack.push(globalScope)
-    this.scopes.push(globalScope)
-  }
-
-  private _getCurrentScope(): Scope {
-    return this._currentScopeStack[this._currentScopeStack.length - 1]
-  }
-
-  private _enterScope(name: string, type: ScopeType) {
-    const scope: Scope = {
-      name: name,
-      filePath: this._filePath,
-      type: type,
-    }
-    this._currentScopeStack.push(scope)
-    this._scopes.push(scope)
-  }
-
-  private _exitScope(name: string) {
-    const popped = this._currentScopeStack.pop()
-
-    if (name !== popped.name) {
-      console.log(this._currentScopeStack)
-      throw new Error(`Popped scope is not equal to the exiting scope! ${name} != ${popped.name}`)
-    }
-  }
 
   // context
-  public ClassDeclaration = {
-    enter: (path) => {
-      this._enterScope(path.node.id.name, ScopeType.Class)
-    },
-    exit: (path) => {
-      this._exitScope(path.node.id.name)
-    }
+  public ClassDeclaration: (path) => void = (path) => {
   }
 
-  public ClassMethod = {
-    enter: (path) => {
-      this._enterScope(path.node.key.name, ScopeType.Method)
-    },
-    exit: (path) => {
-      this._exitScope(path.node.key.name)
+  public ClassMethod: (path) => void = (path) => {
+    if (path.node.kind === 'constructor') {
+      // TODO
+      return
     }
+
+    const involved: Element[] = [this._getElement(path,  path.node.key)]
+
+    for (const param of path.node.params) {
+      involved.push(this._getElement(path, param))
+    }
+
+    this.relations.push({
+      relation: RelationType.Parameters,
+      involved: involved
+    })
   }
 
-  public FunctionDeclaration = {
-    enter: (path) => {
-      const functionScope = this._getCurrentScope()
-      const functionName = path.node.id.name
-      this._enterScope(functionName, ScopeType.Function)
+  public FunctionDeclaration: (path) => void = (path) => {
+    const involved: Element[] = [this._getElement(path, path.node.id)]
 
-      const scope = this._getCurrentScope()
-
-      const involved: Element[] = [{
-        scope: functionScope,
-        type: ElementType.Identifier,
-        value: functionName
-      }]
-
-      for (const param of path.node.params) {
-        if (param.type === "Identifier") {
-          involved.push({
-            scope: scope,
-            type: ElementType.Identifier,
-            value: param.name
-          })
-        } else if (param.type === "RestElement"
-          || param.type === "AssignmentPattern") {
-          involved.push({
-            scope: scope,
-            type: ElementType.Relation,
-            value: `%${path.node.start}-${path.node.end}`
-          })
-        } else {
-          throw new Error("unsupported")
-        }
-      }
-
-      this.relations.push({
-        relation: RelationType.Parameters,
-        involved: involved
-      })
-    },
-    exit: (path) => {
-      this._exitScope(path.node.id.name)
+    for (const param of path.node.params) {
+      involved.push(this._getElement(path, param))
     }
+
+    this.relations.push({
+      relation: RelationType.Parameters,
+      involved: involved
+    })
   }
 
-  public ArrowFunctionExpression = {
-    enter: (path) => {
-      const functionScope = this._getCurrentScope()
-      const functionName = `%${path.node.start}-${path.node.end}`
+  public ArrowFunctionExpression: (path) => void = (path) => {
+    const involved: Element[] = [this._getElement(path, path.node)]
 
-      this._enterScope(functionName, ScopeType.Function)
-
-      const scope = this._getCurrentScope()
-
-      const involved: Element[] = [{
-        scope: functionScope,
-        type: ElementType.Identifier,
-        value: functionName
-      }]
-
-      for (const param of path.node.params) {
-        if (param.type === "Identifier") {
-          involved.push({
-            scope: scope,
-            type: ElementType.Identifier,
-            value: param.name
-          })
-        } else if (param.type === "RestElement") {
-          involved.push({
-            scope: scope,
-            type: ElementType.Relation,
-            value: `%${path.node.start}-${path.node.end}`
-          })
-        } else {
-          throw new Error("unsupported")
-        }
-      }
-
-      this.relations.push({
-        relation: RelationType.Parameters,
-        involved: involved
-      })
-    },
-    exit: (path) => {
-      const functionName = `%${path.node.start}-${path.node.end}`
-      this._exitScope(functionName)
+    for (const param of path.node.params) {
+      involved.push(this._getElement(path, param))
     }
+
+    this.relations.push({
+      relation: RelationType.Parameters,
+      involved: involved
+    })
+  }
+
+  public FunctionExpression: (path) => void = (path) => {
+    const involved: Element[] = [this._getElement(path, path.node)]
+
+    for (const param of path.node.params) {
+      involved.push(this._getElement(path, param))
+    }
+
+    this.relations.push({
+      relation: RelationType.Parameters,
+      involved: involved
+    })
   }
 
   public CallExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: RelationType.Call,
       involved: [
-        getElement(scope, path.node.callee),
+        this._getElement(path, path.node.callee),
         ...path.node.arguments.map((a) => {
-          return getElement(scope, a)
+          return this._getElement(path, a)
         })
       ]
     }
@@ -230,36 +134,32 @@ export class VariableVisitor {
     this.relations.push(relation)
   }
 
-  // public VariableDeclarator: (path) => void = (path) => {
-  //   const scope = this._getCurrentScope()
-  //
-  //   const variableId = path.node.id.name
-  //
-  //   if (this._variables.find((v) => v.scope === scope && v.id === variableId)) {
-  //     throw new Error("I wasnt expecting that things can be redeclared")
-  //   }
-  //
-  //   const variable = new Variable(variableId, scope)
-  //   this._variables.push(variable)
-  //
-  //   variable.usage.push(
-  //     {
-  //       type: UsageType.Assignment,
-  //       operation: '=',
-  //       usedVariable: `${path.node.init.start}-${path.node.init.end}`
-  //     }
-  //   )
-  // }
+  public VariableDeclarator: (path) => void = (path) => {
+    if (!path.node.init) {
+      // if the variable is not instantiated we skip it
+      return
+    }
+    const relation: Relation = {
+      relation: getRelationType("assignment", "="),
+      involved: [
+        this._getElement(path, path.node.id),
+        this._getElement(path, path.node.init)
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
 
     // operations
   // public ReturnStatement: (path) => void = (path) => {
   //   // get the name of the function that we are returning
-  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.type === ScopeType.Method || s.type === ScopeType.FUNCTION)
+  //   const functionScope = [...this._currentScopeStack].reverse().find((s) => s.identifierDescription === ScopeType.Method || s.identifierDescription === ScopeType.FUNCTION)
   //   // get the corresponding variable of the function
   //   const variable = this._getVariableInScope(functionScope.name)
   //
   //   variable.usage.push({
-  //     type: UsageType.Return,
+  //     identifierDescription: UsageType.Return,
   //     operation: "",
   //     usedVariable: `${path.node.argument.start}-${path.node.argument.end}`
   //   })
@@ -267,12 +167,10 @@ export class VariableVisitor {
 
   // unary
   public UnaryExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: getRelationType("unary", path.node.operator, path.node.prefix),
       involved: [
-        getElement(scope, path.node.argument)
+        this._getElement(path, path.node.argument)
       ]
     }
 
@@ -281,12 +179,10 @@ export class VariableVisitor {
   }
 
   public UpdateExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: getRelationType("unary", path.node.operator),
       involved: [
-        getElement(scope, path.node.argument)
+        this._getElement(path, path.node.argument)
       ]
     }
 
@@ -295,12 +191,10 @@ export class VariableVisitor {
   }
 
   public RestElement: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: RelationType.Spread,
       involved: [
-        getElement(scope, path.node.argument)
+        this._getElement(path, path.node.argument)
       ]
     }
 
@@ -309,12 +203,16 @@ export class VariableVisitor {
   }
 
   public ArrayExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: RelationType.Array,
       involved: path.node.elements.map((e) => {
-        return getElement(scope, e)
+        if (!e) {
+          return {
+            type: ElementType.NullConstant,
+            value: null
+          }
+        }
+        return this._getElement(path, e)
       })
     }
 
@@ -323,12 +221,10 @@ export class VariableVisitor {
   }
 
   public ObjectExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: RelationType.Object,
       involved: path.node.properties.map((e) => {
-        return getElement(scope, e)
+        return this._getElement(path, e)
       })
     }
 
@@ -337,13 +233,11 @@ export class VariableVisitor {
   }
 
   public AssignmentExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: getRelationType("assignment", path.node.operator),
       involved: [
-        getElement(scope, path.node.left),
-        getElement(scope, path.node.right)
+        this._getElement(path, path.node.left),
+        this._getElement(path, path.node.right)
       ]
     }
 
@@ -353,13 +247,11 @@ export class VariableVisitor {
 
   // binary
   public BinaryExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: getRelationType("binary", path.node.operator),
       involved: [
-        getElement(scope, path.node.left),
-        getElement(scope, path.node.right)
+        this._getElement(path, path.node.left),
+        this._getElement(path, path.node.right)
       ]
     }
 
@@ -368,13 +260,11 @@ export class VariableVisitor {
   }
 
   public LogicalExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: getRelationType("binary", path.node.operator),
       involved: [
-        getElement(scope, path.node.left),
-        getElement(scope, path.node.right)
+        this._getElement(path, path.node.left),
+        this._getElement(path, path.node.right)
       ]
     }
 
@@ -383,13 +273,22 @@ export class VariableVisitor {
   }
 
   public MemberExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
+    // if (path.node.object.type === "ThisExpression") {
+    //   // set the scope to the first "thisable" scope
+    //   scope = this._scopes
+    //     .reverse()
+    //     .find((s) =>
+    //       s.type === ScopeType.Object
+    //       || s.type === ScopeType.Class
+    //       || s.type === ScopeType.Function
+    //     )
+    // }
 
     const relation: Relation = {
       relation: RelationType.PropertyAccessor,
       involved: [
-        getElement(scope, path.node.object),
-        getElement(scope, path.node.property)
+        this._getElement(path, path.node.object),
+        this._getElement(path, path.node.property)
       ]
     }
 
@@ -399,19 +298,28 @@ export class VariableVisitor {
 
   // ternary
   public ConditionalExpression: (path) => void = (path) => {
-    const scope = this._getCurrentScope()
-
     const relation: Relation = {
       relation: RelationType.Conditional,
       involved: [
-        getElement(scope, path.node.test),
-        getElement(scope, path.node.consequent),
-        getElement(scope, path.node.alternate)
+        this._getElement(path, path.node.test),
+        this._getElement(path, path.node.consequent),
+        this._getElement(path, path.node.alternate)
       ]
     }
 
     this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
+  }
+
+  _getElement(path, node) {
+    const element = super._getElement(path, node)
+    const elementId = getElementId(element)
+
+    if (!this._elementStore.has(elementId)) {
+      this._elementStore.set(elementId, element)
+    }
+
+    return this._elementStore.get(elementId)
   }
 }
 

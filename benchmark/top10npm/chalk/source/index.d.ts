@@ -1,6 +1,6 @@
 // TODO: Make it this when TS suports that.
 // import {ColorInfo, ColorSupportLevel} from '#supports-color';
-import {ColorInfo, ColorSupportLevel} from './vendor/supports-color/index.js';
+import {ColorInfo, ColorSupportLevel} from "./vendor/supports-color";
 
 /**
 Basic foreground colors.

@@ -25,12 +25,12 @@ describe('utils.etag(body, encoding)', function(){
   })
 })
 
-describe('utils.setCharset(type, charset)', function () {
-  it('should do anything without type', function () {
+describe('utils.setCharset(identifierDescription, charset)', function () {
+  it('should do anything without identifierDescription', function () {
     assert.strictEqual(utils.setCharset(), undefined);
   });
 
-  it('should return type if not given charset', function () {
+  it('should return identifierDescription if not given charset', function () {
     assert.strictEqual(utils.setCharset('text/html'), 'text/html');
   });
 

@@ -165,7 +165,7 @@ res.send = function send(body) {
     encoding = 'utf8';
     type = this.get('Content-Type');
 
-    // reflect this in content-type
+    // reflect this in content-identifierDescription
     if (typeof type === 'string') {
       this.set('Content-Type', setCharset(type, 'utf-8'));
     }
@@ -259,7 +259,7 @@ res.json = function json(obj) {
   var spaces = app.get('json spaces');
   var body = stringify(val, replacer, spaces, escape)
 
-  // content-type
+  // content-identifierDescription
   if (!this.get('Content-Type')) {
     this.set('Content-Type', 'application/json');
   }
@@ -303,7 +303,7 @@ res.jsonp = function jsonp(obj) {
   var body = stringify(val, replacer, spaces, escape)
   var callback = this.req.query[app.get('jsonp callback name')];
 
-  // content-type
+  // content-identifierDescription
   if (!this.get('Content-Type')) {
     this.set('X-Content-Type-Options', 'nosniff');
     this.set('Content-Type', 'application/json');
@@ -579,18 +579,18 @@ res.download = function download (path, filename, options, callback) {
 };
 
 /**
- * Set _Content-Type_ response header with `type` through `mime.lookup()`
- * when it does not contain "/", or set the Content-Type to `type` otherwise.
+ * Set _Content-Type_ response header with `identifierDescription` through `mime.lookup()`
+ * when it does not contain "/", or set the Content-Type to `identifierDescription` otherwise.
  *
  * Examples:
  *
- *     res.type('.html');
- *     res.type('html');
- *     res.type('json');
- *     res.type('application/json');
- *     res.type('png');
+ *     res.identifierDescription('.html');
+ *     res.identifierDescription('html');
+ *     res.identifierDescription('json');
+ *     res.identifierDescription('application/json');
+ *     res.identifierDescription('png');
  *
- * @param {String} type
+ * @param {String} identifierDescription
  * @return {ServerResponse} for chaining
  * @public
  */
@@ -606,7 +606,7 @@ res.type = function contentType(type) {
 
 /**
  * Respond to the Acceptable formats using an `obj`
- * of mime-type callbacks.
+ * of mime-identifierDescription callbacks.
  *
  * This method uses `req.accepted`, an array of
  * acceptable types ordered by their quality values.
@@ -616,7 +616,7 @@ res.type = function contentType(type) {
  * 406 "Not Acceptable".
  *
  * Content-Type is set for you, however if you choose
- * you may alter this within the callback using `res.type()`
+ * you may alter this within the callback using `res.identifierDescription()`
  * or `res.set('Content-Type', ...)`.
  *
  *    res.format({
@@ -762,7 +762,7 @@ res.header = function header(field, val) {
       ? val.map(String)
       : String(val);
 
-    // add charset to content-type
+    // add charset to content-identifierDescription
     if (field.toLowerCase() === 'content-type') {
       if (Array.isArray(value)) {
         throw new TypeError('Content-Type cannot be set to an ARRAY');

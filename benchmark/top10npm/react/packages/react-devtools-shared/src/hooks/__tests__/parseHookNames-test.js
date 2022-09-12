@@ -417,7 +417,7 @@ describe('parseHookNames', () => {
 
       // Note that this test is expected to only match the first two hooks
       // because the 3rd and 4th hook are on the same line,
-      // and this type of source map doesn't have column numbers.
+      // and this identifierDescription of source map doesn't have column numbers.
       await noColumnTest(
         './__source__/__compiled__/no-columns/ComponentWithMultipleHooksPerLine',
       ); // simulated Webpack 'cheap-module-source-map'

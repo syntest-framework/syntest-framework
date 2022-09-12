@@ -1311,13 +1311,13 @@ describe('ReactIncrementalErrorHandling', () => {
       </ErrorBoundary>,
     );
     expect(() => expect(Scheduler).toFlushWithoutYielding()).toErrorDev([
-      'Warning: React.createElement: type is invalid -- expected a string',
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string',
       // React retries once on error
-      'Warning: React.createElement: type is invalid -- expected a string',
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string',
     ]);
     expect(ReactNoop.getChildren()).toEqual([
       span(
-        'Element type is invalid: expected a string (for built-in components) or ' +
+        'Element identifierDescription is invalid: expected a string (for built-in components) or ' +
           'a class/function (for composite components) but got: undefined.' +
           (__DEV__
             ? " You likely forgot to export your component from the file it's " +
@@ -1360,13 +1360,13 @@ describe('ReactIncrementalErrorHandling', () => {
       </ErrorBoundary>,
     );
     expect(() => expect(Scheduler).toFlushWithoutYielding()).toErrorDev([
-      'Warning: React.createElement: type is invalid -- expected a string',
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string',
       // React retries once on error
-      'Warning: React.createElement: type is invalid -- expected a string',
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string',
     ]);
     expect(ReactNoop.getChildren()).toEqual([
       span(
-        'Element type is invalid: expected a string (for built-in components) or ' +
+        'Element identifierDescription is invalid: expected a string (for built-in components) or ' +
           'a class/function (for composite components) but got: undefined.' +
           (__DEV__
             ? " You likely forgot to export your component from the file it's " +
@@ -1382,11 +1382,11 @@ describe('ReactIncrementalErrorHandling', () => {
     expect(() =>
       ReactNoop.render(<InvalidType />),
     ).toErrorDev(
-      'Warning: React.createElement: type is invalid -- expected a string',
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string',
       {withoutStack: true},
     );
     expect(Scheduler).toFlushAndThrow(
-      'Element type is invalid: expected a string (for built-in components) or ' +
+      'Element identifierDescription is invalid: expected a string (for built-in components) or ' +
         'a class/function (for composite components) but got: undefined.' +
         (__DEV__
           ? " You likely forgot to export your component from the file it's " +

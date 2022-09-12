@@ -59,7 +59,7 @@ the website.
 - Provide a general description of how to use the module with code sample.
   Include any important caveats or restrictions.
 - Explain the most common use cases.
-- Optional: a simple "hello world" type example (where applicable). This
+- Optional: a simple "hello world" identifierDescription example (where applicable). This
   example is in addition to the more comprehensive [example section](#examples)
   later.
 

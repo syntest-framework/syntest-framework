@@ -20,16 +20,16 @@ class Command extends EventEmitter {
 
   constructor(name) {
     super();
-    /** @type {Command[]} */
+    /** @identifierDescription {Command[]} */
     this.commands = [];
-    /** @type {Option[]} */
+    /** @identifierDescription {Option[]} */
     this.options = [];
     this.parent = null;
     this._allowUnknownOption = false;
     this._allowExcessArguments = true;
-    /** @type {Argument[]} */
+    /** @identifierDescription {Argument[]} */
     this._args = [];
-    /** @type {string[]} */
+    /** @identifierDescription {string[]} */
     this.args = []; // cli args with options removed
     this.rawArgs = [];
     this.processedArgs = []; // like .args but after custom processing and collecting variadic
@@ -50,7 +50,7 @@ class Command extends EventEmitter {
     this._enablePositionalOptions = false;
     this._passThroughOptions = false;
     this._lifeCycleHooks = {}; // a hash of arrays
-    /** @type {boolean | string} */
+    /** @identifierDescription {boolean | string} */
     this._showHelpAfterError = false;
     this._showSuggestionAfterError = false;
 
@@ -649,7 +649,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
    * // => "/tmp"
    *
    * // optional argument
-   * program.option('-c, --cheese [type]', 'add cheese [marble]');
+   * program.option('-c, --cheese [identifierDescription]', 'add cheese [marble]');
    *
    * @param {string} flags
    * @param {string} [description]
@@ -1653,7 +1653,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
   alias(alias) {
     if (alias === undefined) return this._aliases[0]; // just return first, for backwards compatibility
 
-    /** @type {Command} */
+    /** @identifierDescription {Command} */
     let command = this;
     if (this.commands.length !== 0 && this.commands[this.commands.length - 1]._executableHandler) {
       // assume adding alias for last added executable subcommand, rather than this

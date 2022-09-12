@@ -10,9 +10,7 @@ import * as path from "path";
 import { JavaScriptExecutionResult, JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
 import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
-import { handleRequires } from "mocha/lib/cli/run-helpers"
 import * as _ from 'lodash'
-import { spawn } from "child_process";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
@@ -61,11 +59,11 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     let runner: Runner = null
 
-    // Finally, run mocha.
     process.on("unhandledRejection", reason => {
       throw reason;
     });
 
+    // Finally, run mocha.
     await new Promise((resolve) => {
       runner = mocha.run((failures) => {
         resolve(failures)
@@ -80,15 +78,21 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     // If one of the executions failed, log it
     if (stats.failures > 0) {
+      subject.recordTypeScore(testCase.getFlatTypes(), true)
       getUserInterface().error("Test case has failed!");
+    } else {
+      subject.recordTypeScore(testCase.getFlatTypes(), false)
     }
+
+    // TODO maybe this should be done not after each testcase
+    subject.reevaluateTypes()
 
     // Retrieve execution traces
     const instrumentationData = _.cloneDeep(global.__coverage__)
+    const metaData = _.cloneDeep(global.__meta__) // TODO use this
 
     const traces: Datapoint[] = [];
     for (const key of Object.keys(instrumentationData)) {
-      if (instrumentationData[key].path.includes(subject.name))
         for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
           const fn = instrumentationData[key].fnMap[functionKey]
           const hits = instrumentationData[key].f[functionKey]
@@ -108,10 +112,10 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           const hits = instrumentationData[key].s[statementKey]
 
           traces.push({
-            id: `f-${statement.line}`,
+            id: `s-${statement.start.line}`,
             type: "statement",
             path: key,
-            line: statement.line,
+            line: statement.start.line,
 
             hits: hits,
           })
@@ -155,7 +159,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
             right: [],
           });
         }
-
     }
 
     // Retrieve execution information

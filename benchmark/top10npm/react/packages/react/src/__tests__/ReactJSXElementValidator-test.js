@@ -164,8 +164,8 @@ describe('ReactJSXElementValidator', () => {
       }
     }
     expect(() => ReactTestUtils.renderIntoDocument(<ParentComp />)).toErrorDev(
-      'Warning: Failed prop type: ' +
-        'Invalid prop `color` of type `number` supplied to `MyComp`, ' +
+      'Warning: Failed prop identifierDescription: ' +
+        'Invalid prop `color` of identifierDescription `number` supplied to `MyComp`, ' +
         'expected `string`.\n' +
         '    in MyComp (at **)\n' +
         '    in ParentComp (at **)',
@@ -196,8 +196,8 @@ describe('ReactJSXElementValidator', () => {
     expect(() =>
       ReactDOM.render(<ParentComp warn={true} />, container),
     ).toErrorDev(
-      'Warning: Failed prop type: ' +
-        'Invalid prop `color` of type `number` supplied to `MyComp`, ' +
+      'Warning: Failed prop identifierDescription: ' +
+        'Invalid prop `color` of identifierDescription `number` supplied to `MyComp`, ' +
         'expected `string`.\n' +
         '    in MyComp (at **)\n' +
         '    in MiddleComp (at **)\n' +
@@ -213,7 +213,7 @@ describe('ReactJSXElementValidator', () => {
     expect(
       () => void (<Undefined />),
     ).toErrorDev(
-      'Warning: React.createElement: type is invalid -- expected a string ' +
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
         '(for built-in components) or a class/function (for composite ' +
         'components) but got: undefined. You likely forgot to export your ' +
         "component from the file it's defined in, or you might have mixed up " +
@@ -224,7 +224,7 @@ describe('ReactJSXElementValidator', () => {
     expect(
       () => void (<Null />),
     ).toErrorDev(
-      'Warning: React.createElement: type is invalid -- expected a string ' +
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
         '(for built-in components) or a class/function (for composite ' +
         'components) but got: null.' +
         '\n\nCheck your code at **.',
@@ -233,7 +233,7 @@ describe('ReactJSXElementValidator', () => {
     expect(
       () => void (<True />),
     ).toErrorDev(
-      'Warning: React.createElement: type is invalid -- expected a string ' +
+      'Warning: React.createElement: identifierDescription is invalid -- expected a string ' +
         '(for built-in components) or a class/function (for composite ' +
         'components) but got: boolean.' +
         '\n\nCheck your code at **.',
@@ -249,7 +249,7 @@ describe('ReactJSXElementValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<RequiredPropComponent />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `prop` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `prop` is marked as required in ' +
         '`RequiredPropComponent`, but its value is `null`.\n' +
         '    in RequiredPropComponent (at **)',
     );
@@ -259,7 +259,7 @@ describe('ReactJSXElementValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<RequiredPropComponent prop={null} />),
     ).toErrorDev(
-      'Warning: Failed prop type: The prop `prop` is marked as required in ' +
+      'Warning: Failed prop identifierDescription: The prop `prop` is marked as required in ' +
         '`RequiredPropComponent`, but its value is `null`.\n' +
         '    in RequiredPropComponent (at **)',
     );
@@ -269,7 +269,7 @@ describe('ReactJSXElementValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<RequiredPropComponent />),
     ).toErrorDev(
-      'Warning: Failed prop type: ' +
+      'Warning: Failed prop identifierDescription: ' +
         'The prop `prop` is marked as required in `RequiredPropComponent`, but ' +
         'its value is `undefined`.\n' +
         '    in RequiredPropComponent (at **)',
@@ -277,8 +277,8 @@ describe('ReactJSXElementValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<RequiredPropComponent prop={42} />),
     ).toErrorDev(
-      'Warning: Failed prop type: ' +
-        'Invalid prop `prop` of type `number` supplied to ' +
+      'Warning: Failed prop identifierDescription: ' +
+        'Invalid prop `prop` of identifierDescription `number` supplied to ' +
         '`RequiredPropComponent`, expected `string`.\n' +
         '    in RequiredPropComponent (at **)',
     );
@@ -303,7 +303,7 @@ describe('ReactJSXElementValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<NullPropTypeComponent />),
     ).toErrorDev(
-      'NullPropTypeComponent: prop type `prop` is invalid; it must be a ' +
+      'NullPropTypeComponent: prop identifierDescription `prop` is invalid; it must be a ' +
         'function, usually from the `prop-types` package,',
     );
   });
@@ -320,7 +320,7 @@ describe('ReactJSXElementValidator', () => {
     expect(() =>
       ReactTestUtils.renderIntoDocument(<NullContextTypeComponent />),
     ).toErrorDev(
-      'NullContextTypeComponent: context type `prop` is invalid; it must ' +
+      'NullContextTypeComponent: context identifierDescription `prop` is invalid; it must ' +
         'be a function, usually from the `prop-types` package,',
     );
   });

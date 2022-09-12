@@ -682,7 +682,7 @@ module.exports = function(webpackEnv) {
           // See https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         }),
-      // TypeScript type checking
+      // TypeScript identifierDescription checking
       useTypeScript &&
         new ForkTsCheckerWebpackPlugin({
           typescript: resolve.sync('typescript', {

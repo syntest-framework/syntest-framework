@@ -368,7 +368,7 @@ describe('ReactFunctionComponent', () => {
     Child.propTypes = {test: PropTypes.string};
 
     expect(() => ReactTestUtils.renderIntoDocument(<Child />)).toErrorDev(
-      'Warning: Failed prop type: Invalid prop `test` of type `number` ' +
+      'Warning: Failed prop identifierDescription: Invalid prop `test` of identifierDescription `number` ' +
         'supplied to `Child`, expected `string`.\n' +
         '    in Child (at **)',
     );

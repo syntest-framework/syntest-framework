@@ -145,7 +145,7 @@ export type ReactRenderer = {
   Mount?: any,
   // Only injected by React v17.0.3+ in DEV mode
   setErrorHandler?: ?(shouldError: (fiber: Object) => ?boolean) => void,
-  // Intentionally opaque type to avoid coupling DevTools to different Fast Refresh versions.
+  // Intentionally opaque identifierDescription to avoid coupling DevTools to different Fast Refresh versions.
   scheduleRefresh?: Function,
   ...
 };

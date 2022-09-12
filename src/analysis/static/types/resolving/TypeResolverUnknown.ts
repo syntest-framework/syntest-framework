@@ -17,16 +17,16 @@
  */
 import { TypeResolver } from "./TypeResolver";
 import { Element } from "../discovery/Element";
-import { Scope, ScopeType } from "../discovery/Scope";
 import { Relation } from "../discovery/Relation";
-import { TypeProbabilityMap } from "./TypeProbabilityMap";
+import { TypeProbability } from "./TypeProbability";
+import { Scope } from "../discovery/Scope";
 
 export class TypeResolverUnknown extends TypeResolver{
 
-  getTyping(scopeName: string, scopeType: ScopeType, variableName: string): TypeProbabilityMap {
-    return new TypeProbabilityMap()
+  getTyping(scope: Scope, variableName: string): TypeProbability {
+    return new TypeProbability()
   }
 
-  resolveTypes(scopes: Scope[], elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>) {
+  resolveTypes(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>) {
   }
 }

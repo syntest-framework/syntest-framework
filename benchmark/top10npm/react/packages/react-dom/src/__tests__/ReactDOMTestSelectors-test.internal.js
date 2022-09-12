@@ -503,7 +503,7 @@ describe('ReactDOMTestSelectors', () => {
 
   describe('getFindAllNodesFailureDescription', () => {
     // @gate www || experimental
-    it('should describe findAllNodes failures caused by the component type selector', () => {
+    it('should describe findAllNodes failures caused by the component identifierDescription selector', () => {
       function Outer() {
         return <Middle />;
       }

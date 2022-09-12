@@ -18,7 +18,7 @@
 
 import { Statement } from "../Statement";
 import { Encoding, EncodingSampler } from "@syntest/framework";
-import { Parameter } from "../../../analysis/static/parsing/Parameter";
+import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 
 /**
  * @author Dimitri Stallenberg
@@ -27,11 +27,12 @@ export abstract class ActionStatement extends Statement {
   private _args: Statement[];
 
   protected constructor(
-    type: Parameter,
+    identifierDescription: IdentifierDescription,
+    type: string,
     uniqueId: string,
     args: Statement[]
   ) {
-    super(type, uniqueId);
+    super(identifierDescription, type, uniqueId);
     this._args = args;
   }
 
@@ -56,5 +57,11 @@ export abstract class ActionStatement extends Statement {
 
   get args(): Statement[] {
     return this._args;
+  }
+
+  getFlatTypes(): string[] {
+    return [
+      ...this.args.flatMap((a) => a.getFlatTypes())
+    ]
   }
 }

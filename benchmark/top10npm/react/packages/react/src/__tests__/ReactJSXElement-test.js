@@ -39,7 +39,7 @@ describe('ReactJSXElement', () => {
     expect(element.props).toEqual(expectation);
   });
 
-  it('allows a lower-case to be passed as the string type', () => {
+  it('allows a lower-case to be passed as the string identifierDescription', () => {
     const element = <div />;
     expect(element.type).toBe('div');
     expect(element.key).toBe(null);
@@ -49,7 +49,7 @@ describe('ReactJSXElement', () => {
     expect(element.props).toEqual(expectation);
   });
 
-  it('allows a string to be passed as the type', () => {
+  it('allows a string to be passed as the identifierDescription', () => {
     const TagName = 'div';
     const element = <TagName />;
     expect(element.type).toBe('div');
@@ -139,7 +139,7 @@ describe('ReactJSXElement', () => {
     expect(element.props.children).toEqual([1, 2, 3]);
   });
 
-  it('allows static methods to be called using the type property', () => {
+  it('allows static methods to be called using the identifierDescription property', () => {
     class StaticMethodComponent {
       static someStaticMethod() {
         return 'someReturnValue';

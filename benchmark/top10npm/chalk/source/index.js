@@ -1,5 +1,5 @@
-import ansiStyles from '#ansi-styles';
-import supportsColor from '#supports-color';
+import ansiStyles from './vendor/ansi-styles/index.js';
+import supportsColor from './vendor/supports-color/index.js';
 import { // eslint-disable-line import/order
 	stringReplaceAll,
 	stringEncaseCRLFWithFirstIndex,

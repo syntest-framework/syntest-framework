@@ -167,7 +167,7 @@ axios.patch<User>('/user', { name: 'foo', id: 1 })
 	.then(handleUserResponse)
   .catch(handleError);
 
-// (Typed methods) with custom response type
+// (Typed methods) with custom response identifierDescription
 
 const handleStringResponse = (response: string) => {
   console.log(response);

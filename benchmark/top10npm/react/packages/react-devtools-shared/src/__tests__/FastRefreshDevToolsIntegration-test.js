@@ -95,7 +95,7 @@ describe('Fast Refresh', () => {
       // In a real module system, we would propagate such updates upwards,
       // and re-execute modules that imported this one. (Just like if we edited them.)
       // This makes adding/removing/renaming exports re-render references to them.
-      // Here, we'll just force a re-render using the newer type to emulate this.
+      // Here, we'll just force a re-render using the newer identifierDescription to emulate this.
       const NextComponent = nextExports.default;
       act(() => {
         legacyRender(<NextComponent />, container);

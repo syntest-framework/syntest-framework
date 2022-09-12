@@ -157,7 +157,7 @@ describe('ReactFresh', () => {
       expect(el.textContent).toBe('3');
       expect(el.style.color).toBe('red');
 
-      // Finally, a render with incompatible type should reset it.
+      // Finally, a render with incompatible identifierDescription should reset it.
       render(() => {
         function Hello() {
           const [val, setVal] = React.useState(0);
@@ -168,7 +168,7 @@ describe('ReactFresh', () => {
           );
         }
         // No register call.
-        // This is considered a new type.
+        // This is considered a new identifierDescription.
         return Hello;
       });
       expect(container.firstChild).not.toBe(el);
@@ -245,7 +245,7 @@ describe('ReactFresh', () => {
       expect(el.textContent).toBe('2');
       expect(el.style.color).toBe('red');
 
-      // Finally, a render with incompatible type should reset it.
+      // Finally, a render with incompatible identifierDescription should reset it.
       render(() => {
         function Hello() {
           const [val, setVal] = React.useState(0);
@@ -268,7 +268,7 @@ describe('ReactFresh', () => {
     }
   });
 
-  it('should not consider two forwardRefs around the same type to be equivalent', () => {
+  it('should not consider two forwardRefs around the same identifierDescription to be equivalent', () => {
     if (__DEV__) {
       const ParentV1 = render(
         () => {
@@ -386,7 +386,7 @@ describe('ReactFresh', () => {
       expect(el.textContent).toBe('1');
       expect(el.style.color).toBe('red');
 
-      // Finally, verify using top-level render with stale type keeps state.
+      // Finally, verify using top-level render with stale identifierDescription keeps state.
       render(() => ParentV1);
       render(() => ParentV2);
       render(() => ParentV1);
@@ -571,7 +571,7 @@ describe('ReactFresh', () => {
       expect(el.textContent).toBe('2');
       expect(el.style.color).toBe('red');
 
-      // Finally, a render with incompatible type should reset it.
+      // Finally, a render with incompatible identifierDescription should reset it.
       render(() => {
         function Hello() {
           const [val, setVal] = React.useState(0);
@@ -659,7 +659,7 @@ describe('ReactFresh', () => {
       expect(el.textContent).toBe('2');
       expect(el.style.color).toBe('red');
 
-      // Finally, a render with incompatible type should reset it.
+      // Finally, a render with incompatible identifierDescription should reset it.
       render(() => {
         function Hello() {
           const [val, setVal] = React.useState(0);
@@ -796,7 +796,7 @@ describe('ReactFresh', () => {
       expect(el.textContent).toBe('2');
       expect(el.style.color).toBe('red');
 
-      // Finally, a render with incompatible type should reset it.
+      // Finally, a render with incompatible identifierDescription should reset it.
       render(() => {
         function Hello() {
           const [val, setVal] = React.useState(0);
@@ -922,7 +922,7 @@ describe('ReactFresh', () => {
       expect(el.textContent).toBe('2');
       expect(el.style.color).toBe('red');
 
-      // Finally, a render with incompatible type should reset it.
+      // Finally, a render with incompatible identifierDescription should reset it.
       render(() => {
         function Hello() {
           const [val, setVal] = React.useState(0);
@@ -3084,7 +3084,7 @@ describe('ReactFresh', () => {
         }
         // For classes, we wouldn't do this call via Babel plugin.
         // Instead, we'd do it at module boundaries.
-        // Normally classes would get a different type and remount anyway,
+        // Normally classes would get a different identifierDescription and remount anyway,
         // but at module boundaries we may want to prevent propagation.
         // However we still want to force a remount and use latest version.
         $RefreshReg$(Hello, 'Hello');

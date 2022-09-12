@@ -16,21 +16,29 @@
  * limitations under the License.
  */
 import * as path from "path";
-import { readFile } from "../../utils/fileSystem";
+import { getAllFiles, readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
-import { CFG, Target, TargetMetaData, TargetPool } from "@syntest/framework";
+import { CFG, Properties, TargetMetaData, TargetPool } from "@syntest/framework";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
 import { ExportGenerator } from "./dependency/ExportGenerator";
-import { existsSync } from "fs";
-import { Export, ExportType } from "./dependency/ExportVisitor";
+import { existsSync, lstatSync } from "fs";
+import { Export } from "./dependency/ExportVisitor";
 import { SubjectType } from "../../search/JavaScriptSubject";
 import { TypeResolver } from "./types/resolving/TypeResolver";
 import { VariableGenerator } from "./types/discovery/VariableGenerator";
 import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
 import { ComplexObject } from "./types/discovery/object/ComplexObject";
 import { ActionDescription } from "./parsing/ActionDescription";
+import { Scope } from "./types/discovery/Scope";
+import { Relation } from "./types/discovery/Relation";
+import { Element } from "./types/discovery/Element";
+import { TypeEnum } from "./types/resolving/TypeEnum";
+import { TypeProbability } from "./types/resolving/TypeProbability";
+import { Instrumenter } from "../../instrumentation/Instrumenter";
+import { ExportType } from "./dependency/IdentifierVisitor";
+const { outputFileSync, copySync } = require("fs-extra");
 
 
 export interface JavaScriptTargetMetaData extends TargetMetaData {
@@ -101,20 +109,33 @@ export class JavaScriptTargetPool extends TargetPool {
   }
 
   getSource(targetPath: string) {
-    const absoluteTargetPath = path.resolve(targetPath);
+    let absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._sources.has(absoluteTargetPath)) {
-      if (existsSync(absoluteTargetPath)) {
-        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
-
-      } else if (existsSync(absoluteTargetPath + '.js')) {
-        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath + '.js'));
-
-      } else if (existsSync(absoluteTargetPath + '.ts')) {
-        this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath + '.ts'));
-      } else {
-        throw new Error("Cannot find source: " + absoluteTargetPath)
+      if (!existsSync(absoluteTargetPath)) {
+        if (existsSync(absoluteTargetPath + '.js')) {
+          absoluteTargetPath += '.js'
+        } else if (existsSync(absoluteTargetPath + '.ts')) {
+          absoluteTargetPath += '.ts'
+        } else {
+          throw new Error("Cannot find source: " + absoluteTargetPath)
+        }
       }
+
+      const stats = lstatSync(absoluteTargetPath)
+
+      if (stats.isDirectory()) {
+        if (existsSync(absoluteTargetPath + '/index.js')) {
+          absoluteTargetPath += '/index.js'
+        } else if (existsSync(absoluteTargetPath + '/index.ts')) {
+          absoluteTargetPath += '/index.ts'
+        } else {
+          throw new Error("Cannot find source: " + absoluteTargetPath)
+        }
+      }
+
+      return readFile(absoluteTargetPath)
+      // this._sources.set(absoluteTargetPath, readFile(absoluteTargetPath));
     }
 
     return this._sources.get(absoluteTargetPath);
@@ -123,14 +144,20 @@ export class JavaScriptTargetPool extends TargetPool {
   getAST(targetPath: string) {
     const absoluteTargetPath = path.resolve(targetPath);
 
+
+    // this takes up too much memory we should do some kind of garbage collection if we want to save it all
     if (!this._abstractSyntaxTrees.has(absoluteTargetPath)) {
-      this._abstractSyntaxTrees.set(
-        absoluteTargetPath,
-        this.abstractSyntaxTreeGenerator.generate(
-          this.getSource(targetPath),
-          absoluteTargetPath
-        )
-      );
+      // this._abstractSyntaxTrees.set(
+      //   absoluteTargetPath,
+      //   this.abstractSyntaxTreeGenerator.generate(
+      //     this.getSource(targetPath),
+      //     absoluteTargetPath
+      //   )
+      // );
+      return this.abstractSyntaxTreeGenerator.generate(
+        this.getSource(targetPath),
+        absoluteTargetPath
+      )
     }
 
     return this._abstractSyntaxTrees.get(absoluteTargetPath);
@@ -161,7 +188,7 @@ export class JavaScriptTargetPool extends TargetPool {
     if (!this._targetMap.has(absoluteTargetPath)) {
       const targetAST = this.getAST(absoluteTargetPath);
       const { targetMap, functionMap } =
-        this.targetMapGenerator.generate(targetAST);
+        this.targetMapGenerator.generate(absoluteTargetPath, targetAST);
 
       const exports = this.getExports(targetPath)
 
@@ -180,9 +207,18 @@ export class JavaScriptTargetPool extends TargetPool {
           throw new Error("Target cannot be constant!")
         }
 
+        let isPrototypeClass = false
+        for (const func of functionMap.get(key).values()) {
+          if (func.isConstructor) {
+            isPrototypeClass = true
+            break
+          }
+        }
+
+        // threat everything as a function if we don't know
         finalTargetMap.set(key, {
           name: name,
-          type: export_.type === ExportType.function ? SubjectType.function : SubjectType.class,
+          type: export_.type === ExportType.class || isPrototypeClass ? SubjectType.class : SubjectType.function,
           export: export_
         })
       }
@@ -230,13 +266,27 @@ export class JavaScriptTargetPool extends TargetPool {
 
     if (!this._dependencyMaps.has(absoluteTargetPath)) {
       // Find all external imports in the file under test
-      const imports = this.importGenerator.generate(this.getAST(targetPath))
+      const imports = this.importGenerator.generate(absoluteTargetPath, this.getAST(targetPath))
 
       // For each external import scan the file for libraries with exported functions
       const libraries: Export[] = [];
       imports.forEach((importPath: string) => {
         // Full path to the imported file
         const pathLib = path.join(path.dirname(targetPath), importPath);
+
+        // External libraries have a different path!
+        try {
+          this.getSource(pathLib)
+        } catch (e) {
+          if (e.message.includes('Cannot find source')) {
+            // TODO would be nice if we could get the actual path! (node modules)
+            return
+            // pathLib = path.join
+          } else {
+            throw e
+          }
+        }
+
 
         // Scan for libraries with public or external functions
         const exports = this.getExports(pathLib)
@@ -253,43 +303,56 @@ export class JavaScriptTargetPool extends TargetPool {
     return this._dependencyMaps.get(absoluteTargetPath)
   }
 
-  getInstrumentationTargets(targetPath: string, paths: Set<string> = null): Set<string> {
-    const absoluteTargetPath = path.resolve(targetPath);
+  async prepareAndInstrument(): Promise<void> {
+    const absoluteRootPath = path.resolve(Properties.target_root_directory)
 
-    if (paths === null) {
-      paths = new Set<string>()
+    const destinationPath = path.normalize(absoluteRootPath)
+      .replace(
+        process.cwd(),
+        Properties.temp_instrumented_directory
+      );
+
+    // copy everything
+    await copySync(absoluteRootPath, destinationPath)
+
+    // overwrite the stuff that needs instrumentation
+    const instrumenter = new Instrumenter();
+
+    const targetPaths = this.targets.map((x) => x.canonicalPath)
+
+    for (const targetPath of targetPaths) {
+      const source = this.getSource(targetPath)
+      const instrumentedSource = await instrumenter.instrument(
+        source,
+        targetPath
+      );
+
+      const _path = path
+        .normalize(targetPath)
+        .replace(
+          process.cwd(),
+          Properties.temp_instrumented_directory
+        );
+      await outputFileSync(_path, instrumentedSource);
     }
-
-    paths.add(absoluteTargetPath);
-
-    const dependencies = this.getDependencies(absoluteTargetPath);
-
-    for (const dependency of dependencies) {
-      if (paths.has(dependency.filePath)) {
-        continue
-      }
-      this.getInstrumentationTargets(dependency.filePath, paths).forEach((path) => {
-        paths.add(path)
-      })
-    }
-
-    return paths
   }
 
-  resolveTypes(targetPath: string): void {
-    const absoluteTargetPath = path.resolve(targetPath);
+  scanTargetRootDirectory(): void {
+    const absoluteRootPath = path.resolve(Properties.target_root_directory)
 
-    const ast = this.getAST(absoluteTargetPath)
+    // TODO remove the filters
+    const files = getAllFiles(absoluteRootPath, ".js")
+      .filter((x) => !x.includes('/test/')
+        && !x.includes('.test.js')
+        && !x.includes('node_modules')) // maybe we should also take those into account
 
-    const dependencies = this.getDependencies(absoluteTargetPath);
-
-    // TODO first look at dependencies to extract other variables?
 
     const objects: ComplexObject[] = []
-
-    //TODO the entire project should be searched for complex object types instead of dependencies only
     const objectGenerator = new ObjectGenerator()
-    objects.push(...objectGenerator.generate(absoluteTargetPath, ast))
+
+    for (const file of files) {
+      objects.push(...objectGenerator.generate(file, this.getAST(file)))
+    }
 
     // standard stuff
     // function https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
@@ -297,7 +360,14 @@ export class JavaScriptTargetPool extends TargetPool {
       import: "",
       name: "function",
       properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
-      functions: new Set(['apply', 'bind', 'call', 'toString'])
+      functions: new Set(['apply', 'bind', 'call', 'toString']),
+      propertyType: new Map<string, TypeProbability>([
+        ['arguments', new TypeProbability([[TypeEnum.ARRAY, 1, null]])],
+        ['caller', new TypeProbability([[TypeEnum.FUNCTION, 1, null]])],
+        ['displayName', new TypeProbability([[TypeEnum.STRING, 1, null]])],
+        ['length', new TypeProbability([[TypeEnum.NUMERIC, 1, null]])],
+        ['name', new TypeProbability([[TypeEnum.STRING, 1, null]])]
+      ])
     })
 
     // array https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
@@ -305,7 +375,10 @@ export class JavaScriptTargetPool extends TargetPool {
       import: "",
       name: "array",
       properties: new Set(['length']),
-      functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values'])
+      functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values']),
+      propertyType: new Map<string, TypeProbability>([
+        ['length', new TypeProbability([[TypeEnum.NUMERIC, 1, null]])]
+      ])
     })
 
     // string
@@ -313,7 +386,10 @@ export class JavaScriptTargetPool extends TargetPool {
       import: "",
       name: "string",
       properties: new Set(['length']),
-      functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf'])
+      functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf']),
+      propertyType: new Map<string, TypeProbability>([
+        ['length', new TypeProbability([[TypeEnum.NUMERIC, 1, null]])]
+      ])
     })
 
     // object
@@ -325,17 +401,53 @@ export class JavaScriptTargetPool extends TargetPool {
     //   functions: new Set([])
     // })
 
-    for (const dependency of dependencies) {
-      const objectGenerator = new ObjectGenerator()
-      objects.push(...objectGenerator.generate(dependency.filePath, this.getAST(dependency.filePath)))
+    // TODO npm dependencies
+    // TODO get rid of duplicates
+
+    const finalObjects = []
+
+    function eqSet(as, bs) {
+      if (as.size !== bs.size) return false;
+      for (var a of as) if (!bs.has(a)) return false;
+      return true;
     }
 
+    objects.forEach((o) => {
+      if (!o.properties.size && !o.functions.size) {
+        return
+      }
+
+      const found = finalObjects.find((o2) => {
+        return o.import === o2.import
+          && o.name === o2.name
+          && eqSet(o.properties, o2.properties)
+          && eqSet(o.functions, o2.functions)
+      })
+
+      if (!found) {
+        finalObjects.push(o)
+      }
+    })
+
+
     const generator = new VariableGenerator()
-    const [scopes, elements, relations, wrapperElementIsRelation] = generator.generate(targetPath, ast)
+    const elements: Element[] = []
+    const relations: Relation[] = []
+    const wrapperElementIsRelation: Map<string, Relation> = new Map()
 
-    this._typeResolver.resolveTypes(scopes, elements, relations, wrapperElementIsRelation, objects)
+    for (const file of files) {
+      const [_elements, _relations, _wrapperElementIsRelation] = generator.generate(file, this.getAST(file))
+
+      elements.push(..._elements)
+      relations.push(..._relations)
+
+      for (const key of _wrapperElementIsRelation.keys()) {
+        wrapperElementIsRelation.set(key, _wrapperElementIsRelation.get(key))
+      }
+    }
+
+    this._typeResolver.resolveTypes(elements, relations, wrapperElementIsRelation, finalObjects)
   }
-
 
   get typeResolver(): TypeResolver {
     return this._typeResolver;

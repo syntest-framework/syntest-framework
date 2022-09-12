@@ -85,7 +85,7 @@ describe('.exitOverride and error details', () => {
   });
 
   test('when specify option without required value then throw CommanderError', () => {
-    const optionFlags = '-p, --pepper <type>';
+    const optionFlags = '-p, --pepper <identifierDescription>';
     const program = new commander.Command();
     program
       .exitOverride()
@@ -242,7 +242,7 @@ describe('.exitOverride and error details', () => {
   });
 
   test('when mandatory program option missing then throw CommanderError', () => {
-    const optionFlags = '-p, --pepper <type>';
+    const optionFlags = '-p, --pepper <identifierDescription>';
     const program = new commander.Command();
     program
       .exitOverride()

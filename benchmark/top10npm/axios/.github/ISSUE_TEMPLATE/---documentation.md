@@ -2,7 +2,7 @@
 name: "\U0001F4DA Documentation"
 about: Report an error or area that needs clarification
 title: ''
-labels: 'type:documentation'
+labels: 'identifierDescription:documentation'
 assignees: ''
 
 ---

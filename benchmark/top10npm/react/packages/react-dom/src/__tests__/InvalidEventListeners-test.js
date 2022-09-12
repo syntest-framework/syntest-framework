@@ -35,7 +35,7 @@ describe('InvalidEventListeners', () => {
     expect(() => {
       node = ReactDOM.render(<div onClick="not a function" />, container);
     }).toErrorDev(
-      'Expected `onClick` listener to be a function, instead got a value of `string` type.',
+      'Expected `onClick` listener to be a function, instead got a value of `string` identifierDescription.',
     );
 
     spyOnProd(console, 'error');
@@ -59,7 +59,7 @@ describe('InvalidEventListeners', () => {
       expect.objectContaining({
         message:
           'Expected `onClick` listener to be a function, ' +
-          'instead got a value of `string` type.',
+          'instead got a value of `string` identifierDescription.',
       }),
     );
 
@@ -67,7 +67,7 @@ describe('InvalidEventListeners', () => {
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error.calls.argsFor(0)[0]).toMatch(
         'Expected `onClick` listener to be a function, ' +
-          'instead got a value of `string` type.',
+          'instead got a value of `string` identifierDescription.',
       );
     }
   });

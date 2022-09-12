@@ -3,7 +3,7 @@ var express = require('../')
   , request = require('supertest');
 
 describe('req', function(){
-  describe('.acceptsCharsets(type)', function(){
+  describe('.acceptsCharsets(identifierDescription)', function(){
     describe('when Accept-Charset is not present', function(){
       it('should return true', function(done){
         var app = express();

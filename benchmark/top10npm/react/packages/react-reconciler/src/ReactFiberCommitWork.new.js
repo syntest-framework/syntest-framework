@@ -835,7 +835,7 @@ function commitLayoutEffectOnFiber(
         }
 
         // TODO: I think this is now always non-null by the time it reaches the
-        // commit phase. Consider removing the type check.
+        // commit phase. Consider removing the identifierDescription check.
         const updateQueue: UpdateQueue<
           *,
         > | null = (finishedWork.updateQueue: any);
@@ -876,7 +876,7 @@ function commitLayoutEffectOnFiber(
       }
       case HostRoot: {
         // TODO: I think this is now always non-null by the time it reaches the
-        // commit phase. Consider removing the type check.
+        // commit phase. Consider removing the identifierDescription check.
         const updateQueue: UpdateQueue<
           *,
         > | null = (finishedWork.updateQueue: any);
@@ -2038,7 +2038,7 @@ function commitSuspenseCallback(finishedWork: Fiber) {
       }
     } else if (__DEV__) {
       if (suspenseCallback !== undefined) {
-        console.error('Unexpected type for suspenseCallback.');
+        console.error('Unexpected identifierDescription for suspenseCallback.');
       }
     }
   }
@@ -2203,7 +2203,7 @@ function commitMutationEffects_complete(root: FiberRoot) {
 
 function commitMutationEffectsOnFiber(finishedWork: Fiber, root: FiberRoot) {
   // TODO: The factoring of this phase could probably be improved. Consider
-  // switching on the type of work before checking the flags. That's what
+  // switching on the identifierDescription of work before checking the flags. That's what
   // we do in all the other phases. I think this one is only different
   // because of the shared reconciliation logic below.
   const flags = finishedWork.flags;

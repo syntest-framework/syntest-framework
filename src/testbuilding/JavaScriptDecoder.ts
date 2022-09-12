@@ -2,24 +2,26 @@ import { Decoder, Properties } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import * as path from "path";
 import { ConstructorCall } from "../testcase/statements/root/ConstructorCall";
-import { MethodCall } from "../testcase/statements/action/MethodCall";
-import { Decoding, Statement } from "../testcase/statements/Statement";
-import { PrimitiveStatement } from "../testcase/statements/primitive/PrimitiveStatement";
+import { Decoding } from "../testcase/statements/Statement";
 import { Export } from "../analysis/static/dependency/ExportVisitor";
 import { FunctionCall } from "../testcase/statements/root/FunctionCall";
 import { RootStatement } from "../testcase/statements/root/RootStatement";
+import { JavaScriptTargetPool } from "../analysis/static/JavaScriptTargetPool";
 
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
+  private targetPool: JavaScriptTargetPool
   private dependencies: Map<string, Export[]>;
   private exports: Export[]
   private folder: string
 
   constructor(
+    targetPool: JavaScriptTargetPool,
     dependencies: Map<string, Export[]>,
     exports: Export[],
-    folder: string = '../instrumented'
+    folder = '../instrumented'
   ) {
+    this.targetPool = targetPool
     this.dependencies = dependencies;
     this.exports = exports
     this.folder = folder
@@ -78,11 +80,13 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         );
         testString.push("}");
       }
+      imports.push(`export {}`);
 
-      const importsOfTest = this.gatherImports(importableGenes);
+      const importsOfTest = this.gatherImports(testString, importableGenes);
       imports.push(...importsOfTest);
 
       if (testCase.assertions.size) {
+
         imports.push(`const chai = require('chai');`);
         imports.push(`const chaiAsPromised = require('chai-as-promised');`)
         imports.push(`const expect = chai.expect;`);
@@ -115,6 +119,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     // Add the imports
     test =
       imports
+        // remove duplicates
         .filter((value, index, self) => self.indexOf(value) === index)
         .join("\n") +
       `\n\n` +
@@ -123,8 +128,9 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     return test;
   }
 
-  gatherImports(importableGenes: RootStatement[]): string[] {
+  gatherImports(testStrings: string[], importableGenes: RootStatement[]): string[] {
     const imports: string[] = [];
+    const importedDependencies: Set<string> = new Set<string>()
 
     for (const gene of importableGenes) {
       const importName = gene instanceof FunctionCall ? gene.functionName : (gene instanceof ConstructorCall ? gene.constructorName : null);
@@ -132,6 +138,18 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       if (!export_) {
         throw new Error('Cannot find an export corresponding to the importable gene: ' + importName)
       }
+
+      // no duplicates
+      if (importedDependencies.has(export_.name)) {
+        continue
+      }
+      importedDependencies.add(export_.name)
+
+      // skip non-used imports
+      if (!testStrings.find((s) => s.includes(export_.name))) {
+        continue
+      }
+
       const importString: string = this.getImport(export_)
 
       if (imports.includes(importString) || importString.length === 0) {
@@ -142,6 +160,17 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
       let count = 0;
       for (const dependency of this.dependencies.get(importName)) {
+        // no duplicates
+        if (importedDependencies.has(dependency.name)) {
+          continue
+        }
+        importedDependencies.add(dependency.name)
+
+        // skip non-used imports
+        if (!testStrings.find((s) => s.includes(dependency.name))) {
+          continue
+        }
+
         const importString: string = this.getImport(dependency);
 
         if (imports.includes(importString) || importString.length === 0) {
@@ -158,14 +187,25 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   }
 
   getImport(dependency: Export): string {
-    // TODO correct import (something without the hardcoded "/instrumented/" stuff
     const _path = dependency.filePath.replace(process.cwd(), '')
-    // TODO module imports etc
 
+    let folder = '../..'
+
+    if (this.targetPool.targets.find((t) => t.canonicalPath === dependency.filePath)) {
+      folder = this.folder
+    }
+
+    if (dependency.module) {
+      if (dependency.default) {
+        return `const ${dependency.name} = require("${folder}${_path}");`;
+      } else {
+        return `const {${dependency.name}} = require("${folder}${_path}");`;
+      }
+    }
     if (dependency.default) {
-      return `import ${dependency.name} from "${this.folder}${_path}";`;
+      return `import ${dependency.name} from "${folder}${_path}";`;
     } else {
-      return `import {${dependency.name}} from "${this.folder}${_path}";`;
+      return `import {${dependency.name}} from "${folder}${_path}";`;
     }
   }
 

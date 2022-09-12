@@ -30,19 +30,20 @@ export class TargetMapGenerator {
   /**
    * Generate function map for specified target.
    *
-   * @param typeResolver The type resolver object
+   * @param filePath The filePath of the target
    * @param targetAST The AST of the target
    */
-  generate(targetAST: any): {
+  generate(filePath: string, targetAST: any): {
     targetMap: Map<string, TargetMetaData>;
     functionMap: Map<string, Map<string, ActionDescription>>;
   } {
-    const visitor = new TargetVisitor();
+    const visitor = new TargetVisitor(filePath);
 
     traverse(targetAST, visitor);
 
     const targetMap = visitor.targetMap;
     const functionMap = visitor.functionMap;
+
     return { targetMap, functionMap };
   }
 }

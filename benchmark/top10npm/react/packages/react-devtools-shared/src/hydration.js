@@ -41,9 +41,9 @@ export type Dehydrated = {|
 |};
 
 // Typed arrays and other complex iteratable objects (e.g. Map, Set, ImmutableJS) need special handling.
-// These objects can't be serialized without losing type information,
-// so a "Unserializable" type wrapper is used (with meta-data keys) to send nested values-
-// while preserving the original type and name.
+// These objects can't be serialized without losing identifierDescription information,
+// so a "Unserializable" identifierDescription wrapper is used (with meta-data keys) to send nested values-
+// while preserving the original identifierDescription and name.
 export type Unserializable = {
   name: string | null,
   preview_long: string | null,
@@ -108,11 +108,11 @@ function createDehydrated(
  * Input: {"some": {"attr": fn()}, "other": AnInstance}
  * Output: {
  *   "some": {
- *     "attr": {"name": the fn.name, type: "function"}
+ *     "attr": {"name": the fn.name, identifierDescription: "function"}
  *   },
  *   "other": {
  *     "name": "AnInstance",
- *     "type": "object",
+ *     "identifierDescription": "object",
  *   },
  * }
  * and cleaned = [["some", "attr"], ["other"]]
@@ -323,7 +323,7 @@ export function dehydrate(
     case 'nan':
     case 'undefined':
       // Some values are lossy when sent through a WebSocket.
-      // We dehydrate+rehydrate them to preserve their type.
+      // We dehydrate+rehydrate them to preserve their identifierDescription.
       cleaned.push(path);
       return {
         type,

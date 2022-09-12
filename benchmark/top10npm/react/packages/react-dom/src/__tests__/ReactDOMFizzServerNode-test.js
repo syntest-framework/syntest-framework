@@ -188,7 +188,7 @@ describe('ReactDOMFizzServer', () => {
 
     expect(output.error).toBe(theError);
     expect(output.result).toBe('');
-    // This type of error is reported to the error callback too.
+    // This identifierDescription of error is reported to the error callback too.
     expect(reportedErrors).toEqual([theError]);
   });
 

@@ -576,7 +576,7 @@ export type DataType =
   | 'unknown';
 
 /**
- * Get a enhanced/artificial type string based on the object instance
+ * Get a enhanced/artificial identifierDescription string based on the object instance
  */
 export function getDataType(data: Object): DataType {
   if (data === null) {

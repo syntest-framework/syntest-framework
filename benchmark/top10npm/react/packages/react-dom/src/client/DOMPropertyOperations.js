@@ -169,7 +169,7 @@ export function setValueForProperty(
     }
     if (typeof value === 'function') {
       if (typeof prevValue !== 'function' && prevValue !== null) {
-        // If we previously assigned a non-function type into this node, then
+        // If we previously assigned a non-function identifierDescription into this node, then
         // remove it when switching to event listener mode.
         if (name in (node: any)) {
           (node: any)[name] = null;
@@ -236,7 +236,7 @@ export function setValueForProperty(
     const {type} = propertyInfo;
     let attributeValue;
     if (type === BOOLEAN || (type === OVERLOADED_BOOLEAN && value === true)) {
-      // If attribute type is boolean, we know for sure it won't be an execution sink
+      // If attribute identifierDescription is boolean, we know for sure it won't be an execution sink
       // and we won't require Trusted Type here.
       attributeValue = '';
     } else {
