@@ -76,6 +76,8 @@ const Mocha = require('mocha')
 export class Launcher {
   private readonly _program = "syntest-javascript";
 
+  private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>()
+
   public async run() {
     try {
       await guessCWD(null);
@@ -93,16 +95,21 @@ export class Launcher {
   private async setup(): Promise<JavaScriptTargetPool> {
     // Filesystem & Compiler Re-configuration
     const additionalOptions = {
-      use_type_inference: {
-        description: "The identifierDescription inference mode",
+      incorporate_execution_information: {
+        description: "Incorporate execution information",
         type: "boolean",
         default: true,
       },
       // TODO maybe remove the first one and add a identifierDescription inference mode called "none"
       type_inference_mode: {
-        description: "The identifierDescription inference mode: [roulette, elitist, dynamic]",
+        description: "The type inference mode: [roulette, elitist, dynamic]",
         type: "string",
         default: "roulette",
+      },
+      random_type_probability: {
+        description: "The probability we use a random type regardless of the inferred type",
+        type: "number",
+        default: 0.1,
       },
     };
     setupOptions(this._program, additionalOptions);
@@ -147,10 +154,10 @@ export class Launcher {
 
     let typeResolver: TypeResolver
 
-    if (Properties['use_type_inference']) {
-      typeResolver = new TypeResolverInference()
-    } else {
+    if (Properties['type_inference_mode'] === 'none') {
       typeResolver = new TypeResolverUnknown()
+    } else {
+      typeResolver = new TypeResolverInference()
     }
 
     const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
@@ -172,6 +179,13 @@ export class Launcher {
 
     getUserInterface().report("header", ["TARGETS"]);
 
+    getUserInterface().report("property-set", [
+      "Target Settings",
+      [
+        ["Target Root Directory", Properties.target_root_directory],
+      ],
+    ]);
+
     await targetPool.loadTargets();
 
     if (!targetPool.targets.length) {
@@ -181,7 +195,7 @@ export class Launcher {
       await this.exit();
     }
 
-    let names = [];
+    let names: string[] = [];
 
     targetPool.targets.forEach((target) =>
       names.push(
@@ -232,6 +246,15 @@ export class Launcher {
       ],
     ]);
 
+    getUserInterface().report("property-set", [
+      "Type Inference",
+      [
+        ["Incorporate Execution Information", Properties['incorporate_execution_information']],
+        ["Type Inference Mode", Properties['type_inference_mode']],
+        ["Random Type Probability", Properties['random_type_probability']],
+      ],
+    ]);
+
     return targetPool;
   }
 
@@ -245,8 +268,8 @@ export class Launcher {
     targetPool.scanTargetRootDirectory()
 
     const finalArchive = new Archive<JavaScriptTestCase>();
-    let finalDependencies: Map<string, Export[]> = new Map();
-    let finalExports: Export[] = []
+    const finalDependencies: Map<string, Export[]> = new Map();
+    const finalExports: Export[] = []
 
     for (const target of targetPool.targets) {
       const archive = await this.testTarget(
@@ -286,8 +309,7 @@ export class Launcher {
     const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
 
     // couple types to parameters
-    for (const key of functionMap.keys()) {
-      const func = functionMap.get(key)
+    for (const func of functionMap.values()) {
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
           param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
@@ -318,14 +340,13 @@ export class Launcher {
     dependencyMap.set(targetMeta.name, dependencies)
     const exports = targetPool.getExports(targetPath)
 
-
     const decoder = new JavaScriptDecoder(targetPool, dependencyMap, exports)
     const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
     const runner = new JavaScriptRunner(suiteBuilder)
 
     // TODO constant pool
 
-    const sampler = new JavaScriptRandomSampler(currentSubject)
+    const sampler = new JavaScriptRandomSampler(currentSubject, targetPool)
     const crossover = new JavaScriptTreeCrossover()
     const algorithm = createAlgorithmFromConfig(sampler, runner, crossover);
 
@@ -360,6 +381,13 @@ export class Launcher {
       budgetManager,
       terminationManager
     );
+
+    if (this.coveredInPath.has(targetPath)) {
+      archive.merge(this.coveredInPath.get(targetPath))
+      this.coveredInPath.set(targetPath, archive)
+    } else {
+      this.coveredInPath.set(targetPath, archive)
+    }
 
     // Gather statistics after the search
     collectStatistics(
@@ -435,7 +463,6 @@ export class Launcher {
     //   console[level] = () => {}
     // })
 
-    let runner: Runner = null
 
     // Finally, run mocha.
     process.on("unhandledRejection", reason => {
@@ -443,7 +470,7 @@ export class Launcher {
     });
 
     await new Promise((resolve) => {
-      runner = mocha.run((failures) => {
+      mocha.run((failures: number) => {
         resolve(failures)
       })
     })
@@ -508,7 +535,10 @@ export class Launcher {
         'function': summary['function'] + ' / ' + Object.keys(data.f).length
       }, false])
 
+      // console.log(data.b)
       // console.log(Object.keys(data.s).filter((x) => data.s[x] === 0).map((x) => data.statementMap[x].start.line))
+      // console.log(data.f)
+      // console.log()
     }
 
     overall['statement'] /= totalStatements

@@ -21,8 +21,9 @@ import { ActionVisibility } from "../parsing/ActionVisibility";
 import { ActionDescription } from "../parsing/ActionDescription";
 import { TypeProbability } from "../types/resolving/TypeProbability";
 import { Visitor } from "../Visitor";
+import { IdentifierDescription } from "../parsing/IdentifierDescription";
+import { ComplexObject } from "../types/discovery/object/ComplexObject";
 
-// TODO only top level functions should be targettet
 export class TargetVisitor extends Visitor {
   private _targetMap: Map<string, TargetMetaData>;
   private _functionMap: Map<string, Map<string, ActionDescription>>;
@@ -55,21 +56,29 @@ export class TargetVisitor extends Visitor {
       return
     }
 
+    let target;
     let targetName;
 
     if (path.node.id) {
+      target = path.get('id')
       targetName = path.node.id.name;
     } else if (path.parent.type === 'ObjectProperty') {
       // get identifier from assignment expression
       if (path.parent.key.type === 'Identifier') {
+        target = path.get('key')
         targetName = path.parent.key.name
+      } else if (path.parent.key.type === 'StringLiteral') {
+        target = path.get('key')
+        targetName = path.parent.key.value
       } else {
+        console.log(path)
         throw new Error("unknown function expression name")
       }
 
     } else if (path.parent.type === 'VariableDeclarator') {
       // get identifier from assignment expression
       if (path.parent.id.type === 'Identifier') {
+        target = path.parentPath.get('id')
         targetName = path.parent.id.name
       } else {
         throw new Error("unknown function expression name")
@@ -84,12 +93,15 @@ export class TargetVisitor extends Visitor {
     this._createMaps(targetName)
 
     this._functionMap.get(targetName).set(functionName, {
-      scope: this._getScope(path, targetName),
+      scope: {
+        uid: `${path.scope.uid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
       name: functionName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
       isConstructor: false,
-      parameters: path.node.params.map(this._extractParam),
+      parameters: path.node.params.map((x) => this._extractParam(x)),
       returnParameter: {
         name: "returnValue",
         typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
@@ -99,49 +111,82 @@ export class TargetVisitor extends Visitor {
     });
   }
 
-  Program: (path) => void = (path) => {
-    if (this.scopeIdOffset === undefined) {
-      this.scopeIdOffset = path.scope.uid
-    }
+  // Program: (path) => void = (path) => {
+  //   if (this.scopeIdOffset === undefined) {
+  //     this.scopeIdOffset = path.scope.uid
+  //   }
+  //
+  //   for (const key of Object.keys(path.scope.bindings)) {
+  //     const binding = path.scope.bindings[key]
+  //
+  //     const newScopeUid = binding.path.scope.uid
+  //
+  //     const node = binding.path.node
+  //
+  //     if (node.type === 'VariableDeclarator') {
+  //       let init = node.init
+  //
+  //       if (!init) {
+  //         continue
+  //       }
+  //
+  //       //
+  //       // while (init.type === 'Identifier') {
+  //       //   if (!path.scope.hasBinding(init.name)) {
+  //       //     break
+  //       //   }
+  //       //   init = path.scope.bindings[init.name].path.node
+  //       // }
+  //       //
+  //       if (init.type === "ArrowFunctionExpression") {
+  //         const targetName = binding.identifier.name
+  //         this._createMaps(targetName)
+  //         this._createFunction(newScopeUid, targetName, targetName, init)
+  //       }
+  //
+  //     } else if (node.type === 'ClassDeclaration') {
+  //       const targetName = node.id.name;
+  //       this._createMaps(targetName)
+  //     } else if (node.type === 'FunctionDeclaration') {
+  //       const targetName = node.id.name;
+  //       this._createMaps(targetName)
+  //       this._createFunction(newScopeUid, targetName, targetName, node)
+  //     }
+  //   }
+  // }
 
-    for (const key of Object.keys(path.scope.bindings)) {
-      const binding = path.scope.bindings[key]
 
-      const newScopeUid = binding.path.scope.uid
 
-      const node = binding.path.node
+  public ClassDeclaration: (path) => void = (path) => {
+    const targetName = path.node.id.name;
 
-      if (node.type === 'VariableDeclarator') {
-        let init = node.init
+    this._createMaps(targetName)
+  };
 
-        if (!init) {
-          continue
-        }
+  public FunctionDeclaration: (path) => void = (path) => {
+    const targetName = path.node.id.name;
+    const functionName = targetName;
 
-        //
-        // while (init.type === 'Identifier') {
-        //   if (!path.scope.hasBinding(init.name)) {
-        //     break
-        //   }
-        //   init = path.scope.bindings[init.name].path.node
-        // }
-        //
-        if (init.type === "ArrowFunctionExpression") {
-          const targetName = binding.identifier.name
-          this._createMaps(targetName)
-          this._createFunction(newScopeUid, targetName, targetName, init)
-        }
+    this._createMaps(targetName)
 
-      } else if (node.type === 'ClassDeclaration') {
-        const targetName = node.id.name;
-        this._createMaps(targetName)
-      } else if (node.type === 'FunctionDeclaration') {
-        const targetName = node.id.name;
-        this._createMaps(targetName)
-        this._createFunction(newScopeUid, targetName, targetName, node)
-      }
-    }
-  }
+    this._functionMap.get(targetName).set(functionName, {
+      scope: {
+        uid: `${path.scope.uid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
+      name: functionName,
+      type: ActionType.FUNCTION,
+      visibility: ActionVisibility.PUBLIC,
+      isConstructor: false,
+      parameters: path.node.params.map((x) => this._extractParam(x)),
+      returnParameter: {
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbability(),
+      },
+      isStatic: path.node.static,
+      isAsync: path.node.async,
+    });
+  };
 
   public ClassMethod: (path) => void = (path) => {
     const targetName = path.parentPath.parentPath.node.id.name;
@@ -155,12 +200,15 @@ export class TargetVisitor extends Visitor {
     }
 
     this._functionMap.get(targetName).set(functionName, {
-      scope: this._getScope(path, functionName),
+      scope: {
+        uid: `${path.scope.uid - this.scopeIdOffset}`,
+        filePath: this.filePath
+      },
       name: functionName,
       type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
       visibility: visibility,
       isConstructor: functionName === "constructor",
-      parameters: path.node.params.map(this._extractParam),
+      parameters: path.node.params.map((x) => this._extractParam(x)),
       returnParameter: {
         name: "returnValue",
         typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
@@ -170,16 +218,91 @@ export class TargetVisitor extends Visitor {
     });
   };
 
+  public VariableDeclarator: (path) => void = (path) => {
+    if (!path.node.init) {
+      return
+    }
+
+    if (!(path.node.init.type === 'ArrowFunctionExpression'
+      || path.node.init.type === 'FunctionExpression')
+    ) {
+      return
+    }
+
+    const targetName = path.node.id.name
+    const functionName = targetName
+
+    this._createMaps(targetName)
+
+    let scope
+    path.traverse({
+      ArrowFunctionExpression: {
+        enter: (p) => {
+          scope = {
+            uid: `${p.scope.uid - this.scopeIdOffset}`,
+            filePath: this.filePath
+          }
+        }
+      },
+      FunctionExpression: {
+        enter: (p) => {
+          scope = {
+            uid: `${p.scope.uid - this.scopeIdOffset}`,
+            filePath: this.filePath
+          }
+        }
+      }
+    })
+
+    this._functionMap.get(targetName).set(functionName, {
+      scope: scope,
+      name: functionName,
+      type: ActionType.FUNCTION,
+      visibility: ActionVisibility.PUBLIC,
+      isConstructor: false,
+      parameters: path.node.init.params.map((x) => this._extractParam(x)),
+      returnParameter: {
+        name: "returnValue",
+        typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
+      },
+      isStatic: path.node.init.static,
+      isAsync: path.node.init.async,
+    });
+  }
+
   // prototyping
   public AssignmentExpression: (path) => void = (path) => {
     if (path.node.right.type !== "FunctionExpression") {
       return
     }
 
+    let scope
+    path.traverse({
+      FunctionExpression: {
+        enter: (p) => {
+          scope = {
+            uid: `${p.scope.uid - this.scopeIdOffset}`,
+            filePath: this.filePath
+          }
+        }
+      }
+    })
+
+
     let targetName
 
     if (path.node.left.type === "MemberExpression") {
-      if (path.node.left.object.type === 'MemberExpression'
+      if (path.node.left.object.name === 'module'
+        && path.node.left.property.name === 'exports'
+      ) {
+        targetName = path.node.right.id?.name
+
+        if (!targetName) {
+          targetName = 'anon'
+        }
+      } else if (path.node.left.object.name === 'exports') {
+        targetName = path.node.left.property.name
+      } else if (path.node.left.object.type === 'MemberExpression'
         && path.node.left.object.property.name === 'prototype') {
         targetName = path.node.left.object.object.name
         const functionName = path.node.left.property.name
@@ -192,27 +315,28 @@ export class TargetVisitor extends Visitor {
         }
 
         if (functionName === "method") {
-          console.log(path.node)
-          process.exit()
+          throw new Error("Invalid functionName")
         }
 
         if (!this._functionMap.has(targetName)) {
-          throw new Error("target not discovered yet")
+          this._createMaps(targetName)
+          // modify original
+          // but there is no original so... no constructor?
+        } else {
+          // modify original
+          this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
+          this._functionMap.get(targetName).get(targetName).isConstructor = true
         }
-
-        // modify original
-        this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
-        this._functionMap.get(targetName).get(targetName).isConstructor = true
 
         // TODO this one is probably wrong
 
         this._functionMap.get(targetName).set(functionName, {
-          scope: this._getScope(path, functionName),
+          scope: scope,
           name: functionName,
           type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
           visibility: ActionVisibility.PUBLIC,
           isConstructor: functionName === "constructor",
-          parameters: path.node.right.params.map(this._extractParam),
+          parameters: path.node.right.params.map((x) => this._extractParam(x)),
           returnParameter: {
             name: "returnValue",
             typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
@@ -222,30 +346,68 @@ export class TargetVisitor extends Visitor {
         });
         return
       } else {
-        targetName = path.node.left.property.name
+        targetName = path.node.left.object.name
+        const functionName = path.node.left.property.name
+
+        if (path.node.left.computed) {
+          // we cannot know the name of computed properties unless we find out what the identifier refers to
+          // see line 136 of Axios.js as example
+          // Axios.prototype[method] = ?
+          return
+        }
+
+        if (functionName === "method") {
+          throw new Error("Invalid functionName")
+        }
+
+        if (!this._functionMap.has(targetName)) {
+          this._createMaps(targetName)
+          // modify original
+          // but there is no original so... no constructor?
+        }
+
+        if (this.functionMap.get(targetName).has(targetName)){
+          // modify original
+          this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
+          this._functionMap.get(targetName).get(targetName).isConstructor = true
+        }
+
+        // TODO this one is probably wrong
+
+        this._functionMap.get(targetName).set(functionName, {
+          scope: scope,
+          name: functionName,
+          type: ActionType.METHOD,
+          visibility: ActionVisibility.PUBLIC,
+          isConstructor: false,
+          parameters: path.node.right.params.map((x) => this._extractParam(x)),
+          returnParameter: {
+            name: "returnValue",
+            typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
+          },
+          isStatic: path.node.right.static,
+          isAsync: path.node.right.async,
+        });
+        return
       }
 
     } else if (path.node.left.type === 'Identifier') {
         targetName = path.node.left.name
     } else {
-      console.log(path.node)
       throw new Error("unknown function expression name")
     }
 
-    console.log(path)
-
-    // TODO this one is probably wrong
     if (!this.targetMap.has(targetName)) {
       this._createMaps(targetName)
     }
 
     this._functionMap.get(targetName).set(targetName, {
-      scope: this._getScope(path, targetName),
+      scope: scope,
       name: targetName,
       type: ActionType.FUNCTION,
       visibility: ActionVisibility.PUBLIC,
       isConstructor: false,
-      parameters: path.node.right.params.map(this._extractParam),
+      parameters: path.node.right.params.map((x) => this._extractParam(x)),
       returnParameter: {
         name: "returnValue",
         typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
@@ -255,51 +417,56 @@ export class TargetVisitor extends Visitor {
     });
   }
 
-    // functions
-  public _createFunction (newScopeUid, targetName: string, functionName: string, node) {
-    this._functionMap.get(targetName).set(functionName, {
-      scope: {
-        uid: `${newScopeUid - this.scopeIdOffset}`,
-        filePath: this.filePath
-      },
-      name: functionName,
-      type: ActionType.FUNCTION,
-      visibility: ActionVisibility.PUBLIC,
-      isConstructor: false,
-      parameters: node.params.map(this._extractParam),
-      returnParameter: {
-        name: "returnValue",
-        typeProbabilityMap: new TypeProbability(),
-      },
-      isStatic: node.static,
-      isAsync: node.async,
-    });
-  }
-
-  _extractParam(param: any) {
+  _extractParam(param: any): IdentifierDescription {
       if (param.type === 'RestElement') {
         // TODO this can actually be an infinite amount of arguments...
-        param = param.argument
+        return this._extractParam(param.argument)
       }
 
       if (param.type === "AssignmentPattern") {
-        param = param.left
+        return this._extractParam(param.left)
       }
 
-    if (param.type === "ObjectPattern") {
-      param = {
-        name: `{${param.properties.map((x)=> x.key.name).join(',')}}`
+      if (param.type === "ObjectPattern") {
+        const typeProbability = new TypeProbability()
+
+        const object: ComplexObject = {
+          name: "objectPattern",
+          properties: new Set(param.properties.map((x)=> this._extractParam(x.key).name)), // TODO resolve these types
+          functions: new Set()
+        }
+
+        typeProbability.addType('object', 1, object)
+        param = {
+          name: `objectPattern`,
+          typeProbabilityMap: typeProbability
+        }
       }
-    }
+
+      if (param.type === "ArrayPattern") {
+        const typeProbability = new TypeProbability()
+
+        const object: ComplexObject = {
+          name: "arrayPattern",
+          properties: new Set(param.elements.map((x) => this._extractParam(x).name)), // TODO resolve these types
+          functions: new Set()
+        }
+
+        typeProbability.addType('array', 1, object)
+
+        param = {
+          name: `arrayPattern`,
+          typeProbabilityMap: typeProbability
+        }
+      }
 
       if (!param.name) {
-        console.log(param)
-        throw new Error("Unknown param")
+        throw new Error(`Unknown param ${JSON.stringify(param)}\n ${this.filePath}`)
       }
 
       return {
+        typeProbabilityMap: undefined,
         name: param.name,
-        type: "unknown", // TODO unknown because javascript! (check how this looks in typescript)
       };
 
   }

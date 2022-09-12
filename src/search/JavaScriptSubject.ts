@@ -1,5 +1,4 @@
 import {
-  BranchObjectiveFunction,
   CFG,
   FunctionObjectiveFunction,
   NodeType,
@@ -12,10 +11,12 @@ import { ActionDescription } from "../analysis/static/parsing/ActionDescription"
 import { IdentifierDescription } from "../analysis/static/parsing/IdentifierDescription";
 import { ActionVisibility } from "../analysis/static/parsing/ActionVisibility";
 import { ActionType } from "../analysis/static/parsing/ActionType";
+import { JavaScriptBranchObjectiveFunction } from "../criterion/JavaScriptBranchObjectiveFunction";
 
 export enum SubjectType {
   class,
-  function
+  function,
+  object
 }
 
 export interface TypeScore {
@@ -37,14 +38,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     // maybe look at bayesian inference
   }
 
-  recordTypeScore(types: string[], failed: boolean) {
-    this._typeScores[types.join(",")] = {
-      types: types,
-      failed: failed
-    }
-  }
-
-
   get functions(): ActionDescription[] {
     return this._functions;
   }
@@ -56,7 +49,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     functions: ActionDescription[],
   ) {
     super(path, targetMeta.name, cfg);
-    // TODO SearchSubject should just use the targeMetaData
+    // TODO SearchSubject should just use the targetMetaData
     this._type = targetMeta.type
     this._functions = functions
     this._typeScores = new Map()
@@ -64,11 +57,13 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
   protected _extractObjectives(): void {
     // Branch objectives
-    this._cfg.nodes
-      // Find all branch nodes
+    // Find all branch nodes
+    const branches = this._cfg.nodes
       .filter(
         (node) => node.type === NodeType.Branch
       )
+
+    branches
       .forEach((branchNode) => {
         this._cfg.edges
           // Find all edges from the branch node
@@ -80,7 +75,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
               .forEach((childNode) => {
                 // Add objective function
                 this._objectives.set(
-                  new BranchObjectiveFunction(
+                  new JavaScriptBranchObjectiveFunction(
                     this,
                     childNode.id,
                     branchNode.lines[0],
@@ -92,7 +87,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
           });
       });
 
-    // Add children for branches and probe objectives
     for (const objective of this._objectives.keys()) {
       const childrenObj = this.findChildren(objective);
       this._objectives.get(objective).push(...childrenObj);

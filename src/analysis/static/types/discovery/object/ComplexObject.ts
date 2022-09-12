@@ -17,9 +17,10 @@
  */
 
 import { TypeProbability } from "../../resolving/TypeProbability";
+import { Export } from "../../../dependency/ExportVisitor";
 
 export interface ComplexObject {
-  import: string,
+  export?: Export,
   name: string,
   properties: Set<string>
   functions: Set<string>

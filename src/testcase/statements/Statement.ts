@@ -19,6 +19,7 @@
 
 import { Encoding, EncodingSampler, prng } from "@syntest/framework";
 import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
+import { isNumber } from "util";
 
 /**
  * @author Dimitri Stallenberg
@@ -59,7 +60,9 @@ export abstract class Statement {
     this._type = type
     this._uniqueId = uniqueId;
     this._varName = identifierDescription.name + prng.uniqueId()
+    this._varName = '_' + this.varName
   }
+
 
   /**
    * Mutates the gene

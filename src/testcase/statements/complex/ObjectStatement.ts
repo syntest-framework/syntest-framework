@@ -22,6 +22,7 @@ import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import * as path from "path";
 import { StringStatement } from "../primitive/StringStatement";
+import { TypeProbability } from "../../../analysis/static/types/resolving/TypeProbability";
 
 /**
  * @author Dimitri Stallenberg
@@ -57,8 +58,9 @@ export class ObjectStatement extends Statement {
 
     if (finalKeys.length === 0) {
       // add a child
-      finalKeys.push(sampler.sampleString())
-      finalValues.push(sampler.sampleArgument(depth + 1, null))
+      const key = sampler.sampleString()
+      finalKeys.push(key)
+      finalValues.push(sampler.sampleArgument(depth + 1, { name: key.varName, typeProbabilityMap: new TypeProbability() }))
     } else {
       // go over each child
       for (let i = 0; i < finalKeys.length; i++) {
@@ -71,8 +73,9 @@ export class ObjectStatement extends Statement {
 
             // TODO should also look if we can add back one of the deleted ones
 
-            finalKeys.push(sampler.sampleString())
-            finalValues.push(sampler.sampleArgument(depth + 1, null))
+            const key = sampler.sampleString()
+            finalKeys.push(key)
+            finalValues.push(sampler.sampleArgument(depth + 1, { name: key.varName, typeProbabilityMap: new TypeProbability() }))
             finalKeys.push(keys[i])
             finalValues.push(values[i])
           } else if (choice < 0.2) {

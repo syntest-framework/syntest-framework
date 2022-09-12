@@ -23,10 +23,31 @@ import { Element } from "./Element";
 export interface Relation {
   relation: RelationType
   involved: Element[]
+  computed?: boolean
 }
 
 export enum RelationType {
-  // Left-hand-side expressions
+  // Primary Expressions
+  // TODO others
+  FunctionDefinition="L_R",
+  ClassDefinition="class L",
+
+
+  Await="await L",
+
+  // object
+  Object="{L}", // TODO not correct L doesnt matter
+  ObjectProperty="L:R",
+
+  // array
+  Array="[L]",
+  Sequence="(L,R)",
+
+
+
+
+
+  // Left-hand-side Expressions
   PropertyAccessor="L.R",
   New="new L()",
   // TODO new.target
@@ -114,19 +135,14 @@ export enum RelationType {
   // TODO destructuring assignment
 
 
-
   // function
   Return="L->R",
 
   // MULTI
   // function
-  Parameters="L_R",
   Call="L(R)",
-  // object
-  Object="{L:R}", // TODO not correct L doesnt matter
-  // array
-  Array="[L]",
 
+  PrivateName="#L"
 }
 
 

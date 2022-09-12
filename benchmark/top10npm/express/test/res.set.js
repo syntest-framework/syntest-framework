@@ -37,13 +37,13 @@ describe('res', function(){
       var app = express();
 
       app.use(function(req, res){
-        res.set('Set-Cookie', ["identifierDescription=ninja", "language=javascript"]);
+        res.set('Set-Cookie', ["type=ninja", "language=javascript"]);
         res.send(res.get('Set-Cookie'));
       });
 
       request(app)
       .get('/')
-      .expect('["identifierDescription=ninja","language=javascript"]', done);
+      .expect('["type=ninja","language=javascript"]', done);
     })
 
     it('should coerce to an array of strings', function (done) {

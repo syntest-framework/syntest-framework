@@ -30,7 +30,7 @@ Before publishing, the following preconditions should be met:
 - A release proposal issue or tracking pull request (see "Proposal branch"
   below) will exist documenting:
   - the proposed changes
-  - the identifierDescription of release: patch, minor or major
+  - the type of release: patch, minor or major
   - the version number (according to semantic versioning - http://semver.org)
 - The proposed changes should be complete.
 
@@ -38,7 +38,7 @@ There are two main release flows: patch and non-patch.
 
 The patch flow is for making **patch releases**. As per semantic versioning,
 patch releases are for simple changes, eg: typo fixes, patch dependency updates,
-and simple/low-risk bug fixes. Every other identifierDescription of change is made via the
+and simple/low-risk bug fixes. Every other type of change is made via the
 non-patch flow.
 
 ### Branch terminology

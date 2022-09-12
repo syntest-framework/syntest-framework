@@ -17,9 +17,11 @@
  */
 import { ComplexObject } from "./ComplexObject";
 import { Visitor } from "../../../Visitor";
+import { Export } from "../../../dependency/ExportVisitor";
 
 export class ObjectVisitor extends Visitor {
 
+  private _exports: Export[]
   private _objects: ComplexObject[]
   private _objectStack: ComplexObject[]
 
@@ -27,14 +29,13 @@ export class ObjectVisitor extends Visitor {
     return this._objects;
   }
 
-  constructor(filePath: string) {
+  constructor(filePath: string, exports: Export[]) {
     super(filePath)
-
+    this._exports = exports
     this._objects = []
     this._objectStack = []
 
-    const object = {
-      import: "",
+    const object: ComplexObject = {
       name: "global",
       properties: new Set<string>(),
       functions: new Set<string>()
@@ -44,7 +45,7 @@ export class ObjectVisitor extends Visitor {
     this._objectStack.push(object)
   }
 
-  private _enterObject(_object) {
+  private _enterObject(_object: ComplexObject) {
     this._objectStack.push(_object)
   }
 
@@ -66,20 +67,24 @@ export class ObjectVisitor extends Visitor {
   // context
   public ClassDeclaration = {
     enter: (path) => {
+      const name = path.node.id.name
+      const _export = this._exports.find((e) => e.name === name)
+
       const _object: ComplexObject = {
-        import: this.filePath,
-        name: path.node.id.name,
+        export: _export,
+        name: name,
         properties: new Set(),
         functions: new Set()
       }
 
       for (const classElement of path.node.body.body) {
-        if (classElement.type === 'ClassProperty') {
+        if (classElement.type === 'ClassProperty'
+          || classElement.type === 'ClassPrivateProperty') {
           _object.properties.add(classElement.key.name)
         } else if (classElement.type === 'ClassMethod') {
           _object.functions.add(classElement.key.name)
         } else {
-          throw new Error("unsupported class element: " + classElement.type)
+          throw new Error(`unsupported class element: ${classElement.type}\n${this.filePath}`)
         }
       }
 
@@ -91,9 +96,12 @@ export class ObjectVisitor extends Visitor {
 
   public FunctionDeclaration = {
     enter: (path) => {
+      const name = path.node.id?.name || 'anon'
+      const _export = this._exports.find((e) => e.name === name)
+
       const _object: ComplexObject = {
-        import: this.filePath,
-        name: path.node.id.name,
+        export: _export,
+        name: name,
         properties: new Set(),
         functions: new Set()
       }
@@ -106,10 +114,12 @@ export class ObjectVisitor extends Visitor {
 
   public FunctionExpression = {
     enter: (path) => {
+      const name = path.node.id?.name || 'anon'
+      const _export = this._exports.find((e) => e.name === name)
       // TODO find the object where we are assigning to if its an assignment
       const _object: ComplexObject = {
-        import: this.filePath,
-        name: path.node.id ? path.node.id.name : 'anon',
+        export: _export,
+        name: name,
         properties: new Set(),
         functions: new Set()
       }
@@ -122,10 +132,12 @@ export class ObjectVisitor extends Visitor {
 
   public ObjectExpression = {
     enter: (path) => {
+      const name = path.node.id?.name || 'anon'
+      const _export = this._exports.find((e) => e.name === name)
       // TODO find the object where we are assigning to if its an assignment
       const _object: ComplexObject = {
-        import: this.filePath,
-        name: path.node.id ? path.node.id.name : 'anon',
+        export: _export,
+        name: name,
         properties: new Set(),
         functions: new Set()
       }
@@ -147,6 +159,10 @@ export class ObjectVisitor extends Visitor {
   }
 
   public MemberExpression: (path) => void = (path) => {
+    if (path.node.computed) {
+      return
+    }
+
     // TODO support for prototyping  (./axios/lib/cancel/Cancel.js)
     if (path.node.object.type === "ThisExpression") {
       const _object = this._currentObject()

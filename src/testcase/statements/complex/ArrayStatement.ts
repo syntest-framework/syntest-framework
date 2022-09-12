@@ -21,6 +21,7 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import * as path from "path";
+import { TypeProbability } from "../../../analysis/static/types/resolving/TypeProbability";
 
 /**
  * @author Dimitri Stallenberg
@@ -51,7 +52,7 @@ export class ArrayStatement extends Statement {
 
     if (children.length === 0) {
       // add a call
-      finalChildren.push(sampler.sampleArgument(depth + 1, null))
+      finalChildren.push(sampler.sampleArgument(depth + 1, { name: 'arrayValue', typeProbabilityMap: new TypeProbability() }))
     } else {
       // go over each call
       for (let i = 0; i < children.length; i++) {
@@ -61,14 +62,14 @@ export class ArrayStatement extends Statement {
 
           if (choice < 0.1) {
             // 10% chance to add a call on this position
-            finalChildren.push(sampler.sampleArgument(depth + 1, null))
+            finalChildren.push(sampler.sampleArgument(depth + 1, { name: 'arrayValue', typeProbabilityMap: new TypeProbability() }))
             finalChildren.push(children[i])
           } else if (choice < 0.2) {
             // 10% chance to delete the child
           } else {
             // 80% chance to just mutate the child
             if (Properties.resample_gene_probability) {
-              finalChildren.push(sampler.sampleArgument(depth + 1, null))
+              finalChildren.push(sampler.sampleArgument(depth + 1, { name: 'arrayValue', typeProbabilityMap: new TypeProbability() }))
             } else {
               finalChildren.push(children[i].mutate(sampler, depth + 1))
             }

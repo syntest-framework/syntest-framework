@@ -40,7 +40,7 @@ var toString = Object.prototype.toString;
  * @public
  */
 
-var proto = module.exports = function(options) {
+var proto = function(options) {
   var opts = options || {};
 
   function router(req, res, next) {
@@ -63,7 +63,7 @@ var proto = module.exports = function(options) {
 /**
  * Map the given param placeholder `name`(s) to the given callback.
  *
- * IdentifierDescription mapping is used to provide pre-conditions to routes
+ * type mapping is used to provide pre-conditions to routes
  * which use normalized placeholders. For example a _:user_id_ parameter
  * could automatically load a user's information from the database without
  * any additional code,
@@ -554,7 +554,7 @@ function getProtohost(url) {
     : undefined
 }
 
-// get identifierDescription for error message
+// get type for error message
 function gettype(obj) {
   var type = typeof obj;
 
@@ -666,3 +666,5 @@ function wrap(old, fn) {
     fn.apply(this, args);
   };
 }
+
+module.exports = proto

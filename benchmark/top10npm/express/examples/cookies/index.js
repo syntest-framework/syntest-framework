@@ -24,8 +24,8 @@ app.get('/', function(req, res){
     res.send('Remembered :). Click to <a href="/forget">forget</a>!.');
   } else {
     res.send('<form method="post"><p>Check to <label>'
-      + '<input identifierDescription="checkbox" name="remember"/> remember me</label> '
-      + '<input identifierDescription="submit" value="Submit"/>.</p></form>');
+      + '<input type="checkbox" name="remember"/> remember me</label> '
+      + '<input type="submit" value="Submit"/>.</p></form>');
   }
 });
 

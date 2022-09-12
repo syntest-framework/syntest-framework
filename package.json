@@ -42,7 +42,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "npm run build",
-    "run": "node ./dist/bin.js",
+    "run": "node --inspect ./dist/bin.js",
     "run-ts": "ts-node ./src/bin.ts",
     "test": "mocha",
     "test:coverage": "nyc mocha",
@@ -69,6 +69,7 @@
   "dependencies": {
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
+    "@babel/preset-flow": "^7.17.12",
     "@babel/preset-react": "^7.16.7",
     "@babel/register": "^7.16.5",
     "@istanbuljs/schema": "^0.1.3",

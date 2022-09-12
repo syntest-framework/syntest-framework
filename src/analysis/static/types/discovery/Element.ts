@@ -32,6 +32,7 @@ export enum ElementType {
   NumericalConstant='numericalConstant',
   BooleanConstant='booleanConstant',
   NullConstant='nullConstant',
+  UndefinedConstant='undefinedConstant',
   RegexConstant='regexConstant',
   Identifier='identifier',
   Relation='relation'

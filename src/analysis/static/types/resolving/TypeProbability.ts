@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { TypeEnum } from "./TypeEnum";
-import { prng } from "@syntest/framework";
+import { prng, Properties } from "@syntest/framework";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 
 /**
@@ -26,9 +26,10 @@ import { ComplexObject } from "../discovery/object/ComplexObject";
  * @author Dimitri Stallenberg
  */
 
-  // TODO make recursive possible (typeProbability)
 export class TypeProbability {
-  private objectDescription: Map<string, ComplexObject>
+
+  private id: string
+  objectDescription: Map<string, ComplexObject>
   private objectPropertyTypes: Map<string, Map<string, TypeProbability>>
 
   private scores: Map<string, number>
@@ -38,6 +39,8 @@ export class TypeProbability {
 
   totalScores: number
   scoresChanged: boolean
+
+  private executionScores: Map<string, number>
 
   getObjectDescription(type: string): ComplexObject {
     return this.objectDescription.get(type)
@@ -51,6 +54,8 @@ export class TypeProbability {
    * Constructor
    */
   constructor(initialTypes?: ([string | TypeProbability, number, (ComplexObject | null)])[]) {
+    this.id = prng.uniqueId()
+
     this.objectDescription = new Map()
     this.objectPropertyTypes = new Map()
     this.scores = new Map()
@@ -58,6 +63,8 @@ export class TypeProbability {
     this.typeIsTypeProbability = new Map()
     this.totalScores = 0
     this.scoresChanged = true
+
+    this.executionScores = new Map()
 
     if (initialTypes) {
       initialTypes.forEach((x) => this.addType(x[0], x[1], x[2]))
@@ -115,31 +122,97 @@ export class TypeProbability {
       return
     }
 
-    let total = this.totalScores
+    const total = this.totalScores
     this.probabilities = new Map()
 
-    // this ensures that there is a chance of trying a random other identifierDescription
-    if (true) { // Properties.alsotryrandom) { TODO property
-      total = total / 0.9
-      this.probabilities.set(TypeEnum.ANY, 0.1)
-    }
-
+    const preliminaryProbabilities = new Map()
       // recalculate probabilityMap
     for (const identifier of this.scores.keys()) {
-      this.probabilities.set(identifier, (this.scores.get(identifier) / total))
+      preliminaryProbabilities.set(identifier, (this.scores.get(identifier) / total))
+    }
+    this.scoresChanged = false
+
+
+    // return
+
+    for (const identifier of this.scores.keys()) {
+      if (this.typeIsTypeProbability.has(identifier)) {
+        this.typeIsTypeProbability.get(identifier).calculateProbabilities()
+        const probs = this.typeIsTypeProbability.get(identifier).probabilities
+
+        let divider = 1
+        if (probs.has(this.id)) {
+          divider = 1 - probs.get(this.id)
+        }
+
+        for (const key of probs.keys()) {
+          if (this.id === key) {
+            continue
+          }
+          if (!this.probabilities.has(key)) {
+            this.probabilities.set(key, 0)
+          }
+
+          this.probabilities.set(key, this.probabilities.get(key) + preliminaryProbabilities.get(identifier) * (probs.get(key) / divider))
+        }
+      } else {
+        if (!this.probabilities.has(identifier)) {
+          this.probabilities.set(identifier, 0)
+        }
+
+        this.probabilities.set(identifier, this.probabilities.get(identifier) + preliminaryProbabilities.get(identifier))
+      }
     }
 
-    this.scoresChanged = false
+    // incorporate execution scores
+    // get min value
+    let minValue = 0
+    for (const key of this.executionScores.keys()) {
+      minValue = Math.min(minValue, this.executionScores.get(key))
+    }
+
+    if (Properties['incorporate_execution_information'] && this.executionScores.size) {
+      // calculate total
+      let totalScore = 0
+      for (const key of this.probabilities.keys()) {
+        let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
+        value += -minValue
+        totalScore += value
+      }
+
+      if (totalScore) {
+        // calculate probability and incorporate
+        for (const key of this.probabilities.keys()) {
+          let value = this.executionScores.has(key) ? this.executionScores.get(key) : 0
+          value += -minValue
+
+          const probability = value / totalScore
+
+          this.probabilities.set(key, this.probabilities.get(key) * probability)
+        }
+      }
+    }
+
+    // normalize to one
+    let totalProb = 0
+    for (const key of this.probabilities.keys()) {
+      totalProb += this.probabilities.get(key)
+    }
+
+    if (totalProb) {
+      for (const key of this.probabilities.keys()) {
+        this.probabilities.set(key, this.probabilities.get(key) / totalProb)
+      }
+    }
   }
 
-  /**
-   * Gets the probability of the given identifierDescription
-   * @param type the type
-   */
-  getProbability(type: TypeEnum | string): number {
-    this.calculateProbabilities()
+  addExecutionScore(type: string, score: number) {
+    if (!this.executionScores.has(type)) {
+      this.executionScores.set(type, score)
+    }
 
-    return this.probabilities.get(type)
+    this.scoresChanged = true
+    this.executionScores.set(type, this.executionScores.get(type) + score)
   }
 
   /**
@@ -147,6 +220,10 @@ export class TypeProbability {
    */
   getRandomType(): string {
     this.calculateProbabilities()
+
+    if (!this.probabilities.size) {
+      return TypeEnum.ANY
+    }
 
     const choice = prng.nextDouble(0, 1)
     let index = 0
@@ -173,8 +250,12 @@ export class TypeProbability {
     return type
   }
 
-  getEliteType(): string {
+  getHighestProbabilityType(): string {
     this.calculateProbabilities()
+
+    if (!this.probabilities.size) {
+      return TypeEnum.ANY
+    }
 
     let best: string = this.probabilities.keys().next().value
 
@@ -185,40 +266,15 @@ export class TypeProbability {
     }
 
     if (this.typeIsTypeProbability.has(best)) {
-      return this.typeIsTypeProbability.get(best).getEliteType()
+      return this.typeIsTypeProbability.get(best).getHighestProbabilityType()
     }
 
     return best
   }
 
-  getDynamicType(): string {
-    this.calculateProbabilities()
-
-    const first: string = this.probabilities.keys().next().value
-
-    // TODO
-
-    if (this.typeIsTypeProbability.has(first)) {
-      return this.typeIsTypeProbability.get(first).getEliteType()
-    }
-
-    return first
-  }
-
   keys = () => this.scores.keys()
 
   getIdentifier(): string {
-    let id = ''
-
-    // TODO check ordering
-    for (const key of this.scores.keys()) {
-      if (this.typeIsTypeProbability.has(key)) {
-        id += this.typeIsTypeProbability.get(key).getIdentifier()
-      } else {
-        id += key
-      }
-    }
-
-    return id
+    return this.id
   }
 }

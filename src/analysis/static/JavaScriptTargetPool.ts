@@ -31,13 +31,13 @@ import { VariableGenerator } from "./types/discovery/VariableGenerator";
 import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
 import { ComplexObject } from "./types/discovery/object/ComplexObject";
 import { ActionDescription } from "./parsing/ActionDescription";
-import { Scope } from "./types/discovery/Scope";
 import { Relation } from "./types/discovery/Relation";
 import { Element } from "./types/discovery/Element";
 import { TypeEnum } from "./types/resolving/TypeEnum";
 import { TypeProbability } from "./types/resolving/TypeProbability";
 import { Instrumenter } from "../../instrumentation/Instrumenter";
 import { ExportType } from "./dependency/IdentifierVisitor";
+
 const { outputFileSync, copySync } = require("fs-extra");
 
 
@@ -171,12 +171,15 @@ export class JavaScriptTargetPool extends TargetPool {
     }
 
     if (!this._controlFlowGraphs.get(absoluteTargetPath).has(targetName)) {
-      this._controlFlowGraphs.get(absoluteTargetPath).set(
-        targetName,
-        this.controlFlowGraphGenerator.convertAST(
-          this.getAST(absoluteTargetPath)
-        )
-      );
+      // this._controlFlowGraphs.get(absoluteTargetPath).set(
+      //   targetName,
+      //   this.controlFlowGraphGenerator.convertAST(
+      //     this.getAST(absoluteTargetPath)
+      //   )
+      // );
+      return this.controlFlowGraphGenerator.convertAST(
+        this.getAST(absoluteTargetPath)
+      )
     }
 
     return this._controlFlowGraphs.get(absoluteTargetPath).get(targetName);
@@ -203,8 +206,8 @@ export class JavaScriptTargetPool extends TargetPool {
           continue
         }
 
-        if(export_.type === ExportType.const) {
-          throw new Error("Target cannot be constant!")
+        if(export_.type === ExportType.const && functionMap.get(key).size === 0) {
+          throw new Error(`Target cannot be constant: ${name} -> ${JSON.stringify(export_)}`)
         }
 
         let isPrototypeClass = false
@@ -215,10 +218,17 @@ export class JavaScriptTargetPool extends TargetPool {
           }
         }
 
+        // let isClass = false
+        // if (functionMap.get(key).size > 1) {
+        //   isClass = true
+        // }
+
         // threat everything as a function if we don't know
         finalTargetMap.set(key, {
           name: name,
-          type: export_.type === ExportType.class || isPrototypeClass ? SubjectType.class : SubjectType.function,
+          type: export_.type === ExportType.class || isPrototypeClass
+            ? SubjectType.class
+            : (export_.type === ExportType.const ? SubjectType.object : SubjectType.function),
           export: export_
         })
       }
@@ -255,7 +265,8 @@ export class JavaScriptTargetPool extends TargetPool {
     if (!this._exportMap.has(absoluteTargetPath)) {
       const exports = this.exportGenerator.generate(absoluteTargetPath, this.getAST(absoluteTargetPath))
 
-      this._exportMap.set(absoluteTargetPath, exports);
+      // this._exportMap.set(absoluteTargetPath, exports);
+      return exports
     }
 
     return this._exportMap.get(absoluteTargetPath)
@@ -296,8 +307,8 @@ export class JavaScriptTargetPool extends TargetPool {
         libraries.push(...exports);
       });
 
-      this._dependencyMaps
-        .set(targetPath, libraries);
+      return libraries
+      // this._dependencyMaps.set(targetPath, libraries);
     }
 
     return this._dependencyMaps.get(absoluteTargetPath)
@@ -346,18 +357,17 @@ export class JavaScriptTargetPool extends TargetPool {
         && !x.includes('.test.js')
         && !x.includes('node_modules')) // maybe we should also take those into account
 
-
     const objects: ComplexObject[] = []
     const objectGenerator = new ObjectGenerator()
 
     for (const file of files) {
-      objects.push(...objectGenerator.generate(file, this.getAST(file)))
+      const exports = this.getExports(file)
+      objects.push(...objectGenerator.generate(file, this.getAST(file), exports))
     }
 
     // standard stuff
     // function https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
     objects.push({
-      import: "",
       name: "function",
       properties: new Set(['arguments', 'caller', 'displayName', 'length', 'name']),
       functions: new Set(['apply', 'bind', 'call', 'toString']),
@@ -372,7 +382,6 @@ export class JavaScriptTargetPool extends TargetPool {
 
     // array https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
     objects.push({
-      import: "",
       name: "array",
       properties: new Set(['length']),
       functions: new Set(['at', 'concat', 'copyWithin', 'entries', 'fill', 'filter', 'find', 'findIndex', 'flat', 'flatMap', 'includes', 'indexOf', 'join', 'keys', 'lastIndexOf', 'map', 'pop', 'push', 'reduce', 'reduceRight', 'reverse', 'shift', 'slice', 'toLocaleString', 'toString', 'unshift', 'values']),
@@ -383,7 +392,6 @@ export class JavaScriptTargetPool extends TargetPool {
 
     // string
     objects.push({
-      import: "",
       name: "string",
       properties: new Set(['length']),
       functions: new Set(['at', 'charAt', 'charCodeAt', 'codePointAt', 'concat', 'includes', 'endsWith', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace', 'replaceAll', 'search', 'slice', 'split', 'startsWith', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase', 'toLowerCase', 'toString', 'toUpperCase', 'trim', 'trimStart', 'trimEnd', 'valueOf']),
@@ -392,15 +400,6 @@ export class JavaScriptTargetPool extends TargetPool {
       ])
     })
 
-    // object
-    // TODO
-    // this._objects.push({
-    //   import: "",
-    //   name: "object",
-    //   properties: new Set([]),
-    //   functions: new Set([])
-    // })
-
     // TODO npm dependencies
     // TODO get rid of duplicates
 
@@ -408,7 +407,7 @@ export class JavaScriptTargetPool extends TargetPool {
 
     function eqSet(as, bs) {
       if (as.size !== bs.size) return false;
-      for (var a of as) if (!bs.has(a)) return false;
+      for (const a of as) if (!bs.has(a)) return false;
       return true;
     }
 
@@ -418,7 +417,7 @@ export class JavaScriptTargetPool extends TargetPool {
       }
 
       const found = finalObjects.find((o2) => {
-        return o.import === o2.import
+        return o.export === o2.export // TODO not sure if you can compare exports like this
           && o.name === o2.name
           && eqSet(o.properties, o2.properties)
           && eqSet(o.functions, o2.functions)

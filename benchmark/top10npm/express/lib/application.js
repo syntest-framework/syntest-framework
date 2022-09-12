@@ -35,7 +35,9 @@ var slice = Array.prototype.slice;
  * Application prototype.
  */
 
-var app = exports = module.exports = {};
+var app = {};
+exports = app
+module.exports = app
 
 /**
  * Variable for trust proxy inheritance back-compat

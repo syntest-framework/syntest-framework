@@ -38,7 +38,18 @@ export class IdentifierVisitor extends Visitor {
 
   // identifiable stuff
   public FunctionDeclaration: (path) => void = (path) => {
-    const identifier = path.node.id.name;
+    let identifier = path.node.id?.name;
+
+    if (path.parent.type === 'ObjectPattern') {
+      identifier = path.parent.key.name
+    } else if (path.parent.type === 'ExportDefaultDeclaration') {
+      identifier = 'default'
+    }
+
+    if (!identifier) {
+      throw new Error(`Unsupported identifier declaration: ${path.parent.type}`)
+    }
+
     this._identifiers.set(identifier, ExportType.function)
   }
 
@@ -58,7 +69,8 @@ export class IdentifierVisitor extends Visitor {
 
       if (!declaration.init) {
         this._identifiers.set(identifier, ExportType.unknown)
-      } else if (declaration.init.type === "ArrowFunctionExpression") {
+      } else if (declaration.init.type === "ArrowFunctionExpression"
+        || declaration.init.type === "FunctionExpression") {
         this._identifiers.set(identifier, ExportType.function) // not always the case
       } else {
         this._identifiers.set(identifier, ExportType.const) // not always the case

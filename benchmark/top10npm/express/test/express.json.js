@@ -96,7 +96,7 @@ describe('express.json()', function () {
         .expect(400, parseError('{"user"'), done)
     })
 
-    it('should error with identifierDescription = "entity.parse.failed"', function (done) {
+    it('should error with type = "entity.parse.failed"', function (done) {
       request(this.app)
         .post('/')
         .set('Content-Type', 'application/json')
@@ -126,7 +126,7 @@ describe('express.json()', function () {
         .expect(413, done)
     })
 
-    it('should error with identifierDescription = "entity.too.large"', function (done) {
+    it('should error with type = "entity.too.large"', function (done) {
       var buf = Buffer.alloc(1024, '.')
       request(createApp({ limit: '1kb' }))
         .post('/')
@@ -271,7 +271,7 @@ describe('express.json()', function () {
           .expect(200, '{"user":"tobi"}', done)
       })
 
-      it('should error with identifierDescription = "entity.parse.failed"', function (done) {
+      it('should error with type = "entity.parse.failed"', function (done) {
         request(this.app)
           .post('/')
           .set('Content-Type', 'application/json')
@@ -293,13 +293,13 @@ describe('express.json()', function () {
     })
   })
 
-  describe('with identifierDescription option', function () {
+  describe('with type option', function () {
     describe('when "application/vnd.api+json"', function () {
       before(function () {
         this.app = createApp({ type: 'application/vnd.api+json' })
       })
 
-      it('should parse JSON for custom identifierDescription', function (done) {
+      it('should parse JSON for custom type', function (done) {
         request(this.app)
           .post('/')
           .set('Content-Type', 'application/vnd.api+json')
@@ -307,7 +307,7 @@ describe('express.json()', function () {
           .expect(200, '{"user":"tobi"}', done)
       })
 
-      it('should ignore standard identifierDescription', function (done) {
+      it('should ignore standard type', function (done) {
         request(this.app)
           .post('/')
           .set('Content-Type', 'application/json')
@@ -363,7 +363,7 @@ describe('express.json()', function () {
           .expect(200, '{"user":"tobi"}', done)
       })
 
-      it('should work without content-identifierDescription', function (done) {
+      it('should work without content-type', function (done) {
         var app = createApp({ type: accept })
 
         function accept (req) {
@@ -407,7 +407,7 @@ describe('express.json()', function () {
         .expect(403, 'no arrays', done)
     })
 
-    it('should error with identifierDescription = "entity.verify.failed"', function (done) {
+    it('should error with type = "entity.verify.failed"', function (done) {
       var app = createApp({ verify: function (req, res, buf) {
         if (buf[0] === 0x5b) throw new Error('no arrays')
       } })
@@ -435,7 +435,7 @@ describe('express.json()', function () {
         .expect(400, 'no arrays', done)
     })
 
-    it('should allow custom identifierDescription', function (done) {
+    it('should allow custom type', function (done) {
       var app = createApp({ verify: function (req, res, buf) {
         if (buf[0] !== 0x5b) return
         var err = new Error('no arrays')
@@ -540,7 +540,7 @@ describe('express.json()', function () {
       test.expect(415, 'unsupported charset "KOI8-R"', done)
     })
 
-    it('should error with identifierDescription = "charset.unsupported"', function (done) {
+    it('should error with type = "charset.unsupported"', function (done) {
       var test = request(this.app).post('/')
       test.set('Content-Type', 'application/json; charset=koi8-r')
       test.set('X-Error-Property', 'type')
@@ -601,7 +601,7 @@ describe('express.json()', function () {
       test.expect(415, 'unsupported content encoding "nulls"', done)
     })
 
-    it('should error with identifierDescription = "encoding.unsupported"', function (done) {
+    it('should error with type = "encoding.unsupported"', function (done) {
       var test = request(this.app).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/json')

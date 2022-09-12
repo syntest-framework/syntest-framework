@@ -14,7 +14,7 @@
 
 var Buffer = require('safe-buffer').Buffer
 var contentDisposition = require('content-disposition');
-var contentType = require('content-identifierDescription');
+var contentType = require('content-type');
 var deprecate = require('depd')('express');
 var flatten = require('array-flatten');
 var mime = require('send').mime;
@@ -71,9 +71,9 @@ exports.flatten = deprecate.function(flatten,
   'utils.flatten: use array-flatten npm module instead');
 
 /**
- * Normalize the given `identifierDescription`, for example "html" becomes "text/html".
+ * Normalize the given `type`, for example "html" becomes "text/html".
  *
- * @param {String} identifierDescription
+ * @param {String} type
  * @return {Object}
  * @api private
  */
@@ -248,13 +248,13 @@ exports.setCharset = function setCharset(type, charset) {
     return type;
   }
 
-  // parse identifierDescription
+  // parse type
   var parsed = contentType.parse(type);
 
   // set charset
   parsed.parameters.charset = charset;
 
-  // format identifierDescription
+  // format type
   return contentType.format(parsed);
 };
 

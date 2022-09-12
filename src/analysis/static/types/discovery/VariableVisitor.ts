@@ -19,7 +19,6 @@ import { Element, ElementType, getElementId } from "./Element";
 import { getRelationType, Relation, RelationType } from "./Relation";
 import { Visitor } from "../../Visitor";
 
-// TODO functionexpression
 // TODO return
 export class VariableVisitor extends Visitor {
 
@@ -57,7 +56,6 @@ export class VariableVisitor extends Visitor {
     this._elementStore = new Map<string, Element>()
   }
 
-
   // context
   public ClassDeclaration: (path) => void = (path) => {
   }
@@ -68,69 +66,93 @@ export class VariableVisitor extends Visitor {
       return
     }
 
-    const involved: Element[] = [this._getElement(path,  path.node.key)]
+    const involved: Element[] = [this._getElement(path.get('key')),]
 
-    for (const param of path.node.params) {
-      involved.push(this._getElement(path, param))
+    for (const param of path.get('params')) {
+      involved.push(this._getElement(param))
     }
 
-    this.relations.push({
-      relation: RelationType.Parameters,
+    const relation: Relation = {
+      relation: RelationType.FunctionDefinition,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public FunctionDeclaration: (path) => void = (path) => {
-    const involved: Element[] = [this._getElement(path, path.node.id)]
+    const involved: Element[] = [this._getElement(path.get('id'))]
 
-    for (const param of path.node.params) {
-      involved.push(this._getElement(path, param))
+    for (const param of path.get('params')) {
+      involved.push(this._getElement(param))
     }
 
-    this.relations.push({
-      relation: RelationType.Parameters,
+    const relation: Relation = {
+      relation: RelationType.FunctionDefinition,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public ArrowFunctionExpression: (path) => void = (path) => {
-    const involved: Element[] = [this._getElement(path, path.node)]
+    const involved: Element[] = [this._getElement(path)]
 
-    for (const param of path.node.params) {
-      involved.push(this._getElement(path, param))
+    for (const param of path.get('params')) {
+      involved.push(this._getElement(param))
     }
 
-    this.relations.push({
-      relation: RelationType.Parameters,
+    const relation: Relation = {
+      relation: RelationType.FunctionDefinition,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public FunctionExpression: (path) => void = (path) => {
-    const involved: Element[] = [this._getElement(path, path.node)]
+    const involved: Element[] = [this._getElement(path)]
 
-    for (const param of path.node.params) {
-      involved.push(this._getElement(path, param))
+    for (const param of path.get('params')) {
+      involved.push(this._getElement(param))
     }
 
-    this.relations.push({
-      relation: RelationType.Parameters,
+    const relation: Relation = {
+      relation: RelationType.FunctionDefinition,
       involved: involved
-    })
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+  }
+
+  public ClassExpression: (path) => void = (path) => {
+    const involved: Element[] = [this._getElement(path)]
+
+    const relation: Relation = {
+      relation: RelationType.ClassDefinition,
+      involved: involved
+    }
+
+    this.relations.push(relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
   }
 
   public CallExpression: (path) => void = (path) => {
     const relation: Relation = {
       relation: RelationType.Call,
       involved: [
-        this._getElement(path, path.node.callee),
-        ...path.node.arguments.map((a) => {
-          return this._getElement(path, a)
+        this._getElement(path.get('callee')),
+        ...path.get('arguments').map((a) => {
+          return this._getElement(a)
         })
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -142,12 +164,12 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: getRelationType("assignment", "="),
       involved: [
-        this._getElement(path, path.node.id),
-        this._getElement(path, path.node.init)
+        this._getElement(path.get('id')),
+        this._getElement(path.get('init'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -170,11 +192,11 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: getRelationType("unary", path.node.operator, path.node.prefix),
       involved: [
-        this._getElement(path, path.node.argument)
+        this._getElement(path.get('argument'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -182,11 +204,11 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: getRelationType("unary", path.node.operator),
       involved: [
-        this._getElement(path, path.node.argument)
+        this._getElement(path.get('argument'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -194,41 +216,41 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: RelationType.Spread,
       involved: [
-        this._getElement(path, path.node.argument)
+        this._getElement(path.get('argument'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
   public ArrayExpression: (path) => void = (path) => {
     const relation: Relation = {
       relation: RelationType.Array,
-      involved: path.node.elements.map((e) => {
-        if (!e) {
+      involved: path.get('elements').map((e) => {
+        if (!e.node) {
           return {
             type: ElementType.NullConstant,
             value: null
           }
         }
-        return this._getElement(path, e)
+        return this._getElement(e)
       })
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
   public ObjectExpression: (path) => void = (path) => {
     const relation: Relation = {
       relation: RelationType.Object,
-      involved: path.node.properties.map((e) => {
-        return this._getElement(path, e)
+      involved: path.get('properties').map((p) => {
+        return this._getElement(p)
       })
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -236,12 +258,24 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: getRelationType("assignment", path.node.operator),
       involved: [
-        this._getElement(path, path.node.left),
-        this._getElement(path, path.node.right)
+        this._getElement(path.get('left')),
+        this._getElement(path.get('right'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public AwaitExpression: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Await,
+      involved: [
+        this._getElement(path.get('argument'))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -250,12 +284,12 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: getRelationType("binary", path.node.operator),
       involved: [
-        this._getElement(path, path.node.left),
-        this._getElement(path, path.node.right)
+        this._getElement(path.get('left')),
+        this._getElement(path.get('right'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -263,12 +297,12 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: getRelationType("binary", path.node.operator),
       involved: [
-        this._getElement(path, path.node.left),
-        this._getElement(path, path.node.right)
+        this._getElement(path.get('left')),
+        this._getElement(path.get('right'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -287,12 +321,13 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: RelationType.PropertyAccessor,
       involved: [
-        this._getElement(path, path.node.object),
-        this._getElement(path, path.node.property)
-      ]
+        this._getElement(path.get('object')),
+        this._getElement(path.get('property'))
+      ],
+      computed: path.node.computed
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
@@ -301,18 +336,154 @@ export class VariableVisitor extends Visitor {
     const relation: Relation = {
       relation: RelationType.Conditional,
       involved: [
-        this._getElement(path, path.node.test),
-        this._getElement(path, path.node.consequent),
-        this._getElement(path, path.node.alternate)
+        this._getElement(path.get('test')),
+        this._getElement(path.get('consequent')),
+        this._getElement(path.get('alternate'))
       ]
     }
 
-    this._wrapperElementIsRelation.set(`%${path.node.start}-${path.node.end}`, relation)
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
     this.relations.push(relation)
   }
 
-  _getElement(path, node) {
-    const element = super._getElement(path, node)
+  public SpreadElement: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Spread,
+      involved: [
+        this._getElement(path.get('argument'))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public NewExpression: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.New,
+      involved: [
+        this._getElement(path.get('callee')),
+        ...path.get('arguments').map((a) => this._getElement(a))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public SequenceExpression: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Sequence,
+      involved: [
+        ...path.get('expressions').map((e) => this._getElement(e))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ObjectProperty: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.ObjectProperty,
+      involved: [
+        this._getElement(path.get('key')),
+        this._getElement(path.get('value'))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ObjectMethod: (path) => void = (path) => {
+    const involved: Element[] = [this._getElement(path.get('key'))]
+
+    for (const param of path.get('params')) {
+      involved.push(this._getElement(param))
+    }
+
+    const relation: Relation = {
+      relation: RelationType.FunctionDefinition,
+      involved: involved
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public AssignmentPattern: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Assignment,
+      involved: [
+        this._getElement(path.get('left')),
+        this._getElement(path.get('right'))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ObjectPattern: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Object,
+      involved: [
+        ...path.get('properties').map((p) => this._getElement(p))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public ArrayPattern: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.Array,
+      involved: [
+        ...path.get('elements').map((e) => {
+          if (!e.node) {
+            return {
+              type: ElementType.NullConstant,
+              value: null
+            }
+          }
+          return this._getElement(e)
+        })
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public PrivateName: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.PrivateName,
+      involved: [
+        this._getElement(path.get('id'))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  public MetaProperty: (path) => void = (path) => {
+    const relation: Relation = {
+      relation: RelationType.PropertyAccessor,
+      involved: [
+        this._getElement(path.get('meta')),
+        this._getElement(path.get('property'))
+      ]
+    }
+
+    this._wrapperElementIsRelation.set(`%-${this.filePath}-${path.node.start}-${path.node.end}`, relation)
+    this.relations.push(relation)
+  }
+
+  _getElement(path) {
+    const element = super._getElement(path)
     const elementId = getElementId(element)
 
     if (!this._elementStore.has(elementId)) {

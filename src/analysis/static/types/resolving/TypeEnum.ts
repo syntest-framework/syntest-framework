@@ -23,6 +23,7 @@ export enum TypeEnum {
   STRING='string',
   BOOLEAN='boolean',
   NULL='null',
+  UNDEFINED='undefined',
   REGEX='regex',
 
   ARRAY='array',
@@ -41,6 +42,8 @@ export function elementTypeToTypingType(elementType: ElementType): TypeEnum | vo
     return TypeEnum.NUMERIC
   case ElementType.NullConstant:
     return TypeEnum.NULL
+    case ElementType.UndefinedConstant:
+      return TypeEnum.UNDEFINED
   case ElementType.RegexConstant:
     return TypeEnum.REGEX
   }
