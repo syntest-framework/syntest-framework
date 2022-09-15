@@ -10,7 +10,7 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 120,
+    search_time: 60,
     total_time: 60000,
     iteration_budget: 1000000,
 
@@ -24,7 +24,7 @@ module.exports = {
     log_to_file: ["info", "warn", "error"],
 
     incorporate_execution_information: true,
-    type_inference_mode: 'roulette', // none roulette elitist
+    type_inference_mode: 'proportional', // none proportional ranked
     random_type_probability: 0.1,
 
     draw_cfg: false,

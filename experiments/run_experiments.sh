@@ -2,7 +2,7 @@ experiment_name="new11"
 time=120
 
 incorporate_execution_information=( true false ) # false
-modes=( "none" "elitist" "roulette" ) # none elitist roulette  "elitist" "roulette"
+modes=( "none" "ranked" "proportional" ) # none ranked proportional
 benchmark_name=(
 "javascript_algorithms_matrix"
 "javascript_algorithms_sort"

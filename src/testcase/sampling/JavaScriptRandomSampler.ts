@@ -193,10 +193,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     // console.log(identifierDescription.typeProbabilityMap)
     let chosenType: string
 
-    if (Properties['type_inference_mode'] === 'roulette'
+    if (Properties['type_inference_mode'] === 'proportional'
       || Properties['type_inference_mode'] === 'none') {
       chosenType = identifierDescription.typeProbabilityMap.getRandomType()
-    } else if (Properties['type_inference_mode'] === 'elitist') {
+    } else if (Properties['type_inference_mode'] === 'ranked') {
       chosenType = identifierDescription.typeProbabilityMap.getHighestProbabilityType()
     } else {
       throw new Error("Invalid identifierDescription inference mode selected")

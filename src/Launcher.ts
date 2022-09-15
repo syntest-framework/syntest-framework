@@ -63,7 +63,6 @@ import { ControlFlowGraphGenerator } from "./analysis/static/cfg/ControlFlowGrap
 import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
 import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 import { Export } from "./analysis/static/dependency/ExportVisitor";
-import { Runner } from "mocha";
 import { TypeResolverInference } from "./analysis/static/types/resolving/logic/TypeResolverInference";
 import { TypeResolverUnknown } from "./analysis/static/types/resolving/TypeResolverUnknown";
 import { TypeResolver } from "./analysis/static/types/resolving/TypeResolver";
@@ -100,11 +99,10 @@ export class Launcher {
         type: "boolean",
         default: true,
       },
-      // TODO maybe remove the first one and add a identifierDescription inference mode called "none"
       type_inference_mode: {
-        description: "The type inference mode: [roulette, elitist, dynamic]",
+        description: "The type inference mode: [proportional, ranked, none]",
         type: "string",
-        default: "roulette",
+        default: "proportional",
       },
       random_type_probability: {
         description: "The probability we use a random type regardless of the inferred type",
@@ -455,15 +453,6 @@ export class Launcher {
       mocha.addFile(_path);
     }
 
-    // // By replacing the global log function we disable the output of the truffle test framework
-    // const levels = ['log', 'debug', 'info', 'warn', 'error'];
-    // const originalFunctions = levels.map(level => console[level]);
-    // levels.forEach((level) => {
-    //   // eslint-disable-next-line @typescript-eslint/no-empty-function
-    //   console[level] = () => {}
-    // })
-
-
     // Finally, run mocha.
     process.on("unhandledRejection", reason => {
       throw reason;
@@ -475,15 +464,8 @@ export class Launcher {
       })
     })
 
-    // levels.forEach((level, index) => {
-    //   console[level] = originalFunctions[index]
-    // })
-
     getUserInterface().report("header", ["SEARCH RESULTS"]);
     const instrumentationData = global.__coverage__
-
-    // Run Istanbul
-    // TODO
 
     getUserInterface().report("report-coverage", ['Coverage report', { branch: 'Branch', statement: 'Statement', function: 'Function' }, true])
 
