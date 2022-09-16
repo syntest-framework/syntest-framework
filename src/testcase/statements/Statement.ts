@@ -59,7 +59,7 @@ export abstract class Statement {
     this._identifierDescription = identifierDescription;
     this._type = type
     this._uniqueId = uniqueId;
-    this._varName = identifierDescription.name + prng.uniqueId()
+    this._varName = identifierDescription.name + '_' + type + '_' + prng.uniqueId(4)
     this._varName = '_' + this.varName
   }
 
