@@ -89,34 +89,35 @@ export class MethodCall extends ActionStatement {
     return this._functionName;
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     throw new Error('Cannot call decode on method calls!')
   }
 
-  decodeWithObject(addLogs: boolean, objectVariable: string): Decoding[] {
+  decodeWithObject(id: string, options: { addLogs: boolean, exception: boolean }, objectVariable: string): Decoding[] {
     const args = this.args
       .map((a) => a.varName)
       .join(', ')
 
     const argStatements: Decoding[] = this.args
-      .flatMap((a) => a.decode(addLogs))
+      .flatMap((a) => a.decode(id, options))
 
     let decoded = `const ${this.varName} = await ${objectVariable}.${this.functionName}(${args})`
 
-    if (addLogs) {
+    if (options.addLogs) {
       const logDir = path.join(
         Properties.temp_log_directory,
-        // testCase.id,
+        id,
         this.varName
       )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
     }
 
     return [
       ...argStatements,
       {
         decoded: decoded,
-        reference: this
+        reference: this,
+        objectVariable: objectVariable
       }
     ]
   }

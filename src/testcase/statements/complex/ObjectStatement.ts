@@ -103,23 +103,23 @@ export class ObjectStatement extends Statement {
     return new ObjectStatement(this.identifierDescription, this.type, this.id, this._keys.map(a => a.copy()), this._values.map(a => a.copy()));
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     const children = this._values
       .map((a, i) => `\t"${this._keys[i].value}": ${a.varName}`)
       .join(',\n\t')
 
     const childStatements: Decoding[] = this._values
-      .flatMap((a) => a.decode(addLogs))
+      .flatMap((a) => a.decode(id, options))
 
     let decoded = `const ${this.varName} = {\n${children}\n\t}`
 
-    if (addLogs) {
+    if (options.addLogs) {
       const logDir = path.join(
         Properties.temp_log_directory,
-        // testCase.id,
+        id,
         this.varName
       )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
     }
 
     return [

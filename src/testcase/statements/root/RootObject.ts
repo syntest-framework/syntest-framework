@@ -110,19 +110,19 @@ export class RootObject extends RootStatement {
   }
 
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     const childStatements: Decoding[] = this.children
-      .flatMap((a: MethodCall) => a.decodeWithObject(addLogs, this.varName))
+      .flatMap((a: MethodCall) => a.decodeWithObject(id, options, this.varName))
 
     let decoded = `const ${this.varName} = ${this.type}`
 
-    if (addLogs) {
+    if (options.addLogs) {
       const logDir = path.join(
         Properties.temp_log_directory,
-        // testCase.id,
+        id,
         this.varName
       )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
     }
 
     return [

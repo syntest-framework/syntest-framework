@@ -54,7 +54,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
     throw new Error("Unimplemented function!");
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     return [
       {
         decoded: `const ${this.varName} = ${this.value};`,

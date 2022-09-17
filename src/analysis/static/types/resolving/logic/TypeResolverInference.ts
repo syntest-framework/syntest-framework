@@ -241,7 +241,7 @@ export class TypeResolverInference extends TypeResolver {
     this.wrapperElementIsRelation = wrapperElementIsRelation
 
     this.resolvePrimitiveElements(elements)
-    this.resolveRelations(elements, relations, wrapperElementIsRelation) || somethingSolved
+    this.resolveRelations(elements, relations, wrapperElementIsRelation)
     this.resolveComplexElements(elements, relations, wrapperElementIsRelation, objects)
   }
 

@@ -93,12 +93,13 @@ export abstract class Statement {
   /**
    * Decodes the statement
    */
-  abstract decode(addLogs: boolean): Decoding[];
+  abstract decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[];
 
   abstract getFlatTypes(): string[]
 }
 
 export interface Decoding {
   decoded: string,
-  reference: Statement
+  reference: Statement,
+  objectVariable?: string
 }

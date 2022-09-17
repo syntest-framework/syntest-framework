@@ -317,11 +317,7 @@ export class JavaScriptTargetPool extends TargetPool {
   async prepareAndInstrument(): Promise<void> {
     const absoluteRootPath = path.resolve(Properties.target_root_directory)
 
-    const destinationPath = path.normalize(absoluteRootPath)
-      .replace(
-        process.cwd(),
-        Properties.temp_instrumented_directory
-      );
+    const destinationPath = path.resolve(Properties.temp_instrumented_directory, path.basename(Properties.target_root_directory))
 
     // copy everything
     await copySync(absoluteRootPath, destinationPath)
@@ -341,9 +337,10 @@ export class JavaScriptTargetPool extends TargetPool {
       const _path = path
         .normalize(targetPath)
         .replace(
-          process.cwd(),
-          Properties.temp_instrumented_directory
-        );
+          absoluteRootPath,
+          destinationPath
+        )
+
       await outputFileSync(_path, instrumentedSource);
     }
   }

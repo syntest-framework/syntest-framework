@@ -2,7 +2,7 @@ import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { Statement } from "../statements/Statement";
 
 
-export default class ErrorProcessor {
+export default class ExecutionInformationIntegrator {
   processSuccess(testCase: JavaScriptTestCase, testResult: any) {
 
     // const queue: Statement[] = [testCase.root]

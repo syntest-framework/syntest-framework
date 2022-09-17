@@ -12,17 +12,17 @@ import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
 import * as _ from 'lodash'
 import { SilentMochaReporter } from "./SilentMochaReporter";
-import ErrorProcessor from "./ErrorProcessor";
+import ExecutionInformationIntegrator from "./ExecutionInformationIntegrator";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   protected suiteBuilder: JavaScriptSuiteBuilder;
-  protected errorProcessor: ErrorProcessor
+  protected errorProcessor: ExecutionInformationIntegrator
 
   constructor(suiteBuilder: JavaScriptSuiteBuilder) {
     this.suiteBuilder = suiteBuilder
-    this.errorProcessor = new ErrorProcessor()
+    this.errorProcessor = new ExecutionInformationIntegrator()
 
     process.on("uncaughtException", reason => {
       throw reason;
