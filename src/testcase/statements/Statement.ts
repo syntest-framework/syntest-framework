@@ -59,7 +59,7 @@ export abstract class Statement {
     this._identifierDescription = identifierDescription;
     this._type = type
     this._uniqueId = uniqueId;
-    this._varName = identifierDescription.name + prng.uniqueId()
+    this._varName = identifierDescription.name + '_' + type + '_' + prng.uniqueId(4)
     this._varName = '_' + this.varName
   }
 
@@ -93,12 +93,13 @@ export abstract class Statement {
   /**
    * Decodes the statement
    */
-  abstract decode(addLogs: boolean): Decoding[];
+  abstract decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[];
 
   abstract getFlatTypes(): string[]
 }
 
 export interface Decoding {
   decoded: string,
-  reference: Statement
+  reference: Statement,
+  objectVariable?: string
 }

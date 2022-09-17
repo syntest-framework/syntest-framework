@@ -47,8 +47,8 @@ export class ArrowFunctionStatement extends Statement {
     return new ArrowFunctionStatement(this.identifierDescription, this.type, this.id, this._returnValue);
   }
 
-  decode(addLogs: boolean): Decoding[] {
-    const returnStatement: Decoding[] = this._returnValue.decode(addLogs)
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
+    const returnStatement: Decoding[] = this._returnValue.decode(id, options)
     return [
       ...returnStatement,
       {

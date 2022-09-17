@@ -46,17 +46,6 @@ $ cd syntest-javascript; npm install
 $ cd syntest-javascript; npm run build
 ```
 
-## Building the docker container
-Building
-```bash
-docker build --tag="syntest/javascript:new" .
-```
-
-Running
-```bash
-docker run --env time_per_target=5 --env use_type_inference=1 --env type_inference_mode="roulette" --env target_root_directory="./benchmark/top10npm/axios" --env include="./benchmark/top10npm/axios/lib/**/*.js" syntest/javascript:new
-```
-
 ## Local development
 
 Currently you need to be on the `remove-parsing-from-framework` branch of the syntest-framework.

@@ -16,12 +16,11 @@
  * limitations under the License.
  */
 
-import { Archive, getUserInterface, Properties } from "@syntest/framework";
+import { Archive, getUserInterface, Properties, TargetPool } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
-import { Runner } from "mocha";
 import { SilentMochaReporter } from "../testcase/execution/SilentMochaReporter";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
@@ -60,88 +59,150 @@ export class JavaScriptSuiteBuilder {
     }
   }
 
-  async createSuite(archive: Archive<JavaScriptTestCase>): Promise<string[]> {
-    const reducedArchive = this.reduceArchive(archive);
 
+
+  async createSuite(archive: Map<string, JavaScriptTestCase[]>, sourceDir: string, testDir: string, addLogs: boolean, compact: boolean): Promise<string[]> {
     const paths: string[] = []
     // write the test cases with logs to know what to assert
-    for (const key of reducedArchive.keys()) {
-      for (const testCase of reducedArchive.get(key)!) {
+    if (!compact) {
+      for (const key of archive.keys()) {
+        for (const testCase of archive.get(key)!) {
+          const testPath = path.join(
+            testDir,
+            `test${key}${testCase.id}.spec.ts`
+          );
+          paths.push(testPath)
+          await writeFileSync(
+            testPath,
+            this.decoder.decode(
+              testCase,
+              "",
+              addLogs,
+              sourceDir
+            )
+          )
+        }
+      }
+    } else {
+      for (const key of archive.keys()) {
         const testPath = path.join(
-          Properties.temp_test_directory,
-          `test${key}${testCase.id}.spec.ts`
+          testDir,
+          `test-${key}.spec.ts`
         );
         paths.push(testPath)
-        await this.writeTestCase(testPath, testCase, "", true);
+        await writeFileSync(
+          testPath,
+          this.decoder.decode(
+            archive.get(key),
+            `${key}`,
+            addLogs,
+            sourceDir
+          )
+        );
       }
     }
 
-    let argv = {
-      // package: require('../../../package.json'),
-      // _: [],
-      require: [ 'ts-node/register' ], // , '@babel/register'
-      // config: false,
-      // diff: true,
-      // extension: [ 'js', 'cjs', 'mjs', 'ts' ],
-      // reporter: 'spec',
-      // slow: 75,
-      // timeout: 2000,
-      // ui: 'bdd',
-      // 'watch-ignore': [ 'node_modules', '.git' ],
-      // watchIgnore: [ 'node_modules', '.git' ]
+    return paths
+  }
+  async runSuite(paths: string[], report: boolean, targetPool: TargetPool) {
+    const argv = {
       spec: paths,
-      reporter: SilentMochaReporter
+      reporter: report ? null : SilentMochaReporter
+    }
+    const mocha = new Mocha(argv)
+
+    require("regenerator-runtime/runtime");
+    require('@babel/register')({
+      presets: [
+        "@babel/preset-env"
+      ]
+    })
+
+    for (const _path of paths) {
+      delete originalrequire.cache[_path];
+      mocha.addFile(_path);
     }
 
-    for (const testPath of paths) {
-      const mocha = new Mocha(argv)
+    // Finally, run mocha.
+    process.on("unhandledRejection", reason => {
+      throw reason;
+    });
 
-      delete originalrequire.cache[testPath];
-      mocha.addFile(testPath);
-
-
-      // By replacing the global log function we disable the output of the truffle test framework
-      const old = console.log;
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      console.log = () => {};
-
-      let runner: Runner = null
-
-      // Finally, run mocha.
-      process.on("unhandledRejection", reason => {
-        throw reason;
-      });
-
-      await new Promise((resolve) => {
-        runner = mocha.run((failures) => {
-          resolve(failures)
-        })
+    await new Promise((resolve) => {
+      mocha.run((failures: number) => {
+        resolve(failures)
       })
-      console.log = old;
-    }
+    })
 
+    if (report) {
+      getUserInterface().report("header", ["SEARCH RESULTS"]);
+      const instrumentationData = global.__coverage__
 
+      getUserInterface().report("report-coverage", ['Coverage report', { branch: 'Branch', statement: 'Statement', function: 'Function' }, true])
 
-    // Create final tests files with assertions
-    await this.clearDirectory(Properties.temp_test_directory);
+      const overall = {
+        branch: 0,
+        statement: 0,
+        function: 0
+      }
+      let totalBranches = 0
+      let totalStatements = 0
+      let totalFunctions = 0
+      for (const file of Object.keys(instrumentationData)) {
+        if (!targetPool.targets.find((t) => t.canonicalPath === file)) {
+          continue
+        }
 
-    const finalPaths = []
-    for (const key of reducedArchive.keys()) {
-      await this.gatherAssertions(reducedArchive.get(key));
-      const testPath = path.join(
-        Properties.final_suite_directory,
-        `test-${key}.spec.ts`
-      );
-      finalPaths.push(testPath)
-      await writeFileSync(
-        testPath,
-        this.decoder.decode(reducedArchive.get(key), `${key}`, false)
-      );
+        const data = instrumentationData[file]
+
+        const summary = {
+          branch: 0,
+          statement: 0,
+          function: 0
+        }
+
+        for (const statementKey of Object.keys(data.s)) {
+          summary['statement'] += data.s[statementKey] ? 1 : 0
+          overall['statement'] += data.s[statementKey] ? 1 : 0
+        }
+
+        for (const branchKey of Object.keys(data.b)) {
+          summary['branch'] += data.b[branchKey][0] ? 1 : 0
+          overall['branch'] += data.b[branchKey][0] ? 1 : 0
+          summary['branch'] += data.b[branchKey][1] ? 1 : 0
+          overall['branch'] += data.b[branchKey][1] ? 1 : 0
+        }
+
+        for (const functionKey of Object.keys(data.f)) {
+          summary['function'] += data.f[functionKey] ? 1 : 0
+          overall['function'] += data.f[functionKey] ? 1 : 0
+        }
+
+        totalStatements += Object.keys(data.s).length
+        totalBranches += (Object.keys(data.b).length * 2)
+        totalFunctions += Object.keys(data.f).length
+
+        getUserInterface().report("report-coverage", [file, {
+          'statement': summary['statement'] + ' / ' + Object.keys(data.s).length,
+          'branch': summary['branch'] + ' / ' + (Object.keys(data.b).length * 2),
+          'function': summary['function'] + ' / ' + Object.keys(data.f).length
+        }, false])
+      }
+
+      overall['statement'] /= totalStatements
+      overall['branch'] /= totalBranches
+      overall['function'] /= totalFunctions
+
+      getUserInterface().report("report-coverage", ['Total', {
+        'statement': (overall['statement'] * 100) + ' %',
+        'branch': (overall['branch'] * 100) + ' %',
+        'function': (overall['function'] * 100) + ' %'
+      }, true])
     }
 
     this.resetInstrumentationData();
 
-    return finalPaths
+    // mocha.dispose()
   }
 
   async gatherAssertions(testCases: JavaScriptTestCase[]): Promise<void> {

@@ -1,7 +1,0 @@
-.DS_Store
-*.log*
-doc/*.html
-node_modules
-*.code-workspace
-*.sublime-project
-*.sublime-workspace

@@ -10,7 +10,7 @@ module.exports = {
     explore_illegal_values: false,
 
     algorithm: "DynaMOSA",
-    search_time: 120,
+    search_time: 60,
     total_time: 60000,
     iteration_budget: 1000000,
 
@@ -24,90 +24,87 @@ module.exports = {
     log_to_file: ["info", "warn", "error"],
 
     incorporate_execution_information: true,
-    type_inference_mode: 'roulette', // none roulette elitist
+    type_inference_mode: 'proportional', // none proportional ranked
     random_type_probability: 0.1,
 
     draw_cfg: false,
 
-    // target_root_directory: "./benchmark/custom/simple",
 
-    // target_root_directory: "./benchmark/top10npm/axios",
-    target_root_directory: "./benchmark/top10npm/commanderjs",
-    // target_root_directory: "./benchmark/top10npm/express",
-    // target_root_directory: "./benchmark/top10npm/lodash",
-    // target_root_directory: "./benchmark/top10npm/moment/src",
+    // target_root_directory: "../syntest-javascript-benchmark/axios",
+    target_root_directory: "../syntest-javascript-benchmark/commanderjs",
+    // target_root_directory: "../syntest-javascript-benchmark/express",
+    // target_root_directory: "../syntest-javascript-benchmark/lodash",
+    // target_root_directory: "../syntest-javascript-benchmark/moment/src",
 
-    // target_root_directory: "./benchmark/large_projects/javascript-algorithms",
+    // target_root_directory: "../syntest-javascript-benchmark/javascript-algorithms",
 
-    // target_root_directory: "./benchmark/top10npm/chalk",
-    // target_root_directory: "./benchmark/large_projects/jquery",
-    // target_root_directory: "./benchmark/large_projects/npm_cli",
+    // target_root_directory: "../syntest-javascript-benchmark/chalk",
+    // target_root_directory: "../syntest-javascript-benchmark/jquery",
+    // target_root_directory: "../syntest-javascript-benchmark/npm_cli",
 
     include: [
-        // "./benchmark/top10npm/axios/lib/core/buildFullPath.js",
-        // "./benchmark/top10npm/axios/lib/core/Axios.js",
+        // "../syntest-javascript-benchmark/axios/lib/core/buildFullPath.js",
+        // "../syntest-javascript-benchmark/axios/lib/core/Axios.js",
 
-        // "./benchmark/top10npm/commanderjs/lib/help.js",
+        // "../syntest-javascript-benchmark/commanderjs/lib/help.js",
 
-        // "./benchmark/top10npm/lodash/.internal/equalArrays.js",
-        // "./benchmark/top10npm/lodash/hasPath.js",
-        // "./benchmark/top10npm/lodash/random.js",
-        // "./benchmark/top10npm/lodash/result.js",
-        // "./benchmark/top10npm/lodash/slice.js",
-        // "./benchmark/top10npm/lodash/split.js",
-        // "./benchmark/top10npm/lodash/toNumber.js",
-        // "./benchmark/top10npm/lodash/transform.js",
-        // "./benchmark/top10npm/lodash/truncate.js",
-        // "./benchmark/top10npm/lodash/unzip.js",
-
-
-        // "./benchmark/top10npm/express/lib/view.js",
-
-        // "./benchmark/top10npm/axios/lib/core/*.js",
-        "./benchmark/top10npm/commanderjs/lib/**/*.js",
-
-        // "./benchmark/top10npm/express/lib/**/*.js",
-        // "./benchmark/top10npm/lodash/**/*.js",
-        // "./benchmark/top10npm/moment/src/lib/create/**/*.js",
-        // "./benchmark/top10npm/moment/src/lib/moment/**/*.js",
-
-        // "./benchmark/large_projects/javascript-algorithms/src/data-structures/tree/red-black-tree/*.js",
-        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/math/matrix/*.js",
-        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sorting/counting-sort/*.js",
-        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/**/*.js",
-        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/sets/knapsack-problem/*.js"
-
-        // "./benchmark/large_projects/javascript-algorithms/src/algorithms/graph/detect-cycle/detectUndirectedCycleUsingDisjointSet.js",
+        // "../syntest-javascript-benchmark/lodash/.internal/equalArrays.js",
+        // "../syntest-javascript-benchmark/lodash/hasPath.js",
+        // "../syntest-javascript-benchmark/lodash/random.js",
+        // "../syntest-javascript-benchmark/lodash/result.js",
+        // "../syntest-javascript-benchmark/lodash/slice.js",
+        // "../syntest-javascript-benchmark/lodash/split.js",
+        // "../syntest-javascript-benchmark/lodash/toNumber.js",
+        // "../syntest-javascript-benchmark/lodash/transform.js",
+        // "../syntest-javascript-benchmark/lodash/truncate.js",
+        // "../syntest-javascript-benchmark/lodash/unzip.js",
 
 
-        // "./benchmark/top10npm/chalk/source/**/*.js",
-        // "./benchmark/large_projects/jquery/src/core/**/*.js",
-        // "./benchmark/large_projects/npm_cli/lib/auth/*.js",
+        // "../syntest-javascript-benchmark/express/lib/view.js",
 
-        // "./benchmark/custom/simple/tests.js"
+        // "../syntest-javascript-benchmark/axios/lib/core/*.js",
+        "../syntest-javascript-benchmark/commanderjs/lib/**/*.js",
+
+        // "../syntest-javascript-benchmark/express/lib/**/*.js",
+        // "../syntest-javascript-benchmark/lodash/**/*.js",
+        // "../syntest-javascript-benchmark/moment/src/lib/create/**/*.js",
+        // "../syntest-javascript-benchmark/moment/src/lib/moment/**/*.js",
+
+        // "../syntest-javascript-benchmark/javascript-algorithms/src/data-structures/tree/red-black-tree/*.js",
+        // "../syntest-javascript-benchmark/javascript-algorithms/src/algorithms/math/matrix/*.js",
+        // "../syntest-javascript-benchmark/javascript-algorithms/src/algorithms/sorting/counting-sort/*.js",
+        // "../syntest-javascript-benchmark/javascript-algorithms/src/algorithms/graph/**/*.js",
+        // "../syntest-javascript-benchmark/javascript-algorithms/src/algorithms/sets/knapsack-problem/*.js"
+
+        // "../syntest-javascript-benchmark/javascript-algorithms/src/algorithms/graph/detect-cycle/detectUndirectedCycleUsingDisjointSet.js",
+
+
+        // "../syntest-javascript-benchmark/chalk/source/**/*.js",
+        // "../syntest-javascript-benchmark/jquery/src/core/**/*.js",
+        // "../syntest-javascript-benchmark/npm_cli/lib/auth/*.js",
 
 
     ],
     exclude: [
-        './benchmark/top10npm/lodash/test/.internal/*.js',
-        './benchmark/top10npm/lodash/test/**/*.js',
+        '../syntest-javascript-benchmark/lodash/test/.internal/*.js',
+        '../syntest-javascript-benchmark/lodash/test/**/*.js',
 
-        "./benchmark/top10npm/commanderjs/lib/argument.js",
-        "./benchmark/top10npm/commanderjs/lib/command.js",
-        "./benchmark/top10npm/commanderjs/lib/error.js",
+        "../syntest-javascript-benchmark/commanderjs/lib/argument.js",
+        "../syntest-javascript-benchmark/commanderjs/lib/command.js",
+        "../syntest-javascript-benchmark/commanderjs/lib/error.js",
 
-        "./benchmark/top10npm/express/lib/router/index.js",
-        "./benchmark/top10npm/express/lib/express.js",
+        "../syntest-javascript-benchmark/express/lib/router/index.js",
+        "../syntest-javascript-benchmark/express/lib/express.js",
 
-        "./benchmark/top10npm/moment/src/lib/create/local.js",
-        "./benchmark/top10npm/moment/src/lib/create/utc.js",
+        "../syntest-javascript-benchmark/moment/src/lib/create/local.js",
+        "../syntest-javascript-benchmark/moment/src/lib/create/utc.js",
 
-        "./benchmark/top10npm/moment/src/lib/moment/clone.js",
-        "./benchmark/top10npm/moment/src/lib/moment/creation-data.js",
-        "./benchmark/top10npm/moment/src/lib/moment/valid.js",
-        "./benchmark/top10npm/moment/src/lib/moment/moment.js"
+        "../syntest-javascript-benchmark/moment/src/lib/moment/clone.js",
+        "../syntest-javascript-benchmark/moment/src/lib/moment/creation-data.js",
+        "../syntest-javascript-benchmark/moment/src/lib/moment/valid.js",
+        "../syntest-javascript-benchmark/moment/src/lib/moment/moment.js"
 
-        // "./benchmark/top10npm/chalk/source/vendor/supports-color/*.*",
+        // "../syntest-javascript-benchmark/chalk/source/vendor/supports-color/*.*",
 
     ]
 }

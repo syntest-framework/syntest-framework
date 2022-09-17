@@ -89,23 +89,23 @@ export class FunctionCall extends RootStatement {
     return this._functionName;
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     const args = this.args
       .map((a) => a.varName)
       .join(', ')
 
     const argStatements: Decoding[] = this.args
-      .flatMap((a) => a.decode(addLogs))
+      .flatMap((a) => a.decode(id, options))
 
     let decoded = `const ${this.varName} = await ${this.functionName}(${args})`
 
-    if (addLogs) {
+    if (options.addLogs) {
       const logDir = path.join(
         Properties.temp_log_directory,
-        // testCase.id,
+        id,
         this.varName
       )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
     }
 
     return [

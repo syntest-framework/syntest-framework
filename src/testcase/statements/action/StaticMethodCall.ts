@@ -86,7 +86,7 @@ export class StaticMethodCall extends ActionStatement {
     return this._functionName;
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     // TODO
     return [
       {

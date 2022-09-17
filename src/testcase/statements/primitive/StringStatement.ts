@@ -190,7 +190,7 @@ export class StringStatement extends PrimitiveStatement<string> {
     );
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     return [
       {
         decoded: `const ${this.varName} = "${this.value}";`,

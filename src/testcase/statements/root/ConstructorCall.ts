@@ -143,26 +143,26 @@ export class ConstructorCall extends RootStatement {
     return this._constructorName;
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     const args = this.args
       .map((a) => a.varName)
       .join(", ");
 
     const argStatements: Decoding[] = this.args
-      .flatMap((a) => a.decode(addLogs))
+      .flatMap((a) => a.decode(id, options))
 
     const childStatements: Decoding[] = this.children
-      .flatMap((a: MethodCall) => a.decodeWithObject(addLogs, this.varName))
+      .flatMap((a: MethodCall) => a.decodeWithObject(id, options, this.varName))
 
     let decoded = `const ${this.varName} = new ${this.constructorName}(${args})`
 
-    if (addLogs) {
+    if (options.addLogs) {
       const logDir = path.join(
         Properties.temp_log_directory,
-        // testCase.id,
+        id,
         this.varName
       )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
     }
 
     return [

@@ -85,23 +85,23 @@ export class ArrayStatement extends Statement {
     return new ArrayStatement(this.identifierDescription, this.type, this.id, this._children.map(a => a.copy()));
   }
 
-  decode(addLogs: boolean): Decoding[] {
+  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
     const children = this._children
       .map((a) => a.varName)
       .join(', ')
 
     const childStatements: Decoding[] = this._children
-      .flatMap((a) => a.decode(addLogs))
+      .flatMap((a) => a.decode(id, options))
 
     let decoded = `const ${this.varName} = [${children}]`
 
-    if (addLogs) {
+    if (options.addLogs) {
       const logDir = path.join(
         Properties.temp_log_directory,
-        // testCase.id,
+        id,
         this.varName
       )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName})`
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
     }
 
     return [

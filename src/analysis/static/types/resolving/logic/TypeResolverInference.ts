@@ -240,19 +240,8 @@ export class TypeResolverInference extends TypeResolver {
   resolveTypes(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>, objects: ComplexObject[]) {
     this.wrapperElementIsRelation = wrapperElementIsRelation
 
-
-    // TODO remove this
-    let rounds = 0
-    let somethingSolved = true
     this.resolvePrimitiveElements(elements)
-    while (somethingSolved && rounds < 100) {
-      somethingSolved = false
-      rounds += 1 // TODO remove this
-
-      somethingSolved = this.resolveRelations(elements, relations, wrapperElementIsRelation) || somethingSolved
-    }
-
-    // TODO this should be in the while loop
+    this.resolveRelations(elements, relations, wrapperElementIsRelation)
     this.resolveComplexElements(elements, relations, wrapperElementIsRelation, objects)
   }
 
@@ -538,6 +527,7 @@ export class TypeResolverInference extends TypeResolver {
       // binary
       case RelationType.Addition:
         // TODO can be more
+        // TODO should be based on what the involved values are
         this.setRelationType(relation, TypeEnum.NUMERIC, 1)
         this.setRelationType(relation, TypeEnum.STRING, 1)
         return true
