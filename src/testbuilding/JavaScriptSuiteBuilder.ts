@@ -114,7 +114,7 @@ export class JavaScriptSuiteBuilder {
     require("regenerator-runtime/runtime");
     require('@babel/register')({
       presets: [
-        "@babel/preset-env"
+        require.resolve("@babel/preset-env")
       ]
     })
 
