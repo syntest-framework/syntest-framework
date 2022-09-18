@@ -1,17 +1,12 @@
 import * as chai from "chai";
 import {
   BranchObjectiveFunction,
-  guessCWD,
-  loadConfig,
-  processConfig,
-  setupLogger,
-  setupOptions,
   CommandLineInterface,
-  Properties,
   setUserInterface,
 } from "../../../src";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { tournamentSelection } from "../../../src/search/operators/selection/TournamentSelection";
+import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -23,19 +18,8 @@ global.Math = mockMath;
  * @author Annibale Panichella
  */
 describe("Tournament selection", function () {
-  before(async () => {
-    await guessCWD(null);
-    await setupOptions("", "");
-    await loadConfig();
-    await processConfig({}, "");
-    await setupLogger();
-
-    setUserInterface(
-      new CommandLineInterface(
-        Properties.console_log_level === "silent",
-        Properties.console_log_level === "verbose"
-      )
-    );
+  before(() => {
+    setUserInterface(createStubInstance(CommandLineInterface));
   });
 
   it("Small Tournament size", () => {
