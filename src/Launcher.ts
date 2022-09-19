@@ -435,7 +435,7 @@ export class Launcher {
 
     const reducedArchive = suiteBuilder.reduceArchive(archive);
 
-    let paths = await suiteBuilder.createSuite(reducedArchive, '../instrumented/', Properties.temp_test_directory, true, false);
+    let paths = await suiteBuilder.createSuite(reducedArchive, '../instrumented', Properties.temp_test_directory, true, false);
     await suiteBuilder.runSuite(paths, false, targetPool)
 
     // reset states
@@ -446,7 +446,7 @@ export class Launcher {
     for (const key of reducedArchive.keys()) {
       await suiteBuilder.gatherAssertions(reducedArchive.get(key));
     }
-    paths = await suiteBuilder.createSuite(reducedArchive, '../instrumented/', Properties.temp_test_directory, false, true);
+    paths = await suiteBuilder.createSuite(reducedArchive, '../instrumented', Properties.temp_test_directory, false, true);
     await suiteBuilder.runSuite(paths, true, targetPool)
 
     const originalSourceDir = path

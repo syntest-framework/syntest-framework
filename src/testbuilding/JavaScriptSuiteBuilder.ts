@@ -16,12 +16,15 @@
  * limitations under the License.
  */
 
-import { Archive, getUserInterface, Properties, TargetPool } from "@syntest/framework";
+import { Archive, ExecutionResult, getUserInterface, Properties, TargetPool } from "@syntest/framework";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
+import * as _ from 'lodash'
 import { SilentMochaReporter } from "../testcase/execution/SilentMochaReporter";
+
+import { Runner } from "mocha";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
@@ -30,6 +33,13 @@ export class JavaScriptSuiteBuilder {
 
   constructor(decoder: JavaScriptDecoder) {
     this.decoder = decoder
+
+    process.on("uncaughtException", reason => {
+      throw reason;
+    });
+    process.on("unhandledRejection", reason => {
+      throw reason;
+    });
   }
 
 
@@ -58,8 +68,6 @@ export class JavaScriptSuiteBuilder {
       await unlinkSync(path.resolve(dirPath, file));
     }
   }
-
-
 
   async createSuite(archive: Map<string, JavaScriptTestCase[]>, sourceDir: string, testDir: string, addLogs: boolean, compact: boolean): Promise<string[]> {
     const paths: string[] = []
@@ -104,7 +112,8 @@ export class JavaScriptSuiteBuilder {
 
     return paths
   }
-  async runSuite(paths: string[], report: boolean, targetPool: TargetPool) {
+
+  async runSuite(paths: string[], report: boolean, targetPool: TargetPool): Promise<ExecutionResult> {
     const argv = {
       spec: paths,
       reporter: report ? null : SilentMochaReporter
@@ -123,20 +132,21 @@ export class JavaScriptSuiteBuilder {
       mocha.addFile(_path);
     }
 
-    // Finally, run mocha.
-    process.on("unhandledRejection", reason => {
-      throw reason;
-    });
+    let runner: Runner = null
 
     await new Promise((resolve) => {
-      mocha.run((failures: number) => {
-        resolve(failures)
-      })
+      runner = mocha.run((failures) => resolve(failures))
     })
 
+    const stats = runner.stats
+
     if (report) {
+      if (stats.failures > 0) {
+        getUserInterface().error("Test case has failed!");
+      }
+
       getUserInterface().report("header", ["SEARCH RESULTS"]);
-      const instrumentationData = global.__coverage__
+      const instrumentationData = _.cloneDeep(global.__coverage__)
 
       getUserInterface().report("report-coverage", ['Coverage report', { branch: 'Branch', statement: 'Statement', function: 'Function' }, true])
 
@@ -202,7 +212,8 @@ export class JavaScriptSuiteBuilder {
 
     this.resetInstrumentationData();
 
-    // mocha.dispose()
+    // TODO Not sure why this not works (maybe the files should be deleted first?
+    // await mocha.dispose()
   }
 
   async gatherAssertions(testCases: JavaScriptTestCase[]): Promise<void> {

@@ -8,11 +8,12 @@ import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import * as path from "path";
 import { JavaScriptExecutionResult, JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
-import { Runner } from "mocha";
 import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
 import * as _ from 'lodash'
 import { SilentMochaReporter } from "./SilentMochaReporter";
 import ExecutionInformationIntegrator from "./ExecutionInformationIntegrator";
+
+import { Runner } from "mocha";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
@@ -73,7 +74,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     // If one of the executions failed, log it
     if (stats.failures > 0) {
       this.errorProcessor.processError(testCase, test)
-      getUserInterface().error("Test case has failed!");
     } else {
       this.errorProcessor.processSuccess(testCase, test)
     }
