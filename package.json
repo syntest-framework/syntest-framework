@@ -42,7 +42,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "npm run build",
-    "run": "node --inspect ./dist/bin.js",
+    "run": "node ./dist/bin.js",
     "run-ts": "ts-node ./src/bin.ts",
     "test": "mocha",
     "test:coverage": "nyc mocha",

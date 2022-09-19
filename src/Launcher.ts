@@ -337,8 +337,9 @@ export class Launcher {
     const exports = targetPool.getExports(targetPath)
 
     const decoder = new JavaScriptDecoder(targetPool, dependencyMap, exports)
-    const suiteBuilder = new JavaScriptSuiteBuilder(decoder)
-    const runner = new JavaScriptRunner(suiteBuilder)
+    const runner = new JavaScriptRunner(decoder)
+
+    const suiteBuilder = new JavaScriptSuiteBuilder(decoder, runner)
 
     // TODO constant pool
 
@@ -429,9 +430,11 @@ export class Launcher {
       dependencies,
       exports,
     );
-    // TODO fix hardcoded paths
+    const runner = new JavaScriptRunner(decoder)
 
-    const suiteBuilder = new JavaScriptSuiteBuilder(decoder);
+    const suiteBuilder = new JavaScriptSuiteBuilder(decoder, runner)
+
+    // TODO fix hardcoded paths
 
     const reducedArchive = suiteBuilder.reduceArchive(archive);
 
@@ -440,7 +443,6 @@ export class Launcher {
 
     // reset states
     await suiteBuilder.clearDirectory(Properties.temp_test_directory);
-    await suiteBuilder.resetInstrumentationData()
 
     // run with assertions and report results
     for (const key of reducedArchive.keys()) {

@@ -22,38 +22,17 @@ import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from 
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
 import * as _ from 'lodash'
-import { SilentMochaReporter } from "../testcase/execution/SilentMochaReporter";
 
 import { Runner } from "mocha";
-const Mocha = require('mocha')
-const originalrequire = require("original-require");
+import { JavaScriptRunner } from "../testcase/execution/JavaScriptRunner";
 
 export class JavaScriptSuiteBuilder {
   private decoder: JavaScriptDecoder;
+  private runner: JavaScriptRunner
 
-  constructor(decoder: JavaScriptDecoder) {
+  constructor(decoder: JavaScriptDecoder, runner: JavaScriptRunner) {
     this.decoder = decoder
-
-    process.on("uncaughtException", reason => {
-      throw reason;
-    });
-    process.on("unhandledRejection", reason => {
-      throw reason;
-    });
-  }
-
-
-  /**
-   * Deletes a certain file.
-   *
-   * @param filepath  the filepath of the file to delete
-   */
-  async deleteTestCase(filepath: string) {
-    try {
-      await unlinkSync(filepath);
-    } catch (error) {
-      getUserInterface().debug(error);
-    }
+    this.runner = runner
   }
 
   /**
@@ -77,7 +56,7 @@ export class JavaScriptSuiteBuilder {
         for (const testCase of archive.get(key)!) {
           const testPath = path.join(
             testDir,
-            `test${key}${testCase.id}.spec.ts`
+            `test${key}${testCase.id}.spec.js`
           );
           paths.push(testPath)
           await writeFileSync(
@@ -95,7 +74,7 @@ export class JavaScriptSuiteBuilder {
       for (const key of archive.keys()) {
         const testPath = path.join(
           testDir,
-          `test-${key}.spec.ts`
+          `test-${key}.spec.js`
         );
         paths.push(testPath)
         await writeFileSync(
@@ -113,30 +92,8 @@ export class JavaScriptSuiteBuilder {
     return paths
   }
 
-  async runSuite(paths: string[], report: boolean, targetPool: TargetPool): Promise<ExecutionResult> {
-    const argv = {
-      spec: paths,
-      reporter: report ? null : SilentMochaReporter
-    }
-    const mocha = new Mocha(argv)
-
-    require("regenerator-runtime/runtime");
-    require('@babel/register')({
-      presets: [
-        require.resolve("@babel/preset-env")
-      ]
-    })
-
-    for (const _path of paths) {
-      delete originalrequire.cache[_path];
-      mocha.addFile(_path);
-    }
-
-    let runner: Runner = null
-
-    await new Promise((resolve) => {
-      runner = mocha.run((failures) => resolve(failures))
-    })
+  async runSuite(paths: string[], report: boolean, targetPool: TargetPool) {
+    const runner: Runner = await this.runner.run(paths)
 
     const stats = runner.stats
 
@@ -210,10 +167,7 @@ export class JavaScriptSuiteBuilder {
       }, true])
     }
 
-    this.resetInstrumentationData();
-
-    // TODO Not sure why this not works (maybe the files should be deleted first?
-    // await mocha.dispose()
+    this.runner.resetInstrumentationData();
   }
 
   async gatherAssertions(testCases: JavaScriptTestCase[]): Promise<void> {
@@ -278,34 +232,4 @@ export class JavaScriptSuiteBuilder {
 
     return reducedArchive;
   }
-
-  async writeTestCase(filePath: string, testCase: JavaScriptTestCase, targetName: string, addLogs = false): Promise<void> {
-    const decodedTestCase = this.decoder.decode(
-      testCase,
-      targetName,
-      addLogs
-    );
-
-    // const transpiledTestCase = ts.transpileModule(decodedTestCase, { compilerOptions: { module: ts.ModuleKind.CommonJS }}).outputText
-    // await writeFileSync(filePath, transpiledTestCase);
-
-    await writeFileSync(filePath, decodedTestCase);
-  }
-
-
-
-  resetInstrumentationData () {
-    for (const key of Object.keys(global.__coverage__)) {
-      for (const statementKey of Object.keys(global.__coverage__[key].s)) {
-        global.__coverage__[key].s[statementKey] = 0
-      }
-      for (const functionKey of Object.keys(global.__coverage__[key].f)) {
-        global.__coverage__[key].f[functionKey] = 0
-      }
-      for (const branchKey of Object.keys(global.__coverage__[key].b)) {
-        global.__coverage__[key].b[branchKey] = [0, 0]
-      }
-    }
-  }
-
 }

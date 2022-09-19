@@ -100,8 +100,8 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       }
 
       if (testCase.assertions.size) {
-        imports.push(`import * as chai from 'chai'`);
-        imports.push(`import * as chaiAsPromised from 'chai-as-promised'`)
+        imports.push(`import chai from 'chai'`);
+        imports.push(`import chaiAsPromised from 'chai-as-promised'`)
 
         imports.push(`const expect = chai.expect;`);
         imports.push(`chai.use(chaiAsPromised);`);

@@ -46,7 +46,7 @@ module.exports = {
         // "../syntest-javascript-benchmark/axios/lib/core/buildFullPath.js",
         // "../syntest-javascript-benchmark/axios/lib/core/Axios.js",
 
-        // "../syntest-javascript-benchmark/commanderjs/lib/help.js",
+        "../syntest-javascript-benchmark/commanderjs/lib/help.js",
 
         // "../syntest-javascript-benchmark/lodash/.internal/equalArrays.js",
         // "../syntest-javascript-benchmark/lodash/hasPath.js",
@@ -63,7 +63,7 @@ module.exports = {
         // "../syntest-javascript-benchmark/express/lib/view.js",
 
         // "../syntest-javascript-benchmark/axios/lib/core/*.js",
-        "../syntest-javascript-benchmark/commanderjs/lib/**/*.js",
+        // "../syntest-javascript-benchmark/commanderjs/lib/**/*.js",
 
         // "../syntest-javascript-benchmark/express/lib/**/*.js",
         // "../syntest-javascript-benchmark/lodash/**/*.js",
