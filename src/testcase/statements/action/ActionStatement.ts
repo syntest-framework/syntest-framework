@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Statement } from "../Statement";
+import { Decoding, Statement } from "../Statement";
 import { Encoding, EncodingSampler } from "@syntest/framework";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 

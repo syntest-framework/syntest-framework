@@ -34,7 +34,7 @@ import {
   IterationBudget,
   loadConfig,
   processConfig,
-  Properties,
+  Properties, RuntimeVariable,
   SearchTimeBudget,
   setupLogger,
   setupOptions,
@@ -73,6 +73,7 @@ export class Launcher {
   private readonly _program = "syntest-javascript";
 
   private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>()
+  private timings = []
 
   public async run() {
     try {
@@ -89,6 +90,7 @@ export class Launcher {
   }
 
   private async setup(): Promise<JavaScriptTargetPool> {
+    this.timings.push({ time: Date.now(), what: 'start setup' })
     // Filesystem & Compiler Re-configuration
     const additionalOptions = {
       incorporate_execution_information: {
@@ -181,7 +183,11 @@ export class Launcher {
       ],
     ]);
 
+    this.timings.push({ time: Date.now(), what: 'start load targets' })
+
     await targetPool.loadTargets();
+
+    this.timings.push({ time: Date.now(), what: 'end load targets' })
 
     if (!targetPool.targets.length) {
       getUserInterface().error(
@@ -249,7 +255,7 @@ export class Launcher {
         ["Random Type Probability", Properties['random_type_probability']],
       ],
     ]);
-
+    this.timings.push({ time: Date.now(), what: 'end setup' })
     return targetPool;
   }
 
@@ -258,13 +264,21 @@ export class Launcher {
   ): Promise<
     [Archive<JavaScriptTestCase>, Map<string, Export[]>, Export[]]
   > {
-    await targetPool.prepareAndInstrument()
+    this.timings.push({ time: Date.now(), what: 'start search' })
 
+    this.timings.push({ time: Date.now(), what: 'start instrumenting' })
+    await targetPool.prepareAndInstrument()
+    this.timings.push({ time: Date.now(), what: 'end instrumenting' })
+
+    this.timings.push({ time: Date.now(), what: 'start type resolving' })
     targetPool.scanTargetRootDirectory()
+    this.timings.push({ time: Date.now(), what: 'end type resolving' })
 
     const finalArchive = new Archive<JavaScriptTestCase>();
     const finalDependencies: Map<string, Export[]> = new Map();
     const finalExports: Export[] = []
+
+    this.timings.push({ time: Date.now(), what: 'start testing targets' })
 
     for (const target of targetPool.targets) {
       const archive = await this.testTarget(
@@ -279,6 +293,9 @@ export class Launcher {
       finalDependencies.set(target.targetName, dependencies)
       finalExports.push(...targetPool.getExports(target.canonicalPath))
     }
+    this.timings.push({ time: Date.now(), what: 'end testing targets' })
+
+    this.timings.push({ time: Date.now(), what: 'end search' })
 
     return [finalArchive, finalDependencies, finalExports];
   }
@@ -395,6 +412,16 @@ export class Launcher {
       searchBudget,
       iterationBudget,
       evaluationBudget
+    );
+
+    collector.recordVariable(
+      RuntimeVariable.INSTRUMENTATION_TIME,
+      (this.timings.find((x) => x.what === 'end instrumenting').time - this.timings.find((x) => x.what === 'start instrumenting').time) / 1000
+    );
+
+    collector.recordVariable(
+      RuntimeVariable.TYPE_RESOLVING_TIME,
+      (this.timings.find((x) => x.what === 'end type resolving').time - this.timings.find((x) => x.what === 'start type resolving').time) / 1000
     );
 
     collectCoverageData(collector, archive, "branch");
