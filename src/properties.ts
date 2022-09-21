@@ -149,7 +149,7 @@ export const properties = {
   temp_instrumented_directory: {
     description: "Path to the temporary instrumented directory",
     type: "string",
-    default: ".syntest/instrumented/",
+    default: ".syntest/instrumented",
   },
 
   // random generator settings
