@@ -8,20 +8,22 @@ import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import * as path from "path";
 import { JavaScriptExecutionResult, JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
-import { Runner } from "mocha";
-import { JavaScriptSuiteBuilder } from "../../testbuilding/JavaScriptSuiteBuilder";
 import * as _ from 'lodash'
 import { SilentMochaReporter } from "./SilentMochaReporter";
 import ExecutionInformationIntegrator from "./ExecutionInformationIntegrator";
+
+import { Runner } from "mocha";
+import { unlinkSync, writeFileSync } from "fs";
+import { JavaScriptDecoder } from "../../testbuilding/JavaScriptDecoder";
 const Mocha = require('mocha')
 const originalrequire = require("original-require");
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
-  protected suiteBuilder: JavaScriptSuiteBuilder;
+  protected decoder: JavaScriptDecoder;
   protected errorProcessor: ExecutionInformationIntegrator
 
-  constructor(suiteBuilder: JavaScriptSuiteBuilder) {
-    this.suiteBuilder = suiteBuilder
+  constructor(decoder: JavaScriptDecoder) {
+    this.decoder = decoder
     this.errorProcessor = new ExecutionInformationIntegrator()
 
     process.on("uncaughtException", reason => {
@@ -32,18 +34,41 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     });
   }
 
-  async execute(
-    subject: JavaScriptSubject,
-    testCase: JavaScriptTestCase
-  ): Promise<ExecutionResult> {
-    const testPath = path.resolve(path.join(Properties.temp_test_directory, "tempTest.spec.js"))
+  async writeTestCase(filePath: string, testCase: JavaScriptTestCase, targetName: string, addLogs = false): Promise<void> {
+    const decodedTestCase = this.decoder.decode(
+      testCase,
+      targetName,
+      addLogs
+    );
 
-    await this.suiteBuilder.writeTestCase(testPath, testCase, subject.name);
+    // const transpiledTestCase = ts.transpileModule(decodedTestCase, { compilerOptions: { module: ts.ModuleKind.CommonJS }}).outputText
+    // await writeFileSync(filePath, transpiledTestCase);
 
-    // TODO make this running in memory
+    await writeFileSync(filePath, decodedTestCase);
+  }
+
+  /**
+   * Deletes a certain file.
+   *
+   * @param filepath  the filepath of the file to delete
+   */
+  async deleteTestCase(filepath: string) {
+    try {
+      await unlinkSync(filepath);
+    } catch (error) {
+      getUserInterface().debug(error);
+    }
+  }
+
+  async createSuite() {
+
+  }
+
+  async run(paths: string[]): Promise<Runner> {
+    paths = paths.map((p) => path.resolve(p))
 
     const argv = {
-      spec: testPath,
+      spec: paths,
       reporter: SilentMochaReporter
     }
 
@@ -52,12 +77,14 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     require("regenerator-runtime/runtime");
     require('@babel/register')({
       presets: [
-        "@babel/preset-env"
+        require.resolve("@babel/preset-env")
       ]
     })
 
-    delete originalrequire.cache[testPath];
-    mocha.addFile(testPath);
+    for (const _path of paths) {
+      delete originalrequire.cache[_path];
+      mocha.addFile(_path);
+    }
 
     let runner: Runner = null
 
@@ -66,6 +93,20 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       runner = mocha.run((failures) => resolve(failures))
     })
 
+    await mocha.dispose()
+    return runner
+  }
+
+  async execute(
+    subject: JavaScriptSubject,
+    testCase: JavaScriptTestCase
+  ): Promise<ExecutionResult> {
+    const testPath = path.resolve(path.join(Properties.temp_test_directory, "tempTest.spec.js"))
+
+    await this.writeTestCase(testPath, testCase, subject.name);
+
+    const runner = await this.run([testPath])
+
     const stats = runner.stats
 
     const test = runner.suite.suites[0].tests[0];
@@ -73,7 +114,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     // If one of the executions failed, log it
     if (stats.failures > 0) {
       this.errorProcessor.processError(testCase, test)
-      getUserInterface().error("Test case has failed!");
     } else {
       this.errorProcessor.processSuccess(testCase, test)
     }
@@ -201,9 +241,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     this.resetInstrumentationData();
 
     // Remove test file
-    await this.suiteBuilder.deleteTestCase(testPath);
-
-    await mocha.dispose()
+    await this.deleteTestCase(testPath);
 
     return executionResult;
   }

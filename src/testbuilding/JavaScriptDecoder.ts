@@ -41,7 +41,6 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
       const testString: string[] = [];
       if (addLogs) {
-        imports.push(`const fs = require('fs');\n\n`);
         testString.push(
           `\t\tawait fs.mkdirSync('${path.join(
             Properties.temp_log_directory,
@@ -93,14 +92,17 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         testString.push("}");
       }
 
-      imports.push(`export {}`);
-
       const importsOfTest = this.gatherImports(sourceDir, testString, importableGenes);
       imports.push(...importsOfTest);
 
+      if (addLogs) {
+        imports.push(`import * as fs from 'fs'`)
+      }
+
       if (testCase.assertions.size) {
-        imports.push(`const chai = require('chai');`);
-        imports.push(`const chaiAsPromised = require('chai-as-promised');`)
+        imports.push(`import chai from 'chai'`);
+        imports.push(`import chaiAsPromised from 'chai-as-promised'`)
+
         imports.push(`const expect = chai.expect;`);
         imports.push(`chai.use(chaiAsPromised);`);
       }
@@ -131,21 +133,29 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       );
     }
 
-    let test =
-      `describe('${targetName}', () => {\n` +
-      tests.join("\n\n") +
-      `\n})`;
+    if (imports.find((x) => x.includes('import') && !x.includes('require'))) {
+      const importsString = imports
+          // remove duplicates
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .join("\n") +
+        `\n\n`
 
-    // Add the imports
-    test =
-      imports
-        // remove duplicates
-        .filter((value, index, self) => self.indexOf(value) === index)
-        .join("\n") +
-      `\n\n` +
-      test;
+      return importsString +
+        `describe('${targetName}', () => {\n` +
+        tests.join("\n\n") +
+        `\n})`;
+    } else {
+      const importsString = imports
+          // remove duplicates
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .join("\n\t") +
+        `\n\n`
 
-    return test;
+      return `describe('${targetName}', () => {\n\t` +
+        importsString +
+        tests.join("\n\n") +
+        `\n})`;
+    }
   }
 
   gatherImports(sourceDir: string, testStrings: string[], importableGenes: RootStatement[]): string[] {
@@ -212,9 +222,9 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
     if (dependency.module) {
       if (dependency.default) {
-        return `const ${dependency.name} = require("${_path}");`;
+        return `import * as ${dependency.name} from "${_path}";`;
       } else {
-        return `const {${dependency.name}} = require("${_path}");`;
+        return `import {${dependency.name}} from "${_path}";`;
       }
     }
     if (dependency.default) {

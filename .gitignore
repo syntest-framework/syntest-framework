@@ -116,7 +116,7 @@ dist
 .vscode-test
 
 ### Syntest Javascript ###
-package-lock.json
+#package-lock.json
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
