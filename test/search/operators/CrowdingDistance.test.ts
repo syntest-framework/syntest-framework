@@ -2,16 +2,11 @@ import * as chai from "chai";
 import {
   CommandLineInterface,
   crowdingDistance,
-  guessCWD,
-  loadConfig,
-  processConfig,
-  Properties,
-  setupLogger,
-  setupOptions,
   setUserInterface,
 } from "../../../src";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { BranchObjectiveFunction, ObjectiveFunction } from "../../../src";
+import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -20,24 +15,8 @@ const expect = chai.expect;
  */
 
 describe("Crowding distance", function () {
-  beforeEach(async () => {
-    await guessCWD(null);
-    await setupOptions("", "");
-    await loadConfig();
-    await processConfig(
-      {
-        target_root_directory: "./",
-      },
-      ""
-    );
-    await setupLogger();
-
-    setUserInterface(
-      new CommandLineInterface(
-        Properties.console_log_level === "silent",
-        Properties.console_log_level === "verbose"
-      )
-    );
+  before(() => {
+    setUserInterface(createStubInstance(CommandLineInterface));
   });
 
   it("empty front", () => {

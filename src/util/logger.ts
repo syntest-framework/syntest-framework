@@ -138,6 +138,10 @@ export function getLogger() {
 }
 
 export function setupLogger() {
+  if (logger) {
+    // close existing one before creating a new one.
+    logger.close();
+  }
   const settings = getLoggerSettings(Properties.log_directory);
 
   const options: LoggerOptions = <LoggerOptions>{

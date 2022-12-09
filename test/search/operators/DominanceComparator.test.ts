@@ -3,15 +3,10 @@ import { DominanceComparator } from "../../../src/search/comparators/DominanceCo
 import {
   BranchObjectiveFunction,
   CommandLineInterface,
-  guessCWD,
-  loadConfig,
-  processConfig,
-  Properties,
-  setupLogger,
-  setupOptions,
   setUserInterface,
 } from "../../../src";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
+import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -19,24 +14,8 @@ const expect = chai.expect;
  * @author Annibale Panichella
  */
 describe("Dominance comparator", function () {
-  before(async () => {
-    await guessCWD(null);
-    await setupOptions("", "");
-    await loadConfig();
-    await processConfig(
-      {
-        target_root_directory: "./",
-      },
-      ""
-    );
-    await setupLogger();
-
-    setUserInterface(
-      new CommandLineInterface(
-        Properties.console_log_level === "silent",
-        Properties.console_log_level === "verbose"
-      )
-    );
+  before(() => {
+    setUserInterface(createStubInstance(CommandLineInterface));
   });
 
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
