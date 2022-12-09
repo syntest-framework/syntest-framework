@@ -195,22 +195,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         });
     }
     return covered.size;
-
-    // return [...this._objectiveManager.getCoveredObjectives()]
-    //         .filter((x) => {
-    //             switch (objectiveType) {
-    //                 case 'branch':
-    //                     return x instanceof BranchObjectiveFunction
-    //                 case 'exception':
-    //                     return x instanceof ExceptionObjectiveFunction
-    //                 case 'function':
-    //                     return x instanceof FunctionObjectiveFunction
-    //                 case 'probe':
-    //                     return x instanceof ProbeObjectiveFunction
-    //                 default:
-    //                     return true
-    //             }
-    //         }).length;
   }
 
   public getUncovered(objectiveType = "mixed"): number {
@@ -239,21 +223,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         });
     }
     return total.size - covered.size;
-    // return [...this._objectiveManager.getUncoveredObjectives()]
-    //       .filter((x) => {
-    //           switch (objectiveType) {
-    //               case 'branch':
-    //                   return x instanceof BranchObjectiveFunction
-    //               case 'exception':
-    //                   return x instanceof ExceptionObjectiveFunction
-    //               case 'function':
-    //                   return x instanceof FunctionObjectiveFunction
-    //               case 'probe':
-    //                   return x instanceof ProbeObjectiveFunction
-    //               default:
-    //                   return true
-    //           }
-    //       }).length;
   }
   /**
    * The progress of the search process.
