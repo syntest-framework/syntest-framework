@@ -49,6 +49,8 @@ export class SummaryWriter<T extends Encoding> {
     RuntimeVariable.TOTAL_PROBES,
     RuntimeVariable.PROBE_COVERAGE,
     RuntimeVariable.INITIALIZATION_TIME,
+    RuntimeVariable.INSTRUMENTATION_TIME,
+    RuntimeVariable.TYPE_RESOLVING_TIME,
     RuntimeVariable.SEARCH_TIME,
     RuntimeVariable.TOTAL_TIME,
     RuntimeVariable.ITERATIONS,

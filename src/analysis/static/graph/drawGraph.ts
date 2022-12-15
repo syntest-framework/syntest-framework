@@ -40,10 +40,6 @@ export function drawGraph(cfg: any, path: string) {
           name = `(${n.lines[0]}: ${n.description})`;
         }
 
-        if (n.type === NodeType.Root) {
-          name += ` ${n.contractName} ${n.functionName}`;
-        }
-
         if (n.type === NodeType.Branch) {
           name += ` ${n.condition.operator}`;
         }
@@ -218,6 +214,13 @@ export function drawGraph(cfg: any, path: string) {
         xRotation = 0, // degrees
         largeArc = 0, // 1 or 0
         sweep = 1; // 1 or 0
+
+      if (d.type === true) {
+        sweep = 0;
+      } else if (d.type === undefined) {
+        drx = 0;
+        dry = 0;
+      }
 
       // Self edge.
       if (x1 === x2 && y1 === y2) {

@@ -1,24 +1,12 @@
-import {
-  ActionDescription,
-  ObjectiveFunction,
-  Parameter,
-  SearchSubject,
-} from "../../src";
+import { ObjectiveFunction, SearchSubject } from "../../src";
 import { DummyCFG } from "./DummyCFG.mock";
 
 export class DummySearchSubject extends SearchSubject<any> {
   protected objectives: ObjectiveFunction<any>[];
 
   constructor(objectives: ObjectiveFunction<any>[]) {
-    super("", "", new DummyCFG(), null);
+    super("", "", new DummyCFG());
     this.objectives = objectives;
-  }
-
-  getPossibleActions(
-    type?: string,
-    returnTypes?: Parameter[]
-  ): ActionDescription[] {
-    return [];
   }
 
   getObjectives(): ObjectiveFunction<any>[] {

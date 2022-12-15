@@ -68,6 +68,8 @@ export enum RuntimeVariable {
   INITIALIZATION_TIME,
   SEARCH_TIME,
   TOTAL_TIME,
+  INSTRUMENTATION_TIME,
+  TYPE_RESOLVING_TIME,
 
   /**
    * Archive

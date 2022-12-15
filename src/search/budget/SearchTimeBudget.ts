@@ -67,7 +67,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    */
   getRemainingBudget(): number {
     if (this.getUsedBudget() > this._maxSearchTime) {
-      console.log(
+      console.debug(
         `Consumed ${
           this.getUsedBudget() - this._maxSearchTime
         }s over the allocated search time`

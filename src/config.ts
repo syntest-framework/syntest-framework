@@ -53,6 +53,7 @@ export function setupOptions(program: string, additionalOptions: any) {
       description: setup.description,
       // @ts-ignore
       default: setup.default,
+      required: setup.required,
       // @ts-ignore
       type: setup.type,
       items: setup.items,

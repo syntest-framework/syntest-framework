@@ -28,6 +28,12 @@ export interface Datapoint {
 
   locationIdx?: number;
   branchType?: boolean;
+
+  condition_ast?: string;
+  condition?: string;
+  variables?: any;
+
+  // Deprecated
   opcode?: string;
   left?: number[];
   right?: number[];

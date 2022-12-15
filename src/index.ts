@@ -89,11 +89,7 @@ export * from "./analysis/static/graph/nodes/BranchNode";
 export * from "./analysis/static/graph/nodes/RootNode";
 export * from "./analysis/static/graph/nodes/PlaceholderNode";
 
-export * from "./analysis/static/graph/parsing/ActionDescription";
-export * from "./analysis/static/graph/parsing/FunctionDescription";
-export * from "./analysis/static/graph/parsing/Parameter";
-export * from "./analysis/static/graph/parsing/Visibility";
-export * from "./analysis/static/graph/parsing/TargetMetaData";
+export * from "./analysis/static/TargetMetaData";
 
 // UI
 export * from "./ui/UserInterface";

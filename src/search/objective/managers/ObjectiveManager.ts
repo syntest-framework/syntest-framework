@@ -149,6 +149,9 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // Create separate exception objective when an exception occurred in the execution
     if (result.hasExceptions()) {
+      // TODO there must be a better way
+      //  investigate error patterns somehow
+
       const hash = crypto
         .createHash("md5")
         .update(result.getExceptions())
@@ -159,6 +162,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
         .filter((objective) => objective instanceof ExceptionObjectiveFunction)
         .filter((objective) => objective.getIdentifier() === hash).length;
       if (numOfExceptions === 0) {
+        // TODO this makes the archive become too large crashing the tool
         this._archive.update(
           new ExceptionObjectiveFunction(
             this._subject,
