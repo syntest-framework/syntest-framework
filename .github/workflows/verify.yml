@@ -25,7 +25,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
         # Run the pipeline on all the currently supported LTS versions and the upcoming version
-        node-version: [14, 16, 18, 19]
+        node-version: [19]
 
         # Run the pipeline on all the currently supported architectures
         architecture: [x64]
@@ -66,6 +66,3 @@ jobs:
       - name: Framework - Run Linter
         run: npm run lint
 
-      # Testing
-      - name: Framework - Run Tests
-        run: npm test

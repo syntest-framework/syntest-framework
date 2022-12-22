@@ -61,3 +61,7 @@ jobs:
       # Building
       - name: Framework - Build
         run: npm run build
+
+      # Testing
+      - name: Framework - Run Tests
+        run: npm test
