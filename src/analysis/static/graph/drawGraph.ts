@@ -206,18 +206,18 @@ export function drawGraph(cfg: CFG, path: string): void {
     //     .attr("y2", function(d) { return d.target.y; });
 
     link.attr("d", function (d: any) {
-      const x1 = d.source.x
-      const y1 = d.source.y
-      let x2 = d.target.x
-      let y2 = d.target.y
-      const dx = x2 - x1
-      const dy = y2 - y1
-      const dr = Math.sqrt(dx * dx + dy * dy)
-        // Defaults for normal edge.
-        let drx = dr
-      let dry = dr
-      let xRotation = 0 // degrees
-      let largeArc = 0 // 1 or 0
+      const x1 = d.source.x;
+      const y1 = d.source.y;
+      let x2 = d.target.x;
+      let y2 = d.target.y;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const dr = Math.sqrt(dx * dx + dy * dy);
+      // Defaults for normal edge.
+      let drx = dr;
+      let dry = dr;
+      let xRotation = 0; // degrees
+      let largeArc = 0; // 1 or 0
       let sweep = 1; // 1 or 0
 
       if (d.type === true) {
