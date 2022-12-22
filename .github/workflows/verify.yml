@@ -65,4 +65,3 @@ jobs:
       # Linting
       - name: Framework - Run Linter
         run: npm run lint
-
