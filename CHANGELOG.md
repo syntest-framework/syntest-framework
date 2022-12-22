@@ -25,12 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "required" option for tool arguments
 - "target_root_directory" property
-- Node version 19 to the CI matrix
-- Develop as a CI branch
-
-### Changed
-
-- Improved coverage over time statistics
+- Multiple coverage over time statistic variables
 
 ### Removed
 
