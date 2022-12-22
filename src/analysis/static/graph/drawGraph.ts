@@ -20,7 +20,7 @@
 
 import { Node, NodeType } from "./nodes/Node";
 
-import d3 = require("d3");
+import d3 from "d3";
 import fs = require("fs");
 import { JSDOM } from "jsdom";
 import { CFG } from "./CFG";

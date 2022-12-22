@@ -43,20 +43,20 @@
     "test:watch": "mocha --watch"
   },
   "dependencies": {
-    "@dagrejs/graphlib": "^2.1.4",
+    "@dagrejs/graphlib": "2.1.4",
     "bignumber.js": "9.0.1",
-    "chalk": "^4.1.1",
-    "clear": "^0.1.0",
-    "cli-progress": "^3.9.0",
+    "chalk": "4.1.1",
+    "clear": "0.1.0",
+    "cli-progress": "3.11.2",
     "d3": "^4.13.0",
-    "fast-csv": "^4.3.6",
-    "figlet": "^1.5.0",
+    "fast-csv": "4.3.6",
+    "figlet": "1.5.2",
     "globby": "^11.0.4",
-    "jsdom": "^16.6.0",
-    "seedrandom": "^3.0.5",
-    "shelljs": "^0.8.4",
-    "winston": "^3.3.3",
-    "yargs": "^16.2.0"
+    "jsdom": "20.0.3",
+    "seedrandom": "3.0.5",
+    "shelljs": "0.8.5",
+    "winston": "3.8.2",
+    "yargs": "17.6.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.19",
