@@ -54,8 +54,8 @@ describe("Test MOSA", function () {
     const ind3 = new DummyEncodingMock();
     ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
 
-    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{});
-    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{});
+    const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
+    const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
 
     const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const frontZero = mosa.preferenceCriterion(
@@ -84,8 +84,8 @@ describe("Test MOSA", function () {
     const ind5 = new DummyEncodingMock();
     ind5.setDummyEvaluation(Array.from(objectives), [5, 5]);
 
-    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{});
-    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{});
+    const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
+    const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
 
     const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.getNonDominatedFront(objectives, [
@@ -118,8 +118,8 @@ describe("Test MOSA", function () {
     const ind4 = new DummyEncodingMock();
     ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
 
-    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{});
-    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{});
+    const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
+    const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
 
     const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
     const front = mosa.preferenceSortingAlgorithm(
@@ -154,8 +154,8 @@ describe("Test MOSA", function () {
 
     const searchSubject = new DummySearchSubject(Array.from(objectives));
 
-    const mockedRunner = (<EncodingRunner<DummyEncodingMock>>{});
-    const mockedSampler = (<EncodingSampler<DummyEncodingMock>>{});
+    const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
+    const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
 
     const mosa = new MockedMOSA(
       mockedSampler,

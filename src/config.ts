@@ -32,7 +32,10 @@ export async function guessCWD(givenCwd: string): void {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
 }
 
-export function setupOptions(program: string, additionalOptions: Record<string, unknown>[]): void {
+export function setupOptions(
+  program: string,
+  additionalOptions: Record<string, unknown>[]
+): void {
   if (!cwd) {
     throw new Error("Please call guessCWD before calling setupOptions");
   }
