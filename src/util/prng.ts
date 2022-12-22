@@ -91,7 +91,7 @@ export const prng = {
 
     return z0;
   },
-  pickOne: (options: any[] | string) => {
+  pickOne: <T>(options: T[]): T => {
     if (!options.length) {
       throw new Error("Cannot pick one of an empty array!!!");
     }

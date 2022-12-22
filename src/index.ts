@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 
-// Test case
-import exp = require("constants");
-
 // Runner
 export * from "./util/Datapoint";
 

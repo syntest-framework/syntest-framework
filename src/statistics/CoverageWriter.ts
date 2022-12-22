@@ -56,12 +56,12 @@ export class CoverageWriter<T extends Encoding> {
    * @param collector The collector for the statistics
    * @param filePath The file path to write to
    */
-  write(collector: StatisticsCollector<T>, filePath: string) {
+  write(collector: StatisticsCollector<T>, filePath: string): void {
     const staticVariables = collector.getVariables();
     const events = collector.getEventVariables();
 
     const data = [];
-    const lastVariableValues = new Map<RuntimeVariable, any>();
+    const lastVariableValues = new Map<RuntimeVariable, string>();
 
     // Loop over all recorded times
     for (const time of events.keys()) {

@@ -32,7 +32,7 @@ import { Encoding } from "../../Encoding";
 export function fastNonDomSorting<T extends Encoding>(
   population: T[],
   objectiveFunctions: Set<ObjectiveFunction<T>>
-) {
+): T[][] {
   const S: { [id: string]: T[] } = {};
   const F: T[][] = [[]];
   const n: { [id: string]: number } = {};
@@ -48,14 +48,14 @@ export function fastNonDomSorting<T extends Encoding>(
       let pDominatesQ = true;
       let qDominatesP = true;
       for (const key of objectiveFunctions) {
-        if (p.getDistance(key)! === 0 && q.getDistance(key)! === 0) {
+        if (p.getDistance(key) === 0 && q.getDistance(key) === 0) {
           continue;
         }
-        if (p.getDistance(key)! >= q.getDistance(key)!) {
+        if (p.getDistance(key) >= q.getDistance(key)) {
           pDominatesQ = false;
         }
 
-        if (p.getDistance(key)! <= q.getDistance(key)!) {
+        if (p.getDistance(key) <= q.getDistance(key)) {
           qDominatesP = false;
         }
       }

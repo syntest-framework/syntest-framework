@@ -79,18 +79,18 @@ export class StatisticsCollector<T extends Encoding> {
    */
   public recordEventVariable(
     variable: RuntimeVariable,
-    value: string
+    value: string | number
   ): StatisticsCollector<T> {
     // 1/10th second accuracy
     const eventTime = Math.round(this._timeBudget.getUsedBudget() * 10) / 10;
 
     // If other events already exist on this event time add it, otherwise create a new one
     if (this._eventVariables.has(eventTime)) {
-      this._eventVariables.get(eventTime).set(variable, value);
+      this._eventVariables.get(eventTime).set(variable, `${value}`);
     } else {
       this._eventVariables.set(
         eventTime,
-        new Map<RuntimeVariable, string>().set(variable, value)
+        new Map<RuntimeVariable, string>().set(variable, `${value}`)
       );
     }
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
@@ -18,7 +20,8 @@
 
 import { Properties, properties } from "./properties";
 
-import Yargs = require("yargs/yargs");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Yargs = require("yargs/yargs");
 import decamelize = require("decamelize");
 import path = require("path");
 import shell = require("shelljs");
@@ -28,7 +31,7 @@ let argv: any = null;
 
 export let yargs: any = null;
 
-export async function guessCWD(givenCwd: string): void {
+export async function guessCWD(givenCwd?: string): Promise<void> {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
 }
 
@@ -125,7 +128,7 @@ export function loadConfig(args: any = {}, baseConfig: any = {}): any {
   return finalConfig;
 }
 
-export function processConfig(config: any = {}, args: any = {}) {
+export function processConfig(config: any = {}, args: any = {}): void {
   if (!cwd || !yargs) {
     throw new Error("Please call loadConfig before calling processConfig");
   }

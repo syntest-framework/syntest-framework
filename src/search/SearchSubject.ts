@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
