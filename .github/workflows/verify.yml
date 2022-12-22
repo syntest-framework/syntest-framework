@@ -1,4 +1,4 @@
-name: build
+name: verify
 
 on:
   push:
@@ -58,6 +58,14 @@ jobs:
       - name: Framework - Install Dependencies
         run: npm install
 
-      # Building
-      - name: Framework - Build
-        run: npm run build
+      # Format
+      - name: Framework - Run Formatter
+        run: npm run format:check
+
+      # Linting
+      - name: Framework - Run Linter
+        run: npm run lint
+
+      # Testing
+      - name: Framework - Run Tests
+        run: npm test
