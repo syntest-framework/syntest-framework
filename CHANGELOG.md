@@ -19,6 +19,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.2.0] - 2022-12-22
+
+### Added
+
+- "required" option for tool arguments
+- "target_root_directory" property
+- Node version 19 to the CI matrix
+- Develop as a CI branch
+
+### Changed
+
+- Improved coverage over time statistics
+
+### Removed
+
+- Language specific parsing interfaces
+
 ## [0.1.2] - 2021-11-29
 
 ### Fixed
