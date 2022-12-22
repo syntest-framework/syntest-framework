@@ -80,7 +80,6 @@ export * from "./search/Decoder";
 // Instrumentation
 export * from "./analysis/static/graph/CFG";
 export * from "./analysis/static/graph/Edge";
-export * from "./analysis/static/graph/cfgUtils";
 export * from "./analysis/static/graph/drawGraph";
 export * from "./analysis/static/graph/CFGFactory";
 
@@ -98,7 +97,6 @@ export * from "./ui/MonitorCommandLineInterface";
 
 // Util
 export * from "./config";
-export * from "./util/HashSet";
 export * from "./util/logger";
 export * from "./util/prng";
 export * from "./util/fileSystem";

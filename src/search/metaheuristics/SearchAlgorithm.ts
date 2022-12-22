@@ -25,10 +25,6 @@ import { getUserInterface } from "../../ui/UserInterface";
 import { TerminationManager } from "../termination/TerminationManager";
 import { SearchListener } from "../SearchListener";
 import { ExecutionResult } from "../ExecutionResult";
-import { BranchObjectiveFunction } from "../../criterion/BranchObjectiveFunction";
-import { ExceptionObjectiveFunction } from "../../criterion/ExceptionObjectiveFunction";
-import { FunctionObjectiveFunction } from "../../criterion/FunctionObjectiveFunction";
-import { ProbeObjectiveFunction } from "../../criterion/ProbeObjectiveFunction";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.

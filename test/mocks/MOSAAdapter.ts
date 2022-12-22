@@ -16,7 +16,7 @@ export class MockedMOSA<T extends Encoding> extends MOSA<T> {
     super._environmentalSelection(size);
   }
 
-  public updateObjectives(subject: DummySearchSubject) {
+  public updateObjectives(subject: DummySearchSubject<T>) {
     this._objectiveManager.load(subject);
   }
 }

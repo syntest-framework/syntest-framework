@@ -20,8 +20,8 @@ import * as cliProgress from "cli-progress";
 import { CommandLineInterface } from "./CommandLineInterface";
 import { getLogger } from "../util/logger";
 
-const chalk = require("chalk");
-const clear = require("clear");
+import chalk = require("chalk");
+import clear = require("clear");
 
 export abstract class MonitorCommandLineInterface extends CommandLineInterface {
   protected logs: string[];

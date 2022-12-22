@@ -18,21 +18,21 @@
 
 import { Properties, properties } from "./properties";
 
-const Yargs = require("yargs/yargs");
-const decamelize = require("decamelize");
-const path = require("path");
-const shell = require("shelljs");
+import Yargs = require("yargs/yargs");
+import decamelize = require("decamelize");
+import path = require("path");
+import shell = require("shelljs");
 
-let cwd: any = null;
+let cwd: string = null;
 let argv: any = null;
 
 export let yargs: any = null;
 
-export async function guessCWD(givenCwd: any) {
+export async function guessCWD(givenCwd: string): void {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
 }
 
-export function setupOptions(program: string, additionalOptions: any) {
+export function setupOptions(program: string, additionalOptions: Record<string, unknown>[]): void {
   if (!cwd) {
     throw new Error("Please call guessCWD before calling setupOptions");
   }
@@ -47,17 +47,13 @@ export function setupOptions(program: string, additionalOptions: any) {
     .help(false)
     .version(false);
 
-  const loadArg = ([name, setup]: [string, any]) => {
+  const loadArg = ([name, setup]: [string, Record<string, unknown>]) => {
     const option = {
-      // @ts-ignore
       description: setup.description,
-      // @ts-ignore
       default: setup.default,
       required: setup.required,
-      // @ts-ignore
       type: setup.type,
       items: setup.items,
-      // @ts-ignore
       alias: setup.alias,
       global: false,
     };

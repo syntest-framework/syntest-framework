@@ -139,7 +139,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return Array.from(this._objectives.get(objective));
   }
 
-  public getPath(from: string, to: string) {
+  public getPath(from: string, to: string): number {
     return this._paths[from][to].distance;
   }
 
