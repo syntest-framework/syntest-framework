@@ -31,7 +31,7 @@ export interface Datapoint {
 
   condition_ast?: string;
   condition?: string;
-  variables?: any;
+  variables?: unknown;
 
   // Deprecated
   opcode?: string;

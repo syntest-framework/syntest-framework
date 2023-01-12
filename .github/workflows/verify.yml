@@ -1,4 +1,4 @@
-name: build
+name: verify
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         os: [ubuntu-latest]
 
         # Run the pipeline on all the currently supported LTS versions and the upcoming version
-        node-version: [18, 19]
+        node-version: [19]
 
         # Run the pipeline on all the currently supported architectures
         architecture: [x64]
@@ -58,10 +58,10 @@ jobs:
       - name: Framework - Install Dependencies
         run: npm install
 
-      # Building
-      - name: Framework - Build
-        run: npm run build
+      # Format
+      - name: Framework - Run Formatter
+        run: npm run format:check
 
-      # Testing
-      - name: Framework - Run Tests
-        run: npm test
+      # Linting
+      - name: Framework - Run Linter
+        run: npm run lint

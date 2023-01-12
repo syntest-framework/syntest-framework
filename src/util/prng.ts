@@ -19,12 +19,12 @@
 import BigNumber from "bignumber.js";
 import { Properties } from "../properties";
 
-const seedrandom = require("seedrandom");
+import seedrandom = require("seedrandom");
 
-let seed: any = null;
-let random: any = null;
+let seed: string | null = null;
+let random = null;
 
-export function getSeed() {
+export function getSeed(): string {
   if (!seed) {
     seed = Properties.seed;
 
@@ -91,7 +91,7 @@ export const prng = {
 
     return z0;
   },
-  pickOne: (options: any[] | string) => {
+  pickOne: <T>(options: T[]): T => {
     if (!options.length) {
       throw new Error("Cannot pick one of an empty array!!!");
     }

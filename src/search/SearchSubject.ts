@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
@@ -139,7 +140,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return Array.from(this._objectives.get(objective));
   }
 
-  public getPath(from: string, to: string) {
+  public getPath(from: string, to: string): number {
     return this._paths[from][to].distance;
   }
 

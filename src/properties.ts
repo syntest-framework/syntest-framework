@@ -46,7 +46,7 @@ export class Properties {
   public static sub_algorithm: string;
   public static population_size: number;
 
-  public static stopping_criteria: {}[];
+  public static stopping_criteria: Record<string, unknown>[];
   public static search_time: number;
   public static total_time: number;
   public static iteration_budget: number;

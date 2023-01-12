@@ -15,24 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Properties, properties } from "./properties";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Yargs = require("yargs/yargs");
-const decamelize = require("decamelize");
-const path = require("path");
-const shell = require("shelljs");
+import decamelize = require("decamelize");
+import path = require("path");
+import shell = require("shelljs");
 
-let cwd: any = null;
+let cwd: string = null;
 let argv: any = null;
 
 export let yargs: any = null;
 
-export async function guessCWD(givenCwd: any) {
+export async function guessCWD(givenCwd?: string): Promise<void> {
   cwd = givenCwd || process.env.NYC_CWD || process.cwd();
 }
 
-export function setupOptions(program: string, additionalOptions: any) {
+export function setupOptions(
+  program: string,
+  additionalOptions: Record<string, unknown>[]
+): void {
   if (!cwd) {
     throw new Error("Please call guessCWD before calling setupOptions");
   }
@@ -47,17 +53,13 @@ export function setupOptions(program: string, additionalOptions: any) {
     .help(false)
     .version(false);
 
-  const loadArg = ([name, setup]: [string, any]) => {
+  const loadArg = ([name, setup]: [string, Record<string, unknown>]) => {
     const option = {
-      // @ts-ignore
       description: setup.description,
-      // @ts-ignore
       default: setup.default,
       required: setup.required,
-      // @ts-ignore
       type: setup.type,
       items: setup.items,
-      // @ts-ignore
       alias: setup.alias,
       global: false,
     };
@@ -126,7 +128,7 @@ export function loadConfig(args: any = {}, baseConfig: any = {}): any {
   return finalConfig;
 }
 
-export function processConfig(config: any = {}, args: any = {}) {
+export function processConfig(config: any = {}, args: any = {}): void {
   if (!cwd || !yargs) {
     throw new Error("Please call loadConfig before calling processConfig");
   }

@@ -30,13 +30,13 @@ export class StatisticsCollector<T extends Encoding> {
    * Mapping from runtime variable to value.
    * @protected
    */
-  protected _variables: Map<RuntimeVariable, any>;
+  protected _variables: Map<RuntimeVariable, string>;
 
   /**
    * Mapping from total search time to another mapping from runtime variable to value.
    * @protected
    */
-  protected _eventVariables: Map<number, Map<RuntimeVariable, any>>;
+  protected _eventVariables: Map<number, Map<RuntimeVariable, string>>;
 
   /**
    * Total search time budget from the search process.
@@ -51,8 +51,8 @@ export class StatisticsCollector<T extends Encoding> {
    */
   constructor(timeBudget: TotalTimeBudget<T>) {
     this._timeBudget = timeBudget;
-    this._variables = new Map<RuntimeVariable, any>();
-    this._eventVariables = new Map<number, Map<number, any>>();
+    this._variables = new Map<RuntimeVariable, string>();
+    this._eventVariables = new Map<number, Map<number, string>>();
   }
 
   /**
@@ -63,7 +63,7 @@ export class StatisticsCollector<T extends Encoding> {
    */
   public recordVariable(
     variable: RuntimeVariable,
-    value: any
+    value: string
   ): StatisticsCollector<T> {
     this._variables.set(variable, value);
     return this;
@@ -79,18 +79,18 @@ export class StatisticsCollector<T extends Encoding> {
    */
   public recordEventVariable(
     variable: RuntimeVariable,
-    value: any
+    value: string | number
   ): StatisticsCollector<T> {
     // 1/10th second accuracy
     const eventTime = Math.round(this._timeBudget.getUsedBudget() * 10) / 10;
 
     // If other events already exist on this event time add it, otherwise create a new one
     if (this._eventVariables.has(eventTime)) {
-      this._eventVariables.get(eventTime).set(variable, value);
+      this._eventVariables.get(eventTime).set(variable, `${value}`);
     } else {
       this._eventVariables.set(
         eventTime,
-        new Map<RuntimeVariable, any>().set(variable, value)
+        new Map<RuntimeVariable, string>().set(variable, `${value}`)
       );
     }
 
@@ -100,14 +100,14 @@ export class StatisticsCollector<T extends Encoding> {
   /**
    * Return the static variables stored in the collector
    */
-  public getVariables(): Map<RuntimeVariable, any> {
+  public getVariables(): Map<RuntimeVariable, string> {
     return this._variables;
   }
 
   /**
    * Return the dynamic variables stored in the collector
    */
-  public getEventVariables(): Map<number, Map<RuntimeVariable, any>> {
+  public getEventVariables(): Map<number, Map<RuntimeVariable, string>> {
     return this._eventVariables;
   }
 }

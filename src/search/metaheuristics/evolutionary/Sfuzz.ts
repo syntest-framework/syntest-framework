@@ -44,7 +44,7 @@ export class Sfuzz<T extends Encoding> extends MOSA<T> {
     this._objectiveManager = new SfuzzObjectiveManager<T>(runner);
   }
 
-  protected _environmentalSelection(size: number): void {
+  protected _environmentalSelection(): void {
     if (
       this._objectiveManager.getCurrentObjectives().size == 0 &&
       this._objectiveManager.getUncoveredObjectives().size != 0

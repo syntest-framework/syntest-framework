@@ -1,18 +1,18 @@
-import * as chai from "chai";
-import {
-  //Fitness,
-  guessCWD,
-  loadConfig,
-  //NSGA2,
-  //Objective,
-  processConfig,
-  setupLogger,
-  setupOptions,
-} from "../../../src";
-import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
+// import * as chai from "chai";
+// import {
+//   //Fitness,
+//   guessCWD,
+//   loadConfig,
+//   //NSGA2,
+//   //Objective,
+//   processConfig,
+//   setupLogger,
+//   setupOptions,
+// } from "../../../src";
+// import { DummySearchSubject } from "../../mocks/DummySubject.mock";
+// import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
-const expect = chai.expect;
+// const expect = chai.expect;
 //
 // /**
 //  * @author Dimitri Stallenberg
