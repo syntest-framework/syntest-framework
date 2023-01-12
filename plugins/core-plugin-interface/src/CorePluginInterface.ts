@@ -18,7 +18,7 @@
 
 /**
  * The CorePluginInterface is an interface for creating plugins for the core of the SynTest Framework.
- * 
+ *
  * Format of functions:
  * on[EVENT]Start
  * on[EVENT]Complete
