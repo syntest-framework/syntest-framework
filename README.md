@@ -1,4 +1,4 @@
-# SynTest Core - Common Core
+# SynTest Framework - Common Core
 
 > The aim of the common core of the SynTest Framework is to extract the common parts (e.g., core infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
