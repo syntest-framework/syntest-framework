@@ -1,0 +1,53 @@
+{
+    "name": "@syntest/core-plugin-interface",
+    "version": "0.0.1",
+    "description": "The plugin interface of the SynTest Core",
+    "keywords": [
+      "syntest",
+      "automatic-test-generation"
+    ],
+    "homepage": "https://www.syntest.org",
+    "bugs": {
+      "url": "https://github.com/syntest-framework/syntest-framework/issues"
+    },
+    "license": "Apache-2.0",
+    "contributors": [
+      "Annibale Panichella",
+      "Mitchell Olsthoorn",
+      "Dimitri Stallenberg"
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+      "/dist",
+      "../NOTICE"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/syntest-framework/syntest-framework.git"
+    },
+    "scripts": {
+      "build": "npm run build:compile",
+      "build:compile": "tsc --build",
+      "build:watch": "tsc --build --watch",
+      "clean": "rm -rf .nyc_output dist node_modules",
+      "clean:dist": "rm -rf dist",
+      "docs": "jsdoc -r dist",
+      "format": "prettier --config .prettierrc.json --write .",
+      "format:check": "prettier --config .prettierrc.json --check .",
+      "lint": "eslint .",
+      "lint:fix": "eslint . --fix",
+      "prepare": "npm run build",
+      "test": "mocha",
+      "test:coverage": "nyc mocha",
+      "test:watch": "mocha --watch"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+    },
+    "engines": {
+      "node": ">=10.24.0"
+    }
+  }
+  
