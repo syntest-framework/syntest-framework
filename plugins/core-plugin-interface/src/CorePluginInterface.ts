@@ -23,7 +23,7 @@
  * on[EVENT]Start
  * on[EVENT]Complete
  */
-export abstract class CorePluginInterface {
+export default abstract class CorePluginInterface {
   // Start
   // called from launcher
   onSetupStart() {}
