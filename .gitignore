@@ -115,7 +115,7 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-### Syntest Framework ###
+### Syntest Core ###
 package-lock.json
 .npmrc
 

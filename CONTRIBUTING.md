@@ -2,7 +2,7 @@
 
 First off all, thank you for taking the time to contribute to this project!
 
-This document outlines a set of guidelines for contributing to the SynTest Framework, which is hosted in the [SynTest Framework Organization](https://github.com/syntest-framework) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+This document outlines a set of guidelines for contributing to the SynTest Core, which is hosted in the [SynTest Framework Organization](https://github.com/syntest-framework) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 #### Table Of Contents
 

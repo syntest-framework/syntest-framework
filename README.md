@@ -1,9 +1,9 @@
-# SynTest Framework - Common Core
+# SynTest Core - Common Core
 
-> The aim of the common core of the SynTest framework is to extract the common parts (e.g., framework infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
+> The aim of the common core of the SynTest Framework is to extract the common parts (e.g., core infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
-[![](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/node.js.yml)
-[![publish](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish.yml)
+[![](https://github.com/syntest-framework/syntest-core/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/node.js.yml)
+[![publish](https://github.com/syntest-framework/syntest-core/actions/workflows/publish.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish.yml)
 ![npm (scoped)](https://img.shields.io/npm/v/@syntest/framework?style=flat)
 ![node-current (scoped)](https://img.shields.io/node/v/@syntest/framework)
 
@@ -23,10 +23,10 @@ For more in-depth information about the architecture we refer to: [Architecture]
 
 ### NPM
 
-The simplest way to use syntest-framework is by installing the npm package.
+The simplest way to use syntest-core is by installing the npm package.
 
 ```bash
-$ npm install @syntest/framework
+$ npm install @syntest/core
 ```
 
 ### From source
@@ -36,7 +36,7 @@ The library can be used by cloning the project, installing its dependencies, com
 - Clone the project
 
 ```bash
-$ git clone git@github.com:syntest-framework/syntest-framework.git
+$ git clone git@github.com:syntest-framework/syntest-core.git
 ```
 
 - Install dependencies
@@ -45,7 +45,7 @@ $ git clone git@github.com:syntest-framework/syntest-framework.git
 $ npm install
 ```
 
-- Build the framework
+- Build the core
 
 ```bash
 $ npm run build
@@ -54,7 +54,7 @@ $ npm run build
 - Install as npm module in your project
 
 ```bash
-$ npm install /path/to/syntest-framework
+$ npm install /path/to/syntest-core
 ```
 
 ## Support
