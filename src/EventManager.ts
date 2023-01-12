@@ -16,6 +16,36 @@
  * limitations under the License.
  */
 
- export default class EventManager {
-     
- }
+import { CorePluginInterface } from "@syntest/core-plugin-interface";
+import { Encoding } from ".";
+import { ProgramState } from "./event/ProgramState";
+
+export default class EventManager<
+    P extends CorePluginInterface, 
+    T extends Encoding
+> {
+
+    private state: ProgramState<T>
+    private listeners: P[]
+
+    constructor(state: ProgramState<T>) {
+        this.state = state
+    }
+
+    registerListener(listener: P) {
+        this.listeners.push(listener)
+    }
+
+    removeListener(listener: P) {
+        this.listeners.splice(this.listeners.indexOf(listener))
+    }
+
+    emitEvent(event: keyof P) {
+        for (const listener of this.listeners) {
+            if (!listener[event]) {
+                continue
+            }
+            listener[event](this.state)
+        }
+    }
+}

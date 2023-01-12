@@ -26,7 +26,7 @@
 export default abstract class CorePluginInterface {
   // Start
   // called from launcher
-  onSetupStart() {}
+  onSetupStart(state) {}
   onInstrumentationStart() {}
   onTargetRunStart() {}
   onFinalizeStart() {}
