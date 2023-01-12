@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of Syntest Framework - Syntest Core.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ export abstract class MonitorCommandLineInterface extends CommandLineInterface {
 
   render() {
     clear();
-    console.log(this.asciiArt("Syntest"));
+    console.log(this.asciiArt("SynTest"));
     console.log(new Date().toLocaleTimeString());
 
     if (this.showProgressBar) {
