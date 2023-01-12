@@ -17,8 +17,8 @@
  */
 
 import { CorePluginInterface } from "@syntest/core-plugin-interface";
-import { Encoding } from ".";
-import { ProgramState } from "./event/ProgramState";
+import { Encoding } from "..";
+import { ProgramState } from "./ProgramState";
 
 export default class EventManager<
     P extends CorePluginInterface, 

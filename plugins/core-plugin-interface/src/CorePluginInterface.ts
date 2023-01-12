@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import {Encoding, ProgramState} from '../../../src/index'
+
 /**
  * The CorePluginInterface is an interface for creating plugins for the core of the Syntest Framework.
  * 
@@ -23,10 +25,10 @@
  * on[EVENT]Start
  * on[EVENT]Complete
  */
-export default abstract class CorePluginInterface {
+export default abstract class CorePluginInterface<T extends Encoding> {
   // Start
   // called from launcher
-  onSetupStart(state) {}
+  onSetupStart(state: ProgramState<T>) {}
   onInstrumentationStart() {}
   onTargetRunStart() {}
   onFinalizeStart() {}
