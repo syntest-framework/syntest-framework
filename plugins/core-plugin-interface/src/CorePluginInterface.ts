@@ -16,36 +16,53 @@
  * limitations under the License.
  */
 
- /**
-  * format of functions:
-  * on[EVENT]Start
-  * on[EVENT]Complete
-  */
+/**
+ * The CorePluginInterface is an interface for creating plugins for the core of the Syntest Framework.
+ * 
+ * Format of functions:
+ * on[EVENT]Start
+ * on[EVENT]Complete
+ */
 export abstract class CorePluginInterface {
-    // called from launcher
-    onSetupStart() {}
-    onInstrumentationStart() {}
-    onTargetRunStart() {}
-    onFinalizeStart() {}
-    onReportStart() {}
+  // Start
+  // called from launcher
+  onSetupStart() {}
+  onInstrumentationStart() {}
+  onTargetRunStart() {}
+  onFinalizeStart() {}
+  onReportStart() {}
 
-    // called from search algorithm
-    onInitializationStart() {}
-    onSearchStart() {}
-    onIterationStart() {}
+  // called from search algorithm
+  onInitializationStart() {}
+  onSearchStart() {}
+  onIterationStart() {}
 
-    // called from targetpool
-    onSourceResolvingStart() {}
-    onTargetResolvingStart() {}
-    onFunctionMapResolvingStart() {}
-    onDependencyResolvingStart() {}
-    onControlFlowGraphResolvingStart() {}
-    onAbstractSyntaxTreeResolvingStart() {}
+  // called from targetpool
+  onSourceResolvingStart() {}
+  onTargetResolvingStart() {}
+  onFunctionMapResolvingStart() {}
+  onDependencyResolvingStart() {}
+  onControlFlowGraphResolvingStart() {}
+  onAbstractSyntaxTreeResolvingStart() {}
 
+  // Complete
+  // called from launcher
+  onSetupComplete() {}
+  onInstrumentationComplete() {}
+  onTargetRunComplete() {}
+  onFinalizeComplete() {}
+  onReportComplete() {}
 
+  // called from search algorithm
+  onInitializationComplete() {}
+  onSearchComplete() {}
+  onIterationComplete() {}
 
-    onSearchComplete() {}
-
-
-
+  // called from targetpool
+  onSourceResolvingComplete() {}
+  onTargetResolvingComplete() {}
+  onFunctionMapResolvingComplete() {}
+  onDependencyResolvingComplete() {}
+  onControlFlowGraphResolvingComplete() {}
+  onAbstractSyntaxTreeResolvingComplete() {}
 }

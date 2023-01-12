@@ -16,4 +16,4 @@
  * limitations under the License.
  */
 
-export * from './CorePluginInterface'
+export * from "./CorePluginInterface";
