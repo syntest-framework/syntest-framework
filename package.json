@@ -1,5 +1,5 @@
 {
-  "name": "@syntest/framework",
+  "name": "@syntest/core",
   "version": "0.2.0",
   "description": "The common core of the SynTest Framework",
   "keywords": [
@@ -8,7 +8,7 @@
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-framework/issues"
+    "url": "https://github.com/syntest-framework/syntest-core/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
+    "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
     "build": "npm run build:compile",

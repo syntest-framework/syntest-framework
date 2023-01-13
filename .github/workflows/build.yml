@@ -55,13 +55,13 @@ jobs:
             ${{ runner.os }}-
 
       # Dependencies
-      - name: Framework - Install Dependencies
+      - name: Core - Install Dependencies
         run: npm install
 
       # Building
-      - name: Framework - Build
+      - name: Core - Build
         run: npm run build
 
       # Testing
-      - name: Framework - Run Tests
+      - name: Core - Run Tests
         run: npm test
