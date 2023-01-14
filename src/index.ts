@@ -108,4 +108,7 @@ export * from "./analysis/static/targetUtil";
 // Events
 export * from "./event/EventManager"
 export * from "./event/ProgramState"
-export * from "./event/CorePluginInterface"
+export * from "./event/PluginInterface"
+
+// Launcher
+export * from "./Launcher"

@@ -42,7 +42,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/framework": "file:../.."
+    "@syntest/core": "file:../.."
   },
   "engines": {
     "node": ">=10.24.0"

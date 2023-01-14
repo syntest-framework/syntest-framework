@@ -2,7 +2,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
  * limitations under the License.
  */
 
-import { Encoding, TargetPool } from "..";
+import { TargetPool } from "..";
 import { Archive } from "../search/Archive";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 
-export interface ProgramState<T extends Encoding> {
-    targetPool: TargetPool
-    archive: Archive<T>
-    algorithm: SearchAlgorithm<T>
+export interface ProgramState {
+    targetPool?: TargetPool
+    archive?: Archive<any>
+    algorithm?: SearchAlgorithm<any>
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,27 @@
  * limitations under the License.
  */
 
-import { CorePluginInterface } from "./CorePluginInterface";
-import { Encoding } from "..";
+import { PluginInterface } from "./PluginInterface";
 import { ProgramState } from "./ProgramState";
 
-export default class EventManager<T extends Encoding> {
+export class EventManager {
 
-    private state: ProgramState<T>
-    private listeners: CorePluginInterface<T>[]
+    private static state: ProgramState
+    private static listeners: PluginInterface[] = []
 
-    constructor(state: ProgramState<T>) {
+    static setState(state: ProgramState) {
         this.state = state
     }
 
-    registerListener(listener: CorePluginInterface<T>) {
+    static registerListener(listener: PluginInterface) {
         this.listeners.push(listener)
     }
 
-    removeListener(listener: CorePluginInterface<T>) {
+    static removeListener(listener: PluginInterface) {
         this.listeners.splice(this.listeners.indexOf(listener))
     }
 
-    emitEvent(event: keyof CorePluginInterface<T>) {
+    static emitEvent(event: keyof PluginInterface) {
         for (const listener of this.listeners) {
             if (!listener[event]) {
                 continue

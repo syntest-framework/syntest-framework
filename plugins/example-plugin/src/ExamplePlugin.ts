@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import { CorePluginInterface, Encoding, ProgramState } from "@syntest/framework";
+import { PluginInterface, ProgramState } from "@syntest/core";
 
-export class ExamplePlugin<T extends Encoding> extends CorePluginInterface<T> {
+export class ExamplePlugin extends PluginInterface {
 
-    onSetupStart(state: ProgramState<T>) {
+    onSetupStart(state: ProgramState) {
         console.log(state)
     }
 
