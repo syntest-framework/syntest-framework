@@ -1,5 +1,5 @@
-import { BranchObjectiveFunction, Decoder } from "../../src";
-import { Encoding, EncodingSampler } from "../../src";
+import { BranchObjectiveFunction } from "../../src";
+import { Encoding } from "../../src";
 
 export class DummyEncodingMock extends Encoding {
   private static counter = 0;
@@ -30,11 +30,11 @@ export class DummyEncodingMock extends Encoding {
     return 0;
   }
 
-  hashCode(decoder: Decoder<DummyEncodingMock, string>): number {
+  hashCode(): number {
     return 0;
   }
 
-  mutate(sampler: EncodingSampler<DummyEncodingMock>): DummyEncodingMock {
+  mutate(): DummyEncodingMock {
     return undefined;
   }
 }
