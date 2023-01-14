@@ -16,51 +16,50 @@
  * limitations under the License.
  */
 
-import {EventManager} from "./event/EventManager";
+import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
 
 export abstract class Launcher {
+  private _programState: ProgramState;
+  private programName: string;
 
-    private _programState: ProgramState
-    private programName: string
+  get programState() {
+    return this._programState;
+  }
 
-    get programState() {
-        return this._programState
+  constructor(programName: string) {
+    this.programName = programName;
+    this._programState = {};
+    EventManager.setState(this.programState);
+  }
+
+  public async run(args: string[]): Promise<void> {
+    try {
+      await this.processArguments(args);
+      EventManager.emitEvent("onSetupStart");
+      await this.setup();
+      EventManager.emitEvent("onSetupComplete");
+      EventManager.emitEvent("onPreprocessStart");
+      await this.preprocess();
+      EventManager.emitEvent("onPreprocessComplete");
+      EventManager.emitEvent("onProcessStart");
+      await this.process();
+      EventManager.emitEvent("onProcessComplete");
+      EventManager.emitEvent("onPostprocessStart");
+      await this.postprocess();
+      EventManager.emitEvent("onPostprocessComplete");
+      EventManager.emitEvent("onExit");
+      await this.exit();
+    } catch (e) {
+      console.log(e);
+      console.trace(e);
     }
+  }
 
-    constructor(programName: string) {
-        this.programName = programName;
-        this._programState = {}
-        EventManager.setState(this.programState)
-    }
-
-    public async run(args: string[]): Promise<void> {
-        try {
-            await this.processArguments(args)
-            EventManager.emitEvent("onSetupStart")
-            await this.setup();
-            EventManager.emitEvent("onSetupComplete")
-            EventManager.emitEvent("onPreprocessStart")
-            await this.preprocess();
-            EventManager.emitEvent("onPreprocessComplete")
-            EventManager.emitEvent("onProcessStart")
-            await this.process();
-            EventManager.emitEvent("onProcessComplete")
-            EventManager.emitEvent("onPostprocessStart")
-            await this.postprocess();
-            EventManager.emitEvent("onPostprocessComplete")
-            EventManager.emitEvent("onExit")
-            await this.exit();
-        } catch (e) {
-            console.log(e)
-            console.trace(e)
-        }
-    }
-
-    abstract processArguments(args: string[]): Promise<void> 
-    abstract setup(): Promise<void>
-    abstract preprocess(): Promise<void>
-    abstract process(): Promise<void>
-    abstract postprocess(): Promise<void>
-    abstract exit(): Promise<void>
+  abstract processArguments(args: string[]): Promise<void>;
+  abstract setup(): Promise<void>;
+  abstract preprocess(): Promise<void>;
+  abstract process(): Promise<void>;
+  abstract postprocess(): Promise<void>;
+  abstract exit(): Promise<void>;
 }

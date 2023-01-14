@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
@@ -22,7 +21,7 @@ import { Archive } from "../search/Archive";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 
 export interface ProgramState {
-    targetPool?: TargetPool
-    archive?: Archive<any>
-    algorithm?: SearchAlgorithm<any>
+  targetPool?: TargetPool;
+  archive?: Archive<any>;
+  algorithm?: SearchAlgorithm<any>;
 }

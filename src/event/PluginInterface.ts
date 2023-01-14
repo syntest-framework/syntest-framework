@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import { ProgramState } from './ProgramState'
+import { ProgramState } from "./ProgramState";
 
 /**
  * The PluginInterface is an interface for creating plugins for the core of the Syntest Framework.
- * 
+ *
  * Format of functions:
  * on[EVENT]Start
  * on[EVENT]Complete
@@ -33,7 +33,7 @@ export abstract class PluginInterface {
   onProcessStart(state: ProgramState) {}
   onPostprocessStart(state: ProgramState) {}
   onExit(state: ProgramState) {}
-  
+
   onInstrumentationStart(state: ProgramState) {}
   onTargetRunStart(state: ProgramState) {}
   onReportStart(state: ProgramState) {}

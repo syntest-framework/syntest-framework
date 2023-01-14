@@ -106,9 +106,9 @@ export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
 
 // Events
-export * from "./event/EventManager"
-export * from "./event/ProgramState"
-export * from "./event/PluginInterface"
+export * from "./event/EventManager";
+export * from "./event/ProgramState";
+export * from "./event/PluginInterface";
 
 // Launcher
-export * from "./Launcher"
+export * from "./Launcher";
