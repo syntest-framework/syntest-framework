@@ -44,7 +44,6 @@
   },
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.4",
-    "@syntest/core-plugin-interface": "file:plugins/core-plugin-interface",
     "bignumber.js": "9.0.1",
     "chalk": "^4.1.1",
     "clear": "^0.1.0",

@@ -108,4 +108,4 @@ export * from "./analysis/static/targetUtil";
 // Events
 export * from "./event/EventManager"
 export * from "./event/ProgramState"
-export * from "@syntest/core-plugin-interface"
+export * from "./event/CorePluginInterface"

@@ -41,8 +41,9 @@
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "@syntest/framework": "file:../.."
+  },
   "engines": {
     "node": ">=10.24.0"
   }

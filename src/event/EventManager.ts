@@ -16,36 +16,33 @@
  * limitations under the License.
  */
 
-import { CorePluginInterface } from "@syntest/core-plugin-interface";
+import { CorePluginInterface } from "./CorePluginInterface";
 import { Encoding } from "..";
 import { ProgramState } from "./ProgramState";
 
-export default class EventManager<
-    P extends CorePluginInterface, 
-    T extends Encoding
-> {
+export default class EventManager<T extends Encoding> {
 
     private state: ProgramState<T>
-    private listeners: P[]
+    private listeners: CorePluginInterface<T>[]
 
     constructor(state: ProgramState<T>) {
         this.state = state
     }
 
-    registerListener(listener: P) {
+    registerListener(listener: CorePluginInterface<T>) {
         this.listeners.push(listener)
     }
 
-    removeListener(listener: P) {
+    removeListener(listener: CorePluginInterface<T>) {
         this.listeners.splice(this.listeners.indexOf(listener))
     }
 
-    emitEvent(event: keyof P) {
+    emitEvent(event: keyof CorePluginInterface<T>) {
         for (const listener of this.listeners) {
             if (!listener[event]) {
                 continue
             }
-            listener[event](this.state)
+            (<Function><unknown>listener[event])(this.state)
         }
     }
 }
