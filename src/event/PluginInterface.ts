@@ -30,47 +30,39 @@ export abstract class PluginInterface {
   onInitializeStart(state: ProgramState) {}
   onInitializeComplete(state: ProgramState) {}
   onPreprocessStart(state: ProgramState) {}
+  onPreprocessComplete(state: ProgramState) {}
   onProcessStart(state: ProgramState) {}
+  onProcessComplete(state: ProgramState) {}
   onPostprocessStart(state: ProgramState) {}
+  onPostprocessComplete(state: ProgramState) {}
   onExit(state: ProgramState) {}
 
   onInstrumentationStart(state: ProgramState) {}
-  onTargetRunStart(state: ProgramState) {}
-  onReportStart(state: ProgramState) {}
-
-  // called from search algorithm
-  onSearchInitializationStart(state: ProgramState) {}
-  onSearchSearchStart(state: ProgramState) {}
-  onSearchIterationStart(state: ProgramState) {}
-
-  // called from targetpool
-  onSourceResolvingStart(state: ProgramState) {}
-  onTargetResolvingStart(state: ProgramState) {}
-  onFunctionMapResolvingStart(state: ProgramState) {}
-  onDependencyResolvingStart(state: ProgramState) {}
-  onControlFlowGraphResolvingStart(state: ProgramState) {}
-  onAbstractSyntaxTreeResolvingStart(state: ProgramState) {}
-
-  // Complete
-  // called from launcher
-  onPreprocessComplete(state: ProgramState) {}
-  onProcessComplete(state: ProgramState) {}
-  onPostprocessComplete(state: ProgramState) {}
-
   onInstrumentationComplete(state: ProgramState) {}
+  onTargetRunStart(state: ProgramState) {}
   onTargetRunComplete(state: ProgramState) {}
+  onReportStart(state: ProgramState) {}
   onReportComplete(state: ProgramState) {}
 
   // called from search algorithm
+  onSearchInitializationStart(state: ProgramState) {}
   onSearchInitializationComplete(state: ProgramState) {}
+  onSearchSearchStart(state: ProgramState) {}
   onSearchComplete(state: ProgramState) {}
+  onSearchIterationStart(state: ProgramState) {}
   onSearchIterationComplete(state: ProgramState) {}
 
   // called from targetpool
+  onSourceResolvingStart(state: ProgramState) {}
   onSourceResolvingComplete(state: ProgramState) {}
+  onTargetResolvingStart(state: ProgramState) {}
   onTargetResolvingComplete(state: ProgramState) {}
+  onFunctionMapResolvingStart(state: ProgramState) {}
   onFunctionMapResolvingComplete(state: ProgramState) {}
+  onDependencyResolvingStart(state: ProgramState) {}
   onDependencyResolvingComplete(state: ProgramState) {}
+  onControlFlowGraphResolvingStart(state: ProgramState) {}
   onControlFlowGraphResolvingComplete(state: ProgramState) {}
+  onAbstractSyntaxTreeResolvingStart(state: ProgramState) {}
   onAbstractSyntaxTreeResolvingComplete(state: ProgramState) {}
 }
