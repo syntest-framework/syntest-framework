@@ -26,9 +26,9 @@ import { ProgramState } from "./ProgramState";
  * on[EVENT]Complete
  */
 export abstract class PluginInterface {
-  // Start
   // called from launcher
-  onSetupStart(state: ProgramState) {}
+  onInitializeStart(state: ProgramState) {}
+  onInitializeComplete(state: ProgramState) {}
   onPreprocessStart(state: ProgramState) {}
   onProcessStart(state: ProgramState) {}
   onPostprocessStart(state: ProgramState) {}
@@ -39,9 +39,9 @@ export abstract class PluginInterface {
   onReportStart(state: ProgramState) {}
 
   // called from search algorithm
-  onInitializationStart(state: ProgramState) {}
-  onSearchStart(state: ProgramState) {}
-  onIterationStart(state: ProgramState) {}
+  onSearchInitializationStart(state: ProgramState) {}
+  onSearchSearchStart(state: ProgramState) {}
+  onSearchIterationStart(state: ProgramState) {}
 
   // called from targetpool
   onSourceResolvingStart(state: ProgramState) {}
@@ -53,7 +53,6 @@ export abstract class PluginInterface {
 
   // Complete
   // called from launcher
-  onSetupComplete(state: ProgramState) {}
   onPreprocessComplete(state: ProgramState) {}
   onProcessComplete(state: ProgramState) {}
   onPostprocessComplete(state: ProgramState) {}
@@ -63,9 +62,9 @@ export abstract class PluginInterface {
   onReportComplete(state: ProgramState) {}
 
   // called from search algorithm
-  onInitializationComplete(state: ProgramState) {}
+  onSearchInitializationComplete(state: ProgramState) {}
   onSearchComplete(state: ProgramState) {}
-  onIterationComplete(state: ProgramState) {}
+  onSearchIterationComplete(state: ProgramState) {}
 
   // called from targetpool
   onSourceResolvingComplete(state: ProgramState) {}

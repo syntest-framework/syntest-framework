@@ -35,10 +35,10 @@ export abstract class Launcher {
 
   public async run(args: string[]): Promise<void> {
     try {
-      await this.processArguments(args);
-      EventManager.emitEvent("onSetupStart");
-      await this.setup();
-      EventManager.emitEvent("onSetupComplete");
+      await this.configure(args);
+      EventManager.emitEvent("onInitializeStart");
+      await this.initialize();
+      EventManager.emitEvent("onInitializeComplete");
       EventManager.emitEvent("onPreprocessStart");
       await this.preprocess();
       EventManager.emitEvent("onPreprocessComplete");
@@ -56,8 +56,8 @@ export abstract class Launcher {
     }
   }
 
-  abstract processArguments(args: string[]): Promise<void>;
-  abstract setup(): Promise<void>;
+  abstract configure(args: string[]): Promise<void>;
+  abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;
   abstract process(): Promise<void>;
   abstract postprocess(): Promise<void>;
