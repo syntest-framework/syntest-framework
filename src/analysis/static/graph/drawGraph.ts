@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { NodeType } from "./nodes/Node";
+import { Node, NodeType } from "./nodes/Node";
 
-const d3 = require("d3");
-const fs = require("fs");
-const { JSDOM } = require("jsdom");
+import d3 from "d3";
+import fs = require("fs");
+import { JSDOM } from "jsdom";
+import { CFG } from "./CFG";
+import { Edge } from "./Edge";
+import { BranchNode } from "./nodes/BranchNode";
 
 /**
  * @author Dimitri Stallenberg
  */
-export function drawGraph(cfg: any, path: string) {
+export function drawGraph(cfg: CFG, path: string): void {
   const width = 2000;
   const height = 2000;
   const offset = 200;
@@ -33,19 +38,15 @@ export function drawGraph(cfg: any, path: string) {
   let count = 0;
   const graph = {
     nodes: [
-      ...cfg.nodes.map((n: any) => {
+      ...cfg.nodes.map((n: Node) => {
         let name = `(${n.lines[0]})`;
 
         if (n.description && n.description.length) {
           name = `(${n.lines[0]}: ${n.description})`;
         }
 
-        if (n.type === NodeType.Root) {
-          name += ` ${n.contractName} ${n.functionName}`;
-        }
-
         if (n.type === NodeType.Branch) {
-          name += ` ${n.condition.operator}`;
+          name += ` ${(<BranchNode>n).condition.operator}`;
         }
 
         const node = {
@@ -67,7 +68,7 @@ export function drawGraph(cfg: any, path: string) {
       }),
     ],
     links: [
-      ...cfg.edges.map((e: any) => {
+      ...cfg.edges.map((e: Edge) => {
         return {
           id: e.from + "-" + e.to,
           source: e.from,
@@ -205,19 +206,26 @@ export function drawGraph(cfg: any, path: string) {
     //     .attr("y2", function(d) { return d.target.y; });
 
     link.attr("d", function (d: any) {
-      let x1 = d.source.x,
-        y1 = d.source.y,
-        x2 = d.target.x,
-        y2 = d.target.y,
-        dx = x2 - x1,
-        dy = y2 - y1,
-        dr = Math.sqrt(dx * dx + dy * dy),
-        // Defaults for normal edge.
-        drx = dr,
-        dry = dr,
-        xRotation = 0, // degrees
-        largeArc = 0, // 1 or 0
-        sweep = 1; // 1 or 0
+      const x1 = d.source.x;
+      const y1 = d.source.y;
+      let x2 = d.target.x;
+      let y2 = d.target.y;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const dr = Math.sqrt(dx * dx + dy * dy);
+      // Defaults for normal edge.
+      let drx = dr;
+      let dry = dr;
+      let xRotation = 0; // degrees
+      let largeArc = 0; // 1 or 0
+      let sweep = 1; // 1 or 0
+
+      if (d.type === true) {
+        sweep = 0;
+      } else if (d.type === undefined) {
+        drx = 0;
+        dry = 0;
+      }
 
       // Self edge.
       if (x1 === x2 && y1 === y2) {

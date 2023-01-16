@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
  */
 
 import { Node, NodeType } from "./Node";
-import { Parameter } from "../parsing/Parameter";
-import { Visibility } from "../parsing/Visibility";
 
 /**
  * Interface for a RootNode
@@ -27,13 +25,4 @@ import { Visibility } from "../parsing/Visibility";
  */
 export interface RootNode extends Node {
   type: NodeType.Root;
-
-  // if it is a root node
-  contractName: string;
-  functionName: string;
-  isConstructor: boolean;
-
-  parameters: Parameter[];
-  returnParameters: Parameter[];
-  visibility: Visibility;
 }

@@ -1,8 +1,8 @@
 # Architecture
 
-This document contains a high-level architectural overview of SynTest, and serves as a good place to get to know [the codebase](https://github.com/syntest-framework/syntest-framework).
+This document contains a high-level architectural overview of SynTest, and serves as a good place to get to know [the codebase](https://github.com/syntest-framework/syntest-core).
 
-The Syntest Framework repository serves as common core to automatically generate test cases based on JavaScript. It is important to understand that this repository should not be used directly, but that its architecture defines the underlying structure of extensions based on a language (e.g., Solidity and JavaScript/Typescript).
+The SynTest Core repository serves as common core to automatically generate test cases based on JavaScript. It is important to understand that this repository should not be used directly, but that its architecture defines the underlying structure of extensions based on a language (e.g., Solidity and JavaScript/Typescript).
 
 ## Code organization
 
@@ -27,7 +27,7 @@ Below is a brief view of SynTest's structure:
 
 ## Understanding internals
 
-To get a better idea of how the Syntest Framework operates, let's take a look at the flow of generating a test case and executing it. When testing for a specific target, this can be separated into the following steps:
+To get a better idea of how the SynTest Core operates, let's take a look at the flow of generating a test case and executing it. When testing for a specific target, this can be separated into the following steps:
 
 1. The search algorithm with objective manager is initialized with the user supplied configuration.
 2. The budget mangers are initialized responsible for iterations, evaluations etc.

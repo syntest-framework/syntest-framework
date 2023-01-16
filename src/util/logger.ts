@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import { createLogger, format, LoggerOptions, transports } from "winston";
 import { Properties } from "../properties";
 
 // define the custom settings for each transport (file, console)
-function getLoggerSettings(logDirectory: string): any {
+function getLoggerSettings(logDirectory: string): unknown {
   return {
     error: {
       level: "error",
@@ -125,10 +125,11 @@ function getLoggerSettings(logDirectory: string): any {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let logger: any = null;
 
 // instantiate a new Winston Logger with the settings defined above
-export function getLogger() {
+export function getLogger(): unknown {
   if (!logger) {
     throw new Error(
       "You have to call setupLogger before the program can start"
@@ -137,10 +138,10 @@ export function getLogger() {
   return logger;
 }
 
-export function setupLogger() {
+export function setupLogger(): void {
   if (logger) {
     // close existing one before creating a new one.
-    logger.close()
+    logger.close();
   }
   const settings = getLoggerSettings(Properties.log_directory);
 

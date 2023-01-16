@@ -2,21 +2,21 @@ import { Target } from "./Target";
 import { CFG } from "./graph/CFG";
 import { Properties } from "../../properties";
 import * as path from "path";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const globby = require("globby");
+import { TargetMetaData } from "./TargetMetaData";
+import globby = require("globby");
 
 export abstract class TargetPool {
   private _targets: Target[];
 
   abstract getSource(targetPath: string): string;
-  abstract getTargetMap(targetPath: string): Map<string, any>;
+  abstract getTargetMap(targetPath: string): Map<string, TargetMetaData>;
   abstract getFunctionMap(
     targetPath: string,
     targetName: string
-  ): Map<string, any>;
+  ): Map<string, Map<string, unknown>>;
 
   abstract getCFG(targetPath: string, targetName: string): CFG;
-  abstract getAST(targetPath: string): any;
+  abstract getAST(targetPath: string): unknown;
 
   loadTargets(): void {
     let includes = Properties.include;

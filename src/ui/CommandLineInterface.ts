@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ import { UserInterface } from "./UserInterface";
 import { getLogger } from "../util/logger";
 import * as cliProgress from "cli-progress";
 
-const chalk = require("chalk");
-const figlet = require("figlet");
+import chalk = require("chalk");
+import figlet = require("figlet");
 
 export class CommandLineInterface extends UserInterface {
   protected showProgressBar: boolean;
   protected progressValue: number;
   protected budgetValue: number;
-  protected bar: any;
+  protected bar: cliProgress.SingleBar;
 
   constructor(silent = false, verbose = false) {
     super(silent, verbose);
@@ -37,7 +37,7 @@ export class CommandLineInterface extends UserInterface {
     return chalk.yellow(figlet.textSync(text, { horizontalLayout: "full" }));
   }
 
-  startProgressBar() {
+  startProgressBar(): void {
     this.showProgressBar = true;
 
     this.bar = new cliProgress.SingleBar({
@@ -53,7 +53,7 @@ export class CommandLineInterface extends UserInterface {
     });
   }
 
-  updateProgressBar(value: number, budget: number) {
+  updateProgressBar(value: number, budget: number): void {
     this.progressValue = value;
     this.budgetValue = budget;
 
@@ -62,28 +62,28 @@ export class CommandLineInterface extends UserInterface {
     });
   }
 
-  stopProgressBar() {
+  stopProgressBar(): void {
     this.showProgressBar = false;
     this.bar.stop();
   }
 
-  log(type: string, text: string) {
+  log(type: string, text: string): void {
     getLogger()[type](text);
   }
 
-  debug(text: string) {
+  debug(text: string): void {
     this.log("debug", text);
   }
 
-  info(text: string) {
+  info(text: string): void {
     this.log("info", text);
   }
 
-  error(text: string) {
+  error(text: string): void {
     this.log("error", text);
   }
 
-  report(text: string, args: any[]): void {
+  report(text: string, args: string[]): void {
     this.info(`${text}: ${args.join(", ")}`);
   }
 }

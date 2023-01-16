@@ -1,15 +1,11 @@
 import { BranchObjectiveFunction } from "../../src";
-import { Encoding, EncodingSampler, Parameter } from "../../src";
+import { Encoding } from "../../src";
 
 export class DummyEncodingMock extends Encoding {
   private static counter = 0;
 
   constructor() {
     DummyEncodingMock.counter++;
-    const param: Parameter = {
-      name: "dummy",
-      type: "dummy",
-    };
 
     super();
   }
@@ -34,11 +30,11 @@ export class DummyEncodingMock extends Encoding {
     return 0;
   }
 
-  hashCode(decoder: any): number {
+  hashCode(): number {
     return 0;
   }
 
-  mutate(sampler: EncodingSampler<any>): DummyEncodingMock {
+  mutate(): DummyEncodingMock {
     return undefined;
   }
 }

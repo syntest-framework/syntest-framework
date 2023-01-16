@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,21 +25,21 @@ export abstract class UserInterface {
     this.verbose = verbose;
   }
 
-  abstract report(text: string, args: any[]): void;
+  abstract report(text: string, args: string[]): void;
 
-  abstract log(type: string, text: string);
+  abstract log(type: string, text: string): void;
 
-  abstract debug(text: string);
+  abstract debug(text: string): void;
 
-  abstract info(text: string);
+  abstract info(text: string): void;
 
-  abstract error(text: string);
+  abstract error(text: string): void;
 
-  abstract startProgressBar();
+  abstract startProgressBar(): void;
 
-  abstract updateProgressBar(value: number, budget: number);
+  abstract updateProgressBar(value: number, budget: number): void;
 
-  abstract stopProgressBar();
+  abstract stopProgressBar(): void;
 }
 
 let userInterface: UserInterface;
@@ -52,6 +52,6 @@ export function getUserInterface(): UserInterface {
   return userInterface;
 }
 
-export function setUserInterface(ui: UserInterface) {
+export function setUserInterface(ui: UserInterface): void {
   userInterface = ui;
 }

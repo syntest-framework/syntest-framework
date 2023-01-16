@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  */
 
 export class Properties {
+  public static target_root_directory: string;
   public static include: string[];
   public static exclude: string[];
 
@@ -45,7 +46,7 @@ export class Properties {
   public static sub_algorithm: string;
   public static population_size: number;
 
-  public static stopping_criteria: {}[];
+  public static stopping_criteria: Record<string, unknown>[];
   public static search_time: number;
   public static total_time: number;
   public static iteration_budget: number;
@@ -78,6 +79,13 @@ export class Properties {
 
 export const properties = {
   // Files
+  // This is used to do resolving of dependencies and possible type inference
+  target_root_directory: {
+    description: "The root directory where all targets are in",
+    type: "string",
+    required: true,
+  },
+
   include: {
     description: "Files/Directories to include",
     type: "array",
@@ -141,7 +149,7 @@ export const properties = {
   temp_instrumented_directory: {
     description: "Path to the temporary instrumented directory",
     type: "string",
-    default: ".syntest/instrumented/",
+    default: ".syntest/instrumented",
   },
 
   // random generator settings

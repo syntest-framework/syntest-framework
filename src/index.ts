@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// Test case
-import exp = require("constants");
 
 // Runner
 export * from "./util/Datapoint";
@@ -80,7 +77,6 @@ export * from "./search/Decoder";
 // Instrumentation
 export * from "./analysis/static/graph/CFG";
 export * from "./analysis/static/graph/Edge";
-export * from "./analysis/static/graph/cfgUtils";
 export * from "./analysis/static/graph/drawGraph";
 export * from "./analysis/static/graph/CFGFactory";
 
@@ -89,11 +85,7 @@ export * from "./analysis/static/graph/nodes/BranchNode";
 export * from "./analysis/static/graph/nodes/RootNode";
 export * from "./analysis/static/graph/nodes/PlaceholderNode";
 
-export * from "./analysis/static/graph/parsing/ActionDescription";
-export * from "./analysis/static/graph/parsing/FunctionDescription";
-export * from "./analysis/static/graph/parsing/Parameter";
-export * from "./analysis/static/graph/parsing/Visibility";
-export * from "./analysis/static/graph/parsing/TargetMetaData";
+export * from "./analysis/static/TargetMetaData";
 
 // UI
 export * from "./ui/UserInterface";
@@ -102,7 +94,6 @@ export * from "./ui/MonitorCommandLineInterface";
 
 // Util
 export * from "./config";
-export * from "./util/HashSet";
 export * from "./util/logger";
 export * from "./util/prng";
 export * from "./util/fileSystem";

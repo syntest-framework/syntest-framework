@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    */
   getRemainingBudget(): number {
     if (this.getUsedBudget() > this._maxSearchTime) {
-      console.log(
+      console.debug(
         `Consumed ${
           this.getUsedBudget() - this._maxSearchTime
         }s over the allocated search time`

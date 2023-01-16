@@ -12,10 +12,15 @@ const expect = chai.expect;
 
 describe("PRNG", () => {
   before(async () => {
-    await guessCWD(null);
-    await setupOptions("", "");
+    await guessCWD();
+    await setupOptions("", []);
     await loadConfig();
-    await processConfig({}, "");
+    await processConfig(
+      {
+        target_root_directory: "./",
+      },
+      ""
+    );
     await setupLogger();
   });
 

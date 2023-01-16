@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -149,6 +149,9 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // Create separate exception objective when an exception occurred in the execution
     if (result.hasExceptions()) {
+      // TODO there must be a better way
+      //  investigate error patterns somehow
+
       const hash = crypto
         .createHash("md5")
         .update(result.getExceptions())
@@ -159,6 +162,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
         .filter((objective) => objective instanceof ExceptionObjectiveFunction)
         .filter((objective) => objective.getIdentifier() === hash).length;
       if (numOfExceptions === 0) {
+        // TODO this makes the archive become too large crashing the tool
         this._archive.update(
           new ExceptionObjectiveFunction(
             this._subject,

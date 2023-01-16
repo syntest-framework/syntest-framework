@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +21,9 @@ import { CFG } from "../analysis/static/graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { Edge } from "../analysis/static/graph/Edge";
-import { ActionDescription } from "../analysis/static/graph/parsing/ActionDescription";
 import { getUserInterface } from "../ui/UserInterface";
-import { Parameter } from "../analysis/static/graph/parsing/Parameter";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Graph, alg } = require("@dagrejs/graphlib");
 
 /**
@@ -36,7 +36,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Path to the subject.
    * @protected
    */
-  protected readonly _path: string;
+  private readonly _path: string;
 
   /**
    * Name of the subject.
@@ -49,12 +49,6 @@ export abstract class SearchSubject<T extends Encoding> {
    * @protected
    */
   protected readonly _cfg: CFG;
-
-  /**
-   * Function map of the subject.
-   * @protected
-   */
-  protected readonly _functions: ActionDescription[];
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -76,16 +70,10 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param functions Functions of the subject
    * @protected
    */
-  protected constructor(
-    path: string,
-    name: string,
-    cfg: CFG,
-    functions: ActionDescription[]
-  ) {
+  protected constructor(path: string, name: string, cfg: CFG) {
     this._path = path;
     this._name = name;
     this._cfg = cfg;
-    this._functions = functions;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
     this._extractPaths();
@@ -152,18 +140,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return Array.from(this._objectives.get(objective));
   }
 
-  /**
-   * Return possible actions on this subject.
-   *
-   * @param type
-   * @param returnTypes
-   */
-  public abstract getPossibleActions(
-    type?: string,
-    returnTypes?: Parameter[]
-  ): ActionDescription[];
-
-  public getPath(from: string, to: string) {
+  public getPath(from: string, to: string): number {
     return this._paths[from][to].distance;
   }
 
@@ -175,7 +152,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._cfg;
   }
 
-  get functions(): any {
-    return this._functions;
+  get path(): string {
+    return this._path;
   }
 }

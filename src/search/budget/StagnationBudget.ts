@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    */
   iteration(searchAlgorithm: SearchAlgorithm<T>): void {
     if (this._tracking && this._currentIterations < this._maxIterations) {
-      if (searchAlgorithm.progress > this._bestProgress) {
+      if (searchAlgorithm.progress("branch") > this._bestProgress) {
         this._currentIterations = 0;
       } else {
         this._currentIterations++;
