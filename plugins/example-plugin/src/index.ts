@@ -16,4 +16,4 @@
  * limitations under the License.
  */
 
-export * from "./ExamplePlugin";
+export * as plugin from "./ExamplePlugin";

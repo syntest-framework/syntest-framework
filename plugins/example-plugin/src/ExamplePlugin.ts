@@ -18,7 +18,7 @@
 
 import { PluginInterface, ProgramState } from "@syntest/core";
 
-export class ExamplePlugin extends PluginInterface {
+export default class ExamplePlugin extends PluginInterface {
   onSetupStart(state: ProgramState) {
     console.log(state);
   }

@@ -1,9 +1,10 @@
 import { EventManager, Launcher } from "@syntest/core";
-import { ExamplePlugin } from "../../src";
 
 export class DummyLauncher extends Launcher {
   async processArguments(args: string[]): Promise<void> {
-    EventManager.registerListener(new ExamplePlugin());
+    const {plugin} = await import(args[1])
+    console.log(plugin)
+    EventManager.registerListener(new plugin.default());
   }
   async setup(): Promise<void> {}
   async preprocess(): Promise<void> {}
