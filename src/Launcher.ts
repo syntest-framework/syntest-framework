@@ -20,8 +20,13 @@ import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
 
 export abstract class Launcher {
+  private _eventManager: EventManager;
   private _programState: ProgramState;
   private programName: string;
+
+  get eventManager() {
+    return this._eventManager;
+  }
 
   get programState() {
     return this._programState;
@@ -30,25 +35,25 @@ export abstract class Launcher {
   constructor(programName: string) {
     this.programName = programName;
     this._programState = {};
-    EventManager.setState(this.programState);
+    this._eventManager = new EventManager(this.programState)
   }
 
   public async run(args: string[]): Promise<void> {
     try {
       await this.configure(args);
-      EventManager.emitEvent("onInitializeStart");
+      this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
-      EventManager.emitEvent("onInitializeComplete");
-      EventManager.emitEvent("onPreprocessStart");
+      this.eventManager.emitEvent("onInitializeComplete");
+      this.eventManager.emitEvent("onPreprocessStart");
       await this.preprocess();
-      EventManager.emitEvent("onPreprocessComplete");
-      EventManager.emitEvent("onProcessStart");
+      this.eventManager.emitEvent("onPreprocessComplete");
+      this.eventManager.emitEvent("onProcessStart");
       await this.process();
-      EventManager.emitEvent("onProcessComplete");
-      EventManager.emitEvent("onPostprocessStart");
+      this.eventManager.emitEvent("onProcessComplete");
+      this.eventManager.emitEvent("onPostprocessStart");
       await this.postprocess();
-      EventManager.emitEvent("onPostprocessComplete");
-      EventManager.emitEvent("onExit");
+      this.eventManager.emitEvent("onPostprocessComplete");
+      this.eventManager.emitEvent("onExit");
       await this.exit();
     } catch (e) {
       console.log(e);

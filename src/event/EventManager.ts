@@ -20,27 +20,30 @@ import { PluginInterface } from "./PluginInterface";
 import { ProgramState } from "./ProgramState";
 
 export class EventManager {
-  private static state: ProgramState;
-  private static listeners: PluginInterface[] = [];
+  private state: ProgramState;
+  private listeners: PluginInterface[] = [];
 
-  static setState(state: ProgramState) {
+  constructor(state: ProgramState) {
     this.state = state;
   }
 
-  static registerListener(listener: PluginInterface) {
+  registerListener(listener: PluginInterface) {
     this.listeners.push(listener);
   }
 
-  static removeListener(listener: PluginInterface) {
+  removeListener(listener: PluginInterface) {
     this.listeners.splice(this.listeners.indexOf(listener));
   }
 
-  static emitEvent(event: keyof PluginInterface) {
+  emitEvent(event: keyof PluginInterface) {
     for (const listener of this.listeners) {
       if (!listener[event]) {
         continue;
       }
-      (<Function>(<unknown>listener[event]))(this.state);
+      if ((typeof listener[event]) !== "function") {
+        continue
+      }
+      listener[event](this.state);
     }
   }
 }
