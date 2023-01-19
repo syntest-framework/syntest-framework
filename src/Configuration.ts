@@ -157,7 +157,7 @@ export function configureOptions(programName: string) {
         normalize: true,
         type: "string",
     })
-    .option('temp-log-directory', {
+    .option('temp-instrumented-directory', {
         alias: [],
         default: ".syntest/instrumented",
         description: "Path to the temporary instrumented directory",

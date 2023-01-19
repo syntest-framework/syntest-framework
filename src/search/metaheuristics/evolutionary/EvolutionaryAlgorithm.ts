@@ -23,7 +23,7 @@ import { tournamentSelection } from "../../operators/selection/TournamentSelecti
 import { Crossover } from "../../operators/crossover/Crossover";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
-import { Properties } from "../../../properties";
+import { CONFIG } from "../../../Launcher";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { Encoding } from "../../Encoding";
 
@@ -71,7 +71,7 @@ export abstract class EvolutionaryAlgorithm<
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
     this._population = [];
-    this._populationSize = Properties.population_size;
+    this._populationSize = CONFIG.populationSize;
     this._crossover = crossover;
   }
 
@@ -83,7 +83,7 @@ export abstract class EvolutionaryAlgorithm<
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<void> {
-    for (let i = 0; i < Properties.population_size; i++) {
+    for (let i = 0; i < CONFIG.populationSize; i++) {
       this._population.push(this._encodingSampler.sample());
     }
 
@@ -137,7 +137,7 @@ export abstract class EvolutionaryAlgorithm<
       const parentA = tournamentSelection(this._population, rounds);
       const parentB = tournamentSelection(this._population, rounds);
 
-      if (prng.nextDouble(0, 1) <= Properties.crossover_probability) {
+      if (prng.nextDouble(0, 1) <= CONFIG.crossoverProbability) {
         const [childA, childB] = this._crossover.crossOver(parentA, parentB);
 
         const testCase1 = childA.copy().mutate(this._encodingSampler);

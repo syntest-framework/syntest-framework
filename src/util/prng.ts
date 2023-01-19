@@ -17,7 +17,7 @@
  */
 
 import BigNumber from "bignumber.js";
-import { Properties } from "../properties";
+import { CONFIG } from "../Launcher";
 
 import seedrandom = require("seedrandom");
 
@@ -26,7 +26,7 @@ let random = null;
 
 export function getSeed(): string {
   if (!seed) {
-    seed = Properties.seed;
+    seed = CONFIG.seed;
 
     if (!seed) {
       seed = `${seedrandom()()}`;

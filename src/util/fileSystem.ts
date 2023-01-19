@@ -18,31 +18,31 @@
 
 import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "fs";
 import * as path from "path";
-import { Properties } from "../properties";
+import { CONFIG } from "../Launcher";
 
 export async function createDirectoryStructure() {
   // outputs
-  await mkdirSync(Properties.statistics_directory, {
+  await mkdirSync(CONFIG.statisticsDirectory, {
     recursive: true,
   });
-  await mkdirSync(Properties.log_directory, { recursive: true });
-  await mkdirSync(Properties.final_suite_directory, {
+  await mkdirSync(CONFIG.logDirectory, { recursive: true });
+  await mkdirSync(CONFIG.finalSuiteDirectory, {
     recursive: true,
   });
-  await mkdirSync(Properties.cfg_directory, { recursive: true });
+  await mkdirSync(CONFIG.cfgDirectory, { recursive: true });
 }
 
 export async function createTempDirectoryStructure() {
   // temp
-  await mkdirSync(Properties.temp_test_directory, { recursive: true });
-  await mkdirSync(Properties.temp_log_directory, { recursive: true });
-  await mkdirSync(Properties.temp_instrumented_directory, { recursive: true });
+  await mkdirSync(CONFIG.tempTestDirectory, { recursive: true });
+  await mkdirSync(CONFIG.tempLogDirectory, { recursive: true });
+  await mkdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
 }
 
 export async function deleteTempDirectories() {
-  await rmdirSync(Properties.temp_test_directory, { recursive: true });
-  await rmdirSync(Properties.temp_log_directory, { recursive: true });
-  await rmdirSync(Properties.temp_instrumented_directory, { recursive: true });
+  await rmdirSync(CONFIG.tempTestDirectory, { recursive: true });
+  await rmdirSync(CONFIG.tempLogDirectory, { recursive: true });
+  await rmdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
 
   await rmdirSync(`.syntest`, { recursive: true });
 }

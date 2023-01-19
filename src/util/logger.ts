@@ -17,7 +17,7 @@
  */
 
 import { createLogger, format, LoggerOptions, transports } from "winston";
-import { Properties } from "../properties";
+import { CONFIG } from "../Launcher";
 
 // define the custom settings for each transport (file, console)
 function getLoggerSettings(logDirectory: string): unknown {
@@ -143,11 +143,11 @@ export function setupLogger(): void {
     // close existing one before creating a new one.
     logger.close();
   }
-  const settings = getLoggerSettings(Properties.log_directory);
+  const settings = getLoggerSettings(CONFIG.logDirectory);
 
   const options: LoggerOptions = <LoggerOptions>{
     transports: [
-      ...Properties.log_to_file.map(
+      ...CONFIG.logToFile.map(
         (logLevel: string) => new transports.File(settings[logLevel])
       ),
     ],

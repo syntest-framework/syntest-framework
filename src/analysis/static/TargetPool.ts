@@ -1,9 +1,9 @@
 import { Target } from "./Target";
 import { CFG } from "./graph/CFG";
-import { Properties } from "../../properties";
 import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
+import { CONFIG } from "../../Launcher";
 
 export abstract class TargetPool {
   private _targets: Target[];
@@ -19,8 +19,8 @@ export abstract class TargetPool {
   abstract getAST(targetPath: string): unknown;
 
   loadTargets(): void {
-    let includes = Properties.include;
-    let excludes = Properties.exclude;
+    let includes = CONFIG.include;
+    let excludes = CONFIG.exclude;
 
     if (typeof includes === "string") {
       includes = [includes];
