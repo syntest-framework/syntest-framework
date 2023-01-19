@@ -17,10 +17,9 @@
  * limitations under the License.
  */
 
-import { CFG } from "../analysis/static/graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
-import { Edge } from "../analysis/static/graph/Edge";
+import { CFG, Edge } from "@syntest/cfg";
 import { getUserInterface } from "../ui/UserInterface";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
