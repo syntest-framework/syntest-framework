@@ -6,7 +6,11 @@ describe("", () => {
   it("Valid path", () => {
     const eventManager = new EventManager({});
     const cli = new CommandLineInterface();
-    const launcher = new DummyLauncher<DummyEncoding>("dummy", eventManager, cli);
+    const launcher = new DummyLauncher<DummyEncoding>(
+      "dummy",
+      eventManager,
+      cli
+    );
     const args = [
       "--use_plugin",
       "../plugins/example-plugin/src",
@@ -18,7 +22,11 @@ describe("", () => {
   it("Invalid path", () => {
     const eventManager = new EventManager({});
     const cli = new CommandLineInterface();
-    const launcher = new DummyLauncher<DummyEncoding>("dummy", eventManager, cli);
+    const launcher = new DummyLauncher<DummyEncoding>(
+      "dummy",
+      eventManager,
+      cli
+    );
     const args = ["--use_plugin", "../plugins", "--target_root_directory", "."];
     launcher.run(args);
   });

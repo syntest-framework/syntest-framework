@@ -5,7 +5,7 @@ import {
   processConfig,
   setupLogger,
   setupOptions,
-  Encoding
+  Encoding,
 } from "@syntest/core";
 
 export class DummyLauncher<T extends Encoding> extends Launcher<T> {
@@ -17,9 +17,19 @@ export class DummyLauncher<T extends Encoding> extends Launcher<T> {
     processConfig(config, args);
     setupLogger();
   }
-  async initialize(): Promise<void> {}
-  async preprocess(): Promise<void> {}
-  async process(): Promise<void> {}
-  async postprocess(): Promise<void> {}
-  async exit(): Promise<void> {}
+  async initialize(): Promise<void> {
+    console.log();
+  }
+  async preprocess(): Promise<void> {
+    console.log();
+  }
+  async process(): Promise<void> {
+    console.log();
+  }
+  async postprocess(): Promise<void> {
+    console.log();
+  }
+  async exit(): Promise<void> {
+    console.log();
+  }
 }

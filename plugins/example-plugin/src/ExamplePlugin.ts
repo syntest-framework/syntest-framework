@@ -18,7 +18,9 @@
 
 import { Encoding, PluginInterface, ProgramState } from "@syntest/core";
 
-export default class ExamplePlugin<T extends Encoding> extends PluginInterface<T> {
+export default class ExamplePlugin<
+  T extends Encoding
+> extends PluginInterface<T> {
   onSetupStart(state: ProgramState<T>) {
     console.log(state);
   }
