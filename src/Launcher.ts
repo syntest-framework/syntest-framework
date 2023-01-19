@@ -16,13 +16,16 @@
  * limitations under the License.
  */
 
+import { UserInterface } from ".";
 import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
+import { setupLogger } from "./util/logger";
 
 export abstract class Launcher {
   private _eventManager: EventManager;
   private _programState: ProgramState;
-  private programName: string;
+  private _programName: string;
+  private _ui: UserInterface
 
   get eventManager() {
     return this._eventManager;
@@ -32,10 +35,19 @@ export abstract class Launcher {
     return this._programState;
   }
 
-  constructor(programName: string) {
-    this.programName = programName;
+  get programName() {
+    return this._programName
+  }
+
+  get ui() {
+    return this._ui
+  }
+
+  constructor(programName: string, eventManager: EventManager, ui: UserInterface) {
+    this._programName = programName;
     this._programState = {};
-    this._eventManager = new EventManager(this.programState)
+    this._eventManager = eventManager
+    this._ui = ui
   }
 
   public async run(args: string[]): Promise<void> {
@@ -58,6 +70,16 @@ export abstract class Launcher {
     } catch (e) {
       console.log(e);
       console.trace(e);
+    }
+  }
+
+  async loadPlugin(pluginPath: string): Promise<void> {
+    try {
+      const {plugin} = await import(pluginPath)
+      this.eventManager.registerListener(new plugin.default());
+    } catch (e) {
+      this.ui.error(`Could not load plugin: ${pluginPath}`)
+      console.trace(e)
     }
   }
 

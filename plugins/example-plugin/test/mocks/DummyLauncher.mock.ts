@@ -1,12 +1,15 @@
-import { EventManager, Launcher } from "@syntest/core";
+import { guessCWD, Launcher, loadConfig, processConfig, setupLogger, setupOptions } from "@syntest/core";
 
 export class DummyLauncher extends Launcher {
-  async processArguments(args: string[]): Promise<void> {
-    const {plugin} = await import(args[1])
-    console.log(plugin)
-    EventManager.registerListener(new plugin.default());
+  async configure(args: string[]): Promise<void> {
+    await this.loadPlugin(args[1])
+    guessCWD()
+    setupOptions(this.programName, <Record<string, unknown>[]><unknown>{});
+    const config = loadConfig(args);
+    processConfig(config, args);
+    setupLogger()
   }
-  async setup(): Promise<void> {}
+  async initialize(): Promise<void> {}
   async preprocess(): Promise<void> {}
   async process(): Promise<void> {}
   async postprocess(): Promise<void> {}

@@ -20,11 +20,11 @@ import { PluginInterface } from "./PluginInterface";
 import { ProgramState } from "./ProgramState";
 
 export class EventManager {
-  private state: ProgramState;
+  private _state: ProgramState;
   private listeners: PluginInterface[] = [];
 
   constructor(state: ProgramState) {
-    this.state = state;
+    this._state = state;
   }
 
   registerListener(listener: PluginInterface) {
@@ -45,5 +45,9 @@ export class EventManager {
       }
       listener[event](this.state);
     }
+  }
+
+  get state() {
+    return this._state
   }
 }
