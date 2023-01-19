@@ -39,9 +39,7 @@
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {
-    "@dagrejs/graphlib": "2.1.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/chai": "4.3.4",
     "@types/mocha": "10.0.1",
