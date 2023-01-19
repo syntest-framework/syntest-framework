@@ -16,16 +16,15 @@
  * limitations under the License.
  */
 
-import { UserInterface } from ".";
+import { Encoding, UserInterface } from ".";
 import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
-import { setupLogger } from "./util/logger";
 
-export abstract class Launcher {
-  private _eventManager: EventManager;
-  private _programState: ProgramState;
+export abstract class Launcher<T extends Encoding> {
+  private _eventManager: EventManager<T>;
+  private _programState: ProgramState<T>;
   private _programName: string;
-  private _ui: UserInterface
+  private _ui: UserInterface;
 
   get eventManager() {
     return this._eventManager;
@@ -36,18 +35,22 @@ export abstract class Launcher {
   }
 
   get programName() {
-    return this._programName
+    return this._programName;
   }
 
   get ui() {
-    return this._ui
+    return this._ui;
   }
 
-  constructor(programName: string, eventManager: EventManager, ui: UserInterface) {
+  constructor(
+    programName: string,
+    eventManager: EventManager<T>,
+    ui: UserInterface
+  ) {
     this._programName = programName;
     this._programState = {};
-    this._eventManager = eventManager
-    this._ui = ui
+    this._eventManager = eventManager;
+    this._ui = ui;
   }
 
   public async run(args: string[]): Promise<void> {
@@ -75,11 +78,11 @@ export abstract class Launcher {
 
   async loadPlugin(pluginPath: string): Promise<void> {
     try {
-      const {plugin} = await import(pluginPath)
+      const { plugin } = await import(pluginPath);
       this.eventManager.registerListener(new plugin.default());
     } catch (e) {
-      this.ui.error(`Could not load plugin: ${pluginPath}`)
-      console.trace(e)
+      this.ui.error(`Could not load plugin: ${pluginPath}`);
+      console.trace(e);
     }
   }
 

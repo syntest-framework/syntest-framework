@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { Encoding } from "..";
 import { ProgramState } from "./ProgramState";
 
 /**
@@ -25,44 +26,44 @@ import { ProgramState } from "./ProgramState";
  * on[EVENT]Start
  * on[EVENT]Complete
  */
-export abstract class PluginInterface {
+export abstract class PluginInterface<T extends Encoding> {
   // called from launcher
-  onInitializeStart(state: ProgramState) {}
-  onInitializeComplete(state: ProgramState) {}
-  onPreprocessStart(state: ProgramState) {}
-  onPreprocessComplete(state: ProgramState) {}
-  onProcessStart(state: ProgramState) {}
-  onProcessComplete(state: ProgramState) {}
-  onPostprocessStart(state: ProgramState) {}
-  onPostprocessComplete(state: ProgramState) {}
-  onExit(state: ProgramState) {}
+  onInitializeStart(state: ProgramState<T>) {}
+  onInitializeComplete(state: ProgramState<T>) {}
+  onPreprocessStart(state: ProgramState<T>) {}
+  onPreprocessComplete(state: ProgramState<T>) {}
+  onProcessStart(state: ProgramState<T>) {}
+  onProcessComplete(state: ProgramState<T>) {}
+  onPostprocessStart(state: ProgramState<T>) {}
+  onPostprocessComplete(state: ProgramState<T>) {}
+  onExit(state: ProgramState<T>) {}
 
-  onInstrumentationStart(state: ProgramState) {}
-  onInstrumentationComplete(state: ProgramState) {}
-  onTargetRunStart(state: ProgramState) {}
-  onTargetRunComplete(state: ProgramState) {}
-  onReportStart(state: ProgramState) {}
-  onReportComplete(state: ProgramState) {}
+  onInstrumentationStart(state: ProgramState<T>) {}
+  onInstrumentationComplete(state: ProgramState<T>) {}
+  onTargetRunStart(state: ProgramState<T>) {}
+  onTargetRunComplete(state: ProgramState<T>) {}
+  onReportStart(state: ProgramState<T>) {}
+  onReportComplete(state: ProgramState<T>) {}
 
   // called from search algorithm
-  onSearchInitializationStart(state: ProgramState) {}
-  onSearchInitializationComplete(state: ProgramState) {}
-  onSearchSearchStart(state: ProgramState) {}
-  onSearchComplete(state: ProgramState) {}
-  onSearchIterationStart(state: ProgramState) {}
-  onSearchIterationComplete(state: ProgramState) {}
+  onSearchInitializationStart(state: ProgramState<T>) {}
+  onSearchInitializationComplete(state: ProgramState<T>) {}
+  onSearchSearchStart(state: ProgramState<T>) {}
+  onSearchComplete(state: ProgramState<T>) {}
+  onSearchIterationStart(state: ProgramState<T>) {}
+  onSearchIterationComplete(state: ProgramState<T>) {}
 
   // called from targetpool
-  onSourceResolvingStart(state: ProgramState) {}
-  onSourceResolvingComplete(state: ProgramState) {}
-  onTargetResolvingStart(state: ProgramState) {}
-  onTargetResolvingComplete(state: ProgramState) {}
-  onFunctionMapResolvingStart(state: ProgramState) {}
-  onFunctionMapResolvingComplete(state: ProgramState) {}
-  onDependencyResolvingStart(state: ProgramState) {}
-  onDependencyResolvingComplete(state: ProgramState) {}
-  onControlFlowGraphResolvingStart(state: ProgramState) {}
-  onControlFlowGraphResolvingComplete(state: ProgramState) {}
-  onAbstractSyntaxTreeResolvingStart(state: ProgramState) {}
-  onAbstractSyntaxTreeResolvingComplete(state: ProgramState) {}
+  onSourceResolvingStart(state: ProgramState<T>) {}
+  onSourceResolvingComplete(state: ProgramState<T>) {}
+  onTargetResolvingStart(state: ProgramState<T>) {}
+  onTargetResolvingComplete(state: ProgramState<T>) {}
+  onFunctionMapResolvingStart(state: ProgramState<T>) {}
+  onFunctionMapResolvingComplete(state: ProgramState<T>) {}
+  onDependencyResolvingStart(state: ProgramState<T>) {}
+  onDependencyResolvingComplete(state: ProgramState<T>) {}
+  onControlFlowGraphResolvingStart(state: ProgramState<T>) {}
+  onControlFlowGraphResolvingComplete(state: ProgramState<T>) {}
+  onAbstractSyntaxTreeResolvingStart(state: ProgramState<T>) {}
+  onAbstractSyntaxTreeResolvingComplete(state: ProgramState<T>) {}
 }

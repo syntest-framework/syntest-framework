@@ -16,38 +16,39 @@
  * limitations under the License.
  */
 
+import { Encoding } from "..";
 import { PluginInterface } from "./PluginInterface";
 import { ProgramState } from "./ProgramState";
 
-export class EventManager {
-  private _state: ProgramState;
-  private listeners: PluginInterface[] = [];
+export class EventManager<T extends Encoding> {
+  private _state: ProgramState<T>;
+  private listeners: PluginInterface<T>[] = [];
 
-  constructor(state: ProgramState) {
+  constructor(state: ProgramState<T>) {
     this._state = state;
   }
 
-  registerListener(listener: PluginInterface) {
+  registerListener(listener: PluginInterface<T>) {
     this.listeners.push(listener);
   }
 
-  removeListener(listener: PluginInterface) {
+  removeListener(listener: PluginInterface<T>) {
     this.listeners.splice(this.listeners.indexOf(listener));
   }
 
-  emitEvent(event: keyof PluginInterface) {
+  emitEvent(event: keyof PluginInterface<T>) {
     for (const listener of this.listeners) {
       if (!listener[event]) {
         continue;
       }
-      if ((typeof listener[event]) !== "function") {
-        continue
+      if (typeof listener[event] !== "function") {
+        continue;
       }
       listener[event](this.state);
     }
   }
 
   get state() {
-    return this._state
+    return this._state;
   }
 }

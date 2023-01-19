@@ -161,7 +161,7 @@ export const properties = {
       type: "string",
     },
     default: [],
-    alias: "use"
+    alias: "use",
   },
 
   // random generator settings
