@@ -18,6 +18,7 @@
 
 import { Node, NodeType } from "./nodes/Node";
 import { Edge } from "./Edge";
+import { Pair } from "./Pair";
 import { RootNode } from "./nodes/RootNode";
 
 export class CFG {
@@ -60,8 +61,30 @@ export class CFG {
     return found[0];
   }
 
+  getRotatedAdjacencyList(): Map<String, Pair<string, number>[]> {
+    let adjList = new Map<String, Pair<string, number>[]>();
+
+    for(const edge of this._edges){
+      if(!adjList.has(edge.from)){
+        adjList.set(edge.from, []);
+      } 
+      if(!adjList.has(edge.to)){
+        adjList.set(edge.to, []);
+      }
+      adjList.get(edge.to).push(
+        {
+          "first" : edge.from, 
+          "second" : edge.branchType !== undefined ? 1 : 0
+        }
+      );
+    }
+
+    return adjList;
+  }
+
   findClosestAncestor(from: string, targets: string[]): [number, Node] {
     let targetsSet = new Set<string>(targets);
+    const rotatedAdjList = this.getRotatedAdjacencyList();
 
     let visitedNodeIdSet = new Set<string>([from]);
     const searchQueue = [];
@@ -73,25 +96,22 @@ export class CFG {
       let currentDistance: number = current[0];
       let currentNodeId: string = current[1];
 
-      console.log(currentNodeId);
       // get all neigbors of currently considered node
-      console.log(this._edges);
-      let edgesToNeighbors: Edge[] = this._edges.filter((e: Edge) => e.to === currentNodeId);
-      console.log(edgesToNeighbors);
+      let parentsOfCurrent = rotatedAdjList.get(currentNodeId);
       
-      for(const edge of edgesToNeighbors) {
-        let nextNodeId = edge.from;
+      for(const pairOfParent of parentsOfCurrent) {
+        let nextNodeId = pairOfParent.first;
         // ignore if already visited node
         if(visitedNodeIdSet.has(nextNodeId)) {
           continue;
         }
         // return if of targets nodes was found
         if(targetsSet.has(nextNodeId)) {
-          return [currentDistance + (edge.branchType !== undefined ? 1 : 0), this.getNodeById(nextNodeId)];
+          return [currentDistance + (pairOfParent.second), this.getNodeById(nextNodeId)];
         }
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(nextNodeId);
-        searchQueue.push([currentDistance + (edge.branchType !== undefined ? 1 : 0), nextNodeId]);
+        searchQueue.push([currentDistance + (pairOfParent.second), nextNodeId]);
       }
     }
     console.log("No covered nodes found");
