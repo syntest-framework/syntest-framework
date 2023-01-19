@@ -17,8 +17,11 @@
  */
 
 import { Encoding, UserInterface } from ".";
+import { ArgumentOptions, ArgumentValues, configureOptions } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
+
+export let CONFIG: ArgumentValues
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
@@ -55,7 +58,9 @@ export abstract class Launcher<T extends Encoding> {
 
   public async run(args: string[]): Promise<void> {
     try {
-      await this.configure(args);
+      const yargs = configureOptions(this.programName)
+      CONFIG = await this.configure(yargs, args);
+
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
       this.eventManager.emitEvent("onInitializeComplete");
@@ -76,17 +81,26 @@ export abstract class Launcher<T extends Encoding> {
     }
   }
 
-  async loadPlugin(pluginPath: string): Promise<void> {
+  async loadPlugin<A extends ArgumentOptions>(pluginPath: string, yargs: ArgumentOptions): Promise<A> {
     try {
       const { plugin } = await import(pluginPath);
-      this.eventManager.registerListener(new plugin.default());
+      const pluginInstance = new plugin.default()
+      this.eventManager.registerListener(pluginInstance);
+      return pluginInstance.addConfigurationOptions(yargs)
     } catch (e) {
       this.ui.error(`Could not load plugin: ${pluginPath}`);
       console.trace(e);
     }
   }
 
-  abstract configure(args: string[]): Promise<void>;
+  /**
+   * This function should configure the argument options in the language specific tool.
+   * Next, the plugins should be loaded and configure their argument options.
+   * Finally, the plugin should parse the arguments and given config files.
+   * @param yargs 
+   * @param args 
+   */
+  abstract configure<T extends ArgumentValues>(yargs: ArgumentOptions, args: string[]): Promise<T>
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;
   abstract process(): Promise<void>;
