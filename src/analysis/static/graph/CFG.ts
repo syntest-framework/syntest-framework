@@ -50,4 +50,51 @@ export class CFG {
       .filter((node) => node.type === NodeType.Root)
       .map((node) => <RootNode>node);
   }
+
+  getNodeById(nodeId : string): Node {
+    const found = this._nodes.filter((node: Node) => node.id == nodeId);
+    if(found.length != 1) {
+      console.log("No node with such id in CFG");
+      return null;
+    }
+    return found[0];
+  }
+
+  findClosestAncestor(from: string, targets: string[]): [number, Node] {
+    let targetsSet = new Set<string>(targets);
+
+    let visitedNodeIdSet = new Set<string>([from]);
+    const searchQueue = [];
+    searchQueue.push([0, from]);
+    
+    let current = undefined;
+    while(searchQueue.length != 0) {
+      current = searchQueue.shift();
+      let currentDistance: number = current[0];
+      let currentNodeId: string = current[1];
+
+      console.log(currentNodeId);
+      // get all neigbors of currently considered node
+      console.log(this._edges);
+      let edgesToNeighbors: Edge[] = this._edges.filter((e: Edge) => e.to === currentNodeId);
+      console.log(edgesToNeighbors);
+      
+      for(const edge of edgesToNeighbors) {
+        let nextNodeId = edge.from;
+        // ignore if already visited node
+        if(visitedNodeIdSet.has(nextNodeId)) {
+          continue;
+        }
+        // return if of targets nodes was found
+        if(targetsSet.has(nextNodeId)) {
+          return [currentDistance + (edge.branchType !== undefined ? 1 : 0), this.getNodeById(nextNodeId)];
+        }
+        // add element to queue and visited nodes to continue search
+        visitedNodeIdSet.add(nextNodeId);
+        searchQueue.push([currentDistance + (edge.branchType !== undefined ? 1 : 0), nextNodeId]);
+      }
+    }
+    console.log("No covered nodes found");
+    return [-1, undefined];
+  }
 }
