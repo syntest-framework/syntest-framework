@@ -43,7 +43,7 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-          if [ ${{ github.base_ref }} = development ]; then
+          if [ ${{ github.base_ref }} = 135-create-monorepo-architecture ]; then
             npx lerna version --conventional-commits --conventional-prerelease --preid beta --yes
           else
             npx lerna version --conventional-commits --conventional-graduate --yes
