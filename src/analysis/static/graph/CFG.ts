@@ -53,14 +53,15 @@ export class CFG {
   }
 
   getNodeById(nodeId: string): Node {
-    const found = this._nodes.filter((node: Node) => node.id == nodeId);
-    if (found.length != 1) {
-      console.log("No node with such id in CFG");
-      return null;
-    }
-    return found[0];
+    const node = this._nodes.find((node: Node) => node.id == nodeId);
+    return node;
   }
 
+  /*
+    Method return a map that has node ids as keys, and list of pairs as a value.
+    Each of the pairs in the list of certain node represent a node of a parent as a first value, 
+    and a number that indicates if the edge that connects this two nodes has a defined branch type i.e. weight of the edge
+  */
   getRotatedAdjacencyList(): Map<String, Pair<string, number>[]> {
     let adjList = new Map<String, Pair<string, number>[]>();
 
@@ -80,19 +81,17 @@ export class CFG {
     return adjList;
   }
 
-  findClosestAncestor(from: string, targets: string[]): [number, Node] {
-    let targetsSet = new Set<string>(targets);
+  findClosestAncestor(from: string, targets: Set<string>): {distance: number, ancestor: Node} {
     const rotatedAdjList = this.getRotatedAdjacencyList();
 
     let visitedNodeIdSet = new Set<string>([from]);
-    const searchQueue = [];
-    searchQueue.push([0, from]);
+    const searchQueue : Pair<number, string>[] = [{first: 0, second: from}];
 
     let current = undefined;
     while (searchQueue.length != 0) {
       current = searchQueue.shift();
-      let currentDistance: number = current[0];
-      let currentNodeId: string = current[1];
+      let currentDistance: number = current.first;
+      let currentNodeId: string = current.second;
 
       // get all neigbors of currently considered node
       let parentsOfCurrent = rotatedAdjList.get(currentNodeId);
@@ -103,19 +102,21 @@ export class CFG {
         if (visitedNodeIdSet.has(nextNodeId)) {
           continue;
         }
-        // return if of targets nodes was found
-        if (targetsSet.has(nextNodeId)) {
-          return [
-            currentDistance + pairOfParent.second,
-            this.getNodeById(nextNodeId),
-          ];
+        // return if one of targets nodes was found
+        if (targets.has(nextNodeId)) {
+          return {
+            distance : currentDistance + pairOfParent.second,
+            ancestor : this.getNodeById(nextNodeId),
+          };
         }
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(nextNodeId);
-        searchQueue.push([currentDistance + pairOfParent.second, nextNodeId]);
+        searchQueue.push({first: currentDistance + pairOfParent.second, second : nextNodeId});
       }
     }
-    console.log("No covered nodes found");
-    return [-1, undefined];
+    return {
+      distance : -1,
+      ancestor : null,
+    };
   }
 }
