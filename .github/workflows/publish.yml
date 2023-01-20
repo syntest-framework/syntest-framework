@@ -45,7 +45,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
-
+          
       - name: Bootstrap lerna
         run: npx lerna bootstrap
 
@@ -61,4 +61,4 @@ jobs:
             npx lerna version --conventional-commits --conventional-graduate --yes
           fi
 
-          npx lerna publish from-package --yes
+          npx lerna publish from-git --yes --verify-access
