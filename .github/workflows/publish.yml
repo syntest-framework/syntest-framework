@@ -26,15 +26,14 @@ jobs:
       # - run: npm publish --access public
       #   env:
       #     NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
-      
-      
+
       # Setup NPM git registery (TODO remove if working)
       - name: "Setup npm" # Add our registry to npm config
         run: | # Custom action
           npm set @syntest:registry=https://npm.pkg.github.com/syntest
           npm set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
 
-      # Version and publish 
+      # Version and publish
       - name: "Version and publish"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

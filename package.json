@@ -80,6 +80,7 @@
     "node": ">=10.24.0"
   },
   "workspaces": [
+    ".",
     "plugins/*",
     "packages/*"
   ]
