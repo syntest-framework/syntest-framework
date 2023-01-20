@@ -203,19 +203,19 @@ describe("CFG ancestors search", function () {
     });
 
     it("CFG1 Target E, Path went to B", () => {
-        // Path that was covered: A -> C -> E -> A -> C -> D -> F -> A -> B
+        // Path that was covered: A -> B
         // Try to find distance from E
         expect(CFG1.findClosestAncestor("E", ["ROOT", "A", "B"])).to.eql([2, CFG1.getNodeById("A")]);
     });
 
     it("CFG1 Target F, Path went to B", () => {
-        // Path that was covered: A -> C -> E -> A -> C -> D -> F -> A -> B
+        // Path that was covered: A -> B
         // Try to find distance from F
         expect(CFG1.findClosestAncestor("F", ["ROOT", "A", "B"])).to.eql([3, CFG1.getNodeById("A")]);
     });
 
     it("CFG2 Target E, Path went to S through H", () => {
-        // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q
+        // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
         // Try to find distance from E
         expect(CFG2.findClosestAncestor("E", ["ROOT", "A", "C", "D", "F", "H", "K", "N", "P", "Q", "S"])).to.eql([1, CFG2.getNodeById("C")]);
     });
@@ -248,6 +248,12 @@ describe("CFG ancestors search", function () {
         // Path that was covered: A -> C -> E -> A -> B
         // Try to find distance from R
         expect(CFG2.findClosestAncestor("R", ["ROOT", "A", "C", "E", "A", "B"])).to.eql([3, CFG2.getNodeById("C")]);
+    });
+
+    it("CFG2 Target S, Path went to E and B", () => {
+        // Path that was covered: A -> C -> E -> A -> B
+        // Try to find distance from S
+        expect(CFG2.findClosestAncestor("S", ["ROOT", "A", "C", "E", "A", "B"])).to.eql([3, CFG2.getNodeById("C")]);
     });
 
     it("CFG2 Target S, Path went to B immidiately", () => {
