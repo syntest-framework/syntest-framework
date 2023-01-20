@@ -7,10 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @syntest/core
 
-
-
-
-
 # Changelog
 
 All notable changes to this project will be documented in this file.
