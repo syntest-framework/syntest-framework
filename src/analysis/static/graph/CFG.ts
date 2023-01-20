@@ -81,11 +81,14 @@ export class CFG {
     return adjList;
   }
 
-  findClosestAncestor(from: string, targets: Set<string>): {distance: number, ancestor: Node} {
+  findClosestAncestor(
+    from: string,
+    targets: Set<string>
+  ): { distance: number; ancestor: Node } {
     const rotatedAdjList = this.getRotatedAdjacencyList();
 
     let visitedNodeIdSet = new Set<string>([from]);
-    const searchQueue : Pair<number, string>[] = [{first: 0, second: from}];
+    const searchQueue: Pair<number, string>[] = [{ first: 0, second: from }];
 
     let current = undefined;
     while (searchQueue.length != 0) {
@@ -105,18 +108,21 @@ export class CFG {
         // return if one of targets nodes was found
         if (targets.has(nextNodeId)) {
           return {
-            distance : currentDistance + pairOfParent.second,
-            ancestor : this.getNodeById(nextNodeId),
+            distance: currentDistance + pairOfParent.second,
+            ancestor: this.getNodeById(nextNodeId),
           };
         }
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(nextNodeId);
-        searchQueue.push({first: currentDistance + pairOfParent.second, second : nextNodeId});
+        searchQueue.push({
+          first: currentDistance + pairOfParent.second,
+          second: nextNodeId,
+        });
       }
     }
     return {
-      distance : -1,
-      ancestor : null,
+      distance: -1,
+      ancestor: null,
     };
   }
 }
