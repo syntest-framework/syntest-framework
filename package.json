@@ -1,6 +1,6 @@
 {
   "name": "@syntest/core",
-  "version": "0.2.0",
+  "version": "0.2.1-beta.0",
   "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -72,8 +72,8 @@
     "commitlint": "^17.4.2",
     "eslint": "8.29.0",
     "eslint-config-prettier": "8.5.0",
-    "lerna": "6.4.1",
     "husky": "^8.0.3",
+    "lerna": "6.4.1",
     "lint-staged": "^13.1.0",
     "mocha": "10.2.0",
     "nyc": "15.1.0",
