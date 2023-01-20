@@ -36,6 +36,7 @@
     "format:check": "prettier --config .prettierrc.json --check .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint-staged": "lint-staged",
     "prepare": "husky install",
     "test": "mocha",
     "test:coverage": "nyc mocha",
