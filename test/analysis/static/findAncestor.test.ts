@@ -1,13 +1,5 @@
-import {
-  BranchObjectiveFunction,
-  CFG,
-  Edge,
-  NodeType,
-  SearchSubject,
-} from "../../../src";
+import { CFG, NodeType } from "../../../src";
 import * as chai from "chai";
-import { MockSearchSubject } from "../../mocks/MockSearchSubject.mock";
-import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 

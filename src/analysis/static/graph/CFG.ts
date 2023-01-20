@@ -62,8 +62,8 @@ export class CFG {
     Each of the pairs in the list of certain node represent a node of a parent as a first value, 
     and a number that indicates if the edge that connects this two nodes has a defined branch type i.e. weight of the edge
   */
-  getRotatedAdjacencyList(): Map<String, Pair<string, number>[]> {
-    let adjList = new Map<String, Pair<string, number>[]>();
+  getRotatedAdjacencyList(): Map<string, Pair<string, number>[]> {
+    const adjList = new Map<string, Pair<string, number>[]>();
 
     for (const edge of this._edges) {
       if (!adjList.has(edge.from)) {
@@ -87,20 +87,20 @@ export class CFG {
   ): { distance: number; ancestor: Node } {
     const rotatedAdjList = this.getRotatedAdjacencyList();
 
-    let visitedNodeIdSet = new Set<string>([from]);
+    const visitedNodeIdSet = new Set<string>([from]);
     const searchQueue: Pair<number, string>[] = [{ first: 0, second: from }];
 
     let current = undefined;
     while (searchQueue.length != 0) {
       current = searchQueue.shift();
-      let currentDistance: number = current.first;
-      let currentNodeId: string = current.second;
+      const currentDistance: number = current.first;
+      const currentNodeId: string = current.second;
 
       // get all neigbors of currently considered node
-      let parentsOfCurrent = rotatedAdjList.get(currentNodeId);
+      const parentsOfCurrent = rotatedAdjList.get(currentNodeId);
 
       for (const pairOfParent of parentsOfCurrent) {
-        let nextNodeId = pairOfParent.first;
+        const nextNodeId = pairOfParent.first;
         // ignore if already visited node
         if (visitedNodeIdSet.has(nextNodeId)) {
           continue;
