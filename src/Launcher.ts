@@ -47,13 +47,11 @@ export abstract class Launcher<T extends Encoding> {
 
   constructor(
     programName: string,
-    eventManager: EventManager<T>,
-    ui: UserInterface
+    eventManager: EventManager<T>
   ) {
     this._programName = programName;
-    this._programState = {};
+    this._programState = eventManager.state
     this._eventManager = eventManager;
-    this._ui = ui;
   }
 
   public async run(args: string[]): Promise<void> {
@@ -88,7 +86,7 @@ export abstract class Launcher<T extends Encoding> {
       this.eventManager.registerListener(pluginInstance);
       return pluginInstance.addConfigurationOptions(yargs)
     } catch (e) {
-      this.ui.error(`Could not load plugin: ${pluginPath}`);
+      console.log(`Could not load plugin: ${pluginPath}`);
       console.trace(e);
     }
   }
@@ -100,7 +98,7 @@ export abstract class Launcher<T extends Encoding> {
    * @param yargs 
    * @param args 
    */
-  abstract configure<T extends ArgumentValues>(yargs: ArgumentOptions, args: string[]): Promise<T>
+  abstract configure(yargs: ArgumentOptions, args: string[]): Promise<ArgumentValues>
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;
   abstract process(): Promise<void>;
