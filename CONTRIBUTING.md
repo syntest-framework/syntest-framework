@@ -24,3 +24,25 @@ If you don't know where to begin? You can start by looking through issues with t
 
 - **beginner**: Issues which should only require a few lines of code, and a test or two.
 - **help-wanted**: Issues which should be a bit more involved than `beginner` issues.
+
+### To start
+
+After cloning the project first install the dependencies
+
+```
+npm install
+```
+
+Next, run the prepare script to setup pre-commit hooks
+
+```
+npm run prepare
+```
+
+Now you can create a new branch with the following format
+
+```
+[issue number]-short-description
+```
+
+Happy coding!
