@@ -79,6 +79,7 @@ export * from "./analysis/static/graph/CFG";
 export * from "./analysis/static/graph/Edge";
 export * from "./analysis/static/graph/drawGraph";
 export * from "./analysis/static/graph/CFGFactory";
+
 export * from "./analysis/static/graph/nodes/Node";
 export * from "./analysis/static/graph/nodes/BranchNode";
 export * from "./analysis/static/graph/nodes/RootNode";
