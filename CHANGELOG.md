@@ -3,53 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 0.2.1-beta.8 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.7 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.6 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.5 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.4 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.3 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.2 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.1 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.0 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-## 0.2.1-beta.0 (2023-01-20)
-
-**Note:** Version bump only for package @syntest/core
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## [Unreleased]
 
 ### Added
