@@ -36,7 +36,7 @@ npm install
 Next, run the prepare script to setup pre-commit hooks
 
 ```
-npm run prepare
+npm run setup-pre-commit-hooks
 ```
 
 Now you can create a new branch with the following format

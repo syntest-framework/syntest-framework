@@ -37,7 +37,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint-staged": "lint-staged",
-    "prepare": "husky install",
+    "setup-pre-commit-hooks": "husky install",
     "test": "mocha",
     "test:coverage": "nyc mocha",
     "test:watch": "mocha --watch"
