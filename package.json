@@ -81,6 +81,6 @@
   },
   "workspaces": [
     "plugins/*",
-    "libs/*"
+    "packages/*"
   ]
 }
