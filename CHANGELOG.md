@@ -7,10 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @syntest/core
 
-
-
-
-
 ## 0.2.1-beta.1 (2023-01-20)
 
 **Note:** Version bump only for package @syntest/core
