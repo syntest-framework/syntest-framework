@@ -31,8 +31,9 @@ jobs:
       # Setup NPM git registery (TODO remove if working)
       - name: "Setup npm" # Add our registry to npm config
         run: | # Custom action
-          npm set @syntest:registry=https://npm.pkg.github.com/syntest
+          npm set @syntest-framework:registry=https://npm.pkg.github.com/syntest-framework
           npm set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
+          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_PAT@github.com/syntest-framework/syntest-core
 
       # Version and publish
       - name: "Version and publish"
