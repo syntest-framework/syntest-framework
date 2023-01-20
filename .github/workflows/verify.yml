@@ -2,7 +2,7 @@ name: verify
 
 on:
   pull_request:
-    branches: [opened, synchronize]
+    types: [opened, synchronize]
     paths-ignore:
       - "docs/"
       - "**.md"
