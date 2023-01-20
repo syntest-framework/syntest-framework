@@ -29,22 +29,22 @@ jobs:
       #   env:
       #     NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
 
-      - name: Ensure access
-        run: npm whoami --registry https://npm.pkg.github.com/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Ensure access
+      #   run: npm whoami --registry https://npm.pkg.github.com/
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # # Setup NPM git registery (TODO remove if working)
-      # - name: "Setup npm" # Add our registry to npm config
-      #   run: | # Custom action
-      #     npm set @syntest-framework:registry=https://npm.pkg.github.com/syntest-framework
-      #     npm set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
+      # # # Setup NPM git registery (TODO remove if working)
+      # # - name: "Setup npm" # Add our registry to npm config
+      # #   run: | # Custom action
+      # #     npm set @syntest-framework:registry=https://npm.pkg.github.com/syntest-framework
+      # #     npm set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Config git user
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
+      # - name: Config git user
+      #   run: |
+      #     git config --global user.name 'github-actions[bot]'
+      #     git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      #     git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
           
       - name: Bootstrap lerna
         run: npx lerna bootstrap
