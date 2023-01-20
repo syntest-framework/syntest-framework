@@ -97,6 +97,6 @@
     "packages/*"
   ],
   "publishConfig": {
-    "@syntest-framework:registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com/syntest-framework"
   }
 }

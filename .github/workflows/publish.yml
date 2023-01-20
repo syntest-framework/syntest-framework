@@ -61,4 +61,4 @@ jobs:
             npx lerna version --conventional-commits --conventional-graduate --yes
           fi
 
-          npx lerna publish from-git --yes --registry https://npm.pkg.github.com/ --loglevel silly
+          npx lerna publish from-git --yes --registry https://npm.pkg.github.com/syntest-framework --loglevel silly
