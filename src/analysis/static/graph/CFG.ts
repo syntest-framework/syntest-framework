@@ -52,9 +52,9 @@ export class CFG {
       .map((node) => <RootNode>node);
   }
 
-  getNodeById(nodeId : string): Node {
+  getNodeById(nodeId: string): Node {
     const found = this._nodes.filter((node: Node) => node.id == nodeId);
-    if(found.length != 1) {
+    if (found.length != 1) {
       console.log("No node with such id in CFG");
       return null;
     }
@@ -64,19 +64,17 @@ export class CFG {
   getRotatedAdjacencyList(): Map<String, Pair<string, number>[]> {
     let adjList = new Map<String, Pair<string, number>[]>();
 
-    for(const edge of this._edges){
-      if(!adjList.has(edge.from)){
+    for (const edge of this._edges) {
+      if (!adjList.has(edge.from)) {
         adjList.set(edge.from, []);
-      } 
-      if(!adjList.has(edge.to)){
+      }
+      if (!adjList.has(edge.to)) {
         adjList.set(edge.to, []);
       }
-      adjList.get(edge.to).push(
-        {
-          "first" : edge.from, 
-          "second" : edge.branchType !== undefined ? 1 : 0
-        }
-      );
+      adjList.get(edge.to).push({
+        first: edge.from,
+        second: edge.branchType !== undefined ? 1 : 0,
+      });
     }
 
     return adjList;
@@ -89,29 +87,32 @@ export class CFG {
     let visitedNodeIdSet = new Set<string>([from]);
     const searchQueue = [];
     searchQueue.push([0, from]);
-    
+
     let current = undefined;
-    while(searchQueue.length != 0) {
+    while (searchQueue.length != 0) {
       current = searchQueue.shift();
       let currentDistance: number = current[0];
       let currentNodeId: string = current[1];
 
       // get all neigbors of currently considered node
       let parentsOfCurrent = rotatedAdjList.get(currentNodeId);
-      
-      for(const pairOfParent of parentsOfCurrent) {
+
+      for (const pairOfParent of parentsOfCurrent) {
         let nextNodeId = pairOfParent.first;
         // ignore if already visited node
-        if(visitedNodeIdSet.has(nextNodeId)) {
+        if (visitedNodeIdSet.has(nextNodeId)) {
           continue;
         }
         // return if of targets nodes was found
-        if(targetsSet.has(nextNodeId)) {
-          return [currentDistance + (pairOfParent.second), this.getNodeById(nextNodeId)];
+        if (targetsSet.has(nextNodeId)) {
+          return [
+            currentDistance + pairOfParent.second,
+            this.getNodeById(nextNodeId),
+          ];
         }
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(nextNodeId);
-        searchQueue.push([currentDistance + (pairOfParent.second), nextNodeId]);
+        searchQueue.push([currentDistance + pairOfParent.second, nextNodeId]);
       }
     }
     console.log("No covered nodes found");

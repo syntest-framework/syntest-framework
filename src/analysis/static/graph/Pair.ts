@@ -1,4 +1,4 @@
 export interface Pair<T, U> {
-    first: T;
-    second: U;
+  first: T;
+  second: U;
 }
