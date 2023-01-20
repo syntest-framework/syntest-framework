@@ -1,13 +1,8 @@
 name: build
 
 on:
-  push:
-    branches: [main, develop]
-    paths-ignore:
-      - "docs/"
-      - "**.md"
   pull_request:
-    branches: [main, develop]
+    branches: [opened, synchronize]
     paths-ignore:
       - "docs/"
       - "**.md"
@@ -54,14 +49,22 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
 
+      # Setup NPM git registery (TODO remove if working)
+      - name: "Setup npm" # Add our registry to npm config
+        run: | # Custom action
+          npm set @syntest:registry=https://npm.pkg.github.com/syntest
+          npm set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
+
       # Dependencies
       - name: Core - Install Dependencies
-        run: npm install
+        run: |
+          npm install
+          npx lerna bootstrap
 
       # Building
       - name: Core - Build
-        run: npm run build
+        run: npx lerna exec npm run build
 
       # Testing
       - name: Core - Run Tests
-        run: npm test
+        run: npx lerna exec npm run test
