@@ -1,5 +1,5 @@
 {
-  "name": "syntest-core",
+  "name": "@syntest/core",
   "version": "0.2.1-beta.1",
   "description": "The common core of the SynTest Framework",
   "keywords": [
@@ -40,7 +40,8 @@
     "setup-pre-commit-hooks": "husky install",
     "test": "mocha",
     "test:coverage": "nyc mocha",
-    "test:watch": "mocha --watch"
+    "test:watch": "mocha --watch",
+    "postversion": "git add . && git commit -m 'chore(release): publish v$npm_package_version'"
   },
   "dependencies": {
     "@dagrejs/graphlib": "2.1.4",
