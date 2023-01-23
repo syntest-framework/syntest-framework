@@ -1,9 +1,6 @@
 name: publish
 
 on:
-  push:
-    branches:
-      - 135-create-monorepo-architecture
   pull_request:
     types: [closed]
     branches:
