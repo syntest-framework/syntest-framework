@@ -96,9 +96,5 @@
     ".",
     "plugins/*",
     "packages/*"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "repository": "https://npm.pkg.github.com"
-  }
+  ]
 }
