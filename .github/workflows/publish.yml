@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 18
-          registry-url: "https://npm.pkg.github.com"
+          registry-url: "https://npm.pkg.github.com/syntest-framework/"
           always-auth: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,4 +50,4 @@ jobs:
             npx lerna version --conventional-commits --conventional-graduate --yes
           fi
 
-          npx lerna publish from-git --yes --loglevel silly --registry https://npm.pkg.github.com
+          npx lerna publish from-git --yes --loglevel silly --registry https://npm.pkg.github.com/syntest-framework/
