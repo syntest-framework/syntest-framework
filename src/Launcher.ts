@@ -17,11 +17,25 @@
  */
 
 import { Encoding, UserInterface } from ".";
-import { ArgumentOptions, ArgumentValues, configureOptions } from "./Configuration";
+import {
+  ArgumentOptions,
+  ArgumentValues,
+  configureOptions,
+} from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
 
-export let CONFIG: ArgumentValues
+export let CONFIG: ArgumentValues;
+
+export function initializeConfigSingleton<T extends ArgumentValues>(
+  argumentValues: T
+) {
+  if (CONFIG) {
+    throw Error("Already initialized the config singleton!");
+  }
+
+  CONFIG = argumentValues;
+}
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
@@ -45,18 +59,15 @@ export abstract class Launcher<T extends Encoding> {
     return this._ui;
   }
 
-  constructor(
-    programName: string,
-    eventManager: EventManager<T>
-  ) {
+  constructor(programName: string, eventManager: EventManager<T>) {
     this._programName = programName;
-    this._programState = eventManager.state
+    this._programState = eventManager.state;
     this._eventManager = eventManager;
   }
 
   public async run(args: string[]): Promise<void> {
     try {
-      const yargs = configureOptions(this.programName)
+      const yargs = configureOptions(this.programName);
       CONFIG = await this.configure(yargs, args);
 
       this.eventManager.emitEvent("onInitializeStart");
@@ -79,12 +90,15 @@ export abstract class Launcher<T extends Encoding> {
     }
   }
 
-  async loadPlugin<A extends ArgumentOptions>(pluginPath: string, yargs: ArgumentOptions): Promise<A> {
+  async loadPlugin<A extends ArgumentOptions>(
+    pluginPath: string,
+    yargs: ArgumentOptions
+  ): Promise<A> {
     try {
       const { plugin } = await import(pluginPath);
-      const pluginInstance = new plugin.default()
+      const pluginInstance = new plugin.default();
       this.eventManager.registerListener(pluginInstance);
-      return pluginInstance.addConfigurationOptions(yargs)
+      return pluginInstance.addConfigurationOptions(yargs);
     } catch (e) {
       console.log(`Could not load plugin: ${pluginPath}`);
       console.trace(e);
@@ -95,10 +109,13 @@ export abstract class Launcher<T extends Encoding> {
    * This function should configure the argument options in the language specific tool.
    * Next, the plugins should be loaded and configure their argument options.
    * Finally, the plugin should parse the arguments and given config files.
-   * @param yargs 
-   * @param args 
+   * @param yargs
+   * @param args
    */
-  abstract configure(yargs: ArgumentOptions, args: string[]): Promise<ArgumentValues>
+  abstract configure(
+    yargs: ArgumentOptions,
+    args: string[]
+  ): Promise<ArgumentValues>;
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;
   abstract process(): Promise<void>;

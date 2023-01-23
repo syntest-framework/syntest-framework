@@ -47,7 +47,7 @@ export class EventManager<T extends Encoding> {
 
       if (event === "addConfigurationOptions") {
         // non event
-        continue
+        continue;
       }
 
       listener[event](this.state);

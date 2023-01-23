@@ -30,7 +30,7 @@ import { ProgramState } from "./ProgramState";
  * on[EVENT]Complete
  */
 export abstract class PluginInterface<T extends Encoding> {
-  abstract addConfigurationOptions(yargs: ArgumentOptions): ArgumentOptions
+  abstract addConfigurationOptions(yargs: ArgumentOptions): ArgumentOptions;
 
   // called from launcher
   onInitializeStart(state: ProgramState<T>) {}
