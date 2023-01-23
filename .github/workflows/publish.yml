@@ -43,10 +43,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
         run: |
+          cat .npmrc
+          echo "//npm.pkg.github.com/syntest-framework/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ${{ github.workspace }}/.npmrc
           if [ ${{ github.base_ref }} = 135-create-monorepo-architecture ]; then
             npx lerna version --conventional-commits --conventional-prerelease --preid beta --yes
           else
             npx lerna version --conventional-commits --conventional-graduate --yes
           fi
 
-          npx lerna publish from-git --yes --loglevel silly
+          npx lerna publish from-git --yes --loglevel silly --registry https://npm.pkg.github.com
