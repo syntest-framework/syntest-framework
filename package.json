@@ -97,6 +97,7 @@
     "packages/*"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "repository": "https://npm.pkg.github.com"
   }
 }
