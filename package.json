@@ -1,5 +1,5 @@
 {
-  "name": "@syntest/core",
+  "name": "syntest-core",
   "version": "0.2.1-beta.0",
   "description": "The common core of the SynTest Framework",
   "keywords": [
