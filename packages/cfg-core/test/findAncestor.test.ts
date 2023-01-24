@@ -1,5 +1,5 @@
-import { CFG, NodeType } from "../../../src";
 import * as chai from "chai";
+import { CFG, NodeType } from "../lib";
 
 const expect = chai.expect;
 

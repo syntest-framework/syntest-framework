@@ -18,7 +18,7 @@
 
 import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
 import { Encoding } from "../search/Encoding";
-import { Node, NodeType } from "../analysis/static/graph/nodes/Node";
+import { Node, NodeType } from "@syntest/cfg-core";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
 import { Datapoint } from "../util/Datapoint";

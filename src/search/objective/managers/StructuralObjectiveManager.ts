@@ -21,7 +21,7 @@ import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { EncodingRunner } from "../../EncodingRunner";
-import { NodeType } from "../../../analysis/static/graph/nodes/Node";
+import { NodeType } from "@syntest/cfg-core";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.

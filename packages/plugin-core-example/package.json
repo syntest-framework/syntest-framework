@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/core-plugin-interface",
+  "name": "@syntest/plugin-core-example",
   "version": "0.0.1",
-  "description": "The plugin interface of the SynTest Core",
+  "description": "An example plugin for the SynTest Core",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -44,6 +44,7 @@
   "dependencies": {
     "@syntest/core": "file:../.."
   },
+  "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
   }
