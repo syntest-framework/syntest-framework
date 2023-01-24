@@ -1,10 +1,10 @@
 {
-  "name": "@syntest/cfg",
+  "name": "@syntest/cfg-core",
   "version": "0.1.0",
   "description": "A Control Flow Graph package",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "control-flow-graph"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
