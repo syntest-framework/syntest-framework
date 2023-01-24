@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@dagrejs/graphlib": "2.1.4",
+    "@syntest/cfg-core": "file:packages/cfg-core",
     "bignumber.js": "9.0.1",
     "chalk": "4.1.1",
     "clear": "0.1.0",
@@ -63,7 +64,7 @@
     "@types/chai": "4.3.4",
     "@types/cli-progress": "3.11.0",
     "@types/mocha": "10.0.1",
-    "@types/node": "18.11.17",
+    "@types/node": "18.11.18",
     "@types/sinon": "10.0.13",
     "@typescript-eslint/eslint-plugin": "5.45.1",
     "@typescript-eslint/parser": "5.45.1",
