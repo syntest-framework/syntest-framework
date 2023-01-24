@@ -13,7 +13,7 @@ describe("", () => {
     );
     const args = [
       "--use_plugin",
-      "../plugins/example-plugin/src",
+      "../packages/plugin-core-example/lib",
       "--target_root_directory",
       ".",
     ];
