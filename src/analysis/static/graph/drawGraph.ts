@@ -21,7 +21,7 @@
 import d3 from "d3";
 import fs = require("fs");
 import { JSDOM } from "jsdom";
-import { CFG, Edge, BranchNode, Node, NodeType } from "@syntest/cfg";
+import { CFG, Edge, BranchNode, Node, NodeType } from "@syntest/cfg-core";
 
 /**
  * @author Dimitri Stallenberg

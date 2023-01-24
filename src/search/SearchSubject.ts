@@ -19,7 +19,7 @@
 
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
-import { CFG, Edge } from "@syntest/cfg";
+import { CFG, Edge } from "@syntest/cfg-core";
 import { getUserInterface } from "../ui/UserInterface";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
