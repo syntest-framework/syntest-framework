@@ -18,10 +18,13 @@
 
 import { Encoding, ListenerInterface, ProgramState } from "@syntest/core";
 
+/**
+ * This example plugin logs the program state at the start of the initialization phase of the program.
+ */
 export default class ExamplePlugin<
   T extends Encoding
 > extends ListenerInterface<T> {
-  onSetupStart(state: ProgramState<T>) {
+  onInitializeStart(state: ProgramState<T>) {
     console.log(state);
   }
 }
