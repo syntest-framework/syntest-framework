@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@dagrejs/graphlib": "2.1.4",
+    "@syntest/cfg": "file:packages/cfg",
     "bignumber.js": "9.0.1",
     "chalk": "4.1.1",
     "clear": "0.1.0",
@@ -58,16 +59,21 @@
     "yargs": "17.6.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
     "@types/chai": "4.3.4",
     "@types/cli-progress": "3.11.0",
     "@types/mocha": "10.0.1",
-    "@types/node": "18.11.17",
+    "@types/node": "18.11.18",
     "@types/sinon": "10.0.13",
     "@typescript-eslint/eslint-plugin": "5.45.1",
     "@typescript-eslint/parser": "5.45.1",
     "chai": "4.3.7",
+    "commitlint": "^17.4.2",
     "eslint": "8.29.0",
     "eslint-config-prettier": "8.5.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "mocha": "10.2.0",
     "nyc": "15.1.0",
     "prettier": "2.8.1",
@@ -77,5 +83,11 @@
   },
   "engines": {
     "node": ">=10.24.0"
+  },
+  "lint-staged": {
+    "**/*": [
+      "npx prettier --config .prettierrc.json --ignore-path .prettierignore --write .",
+      "npx eslint --config .eslintrc.json --ignore-path .eslintignore --fix ."
+    ]
   }
 }

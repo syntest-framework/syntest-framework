@@ -18,14 +18,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Node, NodeType } from "./nodes/Node";
-
 import d3 from "d3";
 import fs = require("fs");
 import { JSDOM } from "jsdom";
-import { CFG } from "./CFG";
-import { Edge } from "./Edge";
-import { BranchNode } from "./nodes/BranchNode";
+import { CFG, Edge, BranchNode, Node, NodeType } from "@syntest/cfg";
 
 /**
  * @author Dimitri Stallenberg
