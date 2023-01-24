@@ -48,22 +48,16 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
 
-      # Setup NPM git registery (TODO remove if working)
-      - name: "Setup npm" # Add our registry to npm config
-        run: | # Custom action
-          npm set @syntest:registry=https://npm.pkg.github.com/syntest
-          npm set "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}"
-
       # Dependencies
       - name: Core - Install Dependencies
         run: |
           npm ci
-          npx lerna bootstrap
+          npm run install
 
       # Format
       - name: Core - Run Formatter
-        run: npx lerna exec npm run format:check
+        run: npm run format:check
 
       # Linting
       - name: Core - Run Linter
-        run: npx lerna exec npm run lint
+        run: npm run lint
