@@ -7,6 +7,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Added
 
+- abstract Launcher class with common functions
+- EventManager which propogates events to plugins
+- ProgramState used to communicate the current state of the tool to plugins
+- PluginInterface which is the basis all plugins should extend from
+- plugin folder where plugins for the syntest/core will be located
+- an example plugin
+
 ### Changed
 
 ### Deprecated
