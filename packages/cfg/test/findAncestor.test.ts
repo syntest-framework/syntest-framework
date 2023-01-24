@@ -1,5 +1,5 @@
-import { CFG, NodeType } from "../../../src";
 import * as chai from "chai";
+import { CFG, NodeType } from "@syntest/cfg";
 
 const expect = chai.expect;
 
