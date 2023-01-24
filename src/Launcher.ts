@@ -25,18 +25,6 @@ import {
 import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
 
-export let CONFIG: ArgumentValues;
-
-export function initializeConfigSingleton<T extends ArgumentValues>(
-  argumentValues: T
-) {
-  if (CONFIG) {
-    throw Error("Already initialized the config singleton!");
-  }
-
-  CONFIG = argumentValues;
-}
-
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
   private _programState: ProgramState<T>;
