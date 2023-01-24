@@ -8,7 +8,7 @@ To ensure the plugins are usable by the tool please use the following setup.
 
 ```
 example-plugin
-- src
+- lib
     - index.ts
     - [PluginName].ts
 ```
@@ -58,11 +58,3 @@ interface ProgramState {
 ```
 
 As can be seen from the structure, some of the properties are optional. For some of the early events not all properties are available yet. For example, at the setup start event there is no archive or algorithm yet.
-
-Make sure that the index file exports the plugin as follows:
-
-```javascript
-export * as plugin from "./[PluginName]";
-```
-
-This method of exporing is required for the program to be able to import the plugin.
