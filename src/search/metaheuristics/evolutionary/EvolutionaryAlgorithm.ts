@@ -23,7 +23,7 @@ import { tournamentSelection } from "../../operators/selection/TournamentSelecti
 import { Crossover } from "../../operators/crossover/Crossover";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
-import { CONFIG } from "../../../Launcher";
+import { CONFIG } from "../../../Configuration";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { Encoding } from "../../Encoding";
 

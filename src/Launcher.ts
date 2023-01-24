@@ -17,11 +17,7 @@
  */
 
 import { Encoding, UserInterface } from ".";
-import {
-  ArgumentOptions,
-  ArgumentValues,
-  configureOptions,
-} from "./Configuration";
+import { ArgumentsObject, Configuration, OptionsObject } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { ProgramState } from "./event/ProgramState";
 
@@ -55,8 +51,11 @@ export abstract class Launcher<T extends Encoding> {
 
   public async run(args: string[]): Promise<void> {
     try {
-      const yargs = configureOptions(this.programName);
-      CONFIG = await this.configure(yargs, args);
+      const configuration = new Configuration(this.programName);
+      const yargs = configuration.configureOptions();
+      configuration.initializeConfigSingleton(
+        await this.configure(yargs, args)
+      );
 
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
@@ -78,9 +77,9 @@ export abstract class Launcher<T extends Encoding> {
     }
   }
 
-  async loadPlugin<A extends ArgumentOptions>(
+  async loadPlugin<A extends OptionsObject>(
     pluginPath: string,
-    yargs: ArgumentOptions
+    yargs: OptionsObject
   ): Promise<A> {
     try {
       const { plugin } = await import(pluginPath);
@@ -101,9 +100,9 @@ export abstract class Launcher<T extends Encoding> {
    * @param args
    */
   abstract configure(
-    yargs: ArgumentOptions,
+    yargs: OptionsObject,
     args: string[]
-  ): Promise<ArgumentValues>;
+  ): Promise<ArgumentsObject>;
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;
   abstract process(): Promise<void>;

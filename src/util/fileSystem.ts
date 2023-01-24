@@ -18,7 +18,7 @@
 
 import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "fs";
 import * as path from "path";
-import { CONFIG } from "../Launcher";
+import { CONFIG } from "../Configuration";
 
 export async function createDirectoryStructure() {
   // outputs

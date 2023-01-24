@@ -102,3 +102,6 @@ export * from "./event/PluginInterface";
 
 // Launcher
 export * from "./Launcher";
+
+// Configuration
+export * from "./Configuration";

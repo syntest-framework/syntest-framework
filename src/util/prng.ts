@@ -17,7 +17,7 @@
  */
 
 import BigNumber from "bignumber.js";
-import { CONFIG } from "../Launcher";
+import { CONFIG } from "../Configuration";
 
 import seedrandom = require("seedrandom");
 

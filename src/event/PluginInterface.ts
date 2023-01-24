@@ -19,7 +19,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import { Encoding } from "..";
-import { ArgumentOptions } from "../Configuration";
+import { OptionsObject } from "../Configuration";
 import { ProgramState } from "./ProgramState";
 
 /**
@@ -30,7 +30,7 @@ import { ProgramState } from "./ProgramState";
  * on[EVENT]Complete
  */
 export abstract class PluginInterface<T extends Encoding> {
-  abstract addConfigurationOptions(yargs: ArgumentOptions): ArgumentOptions;
+  abstract addConfigurationOptions(yargs: OptionsObject): OptionsObject;
 
   // called from launcher
   onInitializeStart(state: ProgramState<T>) {}

@@ -3,7 +3,7 @@ import { CFG } from "@syntest/cfg-core";
 import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
-import { CONFIG } from "../../Launcher";
+import { CONFIG } from "../../Configuration";
 
 export abstract class TargetPool {
   private _targets: Target[];

@@ -17,7 +17,7 @@
  */
 
 import { createLogger, format, LoggerOptions, transports } from "winston";
-import { CONFIG } from "../Launcher";
+import { CONFIG } from "../Configuration";
 
 // define the custom settings for each transport (file, console)
 function getLoggerSettings(logDirectory: string): unknown {

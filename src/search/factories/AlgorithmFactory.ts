@@ -27,7 +27,7 @@ import {
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";
 import { DynaMOSA } from "../metaheuristics/evolutionary/mosa/DynaMOSA";
-import { CONFIG } from "../../Launcher";
+import { CONFIG } from "../../Configuration";
 import { Sfuzz } from "../metaheuristics/evolutionary/Sfuzz";
 
 /**

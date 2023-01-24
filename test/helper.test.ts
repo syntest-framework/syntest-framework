@@ -1,9 +1,10 @@
-import { initializeConfigSingleton, ArgumentValues } from "../src";
+import { Configuration, ArgumentsObject } from "../src";
 // globals
 
 // setup
 before(() => {
-  initializeConfigSingleton(<ArgumentValues>(<unknown>{}));
+  const configuration = new Configuration("test-program");
+  configuration.initializeConfigSingleton(<ArgumentsObject>(<unknown>{}));
 });
 // beforeEach();
 
