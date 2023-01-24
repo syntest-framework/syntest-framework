@@ -12,6 +12,8 @@
   },
   "license": "Apache-2.0",
   "contributors": [
+    "Annibale Panichella",
+    "Mitchell Olsthoorn",
     "Dimitri Stallenberg"
   ],
   "main": "dist/index.js",
