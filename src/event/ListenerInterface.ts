@@ -22,13 +22,13 @@ import { Encoding } from "..";
 import { ProgramState } from "./ProgramState";
 
 /**
- * The PluginInterface is an interface for creating plugins for the core of the Syntest Framework.
+ * The ListenerInterface is an interface for creating plugins for the core of the Syntest Framework.
  *
  * Format of functions:
  * on[EVENT]Start
  * on[EVENT]Complete
  */
-export abstract class PluginInterface<T extends Encoding> {
+export abstract class ListenerInterface<T extends Encoding> {
   // called from launcher
   onInitializeStart(state: ProgramState<T>) {}
   onInitializeComplete(state: ProgramState<T>) {}

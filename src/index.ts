@@ -99,7 +99,7 @@ export * from "./analysis/static/targetUtil";
 // Events
 export * from "./event/EventManager";
 export * from "./event/ProgramState";
-export * from "./event/PluginInterface";
+export * from "./event/ListenerInterface";
 
 // Launcher
 export * from "./Launcher";
