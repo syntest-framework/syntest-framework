@@ -1,17 +1,19 @@
 {
-  "name": "@syntest/cfg",
-  "version": "0.1.0",
-  "description": "A Control Flow Graph package",
+  "name": "@syntest/plugin-core-example",
+  "version": "0.0.1",
+  "description": "An example plugin for the SynTest Core",
   "keywords": [
     "syntest",
     "automatic-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
+    "Annibale Panichella",
+    "Mitchell Olsthoorn",
     "Dimitri Stallenberg"
   ],
   "main": "dist/index.js",
@@ -22,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "build": "npm run build:compile",
@@ -39,7 +41,9 @@
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@syntest/core": "file:../.."
+  },
   "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
