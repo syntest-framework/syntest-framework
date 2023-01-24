@@ -9,6 +9,7 @@ on:
 jobs:
   npm:
     if: github.event.pull_request.merged == true
+    if: !startsWith(github.ref, 'release/')
     runs-on: ubuntu-latest
     steps:
       # Cloning
