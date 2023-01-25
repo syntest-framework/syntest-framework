@@ -38,6 +38,7 @@
     "lint": "npx lerna exec npm run lint",
     "lint:fix": "npx lerna exec npm run lint:fix",
     "lint-staged": "lint-staged",
+    "prepare": "npm run build",
     "setup-pre-commit-hooks": "husky install",
     "test": "npx lerna exec npm run test",
     "test:coverage": "npx lerna exec npm run test:coverage",
