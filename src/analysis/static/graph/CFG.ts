@@ -84,7 +84,7 @@ export class CFG {
   findClosestAncestor(
     from: string,
     targets: Set<string>
-  ): { distance: number; ancestor: Node } {
+  ): { approachLevel: number; ancestor: Node } {
     const rotatedAdjList = this.getRotatedAdjacencyList();
 
     const visitedNodeIdSet = new Set<string>([from]);
@@ -108,7 +108,7 @@ export class CFG {
         // return if one of targets nodes was found
         if (targets.has(nextNodeId)) {
           return {
-            distance: currentDistance + pairOfParent.second,
+            approachLevel: currentDistance + pairOfParent.second,
             ancestor: this.getNodeById(nextNodeId),
           };
         }
@@ -121,7 +121,7 @@ export class CFG {
       }
     }
     return {
-      distance: -1,
+      approachLevel: -1,
       ancestor: null,
     };
   }

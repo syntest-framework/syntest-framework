@@ -20,11 +20,7 @@
 import { CFG } from "../analysis/static/graph/CFG";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
-import { Edge } from "../analysis/static/graph/Edge";
-import { getUserInterface } from "../ui/UserInterface";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Graph, alg } = require("@dagrejs/graphlib");
+import { Node } from "../analysis/static/graph/nodes/Node";
 
 /**
  * Subject of the search process.
@@ -76,7 +72,6 @@ export abstract class SearchSubject<T extends Encoding> {
     this._cfg = cfg;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
-    this._extractPaths();
   }
 
   /**
@@ -84,43 +79,6 @@ export abstract class SearchSubject<T extends Encoding> {
    * @protected
    */
   protected abstract _extractObjectives(): void;
-
-  /**
-   *
-   * @protected
-   */
-  protected _extractPaths(): void {
-    const g = new Graph();
-
-    for (const node of this._cfg.nodes) {
-      g.setNode(node.id);
-    }
-
-    for (const edge of this._cfg.edges) {
-      g.setEdge(edge.from, edge.to);
-    }
-
-    this._paths = alg.dijkstraAll(g, (e: any) => {
-      const edge = this._cfg.edges.find((edge: Edge) => {
-        if (
-          String(edge.from) === String(e.v) &&
-          String(edge.to) === String(e.w)
-        ) {
-          return true;
-        }
-
-        return (
-          String(edge.from) === String(e.w) && String(edge.to) === String(e.v)
-        );
-      });
-      if (!edge) {
-        getUserInterface().error(`Edge not found during dijkstra operation.`);
-        process.exit(1);
-      }
-
-      return edge.branchType === undefined ? 2 : 1;
-    });
-  }
 
   /**
    * Retrieve objectives.
@@ -140,8 +98,11 @@ export abstract class SearchSubject<T extends Encoding> {
     return Array.from(this._objectives.get(objective));
   }
 
-  public getPath(from: string, to: string): number {
-    return this._paths[from][to].distance;
+  public findClosestAncestor(
+    from: string,
+    targets: Set<string>
+  ): { approachLevel: number; ancestor: Node } {
+    return this._cfg.findClosestAncestor(from, targets);
   }
 
   get name(): string {
