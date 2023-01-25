@@ -18,11 +18,9 @@
 
 import { Encoding, UserInterface } from ".";
 import { EventManager } from "./event/EventManager";
-import { ProgramState } from "./event/ProgramState";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
-  private _programState: ProgramState<T>;
   private _programName: string;
   private _ui: UserInterface;
 
@@ -31,7 +29,7 @@ export abstract class Launcher<T extends Encoding> {
   }
 
   get programState() {
-    return this._programState;
+    return this.eventManager.state;
   }
 
   get programName() {
@@ -48,7 +46,6 @@ export abstract class Launcher<T extends Encoding> {
     ui: UserInterface
   ) {
     this._programName = programName;
-    this._programState = {};
     this._eventManager = eventManager;
     this._ui = ui;
   }
