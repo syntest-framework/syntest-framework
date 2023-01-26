@@ -29,7 +29,7 @@ export abstract class Launcher<T extends Encoding> {
   }
 
   get programState() {
-    return this.eventManager.state;
+    return this._eventManager.state;
   }
 
   get programName() {

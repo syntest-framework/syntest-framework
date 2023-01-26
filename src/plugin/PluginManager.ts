@@ -33,7 +33,7 @@ export class PluginManager<T extends Encoding> {
   async loadPlugin(pluginPath: string): Promise<void> {
     try {
       const { plugin } = await import(pluginPath);
-      const pluginInstance = <SearchAlgorithmPlugin<T>>new plugin.default();
+      const pluginInstance: PluginInterface<T> = new plugin.default();
       pluginInstance.register(this);
     } catch (e) {
       console.trace(e);
