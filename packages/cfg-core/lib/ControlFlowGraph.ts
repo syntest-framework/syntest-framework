@@ -21,7 +21,7 @@ import { Edge } from "./Edge";
 import { Pair } from "./Pair";
 import { RootNode } from "./nodes/RootNode";
 
-export class CFG {
+export class ControlFlowGraph {
   private _nodes: Node[];
   private _edges: Edge[];
 

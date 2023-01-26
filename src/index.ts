@@ -50,8 +50,9 @@ export * from "./search/factories/AlgorithmFactory";
 export * from "./search/factories/TerminationFactory";
 
 // Objective
-export * from "./search/objective/ObjectiveFunction";
+export * from "./search/objective/ApproachLevel";
 export * from "./search/objective/BranchDistance";
+export * from "./search/objective/ObjectiveFunction";
 export * from "./criterion/BranchObjectiveFunction";
 export * from "./criterion/FunctionObjectiveFunction";
 export * from "./criterion/ProbeObjectiveFunction";

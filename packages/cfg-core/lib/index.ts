@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./CFG";
-export * from "./CFGFactory";
+export * from "./ControlFlowGraph";
+export * from "./ControlFlowGraphFactory";
 export * from "./Edge";
 
 export * from "./nodes/Node";

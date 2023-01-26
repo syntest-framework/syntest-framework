@@ -21,12 +21,18 @@
 import d3 from "d3";
 import fs = require("fs");
 import { JSDOM } from "jsdom";
-import { CFG, Edge, BranchNode, Node, NodeType } from "@syntest/cfg-core";
+import {
+  ControlFlowGraph,
+  Edge,
+  BranchNode,
+  Node,
+  NodeType,
+} from "@syntest/cfg-core";
 
 /**
  * @author Dimitri Stallenberg
  */
-export function drawGraph(cfg: CFG, path: string): void {
+export function drawGraph(cfg: ControlFlowGraph, path: string): void {
   const width = 2000;
   const height = 2000;
   const offset = 200;

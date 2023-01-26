@@ -1,11 +1,11 @@
 import { Encoding, ObjectiveFunction, SearchSubject } from "../../src";
-import { DummyCFG } from "./DummyCFG.mock";
+import { DummyControlFlowGraph } from "./DummyCFG.mock";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
   protected objectives: ObjectiveFunction<T>[];
 
   constructor(objectives: ObjectiveFunction<T>[]) {
-    super("", "", new DummyCFG());
+    super("", "", new DummyControlFlowGraph());
     this.objectives = objectives;
   }
 

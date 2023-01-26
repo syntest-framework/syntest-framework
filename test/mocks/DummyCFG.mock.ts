@@ -1,3 +1,3 @@
-import { CFG } from "@syntest/cfg-core";
+import { ControlFlowGraph } from "@syntest/cfg-core";
 
-export class DummyCFG extends CFG {}
+export class DummyControlFlowGraph extends ControlFlowGraph {}

@@ -1,5 +1,5 @@
 import { Target } from "./Target";
-import { CFG } from "@syntest/cfg-core";
+import { ControlFlowGraph } from "@syntest/cfg-core";
 import { Properties } from "../../properties";
 import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
@@ -15,7 +15,7 @@ export abstract class TargetPool {
     targetName: string
   ): Map<string, Map<string, unknown>>;
 
-  abstract getCFG(targetPath: string, targetName: string): CFG;
+  abstract getCFG(targetPath: string, targetName: string): ControlFlowGraph;
   abstract getAST(targetPath: string): unknown;
 
   loadTargets(): void {

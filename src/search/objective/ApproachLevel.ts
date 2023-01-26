@@ -1,10 +1,10 @@
 import { Datapoint } from "../..";
-import { CFG, Node } from "@syntest/cfg-core";
+import { ControlFlowGraph, Node } from "@syntest/cfg-core";
 import { Pair } from "@syntest/cfg-core/dist/Pair";
 
 export class ApproachLevel {
   public static calculate(
-    cfg: CFG,
+    cfg: ControlFlowGraph,
     node: Node,
     traces: Datapoint[]
   ): { approachLevel: number; hitTrace: Datapoint } {
@@ -27,12 +27,14 @@ export class ApproachLevel {
     const coveredLines = new Set<number>(linesTraceMap.keys());
 
     // Based on set of covered lines, filter CFG nodes that were covered and get their strings
-    const coveredNodeIds = cfg.getNodesByLineNumbers(coveredLines);
+    const coveredNodes = cfg.getNodesByLineNumbers(coveredLines);
+
+    const targetIds = new Set<string>([...coveredNodes].map((node) => node.id));
 
     const { approachLevel, ancestor } = this._findClosestAncestor(
       cfg,
-      node,
-      coveredNodeIds
+      node.id,
+      targetIds
     );
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
@@ -52,17 +54,15 @@ export class ApproachLevel {
     return { approachLevel, hitTrace };
   }
 
-  private static _findClosestAncestor(
-    cfg: CFG,
-    from: Node,
-    targets: Set<Node>
+  static _findClosestAncestor(
+    cfg: ControlFlowGraph,
+    from: string,
+    targets: Set<string>
   ): { approachLevel: number; ancestor: Node } {
     const rotatedAdjList = cfg.getRotatedAdjacencyList();
 
-    const targetIds = new Set<string>([...targets].map((node) => node.id));
-
-    const visitedNodeIdSet = new Set<string>([from.id]);
-    const searchQueue: Pair<number, string>[] = [{ first: 0, second: from.id }];
+    const visitedNodeIdSet = new Set<string>([from]);
+    const searchQueue: Pair<number, string>[] = [{ first: 0, second: from }];
 
     let current = undefined;
     while (searchQueue.length != 0) {
@@ -80,7 +80,7 @@ export class ApproachLevel {
           continue;
         }
         // return if one of targets nodes was found
-        if (targetIds.has(nextNodeId)) {
+        if (targets.has(nextNodeId)) {
           return {
             approachLevel: currentDistance + pairOfParent.second,
             ancestor: cfg.getNodeById(nextNodeId),

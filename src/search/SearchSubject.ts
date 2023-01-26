@@ -20,7 +20,7 @@
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 
-import { CFG, Node } from "@syntest/cfg-core";
+import { ControlFlowGraph } from "@syntest/cfg-core";
 
 /**
  * Subject of the search process.
@@ -44,7 +44,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Control flow graph of the subject.
    * @protected
    */
-  protected readonly _cfg: CFG;
+  protected readonly _cfg: ControlFlowGraph;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -66,7 +66,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param functions Functions of the subject
    * @protected
    */
-  protected constructor(path: string, name: string, cfg: CFG) {
+  protected constructor(path: string, name: string, cfg: ControlFlowGraph) {
     this._path = path;
     this._name = name;
     this._cfg = cfg;
@@ -102,7 +102,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._name;
   }
 
-  get cfg(): CFG {
+  get cfg(): ControlFlowGraph {
     return this._cfg;
   }
 
