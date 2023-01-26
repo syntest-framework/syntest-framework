@@ -30,6 +30,8 @@ export class Properties {
   public static temp_log_directory: string;
   public static temp_instrumented_directory: string;
 
+  public static use_plugin: string[];
+
   public static seed: string | null;
   public static max_depth: number;
   public static max_action_statements: number;
@@ -150,6 +152,16 @@ export const properties = {
     description: "Path to the temporary instrumented directory",
     type: "string",
     default: ".syntest/instrumented",
+  },
+
+  // plugins
+  use_plugin: {
+    description: "List of dependencies or paths to plugins to load",
+    items: {
+      type: "string",
+    },
+    default: [],
+    alias: "use",
   },
 
   // random generator settings
