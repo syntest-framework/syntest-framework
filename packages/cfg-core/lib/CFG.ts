@@ -57,6 +57,14 @@ export class CFG {
     return node;
   }
 
+  getNodesByLineNumbers(lineNumbers: Set<number>): Set<Node> {
+    return new Set<Node>(
+      this.nodes.filter((node) =>
+        node.lines.some((nodeLine) => lineNumbers.has(nodeLine))
+      )
+    );
+  }
+
   /*
     Method return a map that has node ids as keys, and list of pairs as a value.
     Each of the pairs in the list of certain node represent a node of a parent as a first value, 
@@ -79,50 +87,5 @@ export class CFG {
     }
 
     return adjList;
-  }
-
-  findClosestAncestor(
-    from: string,
-    targets: Set<string>
-  ): { approachLevel: number; ancestor: Node } {
-    const rotatedAdjList = this.getRotatedAdjacencyList();
-
-    const visitedNodeIdSet = new Set<string>([from]);
-    const searchQueue: Pair<number, string>[] = [{ first: 0, second: from }];
-
-    let current = undefined;
-    while (searchQueue.length != 0) {
-      current = searchQueue.shift();
-      const currentDistance: number = current.first;
-      const currentNodeId: string = current.second;
-
-      // get all neigbors of currently considered node
-      const parentsOfCurrent = rotatedAdjList.get(currentNodeId);
-
-      for (const pairOfParent of parentsOfCurrent) {
-        const nextNodeId = pairOfParent.first;
-        // ignore if already visited node
-        if (visitedNodeIdSet.has(nextNodeId)) {
-          continue;
-        }
-        // return if one of targets nodes was found
-        if (targets.has(nextNodeId)) {
-          return {
-            approachLevel: currentDistance + pairOfParent.second,
-            ancestor: this.getNodeById(nextNodeId),
-          };
-        }
-        // add element to queue and visited nodes to continue search
-        visitedNodeIdSet.add(nextNodeId);
-        searchQueue.push({
-          first: currentDistance + pairOfParent.second,
-          second: nextNodeId,
-        });
-      }
-    }
-    return {
-      approachLevel: -1,
-      ancestor: null,
-    };
   }
 }

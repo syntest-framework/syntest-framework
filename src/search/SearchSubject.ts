@@ -98,13 +98,6 @@ export abstract class SearchSubject<T extends Encoding> {
     return Array.from(this._objectives.get(objective));
   }
 
-  public findClosestAncestor(
-    from: string,
-    targets: Set<string>
-  ): { approachLevel: number; ancestor: Node } {
-    return this._cfg.findClosestAncestor(from, targets);
-  }
-
   get name(): string {
     return this._name;
   }

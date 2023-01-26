@@ -22,6 +22,7 @@ import { Node, NodeType } from "@syntest/cfg-core";
 import { SearchSubject } from "../search/SearchSubject";
 import { BranchDistance } from "../search/objective/BranchDistance";
 import { Datapoint } from "../util/Datapoint";
+import { ApproachLevel } from "../search/objective/ApproachLevel";
 
 /**
  * Objective function for the branch criterion.
@@ -99,6 +100,8 @@ export class BranchObjectiveFunction<T extends Encoding>
     const branchNode = this._subject.cfg.nodes.find((n: Node) => {
       return n.type === NodeType.Branch && n.lines.includes(this._line);
     });
+
+    // TODO maybe childNode is not required.
     const childEdge = this._subject.cfg.edges.find((edge) => {
       return edge.from === branchNode.id && edge.branchType === this._type;
     });
@@ -106,61 +109,24 @@ export class BranchObjectiveFunction<T extends Encoding>
       return node.id === childEdge.to;
     });
 
-    // Construct map with key as line covered and value as datapoint that coveres that line
-    const linesTraceMap: Map<number, Datapoint> = executionResult
-      .getTraces()
-      .filter(
-        (trace) =>
-          (trace.type === "branch" ||
-            trace.type === "probePre" ||
-            trace.type === "probePost" ||
-            trace.type === "function") &&
-          trace.hits > 0
-      )
-      .reduce((map, trace) => {
-        map.set(trace.line, trace);
-        return map;
-      }, new Map<number, Datapoint>());
-
-    // Construct set of all covered lines
-    const coveredLines = new Set<number>(linesTraceMap.keys());
-
-    // Based on set of covered lines, filter CFG nodes that were covered and get their strings
-    const coveredNodeIds = new Set<string>(
-      this._subject.cfg.nodes
-        .filter((node) =>
-          node.lines.some((nodeLine) => coveredLines.has(nodeLine))
-        )
-        .map((node) => node.id)
-    );
-
     // Find approach level and ancestor based on node and covered nodes
-    const { approachLevel, ancestor } = this._subject.findClosestAncestor(
-      childNode.id,
-      coveredNodeIds
+    const { approachLevel, hitTrace } = ApproachLevel.calculate(
+      this._subject.cfg,
+      childNode,
+      executionResult.getTraces()
     );
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
-    if (!ancestor) {
+    if (!hitTrace) {
       return Number.MAX_VALUE;
     }
 
-    // Retrieve trace based on lines covered by found ancestor
     let branchDistance: number;
-    let hitTrace: Datapoint = null;
-    for (const line of ancestor.lines) {
-      if (linesTraceMap.has(line)) {
-        hitTrace = linesTraceMap.get(line);
-        break;
-      }
-    }
-
     if (hitTrace.type === "function") branchDistance = 1;
     else branchDistance = this.computeBranchDistance(hitTrace);
 
     // add the distances
-    const distance = approachLevel + branchDistance;
-    return distance;
+    return approachLevel + branchDistance;
   }
 
   /**
