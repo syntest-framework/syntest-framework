@@ -18,14 +18,24 @@
 
 import { Encoding, UserInterface } from ".";
 import { EventManager } from "./event/EventManager";
+import { PluginManager } from "./plugin/PluginManager";
+import {
+  DynaMOSAFactory,
+  MOSAFactory,
+} from "./search/metaheuristics/evolutionary/mosa/MOSA";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
+  private _pluginManager: PluginManager<T>;
   private _programName: string;
   private _ui: UserInterface;
 
   get eventManager() {
     return this._eventManager;
+  }
+
+  get pluginManager() {
+    return this._pluginManager;
   }
 
   get programState() {
@@ -43,16 +53,21 @@ export abstract class Launcher<T extends Encoding> {
   constructor(
     programName: string,
     eventManager: EventManager<T>,
+    pluginManager: PluginManager<T>,
     ui: UserInterface
   ) {
     this._programName = programName;
     this._eventManager = eventManager;
+    this._pluginManager = pluginManager;
     this._ui = ui;
   }
 
   public async run(args: string[]): Promise<void> {
     try {
+      await this.registerPlugins();
       await this.configure(args);
+      // await this.executePlugins(yargs)
+
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
       this.eventManager.emitEvent("onInitializeComplete");
@@ -73,7 +88,29 @@ export abstract class Launcher<T extends Encoding> {
     }
   }
 
+  async registerPlugins() {
+    // register standard search algorithms
+    this.pluginManager.registerSearchAlgorithm(new MOSAFactory());
+    this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
+
+    // register standard crossover operators
+    // register standard ranking operators
+    // register standard selection operators
+    // register standard samplers
+    // register standard termination triggers
+    // register standard objective managers
+    // register standard user-interfaces
+
+    // TODO read config and load plugins
+    // this.pluginManager.loadPlugin()
+  }
+
   abstract configure(args: string[]): Promise<void>;
+
+  async executePlugins() {
+    // this.eventManager.state.algorithm =
+  }
+
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;
   abstract process(): Promise<void>;

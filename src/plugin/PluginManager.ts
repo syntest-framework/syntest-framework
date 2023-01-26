@@ -1,17 +1,15 @@
 import { EventManager } from "../event/EventManager";
 import { Encoding } from "../search/Encoding";
-import {
-  CrossoverPlugin,
-  ListenerPlugin,
-  ObjectiveManagerPlugin,
-  PluginInterface,
-  RankingPlugin,
-  SamplerPlugin,
-  SearchAlgorithmPlugin,
-  SelectionPlugin,
-  TerminationPlugin,
-  UserInterfacePlugin,
-} from "./PluginInterface";
+import { CrossoverPlugin } from "./CrossoverPlugin";
+import { ListenerPlugin } from "./ListenerPlugin";
+import { ObjectiveManagerPlugin } from "./ObjectiveManagerPlugin";
+import { PluginInterface } from "./PluginInterface";
+import { RankingPlugin } from "./RankingPlugin";
+import { SamplerPlugin } from "./SamplerPlugin";
+import { SearchAlgorithmPlugin } from "./SearchAlgorithmPlugin";
+import { SelectionPlugin } from "./SelectionPlugin";
+import { TerminationPlugin } from "./TerminationPlugin";
+import { UserInterfacePlugin } from "./UserInterfacePlugin";
 
 export class PluginManager<T extends Encoding> {
   private eventManager: EventManager<T>;
@@ -43,7 +41,7 @@ export class PluginManager<T extends Encoding> {
   async registerListener(plugin: ListenerPlugin<T>): Promise<void> {
     this.listenerPlugins.set(plugin.name, plugin);
 
-    this.eventManager.registerListener(plugin.createListener());
+    this.eventManager.registerListener(plugin.createListener({}));
   }
 
   async registerSearchAlgorithm(
