@@ -20,9 +20,37 @@ import { SearchAlgorithm } from "./SearchAlgorithm";
 import { Encoding } from "../Encoding";
 import { EncodingSampler } from "../EncodingSampler";
 import { SimpleObjectiveManager } from "../objective/managers/SimpleObjectiveManager";
-import { EncodingRunner } from "../EncodingRunner";
 import { BudgetManager } from "../budget/BudgetManager";
 import { TerminationManager } from "../termination/TerminationManager";
+import {
+  SearchAlgorithmPlugin,
+  SearchAlgorithmOptions,
+} from "../../plugin/SearchAlgorithmPlugin";
+import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+
+export class RandomSearchFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "RandomSearch";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("RandomSearch requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("RandomSearch requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("RandomSearch requires crossover option.");
+    }
+    return new RandomSearch(
+      new SimpleObjectiveManager<T>(options.runner),
+      options.encodingSampler
+    );
+  }
+}
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
@@ -38,8 +66,10 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
    * @param encodingSampler The encoding sampler
    * @param runner The encoding execution runner
    */
-  constructor(encodingSampler: EncodingSampler<T>, runner: EncodingRunner<T>) {
-    const objectiveManager = new SimpleObjectiveManager<T>(runner);
+  constructor(
+    objectiveManager: ObjectiveManager<T>,
+    encodingSampler: EncodingSampler<T>
+  ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
   }

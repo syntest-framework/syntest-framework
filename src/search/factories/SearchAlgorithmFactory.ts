@@ -16,19 +16,11 @@
  * limitations under the License.
  */
 
-import {
-  MOSA,
-  NSGAII,
-  Crossover,
-  EncodingSampler,
-  Encoding,
-  EncodingRunner,
-} from "../../";
+import { Crossover, EncodingSampler, Encoding, EncodingRunner } from "../../";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
-import { RandomSearch } from "../metaheuristics/RandomSearch";
-import { DynaMOSA } from "../metaheuristics/evolutionary/mosa/DynaMOSA";
-import { Properties } from "../../properties";
-import { Sfuzz } from "../metaheuristics/evolutionary/Sfuzz";
+import { CONFIG } from "../../Configuration";
+import { PluginManager } from "../../plugin/PluginManager";
+import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 
 /**
  * Factory for creating an instance of a specific search algorithm from the config.
@@ -38,22 +30,20 @@ import { Sfuzz } from "../metaheuristics/evolutionary/Sfuzz";
  * @author Dimitri Stallenberg
  */
 export function createAlgorithmFromConfig<T extends Encoding>(
-  sampler: EncodingSampler<T>,
+  pluginManager: PluginManager<T>,
+  objectiveManager: ObjectiveManager<T>,
+  encodingSampler: EncodingSampler<T>,
   runner: EncodingRunner<T>,
   crossover: Crossover<T>
 ): SearchAlgorithm<T> {
-  const algorithm = Properties.algorithm;
+  const algorithm = CONFIG.algorithm;
 
-  switch (algorithm) {
-    case "Random":
-      return new RandomSearch(sampler, runner);
-    case "NSGAII":
-      return new NSGAII<T>(sampler, runner, crossover);
-    case "MOSA":
-      return new MOSA<T>(sampler, runner, crossover);
-    case "DynaMOSA":
-      return new DynaMOSA<T>(sampler, runner, crossover);
-    case "sFuzz":
-      return new Sfuzz<T>(sampler, runner, crossover);
-  }
+  return pluginManager.searchAlgorithmPlugins
+    .get(algorithm)
+    .createSearchAlgorithm({
+      objectiveManager,
+      encodingSampler,
+      runner,
+      crossover,
+    });
 }

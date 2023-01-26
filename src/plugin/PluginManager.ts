@@ -10,12 +10,12 @@ import { SearchAlgorithmPlugin } from "./SearchAlgorithmPlugin";
 import { SelectionPlugin } from "./SelectionPlugin";
 import { TerminationPlugin } from "./TerminationPlugin";
 import { UserInterfacePlugin } from "./UserInterfacePlugin";
+import Yargs = require("yargs");
 
 export class PluginManager<T extends Encoding> {
-  private eventManager: EventManager<T>;
-
-  private listenerPlugins: Map<string, ListenerPlugin<T>>;
-  private searchAlgorithmPlugins: Map<string, SearchAlgorithmPlugin<T>>;
+  private plugins: PluginInterface<T>[];
+  private _listenerPlugins: Map<string, ListenerPlugin<T>>;
+  private _searchAlgorithmPlugins: Map<string, SearchAlgorithmPlugin<T>>;
   private crossoverPlugins: Map<string, CrossoverPlugin<T>>;
   private rankingPlugins: Map<string, RankingPlugin<T>>;
   private selectionPlugins: Map<string, SelectionPlugin<T>>;
@@ -24,24 +24,43 @@ export class PluginManager<T extends Encoding> {
   private objectiveManagerPlugins: Map<string, ObjectiveManagerPlugin<T>>;
   private userInterfacePlugins: Map<string, UserInterfacePlugin<T>>;
 
-  constructor(eventManager: EventManager<T>) {
-    this.eventManager = eventManager;
+  get listenerPlugins() {
+    return this._listenerPlugins;
+  }
+
+  get searchAlgorithmPlugins() {
+    return this._searchAlgorithmPlugins;
   }
 
   async loadPlugin(pluginPath: string): Promise<void> {
     try {
       const { plugin } = await import(pluginPath);
       const pluginInstance: PluginInterface<T> = new plugin.default();
+
+      if (!pluginInstance.register) {
+        throw new Error(
+          `Could not load plugin\nPlugin has no register function\nPlugin: ${pluginPath}`
+        );
+      }
+
       pluginInstance.register(this);
+      this.plugins.push(pluginInstance);
     } catch (e) {
       console.trace(e);
     }
   }
 
+  async addPluginOptions<T>(yargs: Yargs.Argv<T>) {
+    for (const plugin of this.plugins) {
+      if (plugin.configure) {
+        yargs = plugin.configure(yargs);
+      }
+    }
+    return yargs;
+  }
+
   async registerListener(plugin: ListenerPlugin<T>): Promise<void> {
     this.listenerPlugins.set(plugin.name, plugin);
-
-    this.eventManager.registerListener(plugin.createListener({}));
   }
 
   async registerSearchAlgorithm(

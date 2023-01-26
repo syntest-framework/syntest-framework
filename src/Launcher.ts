@@ -16,13 +16,16 @@
  * limitations under the License.
  */
 
-import { Encoding, UserInterface } from ".";
+import { Encoding, NSGAIIFactory, UserInterface } from ".";
+import { ArgumentsObject, Configuration, OptionsObject } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { PluginManager } from "./plugin/PluginManager";
 import {
   DynaMOSAFactory,
   MOSAFactory,
 } from "./search/metaheuristics/evolutionary/mosa/MOSA";
+import Yargs = require("yargs");
+import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
@@ -64,9 +67,19 @@ export abstract class Launcher<T extends Encoding> {
 
   public async run(args: string[]): Promise<void> {
     try {
-      await this.registerPlugins();
-      await this.configure(args);
-      // await this.executePlugins(yargs)
+      const configuration = new Configuration(this.programName);
+      const yargs = configuration.configureOptions();
+      const baseArguments = await configuration.processArguments(yargs, args);
+      const yargs2 = await this.addOptions(yargs);
+      const yargs3 = await this.registerPlugins(baseArguments.plugins, yargs2);
+
+      configuration.initializeConfigSingleton(
+        await this.configure(yargs3, args)
+      );
+
+      for (const plugin of this.pluginManager.listenerPlugins.values()) {
+        this.eventManager.registerListener(plugin.createListener({}));
+      }
 
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
@@ -88,8 +101,10 @@ export abstract class Launcher<T extends Encoding> {
     }
   }
 
-  async registerPlugins() {
+  async registerPlugins<T>(plugins: string[], yargs: Yargs.Argv<T>) {
     // register standard search algorithms
+    this.pluginManager.registerSearchAlgorithm(new RandomSearchFactory());
+    this.pluginManager.registerSearchAlgorithm(new NSGAIIFactory());
     this.pluginManager.registerSearchAlgorithm(new MOSAFactory());
     this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
 
@@ -101,15 +116,30 @@ export abstract class Launcher<T extends Encoding> {
     // register standard objective managers
     // register standard user-interfaces
 
-    // TODO read config and load plugins
-    // this.pluginManager.loadPlugin()
+    // load external plugins
+    for (const plugin of plugins) {
+      await this.pluginManager.loadPlugin(plugin);
+    }
+
+    // add plugin options
+    return this.pluginManager.addPluginOptions(yargs);
   }
 
-  abstract configure(args: string[]): Promise<void>;
+  /**
+   * This function should configure the argument options in the language specific tool.
+   * @param yargs
+   */
+  abstract addOptions<T>(yargs: Yargs.Argv<T>): Yargs.Argv<T>;
 
-  async executePlugins() {
-    // this.eventManager.state.algorithm =
-  }
+  /**
+   * This function should parse the arguments and given config files.
+   * @param yargs
+   * @param args
+   */
+  abstract configure(
+    yargs: OptionsObject,
+    args: string[]
+  ): Promise<ArgumentsObject>;
 
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;

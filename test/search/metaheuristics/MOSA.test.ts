@@ -2,9 +2,9 @@ import * as chai from "chai";
 import {
   setUserInterface,
   CommandLineInterface,
-  Properties,
   EncodingRunner,
   EncodingSampler,
+  CONFIG,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
@@ -104,7 +104,8 @@ describe("Test MOSA", function () {
 
   it("Test Preference Sorting", () => {
     // This test requires a defined population size.
-    Properties.population_size = 4;
+    CONFIG.populationSize = 4;
+    CONFIG.population_size = 4;
 
     const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);

@@ -21,9 +21,39 @@ import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
 import { EncodingSampler } from "../../EncodingSampler";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
-import { EncodingRunner } from "../../EncodingRunner";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { Encoding } from "../../Encoding";
+import {
+  SearchAlgorithmPlugin,
+  SearchAlgorithmOptions,
+} from "../../../plugin/SearchAlgorithmPlugin";
+import { SearchAlgorithm } from "../SearchAlgorithm";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+
+export class NSGAIIFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "NSGAII";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("NSGAII requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("NSGAII requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("NSGAII requires crossover option.");
+    }
+    return new NSGAII<T>(
+      new SimpleObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
+  }
+}
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -44,11 +74,11 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    * @param runner The runner
    */
   constructor(
+    objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    runner: EncodingRunner<T>,
     crossover: Crossover<T>
   ) {
-    super(new SimpleObjectiveManager<T>(runner), encodingSampler, crossover);
+    super(objectiveManager, encodingSampler, crossover);
   }
 
   /**

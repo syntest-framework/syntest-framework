@@ -25,70 +25,63 @@ import { DominanceComparator } from "../../../comparators/DominanceComparator";
 import { getUserInterface } from "../../../../ui/UserInterface";
 import { Crossover } from "../../../operators/crossover/Crossover";
 import { Encoding } from "../../../Encoding";
-import {
-  SearchAlgorithmOptions,
-  SearchAlgorithmPlugin,
-} from "../../../../plugin/PluginInterface";
+
 import { PluginManager } from "../../../../plugin/PluginManager";
 import { SearchAlgorithm } from "../../SearchAlgorithm";
 import { ObjectiveManager } from "../../../objective/managers/ObjectiveManager";
 import { StructuralObjectiveManager } from "../../../objective/managers/StructuralObjectiveManager";
+import {
+  SearchAlgorithmPlugin,
+  SearchAlgorithmOptions,
+} from "../../../../plugin/SearchAlgorithmPlugin";
 
 export class MOSAFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
-  name = "MOSAFactory";
+  name = "MOSA";
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.encodingSampler) {
-      throw new Error("MOSAFactory requires encodingSampler option.");
+      throw new Error("MOSA requires encodingSampler option.");
     }
     if (!options.runner) {
-      throw new Error("MOSAFactory requires runner option.");
+      throw new Error("MOSA requires runner option.");
     }
     if (!options.crossover) {
-      throw new Error("MOSAFactory requires crossover option.");
+      throw new Error("MOSA requires crossover option.");
     }
-    return new MOSA(
+    return new MOSA<T>(
       new UncoveredObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover
     );
-  }
-
-  register(pluginManager: PluginManager<T>): void {
-    throw new Error("Method not implemented.");
   }
 }
 
 export class DynaMOSAFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
-  name = "DynaMOSAFactory";
+  name = "DynaMOSA";
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.encodingSampler) {
-      throw new Error("DynaMOSAFactory requires encodingSampler option.");
+      throw new Error("DynaMOSA requires encodingSampler option.");
     }
     if (!options.runner) {
-      throw new Error("DynaMOSAFactory requires runner option.");
+      throw new Error("DynaMOSA requires runner option.");
     }
     if (!options.crossover) {
-      throw new Error("DynaMOSAFactory requires crossover option.");
+      throw new Error("DynaMOSA requires crossover option.");
     }
-    return new MOSA(
+    return new MOSA<T>(
       new StructuralObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover
     );
-  }
-
-  register(pluginManager: PluginManager<T>): void {
-    throw new Error("Method not implemented.");
   }
 }
 
