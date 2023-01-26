@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -95,3 +95,11 @@ export * from "./properties";
 export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
+
+// Event System
+export * from "./event/EventManager";
+export * from "./event/ProgramState";
+export * from "./event/ListenerInterface";
+
+// Launcher
+export * from "./Launcher";
