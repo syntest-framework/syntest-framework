@@ -10,4 +10,4 @@ Libraries consist of independent pieces of code that the core package uses. Thes
 
 Plugins consist of extensions of the tool which are not necessarily usefull for every type of user.
 
-For a tutorial on how to create plugins please look at [CREATING_PLUGINS.md](./CREATING_PLUGINS.md)
+For a tutorial on how to create plugins please look at [syntest.org](https://www.syntest.org/docs/)

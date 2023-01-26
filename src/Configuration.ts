@@ -97,7 +97,7 @@ export class Configuration {
     return (
       yargs
         // plugins
-        .option("plugin", {
+        .option("plugins", {
           alias: ["p"],
           default: [],
           description: "List of dependencies or paths to plugins to load",
@@ -250,10 +250,18 @@ export class Configuration {
     return (
       yargs
         // time settings
-        .option("time-budget", {
+        .option("total-time-budget", {
           alias: ["t"],
           default: 3600,
           description: "Total time budget",
+          group: "Budget options:",
+          hidden: false,
+          type: "number",
+        })
+        .option("search-time-budget", {
+          alias: [],
+          default: 3600,
+          description: "Search time budget",
           group: "Budget options:",
           hidden: false,
           type: "number",

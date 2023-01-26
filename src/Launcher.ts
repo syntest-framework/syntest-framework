@@ -19,11 +19,9 @@
 import { Encoding, UserInterface } from ".";
 import { ArgumentsObject, Configuration, OptionsObject } from "./Configuration";
 import { EventManager } from "./event/EventManager";
-import { ProgramState } from "./event/ProgramState";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
-  private _programState: ProgramState<T>;
   private _programName: string;
   private _ui: UserInterface;
 
@@ -32,7 +30,7 @@ export abstract class Launcher<T extends Encoding> {
   }
 
   get programState() {
-    return this._programState;
+    return this._eventManager.state;
   }
 
   get programName() {
@@ -43,10 +41,14 @@ export abstract class Launcher<T extends Encoding> {
     return this._ui;
   }
 
-  constructor(programName: string, eventManager: EventManager<T>) {
+  constructor(
+    programName: string,
+    eventManager: EventManager<T>,
+    ui: UserInterface
+  ) {
     this._programName = programName;
-    this._programState = eventManager.state;
     this._eventManager = eventManager;
+    this._ui = ui;
   }
 
   public async run(args: string[]): Promise<void> {
