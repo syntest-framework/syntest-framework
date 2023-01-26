@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ export class Properties {
   public static temp_test_directory: string;
   public static temp_log_directory: string;
   public static temp_instrumented_directory: string;
+
+  public static use_plugin: string[];
 
   public static seed: string | null;
   public static max_depth: number;
@@ -150,6 +152,16 @@ export const properties = {
     description: "Path to the temporary instrumented directory",
     type: "string",
     default: ".syntest/instrumented",
+  },
+
+  // plugins
+  use_plugin: {
+    description: "List of dependencies or paths to plugins to load",
+    items: {
+      type: "string",
+    },
+    default: [],
+    alias: "use",
   },
 
   // random generator settings

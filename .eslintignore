@@ -8,3 +8,6 @@ syntest/
 .*
 *.json
 *.md
+*.jpg
+LICENSE.header
+NOTICE

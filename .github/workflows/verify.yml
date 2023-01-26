@@ -15,7 +15,9 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-
+    defaults:
+      run:
+        working-directory: "."
     strategy:
       # Keep running other versions when a job fails
       fail-fast: false
@@ -55,13 +57,13 @@ jobs:
             ${{ runner.os }}-
 
       # Dependencies
-      - name: Framework - Install Dependencies
+      - name: Core - Install Dependencies
         run: npm install
 
       # Format
-      - name: Framework - Run Formatter
+      - name: Core - Run Formatter
         run: npm run format:check
 
       # Linting
-      - name: Framework - Run Linter
+      - name: Core - Run Linter
         run: npm run lint

@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- abstract Launcher class with common functions
+- EventManager which propogates events to plugins
+- ProgramState used to communicate the current state of the tool to plugins
+- PluginInterface which is the basis all plugins should extend from
+- plugin folder where plugins for the syntest/core will be located
+- an example plugin
+
 ### Changed
 
 ### Deprecated
@@ -48,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Collector functionality to keep track of statistics regarding the search process
 - CLI user interface
 
-[unreleased]: https://github.com/syntest-framework/syntest-framework/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.2...v0.2.0
-[0.1.2]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.1...v0.1.2
-[0.1.1]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.1
+[unreleased]: https://github.com/syntest-framework/syntest-core/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/syntest-framework/syntest-core/releases/tag/v0.1.2...v0.2.0
+[0.1.2]: https://github.com/syntest-framework/syntest-core/releases/tag/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/syntest-framework/syntest-core/releases/tag/v0.1.1

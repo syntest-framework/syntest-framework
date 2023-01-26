@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,24 +19,10 @@
 import { Node, NodeType } from "./Node";
 
 /**
- * Interface for a BranchNode.
+ * Interface for a RootNode
  *
  * @author Dimitri Stallenberg
  */
-export interface BranchNode extends Node {
-  type: NodeType.Branch;
-
-  condition: Operation;
-
-  probe: boolean;
-}
-
-/**
- * Interface for an Operation.
- *
- * @author Dimitri Stallenberg
- */
-export interface Operation {
-  type: string;
-  operator: string;
+export interface RootNode extends Node {
+  type: NodeType.Root;
 }

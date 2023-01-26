@@ -1,5 +1,5 @@
 import { Target } from "./Target";
-import { CFG } from "./graph/CFG";
+import { CFG } from "@syntest/cfg-core";
 import { Properties } from "../../properties";
 import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";

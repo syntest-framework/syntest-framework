@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export * from "./CFG";
+export * from "./CFGFactory";
+export * from "./Edge";
 
-import { Node, NodeType } from "./Node";
-
-/**
- * Interface for a Placeholder Node.
- *
- * @author Dimitri Stallenberg
- */
-export interface PlaceholderNode extends Node {
-  type: NodeType.Placeholder;
-}
+export * from "./nodes/Node";
+export * from "./nodes/BranchNode";
+export * from "./nodes/PlaceholderNode";
+export * from "./nodes/RootNode";

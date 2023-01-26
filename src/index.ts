@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,16 +75,7 @@ export * from "./search/EncodingSampler";
 export * from "./search/Decoder";
 
 // Instrumentation
-export * from "./analysis/static/graph/CFG";
-export * from "./analysis/static/graph/Edge";
 export * from "./analysis/static/graph/drawGraph";
-export * from "./analysis/static/graph/CFGFactory";
-
-export * from "./analysis/static/graph/nodes/Node";
-export * from "./analysis/static/graph/nodes/BranchNode";
-export * from "./analysis/static/graph/nodes/RootNode";
-export * from "./analysis/static/graph/nodes/PlaceholderNode";
-
 export * from "./analysis/static/TargetMetaData";
 
 // UI
@@ -104,3 +95,11 @@ export * from "./properties";
 export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
+
+// Event System
+export * from "./event/EventManager";
+export * from "./event/ProgramState";
+export * from "./event/ListenerInterface";
+
+// Launcher
+export * from "./Launcher";

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,26 @@
  * limitations under the License.
  */
 
-import { CFG } from "./CFG";
+/**
+ * Interface for a Node.
+ *
+ * @author Dimitri Stallenberg
+ */
+export interface Node {
+  type: NodeType;
 
-export interface CFGFactory {
-  convertAST(AST: unknown): CFG;
+  id: string;
+
+  lines: number[];
+  statements: string[];
+
+  description?: string;
+}
+
+export enum NodeType {
+  Intermediary,
+  Branch,
+  Placeholder,
+  Root,
+  Normal,
 }

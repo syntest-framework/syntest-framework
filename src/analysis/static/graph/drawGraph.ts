@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Node, NodeType } from "./nodes/Node";
-
-import d3 = require("d3");
+import d3 from "d3";
 import fs = require("fs");
 import { JSDOM } from "jsdom";
-import { CFG } from "./CFG";
-import { Edge } from "./Edge";
-import { BranchNode } from "./nodes/BranchNode";
+import { CFG, Edge, BranchNode, Node, NodeType } from "@syntest/cfg-core";
 
 /**
  * @author Dimitri Stallenberg
