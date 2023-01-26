@@ -108,7 +108,6 @@ export class Configuration {
         // ui
         .option("user-interface", {
           alias: [],
-          choices: ["regular"],
           default: "regular",
           description: "The user interface you use",
           group: "General options:",
@@ -228,7 +227,6 @@ export class Configuration {
         // algorithm settings
         .option("algorithm", {
           alias: ["a"],
-          choices: ["Random", "NSGAII", "MOSA", "DynaMOSA", "sFuzz"],
           default: "DynaMOSA",
           description: "Algorithm to be used by the tool.",
           group: "Algorithm options:",
@@ -242,6 +240,53 @@ export class Configuration {
           group: "Algorithm options:",
           hidden: false,
           type: "number",
+        })
+        .option("crossover", {
+          alias: [],
+          default: "",
+          description: "Crossover operator to be used by the tool.",
+          group: "Algorithm options:",
+          hidden: false,
+          type: "string",
+        })
+        .option("ranking", {
+          alias: [],
+          default: "fastNonDom",
+          description: "Ranking operator to be used by the tool.",
+          group: "Algorithm options:",
+          hidden: false,
+          type: "string",
+        })
+        .option("selection", {
+          alias: [],
+          default: "tournament",
+          description: "Selection operator to be used by the tool.",
+          group: "Algorithm options:",
+          hidden: false,
+          type: "string",
+        })
+        .option("objective-manager", {
+          alias: [],
+          default: "simple",
+          description: "Objective manager to be used by the tool.",
+          group: "Algorithm options:",
+          hidden: false,
+          type: "string",
+        })
+        .option("sampler", {
+          alias: [],
+          default: "random",
+          description: "Sampler to be used by the tool.",
+          group: "Algorithm options:",
+          hidden: false,
+          type: "string",
+        })
+        .option("termination-trigger", {
+          alias: [],
+          description: "Termination trigger to be used by the tool.",
+          group: "Algorithm options:",
+          hidden: false,
+          type: "string",
         })
     );
   }

@@ -29,7 +29,7 @@ import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export function createAlgorithmFromConfig<T extends Encoding>(
+export function createSearchAlgorithmFromConfig<T extends Encoding>(
   pluginManager: PluginManager<T>,
   objectiveManager: ObjectiveManager<T>,
   encodingSampler: EncodingSampler<T>,
