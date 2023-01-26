@@ -18,7 +18,6 @@
 
 import { EvolutionaryAlgorithm } from "../EvolutionaryAlgorithm";
 import { EncodingSampler } from "../../../EncodingSampler";
-import { EncodingRunner } from "../../../EncodingRunner";
 import { UncoveredObjectiveManager } from "../../../objective/managers/UncoveredObjectiveManager";
 import { ObjectiveFunction } from "../../../objective/ObjectiveFunction";
 import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
@@ -26,6 +25,72 @@ import { DominanceComparator } from "../../../comparators/DominanceComparator";
 import { getUserInterface } from "../../../../ui/UserInterface";
 import { Crossover } from "../../../operators/crossover/Crossover";
 import { Encoding } from "../../../Encoding";
+import {
+  SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
+} from "../../../../plugin/PluginInterface";
+import { PluginManager } from "../../../../plugin/PluginManager";
+import { SearchAlgorithm } from "../../SearchAlgorithm";
+import { ObjectiveManager } from "../../../objective/managers/ObjectiveManager";
+import { StructuralObjectiveManager } from "../../../objective/managers/StructuralObjectiveManager";
+
+export class MOSAFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "MOSAFactory";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("MOSAFactory requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("MOSAFactory requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("MOSAFactory requires crossover option.");
+    }
+    return new MOSA(
+      new UncoveredObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
+  }
+
+  register(pluginManager: PluginManager<T>): void {
+    throw new Error("Method not implemented.");
+  }
+}
+
+export class DynaMOSAFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "DynaMOSAFactory";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("DynaMOSAFactory requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("DynaMOSAFactory requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("DynaMOSAFactory requires crossover option.");
+    }
+    return new MOSA(
+      new StructuralObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
+  }
+
+  register(pluginManager: PluginManager<T>): void {
+    throw new Error("Method not implemented.");
+  }
+}
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -39,11 +104,11 @@ import { Encoding } from "../../../Encoding";
  */
 export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
+    objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    runner: EncodingRunner<T>,
     crossover: Crossover<T>
   ) {
-    super(new UncoveredObjectiveManager<T>(runner), encodingSampler, crossover);
+    super(objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(size: number): void {
