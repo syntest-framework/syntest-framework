@@ -5,5 +5,5 @@ import Yargs = require("yargs");
 export interface PluginInterface<T extends Encoding> {
   name: string;
   register?(pluginManager: PluginManager<T>): void;
-  configure?(yargs: Yargs.Argv<T>): Promise<Yargs.Argv<T>>;
+  configure?(yargs: Yargs.Argv<Y>): Promise<Yargs.Argv<Y>>;
 }

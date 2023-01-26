@@ -101,7 +101,7 @@ export abstract class Launcher<T extends Encoding> {
     }
   }
 
-  async registerPlugins<T>(plugins: string[], yargs: Yargs.Argv<T>) {
+  async registerPlugins<Y>(plugins: string[], yargs: Yargs.Argv<Y>) {
     // register standard search algorithms
     this.pluginManager.registerSearchAlgorithm(new RandomSearchFactory());
     this.pluginManager.registerSearchAlgorithm(new NSGAIIFactory());
@@ -129,7 +129,7 @@ export abstract class Launcher<T extends Encoding> {
    * This function should configure the argument options in the language specific tool.
    * @param yargs
    */
-  abstract addOptions<T>(yargs: Yargs.Argv<T>): Yargs.Argv<T>;
+  abstract addOptions<Y>(yargs: Yargs.Argv<Y>): Yargs.Argv<Y>;
 
   /**
    * This function should parse the arguments and given config files.

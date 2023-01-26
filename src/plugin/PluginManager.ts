@@ -50,10 +50,10 @@ export class PluginManager<T extends Encoding> {
     }
   }
 
-  async addPluginOptions<T>(yargs: Yargs.Argv<T>) {
+  async addPluginOptions<Y>(yargs: Yargs.Argv<Y>) {
     for (const plugin of this.plugins) {
       if (plugin.configure) {
-        yargs = plugin.configure(yargs);
+        yargs = await plugin.configure(yargs);
       }
     }
     return yargs;
