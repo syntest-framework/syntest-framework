@@ -73,16 +73,6 @@ export abstract class Launcher<T extends Encoding> {
     }
   }
 
-  async loadPlugin(pluginPath: string): Promise<void> {
-    try {
-      const { plugin } = await import(pluginPath);
-      this.eventManager.registerListener(new plugin.default());
-    } catch (e) {
-      this.ui.error(`Could not load plugin: ${pluginPath}`);
-      console.trace(e);
-    }
-  }
-
   abstract configure(args: string[]): Promise<void>;
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;

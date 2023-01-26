@@ -44,6 +44,7 @@ export class EventManager<T extends Encoding> {
       if (typeof listener[event] !== "function") {
         continue;
       }
+
       listener[event](this.state);
     }
   }
