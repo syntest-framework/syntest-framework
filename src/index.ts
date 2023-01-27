@@ -16,25 +16,82 @@
  * limitations under the License.
  */
 
-// Runner
-export * from "./util/Datapoint";
+// Configuration
+export * from "./Configuration";
+// Launcher
+export * from "./Launcher";
+
+// Static Analysis
+export * from "./analysis/static/Target";
+export * from "./analysis/static/TargetMetaData";
+export * from "./analysis/static/TargetPool";
+export * from "./analysis/static/targetUtil";
+
+// - Graph
+export * from "./analysis/static/graph/drawGraph";
+
+// Event System
+export * from "./event/EventManager";
+export * from "./event/ListenerInterface";
+export * from "./event/ProgramState";
+
+// Factories
+export * from "./factories/SearchAlgorithmFactory";
+export * from "./factories/TerminationFactory";
+
+// Plugin
+export * from "./plugin/CrossoverPlugin";
+export * from "./plugin/ListenerPlugin";
+export * from "./plugin/ObjectiveManagerPlugin";
+export * from "./plugin/PluginInterface";
+export * from "./plugin/PluginManager";
+export * from "./plugin/RankingPlugin";
+export * from "./plugin/SamplerPlugin";
+export * from "./plugin/SearchAlgorithmPlugin";
+export * from "./plugin/SelectionPlugin";
+export * from "./plugin/TerminationPlugin";
+export * from "./plugin/UserInterfacePlugin";
 
 // Search
-export * from "./search/SearchSubject";
-export * from "./search/EncodingSampler";
-export * from "./search/Encoding";
-export * from "./search/ExecutionResult";
 export * from "./search/Archive";
+export * from "./search/Decoder";
+export * from "./search/Encoding";
 export * from "./search/EncodingRunner";
+export * from "./search/EncodingSampler";
+export * from "./search/ExecutionResult";
+export * from "./search/SearchListener";
+export * from "./search/SearchSubject";
 
-// Budget
+// - Budget
 export * from "./search/budget/BudgetManager";
 export * from "./search/budget/EvaluationBudget";
 export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
 export * from "./search/budget/TotalTimeBudget";
 
-// Termination
+// - Comparators
+export * from "./search/comparators/DominanceComparator";
+
+// - Metaheuristics
+export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
+export * from "./search/metaheuristics/evolutionary/NSGAII";
+export * from "./search/metaheuristics/evolutionary/mosa/MOSA";
+
+// - Objective
+export * from "./search/objective/ObjectiveFunction";
+export * from "./search/objective/BranchDistance";
+export * from "./search/objective/BranchObjectiveFunction";
+export * from "./search/objective/FunctionObjectiveFunction";
+export * from "./search/objective/ProbeObjectiveFunction";
+export * from "./search/objective/ExceptionObjectiveFunction";
+
+// - Operator
+export * from "./search/operators/ranking/CrowdingDistance";
+export * from "./search/operators/ranking/FastNonDomSorting";
+export * from "./search/operators/selection/TournamentSelection";
+export * from "./search/operators/crossover/Crossover";
+
+// - Termination
 export * from "./search/termination/TerminationManager";
 export * from "./search/termination/SignalTerminationTrigger";
 
@@ -45,63 +102,13 @@ export * from "./statistics/StatisticsCollector";
 export * from "./statistics/StatisticsSearchListener";
 export * from "./statistics/SummaryWriter";
 
-// Factories
-export * from "./search/factories/SearchAlgorithmFactory";
-export * from "./search/factories/TerminationFactory";
-
-// Objective
-export * from "./search/objective/ObjectiveFunction";
-export * from "./search/objective/BranchDistance";
-export * from "./criterion/BranchObjectiveFunction";
-export * from "./criterion/FunctionObjectiveFunction";
-export * from "./criterion/ProbeObjectiveFunction";
-export * from "./criterion/ExceptionObjectiveFunction";
-
-// Operator
-export * from "./search/operators/ranking/CrowdingDistance";
-export * from "./search/operators/ranking/FastNonDomSorting";
-export * from "./search/operators/selection/TournamentSelection";
-export * from "./search/operators/crossover/Crossover";
-
-// Metaheuristics
-export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
-export * from "./search/metaheuristics/evolutionary/NSGAII";
-export * from "./search/metaheuristics/evolutionary/mosa/MOSA";
-
-// Sampling
-export * from "./search/EncodingSampler";
-
-// Test building
-export * from "./search/Decoder";
-
-// Instrumentation
-export * from "./analysis/static/graph/drawGraph";
-export * from "./analysis/static/TargetMetaData";
-
 // UI
 export * from "./ui/UserInterface";
 export * from "./ui/CommandLineInterface";
 export * from "./ui/MonitorCommandLineInterface";
 
 // Util
+export * from "./util/Datapoint";
+export * from "./util/fileSystem";
 export * from "./util/logger";
 export * from "./util/prng";
-export * from "./util/fileSystem";
-
-export * from "./Configuration";
-
-// Targetting
-export * from "./analysis/static/Target";
-export * from "./analysis/static/TargetPool";
-export * from "./analysis/static/targetUtil";
-
-// Event System
-export * from "./event/EventManager";
-export * from "./event/ProgramState";
-export * from "./event/ListenerInterface";
-
-// Launcher
-export * from "./Launcher";
-
-// Configuration
-export * from "./Configuration";

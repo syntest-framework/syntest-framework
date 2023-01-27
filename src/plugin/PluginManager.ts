@@ -16,13 +16,26 @@ export class PluginManager<T extends Encoding> {
   private plugins: PluginInterface<T>[];
   private _listenerPlugins: Map<string, ListenerPlugin<T>>;
   private _searchAlgorithmPlugins: Map<string, SearchAlgorithmPlugin<T>>;
-  private crossoverPlugins: Map<string, CrossoverPlugin<T>>;
-  private rankingPlugins: Map<string, RankingPlugin<T>>;
-  private selectionPlugins: Map<string, SelectionPlugin<T>>;
-  private samplerPlugins: Map<string, SamplerPlugin<T>>;
-  private terminationPlugins: Map<string, TerminationPlugin<T>>;
-  private objectiveManagerPlugins: Map<string, ObjectiveManagerPlugin<T>>;
-  private userInterfacePlugins: Map<string, UserInterfacePlugin<T>>;
+  private _crossoverPlugins: Map<string, CrossoverPlugin<T>>;
+  private _rankingPlugins: Map<string, RankingPlugin<T>>;
+  private _selectionPlugins: Map<string, SelectionPlugin<T>>;
+  private _samplerPlugins: Map<string, SamplerPlugin<T>>;
+  private _terminationPlugins: Map<string, TerminationPlugin<T>>;
+  private _objectiveManagerPlugins: Map<string, ObjectiveManagerPlugin<T>>;
+  private _userInterfacePlugins: Map<string, UserInterfacePlugin<T>>;
+
+  constructor() {
+    this.plugins = [];
+    this._listenerPlugins = new Map();
+    this._searchAlgorithmPlugins = new Map();
+    this._crossoverPlugins = new Map();
+    this._rankingPlugins = new Map();
+    this._selectionPlugins = new Map();
+    this._samplerPlugins = new Map();
+    this._terminationPlugins = new Map();
+    this._objectiveManagerPlugins = new Map();
+    this._userInterfacePlugins = new Map();
+  }
 
   get listenerPlugins() {
     return this._listenerPlugins;
@@ -30,6 +43,34 @@ export class PluginManager<T extends Encoding> {
 
   get searchAlgorithmPlugins() {
     return this._searchAlgorithmPlugins;
+  }
+
+  get crossoverPlugins() {
+    return this._crossoverPlugins;
+  }
+
+  get rankingPlugins() {
+    return this._rankingPlugins;
+  }
+
+  get selectionPlugins() {
+    return this._selectionPlugins;
+  }
+
+  get samplerPlugins() {
+    return this._samplerPlugins;
+  }
+
+  get terminationPlugins() {
+    return this._terminationPlugins;
+  }
+
+  get objectiveManagerPlugins() {
+    return this._objectiveManagerPlugins;
+  }
+
+  get userInterfacePlugins() {
+    return this._userInterfacePlugins;
   }
 
   async loadPlugin(pluginPath: string): Promise<void> {

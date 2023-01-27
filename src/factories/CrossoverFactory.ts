@@ -16,34 +16,27 @@
  * limitations under the License.
  */
 
-import { Crossover, EncodingSampler, Encoding, EncodingRunner } from "../../";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+import { Crossover, Encoding } from "../../";
 import { CONFIG } from "../../Configuration";
 import { PluginManager } from "../../plugin/PluginManager";
-import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 
 /**
- * Factory for creating an instance of a specific search algorithm from the config.
+ * Factory for creating an instance of a specific crossover operator from the config.
  *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export function createSearchAlgorithmFromConfig<T extends Encoding>(
-  pluginManager: PluginManager<T>,
-  objectiveManager: ObjectiveManager<T>,
-  encodingSampler: EncodingSampler<T>,
-  runner: EncodingRunner<T>,
-  crossover: Crossover<T>
-): SearchAlgorithm<T> {
-  const algorithm = CONFIG.algorithm;
+export function createCrossoverFromConfig<T extends Encoding>(
+  pluginManager: PluginManager<T>
+): Crossover<T> {
+  const crossover = CONFIG.crossover;
 
-  return pluginManager.searchAlgorithmPlugins
-    .get(algorithm)
-    .createSearchAlgorithm({
-      objectiveManager,
-      encodingSampler,
-      runner,
-      crossover,
-    });
+  if (!pluginManager.searchAlgorithmPlugins.has(crossover)) {
+    throw new Error(
+      `Specified crossover: ${crossover} not found in pluginManager.`
+    );
+  }
+
+  return pluginManager.crossoverPlugins
+    .get(crossover)
+    .createCrossoverOperator({});
 }

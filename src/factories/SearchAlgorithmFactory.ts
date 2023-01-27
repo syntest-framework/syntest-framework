@@ -25,16 +25,24 @@ import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 /**
  * Factory for creating an instance of a specific search algorithm from the config.
  *
+ * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export function createCrossoverFromConfig<T extends Encoding>(
+export function createSearchAlgorithmFromConfig<T extends Encoding>(
   pluginManager: PluginManager<T>,
   objectiveManager: ObjectiveManager<T>,
   encodingSampler: EncodingSampler<T>,
   runner: EncodingRunner<T>,
   crossover: Crossover<T>
 ): SearchAlgorithm<T> {
-  const algorithm = CONFIG.crossover;
+  const algorithm = CONFIG.algorithm;
+
+  if (!pluginManager.searchAlgorithmPlugins.has(algorithm)) {
+    throw new Error(
+      `Specified algorithm: ${algorithm} not found in pluginManager.`
+    );
+  }
 
   return pluginManager.searchAlgorithmPlugins
     .get(algorithm)
