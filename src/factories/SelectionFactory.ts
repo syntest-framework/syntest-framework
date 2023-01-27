@@ -19,25 +19,25 @@
 import { Encoding } from "..";
 import { CONFIG } from "..";
 import { PluginManager } from "../plugin/PluginManager";
-import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
+import { Selection } from "../search/operators/selection/Selection";
 
 /**
- * Factory for creating an instance of a specific objective manager from the config.
+ * Factory for creating an instance of a specific selection operator from the config.
  *
  * @author Dimitri Stallenberg
  */
-export function createObjectiveManagerFromConfig<T extends Encoding>(
+export function createSelectionOperatorFromConfig<T extends Encoding>(
   pluginManager: PluginManager<T>
-): ObjectiveManager<T> {
-  const objectiveManager = CONFIG.objectiveManager;
+): Selection<T> {
+  const selection = CONFIG.selection;
 
-  if (!pluginManager.objectiveManagerPlugins.has(objectiveManager)) {
+  if (!pluginManager.selectionPlugins.has(selection)) {
     throw new Error(
-      `Specified objectiveManager: ${objectiveManager} not found in pluginManager.`
+      `Specified selection operator: ${selection} not found in pluginManager.`
     );
   }
 
-  return pluginManager.objectiveManagerPlugins
-    .get(objectiveManager)
-    .createObjectiveManager({});
+  return pluginManager.selectionPlugins
+    .get(selection)
+    .createSelectionOperator({});
 }

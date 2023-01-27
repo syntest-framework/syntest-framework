@@ -26,7 +26,6 @@ import { getUserInterface } from "../../../../ui/UserInterface";
 import { Crossover } from "../../../operators/crossover/Crossover";
 import { Encoding } from "../../../Encoding";
 
-import { PluginManager } from "../../../../plugin/PluginManager";
 import { SearchAlgorithm } from "../../SearchAlgorithm";
 import { ObjectiveManager } from "../../../objective/managers/ObjectiveManager";
 import { StructuralObjectiveManager } from "../../../objective/managers/StructuralObjectiveManager";

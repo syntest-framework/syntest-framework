@@ -19,25 +19,25 @@
 import { Encoding } from "..";
 import { CONFIG } from "..";
 import { PluginManager } from "../plugin/PluginManager";
-import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
+import { UserInterface } from "../ui/UserInterface";
 
 /**
- * Factory for creating an instance of a specific objective manager from the config.
+ * Factory for creating an instance of a specific user interface from the config.
  *
  * @author Dimitri Stallenberg
  */
-export function createObjectiveManagerFromConfig<T extends Encoding>(
+export function createUserInterfaceFromConfig<T extends Encoding>(
   pluginManager: PluginManager<T>
-): ObjectiveManager<T> {
-  const objectiveManager = CONFIG.objectiveManager;
+): UserInterface {
+  const userInterface = CONFIG.userInterface;
 
-  if (!pluginManager.objectiveManagerPlugins.has(objectiveManager)) {
+  if (!pluginManager.userInterfacePlugins.has(userInterface)) {
     throw new Error(
-      `Specified objectiveManager: ${objectiveManager} not found in pluginManager.`
+      `Specified user interface: ${userInterface} not found in pluginManager.`
     );
   }
 
-  return pluginManager.objectiveManagerPlugins
-    .get(objectiveManager)
-    .createObjectiveManager({});
+  return pluginManager.userInterfacePlugins
+    .get(userInterface)
+    .createUserInterface({});
 }

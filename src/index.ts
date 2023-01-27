@@ -36,8 +36,14 @@ export * from "./event/ListenerInterface";
 export * from "./event/ProgramState";
 
 // Factories
+export * from "./factories/CrossoverFactory";
+export * from "./factories/ObjectiveManagerFactory";
+export * from "./factories/RankingFactory";
+export * from "./factories/SamplerFactory";
 export * from "./factories/SearchAlgorithmFactory";
+export * from "./factories/SelectionFactory";
 export * from "./factories/TerminationFactory";
+export * from "./factories/UserInterfaceFactory";
 
 // Plugin
 export * from "./plugin/CrossoverPlugin";

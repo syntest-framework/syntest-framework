@@ -16,20 +16,32 @@
  * limitations under the License.
  */
 
-import { TerminationManager } from "../termination/TerminationManager";
-import { SignalTerminationTrigger } from "../termination/SignalTerminationTrigger";
+import { CONFIG, Encoding, TerminationManager } from "..";
+import { PluginManager } from "../../src/plugin/PluginManager";
 
 /**
- * Function to set up the termination manager.
+ * Factory for creating an instance of a termination manager from the config.
  *
+ * @author Dimitri Stallenberg
  * @author Mitchell Olsthoorn
  */
-export function configureTermination(): TerminationManager {
+export function createTerminationManagerFromConfig<T extends Encoding>(
+  pluginManager: PluginManager<T>
+): TerminationManager {
+  const terminationTriggers = CONFIG.terminationTriggers;
+
   const terminationManager = new TerminationManager();
 
-  // TODO: make triggers configurable
-  const signalTerminationTrigger = new SignalTerminationTrigger();
-  terminationManager.addTrigger(signalTerminationTrigger);
+  for (const trigger of terminationTriggers) {
+    if (!pluginManager.terminationPlugins.has(trigger)) {
+      throw new Error(
+        `Specified trigger: ${trigger} not found in pluginManager.`
+      );
+    }
+    terminationManager.addTrigger(
+      pluginManager.terminationPlugins.get(trigger).createTerminationTrigger({})
+    );
+  }
 
   return terminationManager;
 }

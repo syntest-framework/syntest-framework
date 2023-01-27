@@ -19,25 +19,23 @@
 import { Encoding } from "..";
 import { CONFIG } from "..";
 import { PluginManager } from "../plugin/PluginManager";
-import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
+import { Ranking } from "../search/operators/ranking/Ranking";
 
 /**
- * Factory for creating an instance of a specific objective manager from the config.
+ * Factory for creating an instance of a specific ranking operator from the config.
  *
  * @author Dimitri Stallenberg
  */
-export function createObjectiveManagerFromConfig<T extends Encoding>(
+export function createRankingOperatorFromConfig<T extends Encoding>(
   pluginManager: PluginManager<T>
-): ObjectiveManager<T> {
-  const objectiveManager = CONFIG.objectiveManager;
+): Ranking<T> {
+  const ranking = CONFIG.ranking;
 
-  if (!pluginManager.objectiveManagerPlugins.has(objectiveManager)) {
+  if (!pluginManager.rankingPlugins.has(ranking)) {
     throw new Error(
-      `Specified objectiveManager: ${objectiveManager} not found in pluginManager.`
+      `Specified ranking operator: ${ranking} not found in pluginManager.`
     );
   }
 
-  return pluginManager.objectiveManagerPlugins
-    .get(objectiveManager)
-    .createObjectiveManager({});
+  return pluginManager.rankingPlugins.get(ranking).createRankingOperator({});
 }

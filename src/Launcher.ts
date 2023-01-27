@@ -16,7 +16,12 @@
  * limitations under the License.
  */
 
-import { Encoding, NSGAIIFactory, UserInterface } from ".";
+import {
+  Encoding,
+  NSGAIIFactory,
+  SignalTerminationTriggerFactory,
+  UserInterface,
+} from ".";
 import { ArgumentsObject, Configuration, OptionsObject } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { PluginManager } from "./plugin/PluginManager";
@@ -117,6 +122,10 @@ export abstract class Launcher<T extends Encoding> {
     // register standard selection operators
     // register standard samplers
     // register standard termination triggers
+    this.pluginManager.registerTermination(
+      new SignalTerminationTriggerFactory()
+    );
+
     // register standard objective managers
     // register standard user-interfaces
 

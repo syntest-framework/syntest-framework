@@ -282,8 +282,10 @@ export class Configuration {
           hidden: false,
           type: "string",
         })
-        .option("termination-trigger", {
+        .option("termination-triggers", {
           alias: [],
+          default: ["signal"],
+
           description: "Termination trigger to be used by the tool.",
           group: "Algorithm options:",
           hidden: false,

@@ -19,25 +19,23 @@
 import { Encoding } from "..";
 import { CONFIG } from "..";
 import { PluginManager } from "../plugin/PluginManager";
-import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
+import { EncodingSampler } from "../search/EncodingSampler";
 
 /**
- * Factory for creating an instance of a specific objective manager from the config.
+ * Factory for creating an instance of a specific sampler from the config.
  *
  * @author Dimitri Stallenberg
  */
-export function createObjectiveManagerFromConfig<T extends Encoding>(
+export function createEncodingSamplerFromConfig<T extends Encoding>(
   pluginManager: PluginManager<T>
-): ObjectiveManager<T> {
-  const objectiveManager = CONFIG.objectiveManager;
+): EncodingSampler<T> {
+  const sampler = CONFIG.sampler;
 
-  if (!pluginManager.objectiveManagerPlugins.has(objectiveManager)) {
+  if (!pluginManager.samplerPlugins.has(sampler)) {
     throw new Error(
-      `Specified objectiveManager: ${objectiveManager} not found in pluginManager.`
+      `Specified sampler: ${sampler} not found in pluginManager.`
     );
   }
 
-  return pluginManager.objectiveManagerPlugins
-    .get(objectiveManager)
-    .createObjectiveManager({});
+  return pluginManager.samplerPlugins.get(sampler).createSamplerOperator({});
 }

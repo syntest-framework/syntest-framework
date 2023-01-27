@@ -17,8 +17,8 @@
  */
 
 import { Crossover, Encoding } from "../../";
-import { CONFIG } from "../../Configuration";
-import { PluginManager } from "../../plugin/PluginManager";
+import { CONFIG } from "../Configuration";
+import { PluginManager } from "../plugin/PluginManager";
 
 /**
  * Factory for creating an instance of a specific crossover operator from the config.
