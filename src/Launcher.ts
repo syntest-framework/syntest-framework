@@ -31,7 +31,7 @@ export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
   private _pluginManager: PluginManager<T>;
   private _programName: string;
-  private _ui: UserInterface;
+  private _configuration: Configuration;
 
   get eventManager() {
     return this._eventManager;
@@ -49,33 +49,31 @@ export abstract class Launcher<T extends Encoding> {
     return this._programName;
   }
 
-  get ui() {
-    return this._ui;
+  get configuration() {
+    return this._configuration;
   }
 
   constructor(
     programName: string,
     eventManager: EventManager<T>,
-    pluginManager: PluginManager<T>,
-    ui: UserInterface
+    pluginManager: PluginManager<T>
   ) {
     this._programName = programName;
     this._eventManager = eventManager;
     this._pluginManager = pluginManager;
-    this._ui = ui;
+    this._configuration = new Configuration(this.programName);
   }
 
   public async run(args: string[]): Promise<void> {
     try {
-      const configuration = new Configuration(this.programName);
-      const yargs = configuration.configureOptions();
-      const baseArguments = await configuration.processArguments(yargs, args);
+      const yargs = this.configuration.configureOptions();
+      const baseArguments = await this.configuration.processArguments(
+        yargs,
+        args
+      );
       const yargs2 = await this.addOptions(yargs);
       const yargs3 = await this.registerPlugins(baseArguments.plugins, yargs2);
-
-      configuration.initializeConfigSingleton(
-        await this.configure(yargs3, args)
-      );
+      await this.configure(yargs3, args);
 
       for (const plugin of this.pluginManager.listenerPlugins.values()) {
         this.eventManager.registerListener(plugin.createListener({}));
@@ -100,6 +98,12 @@ export abstract class Launcher<T extends Encoding> {
       console.trace(e);
     }
   }
+
+  /**
+   * This function should configure the argument options in the language specific tool.
+   * @param yargs
+   */
+  abstract addOptions<Y>(yargs: Yargs.Argv<Y>);
 
   async registerPlugins<Y>(plugins: string[], yargs: Yargs.Argv<Y>) {
     // register standard search algorithms
@@ -126,20 +130,25 @@ export abstract class Launcher<T extends Encoding> {
   }
 
   /**
-   * This function should configure the argument options in the language specific tool.
-   * @param yargs
-   */
-  abstract addOptions<Y>(yargs: Yargs.Argv<Y>): Yargs.Argv<Y>;
-
-  /**
    * This function should parse the arguments and given config files.
    * @param yargs
    * @param args
    */
-  abstract configure(
-    yargs: OptionsObject,
-    args: string[]
-  ): Promise<ArgumentsObject>;
+  async configure<Y>(yargs: Yargs.Argv<Y>, args: string[]) {
+    const index = args.indexOf(args.find((a) => a.includes(this._programName)));
+
+    args = args.slice(index + 1);
+
+    // initial argument/config processing
+    const configFileContents = await this.configuration.loadConfigurationFile();
+    const configuredArgs = yargs.config(configFileContents);
+
+    const argv = <ArgumentsObject>(
+      configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args)
+    );
+
+    this.configuration.initializeConfigSingleton(argv);
+  }
 
   abstract initialize(): Promise<void>;
   abstract preprocess(): Promise<void>;

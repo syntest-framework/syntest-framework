@@ -22,7 +22,7 @@ import shell = require("shelljs");
 
 export let CONFIG: ArgumentsObject;
 export class Configuration {
-  initializeConfigSingleton<T extends ArgumentsObject>(argumentValues: T) {
+  initializeConfigSingleton(argumentValues: ArgumentsObject) {
     if (CONFIG) {
       throw Error("Already initialized the config singleton!");
     }
@@ -99,11 +99,12 @@ export class Configuration {
         // plugins
         .option("plugins", {
           alias: ["p"],
+          array: true,
           default: [],
           description: "List of dependencies or paths to plugins to load",
           group: "General options:",
           hidden: false,
-          type: "array",
+          type: "string",
         })
         // ui
         .option("user-interface", {

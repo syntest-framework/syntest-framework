@@ -17,12 +17,42 @@
  */
 
 import { EncodingSampler } from "../../EncodingSampler";
-import { EncodingRunner } from "../../EncodingRunner";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
 import { getUserInterface } from "../../../ui/UserInterface";
 import { MOSA } from "./mosa/MOSA";
 import { Encoding } from "../../Encoding";
+import {
+  SearchAlgorithmPlugin,
+  SearchAlgorithmOptions,
+} from "../../../plugin/SearchAlgorithmPlugin";
+import { SearchAlgorithm } from "../SearchAlgorithm";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+
+export class SfuzzFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "MOSA";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("MOSA requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("MOSA requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("MOSA requires crossover option.");
+    }
+    return new Sfuzz<T>(
+      new SfuzzObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
+  }
+}
 
 /**
  * sFuzz
@@ -36,12 +66,11 @@ import { Encoding } from "../../Encoding";
  */
 export class Sfuzz<T extends Encoding> extends MOSA<T> {
   constructor(
+    objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    runner: EncodingRunner<T>,
     crossover: Crossover<T>
   ) {
-    super(encodingSampler, runner, crossover);
-    this._objectiveManager = new SfuzzObjectiveManager<T>(runner);
+    super(objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(): void {

@@ -13,6 +13,7 @@ import { BranchObjectiveFunction } from "../../../src";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { createStubInstance } from "sinon";
+import { StructuralObjectiveManager } from "../../../src/search/objective/managers/StructuralObjectiveManager";
 
 const expect = chai.expect;
 
@@ -56,8 +57,13 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
-    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
+    const mosa = new MOSA(
+      new StructuralObjectiveManager(mockedRunner),
+      mockedSampler,
+      mockedCrossover
+    );
     const frontZero = mosa.preferenceCriterion(
       [ind1 as DummyEncodingMock, ind2, ind3],
       objectives
@@ -86,8 +92,13 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
-    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
+    const mosa = new MOSA(
+      new StructuralObjectiveManager(mockedRunner),
+      mockedSampler,
+      mockedCrossover
+    );
     const front = mosa.getNonDominatedFront(objectives, [
       ind1,
       ind2,
@@ -121,8 +132,13 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
-    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
+    const mosa = new MOSA(
+      new StructuralObjectiveManager(mockedRunner),
+      mockedSampler,
+      mockedCrossover
+    );
     const front = mosa.preferenceSortingAlgorithm(
       [ind1, ind2, ind3, ind4],
       objectives
@@ -157,12 +173,14 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
     const mosa = new MockedMOSA(
+      new StructuralObjectiveManager(mockedRunner),
       mockedSampler,
-      mockedRunner,
-      new DummyCrossover()
+      mockedCrossover
     );
+
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
     mosa.updateObjectives(searchSubject);
     await mosa.environmentalSelection(4);
