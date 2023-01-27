@@ -4,10 +4,8 @@ import { CrossoverPlugin } from "./CrossoverPlugin";
 import { ListenerPlugin } from "./ListenerPlugin";
 import { ObjectiveManagerPlugin } from "./ObjectiveManagerPlugin";
 import { PluginInterface } from "./PluginInterface";
-import { RankingPlugin } from "./RankingPlugin";
 import { SamplerPlugin } from "./SamplerPlugin";
 import { SearchAlgorithmPlugin } from "./SearchAlgorithmPlugin";
-import { SelectionPlugin } from "./SelectionPlugin";
 import { TerminationPlugin } from "./TerminationPlugin";
 import { UserInterfacePlugin } from "./UserInterfacePlugin";
 import Yargs = require("yargs");
@@ -16,8 +14,6 @@ export class PluginManager<T extends Encoding> {
   private _listenerPlugins: Map<string, ListenerPlugin<T>>;
   private _searchAlgorithmPlugins: Map<string, SearchAlgorithmPlugin<T>>;
   private _crossoverPlugins: Map<string, CrossoverPlugin<T>>;
-  private _rankingPlugins: Map<string, RankingPlugin<T>>;
-  private _selectionPlugins: Map<string, SelectionPlugin<T>>;
   private _samplerPlugins: Map<string, SamplerPlugin<T>>;
   private _terminationPlugins: Map<string, TerminationPlugin<T>>;
   private _objectiveManagerPlugins: Map<string, ObjectiveManagerPlugin<T>>;
@@ -27,8 +23,6 @@ export class PluginManager<T extends Encoding> {
     this._listenerPlugins = new Map();
     this._searchAlgorithmPlugins = new Map();
     this._crossoverPlugins = new Map();
-    this._rankingPlugins = new Map();
-    this._selectionPlugins = new Map();
     this._samplerPlugins = new Map();
     this._terminationPlugins = new Map();
     this._objectiveManagerPlugins = new Map();
@@ -45,14 +39,6 @@ export class PluginManager<T extends Encoding> {
 
   get crossoverPlugins() {
     return this._crossoverPlugins;
-  }
-
-  get rankingPlugins() {
-    return this._rankingPlugins;
-  }
-
-  get selectionPlugins() {
-    return this._selectionPlugins;
   }
 
   get samplerPlugins() {
@@ -95,8 +81,6 @@ export class PluginManager<T extends Encoding> {
       this._searchAlgorithmPlugins
     );
     yargs = await this._addPluginOptionsSpecific(yargs, this._crossoverPlugins);
-    yargs = await this._addPluginOptionsSpecific(yargs, this._rankingPlugins);
-    yargs = await this._addPluginOptionsSpecific(yargs, this._selectionPlugins);
     yargs = await this._addPluginOptionsSpecific(yargs, this._samplerPlugins);
     yargs = await this._addPluginOptionsSpecific(
       yargs,
@@ -138,14 +122,6 @@ export class PluginManager<T extends Encoding> {
 
   async registerCrossover(plugin: CrossoverPlugin<T>): Promise<void> {
     this.crossoverPlugins.set(plugin.name, plugin);
-  }
-
-  async registerRanking(plugin: RankingPlugin<T>): Promise<void> {
-    this.rankingPlugins.set(plugin.name, plugin);
-  }
-
-  async registerSelection(plugin: SelectionPlugin<T>): Promise<void> {
-    this.selectionPlugins.set(plugin.name, plugin);
   }
 
   async registerSampler(plugin: SamplerPlugin<T>): Promise<void> {

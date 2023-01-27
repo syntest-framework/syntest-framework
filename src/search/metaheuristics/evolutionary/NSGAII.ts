@@ -17,11 +17,12 @@
  */
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
-import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
-import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
 import { EncodingSampler } from "../../EncodingSampler";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
 import { Crossover } from "../../operators/crossover/Crossover";
+import { Ranking } from "../../operators/ranking/Ranking";
+import { Selection } from "../../operators/selection/Selection";
+import { ParentSelection } from "../../operators/parentSelection/ParentSelection";
 import { Encoding } from "../../Encoding";
 import {
   SearchAlgorithmPlugin,
@@ -47,13 +48,27 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    *
    * @param encodingSampler The encoding sampler
    * @param runner The runner
+   * @param crossover The crossover operator to apply
+   * @param selection The selection operator to apply
+   * @param parentSelection The parent selection operator to apply
+   * @param ranking The ranking operator to apply
    */
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: Crossover<T>,
+    selection: Selection<T>,
+    parentSelection: ParentSelection<T>,
+    ranking: Ranking<T>
   ) {
-    super(objectiveManager, encodingSampler, crossover);
+    super(
+      objectiveManager,
+      encodingSampler,
+      crossover,
+      selection,
+      parentSelection,
+      ranking
+    );
   }
 
   /**

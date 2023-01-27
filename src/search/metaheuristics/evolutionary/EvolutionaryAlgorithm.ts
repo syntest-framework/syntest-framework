@@ -19,7 +19,6 @@
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { EncodingSampler } from "../../EncodingSampler";
-import { tournamentSelection } from "../../operators/selection/TournamentSelection";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
@@ -61,6 +60,7 @@ export abstract class EvolutionaryAlgorithm<
    * @param objectiveManager The objective manager used by the specific algorithm
    * @param encodingSampler The encoding sampler used by the specific algorithm
    * @param crossover The crossover operator to apply
+   *
    * @protected
    */
   protected constructor(
@@ -131,20 +131,16 @@ export abstract class EvolutionaryAlgorithm<
   protected _generateOffspring(): T[] {
     const offspring = [];
 
-    const rounds = Math.max(2, Math.round(this._populationSize / 5));
-
     while (offspring.length < this._populationSize) {
-      const parentA = tournamentSelection(this._population, rounds);
-      const parentB = tournamentSelection(this._population, rounds);
+      const parentA = this._parentSelection.select(this._population);
+      const parentB = this._parentSelection.select(this._population);
 
       if (prng.nextDouble(0, 1) <= CONFIG.crossoverProbability) {
-        const [childA, childB] = this._crossover.crossOver(parentA, parentB);
+        const children = this._crossover.crossOver([parentA, parentB]);
 
-        const testCase1 = childA.copy().mutate(this._encodingSampler);
-        offspring.push(testCase1);
-
-        const testCase2 = childB.copy().mutate(this._encodingSampler);
-        offspring.push(testCase2);
+        for (const child of children) {
+          offspring.push(child.copy().mutate(this._encodingSampler));
+        }
       } else {
         offspring.push(parentA.copy().mutate(this._encodingSampler));
         offspring.push(parentB.copy().mutate(this._encodingSampler));

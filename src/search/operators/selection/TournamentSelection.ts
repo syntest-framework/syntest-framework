@@ -16,11 +16,8 @@
  * limitations under the License.
  */
 
-import { SelectionPlugin } from "../../../plugin/SelectionPlugin";
 import { prng } from "../../../util/prng";
 import { Encoding } from "../../Encoding";
-import { Selection } from "./Selection";
-import Yargs = require("yargs");
 
 /**
  * This function selects the individual for reproduction using tournament selection
@@ -30,12 +27,6 @@ import Yargs = require("yargs");
  *
  * @author Annibale Panichella
  */
-export class TournamentSelection<T extends Encoding> implements Selection<T> {
-  select(population: T[]) {
-    throw new Error("Method not implemented.");
-  }
-}
-
 export function tournamentSelection<T extends Encoding>(
   population: T[],
   tournamentSize: number
@@ -58,30 +49,4 @@ export function tournamentSelection<T extends Encoding>(
   }
 
   return winner;
-}
-
-/**
- * Factory plugin for TournamentSelection
- *
- * @author Dimitri Stallenberg
- */
-export class TournamentSelectionFactory<T extends Encoding>
-  implements SelectionPlugin<T>
-{
-  name = "tournamentSelection";
-
-  async configure<Y>(yargs: Yargs.Argv<Y>): Promise<Yargs.Argv<Y>> {
-    return yargs.option("tournamentSize", {
-      alias: [],
-      default: 4,
-      description: "The size of the tournament",
-      group: "Tournament Selection options:",
-      hidden: false,
-      type: "number",
-    });
-  }
-
-  createSelectionOperator(): TournamentSelection<T> {
-    return new TournamentSelection<T>();
-  }
 }

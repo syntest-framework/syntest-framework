@@ -250,22 +250,6 @@ export class Configuration {
           hidden: false,
           type: "string",
         })
-        .option("ranking", {
-          alias: [],
-          default: "fastNonDom",
-          description: "Ranking operator to be used by the tool.",
-          group: "Algorithm options:",
-          hidden: false,
-          type: "string",
-        })
-        .option("selection", {
-          alias: [],
-          default: "tournament",
-          description: "Selection operator to be used by the tool.",
-          group: "Algorithm options:",
-          hidden: false,
-          type: "string",
-        })
         .option("objective-manager", {
           alias: [],
           default: "simple",

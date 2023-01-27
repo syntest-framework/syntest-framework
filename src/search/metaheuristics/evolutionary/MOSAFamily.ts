@@ -16,23 +16,26 @@
  * limitations under the License.
  */
 
-import { EvolutionaryAlgorithm } from "../EvolutionaryAlgorithm";
-import { EncodingSampler } from "../../../EncodingSampler";
-import { UncoveredObjectiveManager } from "../../../objective/managers/UncoveredObjectiveManager";
-import { ObjectiveFunction } from "../../../objective/ObjectiveFunction";
-import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
-import { DominanceComparator } from "../../../comparators/DominanceComparator";
-import { getUserInterface } from "../../../../ui/UserInterface";
-import { Crossover } from "../../../operators/crossover/Crossover";
-import { Encoding } from "../../../Encoding";
-
-import { SearchAlgorithm } from "../../SearchAlgorithm";
-import { ObjectiveManager } from "../../../objective/managers/ObjectiveManager";
-import { StructuralObjectiveManager } from "../../../objective/managers/StructuralObjectiveManager";
+import {
+  ObjectiveManager,
+  EncodingSampler,
+  getUserInterface,
+  ObjectiveFunction,
+  SearchAlgorithm,
+  UncoveredObjectiveManager,
+  StructuralObjectiveManager,
+} from "../../..";
+import {
+  Encoding,
+  EvolutionaryAlgorithm,
+  Crossover,
+  crowdingDistance,
+} from "../../..";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
-} from "../../../../plugin/SearchAlgorithmPlugin";
+} from "../../../plugin/SearchAlgorithmPlugin";
+import { DominanceComparator } from "../../comparators/DominanceComparator";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -321,6 +324,12 @@ export class MOSAFactory<T extends Encoding>
 
 /**
  * Factory plugin for DynaMOSA
+ *
+ * Dynamic Many-Objective Sorting Algorithm (DynaMOSA).
+ *
+ * Based on:
+ * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
+ * A. Panichella; F. K. Kifetew; P. Tonella
  *
  * @author Dimitri Stallenberg
  */

@@ -19,14 +19,14 @@
 import { Encoding } from "../../..";
 
 /**
- * Creates 2 children swapping statements between the two parents
- * @param parentA the first parent individual
- * @param parentB the second parent individual
+ * Creates children swapping statements between the parents
+ * @param parents the parent individuals
  *
- * @return a tuple of 2 children
+ * @return a tuple of children
  *
  * @author Annibale Panichella
+ * @author Dimitri Stallenberg
  */
 export interface Crossover<T extends Encoding> {
-  crossOver(parentA: T, parentB: T): T[];
+  crossOver(parents: T[]): T[];
 }

@@ -30,6 +30,9 @@ import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
 import { CrowdingDistanceFactory } from "./search/operators/ranking/CrowdingDistance";
 import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
 import { TournamentSelectionFactory } from "./search/operators/selection/TournamentSelection";
+import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
+import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
+import { FastNonDomFactory } from "./search/operators/ranking/FastNonDomSorting";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
@@ -119,14 +122,8 @@ export abstract class Launcher<T extends Encoding> {
 
     // register standard crossover operators
 
-    // register standard ranking operators
-    this.pluginManager.registerRanking(new CrowdingDistanceFactory());
-    this.pluginManager.registerRanking(new FastNonDomFactory());
-
-    // register standard selection operators
-    this.pluginManager.registerSelection(new TournamentSelectionFactory());
-
     // register standard samplers
+
     // register standard termination triggers
     this.pluginManager.registerTermination(
       new SignalTerminationTriggerFactory()
