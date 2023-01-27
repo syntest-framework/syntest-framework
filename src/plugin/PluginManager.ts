@@ -13,7 +13,6 @@ import { UserInterfacePlugin } from "./UserInterfacePlugin";
 import Yargs = require("yargs");
 
 export class PluginManager<T extends Encoding> {
-  private plugins: PluginInterface<T>[];
   private _listenerPlugins: Map<string, ListenerPlugin<T>>;
   private _searchAlgorithmPlugins: Map<string, SearchAlgorithmPlugin<T>>;
   private _crossoverPlugins: Map<string, CrossoverPlugin<T>>;
@@ -25,7 +24,6 @@ export class PluginManager<T extends Encoding> {
   private _userInterfacePlugins: Map<string, UserInterfacePlugin<T>>;
 
   constructor() {
-    this.plugins = [];
     this._listenerPlugins = new Map();
     this._searchAlgorithmPlugins = new Map();
     this._crossoverPlugins = new Map();
@@ -85,14 +83,42 @@ export class PluginManager<T extends Encoding> {
       }
 
       pluginInstance.register(this);
-      this.plugins.push(pluginInstance);
     } catch (e) {
       console.trace(e);
     }
   }
 
   async addPluginOptions<Y>(yargs: Yargs.Argv<Y>) {
-    for (const plugin of this.plugins) {
+    yargs = await this._addPluginOptionsSpecific(yargs, this._listenerPlugins);
+    yargs = await this._addPluginOptionsSpecific(
+      yargs,
+      this._searchAlgorithmPlugins
+    );
+    yargs = await this._addPluginOptionsSpecific(yargs, this._crossoverPlugins);
+    yargs = await this._addPluginOptionsSpecific(yargs, this._rankingPlugins);
+    yargs = await this._addPluginOptionsSpecific(yargs, this._selectionPlugins);
+    yargs = await this._addPluginOptionsSpecific(yargs, this._samplerPlugins);
+    yargs = await this._addPluginOptionsSpecific(
+      yargs,
+      this._terminationPlugins
+    );
+    yargs = await this._addPluginOptionsSpecific(
+      yargs,
+      this._objectiveManagerPlugins
+    );
+    yargs = await this._addPluginOptionsSpecific(
+      yargs,
+      this._userInterfacePlugins
+    );
+
+    return yargs;
+  }
+
+  private async _addPluginOptionsSpecific<Y, X extends PluginInterface<T>>(
+    yargs: Yargs.Argv<Y>,
+    plugins: Map<string, X>
+  ) {
+    for (const plugin of plugins.values()) {
       if (plugin.configure) {
         yargs = await plugin.configure(yargs);
       }

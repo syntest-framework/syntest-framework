@@ -1,4 +1,4 @@
-import { Encoding } from "..";
+import { Encoding, PluginManager } from "..";
 import { PluginInterface } from "./PluginInterface";
 import { Selection } from "../search/operators/selection/Selection";
 

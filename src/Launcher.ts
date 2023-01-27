@@ -16,13 +16,8 @@
  * limitations under the License.
  */
 
-import {
-  Encoding,
-  NSGAIIFactory,
-  SignalTerminationTriggerFactory,
-  UserInterface,
-} from ".";
-import { ArgumentsObject, Configuration, OptionsObject } from "./Configuration";
+import { Encoding } from "./search/Encoding";
+import { ArgumentsObject, Configuration } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { PluginManager } from "./plugin/PluginManager";
 import {
@@ -30,7 +25,11 @@ import {
   MOSAFactory,
 } from "./search/metaheuristics/evolutionary/mosa/MOSA";
 import Yargs = require("yargs");
+
 import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
+import { CrowdingDistanceFactory } from "./search/operators/ranking/CrowdingDistance";
+import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
+import { TournamentSelectionFactory } from "./search/operators/selection/TournamentSelection";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
@@ -116,10 +115,17 @@ export abstract class Launcher<T extends Encoding> {
     this.pluginManager.registerSearchAlgorithm(new NSGAIIFactory());
     this.pluginManager.registerSearchAlgorithm(new MOSAFactory());
     this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
+    this.pluginManager.registerSearchAlgorithm(new SfuzzFactory());
 
     // register standard crossover operators
+
     // register standard ranking operators
+    this.pluginManager.registerRanking(new CrowdingDistanceFactory());
+    this.pluginManager.registerRanking(new FastNonDomFactory());
+
     // register standard selection operators
+    this.pluginManager.registerSelection(new TournamentSelectionFactory());
+
     // register standard samplers
     // register standard termination triggers
     this.pluginManager.registerTermination(

@@ -20,16 +20,6 @@ import { TerminationPlugin } from "../../plugin/TerminationPlugin";
 import { Encoding } from "../Encoding";
 import { TerminationTrigger } from "./TerminationTrigger";
 
-export class SignalTerminationTriggerFactory<T extends Encoding>
-  implements TerminationPlugin<T>
-{
-  name = "signal";
-
-  createTerminationTrigger(): SignalTerminationTrigger {
-    return new SignalTerminationTrigger();
-  }
-}
-
 /**
  * Termination trigger for interrupt signals.
  *
@@ -63,5 +53,20 @@ export class SignalTerminationTrigger implements TerminationTrigger {
    */
   public isTriggered(): boolean {
     return this._triggered;
+  }
+}
+
+/**
+ * Factory plugin for SignalTerminationTrigger
+ *
+ * @author Dimitri Stallenberg
+ */
+export class SignalTerminationTriggerFactory<T extends Encoding>
+  implements TerminationPlugin<T>
+{
+  name = "signal";
+
+  createTerminationTrigger(): SignalTerminationTrigger {
+    return new SignalTerminationTrigger();
   }
 }

@@ -34,56 +34,6 @@ import {
   SearchAlgorithmOptions,
 } from "../../../../plugin/SearchAlgorithmPlugin";
 
-export class MOSAFactory<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "MOSA";
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error("MOSA requires encodingSampler option.");
-    }
-    if (!options.runner) {
-      throw new Error("MOSA requires runner option.");
-    }
-    if (!options.crossover) {
-      throw new Error("MOSA requires crossover option.");
-    }
-    return new MOSA<T>(
-      new UncoveredObjectiveManager<T>(options.runner),
-      options.encodingSampler,
-      options.crossover
-    );
-  }
-}
-
-export class DynaMOSAFactory<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "DynaMOSA";
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error("DynaMOSA requires encodingSampler option.");
-    }
-    if (!options.runner) {
-      throw new Error("DynaMOSA requires runner option.");
-    }
-    if (!options.crossover) {
-      throw new Error("DynaMOSA requires crossover option.");
-    }
-    return new MOSA<T>(
-      new StructuralObjectiveManager<T>(options.runner),
-      options.encodingSampler,
-      options.crossover
-    );
-  }
-}
-
 /**
  * Many-objective Sorting Algorithm (MOSA).
  *
@@ -336,5 +286,65 @@ export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       if (!frontZero.includes(chosen)) frontZero.push(chosen);
     }
     return frontZero;
+  }
+}
+
+/**
+ * Factory plugin for MOSA
+ *
+ * @author Dimitri Stallenberg
+ */
+export class MOSAFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "MOSA";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("MOSA requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("MOSA requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("MOSA requires crossover option.");
+    }
+    return new MOSA<T>(
+      new UncoveredObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
+  }
+}
+
+/**
+ * Factory plugin for DynaMOSA
+ *
+ * @author Dimitri Stallenberg
+ */
+export class DynaMOSAFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "DynaMOSA";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("DynaMOSA requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("DynaMOSA requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("DynaMOSA requires crossover option.");
+    }
+    return new MOSA<T>(
+      new StructuralObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
   }
 }
