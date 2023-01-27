@@ -69,37 +69,56 @@ export * from "./search/SearchListener";
 export * from "./search/SearchSubject";
 
 // - Budget
+export * from "./search/budget/Budget";
+export * from "./search/budget/BudgetListener";
 export * from "./search/budget/BudgetManager";
 export * from "./search/budget/EvaluationBudget";
 export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
+export * from "./search/budget/StagnationBudget";
 export * from "./search/budget/TotalTimeBudget";
 
 // - Comparators
 export * from "./search/comparators/DominanceComparator";
 
 // - Metaheuristics
+export * from "./search/metaheuristics/RandomSearch";
+export * from "./search/metaheuristics/SearchAlgorithm";
+
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
 export * from "./search/metaheuristics/evolutionary/NSGAII";
+export * from "./search/metaheuristics/evolutionary/Sfuzz";
+
 export * from "./search/metaheuristics/evolutionary/mosa/MOSA";
 
 // - Objective
-export * from "./search/objective/ObjectiveFunction";
 export * from "./search/objective/BranchDistance";
 export * from "./search/objective/BranchObjectiveFunction";
-export * from "./search/objective/FunctionObjectiveFunction";
-export * from "./search/objective/ProbeObjectiveFunction";
 export * from "./search/objective/ExceptionObjectiveFunction";
+export * from "./search/objective/FunctionObjectiveFunction";
+export * from "./search/objective/ObjectiveFunction";
+export * from "./search/objective/ProbeObjectiveFunction";
+
+export * from "./search/objective/managers/ObjectiveManager";
+export * from "./search/objective/managers/SfuzzObjectiveManager";
+export * from "./search/objective/managers/SimpleObjectiveManager";
+export * from "./search/objective/managers/StructuralObjectiveManager";
+export * from "./search/objective/managers/UncoveredObjectiveManager";
 
 // - Operator
-export * from "./search/operators/ranking/CrowdingDistance";
-export * from "./search/operators/ranking/FastNonDomSorting";
-export * from "./search/operators/selection/TournamentSelection";
 export * from "./search/operators/crossover/Crossover";
 
+export * from "./search/operators/ranking/CrowdingDistance";
+export * from "./search/operators/ranking/FastNonDomSorting";
+export * from "./search/operators/ranking/Ranking";
+
+export * from "./search/operators/selection/Selection";
+export * from "./search/operators/selection/TournamentSelection";
+
 // - Termination
-export * from "./search/termination/TerminationManager";
 export * from "./search/termination/SignalTerminationTrigger";
+export * from "./search/termination/TerminationManager";
+export * from "./search/termination/TerminationTrigger";
 
 // Statistics
 export * from "./statistics/CoverageWriter";
@@ -109,9 +128,9 @@ export * from "./statistics/StatisticsSearchListener";
 export * from "./statistics/SummaryWriter";
 
 // UI
-export * from "./ui/UserInterface";
 export * from "./ui/CommandLineInterface";
 export * from "./ui/MonitorCommandLineInterface";
+export * from "./ui/UserInterface";
 
 // Util
 export * from "./util/Datapoint";
