@@ -20,20 +20,21 @@ import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
 
-export let CONFIG: ArgumentsObject;
+export let CONFIG: Readonly<ArgumentsObject>;
+
 export class Configuration {
+  private programName: string;
+
+  constructor(programName: string) {
+    this.programName = programName;
+  }
+
   initializeConfigSingleton<T extends ArgumentsObject>(argumentValues: T) {
     if (CONFIG) {
       throw Error("Already initialized the config singleton!");
     }
 
-    CONFIG = argumentValues;
-  }
-
-  private programName: string;
-
-  constructor(programName: string) {
-    this.programName = programName;
+    CONFIG = <Readonly<ArgumentsObject>>argumentValues;
   }
 
   loadConfigurationFile(cwd?: string) {
