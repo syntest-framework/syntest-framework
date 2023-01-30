@@ -18,7 +18,6 @@
 import { Encoding } from "../search/Encoding";
 import { CrossoverPlugin } from "./CrossoverPlugin";
 import { ListenerPlugin } from "./ListenerPlugin";
-import { ObjectiveManagerPlugin } from "./ObjectiveManagerPlugin";
 import { PluginInterface } from "./PluginInterface";
 import { SamplerPlugin } from "./SamplerPlugin";
 import { SearchAlgorithmPlugin } from "./SearchAlgorithmPlugin";
@@ -32,7 +31,6 @@ export class PluginManager<T extends Encoding> {
   private _crossoverOperators: Map<string, CrossoverPlugin<T>>;
   private _samplers: Map<string, SamplerPlugin<T>>;
   private _terminationTriggers: Map<string, TerminationPlugin<T>>;
-  private _objectiveManagers: Map<string, ObjectiveManagerPlugin<T>>;
   private _userInterfaces: Map<string, UserInterfacePlugin<T>>;
 
   constructor() {
@@ -41,7 +39,6 @@ export class PluginManager<T extends Encoding> {
     this._crossoverOperators = new Map();
     this._samplers = new Map();
     this._terminationTriggers = new Map();
-    this._objectiveManagers = new Map();
     this._userInterfaces = new Map();
   }
 
@@ -65,10 +62,6 @@ export class PluginManager<T extends Encoding> {
     return this._terminationTriggers;
   }
 
-  get objectiveManagers() {
-    return this._objectiveManagers;
-  }
-
   get userInterfaces() {
     return this._userInterfaces;
   }
@@ -84,10 +77,6 @@ export class PluginManager<T extends Encoding> {
     yargs = await this._addPluginOptionsSpecific(
       yargs,
       this._terminationTriggers
-    );
-    yargs = await this._addPluginOptionsSpecific(
-      yargs,
-      this._objectiveManagers
     );
     yargs = await this._addPluginOptionsSpecific(yargs, this._userInterfaces);
 
@@ -116,7 +105,6 @@ export class PluginManager<T extends Encoding> {
     await this._cleanupSpecific(this._crossoverOperators);
     await this._cleanupSpecific(this._samplers);
     await this._cleanupSpecific(this._terminationTriggers);
-    await this._cleanupSpecific(this._objectiveManagers);
     await this._cleanupSpecific(this._userInterfaces);
   }
 
@@ -136,7 +124,6 @@ export class PluginManager<T extends Encoding> {
     await this._prepareSpecific(this._crossoverOperators);
     await this._prepareSpecific(this._samplers);
     await this._prepareSpecific(this._terminationTriggers);
-    await this._prepareSpecific(this._objectiveManagers);
     await this._prepareSpecific(this._userInterfaces);
   }
 
@@ -212,17 +199,6 @@ export class PluginManager<T extends Encoding> {
       );
     }
     this.terminationTriggers.set(plugin.name, plugin);
-  }
-
-  async registerObjectiveManager(
-    plugin: ObjectiveManagerPlugin<T>
-  ): Promise<void> {
-    if (this.objectiveManagers.has(plugin.name)) {
-      throw new Error(
-        `Plugin with name: ${plugin.name} is already registered as a objective manager plugin.`
-      );
-    }
-    this.objectiveManagers.set(plugin.name, plugin);
   }
 
   async registerUserInterface(plugin: UserInterfacePlugin<T>): Promise<void> {
