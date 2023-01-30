@@ -84,12 +84,11 @@ export * from "./ui/CommandLineInterface";
 export * from "./ui/MonitorCommandLineInterface";
 
 // Util
-export * from "./config";
 export * from "./util/logger";
 export * from "./util/prng";
 export * from "./util/fileSystem";
 
-export * from "./properties";
+export * from "./Configuration";
 
 // Targetting
 export * from "./analysis/static/Target";
@@ -103,3 +102,6 @@ export * from "./event/ListenerInterface";
 
 // Launcher
 export * from "./Launcher";
+
+// Configuration
+export * from "./Configuration";
