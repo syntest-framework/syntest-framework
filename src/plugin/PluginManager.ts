@@ -103,8 +103,12 @@ export class PluginManager<T extends Encoding> {
     plugins: Map<string, X>
   ) {
     for (const plugin of plugins.values()) {
-      if (plugin.configure) {
-        yargs = await plugin.configure(yargs);
+      if (plugin.getConfig) {
+        const options = await plugin.getConfig();
+
+        for (const option of options.keys()) {
+          yargs = yargs.option(option, options.get(option));
+        }
       }
     }
     return yargs;

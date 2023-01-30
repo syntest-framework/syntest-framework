@@ -116,9 +116,6 @@ describe("Test MOSA", function () {
   it("Test Preference Sorting", () => {
     // This test requires a defined population size.
     Object.defineProperty(configuration.CONFIG, "populationSize", { value: 4 });
-    Object.defineProperty(configuration.CONFIG, "population-size", {
-      value: 4,
-    });
 
     const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);

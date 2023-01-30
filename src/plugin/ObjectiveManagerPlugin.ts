@@ -1,4 +1,4 @@
-import { Encoding } from "..";
+import { Encoding, EncodingRunner } from "..";
 import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
 import { PluginInterface } from "./PluginInterface";
 

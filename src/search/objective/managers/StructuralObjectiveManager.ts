@@ -26,7 +26,6 @@ import {
   ObjectiveManagerOptions,
   ObjectiveManagerPlugin,
 } from "../../../plugin/ObjectiveManagerPlugin";
-import { StructuralObjectiveManagerFactory } from "../../..";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.

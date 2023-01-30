@@ -23,7 +23,7 @@ import shell = require("shelljs");
 export let CONFIG: Readonly<ArgumentsObject>;
 
 export class Configuration {
-  initializeConfigSingleton(argumentValues: ArgumentsObject) {
+  initialize(argumentValues: ArgumentsObject) {
     if (CONFIG) {
       throw Error("Already initialized the config singleton!");
     }
@@ -31,7 +31,7 @@ export class Configuration {
     CONFIG = <Readonly<ArgumentsObject>>argumentValues;
   }
 
-  loadConfigurationFile(cwd?: string) {
+  loadFile(cwd?: string) {
     cwd = cwd || process.env.SYNTEST_CWD || process.cwd();
     const configPath = path.join(cwd, ".syntest.js");
     let config;
@@ -54,7 +54,7 @@ export class Configuration {
     yargs: O,
     args: string[]
   ): ArgumentsObject {
-    const config = this.loadConfigurationFile();
+    const config = this.loadFile();
     const configuredArgs = yargs.config(config);
     return configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args);
   }
@@ -72,22 +72,18 @@ export class Configuration {
       .epilog("visit https://syntest.org for more documentation");
 
     // Here we chain all the configure functions to create a single options object that contains everything.
-    const generalOptions = this.configureGeneralOptions(yargs);
-    const targetOptions = this.configureTargetOptions(generalOptions);
-    const storageOptions = this.configureStorageOptions(targetOptions);
-    const algorithmOptions = this.configureAlgorithmOptions(storageOptions);
-    const budgetOptions = this.configureBudgetOptions(algorithmOptions);
-    const loggingOptions = this.configureLoggingOptions(budgetOptions);
-    const postProcessingOptions =
-      this.configurePostProcessingOptions(loggingOptions);
-    const samplingOptions = this.configureSamplingOptions(
-      postProcessingOptions
-    );
-    const researchModeOptions =
-      this.configureResearchModeOptions(samplingOptions);
+    const options1 = this.configureGeneralOptions(yargs);
+    const options2 = this.configureTargetOptions(options1);
+    const options3 = this.configureStorageOptions(options2);
+    const options4 = this.configureAlgorithmOptions(options3);
+    const options5 = this.configureBudgetOptions(options4);
+    const options6 = this.configureLoggingOptions(options5);
+    const options7 = this.configurePostProcessingOptions(options6);
+    const options8 = this.configureSamplingOptions(options7);
+    const options9 = this.configureResearchModeOptions(options8);
 
     // In case there are hidden options we hide them from the help menu.
-    return researchModeOptions.showHidden(false);
+    return options9.showHidden(false);
   }
 
   configureGeneralOptions<T>(yargs: Yargs.Argv<T>) {

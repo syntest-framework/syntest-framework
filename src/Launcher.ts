@@ -168,7 +168,7 @@ export abstract class Launcher<T extends Encoding> {
     args = args.slice(index + 1);
 
     // initial argument/config processing
-    const configFileContents = await this.configuration.loadConfigurationFile();
+    const configFileContents = await this.configuration.loadFile();
     const configuredArgs = yargs.config(configFileContents);
 
     const argv = <ArgumentsObject>(
@@ -177,7 +177,7 @@ export abstract class Launcher<T extends Encoding> {
       ))
     );
 
-    this.configuration.initializeConfigSingleton(argv);
+    this.configuration.initialize(argv);
   }
 
   abstract initialize(): Promise<void>;
