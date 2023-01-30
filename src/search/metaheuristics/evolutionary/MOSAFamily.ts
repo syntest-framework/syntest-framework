@@ -25,7 +25,6 @@ import {
   UncoveredObjectiveManager,
   StructuralObjectiveManager,
   Encoding,
-  EvolutionaryAlgorithm,
   Crossover,
   crowdingDistance,
 } from "../../..";
@@ -33,6 +32,7 @@ import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "../../../plugin/SearchAlgorithmPlugin";
+import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 
 /**

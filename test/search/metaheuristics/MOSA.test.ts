@@ -4,6 +4,7 @@ import {
   CommandLineInterface,
   EncodingRunner,
   EncodingSampler,
+  UncoveredObjectiveManager,
 } from "../../../src";
 import { MOSA } from "../../../src/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
@@ -12,7 +13,6 @@ import { BranchObjectiveFunction } from "../../../src";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { createStubInstance } from "sinon";
-import { StructuralObjectiveManager } from "../../../src/search/objective/managers/StructuralObjectiveManager";
 import * as configuration from "../../../src/Configuration";
 
 const expect = chai.expect;
@@ -60,7 +60,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSA(
-      new StructuralObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover
     );
@@ -95,7 +95,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSA(
-      new StructuralObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover
     );
@@ -137,7 +137,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSA(
-      new StructuralObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover
     );
@@ -178,7 +178,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MockedMOSA(
-      new StructuralObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover
     );

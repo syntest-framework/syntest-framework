@@ -1,4 +1,4 @@
-import { MOSA } from "../../src/search/metaheuristics/evolutionary/mosa/MOSA";
+import { MOSA } from "../../src/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummySearchSubject } from "./DummySubject.mock";
 import { Encoding } from "../../src/search/Encoding";
 
