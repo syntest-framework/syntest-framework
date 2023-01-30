@@ -106,8 +106,8 @@ export const prng = {
     length = 7,
     characters: string = Charset.alpha + Charset.alphaCapital
   ): string => {
-    let result = "";
     const charactersLength = characters.length;
+    let result = "";
 
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(generator() * charactersLength));
