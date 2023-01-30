@@ -22,6 +22,11 @@ import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { EncodingRunner } from "../../EncodingRunner";
 import { NodeType } from "@syntest/cfg-core";
+import {
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+} from "../../../plugin/ObjectiveManagerPlugin";
+import { StructuralObjectiveManagerFactory } from "../../..";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.
@@ -110,5 +115,25 @@ export class StructuralObjectiveManager<
     rootObjectives.forEach((objective) =>
       this._currentObjectives.add(objective)
     );
+  }
+}
+
+/**
+ * Factory plugin for StructuralObjectiveManager
+ *
+ * @author Dimitri Stallenberg
+ */
+export class StructuralObjectiveManagerFactory<T extends Encoding>
+  implements ObjectiveManagerPlugin<T>
+{
+  name = "StructuralObjectiveManager";
+
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    if (!options.runner) {
+      throw new Error("StructuralObjectiveManager requires runner option.");
+    }
+    return new StructuralObjectiveManager<T>(options.runner);
   }
 }

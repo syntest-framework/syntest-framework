@@ -21,6 +21,10 @@ import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { EncodingRunner } from "../../EncodingRunner";
+import {
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+} from "../../../plugin/ObjectiveManagerPlugin";
 
 /**
  * A simple objective manager that always evaluates an encoding on all objectives.
@@ -76,5 +80,25 @@ export class SimpleObjectiveManager<
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
     });
+  }
+}
+
+/**
+ * Factory plugin for SimpleObjectiveManager
+ *
+ * @author Dimitri Stallenberg
+ */
+export class SimpleObjectiveManagerFactory<T extends Encoding>
+  implements ObjectiveManagerPlugin<T>
+{
+  name = "SimpleObjectiveManager";
+
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    if (!options.runner) {
+      throw new Error("SimpleObjectiveManager requires runner option.");
+    }
+    return new SimpleObjectiveManager<T>(options.runner);
   }
 }
