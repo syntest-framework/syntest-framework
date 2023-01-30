@@ -55,9 +55,7 @@ export abstract class Launcher<T extends Encoding> {
     try {
       const configuration = new Configuration();
       const yargs = configuration.configureOptions(this.programName);
-      configuration.initializeConfigSingleton(
-        await this.configure(yargs, args)
-      );
+      configuration.initialize(await this.configure(yargs, args));
 
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
