@@ -20,7 +20,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "/dist",
-    "/NOTICE"
+    "../../NOTICE"
   ],
   "repository": {
     "type": "git",

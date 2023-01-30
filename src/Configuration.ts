@@ -174,15 +174,6 @@ export class Configuration {
         normalize: true,
         type: "string",
       },
-      "cfg-directory": {
-        alias: [],
-        default: "syntest/cfg",
-        description: "The path where the csv should be saved",
-        group: "Directory options:",
-        hidden: false,
-        normalize: true,
-        type: "string",
-      },
       "temp-test-directory": {
         alias: [],
         default: ".syntest/tests",

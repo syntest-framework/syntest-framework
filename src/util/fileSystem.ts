@@ -29,7 +29,6 @@ export async function createDirectoryStructure() {
   await mkdirSync(CONFIG.finalSuiteDirectory, {
     recursive: true,
   });
-  await mkdirSync(CONFIG.cfgDirectory, { recursive: true });
 }
 
 export async function createTempDirectoryStructure() {
