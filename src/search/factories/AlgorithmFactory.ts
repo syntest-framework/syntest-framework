@@ -27,7 +27,7 @@ import {
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { RandomSearch } from "../metaheuristics/RandomSearch";
 import { DynaMOSA } from "../metaheuristics/evolutionary/mosa/DynaMOSA";
-import { Properties } from "../../properties";
+import { CONFIG } from "../../Configuration";
 import { Sfuzz } from "../metaheuristics/evolutionary/Sfuzz";
 
 /**
@@ -42,7 +42,7 @@ export function createAlgorithmFromConfig<T extends Encoding>(
   runner: EncodingRunner<T>,
   crossover: Crossover<T>
 ): SearchAlgorithm<T> {
-  const algorithm = Properties.algorithm;
+  const algorithm = CONFIG.algorithm;
 
   switch (algorithm) {
     case "Random":

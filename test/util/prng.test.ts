@@ -1,29 +1,9 @@
 import * as chai from "chai";
-import {
-  guessCWD,
-  loadConfig,
-  prng,
-  processConfig,
-  setupLogger,
-  setupOptions,
-} from "../../src";
+import { prng } from "../../src";
 
 const expect = chai.expect;
 
 describe("PRNG", () => {
-  before(async () => {
-    await guessCWD();
-    await setupOptions("", []);
-    await loadConfig();
-    await processConfig(
-      {
-        target_root_directory: "./",
-      },
-      ""
-    );
-    await setupLogger();
-  });
-
   it("Gaussian random variables follow a gaussian distribution", () => {
     const samples = 100000;
     const mu = 5;
