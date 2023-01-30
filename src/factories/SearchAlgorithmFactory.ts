@@ -38,18 +38,16 @@ export function createSearchAlgorithmFromConfig<T extends Encoding>(
 ): SearchAlgorithm<T> {
   const algorithm = CONFIG.algorithm;
 
-  if (!pluginManager.searchAlgorithmPlugins.has(algorithm)) {
+  if (!pluginManager.searchAlgorithms.has(algorithm)) {
     throw new Error(
       `Specified algorithm: ${algorithm} not found in pluginManager.`
     );
   }
 
-  return pluginManager.searchAlgorithmPlugins
-    .get(algorithm)
-    .createSearchAlgorithm({
-      objectiveManager,
-      encodingSampler,
-      runner,
-      crossover,
-    });
+  return pluginManager.searchAlgorithms.get(algorithm).createSearchAlgorithm({
+    objectiveManager,
+    encodingSampler,
+    runner,
+    crossover,
+  });
 }

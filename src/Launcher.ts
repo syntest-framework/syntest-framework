@@ -36,6 +36,7 @@ import {
   UncoveredObjectiveManagerFactory,
   SfuzzObjectiveManagerFactory,
 } from ".";
+import yargHelper = require("yargs/helpers");
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
@@ -76,16 +77,27 @@ export abstract class Launcher<T extends Encoding> {
 
   public async run(args: string[]): Promise<void> {
     try {
-      const yargs = this.configuration.configureOptions(this.programName);
+      // Remove binary call from args
+      args = yargHelper.hideBin(args);
+
+      // Configure base options
+      const yargs1 = this.configuration.configureOptions(this.programName);
+      // Parse the arguments and config using only the base options
       const baseArguments = await this.configuration.processArguments(
-        yargs,
+        yargs1,
         args
       );
-      const yargs2 = await this.addOptions(yargs);
+      // Add the language specific tool options
+      const yargs2 = await this.addOptions(yargs1);
+      // Register the plugins and add the plugin options
       const yargs3 = await this.registerPlugins(baseArguments.plugins, yargs2);
-      await this.configure(yargs3, args);
+      // Parse the arguments and config using all options
+      const argValues = await this.configuration.processArguments(yargs3, args);
+      // Initialize the configuration object
+      this.configuration.initialize(argValues);
 
-      for (const plugin of this.pluginManager.listenerPlugins.values()) {
+      // Register all listener plugins
+      for (const plugin of this.pluginManager.listeners.values()) {
         this.eventManager.registerListener(plugin.createListener({}));
       }
 
@@ -113,7 +125,7 @@ export abstract class Launcher<T extends Encoding> {
    * This function should configure the argument options in the language specific tool.
    * @param yargs
    */
-  abstract addOptions<Y>(yargs: Yargs.Argv<Y>);
+  abstract addOptions<Y>(yargs: Yargs.Argv<Y>): Yargs.Argv<Y>;
 
   async registerPlugins<Y>(plugins: string[], yargs: Yargs.Argv<Y>) {
     // register standard search algorithms
@@ -155,29 +167,6 @@ export abstract class Launcher<T extends Encoding> {
 
     // add plugin options
     return this.pluginManager.addPluginOptions(yargs);
-  }
-
-  /**
-   * This function should parse the arguments and given config files.
-   * @param yargs
-   * @param args
-   */
-  async configure<Y>(yargs: Yargs.Argv<Y>, args: string[]): Promise<void> {
-    const index = args.indexOf(args.find((a) => a.includes(this._programName)));
-
-    args = args.slice(index + 1);
-
-    // initial argument/config processing
-    const configFileContents = await this.configuration.loadFile();
-    const configuredArgs = yargs.config(configFileContents);
-
-    const argv = <ArgumentsObject>(
-      (<unknown>(
-        configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args)
-      ))
-    );
-
-    this.configuration.initialize(argv);
   }
 
   abstract initialize(): Promise<void>;

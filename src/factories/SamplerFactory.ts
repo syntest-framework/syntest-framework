@@ -31,11 +31,11 @@ export function createEncodingSamplerFromConfig<T extends Encoding>(
 ): EncodingSampler<T> {
   const sampler = CONFIG.sampler;
 
-  if (!pluginManager.samplerPlugins.has(sampler)) {
+  if (!pluginManager.samplers.has(sampler)) {
     throw new Error(
       `Specified sampler: ${sampler} not found in pluginManager.`
     );
   }
 
-  return pluginManager.samplerPlugins.get(sampler).createSamplerOperator({});
+  return pluginManager.samplers.get(sampler).createSamplerOperator({});
 }

@@ -33,13 +33,15 @@ export function createTerminationManagerFromConfig<T extends Encoding>(
   const terminationManager = new TerminationManager();
 
   for (const trigger of terminationTriggers) {
-    if (!pluginManager.terminationPlugins.has(trigger)) {
+    if (!pluginManager.terminationTriggers.has(trigger)) {
       throw new Error(
         `Specified trigger: ${trigger} not found in pluginManager.`
       );
     }
     terminationManager.addTrigger(
-      pluginManager.terminationPlugins.get(trigger).createTerminationTrigger({})
+      pluginManager.terminationTriggers
+        .get(trigger)
+        .createTerminationTrigger({})
     );
   }
 

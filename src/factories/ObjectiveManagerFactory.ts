@@ -31,13 +31,13 @@ export function createObjectiveManagerFromConfig<T extends Encoding>(
 ): ObjectiveManager<T> {
   const objectiveManager = CONFIG.objectiveManager;
 
-  if (!pluginManager.objectiveManagerPlugins.has(objectiveManager)) {
+  if (!pluginManager.objectiveManagers.has(objectiveManager)) {
     throw new Error(
       `Specified objectiveManager: ${objectiveManager} not found in pluginManager.`
     );
   }
 
-  return pluginManager.objectiveManagerPlugins
+  return pluginManager.objectiveManagers
     .get(objectiveManager)
     .createObjectiveManager({});
 }

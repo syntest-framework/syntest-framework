@@ -31,13 +31,13 @@ export function createUserInterfaceFromConfig<T extends Encoding>(
 ): UserInterface {
   const userInterface = CONFIG.userInterface;
 
-  if (!pluginManager.userInterfacePlugins.has(userInterface)) {
+  if (!pluginManager.userInterfaces.has(userInterface)) {
     throw new Error(
       `Specified user interface: ${userInterface} not found in pluginManager.`
     );
   }
 
-  return pluginManager.userInterfacePlugins
+  return pluginManager.userInterfaces
     .get(userInterface)
     .createUserInterface({});
 }

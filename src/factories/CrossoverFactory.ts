@@ -30,13 +30,13 @@ export function createCrossoverFromConfig<T extends Encoding>(
 ): Crossover<T> {
   const crossover = CONFIG.crossover;
 
-  if (!pluginManager.searchAlgorithmPlugins.has(crossover)) {
+  if (!pluginManager.crossoverOperators.has(crossover)) {
     throw new Error(
       `Specified crossover: ${crossover} not found in pluginManager.`
     );
   }
 
-  return pluginManager.crossoverPlugins
+  return pluginManager.crossoverOperators
     .get(crossover)
     .createCrossoverOperator({});
 }

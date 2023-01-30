@@ -11,50 +11,50 @@ import { UserInterfacePlugin } from "./UserInterfacePlugin";
 import Yargs = require("yargs");
 
 export class PluginManager<T extends Encoding> {
-  private _listenerPlugins: Map<string, ListenerPlugin<T>>;
-  private _searchAlgorithmPlugins: Map<string, SearchAlgorithmPlugin<T>>;
-  private _crossoverPlugins: Map<string, CrossoverPlugin<T>>;
-  private _samplerPlugins: Map<string, SamplerPlugin<T>>;
-  private _terminationPlugins: Map<string, TerminationPlugin<T>>;
-  private _objectiveManagerPlugins: Map<string, ObjectiveManagerPlugin<T>>;
-  private _userInterfacePlugins: Map<string, UserInterfacePlugin<T>>;
+  private _listeners: Map<string, ListenerPlugin<T>>;
+  private _searchAlgorithms: Map<string, SearchAlgorithmPlugin<T>>;
+  private _crossoverOperators: Map<string, CrossoverPlugin<T>>;
+  private _samplers: Map<string, SamplerPlugin<T>>;
+  private _terminationTriggers: Map<string, TerminationPlugin<T>>;
+  private _objectiveManagers: Map<string, ObjectiveManagerPlugin<T>>;
+  private _userInterfaces: Map<string, UserInterfacePlugin<T>>;
 
   constructor() {
-    this._listenerPlugins = new Map();
-    this._searchAlgorithmPlugins = new Map();
-    this._crossoverPlugins = new Map();
-    this._samplerPlugins = new Map();
-    this._terminationPlugins = new Map();
-    this._objectiveManagerPlugins = new Map();
-    this._userInterfacePlugins = new Map();
+    this._listeners = new Map();
+    this._searchAlgorithms = new Map();
+    this._crossoverOperators = new Map();
+    this._samplers = new Map();
+    this._terminationTriggers = new Map();
+    this._objectiveManagers = new Map();
+    this._userInterfaces = new Map();
   }
 
-  get listenerPlugins() {
-    return this._listenerPlugins;
+  get listeners() {
+    return this._listeners;
   }
 
-  get searchAlgorithmPlugins() {
-    return this._searchAlgorithmPlugins;
+  get searchAlgorithms() {
+    return this._searchAlgorithms;
   }
 
-  get crossoverPlugins() {
-    return this._crossoverPlugins;
+  get crossoverOperators() {
+    return this._crossoverOperators;
   }
 
-  get samplerPlugins() {
-    return this._samplerPlugins;
+  get samplers() {
+    return this._samplers;
   }
 
-  get terminationPlugins() {
-    return this._terminationPlugins;
+  get terminationTriggers() {
+    return this._terminationTriggers;
   }
 
-  get objectiveManagerPlugins() {
-    return this._objectiveManagerPlugins;
+  get objectiveManagers() {
+    return this._objectiveManagers;
   }
 
-  get userInterfacePlugins() {
-    return this._userInterfacePlugins;
+  get userInterfaces() {
+    return this._userInterfaces;
   }
 
   async loadPlugin(pluginPath: string): Promise<void> {
@@ -75,25 +75,22 @@ export class PluginManager<T extends Encoding> {
   }
 
   async addPluginOptions<Y>(yargs: Yargs.Argv<Y>) {
-    yargs = await this._addPluginOptionsSpecific(yargs, this._listenerPlugins);
+    yargs = await this._addPluginOptionsSpecific(yargs, this._listeners);
+    yargs = await this._addPluginOptionsSpecific(yargs, this._searchAlgorithms);
     yargs = await this._addPluginOptionsSpecific(
       yargs,
-      this._searchAlgorithmPlugins
+      this._crossoverOperators
     );
-    yargs = await this._addPluginOptionsSpecific(yargs, this._crossoverPlugins);
-    yargs = await this._addPluginOptionsSpecific(yargs, this._samplerPlugins);
+    yargs = await this._addPluginOptionsSpecific(yargs, this._samplers);
     yargs = await this._addPluginOptionsSpecific(
       yargs,
-      this._terminationPlugins
-    );
-    yargs = await this._addPluginOptionsSpecific(
-      yargs,
-      this._objectiveManagerPlugins
+      this._terminationTriggers
     );
     yargs = await this._addPluginOptionsSpecific(
       yargs,
-      this._userInterfacePlugins
+      this._objectiveManagers
     );
+    yargs = await this._addPluginOptionsSpecific(yargs, this._userInterfaces);
 
     return yargs;
   }
@@ -107,7 +104,7 @@ export class PluginManager<T extends Encoding> {
         const options = await plugin.getConfig();
 
         for (const option of options.keys()) {
-          yargs = yargs.option(option, options.get(option));
+          yargs = yargs.option(`${plugin.name}-${option}`, options.get(option));
         }
       }
     }
@@ -115,34 +112,34 @@ export class PluginManager<T extends Encoding> {
   }
 
   async registerListener(plugin: ListenerPlugin<T>): Promise<void> {
-    this.listenerPlugins.set(plugin.name, plugin);
+    this.listeners.set(plugin.name, plugin);
   }
 
   async registerSearchAlgorithm(
     plugin: SearchAlgorithmPlugin<T>
   ): Promise<void> {
-    this.searchAlgorithmPlugins.set(plugin.name, plugin);
+    this.searchAlgorithms.set(plugin.name, plugin);
   }
 
   async registerCrossover(plugin: CrossoverPlugin<T>): Promise<void> {
-    this.crossoverPlugins.set(plugin.name, plugin);
+    this.crossoverOperators.set(plugin.name, plugin);
   }
 
   async registerSampler(plugin: SamplerPlugin<T>): Promise<void> {
-    this.samplerPlugins.set(plugin.name, plugin);
+    this.samplers.set(plugin.name, plugin);
   }
 
   async registerTermination(plugin: TerminationPlugin<T>): Promise<void> {
-    this.terminationPlugins.set(plugin.name, plugin);
+    this.terminationTriggers.set(plugin.name, plugin);
   }
 
   async registerObjectiveManager(
     plugin: ObjectiveManagerPlugin<T>
   ): Promise<void> {
-    this.objectiveManagerPlugins.set(plugin.name, plugin);
+    this.objectiveManagers.set(plugin.name, plugin);
   }
 
   async registerUserInterface(plugin: UserInterfacePlugin<T>): Promise<void> {
-    this.userInterfacePlugins.set(plugin.name, plugin);
+    this.userInterfaces.set(plugin.name, plugin);
   }
 }
