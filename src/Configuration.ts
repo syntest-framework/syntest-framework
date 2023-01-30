@@ -23,12 +23,6 @@ import shell = require("shelljs");
 export let CONFIG: Readonly<ArgumentsObject>;
 
 export class Configuration {
-  private programName: string;
-
-  constructor(programName: string) {
-    this.programName = programName;
-  }
-
   initializeConfigSingleton<T extends ArgumentsObject>(argumentValues: T) {
     if (CONFIG) {
       throw Error("Already initialized the config singleton!");
@@ -65,22 +59,23 @@ export class Configuration {
     return configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args);
   }
 
-  configureOptions() {
-    const yargs = Yargs.usage(`Usage: ${this.programName} [options]`)
+  configureOptions(programName: string) {
+    const yargs = Yargs.usage(`Usage: ${programName} [options]`)
       .example(
-        `${this.programName} -r ./src`,
+        `${programName} -r ./src`,
         "Running the tool with target directory 'src'"
       )
       .example(
-        `${this.programName} -r ./src --population_size 10`,
+        `${programName} -r ./src --population_size 10`,
         "Setting the population size"
       )
       .epilog("visit https://syntest.org for more documentation");
 
+    // Here we chain all the configure functions to create a single options object that contains everything.
     const generalOptions = this.configureGeneralOptions(yargs);
-    const fileOptions = this.configureFileOptions(generalOptions);
-    const dirOptions = this.configureDirectoryOptions(fileOptions);
-    const algorithmOptions = this.configureAlgorithmOptions(dirOptions);
+    const targetOptions = this.configureTargetOptions(generalOptions);
+    const storageOptions = this.configureStorageOptions(targetOptions);
+    const algorithmOptions = this.configureAlgorithmOptions(storageOptions);
     const budgetOptions = this.configureBudgetOptions(algorithmOptions);
     const loggingOptions = this.configureLoggingOptions(budgetOptions);
     const postProcessingOptions =
@@ -91,6 +86,7 @@ export class Configuration {
     const researchModeOptions =
       this.configureResearchModeOptions(samplingOptions);
 
+    // In case there are hidden options we hide them from the help menu.
     return researchModeOptions.showHidden(false);
   }
 
@@ -119,7 +115,7 @@ export class Configuration {
     );
   }
 
-  configureFileOptions<T>(yargs: Yargs.Argv<T>) {
+  configureTargetOptions<T>(yargs: Yargs.Argv<T>) {
     return (
       yargs
         // files
@@ -153,7 +149,7 @@ export class Configuration {
     );
   }
 
-  configureDirectoryOptions<T>(yargs: Yargs.Argv<T>) {
+  configureStorageOptions<T>(yargs: Yargs.Argv<T>) {
     return (
       yargs
         // directories
@@ -486,7 +482,7 @@ export class Configuration {
   }
 }
 
-const configured = new Configuration("").configureOptions();
+const configured = new Configuration().configureOptions("");
 export type OptionsObject = typeof configured;
 const parsed = configured.parseSync(["-r", "./src"]);
 export type ArgumentsObject = typeof parsed;

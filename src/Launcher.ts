@@ -53,8 +53,8 @@ export abstract class Launcher<T extends Encoding> {
 
   public async run(args: string[]): Promise<void> {
     try {
-      const configuration = new Configuration(this.programName);
-      const yargs = configuration.configureOptions();
+      const configuration = new Configuration();
+      const yargs = configuration.configureOptions(this.programName);
       configuration.initializeConfigSingleton(
         await this.configure(yargs, args)
       );

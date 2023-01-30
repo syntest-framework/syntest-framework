@@ -95,7 +95,7 @@ export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
 
-// Events
+// Event System
 export * from "./event/EventManager";
 export * from "./event/ProgramState";
 export * from "./event/ListenerInterface";
