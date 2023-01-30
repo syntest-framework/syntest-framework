@@ -21,10 +21,6 @@ import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { EncodingRunner } from "../../EncodingRunner";
-import {
-  ObjectiveManagerOptions,
-  ObjectiveManagerPlugin,
-} from "../../../plugin/ObjectiveManagerPlugin";
 
 /**
  * Objective manager that only evaluates an encoding on uncovered objectives.
@@ -85,25 +81,5 @@ export class UncoveredObjectiveManager<
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
     });
-  }
-}
-
-/**
- * Factory plugin for UncoveredObjectiveManager
- *
- * @author Dimitri Stallenberg
- */
-export class UncoveredObjectiveManagerFactory<T extends Encoding>
-  implements ObjectiveManagerPlugin<T>
-{
-  name = "UncoveredObjectiveManager";
-
-  createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
-  ): ObjectiveManager<T> {
-    if (!options.runner) {
-      throw new Error("UncoveredObjectiveManager requires runner option.");
-    }
-    return new UncoveredObjectiveManager<T>(options.runner);
   }
 }

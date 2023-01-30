@@ -30,12 +30,7 @@ import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
 import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
-import { StructuralObjectiveManagerFactory } from "./search/objective/managers/StructuralObjectiveManager";
-import {
-  SimpleObjectiveManagerFactory,
-  UncoveredObjectiveManagerFactory,
-  SfuzzObjectiveManagerFactory,
-} from ".";
+
 import yargHelper = require("yargs/helpers");
 
 export abstract class Launcher<T extends Encoding> {
@@ -97,7 +92,8 @@ export abstract class Launcher<T extends Encoding> {
       this.configuration.initialize(argValues);
 
       // Register all listener plugins
-      for (const plugin of this.pluginManager.listeners.values()) {
+      for (const pluginName of this.pluginManager.getListeners()) {
+        const plugin = this.pluginManager.getListener(pluginName);
         this.eventManager.registerListener(plugin.createListener({}));
       }
 

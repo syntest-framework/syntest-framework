@@ -42,28 +42,52 @@ export class PluginManager<T extends Encoding> {
     this._userInterfaces = new Map();
   }
 
-  get listeners() {
-    return this._listeners;
+  getListeners(): string[] {
+    return [...this._listeners.keys()];
   }
 
-  get searchAlgorithms() {
-    return this._searchAlgorithms;
+  getSearchAlgorithms(): string[] {
+    return [...this._searchAlgorithms.keys()];
   }
 
-  get crossoverOperators() {
-    return this._crossoverOperators;
+  getCrossoverOperators(): string[] {
+    return [...this._crossoverOperators.keys()];
   }
 
-  get samplers() {
-    return this._samplers;
+  getSamplers(): string[] {
+    return [...this._samplers.keys()];
   }
 
-  get terminationTriggers() {
-    return this._terminationTriggers;
+  getTerminationTriggers(): string[] {
+    return [...this._terminationTriggers.keys()];
   }
 
-  get userInterfaces() {
-    return this._userInterfaces;
+  getUserInterfaces(): string[] {
+    return [...this._userInterfaces.keys()];
+  }
+
+  getListener(name: string): ListenerPlugin<T> {
+    return this._listeners.get(name);
+  }
+
+  getSearchAlgorithm(name: string): SearchAlgorithmPlugin<T> {
+    return this._searchAlgorithms.get(name);
+  }
+
+  getCrossoverOperator(name: string): CrossoverPlugin<T> {
+    return this._crossoverOperators.get(name);
+  }
+
+  getSampler(name: string): SamplerPlugin<T> {
+    return this._samplers.get(name);
+  }
+
+  getTerminationTrigger(name: string): TerminationPlugin<T> {
+    return this._terminationTriggers.get(name);
+  }
+
+  getUserInterface(name: string): UserInterfacePlugin<T> {
+    return this._userInterfaces.get(name);
   }
 
   async addPluginOptions<Y>(yargs: Yargs.Argv<Y>) {
@@ -155,58 +179,58 @@ export class PluginManager<T extends Encoding> {
   }
 
   async registerListener(plugin: ListenerPlugin<T>): Promise<void> {
-    if (this.listeners.has(plugin.name)) {
+    if (this._listeners.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a listener plugin.`
       );
     }
-    this.listeners.set(plugin.name, plugin);
+    this._listeners.set(plugin.name, plugin);
   }
 
   async registerSearchAlgorithm(
     plugin: SearchAlgorithmPlugin<T>
   ): Promise<void> {
-    if (this.searchAlgorithms.has(plugin.name)) {
+    if (this._searchAlgorithms.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a search algorithm plugin.`
       );
     }
-    this.searchAlgorithms.set(plugin.name, plugin);
+    this._searchAlgorithms.set(plugin.name, plugin);
   }
 
   async registerCrossover(plugin: CrossoverPlugin<T>): Promise<void> {
-    if (this.crossoverOperators.has(plugin.name)) {
+    if (this._crossoverOperators.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a crossover plugin.`
       );
     }
-    this.crossoverOperators.set(plugin.name, plugin);
+    this._crossoverOperators.set(plugin.name, plugin);
   }
 
   async registerSampler(plugin: SamplerPlugin<T>): Promise<void> {
-    if (this.samplers.has(plugin.name)) {
+    if (this._samplers.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a sampler plugin.`
       );
     }
-    this.samplers.set(plugin.name, plugin);
+    this._samplers.set(plugin.name, plugin);
   }
 
   async registerTermination(plugin: TerminationPlugin<T>): Promise<void> {
-    if (this.terminationTriggers.has(plugin.name)) {
+    if (this._terminationTriggers.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a termination trigger plugin.`
       );
     }
-    this.terminationTriggers.set(plugin.name, plugin);
+    this._terminationTriggers.set(plugin.name, plugin);
   }
 
   async registerUserInterface(plugin: UserInterfacePlugin<T>): Promise<void> {
-    if (this.userInterfaces.has(plugin.name)) {
+    if (this._userInterfaces.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a user-interface plugin.`
       );
     }
-    this.userInterfaces.set(plugin.name, plugin);
+    this._userInterfaces.set(plugin.name, plugin);
   }
 }
