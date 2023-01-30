@@ -83,7 +83,6 @@ export * from "./search/metaheuristics/SearchAlgorithm";
 
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
 export * from "./search/metaheuristics/evolutionary/NSGAII";
-export * from "./search/metaheuristics/evolutionary/Sfuzz";
 
 export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 
@@ -96,7 +95,6 @@ export * from "./search/objective/ObjectiveFunction";
 export * from "./search/objective/ProbeObjectiveFunction";
 
 export * from "./search/objective/managers/ObjectiveManager";
-export * from "./search/objective/managers/SfuzzObjectiveManager";
 export * from "./search/objective/managers/SimpleObjectiveManager";
 export * from "./search/objective/managers/StructuralObjectiveManager";
 export * from "./search/objective/managers/UncoveredObjectiveManager";

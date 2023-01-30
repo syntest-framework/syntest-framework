@@ -16,18 +16,14 @@
  * limitations under the License.
  */
 
-import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../../operators/crossover/Crossover";
-import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
-import { getUserInterface } from "../../../ui/UserInterface";
-import { MOSA } from "./MOSAFamily";
-import { Encoding } from "../../Encoding";
 import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../../../plugin/SearchAlgorithmPlugin";
-import { SearchAlgorithm } from "../SearchAlgorithm";
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+  Encoding,
+  MOSA,
+  EncodingSampler,
+  Crossover,
+  getUserInterface,
+  ObjectiveManager,
+} from "@syntest/core";
 
 /**
  * sFuzz
@@ -78,35 +74,5 @@ export class Sfuzz<T extends Encoding> extends MOSA<T> {
 
     // select new population
     this._population = F[0];
-  }
-}
-
-/**
- * Factory plugin for SFuzz
- *
- * @author Dimitri Stallenberg
- */
-export class SfuzzFactory<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "SFuzz";
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error("SFuzz requires encodingSampler option.");
-    }
-    if (!options.runner) {
-      throw new Error("SFuzz requires runner option.");
-    }
-    if (!options.crossover) {
-      throw new Error("SFuzz requires crossover option.");
-    }
-    return new Sfuzz<T>(
-      new SfuzzObjectiveManager<T>(options.runner),
-      options.encodingSampler,
-      options.crossover
-    );
   }
 }

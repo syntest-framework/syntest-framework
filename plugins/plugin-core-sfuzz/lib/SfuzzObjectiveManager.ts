@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../Encoding";
-import { ObjectiveFunction } from "../ObjectiveFunction";
-import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
-import { EncodingRunner } from "../../EncodingRunner";
 import {
-  ObjectiveManagerPlugin,
-  ObjectiveManagerOptions,
+  Encoding,
+  EncodingRunner,
+  ObjectiveFunction,
   ObjectiveManager,
-} from "../../..";
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+  StructuralObjectiveManager,
+} from "@syntest/core";
 
 /**
  * sFuzz objective manager
@@ -90,25 +90,5 @@ export class SfuzzObjectiveManager<
       // This is to ignore the approach level
       encoding.setDistance(objectiveFunction, 1);
     }
-  }
-}
-
-/**
- * Factory plugin for SfuzzObjectiveManager
- *
- * @author Dimitri Stallenberg
- */
-export class SfuzzObjectiveManagerFactory<T extends Encoding>
-  implements ObjectiveManagerPlugin<T>
-{
-  name = "SfuzzObjectiveManager";
-
-  createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
-  ): ObjectiveManager<T> {
-    if (!options.runner) {
-      throw new Error("SfuzzObjectiveManager requires runner option.");
-    }
-    return new SfuzzObjectiveManager<T>(options.runner);
   }
 }

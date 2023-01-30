@@ -27,14 +27,12 @@ import {
 import Yargs = require("yargs");
 
 import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
-import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
 import { StructuralObjectiveManagerFactory } from "./search/objective/managers/StructuralObjectiveManager";
 import {
   SimpleObjectiveManagerFactory,
   UncoveredObjectiveManagerFactory,
-  SfuzzObjectiveManagerFactory,
 } from ".";
 import yargHelper = require("yargs/helpers");
 
@@ -133,7 +131,6 @@ export abstract class Launcher<T extends Encoding> {
     this.pluginManager.registerSearchAlgorithm(new NSGAIIFactory());
     this.pluginManager.registerSearchAlgorithm(new MOSAFactory());
     this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
-    this.pluginManager.registerSearchAlgorithm(new SfuzzFactory());
 
     // register standard crossover operators
 
@@ -153,9 +150,6 @@ export abstract class Launcher<T extends Encoding> {
     );
     this.pluginManager.registerObjectiveManager(
       new UncoveredObjectiveManagerFactory()
-    );
-    this.pluginManager.registerObjectiveManager(
-      new SfuzzObjectiveManagerFactory()
     );
 
     // register standard user-interfaces
