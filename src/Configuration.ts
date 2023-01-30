@@ -242,14 +242,6 @@ export class Configuration {
             hidden: false,
             type: "string",
           },
-          "objective-manager": {
-            alias: [],
-            default: "simple",
-            description: "Objective manager to be used by the tool.",
-            group: "Algorithm options:",
-            hidden: false,
-            type: "string",
-          },
           sampler: {
             alias: [],
             default: "random",

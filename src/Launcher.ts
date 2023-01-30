@@ -146,20 +146,6 @@ export abstract class Launcher<T extends Encoding> {
       new SignalTerminationTriggerFactory()
     );
 
-    // register standard objective managers
-    this.pluginManager.registerObjectiveManager(
-      new SimpleObjectiveManagerFactory()
-    );
-    this.pluginManager.registerObjectiveManager(
-      new StructuralObjectiveManagerFactory()
-    );
-    this.pluginManager.registerObjectiveManager(
-      new UncoveredObjectiveManagerFactory()
-    );
-    this.pluginManager.registerObjectiveManager(
-      new SfuzzObjectiveManagerFactory()
-    );
-
     // register standard user-interfaces
 
     // load external plugins
