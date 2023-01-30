@@ -116,7 +116,6 @@ dist
 .vscode-test
 
 ### SynTest Framework - SynTest Core ###
-package-lock.json
 .npmrc
 
 # End of https://www.toptal.com/developers/gitignore/api/node

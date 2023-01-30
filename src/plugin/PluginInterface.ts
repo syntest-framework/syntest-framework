@@ -9,4 +9,12 @@ export interface PluginInterface<T extends Encoding> {
    * Should return a map of optionName -> yargsConfig
    */
   getConfig?(): Promise<Map<string, Yargs.Options>>;
+  /**
+   * Called after the initialization step of the tool
+   */
+  prepare?(): Promise<void>;
+  /**
+   * Called before the exit step of the tool
+   */
+  cleanup?(): Promise<void>;
 }

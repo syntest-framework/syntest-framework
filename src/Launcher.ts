@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { Encoding } from "./search/Encoding";
-import { ArgumentsObject, Configuration } from "./Configuration";
+import { Encoding } from ".";
+import { Configuration } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { PluginManager } from "./plugin/PluginManager";
 import {
@@ -101,6 +101,7 @@ export abstract class Launcher<T extends Encoding> {
         this.eventManager.registerListener(plugin.createListener({}));
       }
 
+      await this.pluginManager.prepare();
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
       this.eventManager.emitEvent("onInitializeComplete");
@@ -113,6 +114,7 @@ export abstract class Launcher<T extends Encoding> {
       this.eventManager.emitEvent("onPostprocessStart");
       await this.postprocess();
       this.eventManager.emitEvent("onPostprocessComplete");
+      await this.pluginManager.cleanup();
       this.eventManager.emitEvent("onExit");
       await this.exit();
     } catch (e) {

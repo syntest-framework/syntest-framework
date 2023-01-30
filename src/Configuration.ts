@@ -28,7 +28,7 @@ export class Configuration {
       throw Error("Already initialized the config singleton!");
     }
 
-    CONFIG = argumentValues;
+    CONFIG = <Readonly<ArgumentsObject>>argumentValues;
   }
 
   loadFile(cwd?: string) {
