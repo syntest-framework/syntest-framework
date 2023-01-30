@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
-import { Encoding } from "../search/Encoding";
-import { SearchSubject } from "../search/SearchSubject";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
+import { Encoding } from "../Encoding";
+import { SearchSubject } from "../SearchSubject";
 
 /**
  * Objective function for the exception criterion.

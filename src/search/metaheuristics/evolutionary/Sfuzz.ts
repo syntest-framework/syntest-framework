@@ -20,7 +20,7 @@ import { EncodingSampler } from "../../EncodingSampler";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
 import { getUserInterface } from "../../../ui/UserInterface";
-import { MOSA } from "./mosa/MOSA";
+import { MOSA } from "./MOSAFamily";
 import { Encoding } from "../../Encoding";
 import {
   SearchAlgorithmPlugin,

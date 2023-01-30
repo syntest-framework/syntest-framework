@@ -23,16 +23,13 @@ import { PluginManager } from "./plugin/PluginManager";
 import {
   DynaMOSAFactory,
   MOSAFactory,
-} from "./search/metaheuristics/evolutionary/mosa/MOSA";
+} from "./search/metaheuristics/evolutionary/MOSAFamily";
 import Yargs = require("yargs");
 
 import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
-import { CrowdingDistanceFactory } from "./search/operators/ranking/CrowdingDistance";
 import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
-import { TournamentSelectionFactory } from "./search/operators/selection/TournamentSelection";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
-import { FastNonDomFactory } from "./search/operators/ranking/FastNonDomSorting";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
@@ -68,12 +65,12 @@ export abstract class Launcher<T extends Encoding> {
     this._programName = programName;
     this._eventManager = eventManager;
     this._pluginManager = pluginManager;
-    this._configuration = new Configuration(this.programName);
+    this._configuration = new Configuration();
   }
 
   public async run(args: string[]): Promise<void> {
     try {
-      const yargs = this.configuration.configureOptions();
+      const yargs = this.configuration.configureOptions(this.programName);
       const baseArguments = await this.configuration.processArguments(
         yargs,
         args
@@ -146,7 +143,7 @@ export abstract class Launcher<T extends Encoding> {
    * @param yargs
    * @param args
    */
-  async configure<Y>(yargs: Yargs.Argv<Y>, args: string[]) {
+  async configure<Y>(yargs: Yargs.Argv<Y>, args: string[]): Promise<void> {
     const index = args.indexOf(args.find((a) => a.includes(this._programName)));
 
     args = args.slice(index + 1);
@@ -156,7 +153,9 @@ export abstract class Launcher<T extends Encoding> {
     const configuredArgs = yargs.config(configFileContents);
 
     const argv = <ArgumentsObject>(
-      configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args)
+      (<unknown>(
+        configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args)
+      ))
     );
 
     this.configuration.initializeConfigSingleton(argv);

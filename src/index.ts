@@ -38,10 +38,8 @@ export * from "./event/ProgramState";
 // Factories
 export * from "./factories/CrossoverFactory";
 export * from "./factories/ObjectiveManagerFactory";
-export * from "./factories/RankingFactory";
 export * from "./factories/SamplerFactory";
 export * from "./factories/SearchAlgorithmFactory";
-export * from "./factories/SelectionFactory";
 export * from "./factories/TerminationFactory";
 export * from "./factories/UserInterfaceFactory";
 
@@ -51,10 +49,8 @@ export * from "./plugin/ListenerPlugin";
 export * from "./plugin/ObjectiveManagerPlugin";
 export * from "./plugin/PluginInterface";
 export * from "./plugin/PluginManager";
-export * from "./plugin/RankingPlugin";
 export * from "./plugin/SamplerPlugin";
 export * from "./plugin/SearchAlgorithmPlugin";
-export * from "./plugin/SelectionPlugin";
 export * from "./plugin/TerminationPlugin";
 export * from "./plugin/UserInterfacePlugin";
 
@@ -89,7 +85,7 @@ export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
 export * from "./search/metaheuristics/evolutionary/NSGAII";
 export * from "./search/metaheuristics/evolutionary/Sfuzz";
 
-export * from "./search/metaheuristics/evolutionary/mosa/MOSA";
+export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 
 // - Objective
 export * from "./search/objective/BranchDistance";
@@ -110,9 +106,7 @@ export * from "./search/operators/crossover/Crossover";
 
 export * from "./search/operators/ranking/CrowdingDistance";
 export * from "./search/operators/ranking/FastNonDomSorting";
-export * from "./search/operators/ranking/Ranking";
 
-export * from "./search/operators/selection/Selection";
 export * from "./search/operators/selection/TournamentSelection";
 
 // - Termination

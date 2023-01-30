@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../search/Encoding";
+import { Encoding } from "../Encoding";
 import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
-import { SearchSubject } from "../search/SearchSubject";
+import { SearchSubject } from "../SearchSubject";
 
 /**
  *

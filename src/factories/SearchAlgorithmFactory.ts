@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import { Crossover, EncodingSampler, Encoding, EncodingRunner } from "../../";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
-import { CONFIG } from "../../Configuration";
-import { PluginManager } from "../../plugin/PluginManager";
-import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { Crossover, EncodingSampler, Encoding, EncodingRunner } from "..";
+import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
+import { CONFIG } from "../Configuration";
+import { PluginManager } from "../plugin/PluginManager";
+import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
 
 /**
  * Factory for creating an instance of a specific search algorithm from the config.

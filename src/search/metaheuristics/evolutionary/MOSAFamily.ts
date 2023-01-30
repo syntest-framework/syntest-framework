@@ -24,8 +24,6 @@ import {
   SearchAlgorithm,
   UncoveredObjectiveManager,
   StructuralObjectiveManager,
-} from "../../..";
-import {
   Encoding,
   EvolutionaryAlgorithm,
   Crossover,

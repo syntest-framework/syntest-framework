@@ -21,7 +21,7 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
 import { Archive } from "../../Archive";
 import { SearchSubject } from "../../SearchSubject";
 import { EncodingRunner } from "../../EncodingRunner";
-import { ExceptionObjectiveFunction } from "../../../criterion/ExceptionObjectiveFunction";
+import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import * as crypto from "crypto";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { TerminationManager } from "../../termination/TerminationManager";

@@ -25,6 +25,7 @@ import { BudgetManager } from "../../budget/BudgetManager";
 import { CONFIG } from "../../../Configuration";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { Encoding } from "../../Encoding";
+import { tournamentSelection } from "../../operators/selection/TournamentSelection";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -131,9 +132,11 @@ export abstract class EvolutionaryAlgorithm<
   protected _generateOffspring(): T[] {
     const offspring = [];
 
+    const rounds = Math.max(2, Math.round(this._populationSize / 5));
+
     while (offspring.length < this._populationSize) {
-      const parentA = this._parentSelection.select(this._population);
-      const parentB = this._parentSelection.select(this._population);
+      const parentA = tournamentSelection(this._population, rounds);
+      const parentB = tournamentSelection(this._population, rounds);
 
       if (prng.nextDouble(0, 1) <= CONFIG.crossoverProbability) {
         const children = this._crossover.crossOver([parentA, parentB]);

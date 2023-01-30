@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Crossover, Encoding } from "../../";
+import { Crossover, Encoding } from "..";
 import { CONFIG } from "../Configuration";
 import { PluginManager } from "../plugin/PluginManager";
 

@@ -4,9 +4,8 @@ import {
   CommandLineInterface,
   EncodingRunner,
   EncodingSampler,
-  CONFIG,
 } from "../../../src";
-import { MOSA } from "../../../src/search/metaheuristics/evolutionary/mosa/MOSA";
+import { MOSA } from "../../../src/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import { BranchObjectiveFunction } from "../../../src";
@@ -14,6 +13,7 @@ import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { createStubInstance } from "sinon";
 import { StructuralObjectiveManager } from "../../../src/search/objective/managers/StructuralObjectiveManager";
+import * as configuration from "../../../src/Configuration";
 
 const expect = chai.expect;
 
@@ -115,8 +115,10 @@ describe("Test MOSA", function () {
 
   it("Test Preference Sorting", () => {
     // This test requires a defined population size.
-    CONFIG.populationSize = 4;
-    CONFIG.population_size = 4;
+    Object.defineProperty(configuration.CONFIG, "populationSize", { value: 4 });
+    Object.defineProperty(configuration.CONFIG, "population-size", {
+      value: 4,
+    });
 
     const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
