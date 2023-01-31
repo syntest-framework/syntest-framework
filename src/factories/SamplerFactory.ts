@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -31,11 +31,11 @@ export function createEncodingSamplerFromConfig<T extends Encoding>(
 ): EncodingSampler<T> {
   const sampler = CONFIG.sampler;
 
-  if (!pluginManager.samplers.has(sampler)) {
+  if (!pluginManager.getSamplers().includes(sampler)) {
     throw new Error(
       `Specified sampler: ${sampler} not found in pluginManager.`
     );
   }
 
-  return pluginManager.samplers.get(sampler).createSamplerOperator({});
+  return pluginManager.getSampler(sampler).createSamplerOperator({});
 }

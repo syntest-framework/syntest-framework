@@ -18,12 +18,9 @@
 
 import {
   Encoding,
-  EncodingRunner,
   ObjectiveFunction,
-  ObjectiveManager,
-  ObjectiveManagerOptions,
-  ObjectiveManagerPlugin,
   StructuralObjectiveManager,
+  EncodingRunner,
 } from "@syntest/core";
 
 /**

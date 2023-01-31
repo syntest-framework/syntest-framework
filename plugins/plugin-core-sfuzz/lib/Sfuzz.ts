@@ -18,7 +18,7 @@
 
 import {
   Encoding,
-  MOSA,
+  MOSAFamily,
   EncodingSampler,
   Crossover,
   getUserInterface,
@@ -35,7 +35,7 @@ import {
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class Sfuzz<T extends Encoding> extends MOSA<T> {
+export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,

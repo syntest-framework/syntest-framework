@@ -1,8 +1,8 @@
-import { MOSA } from "../../src/search/metaheuristics/evolutionary/MOSAFamily";
+import { MOSAFamily } from "../../src/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummySearchSubject } from "./DummySubject.mock";
 import { Encoding } from "../../src/search/Encoding";
 
-export class MockedMOSA<T extends Encoding> extends MOSA<T> {
+export class MockedMOSA<T extends Encoding> extends MOSAFamily<T> {
   setPopulation(population: T[], size: number) {
     this._populationSize = size;
     population.forEach((test) => this._population.push(test));

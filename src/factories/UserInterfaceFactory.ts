@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -31,13 +31,11 @@ export function createUserInterfaceFromConfig<T extends Encoding>(
 ): UserInterface {
   const userInterface = CONFIG.userInterface;
 
-  if (!pluginManager.userInterfaces.has(userInterface)) {
+  if (!pluginManager.getUserInterfaces().includes(userInterface)) {
     throw new Error(
       `Specified user interface: ${userInterface} not found in pluginManager.`
     );
   }
 
-  return pluginManager.userInterfaces
-    .get(userInterface)
-    .createUserInterface({});
+  return pluginManager.getUserInterface(userInterface).createUserInterface({});
 }

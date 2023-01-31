@@ -37,7 +37,6 @@ export * from "./event/ProgramState";
 
 // Factories
 export * from "./factories/CrossoverFactory";
-export * from "./factories/ObjectiveManagerFactory";
 export * from "./factories/SamplerFactory";
 export * from "./factories/SearchAlgorithmFactory";
 export * from "./factories/TerminationFactory";
@@ -46,7 +45,6 @@ export * from "./factories/UserInterfaceFactory";
 // Plugin
 export * from "./plugin/CrossoverPlugin";
 export * from "./plugin/ListenerPlugin";
-export * from "./plugin/ObjectiveManagerPlugin";
 export * from "./plugin/PluginInterface";
 export * from "./plugin/PluginManager";
 export * from "./plugin/SamplerPlugin";
@@ -83,7 +81,6 @@ export * from "./search/metaheuristics/SearchAlgorithm";
 
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
 export * from "./search/metaheuristics/evolutionary/NSGAII";
-
 export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 
 // - Objective

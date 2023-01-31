@@ -101,9 +101,6 @@ export class RandomSearchFactory<T extends Encoding>
     if (!options.runner) {
       throw new Error("RandomSearch requires runner option.");
     }
-    if (!options.crossover) {
-      throw new Error("RandomSearch requires crossover option.");
-    }
     return new RandomSearch(
       new SimpleObjectiveManager<T>(options.runner),
       options.encodingSampler
