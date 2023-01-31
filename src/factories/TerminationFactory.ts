@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -33,15 +33,13 @@ export function createTerminationManagerFromConfig<T extends Encoding>(
   const terminationManager = new TerminationManager();
 
   for (const trigger of terminationTriggers) {
-    if (!pluginManager.terminationTriggers.has(trigger)) {
+    if (!pluginManager.getTerminationTriggers().includes(trigger)) {
       throw new Error(
         `Specified trigger: ${trigger} not found in pluginManager.`
       );
     }
     terminationManager.addTrigger(
-      pluginManager.terminationTriggers
-        .get(trigger)
-        .createTerminationTrigger({})
+      pluginManager.getTerminationTrigger(trigger).createTerminationTrigger({})
     );
   }
 

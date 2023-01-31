@@ -27,7 +27,7 @@ jobs:
         os: [ubuntu-latest]
 
         # Run the pipeline on all the currently supported LTS versions and the upcoming version
-        node-version: [19]
+        node-version: [18]
 
         # Run the pipeline on all the currently supported architectures
         architecture: [x64]

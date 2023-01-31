@@ -45,7 +45,7 @@ import { DominanceComparator } from "../../comparators/DominanceComparator";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
@@ -312,7 +312,7 @@ export class MOSAFactory<T extends Encoding>
     if (!options.crossover) {
       throw new Error("MOSA requires crossover option.");
     }
-    return new MOSA<T>(
+    return new MOSAFamily<T>(
       new UncoveredObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover
@@ -348,7 +348,7 @@ export class DynaMOSAFactory<T extends Encoding>
     if (!options.crossover) {
       throw new Error("DynaMOSA requires crossover option.");
     }
-    return new MOSA<T>(
+    return new MOSAFamily<T>(
       new StructuralObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover

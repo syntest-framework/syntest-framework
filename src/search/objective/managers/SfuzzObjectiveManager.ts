@@ -21,9 +21,9 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
 import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
 import {
-  ObjectiveManagerPlugin,
-  ObjectiveManagerOptions,
   ObjectiveManager,
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
 } from "../../..";
 
 /**
