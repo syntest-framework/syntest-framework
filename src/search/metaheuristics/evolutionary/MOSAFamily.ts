@@ -27,7 +27,6 @@ import {
   Encoding,
   Crossover,
   crowdingDistance,
-  PluginManager,
 } from "../../..";
 import {
   SearchAlgorithmPlugin,

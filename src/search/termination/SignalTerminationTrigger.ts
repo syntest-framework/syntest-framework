@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { PluginManager } from "../../plugin/PluginManager";
 import { TerminationPlugin } from "../../plugin/TerminationPlugin";
 import { Encoding } from "../Encoding";
 import { TerminationTrigger } from "./TerminationTrigger";

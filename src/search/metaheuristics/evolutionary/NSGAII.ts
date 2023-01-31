@@ -27,7 +27,7 @@ import {
 } from "../../../plugin/SearchAlgorithmPlugin";
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { fastNonDomSorting, crowdingDistance, PluginManager } from "../../..";
+import { fastNonDomSorting, crowdingDistance } from "../../..";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
