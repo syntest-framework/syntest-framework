@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Example Plugin.
+ * This file is part of SynTest Framework - SynTest Core Sfuzz Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,6 @@ import {
   Encoding,
   SearchAlgorithmPlugin,
   SearchAlgorithm,
-  ObjectiveManagerPlugin,
-  ObjectiveManager,
-  ObjectiveManagerOptions,
   SearchAlgorithmOptions,
 } from "@syntest/core";
 import { Sfuzz } from "./Sfuzz";
@@ -32,18 +29,9 @@ import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
  * This example plugin logs the program state at the start of the initialization phase of the program.
  */
 export default class ExamplePlugin<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>, ObjectiveManagerPlugin<T>
+  implements SearchAlgorithmPlugin<T>
 {
   name = "Sfuzz";
-
-  createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
-  ): ObjectiveManager<T> {
-    if (!options.runner) {
-      throw new Error("SfuzzObjectiveManager requires runner option.");
-    }
-    return new SfuzzObjectiveManager<T>(options.runner);
-  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
