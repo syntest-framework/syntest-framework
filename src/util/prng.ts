@@ -20,6 +20,7 @@ import BigNumber from "bignumber.js";
 import { CONFIG } from "../Configuration";
 
 import seedrandom = require("seedrandom");
+import { Charset } from "./Charset";
 
 let seed: string | null = null;
 let random = null;
@@ -101,17 +102,14 @@ export const prng = {
     const index = Math.round(value * (options.length - 1));
     return options[index];
   },
-  uniqueId: (length = 7): string => {
-    let result = "";
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  uniqueId: (
+    length = 7,
+    characters: string = Charset.alpha + Charset.alphaCapital
+  ): string => {
     const charactersLength = characters.length;
+    let result = "";
 
-    // first character should not be a digit
-    result += characters.charAt(
-      Math.floor(generator() * charactersLength - 10)
-    );
-    for (let i = 1; i < length; i++) {
+    for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(generator() * charactersLength));
     }
     return result;
