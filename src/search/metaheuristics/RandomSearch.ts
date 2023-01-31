@@ -27,6 +27,7 @@ import {
   SearchAlgorithmOptions,
 } from "../../plugin/SearchAlgorithmPlugin";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { PluginManager } from "../../plugin/PluginManager";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
@@ -91,6 +92,10 @@ export class RandomSearchFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "RandomSearch";
+
+  register(pluginManager: PluginManager<T>) {
+    pluginManager.registerSearchAlgorithm(this);
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>

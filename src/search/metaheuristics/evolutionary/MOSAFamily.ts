@@ -27,6 +27,7 @@ import {
   Encoding,
   Crossover,
   crowdingDistance,
+  PluginManager,
 } from "../../..";
 import {
   SearchAlgorithmPlugin,
@@ -300,6 +301,10 @@ export class MOSAFactory<T extends Encoding>
 {
   name = "MOSA";
 
+  register(pluginManager: PluginManager<T>) {
+    pluginManager.registerSearchAlgorithm(this);
+  }
+
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
@@ -335,6 +340,10 @@ export class DynaMOSAFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "DynaMOSA";
+
+  register(pluginManager: PluginManager<T>) {
+    pluginManager.registerSearchAlgorithm(this);
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>

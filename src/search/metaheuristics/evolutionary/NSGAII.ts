@@ -27,7 +27,7 @@ import {
 } from "../../../plugin/SearchAlgorithmPlugin";
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { fastNonDomSorting, crowdingDistance } from "../../..";
+import { fastNonDomSorting, crowdingDistance, PluginManager } from "../../..";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -131,6 +131,10 @@ export class NSGAIIFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "NSGAII";
+
+  register(pluginManager: PluginManager<T>) {
+    pluginManager.registerSearchAlgorithm(this);
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>

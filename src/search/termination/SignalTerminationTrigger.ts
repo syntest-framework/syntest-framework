@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { PluginManager } from "../../plugin/PluginManager";
 import { TerminationPlugin } from "../../plugin/TerminationPlugin";
 import { Encoding } from "../Encoding";
 import { TerminationTrigger } from "./TerminationTrigger";
@@ -65,6 +66,10 @@ export class SignalTerminationTriggerFactory<T extends Encoding>
   implements TerminationPlugin<T>
 {
   name = "signal";
+
+  register(pluginManager: PluginManager<T>) {
+    pluginManager.registerTermination(this);
+  }
 
   createTerminationTrigger(): SignalTerminationTrigger {
     return new SignalTerminationTrigger();
