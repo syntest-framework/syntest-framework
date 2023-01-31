@@ -22,7 +22,7 @@ import Yargs = require("yargs");
 export interface PluginInterface<T extends Encoding> {
   name: Readonly<string>;
 
-  register?(pluginManager: PluginManager<T>): void;
+  register(pluginManager: PluginManager<T>): void;
   /**
    * Should return a map of optionName -> yargsConfig
    */
