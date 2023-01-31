@@ -20,7 +20,6 @@ import { Encoding } from "../../Encoding";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
 import { EncodingRunner } from "../../EncodingRunner";
-import { ObjectiveManager } from "../../..";
 
 /**
  * sFuzz objective manager
