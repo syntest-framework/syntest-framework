@@ -1,4 +1,4 @@
-name: publish
+name: publish-prerelease
 
 on:
   pull_request:
@@ -7,9 +7,9 @@ on:
       - main
 
 jobs:
-  publish:
+  publish-prerelease:
     if: github.event.pull_request.merged == true
-    if: !startsWith(github.ref, 'release/')
+    if: !startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-latest
     steps:
       # Cloning
@@ -49,4 +49,3 @@ jobs:
         run: |
           npx lerna version --conventional-commits --conventional-prerelease --preid beta --no-changelog --yes --loglevel silly
           npx lerna publish from-git --yes --loglevel silly
-

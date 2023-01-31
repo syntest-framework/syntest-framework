@@ -1,4 +1,4 @@
-name: publish
+name: publish-release
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - 'release/**'
 
 jobs:
-  publish:
+  publish-release:
     runs-on: ubuntu-latest
     steps:
       # Cloning
@@ -39,12 +39,10 @@ jobs:
       - name: Core - Build
         run: npm run lerna:build:compile
 
-      # Version and publish
+      # Version
       - name: "Version and publish"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
         run: |
           npx lerna version --conventional-commits --conventional-graduate --create-release github --yes --loglevel silly
-
-
