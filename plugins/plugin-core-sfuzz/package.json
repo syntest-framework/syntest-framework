@@ -1,10 +1,10 @@
 {
-  "name": "@syntest/cfg-core",
+  "name": "@syntest/plugin-core-sfuzz",
   "version": "0.1.0",
-  "description": "A Control Flow Graph package",
+  "description": "A plugin for the SynTest Core containing the Sfuzz modules",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "automatic-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
@@ -41,7 +41,9 @@
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@syntest/core": "file:../.."
+  },
   "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"

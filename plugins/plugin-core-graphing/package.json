@@ -1,10 +1,10 @@
 {
-  "name": "@syntest/cfg-core",
+  "name": "@syntest/plugin-core-graphing",
   "version": "0.1.0",
-  "description": "A Control Flow Graph package",
+  "description": "A listener plugin for the SynTest Core containing graphing functionalities",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "automatic-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
@@ -41,9 +41,16 @@
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "@syntest/cfg-core": "file:../../packages/cfg-core",
+    "@syntest/core": "file:../..",
+    "d3": "6.7.0",
+    "jsdom": "^21.1.0"
+  },
   "engines": {
     "node": ">=10.24.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.0"
   }
 }

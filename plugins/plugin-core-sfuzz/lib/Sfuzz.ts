@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Core Sfuzz plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
  * limitations under the License.
  */
 
-import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../../operators/crossover/Crossover";
-import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
-import { getUserInterface } from "../../../ui/UserInterface";
-import { MOSAFamily } from "./MOSAFamily";
-import { Encoding } from "../../Encoding";
 import {
+  Encoding,
+  MOSAFamily,
+  EncodingSampler,
+  Crossover,
+  getUserInterface,
+  ObjectiveManager,
   SearchAlgorithmPlugin,
+  SearchAlgorithm,
   SearchAlgorithmOptions,
-} from "../../../plugin/SearchAlgorithmPlugin";
-import { SearchAlgorithm } from "../SearchAlgorithm";
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+} from "@syntest/core";
+import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
 
 /**
  * sFuzz

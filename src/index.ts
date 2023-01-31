@@ -27,9 +27,6 @@ export * from "./analysis/static/TargetMetaData";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
 
-// - Graph
-export * from "./analysis/static/graph/drawGraph";
-
 // Event System
 export * from "./event/EventManager";
 export * from "./event/ListenerInterface";
@@ -81,7 +78,6 @@ export * from "./search/metaheuristics/SearchAlgorithm";
 
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
 export * from "./search/metaheuristics/evolutionary/NSGAII";
-export * from "./search/metaheuristics/evolutionary/Sfuzz";
 export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 
 // - Objective
@@ -93,7 +89,6 @@ export * from "./search/objective/ObjectiveFunction";
 export * from "./search/objective/ProbeObjectiveFunction";
 
 export * from "./search/objective/managers/ObjectiveManager";
-export * from "./search/objective/managers/SfuzzObjectiveManager";
 export * from "./search/objective/managers/SimpleObjectiveManager";
 export * from "./search/objective/managers/StructuralObjectiveManager";
 export * from "./search/objective/managers/UncoveredObjectiveManager";
