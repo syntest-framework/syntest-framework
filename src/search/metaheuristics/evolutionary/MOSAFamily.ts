@@ -301,9 +301,9 @@ export class MOSAFactory<T extends Encoding>
 {
   name = "MOSA";
 
-  register(pluginManager: PluginManager<T>) {
-    pluginManager.registerSearchAlgorithm(this);
-  }
+  // This function is not implemented since it is an internal plugin
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  register() {}
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
@@ -341,9 +341,9 @@ export class DynaMOSAFactory<T extends Encoding>
 {
   name = "DynaMOSA";
 
-  register(pluginManager: PluginManager<T>) {
-    pluginManager.registerSearchAlgorithm(this);
-  }
+  // This function is not implemented since it is an internal plugin
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  register() {}
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>

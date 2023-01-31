@@ -130,16 +130,10 @@ export abstract class Launcher<T extends Encoding> {
     this.pluginManager.registerSearchAlgorithm(new MOSAFactory());
     this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
 
-    // register standard crossover operators
-
-    // register standard samplers
-
     // register standard termination triggers
     this.pluginManager.registerTermination(
       new SignalTerminationTriggerFactory()
     );
-
-    // register standard user-interfaces
 
     // load external plugins
     for (const plugin of plugins) {
