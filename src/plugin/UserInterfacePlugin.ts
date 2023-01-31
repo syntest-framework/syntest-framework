@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,18 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Encoding } from "..";
+import { UserInterface } from "../ui/UserInterface";
+import { PluginInterface } from "./PluginInterface";
 
-import { Encoding } from "../../..";
+export type UserInterfaceOptions = unknown;
 
-/**
- * Creates children swapping statements between the parents
- * @param parents the parent individuals
- *
- * @return a tuple of children
- *
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
- */
-export interface Crossover<T extends Encoding> {
-  crossOver(parents: T[]): T[];
+export interface UserInterfacePlugin<T extends Encoding>
+  extends PluginInterface<T> {
+  createUserInterface<O extends UserInterfaceOptions>(
+    options: O
+  ): UserInterface;
 }

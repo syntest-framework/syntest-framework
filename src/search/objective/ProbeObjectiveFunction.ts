@@ -16,20 +16,24 @@
  * limitations under the License.
  */
 
-import { TerminationManager } from "../termination/TerminationManager";
-import { SignalTerminationTrigger } from "../termination/SignalTerminationTrigger";
+import { Encoding } from "../Encoding";
+import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
+import { SearchSubject } from "../SearchSubject";
 
 /**
- * Function to set up the termination manager.
  *
- * @author Mitchell Olsthoorn
  */
-export function configureTermination(): TerminationManager {
-  const terminationManager = new TerminationManager();
+export abstract class ProbeObjectiveFunction<
+  T extends Encoding
+> extends BranchObjectiveFunction<T> {
+  protected constructor(
+    subject: SearchSubject<T>,
+    id: string,
+    line: number,
+    type: boolean
+  ) {
+    super(subject, id, line, type);
+  }
 
-  // TODO: make triggers configurable
-  const signalTerminationTrigger = new SignalTerminationTrigger();
-  terminationManager.addTrigger(signalTerminationTrigger);
-
-  return terminationManager;
+  abstract calculateDistance(encoding: T): number;
 }

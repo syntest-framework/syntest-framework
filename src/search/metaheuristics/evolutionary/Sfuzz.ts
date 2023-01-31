@@ -17,12 +17,17 @@
  */
 
 import { EncodingSampler } from "../../EncodingSampler";
-import { EncodingRunner } from "../../EncodingRunner";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
 import { getUserInterface } from "../../../ui/UserInterface";
-import { MOSA } from "./mosa/MOSA";
+import { MOSAFamily } from "./MOSAFamily";
 import { Encoding } from "../../Encoding";
+import {
+  SearchAlgorithmPlugin,
+  SearchAlgorithmOptions,
+} from "../../../plugin/SearchAlgorithmPlugin";
+import { SearchAlgorithm } from "../SearchAlgorithm";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 
 /**
  * sFuzz
@@ -34,14 +39,13 @@ import { Encoding } from "../../Encoding";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class Sfuzz<T extends Encoding> extends MOSA<T> {
+export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
+    objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    runner: EncodingRunner<T>,
     crossover: Crossover<T>
   ) {
-    super(encodingSampler, runner, crossover);
-    this._objectiveManager = new SfuzzObjectiveManager<T>(runner);
+    super(objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(): void {
@@ -74,5 +78,35 @@ export class Sfuzz<T extends Encoding> extends MOSA<T> {
 
     // select new population
     this._population = F[0];
+  }
+}
+
+/**
+ * Factory plugin for SFuzz
+ *
+ * @author Dimitri Stallenberg
+ */
+export class SfuzzFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "SFuzz";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("SFuzz requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("SFuzz requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("SFuzz requires crossover option.");
+    }
+    return new Sfuzz<T>(
+      new SfuzzObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
   }
 }

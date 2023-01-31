@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,25 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { Encoding } from "../search/Encoding";
-import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
-import { SearchSubject } from "../search/SearchSubject";
+import { PluginManager } from "./PluginManager";
+import Yargs = require("yargs");
 
-/**
- *
- */
-export abstract class ProbeObjectiveFunction<
-  T extends Encoding
-> extends BranchObjectiveFunction<T> {
-  protected constructor(
-    subject: SearchSubject<T>,
-    id: string,
-    line: number,
-    type: boolean
-  ) {
-    super(subject, id, line, type);
-  }
+export interface PluginInterface<T extends Encoding> {
+  name: Readonly<string>;
 
-  abstract calculateDistance(encoding: T): number;
+  register?(pluginManager: PluginManager<T>): void;
+  /**
+   * Should return a map of optionName -> yargsConfig
+   */
+  getConfig?(): Promise<Map<string, Yargs.Options>>;
+  /**
+   * Called after the initialization step of the tool
+   */
+  prepare?(): Promise<void>;
+  /**
+   * Called before the exit step of the tool
+   */
+  cleanup?(): Promise<void>;
 }
