@@ -7,7 +7,7 @@ on:
       - 'release/**'
 
 jobs:
-  npm:
+  publish:
     runs-on: ubuntu-latest
     steps:
       # Cloning

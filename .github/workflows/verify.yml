@@ -8,7 +8,7 @@ on:
       - "**.md"
 
 jobs:
-  test:
+  verify:
     runs-on: ${{ matrix.os }}
     defaults:
       run:

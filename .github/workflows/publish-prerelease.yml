@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  npm:
+  publish:
     if: github.event.pull_request.merged == true
     if: !startsWith(github.ref, 'release/')
     runs-on: ubuntu-latest
