@@ -16,8 +16,15 @@
  * limitations under the License.
  */
 
-import { Encoding, ListenerInterface, ProgramState } from "@syntest/core";
+import {
+  CONFIG,
+  Encoding,
+  ListenerInterface,
+  ProgramState,
+} from "@syntest/core";
 import { createSimulation } from "./D3Simulation";
+import { GraphOptions } from "./GraphingPlugin";
+import fs = require("fs");
 
 export class CFGGraphingListener<T extends Encoding>
   implements ListenerInterface<T>
@@ -28,7 +35,9 @@ export class CFGGraphingListener<T extends Encoding>
     this.done = new Map();
   }
 
-  onControlFlowGraphResolvingComplete(state: ProgramState<T>): void {
+  async onControlFlowGraphResolvingComplete(
+    state: ProgramState<T>
+  ): Promise<void> {
     let count = 0;
     for (const target of state.targetPool.targets) {
       count += 1;
@@ -45,7 +54,11 @@ export class CFGGraphingListener<T extends Encoding>
         target.targetName
       );
 
-      createSimulation(`${target.targetName}${count}`, cfg);
+      const svgHtml = await createSimulation(cfg);
+
+      const base = (<GraphOptions>(<unknown>CONFIG)).cfgDirectory;
+      const path = `${base}/test.svg`;
+      await fs.writeFileSync(path, svgHtml);
     }
   }
 }

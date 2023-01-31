@@ -18,13 +18,11 @@
 import { CFG } from "@syntest/cfg-core";
 import * as d3 from "d3";
 import fs = require("fs");
-import { CONFIG } from "@syntest/core";
 
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";
-import { GraphOptions } from ".";
 
-export async function createSimulation(name: string, cfg: CFG) {
+export async function createSimulation(cfg: CFG) {
   const width = 2000;
   const height = 2000;
   const offset = 200;
@@ -215,7 +213,4 @@ export async function createSimulation(name: string, cfg: CFG) {
   }
 
   return body.html();
-  const base = (<GraphOptions>(<unknown>CONFIG)).cfgDirectory;
-  const path = `${base}/${name}.svg`;
-  fs.writeFileSync(path, body.html());
 }

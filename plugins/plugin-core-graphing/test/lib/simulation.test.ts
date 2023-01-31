@@ -1,21 +1,11 @@
 import * as chai from "chai";
 import { CFG, NodeType } from "@syntest/cfg-core";
-import { Configuration, ArgumentsObject } from "@syntest/core";
+import { CONFIG } from "@syntest/core";
 import { createSimulation } from "../../lib/D3Simulation";
-import fs = require("fs");
+import { GraphOptions } from "../../lib/GraphingPlugin";
 const expect = chai.expect;
 
 describe("simulationTest", () => {
-  before(() => {
-    const configuration = new Configuration();
-    configuration.initialize(<ArgumentsObject>(<unknown>{
-      cfgDirectory: "./test/lib/",
-    }));
-  });
-  after(() => {
-    fs.rmSync("./test/lib/test.svg");
-  });
-
   it("SimpleTest", async () => {
     const cfg: CFG = new CFG();
 
@@ -52,8 +42,8 @@ describe("simulationTest", () => {
     cfg.nodes = nodes;
     cfg.edges = edges;
 
-    const svgHtml = createSimulation(`test`, cfg);
+    const svgHtml = await createSimulation(cfg);
 
-    expect(await fs.existsSync("./test/lib/test.svg"));
+    expect(svgHtml);
   });
 });
