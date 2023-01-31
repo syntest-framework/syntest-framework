@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@dagrejs/graphlib": "2.1.4",
-    "@syntest/cfg": "file:../cfg",
+    "@syntest/cfg-core": "file:../cfg-core",
     "bignumber.js": "9.0.1",
     "chalk": "4.1.1",
     "clear": "0.1.0",
@@ -56,7 +56,6 @@
     "winston": "3.8.2",
     "yargs": "17.6.2"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
   }

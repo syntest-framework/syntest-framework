@@ -42,7 +42,6 @@
   "dependencies": {
     "@syntest/core": "file:../../packages/core"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
   }
