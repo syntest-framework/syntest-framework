@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
-import { Encoding } from "../search/Encoding";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
+import { Encoding } from "../Encoding";
 import { Node, NodeType } from "@syntest/cfg-core";
-import { SearchSubject } from "../search/SearchSubject";
-import { BranchDistance } from "../search/objective/BranchDistance";
-import { Datapoint } from "../util/Datapoint";
+import { SearchSubject } from "../SearchSubject";
+import { BranchDistance } from "../objective/BranchDistance";
+import { Datapoint } from "../../util/Datapoint";
 
 /**
  * Objective function for the branch criterion.

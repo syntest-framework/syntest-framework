@@ -16,46 +16,50 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../search/objective/ObjectiveFunction";
-import { Encoding } from "../search/Encoding";
-import { SearchSubject } from "../search/SearchSubject";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
+import { Encoding } from "../Encoding";
+import { SearchSubject } from "../SearchSubject";
 
 /**
- * Objective function for the exception criterion.
- *
- * This objective function should not be added manually to the objective manager.
- * It is added dynamically when an exception occurs on runtime.
+ * Objective function for the function branch criterion.
  *
  * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
+ * @author Dimitri Stallenberg
  */
-export class ExceptionObjectiveFunction<T extends Encoding>
+export class FunctionObjectiveFunction<T extends Encoding>
   implements ObjectiveFunction<T>
 {
   protected _subject: SearchSubject<T>;
   protected _id: string;
-  protected _message: string;
+  protected _line: number;
 
   /**
    * Constructor.
    *
    * @param subject
    * @param id
+   * @param line
    */
-  constructor(subject: SearchSubject<T>, id: string, message: string) {
+  constructor(subject: SearchSubject<T>, id: string, line: number) {
     this._subject = subject;
     this._id = id;
-    this._message = message;
+    this._line = line;
   }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   calculateDistance(encoding: T): number {
-    // This method should never be called.
-    // The exception objective function is only created when an exception is already covered.
-    // So the distance is always zero.
-    return 0;
+    if (encoding.getExecutionResult() === undefined) {
+      return Number.MAX_VALUE;
+    }
+
+    if (encoding.getExecutionResult().coversLine(this._line)) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 
   /**

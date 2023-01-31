@@ -28,44 +28,44 @@ import { ProgramState } from "./ProgramState";
  * on[EVENT]Start
  * on[EVENT]Complete
  */
-export abstract class ListenerInterface<T extends Encoding> {
+export interface ListenerInterface<T extends Encoding> {
   // called from launcher
-  onInitializeStart(state: ProgramState<T>) {}
-  onInitializeComplete(state: ProgramState<T>) {}
-  onPreprocessStart(state: ProgramState<T>) {}
-  onPreprocessComplete(state: ProgramState<T>) {}
-  onProcessStart(state: ProgramState<T>) {}
-  onProcessComplete(state: ProgramState<T>) {}
-  onPostprocessStart(state: ProgramState<T>) {}
-  onPostprocessComplete(state: ProgramState<T>) {}
-  onExit(state: ProgramState<T>) {}
+  onInitializeStart?(state: ProgramState<T>): void;
+  onInitializeComplete?(state: ProgramState<T>): void;
+  onPreprocessStart?(state: ProgramState<T>): void;
+  onPreprocessComplete?(state: ProgramState<T>): void;
+  onProcessStart?(state: ProgramState<T>): void;
+  onProcessComplete?(state: ProgramState<T>): void;
+  onPostprocessStart?(state: ProgramState<T>): void;
+  onPostprocessComplete?(state: ProgramState<T>): void;
+  onExit?(state: ProgramState<T>): void;
 
-  onInstrumentationStart(state: ProgramState<T>) {}
-  onInstrumentationComplete(state: ProgramState<T>) {}
-  onTargetRunStart(state: ProgramState<T>) {}
-  onTargetRunComplete(state: ProgramState<T>) {}
-  onReportStart(state: ProgramState<T>) {}
-  onReportComplete(state: ProgramState<T>) {}
+  onInstrumentationStart?(state: ProgramState<T>): void;
+  onInstrumentationComplete?(state: ProgramState<T>): void;
+  onTargetRunStart?(state: ProgramState<T>): void;
+  onTargetRunComplete?(state: ProgramState<T>): void;
+  onReportStart?(state: ProgramState<T>): void;
+  onReportComplete?(state: ProgramState<T>): void;
 
   // called from search algorithm
-  onSearchInitializationStart(state: ProgramState<T>) {}
-  onSearchInitializationComplete(state: ProgramState<T>) {}
-  onSearchSearchStart(state: ProgramState<T>) {}
-  onSearchComplete(state: ProgramState<T>) {}
-  onSearchIterationStart(state: ProgramState<T>) {}
-  onSearchIterationComplete(state: ProgramState<T>) {}
+  onSearchInitializationStart?(state: ProgramState<T>): void;
+  onSearchInitializationComplete?(state: ProgramState<T>): void;
+  onSearchSearchStart?(state: ProgramState<T>): void;
+  onSearchComplete?(state: ProgramState<T>): void;
+  onSearchIterationStart?(state: ProgramState<T>): void;
+  onSearchIterationComplete?(state: ProgramState<T>): void;
 
   // called from targetpool
-  onSourceResolvingStart(state: ProgramState<T>) {}
-  onSourceResolvingComplete(state: ProgramState<T>) {}
-  onTargetResolvingStart(state: ProgramState<T>) {}
-  onTargetResolvingComplete(state: ProgramState<T>) {}
-  onFunctionMapResolvingStart(state: ProgramState<T>) {}
-  onFunctionMapResolvingComplete(state: ProgramState<T>) {}
-  onDependencyResolvingStart(state: ProgramState<T>) {}
-  onDependencyResolvingComplete(state: ProgramState<T>) {}
-  onControlFlowGraphResolvingStart(state: ProgramState<T>) {}
-  onControlFlowGraphResolvingComplete(state: ProgramState<T>) {}
-  onAbstractSyntaxTreeResolvingStart(state: ProgramState<T>) {}
-  onAbstractSyntaxTreeResolvingComplete(state: ProgramState<T>) {}
+  onSourceResolvingStart?(state: ProgramState<T>): void;
+  onSourceResolvingComplete?(state: ProgramState<T>): void;
+  onTargetResolvingStart?(state: ProgramState<T>): void;
+  onTargetResolvingComplete?(state: ProgramState<T>): void;
+  onFunctionMapResolvingStart?(state: ProgramState<T>): void;
+  onFunctionMapResolvingComplete?(state: ProgramState<T>): void;
+  onDependencyResolvingStart?(state: ProgramState<T>): void;
+  onDependencyResolvingComplete?(state: ProgramState<T>): void;
+  onControlFlowGraphResolvingStart?(state: ProgramState<T>): void;
+  onControlFlowGraphResolvingComplete?(state: ProgramState<T>): void;
+  onAbstractSyntaxTreeResolvingStart?(state: ProgramState<T>): void;
+  onAbstractSyntaxTreeResolvingComplete?(state: ProgramState<T>): void;
 }

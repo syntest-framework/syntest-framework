@@ -16,16 +16,24 @@
  * limitations under the License.
  */
 
-import { EvolutionaryAlgorithm } from "../EvolutionaryAlgorithm";
-import { EncodingSampler } from "../../../EncodingSampler";
-import { EncodingRunner } from "../../../EncodingRunner";
-import { UncoveredObjectiveManager } from "../../../objective/managers/UncoveredObjectiveManager";
-import { ObjectiveFunction } from "../../../objective/ObjectiveFunction";
-import { crowdingDistance } from "../../../operators/ranking/CrowdingDistance";
-import { DominanceComparator } from "../../../comparators/DominanceComparator";
-import { getUserInterface } from "../../../../ui/UserInterface";
-import { Crossover } from "../../../operators/crossover/Crossover";
-import { Encoding } from "../../../Encoding";
+import {
+  ObjectiveManager,
+  EncodingSampler,
+  getUserInterface,
+  ObjectiveFunction,
+  SearchAlgorithm,
+  UncoveredObjectiveManager,
+  StructuralObjectiveManager,
+  Encoding,
+  Crossover,
+  crowdingDistance,
+} from "../../..";
+import {
+  SearchAlgorithmPlugin,
+  SearchAlgorithmOptions,
+} from "../../../plugin/SearchAlgorithmPlugin";
+import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
+import { DominanceComparator } from "../../comparators/DominanceComparator";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -37,13 +45,13 @@ import { Encoding } from "../../../Encoding";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
+    objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    runner: EncodingRunner<T>,
     crossover: Crossover<T>
   ) {
-    super(new UncoveredObjectiveManager<T>(runner), encodingSampler, crossover);
+    super(objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(size: number): void {
@@ -279,5 +287,71 @@ export class MOSA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       if (!frontZero.includes(chosen)) frontZero.push(chosen);
     }
     return frontZero;
+  }
+}
+
+/**
+ * Factory plugin for MOSA
+ *
+ * @author Dimitri Stallenberg
+ */
+export class MOSAFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "MOSA";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("MOSA requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("MOSA requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("MOSA requires crossover option.");
+    }
+    return new MOSAFamily<T>(
+      new UncoveredObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
+  }
+}
+
+/**
+ * Factory plugin for DynaMOSA
+ *
+ * Dynamic Many-Objective Sorting Algorithm (DynaMOSA).
+ *
+ * Based on:
+ * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
+ * A. Panichella; F. K. Kifetew; P. Tonella
+ *
+ * @author Dimitri Stallenberg
+ */
+export class DynaMOSAFactory<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "DynaMOSA";
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    if (!options.encodingSampler) {
+      throw new Error("DynaMOSA requires encodingSampler option.");
+    }
+    if (!options.runner) {
+      throw new Error("DynaMOSA requires runner option.");
+    }
+    if (!options.crossover) {
+      throw new Error("DynaMOSA requires crossover option.");
+    }
+    return new MOSAFamily<T>(
+      new StructuralObjectiveManager<T>(options.runner),
+      options.encodingSampler,
+      options.crossover
+    );
   }
 }
