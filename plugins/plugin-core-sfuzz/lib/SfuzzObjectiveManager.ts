@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Core Sfuzz plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../Encoding";
-import { ObjectiveFunction } from "../ObjectiveFunction";
-import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
-import { EncodingRunner } from "../../EncodingRunner";
-import { ObjectiveManager } from "../../..";
+import {
+  Encoding,
+  ObjectiveFunction,
+  StructuralObjectiveManager,
+  EncodingRunner,
+} from "@syntest/core";
 
 /**
  * sFuzz objective manager

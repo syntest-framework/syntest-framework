@@ -27,10 +27,8 @@ import {
 import Yargs = require("yargs");
 
 import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
-import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
-
 import yargHelper = require("yargs/helpers");
 
 export abstract class Launcher<T extends Encoding> {
@@ -131,7 +129,6 @@ export abstract class Launcher<T extends Encoding> {
     this.pluginManager.registerSearchAlgorithm(new NSGAIIFactory());
     this.pluginManager.registerSearchAlgorithm(new MOSAFactory());
     this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
-    this.pluginManager.registerSearchAlgorithm(new SfuzzFactory());
 
     // register standard crossover operators
 
