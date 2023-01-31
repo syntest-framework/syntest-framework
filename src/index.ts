@@ -120,6 +120,7 @@ export * from "./ui/UserInterface";
 
 // Util
 export * from "./util/Datapoint";
+export * from "./util/Charset";
 export * from "./util/fileSystem";
 export * from "./util/logger";
 export * from "./util/prng";
