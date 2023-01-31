@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Core Graphing Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,115 +15,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import d3 from "d3";
+import { CFG } from "@syntest/cfg-core";
+import * as d3 from "d3";
 import fs = require("fs");
-import { JSDOM } from "jsdom";
-import { CFG, Edge, BranchNode, Node, NodeType } from "@syntest/cfg-core";
 
-/**
- * @author Dimitri Stallenberg
- */
-export function drawGraph(cfg: CFG, path: string): void {
+import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
+import { getBodyObject, getSVGObject } from "./getSVGObject";
+
+export async function createSimulation(cfg: CFG) {
   const width = 2000;
   const height = 2000;
   const offset = 200;
 
-  let count = 0;
-  const graph = {
-    nodes: [
-      ...cfg.nodes.map((n: Node) => {
-        let name = `(${n.lines[0]})`;
+  const graph = cfgToD3Graph(cfg, offset);
+  const body = getBodyObject();
+  const svg = getSVGObject(body, width, height);
 
-        if (n.description && n.description.length) {
-          name = `(${n.lines[0]}: ${n.description})`;
-        }
+  const color = d3.scaleOrdinal().range(d3.schemeCategory10);
 
-        if (n.type === NodeType.Branch) {
-          name += ` ${(<BranchNode>n).condition.operator}`;
-        }
+  const chargeForce = d3
+    .forceManyBody()
+    .strength(-100)
+    .distanceMin(10)
+    .distanceMax(100);
 
-        const node = {
-          id: n.id,
-          name: name,
-          fixed: n.type === NodeType.Root,
-          root: n.type === NodeType.Root,
-          fx: undefined,
-          fy: undefined,
-        };
+  const linkForce = d3
+    .forceLink()
+    .id((d: D3Node) => d.id)
+    .distance(30);
 
-        if (node.root) {
-          node.fx = 50 + (count + 1) * offset;
-          node.fy = 20;
-          count += 1;
-        }
+  const forceY = d3.forceY(height).strength(0.01);
 
-        return node;
-      }),
-    ],
-    links: [
-      ...cfg.edges.map((e: Edge) => {
-        return {
-          id: e.from + "-" + e.to,
-          source: e.from,
-          target: e.to,
-          type: e.branchType,
-        };
-      }),
-    ],
-  };
-
-  const dom = new JSDOM(`<!DOCTYPE html><body></body>`);
-
-  const body = d3.select(dom.window.document.querySelector("body"));
-  const svg = body
-    .append("svg")
-    .attr("xmlns", "http://www.w3.org/2000/svg")
-    .attr("width", width)
-    .attr("height", height);
-
-  svg
-    .append("defs")
-    .append("marker")
-    .attr("id", "marker")
-    .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 15)
-    .attr("refY", -1.5)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
-    .attr("orient", "auto")
-    .append("svg:path")
-    .attr("d", "M 0,-5 L 10 ,0 L 0,5")
-    .attr("fill", "#555")
-    .attr("stroke", "#555");
-
-  const color = d3.scaleOrdinal().range(d3.schemeCategory20);
+  const forceX = d3.forceY(width).strength(0.01);
 
   const simulation = d3
     .forceSimulation()
-    .force(
-      "charge",
-      d3.forceManyBody().strength(-100).distanceMin(10).distanceMax(100)
-    )
-    .force(
-      "link",
-      d3
-        .forceLink()
-        .id(function (d: any) {
-          return d.id;
-        })
-        .distance(30) //.strength(-2)
-    )
-    // .force("center", d3.forceCenter(250, 250))
-    .force("y", d3.forceY(height).strength(0.01))
-    .force("x", d3.forceX(width).strength(0.01));
-  // .force('y',  d3.forceY(height / 2).strength(0.25))
+    .force("charge", chargeForce)
+    .force("link", linkForce)
+    .force("y", forceY)
+    .force("x", forceX);
 
   simulation.nodes(graph.nodes);
-
-  simulation.force("link").links(graph.links);
+  (<any>simulation.force("link")).links(graph.links);
 
   const link = svg
     .append("g")
@@ -279,5 +212,5 @@ export function drawGraph(cfg: CFG, path: string): void {
     ticked();
   }
 
-  fs.writeFileSync(path, body.html());
+  return body.html();
 }
