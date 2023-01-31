@@ -17,26 +17,26 @@
  */
 
 import { Encoding } from "..";
-import { PluginInterface } from "./PluginInterface";
+import { ListenerInterface } from "./ListenerInterface";
 import { ProgramState } from "./ProgramState";
 
 export class EventManager<T extends Encoding> {
   private _state: ProgramState<T>;
-  private listeners: PluginInterface<T>[] = [];
+  private listeners: ListenerInterface<T>[] = [];
 
   constructor(state: ProgramState<T>) {
     this._state = state;
   }
 
-  registerListener(listener: PluginInterface<T>) {
+  registerListener(listener: ListenerInterface<T>) {
     this.listeners.push(listener);
   }
 
-  removeListener(listener: PluginInterface<T>) {
+  deregisterListener(listener: ListenerInterface<T>) {
     this.listeners.splice(this.listeners.indexOf(listener));
   }
 
-  emitEvent(event: keyof PluginInterface<T>) {
+  emitEvent(event: keyof ListenerInterface<T>) {
     for (const listener of this.listeners) {
       if (!listener[event]) {
         continue;

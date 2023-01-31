@@ -2,17 +2,18 @@ import * as chai from "chai";
 import {
   setUserInterface,
   CommandLineInterface,
-  Properties,
   EncodingRunner,
   EncodingSampler,
+  UncoveredObjectiveManager,
 } from "../../../lib";
-import { MOSA } from "../../../lib/search/metaheuristics/evolutionary/mosa/MOSA";
+import { MOSAFamily } from "../../../lib/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import { BranchObjectiveFunction } from "../../../lib";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { createStubInstance } from "sinon";
+import * as configuration from "../../../lib/Configuration";
 
 const expect = chai.expect;
 
@@ -56,8 +57,13 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
-    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
+    const mosa = new MOSAFamily(
+      new UncoveredObjectiveManager(mockedRunner),
+      mockedSampler,
+      mockedCrossover
+    );
     const frontZero = mosa.preferenceCriterion(
       [ind1 as DummyEncodingMock, ind2, ind3],
       objectives
@@ -86,8 +92,13 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
-    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
+    const mosa = new MOSAFamily(
+      new UncoveredObjectiveManager(mockedRunner),
+      mockedSampler,
+      mockedCrossover
+    );
     const front = mosa.getNonDominatedFront(objectives, [
       ind1,
       ind2,
@@ -104,7 +115,7 @@ describe("Test MOSA", function () {
 
   it("Test Preference Sorting", () => {
     // This test requires a defined population size.
-    Properties.population_size = 4;
+    Object.defineProperty(configuration.CONFIG, "populationSize", { value: 4 });
 
     const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
@@ -120,8 +131,13 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
-    const mosa = new MOSA(mockedSampler, mockedRunner, new DummyCrossover());
+    const mosa = new MOSAFamily(
+      new UncoveredObjectiveManager(mockedRunner),
+      mockedSampler,
+      mockedCrossover
+    );
     const front = mosa.preferenceSortingAlgorithm(
       [ind1, ind2, ind3, ind4],
       objectives
@@ -156,12 +172,14 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = new DummyCrossover();
 
     const mosa = new MockedMOSA(
+      new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
-      mockedRunner,
-      new DummyCrossover()
+      mockedCrossover
     );
+
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
     mosa.updateObjectives(searchSubject);
     await mosa.environmentalSelection(4);
