@@ -30,6 +30,7 @@ import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
 import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
+
 import yargHelper = require("yargs/helpers");
 
 export abstract class Launcher<T extends Encoding> {
