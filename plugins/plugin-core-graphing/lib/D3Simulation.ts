@@ -22,9 +22,9 @@ import { CONFIG } from "@syntest/core";
 
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";
-import { GraphOptions } from "./GraphingPlugin";
+import { GraphOptions } from ".";
 
-export function createSimulation(name: string, cfg: CFG) {
+export async function createSimulation(name: string, cfg: CFG) {
   const width = 2000;
   const height = 2000;
   const offset = 200;
@@ -44,8 +44,7 @@ export function createSimulation(name: string, cfg: CFG) {
   const linkForce = d3
     .forceLink()
     .id((d: D3Node) => d.id)
-    .distance(30)
-    .links(graph.links);
+    .distance(30);
 
   const forceY = d3.forceY(height).strength(0.01);
 
@@ -59,7 +58,7 @@ export function createSimulation(name: string, cfg: CFG) {
     .force("x", forceX);
 
   simulation.nodes(graph.nodes);
-  // simulation.force("link").links(graph.links)
+  (<any>simulation.force("link")).links(graph.links);
 
   const link = svg
     .append("g")

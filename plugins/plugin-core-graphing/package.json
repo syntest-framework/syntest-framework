@@ -44,7 +44,7 @@
   "dependencies": {
     "@syntest/cfg-core": "file:../../packages/cfg-core",
     "@syntest/core": "file:../..",
-    "d3": "^7.8.2",
+    "d3": "6.7.0",
     "jsdom": "^21.1.0"
   },
   "engines": {

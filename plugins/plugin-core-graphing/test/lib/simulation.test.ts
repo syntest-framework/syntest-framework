@@ -1,14 +1,22 @@
 import * as chai from "chai";
 import { CFG, NodeType } from "@syntest/cfg-core";
 import { Configuration, ArgumentsObject } from "@syntest/core";
-import { createSimulation } from "../lib/D3Simulation";
+import { createSimulation } from "../../lib/D3Simulation";
+import fs = require("fs");
 const expect = chai.expect;
 
 describe("simulationTest", () => {
-  it("SimpleTest", () => {
+  before(() => {
     const configuration = new Configuration();
-    configuration.initialize(<ArgumentsObject>(<unknown>{}));
+    configuration.initialize(<ArgumentsObject>(<unknown>{
+      cfgDirectory: "./test/lib/",
+    }));
+  });
+  after(() => {
+    fs.rmSync("./test/lib/test.svg");
+  });
 
+  it("SimpleTest", () => {
     const cfg: CFG = new CFG();
 
     const nodes = [
@@ -39,7 +47,7 @@ describe("simulationTest", () => {
     ];
 
     // Construct CFG
-    for (let i = 65; i < 70; i++) {
+    for (let i = 65; i < 72; i++) {
       nodes.push({
         type: NodeType.Intermediary,
         id: String.fromCharCode(i),
@@ -63,5 +71,6 @@ describe("simulationTest", () => {
     cfg.edges = edges;
 
     createSimulation(`test`, cfg);
+    expect(true);
   });
 });
