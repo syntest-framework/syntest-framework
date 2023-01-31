@@ -59,7 +59,7 @@ jobs:
 
       # Building
       - name: Core - Build
-        run: npm run lerna:build
+        run: npm run lerna:build:compile
 
       # Testing
       - name: Core - Run Tests

@@ -39,7 +39,7 @@ jobs:
 
       # Building
       - name: Core - Build
-        run: npm run lerna:build
+        run: npm run lerna:build:compile
 
       # Version and publish
       - name: "Version and publish"

@@ -28,7 +28,6 @@
   },
   "scripts": {
     "lerna:install": "npx lerna bootstrap",
-    "lerna:build": "npx lerna exec npm run build",
     "lerna:build:compile": "npx lerna exec npm run build:compile",
     "lerna:build:watch": "npx lerna exec npm run build:watch",
     "lerna:clean": "npx lerna exec npm run clean",
@@ -38,7 +37,6 @@
     "lerna:lint": "npx lerna exec npm run lint",
     "lerna:lint:fix": "npx lerna exec npm run lint:fix",
     "lint-staged": "lint-staged",
-    "lerna:prepare": "npm run build",
     "lerna:setup-pre-commit-hooks": "husky install",
     "lerna:test": "npx lerna exec npm run test",
     "lerna:test:coverage": "npx lerna exec npm run test:coverage",
