@@ -4,8 +4,8 @@
 
 [![](https://github.com/syntest-framework/syntest-core/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/node.js.yml)
 [![publish](https://github.com/syntest-framework/syntest-core/actions/workflows/publish.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish.yml)
-![npm (scoped)](https://img.shields.io/npm/v/@syntest/framework?style=flat)
-![node-current (scoped)](https://img.shields.io/node/v/@syntest/framework)
+![npm (scoped)](https://img.shields.io/npm/v/@syntest/core?style=flat)
+![node-current (scoped)](https://img.shields.io/node/v/@syntest/core)
 
 The common core of the [SynTest Framework](https://www.syntest.org).
 
