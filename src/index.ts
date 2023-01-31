@@ -27,9 +27,6 @@ export * from "./analysis/static/TargetMetaData";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
 
-// - Graph
-export * from "./analysis/static/graph/drawGraph";
-
 // Event System
 export * from "./event/EventManager";
 export * from "./event/ListenerInterface";
