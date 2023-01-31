@@ -32,8 +32,10 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         
       # Bootstrap
-      - name: Bootstrap lerna
-        run: npx lerna bootstrap
+      - name: Core - Install Dependencies
+        run: |
+          npm ci --ignore-scripts
+          npm run install
 
       # Version and publish
       - name: "Version and publish"
