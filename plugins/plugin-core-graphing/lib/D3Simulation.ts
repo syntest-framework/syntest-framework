@@ -214,6 +214,7 @@ export async function createSimulation(name: string, cfg: CFG) {
     ticked();
   }
 
+  return body.html();
   const base = (<GraphOptions>(<unknown>CONFIG)).cfgDirectory;
   const path = `${base}/${name}.svg`;
   fs.writeFileSync(path, body.html());

@@ -19,7 +19,7 @@
 import { Encoding, ListenerInterface, ProgramState } from "@syntest/core";
 import { createSimulation } from "./D3Simulation";
 
-export class GraphingListener<T extends Encoding>
+export class CFGGraphingListener<T extends Encoding>
   implements ListenerInterface<T>
 {
   private done: Map<string, Set<string>>;

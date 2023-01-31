@@ -21,21 +21,26 @@ import {
   ListenerPlugin,
   ListenerInterface,
   CONFIG,
+  PluginManager,
 } from "@syntest/core";
-import { GraphingListener } from "./GraphingListener";
+import { CFGGraphingListener } from "./CFGGraphingListener";
 import Yargs = require("yargs");
 import { mkdirSync } from "fs";
 
 /**
- * This example plugin logs the program state at the start of the initialization phase of the program.
+ * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
  */
 export default class GraphingPlugin<T extends Encoding>
   implements ListenerPlugin<T>
 {
   name = "Graphing";
 
+  register(pluginManager: PluginManager<T>) {
+    pluginManager.registerListener(this);
+  }
+
   createListener(): ListenerInterface<T> {
-    return new GraphingListener<T>();
+    return new CFGGraphingListener<T>();
   }
 
   async getConfig() {
@@ -53,7 +58,9 @@ export default class GraphingPlugin<T extends Encoding>
   }
 
   async prepare() {
-    await mkdirSync(CONFIG.cfgDirectory, { recursive: true });
+    await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
+      recursive: true,
+    });
   }
 }
 

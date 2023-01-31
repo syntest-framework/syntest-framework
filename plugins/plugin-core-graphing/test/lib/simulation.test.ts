@@ -16,28 +16,10 @@ describe("simulationTest", () => {
     fs.rmSync("./test/lib/test.svg");
   });
 
-  it("SimpleTest", () => {
+  it("SimpleTest", async () => {
     const cfg: CFG = new CFG();
 
     const nodes = [
-      {
-        type: NodeType.Intermediary,
-        id: "1",
-        lines: [],
-        statements: [],
-      },
-      {
-        type: NodeType.Intermediary,
-        id: "2",
-        lines: [],
-        statements: [],
-      },
-      {
-        type: NodeType.Intermediary,
-        id: "3",
-        lines: [],
-        statements: [],
-      },
       {
         type: NodeType.Root,
         id: "ROOT",
@@ -70,7 +52,8 @@ describe("simulationTest", () => {
     cfg.nodes = nodes;
     cfg.edges = edges;
 
-    createSimulation(`test`, cfg);
-    expect(true);
+    const svgHtml = createSimulation(`test`, cfg);
+
+    expect(await fs.existsSync("./test/lib/test.svg"));
   });
 });
