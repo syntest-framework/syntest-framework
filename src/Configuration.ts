@@ -28,7 +28,7 @@ export class Configuration {
       throw Error("Already initialized the config singleton!");
     }
 
-    CONFIG = argumentValues;
+    CONFIG = <Readonly<ArgumentsObject>>argumentValues;
   }
 
   loadFile(cwd?: string) {
@@ -229,14 +229,6 @@ export class Configuration {
             alias: [],
             default: "",
             description: "Crossover operator to be used by the tool.",
-            group: "Algorithm options:",
-            hidden: false,
-            type: "string",
-          },
-          "objective-manager": {
-            alias: [],
-            default: "simple",
-            description: "Objective manager to be used by the tool.",
             group: "Algorithm options:",
             hidden: false,
             type: "string",

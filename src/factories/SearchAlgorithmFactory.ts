@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -38,13 +38,13 @@ export function createSearchAlgorithmFromConfig<T extends Encoding>(
 ): SearchAlgorithm<T> {
   const algorithm = CONFIG.algorithm;
 
-  if (!pluginManager.searchAlgorithms.has(algorithm)) {
+  if (!pluginManager.getSearchAlgorithms().includes(algorithm)) {
     throw new Error(
       `Specified algorithm: ${algorithm} not found in pluginManager.`
     );
   }
 
-  return pluginManager.searchAlgorithms.get(algorithm).createSearchAlgorithm({
+  return pluginManager.getSearchAlgorithm(algorithm).createSearchAlgorithm({
     objectiveManager,
     encodingSampler,
     runner,

@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { Encoding } from "./search/Encoding";
-import { ArgumentsObject, Configuration } from "./Configuration";
+import { Encoding } from ".";
+import { Configuration } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { PluginManager } from "./plugin/PluginManager";
 import {
@@ -30,12 +30,7 @@ import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
 import { SfuzzFactory } from "./search/metaheuristics/evolutionary/Sfuzz";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
-import { StructuralObjectiveManagerFactory } from "./search/objective/managers/StructuralObjectiveManager";
-import {
-  SimpleObjectiveManagerFactory,
-  UncoveredObjectiveManagerFactory,
-  SfuzzObjectiveManagerFactory,
-} from ".";
+
 import yargHelper = require("yargs/helpers");
 
 export abstract class Launcher<T extends Encoding> {
@@ -97,10 +92,12 @@ export abstract class Launcher<T extends Encoding> {
       this.configuration.initialize(argValues);
 
       // Register all listener plugins
-      for (const plugin of this.pluginManager.listeners.values()) {
+      for (const pluginName of this.pluginManager.getListeners()) {
+        const plugin = this.pluginManager.getListener(pluginName);
         this.eventManager.registerListener(plugin.createListener({}));
       }
 
+      await this.pluginManager.prepare();
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
       this.eventManager.emitEvent("onInitializeComplete");
@@ -113,6 +110,7 @@ export abstract class Launcher<T extends Encoding> {
       this.eventManager.emitEvent("onPostprocessStart");
       await this.postprocess();
       this.eventManager.emitEvent("onPostprocessComplete");
+      await this.pluginManager.cleanup();
       this.eventManager.emitEvent("onExit");
       await this.exit();
     } catch (e) {
@@ -142,20 +140,6 @@ export abstract class Launcher<T extends Encoding> {
     // register standard termination triggers
     this.pluginManager.registerTermination(
       new SignalTerminationTriggerFactory()
-    );
-
-    // register standard objective managers
-    this.pluginManager.registerObjectiveManager(
-      new SimpleObjectiveManagerFactory()
-    );
-    this.pluginManager.registerObjectiveManager(
-      new StructuralObjectiveManagerFactory()
-    );
-    this.pluginManager.registerObjectiveManager(
-      new UncoveredObjectiveManagerFactory()
-    );
-    this.pluginManager.registerObjectiveManager(
-      new SfuzzObjectiveManagerFactory()
     );
 
     // register standard user-interfaces

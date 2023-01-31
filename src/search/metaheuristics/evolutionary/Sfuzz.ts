@@ -20,7 +20,7 @@ import { EncodingSampler } from "../../EncodingSampler";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { SfuzzObjectiveManager } from "../../objective/managers/SfuzzObjectiveManager";
 import { getUserInterface } from "../../../ui/UserInterface";
-import { MOSA } from "./MOSAFamily";
+import { MOSAFamily } from "./MOSAFamily";
 import { Encoding } from "../../Encoding";
 import {
   SearchAlgorithmPlugin,
@@ -39,7 +39,7 @@ import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class Sfuzz<T extends Encoding> extends MOSA<T> {
+export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,

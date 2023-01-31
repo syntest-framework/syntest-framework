@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -30,13 +30,13 @@ export function createCrossoverFromConfig<T extends Encoding>(
 ): Crossover<T> {
   const crossover = CONFIG.crossover;
 
-  if (!pluginManager.crossoverOperators.has(crossover)) {
+  if (!pluginManager.getCrossoverOperators().includes(crossover)) {
     throw new Error(
       `Specified crossover: ${crossover} not found in pluginManager.`
     );
   }
 
-  return pluginManager.crossoverOperators
-    .get(crossover)
+  return pluginManager
+    .getCrossoverOperator(crossover)
     .createCrossoverOperator({});
 }
