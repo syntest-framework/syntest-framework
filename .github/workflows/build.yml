@@ -55,12 +55,12 @@ jobs:
       - name: Core - Install Dependencies
         run: |
           npm ci --ignore-scripts
-          npm run install
+          npm run lerna:install
 
       # Building
       - name: Core - Build
-        run: npm run build
+        run: npm run lerna:build
 
       # Testing
       - name: Core - Run Tests
-        run: npm run test
+        run: npm run lerna:test
