@@ -1,8 +1,6 @@
 import * as chai from "chai";
 import { CFG, NodeType } from "@syntest/cfg-core";
-import { CONFIG } from "@syntest/core";
-import { createSimulation } from "../../lib/D3Simulation";
-import { GraphOptions } from "../../lib/GraphingPlugin";
+import { createSimulation } from "../lib/D3Simulation";
 const expect = chai.expect;
 
 describe("simulationTest", () => {

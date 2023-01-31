@@ -1,4 +1,4 @@
-import { Configuration, ArgumentsObject } from "../src";
+import { Configuration, ArgumentsObject } from "../lib";
 // globals
 
 // setup
