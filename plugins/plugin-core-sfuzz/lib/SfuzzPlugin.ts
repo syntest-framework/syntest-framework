@@ -21,6 +21,7 @@ import {
   SearchAlgorithmPlugin,
   SearchAlgorithm,
   SearchAlgorithmOptions,
+  PluginManager,
 } from "@syntest/core";
 import { Sfuzz } from "./Sfuzz";
 import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
@@ -32,6 +33,10 @@ export default class ExamplePlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "Sfuzz";
+
+  register(pluginManager: PluginManager<T>) {
+    pluginManager.registerSearchAlgorithm(this);
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
