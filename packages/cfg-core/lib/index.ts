@@ -15,10 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// CFG
 export * from "./CFG";
 export * from "./CFGFactory";
+
+// Edge
 export * from "./Edge";
 
+// Nodes
 export * from "./nodes/Node";
 export * from "./nodes/BranchNode";
 export * from "./nodes/PlaceholderNode";
