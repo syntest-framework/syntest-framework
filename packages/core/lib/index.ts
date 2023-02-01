@@ -76,6 +76,7 @@ export * from "./search/comparators/DominanceComparator";
 export * from "./search/metaheuristics/RandomSearch";
 export * from "./search/metaheuristics/SearchAlgorithm";
 
+// - - Evolutionary
 export * from "./search/metaheuristics/evolutionary/EvolutionaryAlgorithm";
 export * from "./search/metaheuristics/evolutionary/NSGAII";
 export * from "./search/metaheuristics/evolutionary/MOSAFamily";
