@@ -27,6 +27,8 @@
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
+    "postinstall": "tsc --build",
+    "build": "tsc --build",
     "build:compile": "tsc --build",
     "build:watch": "tsc --build --watch",
     "clean": "rm -rf .nyc_output dist node_modules",

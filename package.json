@@ -28,18 +28,18 @@
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "lerna:install": "npx lerna bootstrap",
-    "lerna:build:compile": "npx lerna exec npm run build:compile",
-    "lerna:build:watch": "npx lerna exec npm run build:watch",
-    "lerna:clean": "npx lerna exec npm run clean",
-    "lerna:clean:dist": "npx lerna exec npm run clean:dist",
-    "lerna:format": "npx lerna exec npm run format",
-    "lerna:format:check": "npx lerna exec npm run format:check",
-    "lerna:lint": "npx lerna exec npm run lint",
-    "lerna:lint:fix": "npx lerna exec npm run lint:fix",
-    "lerna:test": "npx lerna exec npm run test",
-    "lerna:test:coverage": "npx lerna exec npm run test:coverage",
-    "lerna:test:watch": "npx lerna exec npm run test:watch",
+    "lerna:install": "lerna bootstrap --loglevel silly",
+    "lerna:build:compile": "lerna run build:compile",
+    "lerna:build:watch": "lerna run build:watch",
+    "lerna:clean": "lerna run --parallel clean",
+    "lerna:clean:dist": "lerna run --parallel clean:dist",
+    "lerna:format": "lerna run --parallel format",
+    "lerna:format:check": "lerna run --parallel format:check",
+    "lerna:lint": "lerna run --parallel lint",
+    "lerna:lint:fix": "lerna run --parallel lint:fix",
+    "lerna:test": "lerna run --parallel test",
+    "lerna:test:coverage": "lerna run --parallel test:coverage",
+    "lerna:test:watch": "lerna run --parallel test:watch",
     "postinstall": "husky install"
   },
   "dependencies": {},
@@ -76,9 +76,5 @@
       "npx lerna exec npm run format",
       "npx lerna exec npm run lint:fix"
     ]
-  },
-  "workspaces": [
-    "packages/*",
-    "plugins/*"
-  ]
+  }
 }
