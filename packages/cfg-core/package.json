@@ -43,5 +43,8 @@
   "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

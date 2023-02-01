@@ -50,5 +50,8 @@
   },
   "devDependencies": {
     "@types/d3": "^7.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
