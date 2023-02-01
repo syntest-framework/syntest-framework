@@ -24,3 +24,22 @@ If you don't know where to begin? You can start by looking through issues with t
 
 - **beginner**: Issues which should only require a few lines of code, and a test or two.
 - **help-wanted**: Issues which should be a bit more involved than `beginner` issues.
+
+### To start
+
+After cloning the project first install the dependencies.
+This will also automatically setup pre-commit hooks using husky.
+These hooks will enforce code linting and formatting.
+Finally, it will install the dependencies of the sub-projects.
+
+```
+npm install
+```
+
+Now you can create a new branch with the following format:
+
+```
+[issue number]-short-description
+```
+
+Happy coding!

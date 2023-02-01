@@ -1,13 +1,7 @@
 name: build
 
 on:
-  push:
-    branches: [main, develop]
-    paths-ignore:
-      - "docs/"
-      - "**.md"
   pull_request:
-    branches: [main, develop]
     paths-ignore:
       - "docs/"
       - "**.md"
@@ -58,12 +52,13 @@ jobs:
 
       # Dependencies
       - name: Core - Install Dependencies
-        run: npm install
+        run: |
+          npm ci
 
       # Building
       - name: Core - Build
-        run: npm run build
+        run: npm run lerna:build:compile
 
       # Testing
       - name: Core - Run Tests
-        run: npm test
+        run: npm run lerna:test

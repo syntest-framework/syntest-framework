@@ -1,0 +1,49 @@
+name: publish-release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  publish-release:
+    if: github.event.pull_request.merged == true
+    if: startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-latest
+    steps:
+      # Cloning
+      - uses: actions/checkout@v2
+
+      # Setup .npmrc file to publish to npm
+      - name: Use Node.js 18
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+          always-auth: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
+
+      # Configure git user
+      - name: Config git user
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        
+      # Bootstrap
+      - name: Core - Install Dependencies
+        run: |
+          npm ci
+
+      # Building
+      - name: Core - Build
+        run: npm run lerna:build:compile
+
+      # Publishing
+      - name: "Core - Publish"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
+        run: |
+          npx lerna publish from-git --yes --loglevel silly

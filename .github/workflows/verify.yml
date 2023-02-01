@@ -1,19 +1,13 @@
 name: verify
 
 on:
-  push:
-    branches: [main, develop]
-    paths-ignore:
-      - "docs/"
-      - "**.md"
   pull_request:
-    branches: [main, develop]
     paths-ignore:
       - "docs/"
       - "**.md"
 
 jobs:
-  test:
+  verify:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -58,12 +52,13 @@ jobs:
 
       # Dependencies
       - name: Core - Install Dependencies
-        run: npm install
+        run: |
+          npm ci
 
-      # Format
+      # Formatting
       - name: Core - Run Formatter
-        run: npm run format:check
+        run: npm run lerna:format:check
 
       # Linting
       - name: Core - Run Linter
-        run: npm run lint
+        run: npm run lerna:lint

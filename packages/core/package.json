@@ -1,10 +1,10 @@
 {
-  "name": "@syntest/cfg-core",
-  "version": "0.1.0",
-  "description": "A Control Flow Graph package",
+  "name": "@syntest/core",
+  "version": "0.2.0",
+  "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "automatic-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
@@ -39,8 +39,23 @@
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "@dagrejs/graphlib": "2.1.4",
+    "@syntest/cfg-core": "*",
+    "bignumber.js": "9.0.1",
+    "chalk": "4.1.1",
+    "clear": "0.1.0",
+    "cli-progress": "3.11.2",
+    "d3": "^4.13.0",
+    "fast-csv": "4.3.6",
+    "figlet": "1.5.2",
+    "globby": "^11.0.4",
+    "jsdom": "20.0.3",
+    "seedrandom": "3.0.5",
+    "shelljs": "0.8.5",
+    "winston": "3.8.2",
+    "yargs": "17.6.2"
+  },
   "engines": {
     "node": ">=10.24.0"
   }
