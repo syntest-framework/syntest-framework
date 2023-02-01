@@ -27,8 +27,8 @@
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
-    "lerna:lint-staged": "lerna run --parallel lint-staged",
-    "lerna:install": "lerna bootstrap --loglevel silly",
+    "lint-staged": "lint-staged",
+    "lerna:install": "lerna bootstrap --force-local",
     "lerna:build:compile": "lerna run build:compile",
     "lerna:build:watch": "lerna run build:watch",
     "lerna:clean": "lerna run --parallel clean",
@@ -70,5 +70,11 @@
   },
   "engines": {
     "node": ">=10.24.0"
+  },
+  "lint-staged": {
+    "**/*": [
+      "npx lerna exec npm run format",
+      "npx lerna exec npm run lint:fix"
+    ]
   }
 }

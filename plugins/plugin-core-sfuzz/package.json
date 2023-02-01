@@ -27,8 +27,6 @@
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
-    "lint-staged": "lint-staged",
-    "postinstall": "tsc --build",
     "build": "tsc --build",
     "build:compile": "tsc --build",
     "build:watch": "tsc --build --watch",
@@ -38,20 +36,15 @@
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
     "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
     "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
+    "postinstall": "tsc --build",
     "test": "mocha --config ../../.mocharc.json",
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/core": "file:../../packages/core"
+    "@syntest/core": "*"
   },
   "engines": {
     "node": ">=10.24.0"
-  },
-  "lint-staged": {
-    "**/*": [
-      "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
-      "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix"
-    ]
   }
 }
