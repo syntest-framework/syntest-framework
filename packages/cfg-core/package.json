@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cfg-core",
-  "version": "0.1.0",
+  "version": "0.1.1-beta.0",
   "description": "A Control Flow Graph package",
   "keywords": [
     "syntest",
@@ -39,8 +39,6 @@
     "test:coverage": "nyc mocha --config ../../.mocharc.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {},
-  "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
   },
