@@ -12,6 +12,8 @@ jobs:
     steps:
       # Cloning
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.SYNTEST_CI }}
 
       # Setup .npmrc file to publish to npm
       - name: Use Node.js 18
@@ -26,9 +28,9 @@ jobs:
       # Configure git user
       - name: Config git user
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        
+          git config --global user.name 'SynTest CI'
+          git config --global user.email 'info@syntest.org'
+
       # Bootstrap
       - name: Core - Install Dependencies
         run: |
