@@ -28,7 +28,6 @@
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "lerna:install": "lerna bootstrap --force-local",
     "lerna:build:compile": "lerna run build:compile",
     "lerna:build:watch": "lerna run build:watch",
     "lerna:clean": "lerna run --parallel clean",
@@ -40,7 +39,7 @@
     "lerna:test": "lerna run --parallel test",
     "lerna:test:coverage": "lerna run --parallel test:coverage",
     "lerna:test:watch": "lerna run --parallel test:watch",
-    "postinstall": "husky install"
+    "postinstall": "husky install & lerna bootstrap --force-local"
   },
   "dependencies": {},
   "devDependencies": {

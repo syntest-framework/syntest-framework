@@ -30,15 +30,10 @@ If you don't know where to begin? You can start by looking through issues with t
 After cloning the project first install the dependencies.
 This will also automatically setup pre-commit hooks using husky.
 These hooks will enforce code linting and formatting.
+Finally, it will install the dependencies of the sub-projects.
 
 ```
 npm install
-```
-
-Next, run the following command to install the dependencies of the sub-projects.
-
-```
-npm run lerna:install
 ```
 
 Now you can create a new branch with the following format:
