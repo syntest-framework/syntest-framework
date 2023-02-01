@@ -41,7 +41,7 @@ jobs:
       # Versioning
       - name: "Core - Version"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNTEST_CI }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
         run: |
           npx lerna version --conventional-commits --conventional-graduate --create-release github --yes --loglevel silly
