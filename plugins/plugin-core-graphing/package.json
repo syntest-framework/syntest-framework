@@ -27,6 +27,7 @@
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
+    "lint-staged": "lint-staged",
     "postinstall": "tsc --build",
     "build": "tsc --build",
     "build:compile": "tsc --build",
@@ -52,5 +53,11 @@
   },
   "devDependencies": {
     "@types/d3": "^7.4.0"
+  },
+  "lint-staged": {
+    "**/*": [
+      "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
+      "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix"
+    ]
   }
 }

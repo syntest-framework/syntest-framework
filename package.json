@@ -27,7 +27,7 @@
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
-    "lint-staged": "lint-staged",
+    "lerna:lint-staged": "lerna run lint-staged",
     "lerna:install": "lerna bootstrap --loglevel silly",
     "lerna:build:compile": "lerna run build:compile",
     "lerna:build:watch": "lerna run build:watch",
@@ -73,8 +73,8 @@
   },
   "lint-staged": {
     "**/*": [
-      "npx lerna exec npm run format",
-      "npx lerna exec npm run lint:fix"
+      "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
+      "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix"
     ]
   }
 }
