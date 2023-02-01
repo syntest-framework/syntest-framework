@@ -27,6 +27,7 @@
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
+    "lint-staged": "lint-staged",
     "lerna:install": "npx lerna bootstrap",
     "lerna:build:compile": "npx lerna exec npm run build:compile",
     "lerna:build:watch": "npx lerna exec npm run build:watch",
@@ -36,11 +37,10 @@
     "lerna:format:check": "npx lerna exec npm run format:check",
     "lerna:lint": "npx lerna exec npm run lint",
     "lerna:lint:fix": "npx lerna exec npm run lint:fix",
-    "lint-staged": "lint-staged",
-    "setup-pre-commit-hooks": "husky install",
     "lerna:test": "npx lerna exec npm run test",
     "lerna:test:coverage": "npx lerna exec npm run test:coverage",
-    "lerna:test:watch": "npx lerna exec npm run test:watch"
+    "lerna:test:watch": "npx lerna exec npm run test:watch",
+    "postinstall": "husky install"
   },
   "dependencies": {},
   "devDependencies": {
