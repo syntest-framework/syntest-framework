@@ -4,10 +4,5 @@
   "version": "independent",
   "ignoreChanges": [],
   "conventionalCommits": true,
-  "command": {
-    "version": {
-      "message": "chore(release): publish %s"
-    }
-  },
   "packages": ["packages/*", "plugins/*"]
 }
