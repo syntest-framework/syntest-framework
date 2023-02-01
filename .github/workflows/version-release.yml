@@ -31,7 +31,7 @@ jobs:
           git config --global user.name 'SynTest CI'
           git config --global user.email 'info@syntest.org'
 
-      # Bootstrap
+      # Bootstrapping
       - name: Core - Install Dependencies
         run: |
           npm ci
