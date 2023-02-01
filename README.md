@@ -2,10 +2,23 @@
 
 > The aim of the common core of the SynTest Framework is to extract the common parts (e.g., core infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
-[![](https://github.com/syntest-framework/syntest-core/actions/workflows/node.js.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/node.js.yml)
-[![publish](https://github.com/syntest-framework/syntest-core/actions/workflows/publish.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish.yml)
-![npm (scoped)](https://img.shields.io/npm/v/@syntest/core?style=flat)
-![node-current (scoped)](https://img.shields.io/node/v/@syntest/core)
+[![build](https://github.com/syntest-framework/syntest-core/actions/workflows/build.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/build.yml)
+[![verify](https://github.com/syntest-framework/syntest-core/actions/workflows/verify.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/verify.yml)
+[![publish pre-release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml)
+[![publish release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml)
+
+core:
+![latest NPM version](https://img.shields.io/npm/v/@syntest/core/latest?style=flat)
+![beta NPM version](https://img.shields.io/npm/v/@syntest/core/beta?style=flat) <br />
+CFG-core:
+![latest NPM version](https://img.shields.io/npm/v/@syntest/cfg-core/latest?style=flat)
+![beta NPM version](https://img.shields.io/npm/v/@syntest/cfg-core/beta?style=flat) <br />
+plugin-core-graphing:
+![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-graphing/latest?style=flat)
+![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-graphing/beta?style=flat) <br />
+plugin-core-sFuzz:
+![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-sfuzz/latest?style=flat)
+![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-sfuzz/beta?style=flat) <br />
 
 The common core of the [SynTest Framework](https://www.syntest.org).
 
