@@ -44,7 +44,7 @@ jobs:
       # Versioning and publishing
       - name: "Core - Version and publish"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNTEST_CI }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
         run: |
           npx lerna version --conventional-commits --conventional-prerelease --preid beta --no-changelog --yes --loglevel silly
