@@ -55,7 +55,7 @@ jobs:
         run: |
           npm ci
 
-      # Format
+      # Formatting
       - name: Core - Run Formatter
         run: npm run lerna:format:check
 
