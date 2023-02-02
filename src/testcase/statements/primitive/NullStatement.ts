@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  prng,
-  Properties,
-} from "@syntest/framework";
-import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
+import { prng } from "@syntest/core";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 
@@ -28,13 +24,21 @@ import { IdentifierDescription } from "../../../analysis/static/parsing/Identifi
  * @author Dimitri Stallenberg
  */
 export class NullStatement extends PrimitiveStatement<boolean> {
-  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string) {
+  constructor(
+    identifierDescription: IdentifierDescription,
+    type: string,
+    uniqueId: string
+  ) {
     super(identifierDescription, type, uniqueId, null);
-    this._classType = 'NullStatement'
+    this._classType = "NullStatement";
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number): NullStatement {
-    return new NullStatement(this.identifierDescription, this.type, prng.uniqueId());
+  mutate(): NullStatement {
+    return new NullStatement(
+      this.identifierDescription,
+      this.type,
+      prng.uniqueId()
+    );
   }
 
   copy(): NullStatement {
@@ -42,6 +46,6 @@ export class NullStatement extends PrimitiveStatement<boolean> {
   }
 
   getFlatTypes(): string[] {
-    return ["null"]
+    return ["null"];
   }
 }

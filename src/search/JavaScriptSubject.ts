@@ -1,10 +1,28 @@
+/*
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest Framework - SynTest Javascript.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import {
   CFG,
   FunctionObjectiveFunction,
   NodeType,
   ObjectiveFunction,
   SearchSubject,
-} from "@syntest/framework";
+} from "@syntest/core";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { JavaScriptTargetMetaData } from "../analysis/static/JavaScriptTargetPool";
 import { ActionDescription } from "../analysis/static/parsing/ActionDescription";
@@ -16,22 +34,19 @@ import { JavaScriptBranchObjectiveFunction } from "../criterion/JavaScriptBranch
 export enum SubjectType {
   class,
   function,
-  object
+  object,
 }
 
 export interface TypeScore {
-  types: string[],
-  failed: boolean
+  types: string[];
+  failed: boolean;
 }
 
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
+  private _functions: ActionDescription[];
+  private _type: SubjectType;
 
-  private _functions: ActionDescription[]
-  private _type: SubjectType
-
-  private _typeScores: Map<string, TypeScore[]>
-
-
+  private _typeScores: Map<string, TypeScore[]>;
 
   reevaluateTypes() {
     // TODO find correlations
@@ -46,46 +61,44 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     path: string,
     targetMeta: JavaScriptTargetMetaData,
     cfg: CFG,
-    functions: ActionDescription[],
+    functions: ActionDescription[]
   ) {
     super(path, targetMeta.name, cfg);
     // TODO SearchSubject should just use the targetMetaData
-    this._type = targetMeta.type
-    this._functions = functions
-    this._typeScores = new Map()
+    this._type = targetMeta.type;
+    this._functions = functions;
+    this._typeScores = new Map();
   }
 
   protected _extractObjectives(): void {
     // Branch objectives
     // Find all branch nodes
-    const branches = this._cfg.nodes
-      .filter(
-        (node) => node.type === NodeType.Branch
-      )
+    const branches = this._cfg.nodes.filter(
+      (node) => node.type === NodeType.Branch
+    );
 
-    branches
-      .forEach((branchNode) => {
-        this._cfg.edges
-          // Find all edges from the branch node
-          .filter((edge) => edge.from === branchNode.id)
-          .forEach((edge) => {
-            this._cfg.nodes
-              // Find nodes with incoming edge from branch node
-              .filter((node) => node.id === edge.to)
-              .forEach((childNode) => {
-                // Add objective function
-                this._objectives.set(
-                  new JavaScriptBranchObjectiveFunction(
-                    this,
-                    childNode.id,
-                    branchNode.lines[0],
-                    edge.branchType
-                  ),
-                  []
-                );
-              });
-          });
-      });
+    branches.forEach((branchNode) => {
+      this._cfg.edges
+        // Find all edges from the branch node
+        .filter((edge) => edge.from === branchNode.id)
+        .forEach((edge) => {
+          this._cfg.nodes
+            // Find nodes with incoming edge from branch node
+            .filter((node) => node.id === edge.to)
+            .forEach((childNode) => {
+              // Add objective function
+              this._objectives.set(
+                new JavaScriptBranchObjectiveFunction(
+                  this,
+                  childNode.id,
+                  branchNode.lines[0],
+                  edge.branchType
+                ),
+                []
+              );
+            });
+        });
+    });
 
     for (const objective of this._objectives.keys()) {
       const childrenObj = this.findChildren(objective);
@@ -150,13 +163,16 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     return this.functions.filter((f) => {
       if (returnType) {
         // TODO this will not work (comparing typeprobability maps)
-        if (returnType.typeProbabilityMap !== f.returnParameter.typeProbabilityMap) {
+        if (
+          returnType.typeProbabilityMap !== f.returnParameter.typeProbabilityMap
+        ) {
           return false;
         }
       }
 
-      return ((type === undefined || f.type === type) &&
-        (f.visibility === ActionVisibility.PUBLIC) &&
+      return (
+        (type === undefined || f.type === type) &&
+        f.visibility === ActionVisibility.PUBLIC &&
         f.name !== "" // fallback function has no name
       );
     });

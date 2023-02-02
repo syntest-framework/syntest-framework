@@ -1,4 +1,22 @@
-const Mocha = require('mocha')
+/*
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest Framework - SynTest Javascript.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import Mocha = require("mocha");
 
 const {
   EVENT_RUN_BEGIN,
@@ -6,17 +24,16 @@ const {
   EVENT_TEST_FAIL,
   EVENT_TEST_PASS,
   EVENT_SUITE_BEGIN,
-  EVENT_SUITE_END
+  EVENT_SUITE_END,
 } = Mocha.Runner.constants;
 
 export class SilentMochaReporter {
-  private _indents: number
+  private _indents: number;
   private failures;
 
   constructor(runner) {
     this._indents = 0;
-    this.failures = []
-    const stats = runner.stats;
+    this.failures = [];
 
     runner
       .once(EVENT_RUN_BEGIN, () => {
@@ -28,17 +45,17 @@ export class SilentMochaReporter {
       .on(EVENT_SUITE_END, () => {
         this.decreaseIndent();
       })
-      .on(EVENT_TEST_PASS, test => {
+      .on(EVENT_TEST_PASS, (test) => {
         // Test#fullTitle() returns the suite name(s)
         // prepended to the test title
         // console.log(`${this.indent()}pass: ${test.fullTitle()}`);
 
         if (test.duration > test.slow()) {
-          test.speed = 'slow';
+          test.speed = "slow";
         } else if (test.duration > test.slow() / 2) {
-          test.speed = 'medium';
+          test.speed = "medium";
         } else {
-          test.speed = 'fast';
+          test.speed = "fast";
         }
       })
       .on(EVENT_TEST_FAIL, (test, err) => {
@@ -63,7 +80,7 @@ export class SilentMochaReporter {
   }
 
   indent() {
-    return Array(this._indents).join('  ');
+    return Array(this._indents).join("  ");
   }
 
   increaseIndent() {

@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   BranchNode,
   CFG,
-  CFGFactory, Edge,
+  CFGFactory,
+  Edge,
   Node,
-  NodeType, Operation,
-  PlaceholderNode, prng,
+  NodeType,
+  Operation,
+  PlaceholderNode,
+  prng,
   RootNode,
-} from "@syntest/framework";
+} from "@syntest/core";
+import * as t from "@babel/types";
 
 interface ReturnValue {
   childNodes: Node[];
@@ -31,14 +36,10 @@ interface ReturnValue {
 }
 
 export class ControlFlowGraphGenerator implements CFGFactory {
-
   private cfg: CFG;
-  private _contracts: string[] = [];
 
-  convertAST(ast: any, compress = false, placeholder = false): CFG {
+  convertAST(ast: t.Node): CFG {
     // TODO the imported stuff should also be resolved...
-    this._contracts = [];
-
     this.cfg = new CFG();
 
     this.visitChild(ast, []);
@@ -53,7 +54,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     return this.cfg;
   }
-
 
   removePlaceholder(): void {
     const removableEdges = [];
@@ -212,7 +212,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       lines: lines,
       statements: statements,
       type: NodeType.Root,
-      description: description
+      description: description,
     };
 
     this.cfg.nodes.push(node);
@@ -242,7 +242,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     return node;
   }
-
 
   private createPlaceholderNode(
     lines: number[],
@@ -302,14 +301,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
    *
    * @param child the child ast node
    * @param parents the parents of the child
-   * @param contractName
    * @private
    */
-  private visitChild(
-    child: any,
-    parents: Node[],
-    contractName?: string
-  ): ReturnValue {
+  private visitChild(child: t.Node, parents: Node[]): ReturnValue {
     const skipable: string[] = [
       "ImportDeclaration",
       "ClassProperty",
@@ -326,9 +320,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     switch (child.type) {
       // passthrough
       case "File":
-        return this.visitChild(child.program, parents)
+        return this.visitChild(child.program, parents);
       case "ExportDefaultDeclaration":
-        return this.visitChild(child.declaration, parents)
+        return this.visitChild(child.declaration, parents);
       case "ExportSpecifier":
         return this.visitChild(child.local, parents);
       case "UnaryExpression":
@@ -338,9 +332,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
       //
       case "Program":
-        return this.visitProgram(child)
+        return this.visitProgram(child);
       case "FunctionDeclaration":
-        return this.visitFunctionDeclaration(child)
+        return this.visitFunctionDeclaration(child);
       case "CallExpression":
         return this.visitCallExpression(child, parents);
       case "ExportNamedDeclaration":
@@ -374,20 +368,20 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         return this.visitGeneralExpression(child, parents);
 
       case "VariableDeclaration":
-        return this.visitVariableDeclaration(child, parents)
+        return this.visitVariableDeclaration(child, parents);
 
       case "ReturnStatement":
-        return this.visitReturnStatement(child, parents)
+        return this.visitReturnStatement(child, parents);
       case "ThrowStatement":
-        return this.visitThrowStatement(child, parents)
+        return this.visitThrowStatement(child, parents);
 
       case "BlockStatement":
-        return this.visitBlockStatement(child, parents)
+        return this.visitBlockStatement(child, parents);
 
       case "ClassDeclaration":
-        return this.visitClassDeclaration(child)
+        return this.visitClassDeclaration(child);
       case "ClassMethod":
-        return this.visitClassMethod(child)
+        return this.visitClassMethod(child);
 
       case "IfStatement":
         return this.visitIfStatement(child, parents);
@@ -395,7 +389,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         return this.visitConditional(child, parents);
 
       case "TryStatement":
-        return this.visitTryStatement(child, parents)
+        return this.visitTryStatement(child, parents);
 
       case "CatchClause":
         return this.visitCatchClause(child, parents);
@@ -405,23 +399,21 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       case "DoWhileStatement":
         return this.visitDoWhileStatement(child, parents);
       case "ForOfStatement":
-        return this.visitForOfStatement(child, parents)
+        return this.visitForOfStatement(child, parents);
       case "ForInStatement":
-        return this.visitForOfStatement(child, parents)
+        return this.visitForOfStatement(child, parents);
       case "ForStatement":
         return this.visitForStatement(child, parents);
 
       case "BreakStatement":
-        return this.visitBreakStatement(child, parents)
+        return this.visitBreakStatement(child, parents);
       case "ContinueStatement":
-        return this.visitContinueStatement(child, parents)
-
+        return this.visitContinueStatement(child, parents);
 
       case "SwitchStatement":
-        return this.visitSwitchStatement(child, parents)
+        return this.visitSwitchStatement(child, parents);
       case "SwitchCase":
-        return this.visitSwitchCase(child, parents)
-
+        return this.visitSwitchCase(child, parents);
 
       // case "SourceUnit":
       //   return this.SourceUnit(cfg, child);
@@ -438,7 +430,6 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       //
       // case "IfStatement":
       //   return this.IfStatement(cfg, child, parents);
-
 
       // case "WhileStatement":
       //   return this.WhileStatement(cfg, child, parents);
@@ -460,7 +451,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     }
   }
 
-  private visitProgram(ast: any): ReturnValue {
+  private visitProgram(ast: t.Program): ReturnValue {
     for (const child of ast.body) {
       // TODO add more probably
       // if (!['FunctionDeclaration', 'ClassDeclaration', 'ExpressionStatement'].includes(child.type)) {
@@ -477,7 +468,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitFunctionDeclaration(ast: any): ReturnValue {
+  private visitFunctionDeclaration(ast: t.FunctionDeclaration): ReturnValue {
     if (!ast.loc) {
       return {
         childNodes: [],
@@ -490,10 +481,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       ast.id.name
     );
 
+    const parents: Node[] = [node];
 
-    let parents: Node[] = [node];
-
-    const totalBreakNodes = [];
+    // const totalBreakNodes = [];
     // if (ast.modifiers && Properties.modifier_extraction) {
     //   ast.modifiers.forEach((modifier) => {
     //     const { childNodes, breakNodes } = this.visitChild(
@@ -521,50 +511,50 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   }
 
   private visitCallExpression(
-    ast: any,
+    ast: t.CallExpression,
     parents: Node[]
   ): ReturnValue {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
-    let nodes = [node]
+    let nodes = [node];
     for (const arg of ast.arguments) {
       const result = this.visitChild(arg, nodes);
 
-      nodes = result.childNodes
+      nodes = result.childNodes;
     }
 
     return {
       childNodes: [node],
-      breakNodes: []
-    }
+      breakNodes: [],
+    };
   }
 
   private visitExportNamedDeclaration(
-    ast: any,
+    ast: t.ExportNamedDeclaration,
     parents: Node[]
   ): ReturnValue {
     if (ast.specifiers && ast.specifiers.length) {
-      let nodes = parents
+      let nodes = parents;
       for (const specifier of ast.specifiers) {
         const result = this.visitChild(specifier, nodes);
 
-        nodes = result.childNodes
+        nodes = result.childNodes;
       }
 
       return {
         childNodes: nodes,
-        breakNodes: []
-      }
+        breakNodes: [],
+      };
     } else {
-      return this.visitChild(ast.declaration, parents)
+      return this.visitChild(ast.declaration, parents);
     }
   }
 
   private visitGeneralExpression(
-    ast: any,
+    ast: t.Expression | t.VariableDeclarator | t.SpreadElement,
     parents: Node[]
   ): ReturnValue {
-    if (['LogicalExpression', 'BinaryExpression'].includes(ast.type)) {
+    if (ast.type === "BinaryExpression" || ast.type === "LogicalExpression") {
       const left = this.visitChild(ast.left, parents);
       const right = this.visitChild(ast.right, left.childNodes);
 
@@ -572,9 +562,9 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         childNodes: [...right.childNodes],
         breakNodes: [...left.breakNodes, ...right.breakNodes],
       };
-    } else if (ast.type === 'AssignmentExpression') {
+    } else if (ast.type === "AssignmentExpression") {
       return this.visitChild(ast.right, parents);
-    } else if (ast.type === 'VariableDeclarator') {
+    } else if (ast.type === "VariableDeclarator") {
       if (ast.init) {
         return this.visitChild(ast.init, parents);
       }
@@ -582,17 +572,15 @@ export class ControlFlowGraphGenerator implements CFGFactory {
       const node: Node = this.createNode([ast.loc.start.line], []);
       this.connectParents(parents, [node]);
 
-
       return {
         childNodes: [node],
         breakNodes: [],
       };
-    } else if (ast.type === 'FunctionExpression'
-    || ast.type === 'ArrowFunctionExpression') {
-      const node: RootNode = this.createRootNode(
-        [ast.loc.start.line],
-        [],
-      );
+    } else if (
+      ast.type === "FunctionExpression" ||
+      ast.type === "ArrowFunctionExpression"
+    ) {
+      const node: RootNode = this.createRootNode([ast.loc.start.line], []);
       this.connectParents(parents, [node]);
 
       if (ast.body) {
@@ -612,10 +600,12 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         breakNodes: [],
       };
     }
-
   }
 
-  private visitBlockStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitBlockStatement(
+    ast: t.BlockStatement,
+    parents: Node[]
+  ): ReturnValue {
     let nodes = parents;
     const totalBreakNodes = [];
     for (const child of ast.body) {
@@ -637,11 +627,14 @@ export class ControlFlowGraphGenerator implements CFGFactory {
    * @constructor
    * @private
    */
-  private visitReturnStatement(ast: any, parents: Node[]): ReturnValue {
-    const count = this.cfg.edges.length
+  private visitReturnStatement(
+    ast: t.ReturnStatement,
+    parents: Node[]
+  ): ReturnValue {
+    const count = this.cfg.edges.length;
 
     if (ast.argument) {
-      this.visitChild(ast.argument, parents)
+      this.visitChild(ast.argument, parents);
     }
 
     if (!this.cfg.edges[count]) {
@@ -657,7 +650,10 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   }
 
   // TODO try catch support
-  private visitThrowStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitThrowStatement(
+    ast: t.ThrowStatement,
+    parents: Node[]
+  ): ReturnValue {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
 
@@ -667,8 +663,8 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitClassDeclaration(ast: any): ReturnValue {
-    const classBody = ast.body
+  private visitClassDeclaration(ast: t.ClassDeclaration): ReturnValue {
+    const classBody = ast.body;
     for (const child of classBody.body) {
       this.visitChild(child, []);
     }
@@ -679,14 +675,14 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitClassMethod(ast: any): ReturnValue {
+  private visitClassMethod(ast: t.ClassMethod): ReturnValue {
     const node: RootNode = this.createRootNode(
       [ast.loc.start.line],
       [],
-      ast.key.name
+      ast.key.type === "Identifier" ? ast.key.name : ""
     );
 
-    let parents: Node[] = [node];
+    const parents: Node[] = [node];
 
     // Check if body is block
     if (ast.body) {
@@ -700,13 +696,13 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   }
 
   private visitVariableDeclaration(
-    ast: any,
+    ast: t.VariableDeclaration,
     parents: Node[]
   ): ReturnValue {
     // const node: Node = this.createNode([ast.loc.start.line], []);
     // this.connectParents(parents, [node]);
 
-    let nodes = parents
+    let nodes = parents;
     const totalBreakNodes = [];
     for (const child of ast.declarations) {
       const { childNodes, breakNodes } = this.visitChild(child, nodes);
@@ -720,15 +716,15 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitIfStatement(ast: any, parents: Node[]): ReturnValue {
-    const node: BranchNode = this.createBranchNode(
-      [ast.loc.start.line],
-      [],
-      {
-        type: ast.test.type,
-        operator: ast.test.operator,
-      }
-    );
+  private visitIfStatement(ast: t.IfStatement, parents: Node[]): ReturnValue {
+    const node: BranchNode = this.createBranchNode([ast.loc.start.line], [], {
+      type: ast.test.type,
+      operator:
+        ast.test.type === "BinaryExpression" ||
+        ast.test.type === "UnaryExpression"
+          ? ast.test.operator
+          : "",
+    });
 
     this.connectParents(parents, [node]);
 
@@ -737,9 +733,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Visit true flow
     let count = this.cfg.edges.length;
-    const { childNodes, breakNodes } = this.visitChild(ast.consequent, [
-      node,
-    ]);
+    const { childNodes, breakNodes } = this.visitChild(ast.consequent, [node]);
     const trueNodes = childNodes;
 
     totalBreakNodes.push(...breakNodes);
@@ -751,7 +745,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         [ast.consequent.loc.start.line],
         []
       );
-      this.connectParents([node], [emptyChildNode])
+      this.connectParents([node], [emptyChildNode]);
       trueNodes.push(emptyChildNode);
 
       this.cfg.edges[count].branchType = true;
@@ -768,9 +762,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     // Visit false flow
     if (ast.alternate) {
       count = this.cfg.edges.length;
-      const { childNodes, breakNodes } = this.visitChild(ast.alternate, [
-        node,
-      ]);
+      const { childNodes, breakNodes } = this.visitChild(ast.alternate, [node]);
       const falseNodes = childNodes;
       totalBreakNodes.push(...breakNodes);
 
@@ -817,15 +809,15 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     }
   }
 
-
-  private visitConditional(ast: any, parents: Node[]): ReturnValue {
-    const node: BranchNode = this.createBranchNode(
-      [ast.loc.start.line],
-      [],
-      {
-        type: ast.test.type,
-        operator: ast.test.operator,
-      });
+  private visitConditional(ast: t.Conditional, parents: Node[]): ReturnValue {
+    const node: BranchNode = this.createBranchNode([ast.loc.start.line], [], {
+      type: ast.test.type,
+      operator:
+        ast.test.type === "BinaryExpression" ||
+        ast.test.type === "UnaryExpression"
+          ? ast.test.operator
+          : "",
+    });
     this.connectParents(parents, [node]);
 
     // Store all break points
@@ -833,9 +825,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Visit true flow
     let count = this.cfg.edges.length;
-    const { childNodes, breakNodes } = this.visitChild(ast.consequent,
-      [node]
-    );
+    const { childNodes, breakNodes } = this.visitChild(ast.consequent, [node]);
     const trueNodes = childNodes;
     totalBreakNodes.push(...breakNodes);
 
@@ -861,10 +851,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     // Visit false flow
     if (ast.alternate) {
       count = this.cfg.edges.length;
-      const { childNodes, breakNodes } = this.visitChild(
-        ast.alternate,
-        [node]
-      );
+      const { childNodes, breakNodes } = this.visitChild(ast.alternate, [node]);
       const falseNodes = childNodes;
       totalBreakNodes.push(...breakNodes);
 
@@ -908,16 +895,12 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     }
   }
 
-  private visitTryStatement(ast: any, parents:Node[]): ReturnValue {
+  private visitTryStatement(ast: t.TryStatement, parents: Node[]): ReturnValue {
     // TODO finalizer try -> catch -> finally
-    const node: BranchNode = this.createBranchNode(
-      [ast.loc.start.line],
-      [],
-      {
-        type: ast.type,
-        operator: 'exception',
-      }
-    );
+    const node: BranchNode = this.createBranchNode([ast.loc.start.line], [], {
+      type: ast.type,
+      operator: "exception",
+    });
 
     this.connectParents(parents, [node]);
 
@@ -926,9 +909,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Visit try flow
     let count = this.cfg.edges.length;
-    let tryNodes = this.visitChild(ast.block, [
-      node,
-    ]);
+    const tryNodes = this.visitChild(ast.block, [node]);
     const tryChildNodes = tryNodes.childNodes;
     totalBreakNodes.push(...tryNodes.breakNodes);
 
@@ -939,7 +920,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     } else {
       // Add empty placeholder node
       const emptyChildNode = this.createPlaceholderNode(
-        [ast.consequent.loc.start.line],
+        [ast.block.loc.start.line],
         []
       );
       tryChildNodes.push(emptyChildNode);
@@ -953,9 +934,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
 
     // Visit catch flow
     count = this.cfg.edges.length;
-    const catchNodes = this.visitChild(ast.handler, [
-      node,
-    ]);
+    const catchNodes = this.visitChild(ast.handler, [node]);
     const catchChildNodes = catchNodes.childNodes;
     totalBreakNodes.push(...catchNodes.breakNodes);
 
@@ -966,7 +945,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     } else {
       // Add empty placeholder node
       const emptyChildNode = this.createPlaceholderNode(
-        [ast.alternate.loc.start.line],
+        [ast.handler.loc.start.line],
         []
       );
       catchChildNodes.push(emptyChildNode);
@@ -984,7 +963,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitCatchClause(ast: any, parents:Node[]): ReturnValue {
+  private visitCatchClause(ast: t.CatchClause, parents: Node[]): ReturnValue {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
 
@@ -994,10 +973,17 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitWhileStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitWhileStatement(
+    ast: t.WhileStatement,
+    parents: Node[]
+  ): ReturnValue {
     const node: Node = this.createBranchNode([ast.loc.start.line], [], {
       type: ast.test.type,
-      operator: ast.test.operator,
+      operator:
+        ast.test.type === "BinaryExpression" ||
+        ast.test.type === "UnaryExpression"
+          ? ast.test.operator
+          : "",
     });
     this.connectParents(parents, [node]);
 
@@ -1025,7 +1011,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     }
 
     // Add empty placeholder node for the false flow
-    const falseNode = this.createPlaceholderNode( [ast.loc.end.line], []);
+    const falseNode = this.createPlaceholderNode([ast.loc.end.line], []);
     this.cfg.edges.push({
       from: node.id,
       to: falseNode.id,
@@ -1049,10 +1035,13 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitForOfStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitForOfStatement(
+    ast: t.ForOfStatement | t.ForInStatement,
+    parents: Node[]
+  ): ReturnValue {
     const node: Node = this.createBranchNode([ast.loc.start.line], [], {
-      type: 'CallExpression',
-      operator: 'isEmpty',
+      type: "CallExpression",
+      operator: "isEmpty",
     });
     this.connectParents(parents, [node]);
 
@@ -1111,7 +1100,10 @@ export class ControlFlowGraphGenerator implements CFGFactory {
    * @constructor
    * @private
    */
-  private visitBreakStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitBreakStatement(
+    ast: t.BreakStatement,
+    parents: Node[]
+  ): ReturnValue {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
 
@@ -1122,7 +1114,10 @@ export class ControlFlowGraphGenerator implements CFGFactory {
   }
 
   // TODO currently incorrect is passthrough now
-  private visitContinueStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitContinueStatement(
+    ast: t.ContinueStatement,
+    parents: Node[]
+  ): ReturnValue {
     const node: Node = this.createNode([ast.loc.start.line], []);
     this.connectParents(parents, [node]);
 
@@ -1132,34 +1127,35 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitDoWhileStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitDoWhileStatement(
+    ast: t.DoWhileStatement,
+    parents: Node[]
+  ): ReturnValue {
     // entry node
-    const entryNode: Node = this.createBranchNode(
-      [ast.loc.start.line],
-      [],
-      {
-        type: ast.test.type,
-        operator: ast.test.operator,
-      }
-    );
+    const entryNode: Node = this.createBranchNode([ast.loc.start.line], [], {
+      type: ast.test.type,
+      operator:
+        ast.test.type === "BinaryExpression" ||
+        ast.test.type === "UnaryExpression"
+          ? ast.test.operator
+          : "",
+    });
     this.connectParents(parents, [entryNode]);
 
     // TODO: We can check if a node is generated. This eliminates the need for entryNode
     // 'do' block
-    const { childNodes, breakNodes } = this.visitChild(ast.body, [
-      entryNode,
-    ]);
+    const { childNodes, breakNodes } = this.visitChild(ast.body, [entryNode]);
     const trueNodes = childNodes;
 
     // while check
-    const whileNode: Node = this.createBranchNode(
-      [ast.loc.start.line],
-      [],
-      {
-        type: ast.test.type,
-        operator: ast.test.operator,
-      }
-    );
+    const whileNode: Node = this.createBranchNode([ast.loc.start.line], [], {
+      type: ast.test.type,
+      operator:
+        ast.test.type === "BinaryExpression" ||
+        ast.test.type === "UnaryExpression"
+          ? ast.test.operator
+          : "",
+    });
     this.connectParents(trueNodes, [whileNode]);
 
     // Connect back to the entry node and mark as true branch
@@ -1170,10 +1166,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     });
 
     // Add empty placeholder node for the false flow
-    const falseNode: Node = this.createPlaceholderNode(
-      [ast.loc.end.line],
-      []
-    );
+    const falseNode: Node = this.createPlaceholderNode([ast.loc.end.line], []);
     this.cfg.edges.push({
       from: whileNode.id,
       to: falseNode.id,
@@ -1194,21 +1187,24 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitSwitchStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitSwitchStatement(
+    ast: t.SwitchStatement,
+    parents: Node[]
+  ): ReturnValue {
     // TODO currently incorrect
     const node: Node = this.createBranchNode([ast.loc.start.line], [], {
-      type: 'Switch',
-      operator: '==',
+      type: "Switch",
+      operator: "==",
     });
     this.connectParents(parents, [node]);
 
     // Add empty placeholder node for the false flow
     const falseNode = this.createPlaceholderNode([ast.loc.end.line], []);
 
-    let nodes = [node]
+    let nodes = [node];
     for (const switchCase of ast.cases) {
       const { childNodes, breakNodes } = this.visitChild(switchCase, nodes);
-      nodes = childNodes
+      nodes = childNodes;
 
       // Connect break points
       for (const breakNode of breakNodes) {
@@ -1232,25 +1228,25 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitSwitchCase(ast: any, parents: Node[]): ReturnValue {
+  private visitSwitchCase(ast: t.SwitchCase, parents: Node[]): ReturnValue {
     const node: Node = this.createBranchNode([ast.loc.start.line], [], {
-      type: 'switchCase',
-      operator: '==',
+      type: "switchCase",
+      operator: "==",
     });
     this.connectParents(parents, [node]);
 
     const count = this.cfg.edges.length;
 
-    let nodes = [node]
-    const totalBreakNodes = []
+    let nodes = [node];
+    const totalBreakNodes = [];
     for (const child of ast.consequent) {
       const { childNodes, breakNodes } = this.visitChild(child, nodes);
-      nodes = childNodes
-      totalBreakNodes.push(...breakNodes)
+      nodes = childNodes;
+      totalBreakNodes.push(...breakNodes);
     }
 
     const trueNodes = nodes;
-    const childNodes = []
+    const childNodes = [];
 
     // Check if a child node was created
     if (this.cfg.edges[count]) {
@@ -1270,7 +1266,7 @@ export class ControlFlowGraphGenerator implements CFGFactory {
         branchType: true,
       });
 
-      childNodes.push(emptyChildNode)
+      childNodes.push(emptyChildNode);
     }
 
     // Add empty placeholder node for the false flow
@@ -1287,10 +1283,14 @@ export class ControlFlowGraphGenerator implements CFGFactory {
     };
   }
 
-  private visitForStatement(ast: any, parents: Node[]): ReturnValue {
+  private visitForStatement(ast: t.ForStatement, parents: Node[]): ReturnValue {
     const node: Node = this.createBranchNode([ast.loc.start.line], [], {
       type: ast.test.type,
-      operator: ast.test.operator || ast.test.name || ast.test.value,
+      operator:
+        ast.test.type === "BinaryExpression" ||
+        ast.test.type === "UnaryExpression"
+          ? ast.test.operator
+          : "",
     });
     this.connectParents(parents, [node]);
     // TODO For each probably not supported

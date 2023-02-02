@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
  * limitations under the License.
  */
 
-
 import { Decoding, Statement } from "../Statement";
-import { EncodingSampler } from "@syntest/framework";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
+import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 
 /**
  * @author Dimitri Stallenberg
@@ -28,15 +27,20 @@ export abstract class PrimitiveStatement<T> extends Statement {
   get value(): T {
     return this._value;
   }
-  private _value: any;
+  private _value: T;
 
-  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, value: T) {
+  constructor(
+    identifierDescription: IdentifierDescription,
+    type: string,
+    uniqueId: string,
+    value: T
+  ) {
     super(identifierDescription, type, uniqueId);
     this._value = value;
   }
 
   abstract mutate(
-    sampler: EncodingSampler<any>,
+    sampler: JavaScriptTestCaseSampler,
     depth: number
   ): PrimitiveStatement<T>;
 
@@ -50,16 +54,16 @@ export abstract class PrimitiveStatement<T> extends Statement {
     return [];
   }
 
-  static getRandom(): PrimitiveStatement<any> {
+  static getRandom() {
     throw new Error("Unimplemented function!");
   }
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
+  decode(): Decoding[] {
     return [
       {
         decoded: `const ${this.varName} = ${this.value};`,
-        reference: this
-      }
-    ]
+        reference: this,
+      },
+    ];
   }
 }

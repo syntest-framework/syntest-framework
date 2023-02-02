@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { TypeResolver } from "./TypeResolver";
-import { Element } from "../discovery/Element";
-import { Relation } from "../discovery/Relation";
 import { TypeProbability } from "./TypeProbability";
-import { Scope } from "../discovery/Scope";
 
-export class TypeResolverUnknown extends TypeResolver{
-
-  getTyping(scope: Scope, variableName: string): TypeProbability {
-    return new TypeProbability()
+export class TypeResolverUnknown extends TypeResolver {
+  getTyping(): TypeProbability {
+    return new TypeProbability();
   }
 
-  resolveTypes(elements: Element[], relations: Relation[], wrapperElementIsRelation: Map<string, Relation>) {
-  }
+  // eslint-disable-next-line
+  resolveTypes() {}
 }

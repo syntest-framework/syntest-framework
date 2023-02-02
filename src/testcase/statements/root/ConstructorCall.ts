@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/framework";
+import { prng, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./RootStatement";
 import { Decoding, Statement } from "../Statement";
@@ -30,7 +30,6 @@ import { ActionType } from "../../../analysis/static/parsing/ActionType";
  * @author Dimitri Stallenberg
  */
 export class ConstructorCall extends RootStatement {
-
   private readonly _constructorName: string;
 
   /**
@@ -47,22 +46,26 @@ export class ConstructorCall extends RootStatement {
     uniqueId: string,
     args: Statement[],
     calls: Statement[],
-    constructorName: string,
+    constructorName: string
   ) {
     super(identifierDescription, type, uniqueId, args, calls);
-    this._classType = 'ConstructorCall'
+    this._classType = "ConstructorCall";
 
     this._constructorName = constructorName;
 
     for (const arg of args) {
       if (arg instanceof MethodCall) {
-        throw new Error("Constructor args cannot be of identifierDescription MethodCall")
+        throw new Error(
+          "Constructor args cannot be of identifierDescription MethodCall"
+        );
       }
     }
 
     for (const call of calls) {
       if (!(call instanceof MethodCall)) {
-        throw new Error("Constructor children must be of identifierDescription MethodCall")
+        throw new Error(
+          "Constructor children must be of identifierDescription MethodCall"
+        );
       }
     }
   }
@@ -76,8 +79,12 @@ export class ConstructorCall extends RootStatement {
       // go over each arg
       for (let i = 0; i < args.length; i++) {
         if (prng.nextBoolean(1 / args.length)) {
-          if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-            args[i] = sampler.sampleArgument(depth + 1, args[i].identifierDescription)
+          if (prng.nextBoolean(Properties.resample_gene_probability)) {
+            // TODO should be different property
+            args[i] = sampler.sampleArgument(
+              depth + 1,
+              args[i].identifierDescription
+            );
           } else {
             args[i] = args[i].mutate(sampler, depth + 1);
           }
@@ -85,31 +92,33 @@ export class ConstructorCall extends RootStatement {
       }
     }
 
-    const methodsAvailable = !!(<JavaScriptSubject>sampler.subject).getPossibleActions(ActionType.METHOD).length
+    const methodsAvailable = !!(<JavaScriptSubject>(
+      sampler.subject
+    )).getPossibleActions(ActionType.METHOD).length;
 
-    const finalCalls = []
+    const finalCalls = [];
     if (calls.length === 0 && methodsAvailable) {
       // add a call
-      finalCalls.push(sampler.sampleMethodCall(depth + 1))
+      finalCalls.push(sampler.sampleMethodCall(depth + 1));
     } else {
       // go over each call
       for (let i = 0; i < calls.length; i++) {
         if (prng.nextBoolean(1 / calls.length)) {
           // Mutate this position
-          const choice = prng.nextDouble()
+          const choice = prng.nextDouble();
 
           if (choice < 0.1 && methodsAvailable) {
             // 10% chance to add a call on this position
-            finalCalls.push(sampler.sampleMethodCall(depth + 1))
-            finalCalls.push(calls[i])
+            finalCalls.push(sampler.sampleMethodCall(depth + 1));
+            finalCalls.push(calls[i]);
           } else if (choice < 0.2) {
             // 10% chance to delete the call
           } else {
             // 80% chance to just mutate the call
             if (Properties.resample_gene_probability) {
-              finalCalls.push(sampler.sampleMethodCall(depth + 1))
+              finalCalls.push(sampler.sampleMethodCall(depth + 1));
             } else {
-              finalCalls.push(calls[i].mutate(sampler, depth + 1))
+              finalCalls.push(calls[i].mutate(sampler, depth + 1));
             }
           }
         }
@@ -122,7 +131,14 @@ export class ConstructorCall extends RootStatement {
     //     args[index] = args[index].mutate(sampler, depth + 1);
     // }
 
-    return new ConstructorCall(this.identifierDescription, this.type, prng.uniqueId(), args, finalCalls, this.constructorName);
+    return new ConstructorCall(
+      this.identifierDescription,
+      this.type,
+      prng.uniqueId(),
+      args,
+      finalCalls,
+      this.constructorName
+    );
   }
 
   copy(): ConstructorCall {
@@ -143,35 +159,34 @@ export class ConstructorCall extends RootStatement {
     return this._constructorName;
   }
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
-    const args = this.args
-      .map((a) => a.varName)
-      .join(", ");
+  decode(
+    id: string,
+    options: { addLogs: boolean; exception: boolean }
+  ): Decoding[] {
+    const args = this.args.map((a) => a.varName).join(", ");
 
-    const argStatements: Decoding[] = this.args
-      .flatMap((a) => a.decode(id, options))
+    const argStatements: Decoding[] = this.args.flatMap((a) =>
+      a.decode(id, options)
+    );
 
-    const childStatements: Decoding[] = this.children
-      .flatMap((a: MethodCall) => a.decodeWithObject(id, options, this.varName))
+    const childStatements: Decoding[] = this.children.flatMap((a: MethodCall) =>
+      a.decodeWithObject(id, options, this.varName)
+    );
 
-    let decoded = `const ${this.varName} = new ${this.constructorName}(${args})`
+    let decoded = `const ${this.varName} = new ${this.constructorName}(${args})`;
 
     if (options.addLogs) {
-      const logDir = path.join(
-        Properties.temp_log_directory,
-        id,
-        this.varName
-      )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
+      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 
     return [
       ...argStatements,
       {
         decoded: decoded,
-        reference: this
+        reference: this,
       },
-      ...childStatements
-    ]
+      ...childStatements,
+    ];
   }
 }

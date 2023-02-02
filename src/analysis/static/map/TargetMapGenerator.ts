@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@
 
 import { traverse } from "@babel/core";
 import { TargetVisitor } from "./TargetVisitor";
-import { TargetMetaData } from "@syntest/framework";
+import { TargetMetaData } from "@syntest/core";
 import { ActionDescription } from "../parsing/ActionDescription";
+import * as t from "@babel/types";
 
 /**
  * FUNCTION map generator for targets.
@@ -33,7 +34,10 @@ export class TargetMapGenerator {
    * @param filePath The filePath of the target
    * @param targetAST The AST of the target
    */
-  generate(filePath: string, targetAST: any): {
+  generate(
+    filePath: string,
+    targetAST: t.Node
+  ): {
     targetMap: Map<string, TargetMetaData>;
     functionMap: Map<string, Map<string, ActionDescription>>;
   } {

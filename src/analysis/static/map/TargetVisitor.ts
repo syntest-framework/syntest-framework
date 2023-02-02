@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TargetMetaData } from "@syntest/framework";
+
+import { TargetMetaData } from "@syntest/core";
 import { ActionType } from "../parsing/ActionType";
 import { ActionVisibility } from "../parsing/ActionVisibility";
 import { ActionDescription } from "../parsing/ActionDescription";
@@ -23,13 +24,14 @@ import { TypeProbability } from "../types/resolving/TypeProbability";
 import { Visitor } from "../Visitor";
 import { IdentifierDescription } from "../parsing/IdentifierDescription";
 import { ComplexObject } from "../types/discovery/object/ComplexObject";
+import * as t from "@babel/types";
 
 export class TargetVisitor extends Visitor {
   private _targetMap: Map<string, TargetMetaData>;
   private _functionMap: Map<string, Map<string, ActionDescription>>;
 
   constructor(filePath: string) {
-    super(filePath)
+    super(filePath);
     this._targetMap = new Map<string, TargetMetaData>();
     this._functionMap = new Map<string, Map<string, ActionDescription>>();
   }
@@ -46,56 +48,51 @@ export class TargetVisitor extends Visitor {
 
   // classic function declarations
   public FunctionExpression: (path) => void = (path) => {
-    if (path.parent.type === 'CallExpression'
-      || path.parent.type === 'NewExpression'
-      || path.parent.type === 'ReturnStatement'
-      || path.parent.type === 'LogicalExpression'
-      || path.parent.type === 'ConditionalExpression'
-      || path.parent.type === 'AssignmentExpression') {
+    if (
+      path.parent.type === "CallExpression" ||
+      path.parent.type === "NewExpression" ||
+      path.parent.type === "ReturnStatement" ||
+      path.parent.type === "LogicalExpression" ||
+      path.parent.type === "ConditionalExpression" ||
+      path.parent.type === "AssignmentExpression"
+    ) {
       // anonymous argument function cannot call is not target
-      return
+      return;
     }
 
-    let target;
     let targetName;
 
     if (path.node.id) {
-      target = path.get('id')
       targetName = path.node.id.name;
-    } else if (path.parent.type === 'ObjectProperty') {
+    } else if (path.parent.type === "ObjectProperty") {
       // get identifier from assignment expression
-      if (path.parent.key.type === 'Identifier') {
-        target = path.get('key')
-        targetName = path.parent.key.name
-      } else if (path.parent.key.type === 'StringLiteral') {
-        target = path.get('key')
-        targetName = path.parent.key.value
+      if (path.parent.key.type === "Identifier") {
+        targetName = path.parent.key.name;
+      } else if (path.parent.key.type === "StringLiteral") {
+        targetName = path.parent.key.value;
       } else {
-        console.log(path)
-        throw new Error("unknown function expression name")
+        console.log(path);
+        throw new Error("unknown function expression name");
       }
-
-    } else if (path.parent.type === 'VariableDeclarator') {
+    } else if (path.parent.type === "VariableDeclarator") {
       // get identifier from assignment expression
-      if (path.parent.id.type === 'Identifier') {
-        target = path.parentPath.get('id')
-        targetName = path.parent.id.name
+      if (path.parent.id.type === "Identifier") {
+        targetName = path.parent.id.name;
       } else {
-        throw new Error("unknown function expression name")
+        throw new Error("unknown function expression name");
       }
-
     } else {
-      throw new Error("unknown function expression name")
+      throw new Error("unknown function expression name");
     }
 
     const functionName = targetName;
 
-    this._createMaps(targetName)
+    this._createMaps(targetName);
 
     this._functionMap.get(targetName).set(functionName, {
       scope: {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
-        filePath: this.filePath
+        filePath: this.filePath,
       },
       name: functionName,
       type: ActionType.FUNCTION,
@@ -109,7 +106,7 @@ export class TargetVisitor extends Visitor {
       isStatic: path.node.static,
       isAsync: path.node.async,
     });
-  }
+  };
 
   // Program: (path) => void = (path) => {
   //   if (this.scopeIdOffset === undefined) {
@@ -155,24 +152,22 @@ export class TargetVisitor extends Visitor {
   //   }
   // }
 
-
-
   public ClassDeclaration: (path) => void = (path) => {
     const targetName = path.node.id.name;
 
-    this._createMaps(targetName)
+    this._createMaps(targetName);
   };
 
   public FunctionDeclaration: (path) => void = (path) => {
     const targetName = path.node.id.name;
     const functionName = targetName;
 
-    this._createMaps(targetName)
+    this._createMaps(targetName);
 
     this._functionMap.get(targetName).set(functionName, {
       scope: {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
-        filePath: this.filePath
+        filePath: this.filePath,
       },
       name: functionName,
       type: ActionType.FUNCTION,
@@ -202,10 +197,13 @@ export class TargetVisitor extends Visitor {
     this._functionMap.get(targetName).set(functionName, {
       scope: {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
-        filePath: this.filePath
+        filePath: this.filePath,
       },
       name: functionName,
-      type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
+      type:
+        functionName === "constructor"
+          ? ActionType.CONSTRUCTOR
+          : ActionType.METHOD,
       visibility: visibility,
       isConstructor: functionName === "constructor",
       parameters: path.node.params.map((x) => this._extractParam(x)),
@@ -220,39 +218,42 @@ export class TargetVisitor extends Visitor {
 
   public VariableDeclarator: (path) => void = (path) => {
     if (!path.node.init) {
-      return
+      return;
     }
 
-    if (!(path.node.init.type === 'ArrowFunctionExpression'
-      || path.node.init.type === 'FunctionExpression')
+    if (
+      !(
+        path.node.init.type === "ArrowFunctionExpression" ||
+        path.node.init.type === "FunctionExpression"
+      )
     ) {
-      return
+      return;
     }
 
-    const targetName = path.node.id.name
-    const functionName = targetName
+    const targetName = path.node.id.name;
+    const functionName = targetName;
 
-    this._createMaps(targetName)
+    this._createMaps(targetName);
 
-    let scope
+    let scope;
     path.traverse({
       ArrowFunctionExpression: {
         enter: (p) => {
           scope = {
             uid: `${p.scope.uid - this.scopeIdOffset}`,
-            filePath: this.filePath
-          }
-        }
+            filePath: this.filePath,
+          };
+        },
       },
       FunctionExpression: {
         enter: (p) => {
           scope = {
             uid: `${p.scope.uid - this.scopeIdOffset}`,
-            filePath: this.filePath
-          }
-        }
-      }
-    })
+            filePath: this.filePath,
+          };
+        },
+      },
+    });
 
     this._functionMap.get(targetName).set(functionName, {
       scope: scope,
@@ -268,64 +269,68 @@ export class TargetVisitor extends Visitor {
       isStatic: path.node.init.static,
       isAsync: path.node.init.async,
     });
-  }
+  };
 
   // prototyping
   public AssignmentExpression: (path) => void = (path) => {
     if (path.node.right.type !== "FunctionExpression") {
-      return
+      return;
     }
 
-    let scope
+    let scope;
     path.traverse({
       FunctionExpression: {
         enter: (p) => {
           scope = {
             uid: `${p.scope.uid - this.scopeIdOffset}`,
-            filePath: this.filePath
-          }
-        }
-      }
-    })
+            filePath: this.filePath,
+          };
+        },
+      },
+    });
 
-
-    let targetName
+    let targetName;
 
     if (path.node.left.type === "MemberExpression") {
-      if (path.node.left.object.name === 'module'
-        && path.node.left.property.name === 'exports'
+      if (
+        path.node.left.object.name === "module" &&
+        path.node.left.property.name === "exports"
       ) {
-        targetName = path.node.right.id?.name
+        targetName = path.node.right.id?.name;
 
         if (!targetName) {
-          targetName = 'anon'
+          targetName = "anon";
         }
-      } else if (path.node.left.object.name === 'exports') {
-        targetName = path.node.left.property.name
-      } else if (path.node.left.object.type === 'MemberExpression'
-        && path.node.left.object.property.name === 'prototype') {
-        targetName = path.node.left.object.object.name
-        const functionName = path.node.left.property.name
+      } else if (path.node.left.object.name === "exports") {
+        targetName = path.node.left.property.name;
+      } else if (
+        path.node.left.object.type === "MemberExpression" &&
+        path.node.left.object.property.name === "prototype"
+      ) {
+        targetName = path.node.left.object.object.name;
+        const functionName = path.node.left.property.name;
 
         if (path.node.left.computed) {
           // we cannot know the name of computed properties unless we find out what the identifier refers to
           // see line 136 of Axios.js as example
           // Axios.prototype[method] = ?
-          return
+          return;
         }
 
         if (functionName === "method") {
-          throw new Error("Invalid functionName")
+          throw new Error("Invalid functionName");
         }
 
         if (!this._functionMap.has(targetName)) {
-          this._createMaps(targetName)
+          this._createMaps(targetName);
           // modify original
           // but there is no original so... no constructor?
         } else {
           // modify original
-          this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
-          this._functionMap.get(targetName).get(targetName).isConstructor = true
+          this._functionMap.get(targetName).get(targetName).type =
+            ActionType.CONSTRUCTOR;
+          this._functionMap.get(targetName).get(targetName).isConstructor =
+            true;
         }
 
         // TODO this one is probably wrong
@@ -333,7 +338,10 @@ export class TargetVisitor extends Visitor {
         this._functionMap.get(targetName).set(functionName, {
           scope: scope,
           name: functionName,
-          type: functionName === "constructor" ? ActionType.CONSTRUCTOR : ActionType.METHOD,
+          type:
+            functionName === "constructor"
+              ? ActionType.CONSTRUCTOR
+              : ActionType.METHOD,
           visibility: ActionVisibility.PUBLIC,
           isConstructor: functionName === "constructor",
           parameters: path.node.right.params.map((x) => this._extractParam(x)),
@@ -344,32 +352,34 @@ export class TargetVisitor extends Visitor {
           isStatic: path.node.right.static,
           isAsync: path.node.right.async,
         });
-        return
+        return;
       } else {
-        targetName = path.node.left.object.name
-        const functionName = path.node.left.property.name
+        targetName = path.node.left.object.name;
+        const functionName = path.node.left.property.name;
 
         if (path.node.left.computed) {
           // we cannot know the name of computed properties unless we find out what the identifier refers to
           // see line 136 of Axios.js as example
           // Axios.prototype[method] = ?
-          return
+          return;
         }
 
         if (functionName === "method") {
-          throw new Error("Invalid functionName")
+          throw new Error("Invalid functionName");
         }
 
         if (!this._functionMap.has(targetName)) {
-          this._createMaps(targetName)
+          this._createMaps(targetName);
           // modify original
           // but there is no original so... no constructor?
         }
 
-        if (this.functionMap.get(targetName).has(targetName)){
+        if (this.functionMap.get(targetName).has(targetName)) {
           // modify original
-          this._functionMap.get(targetName).get(targetName).type = ActionType.CONSTRUCTOR
-          this._functionMap.get(targetName).get(targetName).isConstructor = true
+          this._functionMap.get(targetName).get(targetName).type =
+            ActionType.CONSTRUCTOR;
+          this._functionMap.get(targetName).get(targetName).isConstructor =
+            true;
         }
 
         // TODO this one is probably wrong
@@ -388,17 +398,16 @@ export class TargetVisitor extends Visitor {
           isStatic: path.node.right.static,
           isAsync: path.node.right.async,
         });
-        return
+        return;
       }
-
-    } else if (path.node.left.type === 'Identifier') {
-        targetName = path.node.left.name
+    } else if (path.node.left.type === "Identifier") {
+      targetName = path.node.left.name;
     } else {
-      throw new Error("unknown function expression name")
+      throw new Error("unknown function expression name");
     }
 
     if (!this.targetMap.has(targetName)) {
-      this._createMaps(targetName)
+      this._createMaps(targetName);
     }
 
     this._functionMap.get(targetName).set(targetName, {
@@ -415,67 +424,77 @@ export class TargetVisitor extends Visitor {
       isStatic: path.node.right.static,
       isAsync: path.node.right.async,
     });
-  }
+  };
 
-  _extractParam(param: any): IdentifierDescription {
-      if (param.type === 'RestElement') {
-        // TODO this can actually be an infinite amount of arguments...
-        return this._extractParam(param.argument)
-      }
+  _extractParam(param: t.Node): IdentifierDescription {
+    if (param.type === "RestElement") {
+      // TODO this can actually be an infinite amount of arguments...
+      return this._extractParam(param.argument);
+    }
 
-      if (param.type === "AssignmentPattern") {
-        return this._extractParam(param.left)
-      }
+    if (param.type === "AssignmentPattern") {
+      return this._extractParam(param.left);
+    }
 
-      if (param.type === "ObjectPattern") {
-        const typeProbability = new TypeProbability()
+    if (param.type === "ObjectPattern") {
+      const typeProbability = new TypeProbability();
 
-        const object: ComplexObject = {
-          name: "objectPattern",
-          properties: new Set(param.properties.map((x)=> this._extractParam(x.key).name)), // TODO resolve these types
-          functions: new Set()
-        }
-
-        typeProbability.addType('object', 1, object)
-        param = {
-          name: `objectPattern`,
-          typeProbabilityMap: typeProbability
-        }
-      }
-
-      if (param.type === "ArrayPattern") {
-        const typeProbability = new TypeProbability()
-
-        const object: ComplexObject = {
-          name: "arrayPattern",
-          properties: new Set(param.elements.map((x) => this._extractParam(x).name)), // TODO resolve these types
-          functions: new Set()
-        }
-
-        typeProbability.addType('array', 1, object)
-
-        param = {
-          name: `arrayPattern`,
-          typeProbabilityMap: typeProbability
-        }
-      }
-
-      if (!param.name) {
-        throw new Error(`Unknown param ${JSON.stringify(param)}\n ${this.filePath}`)
-      }
-
-      return {
-        typeProbabilityMap: undefined,
-        name: param.name,
+      const object: ComplexObject = {
+        name: "objectPattern",
+        properties: new Set(
+          param.properties.map(
+            (x) =>
+              this._extractParam(
+                x.type === "ObjectProperty" ? x.key : x.argument
+              ).name
+          )
+        ), // TODO resolve these types
+        functions: new Set(),
       };
 
+      typeProbability.addType("object", 1, object);
+      return {
+        name: `objectPattern`,
+        typeProbabilityMap: typeProbability,
+      };
+    }
+
+    if (param.type === "ArrayPattern") {
+      const typeProbability = new TypeProbability();
+
+      const object: ComplexObject = {
+        name: "arrayPattern",
+        properties: new Set(
+          param.elements.map((x) => this._extractParam(x).name)
+        ), // TODO resolve these types
+        functions: new Set(),
+      };
+
+      typeProbability.addType("array", 1, object);
+
+      return {
+        name: `arrayPattern`,
+        typeProbabilityMap: typeProbability,
+      };
+    }
+
+    if (param.type === "Identifier") {
+      return {
+        name: param.name,
+        typeProbabilityMap: undefined,
+      };
+    }
+
+    throw new Error(
+      `Unknown param ${JSON.stringify(param)}\n ${this.filePath}`
+    );
   }
 
-  get targetMap(): Map<string, any> {
+  get targetMap(): Map<string, TargetMetaData> {
     return this._targetMap;
   }
 
-  get functionMap(): Map<string, Map<string, any>> {
+  get functionMap(): Map<string, Map<string, ActionDescription>> {
     return this._functionMap;
   }
 }

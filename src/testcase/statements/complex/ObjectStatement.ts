@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/framework";
+import { prng, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -32,11 +32,17 @@ export class ObjectStatement extends Statement {
   private _keys: StringStatement[];
   private _values: Statement[];
 
-  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, keys: StringStatement[], values: Statement[]) {
+  constructor(
+    identifierDescription: IdentifierDescription,
+    type: string,
+    uniqueId: string,
+    keys: StringStatement[],
+    values: Statement[]
+  ) {
     super(identifierDescription, type, uniqueId);
-    this._keys = keys
-    this._values = values
-    this._classType = 'ObjectStatement'
+    this._keys = keys;
+    this._values = values;
+    this._classType = "ObjectStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): ObjectStatement {
@@ -53,82 +59,111 @@ export class ObjectStatement extends Statement {
     //   }
     // }
 
-    const finalKeys = []
-    const finalValues = []
+    const finalKeys = [];
+    const finalValues = [];
 
     if (finalKeys.length === 0) {
       // add a child
-      const key = sampler.sampleString()
-      finalKeys.push(key)
-      finalValues.push(sampler.sampleArgument(depth + 1, { name: key.varName, typeProbabilityMap: new TypeProbability() }))
+      const key = sampler.sampleString();
+      finalKeys.push(key);
+      finalValues.push(
+        sampler.sampleArgument(depth + 1, {
+          name: key.varName,
+          typeProbabilityMap: new TypeProbability(),
+        })
+      );
     } else {
       // go over each child
       for (let i = 0; i < finalKeys.length; i++) {
         if (prng.nextBoolean(1 / finalKeys.length)) {
           // Mutate this position
-          const choice = prng.nextDouble()
+          const choice = prng.nextDouble();
 
           if (choice < 0.1) {
             // 10% chance to add a call on this position
 
             // TODO should also look if we can add back one of the deleted ones
 
-            const key = sampler.sampleString()
-            finalKeys.push(key)
-            finalValues.push(sampler.sampleArgument(depth + 1, { name: key.varName, typeProbabilityMap: new TypeProbability() }))
-            finalKeys.push(keys[i])
-            finalValues.push(values[i])
+            const key = sampler.sampleString();
+            finalKeys.push(key);
+            finalValues.push(
+              sampler.sampleArgument(depth + 1, {
+                name: key.varName,
+                typeProbabilityMap: new TypeProbability(),
+              })
+            );
+            finalKeys.push(keys[i]);
+            finalValues.push(values[i]);
           } else if (choice < 0.2) {
             // 10% chance to delete the call
           } else {
             // 80% chance to just mutate the call
 
-            finalKeys.push(keys[i])
+            finalKeys.push(keys[i]);
 
             if (Properties.resample_gene_probability) {
-              const propertyType = this.identifierDescription.typeProbabilityMap.getPropertyTypes(this.type).get(keys[i].varName)
-              finalValues.push(sampler.sampleArgument(depth + 1, {name: keys[i].varName, typeProbabilityMap: propertyType}))
+              const propertyType = this.identifierDescription.typeProbabilityMap
+                .getPropertyTypes(this.type)
+                .get(keys[i].varName);
+              finalValues.push(
+                sampler.sampleArgument(depth + 1, {
+                  name: keys[i].varName,
+                  typeProbabilityMap: propertyType,
+                })
+              );
             } else {
-              finalValues.push(values[i].mutate(sampler, depth + 1))
+              finalValues.push(values[i].mutate(sampler, depth + 1));
             }
           }
         }
       }
     }
 
-    return new ObjectStatement(this.identifierDescription, this.type, prng.uniqueId(), finalKeys, finalValues);
+    return new ObjectStatement(
+      this.identifierDescription,
+      this.type,
+      prng.uniqueId(),
+      finalKeys,
+      finalValues
+    );
   }
 
   copy(): ObjectStatement {
-    return new ObjectStatement(this.identifierDescription, this.type, this.id, this._keys.map(a => a.copy()), this._values.map(a => a.copy()));
+    return new ObjectStatement(
+      this.identifierDescription,
+      this.type,
+      this.id,
+      this._keys.map((a) => a.copy()),
+      this._values.map((a) => a.copy())
+    );
   }
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
+  decode(
+    id: string,
+    options: { addLogs: boolean; exception: boolean }
+  ): Decoding[] {
     const children = this._values
       .map((a, i) => `\t"${this._keys[i].value}": ${a.varName}`)
-      .join(',\n\t')
+      .join(",\n\t");
 
-    const childStatements: Decoding[] = this._values
-      .flatMap((a) => a.decode(id, options))
+    const childStatements: Decoding[] = this._values.flatMap((a) =>
+      a.decode(id, options)
+    );
 
-    let decoded = `const ${this.varName} = {\n${children}\n\t}`
+    let decoded = `const ${this.varName} = {\n${children}\n\t}`;
 
     if (options.addLogs) {
-      const logDir = path.join(
-        Properties.temp_log_directory,
-        id,
-        this.varName
-      )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
+      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 
     return [
       ...childStatements,
       {
         decoded: decoded,
-        reference: this
-      }
-    ]
+        reference: this,
+      },
+    ];
   }
 
   getChildren(): Statement[] {
@@ -141,14 +176,14 @@ export class ObjectStatement extends Statement {
 
   setChild(index: number, newChild: Statement) {
     if (!newChild) {
-      throw new Error("Invalid new child!")
+      throw new Error("Invalid new child!");
     }
 
     if (index >= this.children.length) {
-      throw new Error("Invalid child location!")
+      throw new Error("Invalid child location!");
     }
 
-    this.children[index] = newChild
+    this.children[index] = newChild;
   }
 
   get children(): Statement[] {
@@ -156,9 +191,6 @@ export class ObjectStatement extends Statement {
   }
 
   getFlatTypes(): string[] {
-    return [
-      "object",
-      ...this.children.flatMap((a) => a.getFlatTypes())
-    ]
+    return ["object", ...this.children.flatMap((a) => a.getFlatTypes())];
   }
 }

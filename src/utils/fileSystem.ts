@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Javascript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import * as path from "path";
 import { readFileSync, readdirSync, statSync } from "fs";
 
@@ -25,10 +26,16 @@ export function readFile(absolutePath: string): string {
   return readFileSync(absolutePath).toString("utf-8");
 }
 
-export function getAllFiles(dir: string, extn: string, files: string[] = null, result: string[] = null, regex: RegExp = null) {
+export function getAllFiles(
+  dir: string,
+  extn: string,
+  files: string[] = null,
+  result: string[] = null,
+  regex: RegExp = null
+) {
   files = files || readdirSync(dir);
   result = result || [];
-  regex = regex || new RegExp(`\\${extn}$`)
+  regex = regex || new RegExp(`\\${extn}$`);
 
   for (let i = 0; i < files.length; i++) {
     const file = path.join(dir, files[i]);
@@ -46,4 +53,3 @@ export function getAllFiles(dir: string, extn: string, files: string[] = null, r
   }
   return result;
 }
-

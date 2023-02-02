@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  getUserInterface,
-  Encoding,
-  Decoder, Properties,
-} from "@syntest/framework";
+import { getUserInterface, Encoding, Decoder, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./statements/root/RootStatement";
 
@@ -45,11 +41,9 @@ export class JavaScriptTestCase extends Encoding {
   mutate(sampler: JavaScriptTestCaseSampler) {
     getUserInterface().debug(`Mutating test case: ${this._id}`);
     if (Properties.resample_gene_probability) {
-      return sampler.sample()
+      return sampler.sample();
     } else {
-      return new JavaScriptTestCase(
-        this._root.mutate(sampler, 0)
-      );
+      return new JavaScriptTestCase(this._root.mutate(sampler, 0));
     }
   }
 

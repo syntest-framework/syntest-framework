@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/framework";
+import { prng, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -30,10 +30,15 @@ import { TypeProbability } from "../../../analysis/static/types/resolving/TypePr
 export class ArrayStatement extends Statement {
   private _children: Statement[];
 
-  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, children: Statement[]) {
+  constructor(
+    identifierDescription: IdentifierDescription,
+    type: string,
+    uniqueId: string,
+    children: Statement[]
+  ) {
     super(identifierDescription, type, uniqueId);
-    this._children = children
-    this._classType = 'ArrayStatement'
+    this._children = children;
+    this._classType = "ArrayStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): ArrayStatement {
@@ -48,69 +53,92 @@ export class ArrayStatement extends Statement {
     //   }
     // }
 
-    const finalChildren = []
+    const finalChildren = [];
 
     if (children.length === 0) {
       // add a call
-      finalChildren.push(sampler.sampleArgument(depth + 1, { name: 'arrayValue', typeProbabilityMap: new TypeProbability() }))
+      finalChildren.push(
+        sampler.sampleArgument(depth + 1, {
+          name: "arrayValue",
+          typeProbabilityMap: new TypeProbability(),
+        })
+      );
     } else {
       // go over each call
       for (let i = 0; i < children.length; i++) {
         if (prng.nextBoolean(1 / children.length)) {
           // Mutate this position
-          const choice = prng.nextDouble()
+          const choice = prng.nextDouble();
 
           if (choice < 0.1) {
             // 10% chance to add a call on this position
-            finalChildren.push(sampler.sampleArgument(depth + 1, { name: 'arrayValue', typeProbabilityMap: new TypeProbability() }))
-            finalChildren.push(children[i])
+            finalChildren.push(
+              sampler.sampleArgument(depth + 1, {
+                name: "arrayValue",
+                typeProbabilityMap: new TypeProbability(),
+              })
+            );
+            finalChildren.push(children[i]);
           } else if (choice < 0.2) {
             // 10% chance to delete the child
           } else {
             // 80% chance to just mutate the child
             if (Properties.resample_gene_probability) {
-              finalChildren.push(sampler.sampleArgument(depth + 1, { name: 'arrayValue', typeProbabilityMap: new TypeProbability() }))
+              finalChildren.push(
+                sampler.sampleArgument(depth + 1, {
+                  name: "arrayValue",
+                  typeProbabilityMap: new TypeProbability(),
+                })
+              );
             } else {
-              finalChildren.push(children[i].mutate(sampler, depth + 1))
+              finalChildren.push(children[i].mutate(sampler, depth + 1));
             }
           }
         }
       }
     }
 
-    return new ArrayStatement(this.identifierDescription, this.type, prng.uniqueId(), finalChildren);
+    return new ArrayStatement(
+      this.identifierDescription,
+      this.type,
+      prng.uniqueId(),
+      finalChildren
+    );
   }
 
   copy(): ArrayStatement {
-    return new ArrayStatement(this.identifierDescription, this.type, this.id, this._children.map(a => a.copy()));
+    return new ArrayStatement(
+      this.identifierDescription,
+      this.type,
+      this.id,
+      this._children.map((a) => a.copy())
+    );
   }
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
-    const children = this._children
-      .map((a) => a.varName)
-      .join(', ')
+  decode(
+    id: string,
+    options: { addLogs: boolean; exception: boolean }
+  ): Decoding[] {
+    const children = this._children.map((a) => a.varName).join(", ");
 
-    const childStatements: Decoding[] = this._children
-      .flatMap((a) => a.decode(id, options))
+    const childStatements: Decoding[] = this._children.flatMap((a) =>
+      a.decode(id, options)
+    );
 
-    let decoded = `const ${this.varName} = [${children}]`
+    let decoded = `const ${this.varName} = [${children}]`;
 
     if (options.addLogs) {
-      const logDir = path.join(
-        Properties.temp_log_directory,
-        id,
-        this.varName
-      )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
+      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 
     return [
       ...childStatements,
       {
         decoded: decoded,
-        reference: this
-      }
-    ]
+        reference: this,
+      },
+    ];
   }
 
   getChildren(): Statement[] {
@@ -123,14 +151,14 @@ export class ArrayStatement extends Statement {
 
   setChild(index: number, newChild: Statement) {
     if (!newChild) {
-      throw new Error("Invalid new child!")
+      throw new Error("Invalid new child!");
     }
 
     if (index >= this.children.length) {
-      throw new Error("Invalid child location!")
+      throw new Error("Invalid child location!");
     }
 
-    this.children[index] = newChild
+    this.children[index] = newChild;
   }
 
   get children(): Statement[] {
@@ -138,9 +166,6 @@ export class ArrayStatement extends Statement {
   }
 
   getFlatTypes(): string[] {
-    return [
-      "array",
-      ...this.children.flatMap((a) => a.getFlatTypes())
-    ]
+    return ["array", ...this.children.flatMap((a) => a.getFlatTypes())];
   }
 }

@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  prng,
-  Properties,
-} from "@syntest/framework";
+import { prng, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Decoding } from "../Statement";
@@ -29,7 +26,6 @@ import { IdentifierDescription } from "../../../analysis/static/parsing/Identifi
  * @author Dimitri Stallenberg
  */
 export class StringStatement extends PrimitiveStatement<string> {
-
   private readonly alphabet: string;
   private readonly maxlength: number;
 
@@ -42,15 +38,20 @@ export class StringStatement extends PrimitiveStatement<string> {
     maxlength: number
   ) {
     super(identifierDescription, type, uniqueId, value);
-    this._classType = 'StringStatement'
+    this._classType = "StringStatement";
 
     this.alphabet = alphabet;
     this.maxlength = maxlength;
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number): StringStatement {
+  mutate(sampler: JavaScriptTestCaseSampler): StringStatement {
     if (prng.nextBoolean(Properties.resample_gene_probability)) {
-      return sampler.sampleString(this.identifierDescription, this.type, this.alphabet, this.maxlength);
+      return sampler.sampleString(
+        this.identifierDescription,
+        this.type,
+        this.alphabet,
+        this.maxlength
+      );
     }
 
     if (this.value.length > 0 && this.value.length < this.maxlength) {
@@ -82,7 +83,7 @@ export class StringStatement extends PrimitiveStatement<string> {
 
   addMutation(): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
-    const addedChar = prng.pickOne(this.alphabet);
+    const addedChar = prng.pickOne(this.alphabet.split(""));
 
     let newValue = "";
 
@@ -129,7 +130,7 @@ export class StringStatement extends PrimitiveStatement<string> {
 
   replaceMutation(): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
-    const newChar = prng.pickOne(this.alphabet);
+    const newChar = prng.pickOne(this.alphabet.split(""));
 
     let newValue = "";
 
@@ -190,16 +191,16 @@ export class StringStatement extends PrimitiveStatement<string> {
     );
   }
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
+  decode(): Decoding[] {
     return [
       {
         decoded: `const ${this.varName} = "${this.value}";`,
-        reference: this
-      }
-    ]
+        reference: this,
+      },
+    ];
   }
 
   getFlatTypes(): string[] {
-    return ["string"]
+    return ["string"];
   }
 }

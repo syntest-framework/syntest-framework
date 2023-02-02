@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Javascript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,8 @@ import {
   IterationBudget,
   loadConfig,
   processConfig,
-  Properties, RuntimeVariable,
+  Properties,
+  RuntimeVariable,
   SearchTimeBudget,
   setupLogger,
   setupOptions,
@@ -43,10 +44,13 @@ import {
   StatisticsSearchListener,
   SummaryWriter,
   TotalTimeBudget,
-} from "@syntest/framework";
+} from "@syntest/core";
 
 import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
-import { JavaScriptTargetMetaData, JavaScriptTargetPool } from "./analysis/static/JavaScriptTargetPool";
+import {
+  JavaScriptTargetMetaData,
+  JavaScriptTargetPool,
+} from "./analysis/static/JavaScriptTargetPool";
 import { AbstractSyntaxTreeGenerator } from "./analysis/static/ast/AbstractSyntaxTreeGenerator";
 import * as path from "path";
 import { TargetMapGenerator } from "./analysis/static/map/TargetMapGenerator";
@@ -56,7 +60,11 @@ import { JavaScriptDecoder } from "./testbuilding/JavaScriptDecoder";
 import { JavaScriptRunner } from "./testcase/execution/JavaScriptRunner";
 import { JavaScriptRandomSampler } from "./testcase/sampling/JavaScriptRandomSampler";
 import { JavaScriptTreeCrossover } from "./search/crossover/JavaScriptTreeCrossover";
-import { collectCoverageData, collectInitialVariables, collectStatistics } from "./utils/collection";
+import {
+  collectCoverageData,
+  collectInitialVariables,
+  collectStatistics,
+} from "./utils/collection";
 import Messages from "./ui/Messages";
 import { JavaScriptCommandLineInterface } from "./ui/JavaScriptCommandLineInterface";
 import { ControlFlowGraphGenerator } from "./analysis/static/cfg/ControlFlowGraphGenerator";
@@ -72,8 +80,8 @@ import { existsSync } from "fs";
 export class Launcher {
   private readonly _program = "syntest-javascript";
 
-  private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>()
-  private timings = []
+  private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>();
+  private timings = [];
 
   public async run() {
     try {
@@ -84,13 +92,13 @@ export class Launcher {
 
       await this.exit();
     } catch (e) {
-      console.log(e)
-      console.trace(e)
+      console.log(e);
+      console.trace(e);
     }
   }
 
   private async setup(): Promise<JavaScriptTargetPool> {
-    this.timings.push({ time: Date.now(), what: 'start setup' })
+    this.timings.push({ time: Date.now(), what: "start setup" });
     // Filesystem & Compiler Re-configuration
     const additionalOptions = {
       incorporate_execution_information: {
@@ -104,12 +112,16 @@ export class Launcher {
         default: "proportional",
       },
       random_type_probability: {
-        description: "The probability we use a random type regardless of the inferred type",
+        description:
+          "The probability we use a random type regardless of the inferred type",
         type: "number",
         default: 0.1,
       },
     };
-    setupOptions(this._program, additionalOptions);
+    setupOptions(
+      this._program,
+      <Record<string, unknown>[]>(<unknown>additionalOptions)
+    );
 
     const programArgs = process.argv.filter(
       (a) => a.includes(this._program) || a.includes("bin.ts")
@@ -121,7 +133,7 @@ export class Launcher {
     processConfig(config, args);
     setupLogger();
 
-    if (existsSync('.syntest')) {
+    if (existsSync(".syntest")) {
       await deleteTempDirectories();
     }
 
@@ -139,6 +151,7 @@ export class Launcher {
 
     getUserInterface().report("clear", []);
     getUserInterface().report("asciiArt", ["Syntest"]);
+    // eslint-disable-next-line
     getUserInterface().report("version", [require("../package.json").version]);
 
     if (args.includes("--help") || args.includes("-h")) {
@@ -149,17 +162,17 @@ export class Launcher {
     const abstractSyntaxTreeGenerator = new AbstractSyntaxTreeGenerator();
     const targetMapGenerator = new TargetMapGenerator();
 
-    let typeResolver: TypeResolver
+    let typeResolver: TypeResolver;
 
-    if (Properties['type_inference_mode'] === 'none') {
-      typeResolver = new TypeResolverUnknown()
+    if (Properties["type_inference_mode"] === "none") {
+      typeResolver = new TypeResolverUnknown();
     } else {
-      typeResolver = new TypeResolverInference()
+      typeResolver = new TypeResolverInference();
     }
 
-    const controlFlowGraphGenerator = new ControlFlowGraphGenerator()
-    const importGenerator = new ImportGenerator()
-    const exportGenerator = new ExportGenerator()
+    const controlFlowGraphGenerator = new ControlFlowGraphGenerator();
+    const importGenerator = new ImportGenerator();
+    const exportGenerator = new ExportGenerator();
     const targetPool = new JavaScriptTargetPool(
       abstractSyntaxTreeGenerator,
       targetMapGenerator,
@@ -169,25 +182,23 @@ export class Launcher {
       typeResolver
     );
 
-
     getUserInterface().report("header", ["GENERAL INFO"]);
     // TODO ui info messages
-
 
     getUserInterface().report("header", ["TARGETS"]);
 
     getUserInterface().report("property-set", [
       "Target Settings",
-      [
-        ["Target Root Directory", Properties.target_root_directory],
-      ],
+      <string>(
+        (<unknown>[["Target Root Directory", Properties.target_root_directory]])
+      ),
     ]);
 
-    this.timings.push({ time: Date.now(), what: 'start load targets' })
+    this.timings.push({ time: Date.now(), what: "start load targets" });
 
     await targetPool.loadTargets();
 
-    this.timings.push({ time: Date.now(), what: 'end load targets' })
+    this.timings.push({ time: Date.now(), what: "end load targets" });
 
     if (!targetPool.targets.length) {
       getUserInterface().error(
@@ -196,7 +207,7 @@ export class Launcher {
       await this.exit();
     }
 
-    let names: string[] = [];
+    const names: string[] = [];
 
     targetPool.targets.forEach((target) =>
       names.push(
@@ -208,25 +219,19 @@ export class Launcher {
     getUserInterface().report("header", ["CONFIGURATION"]);
 
     getUserInterface().report("single-property", ["Seed", getSeed()]);
-    getUserInterface().report("property-set", [
-      "Budgets",
-      [
+    getUserInterface().report("property-set", ["Budgets", <string>(<unknown>[
         ["Iteration Budget", `${Properties.iteration_budget} iterations`],
         ["Evaluation Budget", `${Properties.evaluation_budget} evaluations`],
         ["Search Time Budget", `${Properties.search_time} seconds`],
         ["Total Time Budget", `${Properties.total_time} seconds`],
-      ],
-    ]);
-    getUserInterface().report("property-set", [
-      "Algorithm",
-      [
+      ])]);
+    getUserInterface().report("property-set", ["Algorithm", <string>(<unknown>[
         ["Algorithm", Properties.algorithm],
         ["Population Size", Properties.population_size],
-      ],
-    ]);
+      ])]);
     getUserInterface().report("property-set", [
       "Variation Probabilities",
-      [
+      <string>(<unknown>[
         ["Resampling", Properties.resample_gene_probability],
         ["Delta mutation", Properties.delta_mutation_probability],
         [
@@ -234,51 +239,48 @@ export class Launcher {
           Properties.sample_existing_value_probability,
         ],
         ["Crossover", Properties.crossover_probability],
-      ],
+      ]),
     ]);
 
-    getUserInterface().report("property-set", [
-      "Sampling",
-      [
+    getUserInterface().report("property-set", ["Sampling", <string>(<unknown>[
         ["Max Depth", Properties.max_depth],
         ["Explore Illegal Values", Properties.explore_illegal_values],
         ["Sample FUNCTION Result as Argument", Properties.sample_func_as_arg],
         ["Crossover", Properties.crossover_probability],
-      ],
-    ]);
+      ])]);
 
-    getUserInterface().report("property-set", [
-      "Type Inference",
-      [
-        ["Incorporate Execution Information", Properties['incorporate_execution_information']],
-        ["Type Inference Mode", Properties['type_inference_mode']],
-        ["Random Type Probability", Properties['random_type_probability']],
-      ],
-    ]);
-    this.timings.push({ time: Date.now(), what: 'end setup' })
+    getUserInterface().report("property-set", ["Type Inference", <string>(<
+        unknown
+      >[
+        [
+          "Incorporate Execution Information",
+          Properties["incorporate_execution_information"],
+        ],
+        ["Type Inference Mode", Properties["type_inference_mode"]],
+        ["Random Type Probability", Properties["random_type_probability"]],
+      ])]);
+    this.timings.push({ time: Date.now(), what: "end setup" });
     return targetPool;
   }
 
   private async search(
     targetPool: JavaScriptTargetPool
-  ): Promise<
-    [Archive<JavaScriptTestCase>, Map<string, Export[]>, Export[]]
-  > {
-    this.timings.push({ time: Date.now(), what: 'start search' })
+  ): Promise<[Archive<JavaScriptTestCase>, Map<string, Export[]>, Export[]]> {
+    this.timings.push({ time: Date.now(), what: "start search" });
 
-    this.timings.push({ time: Date.now(), what: 'start instrumenting' })
-    await targetPool.prepareAndInstrument()
-    this.timings.push({ time: Date.now(), what: 'end instrumenting' })
+    this.timings.push({ time: Date.now(), what: "start instrumenting" });
+    await targetPool.prepareAndInstrument();
+    this.timings.push({ time: Date.now(), what: "end instrumenting" });
 
-    this.timings.push({ time: Date.now(), what: 'start type resolving' })
-    targetPool.scanTargetRootDirectory()
-    this.timings.push({ time: Date.now(), what: 'end type resolving' })
+    this.timings.push({ time: Date.now(), what: "start type resolving" });
+    targetPool.scanTargetRootDirectory();
+    this.timings.push({ time: Date.now(), what: "end type resolving" });
 
     const finalArchive = new Archive<JavaScriptTestCase>();
     const finalDependencies: Map<string, Export[]> = new Map();
-    const finalExports: Export[] = []
+    const finalExports: Export[] = [];
 
-    this.timings.push({ time: Date.now(), what: 'start testing targets' })
+    this.timings.push({ time: Date.now(), what: "start testing targets" });
 
     for (const target of targetPool.targets) {
       const archive = await this.testTarget(
@@ -288,14 +290,14 @@ export class Launcher {
       );
 
       const dependencies = targetPool.getDependencies(target.canonicalPath);
-      finalArchive.merge(archive)
+      finalArchive.merge(archive);
 
-      finalDependencies.set(target.targetName, dependencies)
-      finalExports.push(...targetPool.getExports(target.canonicalPath))
+      finalDependencies.set(target.targetName, dependencies);
+      finalExports.push(...targetPool.getExports(target.canonicalPath));
     }
-    this.timings.push({ time: Date.now(), what: 'end testing targets' })
+    this.timings.push({ time: Date.now(), what: "end testing targets" });
 
-    this.timings.push({ time: Date.now(), what: 'end search' })
+    this.timings.push({ time: Date.now(), what: "end search" });
 
     return [finalArchive, finalDependencies, finalExports];
   }
@@ -313,35 +315,48 @@ export class Launcher {
         path.join(
           Properties.cfg_directory,
           // TODO also support .ts
-          `${path.basename(targetPath, '.js').split(".")[0]}.svg`
+          `${path.basename(targetPath, ".js").split(".")[0]}.svg`
         )
       );
     }
 
-    const functionMap = targetPool.getFunctionMap(targetPath, targetMeta.name)
+    const functionMap = targetPool.getFunctionMapSpecific(
+      targetPath,
+      targetMeta.name
+    );
 
     // couple types to parameters
     // TODO do this type matching already in the target visitor
     for (const func of functionMap.values()) {
       for (const param of func.parameters) {
         if (func.type === ActionType.FUNCTION) {
-          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
-        } else if (func.type === ActionType.METHOD
-          || func.type === ActionType.CONSTRUCTOR) {
-          param.typeProbabilityMap = targetPool.typeResolver.getTyping(func.scope, param.name)
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(
+            func.scope,
+            param.name
+          );
+        } else if (
+          func.type === ActionType.METHOD ||
+          func.type === ActionType.CONSTRUCTOR
+        ) {
+          param.typeProbabilityMap = targetPool.typeResolver.getTyping(
+            func.scope,
+            param.name
+          );
         } else {
-          throw new Error(`Unimplemented action identifierDescription ${func.type}`)
+          throw new Error(
+            `Unimplemented action identifierDescription ${func.type}`
+          );
         }
       }
-    // TODO return types
+      // TODO return types
     }
 
     const currentSubject = new JavaScriptSubject(
       path.basename(targetPath),
       targetMeta,
       cfg,
-      [...functionMap.values()],
-    )
+      [...functionMap.values()]
+    );
 
     if (!currentSubject.getPossibleActions().length) {
       // report skipped
@@ -349,19 +364,19 @@ export class Launcher {
     }
 
     const dependencies = targetPool.getDependencies(targetPath);
-    const dependencyMap = new Map<string, Export[]>()
-    dependencyMap.set(targetMeta.name, dependencies)
-    const exports = targetPool.getExports(targetPath)
+    const dependencyMap = new Map<string, Export[]>();
+    dependencyMap.set(targetMeta.name, dependencies);
+    const exports = targetPool.getExports(targetPath);
 
-    const decoder = new JavaScriptDecoder(targetPool, dependencyMap, exports)
-    const runner = new JavaScriptRunner(decoder)
+    const decoder = new JavaScriptDecoder(targetPool, dependencyMap, exports);
+    const runner = new JavaScriptRunner(decoder);
 
-    const suiteBuilder = new JavaScriptSuiteBuilder(decoder, runner)
+    const suiteBuilder = new JavaScriptSuiteBuilder(decoder, runner);
 
     // TODO constant pool
 
-    const sampler = new JavaScriptRandomSampler(currentSubject, targetPool)
-    const crossover = new JavaScriptTreeCrossover()
+    const sampler = new JavaScriptRandomSampler(currentSubject, targetPool);
+    const crossover = new JavaScriptTreeCrossover();
     const algorithm = createAlgorithmFromConfig(sampler, runner, crossover);
 
     await suiteBuilder.clearDirectory(Properties.temp_test_directory);
@@ -376,7 +391,6 @@ export class Launcher {
     budgetManager.addBudget(evaluationBudget);
     budgetManager.addBudget(searchBudget);
     budgetManager.addBudget(totalTimeBudget);
-
 
     // Termination
     const terminationManager = configureTermination();
@@ -397,10 +411,10 @@ export class Launcher {
     );
 
     if (this.coveredInPath.has(targetPath)) {
-      archive.merge(this.coveredInPath.get(targetPath))
-      this.coveredInPath.set(targetPath, archive)
+      archive.merge(this.coveredInPath.get(targetPath));
+      this.coveredInPath.set(targetPath, archive);
     } else {
-      this.coveredInPath.set(targetPath, archive)
+      this.coveredInPath.set(targetPath, archive);
     }
 
     // Gather statistics after the search
@@ -416,12 +430,20 @@ export class Launcher {
 
     collector.recordVariable(
       RuntimeVariable.INSTRUMENTATION_TIME,
-      (this.timings.find((x) => x.what === 'end instrumenting').time - this.timings.find((x) => x.what === 'start instrumenting').time) / 1000
+      `${
+        (this.timings.find((x) => x.what === "end instrumenting").time -
+          this.timings.find((x) => x.what === "start instrumenting").time) /
+        1000
+      }`
     );
 
     collector.recordVariable(
       RuntimeVariable.TYPE_RESOLVING_TIME,
-      (this.timings.find((x) => x.what === 'end type resolving').time - this.timings.find((x) => x.what === 'start type resolving').time) / 1000
+      `${
+        (this.timings.find((x) => x.what === "end type resolving").time -
+          this.timings.find((x) => x.what === "start type resolving").time) /
+        1000
+      }`
     );
 
     collectCoverageData(collector, archive, "branch");
@@ -448,25 +470,26 @@ export class Launcher {
     dependencies: Map<string, Export[]>,
     exports: Export[]
   ): Promise<void> {
-
     const testDir = path.resolve(Properties.final_suite_directory);
     await clearDirectory(testDir);
 
-    const decoder = new JavaScriptDecoder(
-      targetPool,
-      dependencies,
-      exports,
-    );
-    const runner = new JavaScriptRunner(decoder)
+    const decoder = new JavaScriptDecoder(targetPool, dependencies, exports);
+    const runner = new JavaScriptRunner(decoder);
 
-    const suiteBuilder = new JavaScriptSuiteBuilder(decoder, runner)
+    const suiteBuilder = new JavaScriptSuiteBuilder(decoder, runner);
 
     // TODO fix hardcoded paths
 
     const reducedArchive = suiteBuilder.reduceArchive(archive);
 
-    let paths = await suiteBuilder.createSuite(reducedArchive, '../instrumented', Properties.temp_test_directory, true, false);
-    await suiteBuilder.runSuite(paths, false, targetPool)
+    let paths = await suiteBuilder.createSuite(
+      reducedArchive,
+      "../instrumented",
+      Properties.temp_test_directory,
+      true,
+      false
+    );
+    await suiteBuilder.runSuite(paths, false, targetPool);
 
     // reset states
     await suiteBuilder.clearDirectory(Properties.temp_test_directory);
@@ -475,15 +498,21 @@ export class Launcher {
     for (const key of reducedArchive.keys()) {
       await suiteBuilder.gatherAssertions(reducedArchive.get(key));
     }
-    paths = await suiteBuilder.createSuite(reducedArchive, '../instrumented', Properties.temp_test_directory, false, true);
-    await suiteBuilder.runSuite(paths, true, targetPool)
+    paths = await suiteBuilder.createSuite(
+      reducedArchive,
+      "../instrumented",
+      Properties.temp_test_directory,
+      false,
+      true
+    );
+    await suiteBuilder.runSuite(paths, true, targetPool);
 
     const originalSourceDir = path
-      .join('../../', path.relative(
-        process.cwd(),
-        Properties.target_root_directory
-        ))
-      .replace(path.basename(Properties.target_root_directory), '')
+      .join(
+        "../../",
+        path.relative(process.cwd(), Properties.target_root_directory)
+      )
+      .replace(path.basename(Properties.target_root_directory), "");
 
     // create final suite
     await suiteBuilder.createSuite(

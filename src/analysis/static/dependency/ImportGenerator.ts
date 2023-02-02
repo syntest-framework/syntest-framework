@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 import { traverse } from "@babel/core";
 import { ImportVisitor } from "./ImportVisitor";
+import * as t from "@babel/types";
 
 /**
  * Imports generator for targets.
@@ -30,7 +31,7 @@ export class ImportGenerator {
    *
    * @param targetAST The AST of the target
    */
-  generate(filePath: string, targetAST: any): Set<string> {
+  generate(filePath: string, targetAST: t.Node): Set<string> {
     const visitor = new ImportVisitor(filePath);
 
     traverse(targetAST, visitor);

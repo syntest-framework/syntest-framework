@@ -1,3 +1,21 @@
+/*
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest Framework - SynTest Javascript.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { defaults } from "@istanbuljs/schema";
 import { VisitState } from "./VisitState";
 import { createHash } from "crypto";
@@ -100,7 +118,7 @@ export class Visitor {
     });
 
     const meta = metaTemplate({
-      GLOBAL_META_VAR: "\"__meta__\"",
+      GLOBAL_META_VAR: '"__meta__"',
       META_FUNCTION: this.types.identifier(this.visitState.metaVarName),
       PATH: this.types.stringLiteral(this.sourceFilePath),
       HASH: this.types.stringLiteral(hash),
@@ -116,7 +134,7 @@ export class Visitor {
       )
     );
     path.node.body.unshift(cv);
-    path.node.body.unshift(meta)
+    path.node.body.unshift(meta);
     return {
       fileCoverage: coverageData,
       sourceMappingURL: this.visitState.sourceMappingURL,
@@ -244,28 +262,39 @@ function coverIfBranches(path) {
   }
 
   const T = this.types;
-  const test = path.get('test')
-  const variables = []
-  test.traverse({
-    Identifier: {
-      enter: (p) => {
-        if (p.parent.type === "MemberExpression") {
-          return
-        }
-        variables.push(p.node.name)
-      }
+  const test = path.get("test");
+  const variables = [];
+  test.traverse(
+    {
+      Identifier: {
+        enter: (p) => {
+          if (p.parent.type === "MemberExpression") {
+            return;
+          }
+          variables.push(p.node.name);
+        },
+      },
+      MemberExpression: {
+        enter: (p) => {
+          // calls and such are possible but are problamatic because they could have side effects changing the behaviour
+          if (
+            p.node.object.type === "Identifier" &&
+            p.node.property.type === "Identifier"
+          ) {
+            variables.push(p.getSource());
+          }
+        },
+      },
+      // calls and such are possible but are problamatic because they could have side effects changing the behaviour
     },
-    MemberExpression: {
-      enter: (p) => {
-        // calls and such are possible but are problamatic because they could have side effects changing the behaviour
-        if (p.node.object.type === 'Identifier' && p.node.property.type === 'Identifier') {
-          variables.push(p.getSource())
-        }
-      }
-    }
-    // calls and such are possible but are problamatic because they could have side effects changing the behaviour
-  }, test)
-  const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
+    test
+  );
+  const metaTracker = this.getBranchMetaTracker(
+    branch,
+    test.node,
+    test.getSource(),
+    variables
+  );
   path.insertBefore(T.expressionStatement(metaTracker));
 }
 
@@ -281,40 +310,51 @@ function coverLoopBranch(path) {
   path.insertAfter(T.expressionStatement(increment));
 
   // TODO we should actually print what the just defined variable is set to
-  const justDefinedVariables = []
+  const justDefinedVariables = [];
 
-  path.get('init').traverse({
+  path.get("init").traverse({
     VariableDeclarator: {
       enter: (p) => {
-        justDefinedVariables.push(p.node.id.name)
-      }
-    }
-  })
-
-  const test = path.get('test')
-  const variables = []
-  test.traverse({
-    Identifier: {
-      enter: (p) => {
-        if (p.parent.type === "MemberExpression") {
-          return
-        }
-        if (justDefinedVariables.includes(p.node.name)) {
-          return
-        }
-        variables.push(p.node.name)
-      }
+        justDefinedVariables.push(p.node.id.name);
+      },
     },
-    MemberExpression: {
-      enter: (p) => {
-        // calls and such are possible but are problamatic because they could have side effects changing the behaviour
-        if (p.node.object.type === 'Identifier' && p.node.property.type === 'Identifier') {
-          variables.push(p.getSource())
-        }
-      }
-    }
-  }, test)
-  const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
+  });
+
+  const test = path.get("test");
+  const variables = [];
+  test.traverse(
+    {
+      Identifier: {
+        enter: (p) => {
+          if (p.parent.type === "MemberExpression") {
+            return;
+          }
+          if (justDefinedVariables.includes(p.node.name)) {
+            return;
+          }
+          variables.push(p.node.name);
+        },
+      },
+      MemberExpression: {
+        enter: (p) => {
+          // calls and such are possible but are problamatic because they could have side effects changing the behaviour
+          if (
+            p.node.object.type === "Identifier" &&
+            p.node.property.type === "Identifier"
+          ) {
+            variables.push(p.getSource());
+          }
+        },
+      },
+    },
+    test
+  );
+  const metaTracker = this.getBranchMetaTracker(
+    branch,
+    test.node,
+    test.getSource(),
+    variables
+  );
   path.insertBefore(T.expressionStatement(metaTracker));
 }
 
@@ -348,27 +388,38 @@ function coverTernary(path) {
   }
 
   const T = this.types;
-  const test = path.get('test')
-  const variables = []
-  test.traverse({
-    Identifier: {
-      enter: (p) => {
-        if (p.parent.type === "MemberExpression") {
-          return
-        }
-        variables.push(p.node.name)
-      }
+  const test = path.get("test");
+  const variables = [];
+  test.traverse(
+    {
+      Identifier: {
+        enter: (p) => {
+          if (p.parent.type === "MemberExpression") {
+            return;
+          }
+          variables.push(p.node.name);
+        },
+      },
+      MemberExpression: {
+        enter: (p) => {
+          // calls and such are possible but are problamatic because they could have side effects changing the behaviour
+          if (
+            p.node.object.type === "Identifier" &&
+            p.node.property.type === "Identifier"
+          ) {
+            variables.push(p.getSource());
+          }
+        },
+      },
     },
-    MemberExpression: {
-      enter: (p) => {
-        // calls and such are possible but are problamatic because they could have side effects changing the behaviour
-        if (p.node.object.type === 'Identifier' && p.node.property.type === 'Identifier') {
-          variables.push(p.getSource())
-        }
-      }
-    }
-  }, test)
-  const metaTracker = this.getBranchMetaTracker(branch, test.node, test.getSource(), variables)
+    test
+  );
+  const metaTracker = this.getBranchMetaTracker(
+    branch,
+    test.node,
+    test.getSource(),
+    variables
+  );
   // path.parentPath.insertBefore(metaTracker)
   // path.replaceWith(T.sequenceExpression([metaTracker, path.node]))
   test.replaceWith(T.sequenceExpression([metaTracker, test.node]));
@@ -438,26 +489,19 @@ const codeVisitor = {
     coverStatement,
     coverIfBranches
   ),
-  ForStatement: entries(blockProp("body"),
-    coverStatement,
-    coverLoopBranch
-  ),
-  ForInStatement: entries(blockProp("body"),
-    coverStatement,
+  ForStatement: entries(blockProp("body"), coverStatement, coverLoopBranch),
+  ForInStatement: entries(
+    blockProp("body"),
+    coverStatement
     // coverLoopBranch
   ),
-  ForOfStatement: entries(blockProp("body"),
-    coverStatement,
+  ForOfStatement: entries(
+    blockProp("body"),
+    coverStatement
     // coverLoopBranch
   ),
-  WhileStatement: entries(blockProp("body"),
-    coverStatement,
-    coverLoopBranch
-  ),
-  DoWhileStatement: entries(blockProp("body"),
-    coverStatement,
-    coverLoopBranch
-  ),
+  WhileStatement: entries(blockProp("body"), coverStatement, coverLoopBranch),
+  DoWhileStatement: entries(blockProp("body"), coverStatement, coverLoopBranch),
   SwitchStatement: entries(createSwitchBranch, coverStatement),
   SwitchCase: entries(coverSwitchCase),
   WithStatement: entries(blockProp("body"), coverStatement),

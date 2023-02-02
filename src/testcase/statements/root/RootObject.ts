@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/framework";
+import { prng, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./RootStatement";
 import { Decoding, Statement } from "../Statement";
@@ -30,8 +30,6 @@ import { ActionType } from "../../../analysis/static/parsing/ActionType";
  * @author Dimitri Stallenberg
  */
 export class RootObject extends RootStatement {
-
-
   /**
    * Constructor
    * @param type the return identifierDescription of the constructor
@@ -42,14 +40,16 @@ export class RootObject extends RootStatement {
     identifierDescription: IdentifierDescription,
     type: string,
     uniqueId: string,
-    calls: Statement[],
+    calls: Statement[]
   ) {
     super(identifierDescription, type, uniqueId, [], calls);
-    this._classType = 'RootObject'
+    this._classType = "RootObject";
 
     for (const call of calls) {
       if (!(call instanceof MethodCall)) {
-        throw new Error("Constructor children must be of identifierDescription MethodCall")
+        throw new Error(
+          "Constructor children must be of identifierDescription MethodCall"
+        );
       }
     }
   }
@@ -58,31 +58,33 @@ export class RootObject extends RootStatement {
     // TODO replace entire constructor?
     const calls = [...this.children.map((a: Statement) => a.copy())];
 
-    const methodsAvailable = !!(<JavaScriptSubject>sampler.subject).getPossibleActions(ActionType.METHOD).length
+    const methodsAvailable = !!(<JavaScriptSubject>(
+      sampler.subject
+    )).getPossibleActions(ActionType.METHOD).length;
 
-    const finalCalls = []
+    const finalCalls = [];
     if (calls.length === 0 && methodsAvailable) {
       // add a call
-      finalCalls.push(sampler.sampleMethodCall(depth + 1))
+      finalCalls.push(sampler.sampleMethodCall(depth + 1));
     } else {
       // go over each call
       for (let i = 0; i < calls.length; i++) {
         if (prng.nextBoolean(1 / calls.length)) {
           // Mutate this position
-          const choice = prng.nextDouble()
+          const choice = prng.nextDouble();
 
           if (choice < 0.1 && methodsAvailable) {
             // 10% chance to add a call on this position
-            finalCalls.push(sampler.sampleMethodCall(depth + 1))
-            finalCalls.push(calls[i])
+            finalCalls.push(sampler.sampleMethodCall(depth + 1));
+            finalCalls.push(calls[i]);
           } else if (choice < 0.2) {
             // 10% chance to delete the call
           } else {
             // 80% chance to just mutate the call
             if (Properties.resample_gene_probability) {
-              finalCalls.push(sampler.sampleMethodCall(depth + 1))
+              finalCalls.push(sampler.sampleMethodCall(depth + 1));
             } else {
-              finalCalls.push(calls[i].mutate(sampler, depth + 1))
+              finalCalls.push(calls[i].mutate(sampler, depth + 1));
             }
           }
         }
@@ -95,7 +97,12 @@ export class RootObject extends RootStatement {
     //     args[index] = args[index].mutate(sampler, depth + 1);
     // }
 
-    return new RootObject(this.identifierDescription, this.type, prng.uniqueId(), finalCalls);
+    return new RootObject(
+      this.identifierDescription,
+      this.type,
+      prng.uniqueId(),
+      finalCalls
+    );
   }
 
   copy(): RootObject {
@@ -109,28 +116,27 @@ export class RootObject extends RootStatement {
     );
   }
 
+  decode(
+    id: string,
+    options: { addLogs: boolean; exception: boolean }
+  ): Decoding[] {
+    const childStatements: Decoding[] = this.children.flatMap((a: MethodCall) =>
+      a.decodeWithObject(id, options, this.varName)
+    );
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
-    const childStatements: Decoding[] = this.children
-      .flatMap((a: MethodCall) => a.decodeWithObject(id, options, this.varName))
-
-    let decoded = `const ${this.varName} = ${this.type}`
+    let decoded = `const ${this.varName} = ${this.type}`;
 
     if (options.addLogs) {
-      const logDir = path.join(
-        Properties.temp_log_directory,
-        id,
-        this.varName
-      )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
+      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 
     return [
       {
         decoded: decoded,
-        reference: this
+        reference: this,
       },
-      ...childStatements
-    ]
+      ...childStatements,
+    ];
   }
 }

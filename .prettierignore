@@ -1,4 +1,5 @@
 .nyc_output/
 dist/
 node_modules/
-benchmark/
+.*
+LICENSE*

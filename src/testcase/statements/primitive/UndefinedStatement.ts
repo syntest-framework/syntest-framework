@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  prng,
-} from "@syntest/framework";
-import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
+import { prng } from "@syntest/core";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 
@@ -27,20 +24,32 @@ import { IdentifierDescription } from "../../../analysis/static/parsing/Identifi
  * @author Dimitri Stallenberg
  */
 export class UndefinedStatement extends PrimitiveStatement<boolean> {
-  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string) {
+  constructor(
+    identifierDescription: IdentifierDescription,
+    type: string,
+    uniqueId: string
+  ) {
     super(identifierDescription, type, uniqueId, undefined);
-    this._classType = 'UndefinedStatement'
+    this._classType = "UndefinedStatement";
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number): UndefinedStatement {
-    return new UndefinedStatement(this.identifierDescription, this.type, prng.uniqueId());
+  mutate(): UndefinedStatement {
+    return new UndefinedStatement(
+      this.identifierDescription,
+      this.type,
+      prng.uniqueId()
+    );
   }
 
   copy(): UndefinedStatement {
-    return new UndefinedStatement(this.identifierDescription, this.type, this.id);
+    return new UndefinedStatement(
+      this.identifierDescription,
+      this.type,
+      this.id
+    );
   }
 
   getFlatTypes(): string[] {
-    return ["undefined"]
+    return ["undefined"];
   }
 }

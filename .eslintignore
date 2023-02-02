@@ -8,4 +8,10 @@ syntest/
 .*
 *.json
 *.md
-benchmark/
+LICENSE*
+
+# The instrumentation files are copied from istanbul (and modified).
+# In the future in a big refactor the instrumentation should be redone such that these files dont have to be ignored anymore.
+src/instrumentation/Instrumenter.ts
+src/instrumentation/VisitState.ts
+src/instrumentation/Visitor.ts

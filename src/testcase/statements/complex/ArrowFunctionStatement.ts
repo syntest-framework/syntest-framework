@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 
 // TODO
-import { prng, Properties } from "@syntest/framework";
+import { prng, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -28,33 +28,63 @@ import { IdentifierDescription } from "../../../analysis/static/parsing/Identifi
 export class ArrowFunctionStatement extends Statement {
   private _returnValue: Statement;
 
-  constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string, returnValue: Statement) {
+  constructor(
+    identifierDescription: IdentifierDescription,
+    type: string,
+    uniqueId: string,
+    returnValue: Statement
+  ) {
     super(identifierDescription, type, uniqueId);
-    this._returnValue = returnValue
-    this._classType = 'ArrowFunctionStatement'
+    this._returnValue = returnValue;
+    this._classType = "ArrowFunctionStatement";
   }
 
-  mutate(sampler: JavaScriptTestCaseSampler, depth: number): ArrowFunctionStatement {
+  mutate(
+    sampler: JavaScriptTestCaseSampler,
+    depth: number
+  ): ArrowFunctionStatement {
     // TODO mutate returnvalue identifierDescription
-    if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-      return new ArrowFunctionStatement(this.identifierDescription, this.type, prng.uniqueId(), sampler.sampleArgument(depth + 1, this._returnValue.identifierDescription));
+    if (prng.nextBoolean(Properties.resample_gene_probability)) {
+      // TODO should be different property
+      return new ArrowFunctionStatement(
+        this.identifierDescription,
+        this.type,
+        prng.uniqueId(),
+        sampler.sampleArgument(
+          depth + 1,
+          this._returnValue.identifierDescription
+        )
+      );
     }
 
-    return new ArrowFunctionStatement(this.identifierDescription, this.type, prng.uniqueId(), this._returnValue.mutate(sampler, depth + 1));
+    return new ArrowFunctionStatement(
+      this.identifierDescription,
+      this.type,
+      prng.uniqueId(),
+      this._returnValue.mutate(sampler, depth + 1)
+    );
   }
 
   copy(): ArrowFunctionStatement {
-    return new ArrowFunctionStatement(this.identifierDescription, this.type, this.id, this._returnValue);
+    return new ArrowFunctionStatement(
+      this.identifierDescription,
+      this.type,
+      this.id,
+      this._returnValue
+    );
   }
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
-    const returnStatement: Decoding[] = this._returnValue.decode(id, options)
+  decode(
+    id: string,
+    options: { addLogs: boolean; exception: boolean }
+  ): Decoding[] {
+    const returnStatement: Decoding[] = this._returnValue.decode(id, options);
     return [
       ...returnStatement,
       {
         decoded: `const ${this.varName} = () => { return ${this.returnValue.varName} };`,
-        reference: this
-      }
+        reference: this,
+      },
     ];
   }
 
@@ -67,7 +97,7 @@ export class ArrowFunctionStatement extends Statement {
   }
 
   setChild(index: number, newChild: Statement) {
-    this._returnValue = newChild
+    this._returnValue = newChild;
   }
 
   get returnValue(): Statement {
@@ -75,8 +105,6 @@ export class ArrowFunctionStatement extends Statement {
   }
 
   getFlatTypes(): string[] {
-    return [
-      "arrowfunction"
-    ]
+    return ["arrowfunction"];
   }
 }

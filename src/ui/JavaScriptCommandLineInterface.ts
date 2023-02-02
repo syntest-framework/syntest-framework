@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import { CommandLineInterface, yargs } from "@syntest/framework";
+import { CommandLineInterface, yargs } from "@syntest/core";
 
 import Messages from "./Messages";
 
-import * as clear from "clear"
+import * as clear from "clear";
 
 /**
  * A javascript specific command line interface.
@@ -62,7 +62,9 @@ export class JavaScriptCommandLineInterface extends CommandLineInterface {
           `Skipping '${args[0]}' no possible function calls found!`
         );
       case "report-coverage":
-        return console.log(this.messages.reportCoverage(args[0], args[1], args[2]))
+        return console.log(
+          this.messages.reportCoverage(args[0], args[1], args[2])
+        );
     }
 
     throw new Error(`Message not supported by UI: "${text}"`);

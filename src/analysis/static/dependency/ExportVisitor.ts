@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,23 +20,23 @@ import { ExportType } from "./IdentifierVisitor";
 import { Visitor } from "../Visitor";
 
 export interface Export {
-  name: string,
-  type: ExportType,
-  default: boolean,
-  module: boolean,
-  filePath: string
+  name: string;
+  type: ExportType;
+  default: boolean;
+  module: boolean;
+  filePath: string;
 }
 
 export class ExportVisitor extends Visitor {
   // TODO other export types such as module.export or exports.
 
   private _exports: Export[];
-  private _identifiers: Map<string, ExportType>
+  private _identifiers: Map<string, ExportType>;
 
   constructor(filePath: string, identifiers: Map<string, ExportType>) {
-    super(filePath)
+    super(filePath);
     this._exports = [];
-    this._identifiers = identifiers
+    this._identifiers = identifiers;
   }
 
   // exports
@@ -49,35 +49,37 @@ export class ExportVisitor extends Visitor {
             type: this._getType(declaration.init?.type, declaration),
             default: false,
             module: false,
-            filePath: this.filePath
-          })
+            filePath: this.filePath,
+          });
         }
-      }
-       else {
+      } else {
         this._exports.push({
           name: path.node.declaration.id.name,
-          type: this._getType(path.node.declaration.type, path.node.declaration),
+          type: this._getType(
+            path.node.declaration.type,
+            path.node.declaration
+          ),
           default: false,
           module: false,
-          filePath: this.filePath
-        })
-       }
-
+          filePath: this.filePath,
+        });
+      }
     } else if (path.node.specifiers) {
-
       if (path.node.source) {
         // TODO skip because we already tested it in another file
-        return
+        return;
       }
 
       for (const specifier of path.node.specifiers) {
         this._exports.push({
           name: specifier.local.name,
           type: this._getType(specifier.local.type, specifier.local),
-          default: specifier.local.name === 'default' || specifier.exported.name === 'default',
+          default:
+            specifier.local.name === "default" ||
+            specifier.exported.name === "default",
           module: false,
-          filePath: this.filePath
-        })
+          filePath: this.filePath,
+        });
       }
     }
 
@@ -85,18 +87,18 @@ export class ExportVisitor extends Visitor {
   };
 
   public ExportDefaultDeclaration: (path) => void = (path) => {
-    let name: string
+    let name: string;
 
-    if (path.node.declaration.type === 'Identifier') {
-      name = path.node.declaration.name
-    } else if (path.node.declaration.type === 'NewExpression') {
-      name = path.node.declaration.callee.name
+    if (path.node.declaration.type === "Identifier") {
+      name = path.node.declaration.name;
+    } else if (path.node.declaration.type === "NewExpression") {
+      name = path.node.declaration.callee.name;
     } else {
-      name = path.node.declaration.id?.name
+      name = path.node.declaration.id?.name;
     }
 
     if (!name) {
-      return
+      return;
     }
 
     this._exports.push({
@@ -104,51 +106,55 @@ export class ExportVisitor extends Visitor {
       type: this._getType(path.node.declaration.type, path.node.declaration),
       default: true,
       module: false,
-      filePath: this.filePath
-    })
+      filePath: this.filePath,
+    });
   };
 
   public ExpressionStatement: (path) => void = (path) => {
-    if (path.node.expression.type !== 'AssignmentExpression') {
-      return
+    if (path.node.expression.type !== "AssignmentExpression") {
+      return;
     }
 
-    const left = path.get('expression').get('left')
-    const right = path.get('expression').get('right')
+    const left = path.get("expression").get("left");
+    const right = path.get("expression").get("right");
 
-    let name: string
-    let default_ = false
+    let name: string;
+    let default_ = false;
 
-    if (left.isIdentifier() && left.node.name === 'exports') {
-      name = this._getName(right.node)
-      default_ = true
+    if (left.isIdentifier() && left.node.name === "exports") {
+      name = this._getName(right.node);
+      default_ = true;
     } else if (left.isMemberExpression()) {
-      const object = left.get('object')
-      const property = left.get('property')
+      const object = left.get("object");
+      const property = left.get("property");
 
       if (object.isIdentifier()) {
-        if (object.node.name === 'exports') {
-          name = this._getName(property.node)
-        } else if (object.node.name === 'module'
-          && property.node.name === 'exports') {
-          name = this._getName(right.node)
-          default_ = true
+        if (object.node.name === "exports") {
+          name = this._getName(property.node);
+        } else if (
+          object.node.name === "module" &&
+          property.node.name === "exports"
+        ) {
+          name = this._getName(right.node);
+          default_ = true;
         }
       } else if (object.isMemberExpression()) {
-        const higherObject = object.get('object')
-        const higherProperty = object.get('property')
+        const higherObject = object.get("object");
+        const higherProperty = object.get("property");
 
         if (higherObject.isIdentifier()) {
-         if (higherObject.node.name === 'module'
-            && higherProperty.node.name === 'exports') {
-            name = this._getName(property.node)
+          if (
+            higherObject.node.name === "module" &&
+            higherProperty.node.name === "exports"
+          ) {
+            name = this._getName(property.node);
           }
         }
       }
     }
 
     if (!name) {
-      return
+      return;
     }
 
     if (right.isObjectExpression()) {
@@ -158,8 +164,8 @@ export class ExportVisitor extends Visitor {
           type: this._getType(property.key.type, property.key),
           default: default_,
           module: true,
-          filePath: this.filePath
-        })
+          filePath: this.filePath,
+        });
       }
     } else if (right.isArrayExpression()) {
       for (const element of right.node.elements) {
@@ -168,8 +174,8 @@ export class ExportVisitor extends Visitor {
           type: this._getType(element.type, element),
           default: default_,
           module: true,
-          filePath: this.filePath
-        })
+          filePath: this.filePath,
+        });
       }
     } else {
       this._exports.push({
@@ -177,61 +183,67 @@ export class ExportVisitor extends Visitor {
         type: this._getType(right.node.type, right.node),
         default: default_,
         module: true,
-        filePath: this.filePath
-      })
+        filePath: this.filePath,
+      });
     }
   };
 
   private _getName(node): string {
     switch (node.type) {
-      case 'Identifier':
-        return node.name
-      case 'Literal':
-      case 'ArrayExpression':
-      case 'ObjectExpression':
-        return `${node.type}`
-      case 'FunctionExpression':
-      case 'ArrowFunctionExpression':
-        return node.id?.name || 'anon'
+      case "Identifier":
+        return node.name;
+      case "Literal":
+      case "ArrayExpression":
+      case "ObjectExpression":
+        return `${node.type}`;
+      case "FunctionExpression":
+      case "ArrowFunctionExpression":
+        return node.id?.name || "anon";
     }
 
     // throw new Error(`Cannot get name of node of type ${node.type}`)
-    return 'anon'
+    return "anon";
   }
 
   // util function
   _getType(type: string, node): ExportType {
-    if (type === 'FunctionDeclaration'
-      || type === 'FunctionExpression'
-      || type === 'ArrowFunctionExpression') {
-      return ExportType.function
-    } else if (type === 'VariableDeclaration'
-      || type === 'VariableDeclarator') {
-      return ExportType.const
-    }  else if (type === 'NewExpression') {
-      return ExportType.const
-    } else if (type === 'ClassDeclaration') {
-      return ExportType.class
-    } else if (type === 'Identifier') {
+    if (
+      type === "FunctionDeclaration" ||
+      type === "FunctionExpression" ||
+      type === "ArrowFunctionExpression"
+    ) {
+      return ExportType.function;
+    } else if (
+      type === "VariableDeclaration" ||
+      type === "VariableDeclarator"
+    ) {
+      return ExportType.const;
+    } else if (type === "NewExpression") {
+      return ExportType.const;
+    } else if (type === "ClassDeclaration") {
+      return ExportType.class;
+    } else if (type === "Identifier") {
       if (!this._identifiers.has(node.name)) {
         // TODO for now we just assume const when we have not found such an identifier
-        return ExportType.const
+        return ExportType.const;
         // throw new Error("Cannot find identifier that is exported: " + name + " - " + type)
       }
 
-      return this._identifiers.get(node.name)
-    } else if (type === 'StringLiteral'
-      || type === 'TemplateLiteral'
-      || type === 'NumericLiteral'
-      || type === 'BooleanLiteral'
-      || type === 'RegExpLiteral'
-      || type === 'NullLiteral') {
-      return ExportType.const
+      return this._identifiers.get(node.name);
+    } else if (
+      type === "StringLiteral" ||
+      type === "TemplateLiteral" ||
+      type === "NumericLiteral" ||
+      type === "BooleanLiteral" ||
+      type === "RegExpLiteral" ||
+      type === "NullLiteral"
+    ) {
+      return ExportType.const;
     }
 
     // we dont know what this returns
     // default is const
-    return ExportType.unknown
+    return ExportType.unknown;
   }
 
   // getters
@@ -239,5 +251,3 @@ export class ExportVisitor extends Visitor {
     return this._exports;
   }
 }
-
-

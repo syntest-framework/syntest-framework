@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  prng, Properties,
-} from "@syntest/framework";
+import { prng, Properties } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
 import { Decoding, Statement } from "../Statement";
@@ -47,7 +45,7 @@ export class MethodCall extends ActionStatement {
     args: Statement[]
   ) {
     super(identifierDescription, type, uniqueId, args);
-    this._classType = "MethodCall"
+    this._classType = "MethodCall";
     this._functionName = functionName;
   }
 
@@ -57,8 +55,12 @@ export class MethodCall extends ActionStatement {
     if (args.length !== 0) {
       const index = prng.nextInt(0, args.length - 1);
 
-      if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-        args[index] = sampler.sampleArgument(depth + 1, args[index].identifierDescription)
+      if (prng.nextBoolean(Properties.resample_gene_probability)) {
+        // TODO should be different property
+        args[index] = sampler.sampleArgument(
+          depth + 1,
+          args[index].identifierDescription
+        );
       } else {
         args[index] = args[index].mutate(sampler, depth + 1);
       }
@@ -89,27 +91,26 @@ export class MethodCall extends ActionStatement {
     return this._functionName;
   }
 
-  decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[] {
-    throw new Error('Cannot call decode on method calls!')
+  decode(): Decoding[] {
+    throw new Error("Cannot call decode on method calls!");
   }
 
-  decodeWithObject(id: string, options: { addLogs: boolean, exception: boolean }, objectVariable: string): Decoding[] {
-    const args = this.args
-      .map((a) => a.varName)
-      .join(', ')
+  decodeWithObject(
+    id: string,
+    options: { addLogs: boolean; exception: boolean },
+    objectVariable: string
+  ): Decoding[] {
+    const args = this.args.map((a) => a.varName).join(", ");
 
-    const argStatements: Decoding[] = this.args
-      .flatMap((a) => a.decode(id, options))
+    const argStatements: Decoding[] = this.args.flatMap((a) =>
+      a.decode(id, options)
+    );
 
-    let decoded = `const ${this.varName} = await ${objectVariable}.${this.functionName}(${args})`
+    let decoded = `const ${this.varName} = await ${objectVariable}.${this.functionName}(${args})`;
 
     if (options.addLogs) {
-      const logDir = path.join(
-        Properties.temp_log_directory,
-        id,
-        this.varName
-      )
-      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`
+      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 
     return [
@@ -117,17 +118,14 @@ export class MethodCall extends ActionStatement {
       {
         decoded: decoded,
         reference: this,
-        objectVariable: objectVariable
-      }
-    ]
+        objectVariable: objectVariable,
+      },
+    ];
   }
 
   // TODO
   decodeErroring(objectVariable: string): string {
-    const args = this.args.map((a) => a.varName).join(', ')
+    const args = this.args.map((a) => a.varName).join(", ");
     return `await expect(${objectVariable}.${this.functionName}(${args})).to.be.rejectedWith(Error);`;
-
   }
-
-
 }

@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,17 @@
  * limitations under the License.
  */
 
-import { prng, Crossover, Properties } from "@syntest/framework";
+import { prng, Crossover, Properties } from "@syntest/core";
 
 import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";
 import { RootStatement } from "../../testcase/statements/root/RootStatement";
 import { Statement } from "../../testcase/statements/Statement";
+
+interface QueueEntry {
+  parent: Statement;
+  childIndex: number;
+  child: Statement;
+}
 
 /**
  * Creates 2 children which are each other's complement with respect to their parents.
@@ -44,13 +50,9 @@ export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
     const rootA: RootStatement = parentA.copy().root;
     const rootB: RootStatement = parentB.copy().root;
 
-    const queueA: any = [];
+    const queueA: QueueEntry[] = [];
 
-    for (
-      let i = 0;
-      i < rootA.getChildren().length;
-      i++
-    ) {
+    for (let i = 0; i < rootA.getChildren().length; i++) {
       queueA.push({
         parent: rootA,
         childIndex: i,
@@ -95,10 +97,7 @@ export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
       donorTree.parent.setChild(donorTree.childIndex, pair.child.copy());
     }
 
-    return [
-      new JavaScriptTestCase(rootA),
-      new JavaScriptTestCase(rootB),
-    ];
+    return [new JavaScriptTestCase(rootA), new JavaScriptTestCase(rootB)];
   }
 
   /**
@@ -110,7 +109,7 @@ export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
    * @author Dimitri Stallenberg
    */
   protected findSimilarSubtree(wanted: Statement, tree: Statement) {
-    const queue: any = [];
+    const queue: QueueEntry[] = [];
     const similar = [];
 
     for (let i = 0; i < tree.getChildren().length; i++) {
@@ -135,10 +134,11 @@ export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
       }
 
       if (!wanted.classType || !pair.child.classType) {
-        throw new Error("All statements require a classType!")
+        throw new Error("All statements require a classType!");
       }
 
-      if (wanted.identifierDescription === pair.child.type) { // && wanted.classType === pair.child.classType) { TODO this might be necessary
+      if (wanted.identifierDescription === pair.child.identifierDescription) {
+        // && wanted.classType === pair.child.classType) { TODO this might be necessary
         similar.push(pair);
       }
     }

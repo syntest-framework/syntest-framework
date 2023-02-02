@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,34 @@
  * limitations under the License.
  */
 
-import { Archive, ExecutionResult, getUserInterface, Properties, TargetPool } from "@syntest/framework";
+import {
+  Archive,
+  getUserInterface,
+  Properties,
+  TargetPool,
+} from "@syntest/core";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
-import { readdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from "fs";
+import {
+  readdirSync,
+  readFileSync,
+  rmdirSync,
+  unlinkSync,
+  writeFileSync,
+} from "fs";
 import * as path from "path";
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
-import * as _ from 'lodash'
+import cloneDeep = require("lodash.clonedeep");
 
 import { Runner } from "mocha";
 import { JavaScriptRunner } from "../testcase/execution/JavaScriptRunner";
 
 export class JavaScriptSuiteBuilder {
   private decoder: JavaScriptDecoder;
-  private runner: JavaScriptRunner
+  private runner: JavaScriptRunner;
 
   constructor(decoder: JavaScriptDecoder, runner: JavaScriptRunner) {
-    this.decoder = decoder
-    this.runner = runner
+    this.decoder = decoder;
+    this.runner = runner;
   }
 
   /**
@@ -48,54 +59,47 @@ export class JavaScriptSuiteBuilder {
     }
   }
 
-  async createSuite(archive: Map<string, JavaScriptTestCase[]>, sourceDir: string, testDir: string, addLogs: boolean, compact: boolean): Promise<string[]> {
-    const paths: string[] = []
+  async createSuite(
+    archive: Map<string, JavaScriptTestCase[]>,
+    sourceDir: string,
+    testDir: string,
+    addLogs: boolean,
+    compact: boolean
+  ): Promise<string[]> {
+    const paths: string[] = [];
     // write the test cases with logs to know what to assert
     if (!compact) {
       for (const key of archive.keys()) {
-        for (const testCase of archive.get(key)!) {
+        for (const testCase of archive.get(key)) {
           const testPath = path.join(
             testDir,
             `test${key}${testCase.id}.spec.js`
           );
-          paths.push(testPath)
+          paths.push(testPath);
           await writeFileSync(
             testPath,
-            this.decoder.decode(
-              testCase,
-              "",
-              addLogs,
-              sourceDir
-            )
-          )
+            this.decoder.decode(testCase, "", addLogs, sourceDir)
+          );
         }
       }
     } else {
       for (const key of archive.keys()) {
-        const testPath = path.join(
-          testDir,
-          `test-${key}.spec.js`
-        );
-        paths.push(testPath)
+        const testPath = path.join(testDir, `test-${key}.spec.js`);
+        paths.push(testPath);
         await writeFileSync(
           testPath,
-          this.decoder.decode(
-            archive.get(key),
-            `${key}`,
-            addLogs,
-            sourceDir
-          )
+          this.decoder.decode(archive.get(key), `${key}`, addLogs, sourceDir)
         );
       }
     }
 
-    return paths
+    return paths;
   }
 
   async runSuite(paths: string[], report: boolean, targetPool: TargetPool) {
-    const runner: Runner = await this.runner.run(paths)
+    const runner: Runner = await this.runner.run(paths);
 
-    const stats = runner.stats
+    const stats = runner.stats;
 
     if (report) {
       if (stats.failures > 0) {
@@ -103,68 +107,77 @@ export class JavaScriptSuiteBuilder {
       }
 
       getUserInterface().report("header", ["SEARCH RESULTS"]);
-      const instrumentationData = _.cloneDeep(global.__coverage__)
+      const instrumentationData = cloneDeep(global.__coverage__);
 
-      getUserInterface().report("report-coverage", ['Coverage report', { branch: 'Branch', statement: 'Statement', function: 'Function' }, true])
+      getUserInterface().report("report-coverage", [
+        "Coverage report",
+        <string>(<unknown>{
+          branch: "Branch",
+          statement: "Statement",
+          function: "Function",
+        }),
+        "true",
+      ]);
 
       const overall = {
         branch: 0,
         statement: 0,
-        function: 0
-      }
-      let totalBranches = 0
-      let totalStatements = 0
-      let totalFunctions = 0
+        function: 0,
+      };
+      let totalBranches = 0;
+      let totalStatements = 0;
+      let totalFunctions = 0;
       for (const file of Object.keys(instrumentationData)) {
         if (!targetPool.targets.find((t) => t.canonicalPath === file)) {
-          continue
+          continue;
         }
 
-        const data = instrumentationData[file]
+        const data = instrumentationData[file];
 
         const summary = {
           branch: 0,
           statement: 0,
-          function: 0
-        }
+          function: 0,
+        };
 
         for (const statementKey of Object.keys(data.s)) {
-          summary['statement'] += data.s[statementKey] ? 1 : 0
-          overall['statement'] += data.s[statementKey] ? 1 : 0
+          summary["statement"] += data.s[statementKey] ? 1 : 0;
+          overall["statement"] += data.s[statementKey] ? 1 : 0;
         }
 
         for (const branchKey of Object.keys(data.b)) {
-          summary['branch'] += data.b[branchKey][0] ? 1 : 0
-          overall['branch'] += data.b[branchKey][0] ? 1 : 0
-          summary['branch'] += data.b[branchKey][1] ? 1 : 0
-          overall['branch'] += data.b[branchKey][1] ? 1 : 0
+          summary["branch"] += data.b[branchKey][0] ? 1 : 0;
+          overall["branch"] += data.b[branchKey][0] ? 1 : 0;
+          summary["branch"] += data.b[branchKey][1] ? 1 : 0;
+          overall["branch"] += data.b[branchKey][1] ? 1 : 0;
         }
 
         for (const functionKey of Object.keys(data.f)) {
-          summary['function'] += data.f[functionKey] ? 1 : 0
-          overall['function'] += data.f[functionKey] ? 1 : 0
+          summary["function"] += data.f[functionKey] ? 1 : 0;
+          overall["function"] += data.f[functionKey] ? 1 : 0;
         }
 
-        totalStatements += Object.keys(data.s).length
-        totalBranches += (Object.keys(data.b).length * 2)
-        totalFunctions += Object.keys(data.f).length
+        totalStatements += Object.keys(data.s).length;
+        totalBranches += Object.keys(data.b).length * 2;
+        totalFunctions += Object.keys(data.f).length;
 
-        getUserInterface().report("report-coverage", [file, {
-          'statement': summary['statement'] + ' / ' + Object.keys(data.s).length,
-          'branch': summary['branch'] + ' / ' + (Object.keys(data.b).length * 2),
-          'function': summary['function'] + ' / ' + Object.keys(data.f).length
-        }, false])
+        getUserInterface().report("report-coverage", [file, <string>(<unknown>{
+            statement:
+              summary["statement"] + " / " + Object.keys(data.s).length,
+            branch: summary["branch"] + " / " + Object.keys(data.b).length * 2,
+            function: summary["function"] + " / " + Object.keys(data.f).length,
+          }), "false"]);
       }
 
-      overall['statement'] /= totalStatements
-      overall['branch'] /= totalBranches
-      overall['function'] /= totalFunctions
+      overall["statement"] /= totalStatements;
+      overall["branch"] /= totalBranches;
+      overall["function"] /= totalFunctions;
 
-      getUserInterface().report("report-coverage", ['Total', {
-        'statement': (overall['statement'] * 100) + ' %',
-        'branch': (overall['branch'] * 100) + ' %',
-        'function': (overall['function'] * 100) + ' %'
-      }, true])
+      getUserInterface().report("report-coverage", ["Total", <string>(<unknown>{
+          statement: overall["statement"] * 100 + " %",
+          branch: overall["branch"] * 100 + " %",
+          function: overall["function"] * 100 + " %",
+        }), "true"]);
     }
 
     this.runner.resetInstrumentationData();
@@ -209,8 +222,8 @@ export class JavaScriptSuiteBuilder {
       const targetName = objective
         .getSubject()
         .name.split("/")
-        .pop()!
-        .split(".")[0]!;
+        .pop()
+        .split(".")[0];
 
       if (!reducedArchive.has(targetName)) {
         reducedArchive.set(targetName, []);

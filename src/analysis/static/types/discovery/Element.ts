@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Scope } from "./Scope";
 
 export interface Element {
-  scope: Scope
-  type: ElementType
-  value: string
+  scope: Scope;
+  type: ElementType;
+  value: string;
 }
 
+// eslint-disable-next-line
 export function isInstanceOfElement(object: any): object is Element {
-  return 'scope' in object && 'type' in object && 'value' in object
+  return "scope" in object && "type" in object && "value" in object;
 }
 
 export enum ElementType {
-  StringConstant='stringConstant',
-  NumericalConstant='numericalConstant',
-  BooleanConstant='booleanConstant',
-  NullConstant='nullConstant',
-  UndefinedConstant='undefinedConstant',
-  RegexConstant='regexConstant',
-  Identifier='identifier',
-  Relation='relation'
+  StringConstant = "stringConstant",
+  NumericalConstant = "numericalConstant",
+  BooleanConstant = "booleanConstant",
+  NullConstant = "nullConstant",
+  UndefinedConstant = "undefinedConstant",
+  RegexConstant = "regexConstant",
+  Identifier = "identifier",
+  Relation = "relation",
 }
 
 export function getElementId(element: Element): string {
   if (!element.scope) {
-    return `scope=null,type=${element.type},value=${element.value}`
+    return `scope=null,type=${element.type},value=${element.value}`;
   }
-  return `scope=(id=${element.scope.uid},filePath=${element.scope.filePath}),type=${element.type},value=${element.value}`
+  return `scope=(id=${element.scope.uid},filePath=${element.scope.filePath}),type=${element.type},value=${element.value}`;
 }

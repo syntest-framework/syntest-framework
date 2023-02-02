@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 
 import * as chalk from "chalk";
-import {textSync} from "figlet";
+import { textSync } from "figlet";
 
 /**
  * This class contains standardized functions that create colored and formatted messages to be used by the user-interface.
@@ -70,10 +70,23 @@ export default class Messages {
     return "\n" + chalk.green(chalk.bold(`${header}`)) + "\n";
   }
 
+  // eslint-disable-next-line
   reportCoverage(name: string, report: any, bold = false): string {
     if (bold) {
-      return chalk.bold(`${String(report['branch']).padStart(20, ' ')} | ${String(report['statement']).padStart(20, ' ')} | ${String(report['function']).padStart(20, ' ')} | ${name}`)
+      return chalk.bold(
+        `${String(report["branch"]).padStart(20, " ")} | ${String(
+          report["statement"]
+        ).padStart(20, " ")} | ${String(report["function"]).padStart(
+          20,
+          " "
+        )} | ${name}`
+      );
     }
-    return `${String(report['branch']).padStart(20, ' ')} | ${String(report['statement']).padStart(20, ' ')} | ${String(report['function']).padStart(20, ' ')} | ${name}`
+    return `${String(report["branch"]).padStart(20, " ")} | ${String(
+      report["statement"]
+    ).padStart(20, " ")} | ${String(report["function"]).padStart(
+      20,
+      " "
+    )} | ${name}`;
   }
 }

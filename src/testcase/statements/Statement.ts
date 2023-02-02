@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
  * limitations under the License.
  */
 
-
-import { Encoding, EncodingSampler, prng } from "@syntest/framework";
+import { Encoding, EncodingSampler, prng } from "@syntest/core";
 import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
-import { isNumber } from "util";
 
 /**
  * @author Dimitri Stallenberg
@@ -43,10 +41,10 @@ export abstract class Statement {
     return this._classType;
   }
 
-  protected _classType: string
+  protected _classType: string;
   private _varName: string;
   private _identifierDescription: IdentifierDescription;
-  private _type: string
+  private _type: string;
   private _uniqueId: string;
 
   /**
@@ -55,14 +53,18 @@ export abstract class Statement {
    * @param type
    * @param uniqueId
    */
-  protected constructor(identifierDescription: IdentifierDescription, type: string, uniqueId: string) {
+  protected constructor(
+    identifierDescription: IdentifierDescription,
+    type: string,
+    uniqueId: string
+  ) {
     this._identifierDescription = identifierDescription;
-    this._type = type
+    this._type = type;
     this._uniqueId = uniqueId;
-    this._varName = identifierDescription.name + '_' + type + '_' + prng.uniqueId(4)
-    this._varName = '_' + this.varName
+    this._varName =
+      identifierDescription.name + "_" + type + "_" + prng.uniqueId(4);
+    this._varName = "_" + this.varName;
   }
-
 
   /**
    * Mutates the gene
@@ -93,13 +95,16 @@ export abstract class Statement {
   /**
    * Decodes the statement
    */
-  abstract decode(id: string, options: { addLogs: boolean, exception: boolean }): Decoding[];
+  abstract decode(
+    id: string,
+    options: { addLogs: boolean; exception: boolean }
+  ): Decoding[];
 
-  abstract getFlatTypes(): string[]
+  abstract getFlatTypes(): string[];
 }
 
 export interface Decoding {
-  decoded: string,
-  reference: Statement,
-  objectVariable?: string
+  decoded: string;
+  reference: Statement;
+  objectVariable?: string;
 }

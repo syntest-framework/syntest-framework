@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2022 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest JavaScript.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  EncodingSampler, Properties,
-} from "@syntest/framework";
+import { EncodingSampler } from "@syntest/core";
 
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { ConstructorCall } from "../statements/root/ConstructorCall";
@@ -54,15 +52,15 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     type?: string,
     alphabet?: string,
     maxlength?: number
-  ): StringStatement
+  ): StringStatement;
 
   abstract sampleBool(
     identifierDescription?: IdentifierDescription,
-    type?: string,
-  )
+    type?: string
+  );
 
   abstract sampleNumber(
     identifierDescription?: IdentifierDescription,
-    type?: string,
-  )
+    type?: string
+  );
 }
