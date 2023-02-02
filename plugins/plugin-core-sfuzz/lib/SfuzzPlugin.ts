@@ -28,6 +28,8 @@ import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
 
 /**
  * This example plugin logs the program state at the start of the initialization phase of the program.
+ *
+ * @author Dimitri Stallenberg
  */
 export default class ExamplePlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
