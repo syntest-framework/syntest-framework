@@ -24,12 +24,12 @@ import {
   ExecutionResult,
   getSeed,
   IterationBudget,
-  Properties,
   RuntimeVariable,
   SearchTimeBudget,
   StatisticsCollector,
   TotalTimeBudget,
   Encoding,
+  CONFIG,
 } from "@syntest/core";
 import { JavaScriptSubject } from "../search/JavaScriptSubject";
 
@@ -39,17 +39,14 @@ export function collectInitialVariables<T extends Encoding>(
   targetPath: string
 ) {
   collector.recordVariable(RuntimeVariable.VERSION, "1");
-  collector.recordVariable(
-    RuntimeVariable.CONFIGURATION,
-    Properties.configuration
-  );
+  collector.recordVariable(RuntimeVariable.CONFIGURATION, CONFIG.configuration);
   collector.recordVariable(RuntimeVariable.SEED, getSeed());
   collector.recordVariable(RuntimeVariable.SUBJECT, path.basename(targetPath));
   collector.recordVariable(
     RuntimeVariable.CONSTANT_POOL_ENABLED,
-    `${Properties.constant_pool}`
+    `${CONFIG.constantPool}`
   );
-  collector.recordVariable(RuntimeVariable.ALGORITHM, Properties.algorithm);
+  collector.recordVariable(RuntimeVariable.ALGORITHM, CONFIG.algorithm);
   collector.recordVariable(
     RuntimeVariable.TOTAL_OBJECTIVES,
     `${currentSubject.getObjectives().length}`

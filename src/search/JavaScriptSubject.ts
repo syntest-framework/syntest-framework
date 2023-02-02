@@ -16,10 +16,9 @@
  * limitations under the License.
  */
 
+import { CFG, NodeType } from "@syntest/cfg-core";
 import {
-  CFG,
   FunctionObjectiveFunction,
-  NodeType,
   ObjectiveFunction,
   SearchSubject,
 } from "@syntest/core";

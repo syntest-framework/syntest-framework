@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -38,11 +38,11 @@ export class NumericStatement extends PrimitiveStatement<number> {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler): NumericStatement {
-    if (prng.nextBoolean(Properties.resample_gene_probability)) {
+    if (prng.nextBoolean(CONFIG.resampleGeneProbability)) {
       return sampler.sampleNumber(this.identifierDescription, this.type);
     }
 
-    if (prng.nextBoolean(Properties.delta_mutation_probability)) {
+    if (prng.nextBoolean(CONFIG.deltaMutationProbability)) {
       return this.deltaMutation();
     }
 
@@ -56,7 +56,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
     let newValue = this.value + change;
 
     // If illegal values are not allowed we make sure the value does not exceed the specified bounds
-    if (!Properties.explore_illegal_values) {
+    if (!CONFIG.exploreIllegalValues) {
       const max = Number.MAX_SAFE_INTEGER;
       const min = Number.MIN_SAFE_INTEGER;
 

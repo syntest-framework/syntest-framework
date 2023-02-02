@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Crossover, Properties } from "@syntest/core";
+import { prng, Crossover, CONFIG } from "@syntest/core";
 
 import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";
 import { RootStatement } from "../../testcase/statements/root/RootStatement";
@@ -43,12 +43,13 @@ interface QueueEntry {
  */
 // TODO check if this still works
 export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
-  public crossOver(
-    parentA: JavaScriptTestCase,
-    parentB: JavaScriptTestCase
-  ): JavaScriptTestCase[] {
-    const rootA: RootStatement = parentA.copy().root;
-    const rootB: RootStatement = parentB.copy().root;
+  public crossOver(parents: JavaScriptTestCase[]): JavaScriptTestCase[] {
+    if (parents.length !== 2) {
+      throw new Error("Expected exactly 2 parents, got: " + parents.length);
+    }
+
+    const rootA: RootStatement = parents[0].copy().root;
+    const rootB: RootStatement = parents[1].copy().root;
 
     const queueA: QueueEntry[] = [];
 
@@ -75,7 +76,7 @@ export class JavaScriptTreeCrossover implements Crossover<JavaScriptTestCase> {
         });
       }
 
-      if (prng.nextBoolean(Properties.crossover_probability)) {
+      if (prng.nextBoolean(CONFIG.crossoverProbability)) {
         // crossover
         const donorSubtrees = this.findSimilarSubtree(pair.child, rootB);
 

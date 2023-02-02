@@ -17,9 +17,10 @@
  */
 
 import * as path from "path";
+import { CFG } from "@syntest/cfg-core";
 import { getAllFiles, readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
-import { CFG, Properties, TargetMetaData, TargetPool } from "@syntest/core";
+import { CONFIG, TargetMetaData, TargetPool } from "@syntest/core";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
@@ -342,11 +343,11 @@ export class JavaScriptTargetPool extends TargetPool {
   }
 
   async prepareAndInstrument(): Promise<void> {
-    const absoluteRootPath = path.resolve(Properties.target_root_directory);
+    const absoluteRootPath = path.resolve(CONFIG.targetRootDirectory);
 
     const destinationPath = path.resolve(
-      Properties.temp_instrumented_directory,
-      path.basename(Properties.target_root_directory)
+      CONFIG.tempInstrumentedDirectory,
+      path.basename(CONFIG.targetRootDirectory)
     );
 
     // copy everything
@@ -373,7 +374,7 @@ export class JavaScriptTargetPool extends TargetPool {
   }
 
   scanTargetRootDirectory(): void {
-    const absoluteRootPath = path.resolve(Properties.target_root_directory);
+    const absoluteRootPath = path.resolve(CONFIG.targetRootDirectory);
 
     // TODO remove the filters
     const files = getAllFiles(absoluteRootPath, ".js").filter(

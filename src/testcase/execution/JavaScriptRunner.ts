@@ -17,11 +17,11 @@
  */
 
 import {
+  CONFIG,
   Datapoint,
   EncodingRunner,
   ExecutionResult,
   getUserInterface,
-  Properties,
 } from "@syntest/core";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
@@ -118,7 +118,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     testCase: JavaScriptTestCase
   ): Promise<ExecutionResult> {
     const testPath = path.resolve(
-      path.join(Properties.temp_test_directory, "tempTest.spec.js")
+      path.join(CONFIG.tempTestDirectory, "tempTest.spec.js")
     );
 
     await this.writeTestCase(testPath, testCase, subject.name);

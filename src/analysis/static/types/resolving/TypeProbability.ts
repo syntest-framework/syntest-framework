@@ -17,8 +17,9 @@
  */
 
 import { TypeEnum } from "./TypeEnum";
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { ComplexObject } from "../discovery/object/ComplexObject";
+import { JavaScriptArguments } from "../../../../JavaScriptLauncher";
 
 /**
  * Type Probability Map
@@ -190,7 +191,7 @@ export class TypeProbability {
     }
 
     if (
-      Properties["incorporate_execution_information"] &&
+      (<JavaScriptArguments>CONFIG).incorporateExecutionInformation &&
       this.executionScores.size
     ) {
       // calculate total

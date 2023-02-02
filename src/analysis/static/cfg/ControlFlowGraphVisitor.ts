@@ -25,7 +25,7 @@ import {
   Operation,
   PlaceholderNode,
   RootNode,
-} from "@syntest/core";
+} from "@syntest/cfg-core";
 
 export class ControlFlowGraphVisitor extends Visitor {
   private _cfg: CFG;

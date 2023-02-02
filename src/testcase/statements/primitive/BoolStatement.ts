@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -36,7 +36,7 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler): BoolStatement {
-    if (prng.nextBoolean(Properties.resample_gene_probability)) {
+    if (prng.nextBoolean(CONFIG.resampleGeneProbability)) {
       return sampler.sampleBool(this.identifierDescription, this.type);
     }
 

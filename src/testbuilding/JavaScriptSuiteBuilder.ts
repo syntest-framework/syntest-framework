@@ -16,12 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  Archive,
-  getUserInterface,
-  Properties,
-  TargetPool,
-} from "@syntest/core";
+import { Archive, CONFIG, getUserInterface, TargetPool } from "@syntest/core";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import {
   readdirSync,
@@ -189,12 +184,12 @@ export class JavaScriptSuiteBuilder {
       try {
         // extract the log statements
         const dir = await readdirSync(
-          path.join(Properties.temp_log_directory, testCase.id)
+          path.join(CONFIG.tempLogDirectory, testCase.id)
         );
 
         for (const file of dir) {
           const assertionValue = await readFileSync(
-            path.join(Properties.temp_log_directory, testCase.id, file),
+            path.join(CONFIG.tempLogDirectory, testCase.id, file),
             "utf8"
           );
           assertions.set(file, assertionValue);
@@ -204,10 +199,10 @@ export class JavaScriptSuiteBuilder {
       }
 
       await this.clearDirectory(
-        path.join(Properties.temp_log_directory, testCase.id),
+        path.join(CONFIG.tempLogDirectory, testCase.id),
         /.*/g
       );
-      await rmdirSync(path.join(Properties.temp_log_directory, testCase.id));
+      await rmdirSync(path.join(CONFIG.tempLogDirectory, testCase.id));
 
       testCase.assertions = assertions;
     }
