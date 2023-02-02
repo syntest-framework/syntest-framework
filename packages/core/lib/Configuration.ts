@@ -284,7 +284,7 @@ export class Configuration {
             type: "number",
           },
           "evaluation-budget": {
-            alias: ["e"],
+            alias: [],
             default: Number.MAX_SAFE_INTEGER,
             description: "Evaluation budget",
             group: "Budget options:",

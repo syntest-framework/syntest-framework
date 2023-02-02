@@ -25,6 +25,7 @@ import { getUserInterface } from "../../ui/UserInterface";
 import { TerminationManager } from "../termination/TerminationManager";
 import { SearchListener } from "../SearchListener";
 import { ExecutionResult } from "../ExecutionResult";
+import { EventManager } from "../../event/EventManager";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -119,6 +120,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     this._listeners.forEach((listener) =>
       listener.initializationDone(this, budgetManager, terminationManager)
     );
+    
     getUserInterface().updateProgressBar(
       this.progress("branch"),
       budgetManager.getBudget()
