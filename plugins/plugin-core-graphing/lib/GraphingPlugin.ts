@@ -29,6 +29,8 @@ import { mkdirSync } from "fs";
 
 /**
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
+ *
+ * @author Dimitri Stallenberg
  */
 export default class GraphingPlugin<T extends Encoding>
   implements ListenerPlugin<T>
