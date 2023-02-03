@@ -141,6 +141,9 @@ export class NSGAIIFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("MOSA requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error("NSGAII requires encodingSampler option.");
     }
@@ -151,6 +154,7 @@ export class NSGAIIFactory<T extends Encoding>
       throw new Error("NSGAII requires crossover option.");
     }
     return new NSGAII<T>(
+      options.eventManager,
       new SimpleObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover

@@ -309,6 +309,9 @@ export class MOSAFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("MOSA requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error("MOSA requires encodingSampler option.");
     }
@@ -319,6 +322,7 @@ export class MOSAFactory<T extends Encoding>
       throw new Error("MOSA requires crossover option.");
     }
     return new MOSAFamily<T>(
+      options.eventManager,
       new UncoveredObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover
@@ -349,6 +353,9 @@ export class DynaMOSAFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("MOSA requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error("DynaMOSA requires encodingSampler option.");
     }
@@ -359,6 +366,7 @@ export class DynaMOSAFactory<T extends Encoding>
       throw new Error("DynaMOSA requires crossover option.");
     }
     return new MOSAFamily<T>(
+      options.eventManager,
       new StructuralObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover

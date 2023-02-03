@@ -109,6 +109,7 @@ export class RandomSearchFactory<T extends Encoding>
       throw new Error("RandomSearch requires runner option.");
     }
     return new RandomSearch(
+      options.eventManager,
       new SimpleObjectiveManager<T>(options.runner),
       options.encodingSampler
     );
