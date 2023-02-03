@@ -20,15 +20,22 @@ import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
 
-export let CONFIG: Readonly<ArgumentsObject>;
+type RemoveIndex<T> = {
+  [K in keyof T as string extends K
+    ? never
+    : number extends K
+    ? never
+    : K]: T[K];
+};
 
+export let CONFIG: Readonly<RemoveIndex<ArgumentsObject>>;
 export class Configuration {
   initialize(argumentValues: ArgumentsObject) {
     if (CONFIG) {
       throw Error("Already initialized the config singleton!");
     }
 
-    CONFIG = <Readonly<ArgumentsObject>>argumentValues;
+    CONFIG = <Readonly<RemoveIndex<ArgumentsObject>>>(<unknown>argumentValues);
   }
 
   loadFile(cwd?: string) {
