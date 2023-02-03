@@ -119,6 +119,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     this._listeners.forEach((listener) =>
       listener.initializationDone(this, budgetManager, terminationManager)
     );
+
     getUserInterface().updateProgressBar(
       this.progress("branch"),
       budgetManager.getBudget()
