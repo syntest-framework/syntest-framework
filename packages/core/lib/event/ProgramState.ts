@@ -16,12 +16,14 @@
  * limitations under the License.
  */
 
-import { Encoding, TargetPool } from "..";
+import { BudgetManager, Encoding, TargetPool, TerminationManager } from "..";
 import { Archive } from "../search/Archive";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 
 export interface ProgramState<T extends Encoding> {
-  targetPool?: TargetPool;
+  targetPool?: TargetPool<T>;
   archive?: Archive<T>;
   algorithm?: SearchAlgorithm<T>;
+  terminationManager?: TerminationManager;
+  budgetManager?: BudgetManager<T>;
 }

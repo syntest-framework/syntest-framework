@@ -4,9 +4,16 @@ import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
 import { CONFIG } from "../../Configuration";
+import { EventManager } from "../../event/EventManager";
+import { Encoding } from "../../search/Encoding";
 
-export abstract class TargetPool {
-  private _targets: Target[];
+export abstract class TargetPool<T extends Encoding> {
+  protected _targets: Target[];
+  protected eventManager: EventManager<T>;
+
+  constructor(eventManager: EventManager<T>) {
+    this.eventManager = eventManager;
+  }
 
   abstract getSource(targetPath: string): string;
   abstract getTargetMap(targetPath: string): Map<string, TargetMetaData>;
@@ -19,6 +26,7 @@ export abstract class TargetPool {
   abstract getAST(targetPath: string): unknown;
 
   loadTargets(): void {
+    this.eventManager.emitEvent("onTargetLoadStart");
     let includes = CONFIG.include;
     let excludes = CONFIG.exclude;
 
@@ -131,6 +139,7 @@ export abstract class TargetPool {
     }
 
     this._targets = targets;
+    this.eventManager.emitEvent("onTargetLoadComplete");
   }
 
   get targets(): Target[] {
