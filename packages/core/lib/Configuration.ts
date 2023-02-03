@@ -20,6 +20,7 @@ import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
 
+// This type declaration removes the [key: string]: unknown index from type T.
 export type RemoveIndex<T> = {
   [K in keyof T as string extends K
     ? never
@@ -28,6 +29,8 @@ export type RemoveIndex<T> = {
     : K]: T[K];
 };
 
+// We do not want the [key: string]: unknown index that yargs gives as our config.
+// RemoveIndex<T> removes this for us.
 export let CONFIG: Readonly<RemoveIndex<ArgumentsObject>>;
 export class Configuration {
   initialize(argumentValues: ArgumentsObject) {
