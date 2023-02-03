@@ -54,6 +54,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   /**
    * Abstract constructor.
    *
+   * @param eventManager The event manager
    * @param objectiveManager The objective manager
    * @protected
    */

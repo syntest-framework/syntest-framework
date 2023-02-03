@@ -27,6 +27,7 @@ import {
   Encoding,
   Crossover,
   crowdingDistance,
+  EventManager,
 } from "../../..";
 import {
   SearchAlgorithmPlugin,
@@ -47,11 +48,12 @@ import { DominanceComparator } from "../../comparators/DominanceComparator";
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
+    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>
   ) {
-    super(objectiveManager, encodingSampler, crossover);
+    super(eventManager, objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(size: number): void {

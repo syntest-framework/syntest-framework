@@ -27,7 +27,7 @@ import {
 } from "../../../plugin/SearchAlgorithmPlugin";
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { fastNonDomSorting, crowdingDistance } from "../../..";
+import { fastNonDomSorting, crowdingDistance, EventManager } from "../../..";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -44,16 +44,18 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   /**
    * Constructor.
    *
+   * @param eventManager The event manager
    * @param encodingSampler The encoding sampler
    * @param runner The runner
    * @param crossover The crossover operator to apply
    */
   constructor(
+    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>
   ) {
-    super(objectiveManager, encodingSampler, crossover);
+    super(eventManager, objectiveManager, encodingSampler, crossover);
   }
 
   /**
