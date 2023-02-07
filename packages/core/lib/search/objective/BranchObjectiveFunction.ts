@@ -22,6 +22,7 @@ import { Node, NodeType } from "@syntest/cfg-core";
 import { SearchSubject } from "../SearchSubject";
 import { BranchDistance } from "../objective/BranchDistance";
 import { Datapoint } from "../../util/Datapoint";
+import { ApproachLevel } from "./ApproachLevel";
 
 /**
  * Objective function for the branch criterion.
@@ -99,6 +100,8 @@ export class BranchObjectiveFunction<T extends Encoding>
     const branchNode = this._subject.cfg.nodes.find((n: Node) => {
       return n.type === NodeType.Branch && n.lines.includes(this._line);
     });
+
+    // TODO maybe childNode is not required.
     const childEdge = this._subject.cfg.edges.find((edge) => {
       return edge.from === branchNode.id && edge.branchType === this._type;
     });
@@ -106,43 +109,24 @@ export class BranchObjectiveFunction<T extends Encoding>
       return node.id === childEdge.to;
     });
 
-    // find the closest covered branch to the objective branch
-    let closestHitNode = null;
-    let approachLevel = Number.MAX_VALUE;
-    for (const n of this._subject.cfg.nodes) {
-      const traces = executionResult
-        .getTraces()
-        .filter(
-          (trace) =>
-            n.lines.includes(trace.line) &&
-            (trace.type === "branch" ||
-              trace.type === "probePre" ||
-              trace.type === "probePost" ||
-              trace.type === "function") &&
-            trace.hits > 0
-        );
-      for (const trace of traces) {
-        const pathDistance = this._subject.getPath(n.id, childNode.id);
-        if (approachLevel > pathDistance) {
-          approachLevel = pathDistance;
-          closestHitNode = trace;
-        }
-      }
-    }
+    // Find approach level and ancestor based on node and covered nodes
+    const { approachLevel, hitTrace } = ApproachLevel.calculate(
+      this._subject.cfg,
+      childNode,
+      executionResult.getTraces()
+    );
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
-    if (!closestHitNode) {
+    if (!hitTrace) {
       return Number.MAX_VALUE;
     }
 
     let branchDistance: number;
-
-    if (closestHitNode.type === "function") branchDistance = 1;
-    else branchDistance = this.computeBranchDistance(closestHitNode);
+    if (hitTrace.type === "function") branchDistance = 1;
+    else branchDistance = this.computeBranchDistance(hitTrace);
 
     // add the distances
-    const distance = approachLevel + branchDistance;
-    return distance;
+    return approachLevel + branchDistance;
   }
 
   /**

@@ -41,7 +41,6 @@
     "lerna:test:watch": "lerna run --parallel test:watch",
     "postinstall": "husky install & lerna bootstrap --force-local"
   },
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
     "@commitlint/config-conventional": "17.4.2",

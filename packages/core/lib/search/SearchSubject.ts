@@ -19,7 +19,7 @@
 
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
-import { CFG, Edge } from "@syntest/cfg-core";
+import { ControlFlowGraph, Edge } from "@syntest/cfg-core";
 import { getUserInterface } from "../ui/UserInterface";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -47,7 +47,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Control flow graph of the subject.
    * @protected
    */
-  protected readonly _cfg: CFG;
+  protected readonly _cfg: ControlFlowGraph;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -69,7 +69,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param functions Functions of the subject
    * @protected
    */
-  protected constructor(path: string, name: string, cfg: CFG) {
+  protected constructor(path: string, name: string, cfg: ControlFlowGraph) {
     this._path = path;
     this._name = name;
     this._cfg = cfg;
@@ -147,7 +147,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._name;
   }
 
-  get cfg(): CFG {
+  get cfg(): ControlFlowGraph {
     return this._cfg;
   }
 

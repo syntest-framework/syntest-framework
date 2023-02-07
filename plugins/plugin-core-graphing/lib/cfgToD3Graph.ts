@@ -16,9 +16,15 @@
  * limitations under the License.
  */
 
-import { CFG, Node, BranchNode, Edge, NodeType } from "@syntest/cfg-core";
+import {
+  ControlFlowGraph,
+  Node,
+  BranchNode,
+  Edge,
+  NodeType,
+} from "@syntest/cfg-core";
 
-export function cfgToD3Graph(cfg: CFG, offset: number): D3Graph {
+export function cfgToD3Graph(cfg: ControlFlowGraph, offset: number): D3Graph {
   let count = 0;
 
   const nodes = [

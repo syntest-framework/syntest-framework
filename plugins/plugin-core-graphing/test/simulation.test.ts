@@ -1,11 +1,11 @@
 import * as chai from "chai";
-import { CFG, NodeType } from "@syntest/cfg-core";
+import { ControlFlowGraph, NodeType } from "@syntest/cfg-core";
 import { createSimulation } from "../lib/D3Simulation";
 const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", async () => {
-    const cfg: CFG = new CFG();
+    const cfg: ControlFlowGraph = new ControlFlowGraph();
 
     const nodes = [
       {

@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { CFG } from "./CFG";
+import { ControlFlowGraph } from "./ControlFlowGraph";
 
-export interface CFGFactory {
-  convertAST(AST: unknown): CFG;
+export interface ControlFlowGraphFactory {
+  convertAST(AST: unknown): ControlFlowGraph;
 }
