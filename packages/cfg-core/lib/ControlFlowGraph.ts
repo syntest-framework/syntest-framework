@@ -78,18 +78,22 @@ export class ControlFlowGraph {
 
   // Returns list of node IDs that have an outgoing edge to the target node
   getParents(targetNodeId: string): Node[] {
-    const selectedIds: string[] = this._edges
-      .filter((e: Edge) => e.to == targetNodeId)
-      .map((e: Edge) => e.from);
-    return selectedIds.map((id: string) => this.getNodeById(id));
+    const selectedIds = new Set<string>(
+      this._edges
+        .filter((e: Edge) => e.to == targetNodeId)
+        .map((e: Edge) => e.from)
+    );
+    return this._nodes.filter((node: Node) => selectedIds.has(node.id));
   }
 
   // Returns list of node IDs that have an outgoing edge from the target node
   getChildren(targetNodeId: string): Node[] {
-    const selectedIds: string[] = this._edges
-      .filter((e: Edge) => e.from == targetNodeId)
-      .map((e: Edge) => e.to);
-    return selectedIds.map((id: string) => this.getNodeById(id));
+    const selectedIds = new Set<string>(
+      this._edges
+        .filter((e: Edge) => e.from == targetNodeId)
+        .map((e: Edge) => e.to)
+    );
+    return this._nodes.filter((node: Node) => selectedIds.has(node.id));
   }
 
   /*
