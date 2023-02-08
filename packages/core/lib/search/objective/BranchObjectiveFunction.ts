@@ -110,20 +110,21 @@ export class BranchObjectiveFunction<T extends Encoding>
     });
 
     // Find approach level and ancestor based on node and covered nodes
-    const { approachLevel, hitTrace } = ApproachLevel.calculate(
-      this._subject.cfg,
-      childNode,
-      executionResult.getTraces()
-    );
+    const { approachLevel, closestCoveredBranchTrace } =
+      ApproachLevel.calculate(
+        this._subject.cfg,
+        childNode,
+        executionResult.getTraces()
+      );
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
-    if (!hitTrace) {
+    if (!closestCoveredBranchTrace) {
       return Number.MAX_VALUE;
     }
 
     let branchDistance: number;
-    if (hitTrace.type === "function") branchDistance = 1;
-    else branchDistance = this.computeBranchDistance(hitTrace);
+    if (closestCoveredBranchTrace.type === "function") branchDistance = 1;
+    else branchDistance = this.computeBranchDistance(closestCoveredBranchTrace);
 
     // add the distances
     return approachLevel + branchDistance;

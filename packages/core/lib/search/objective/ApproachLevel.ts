@@ -7,7 +7,7 @@ export class ApproachLevel {
     cfg: ControlFlowGraph,
     node: Node,
     traces: Datapoint[]
-  ): { approachLevel: number; hitTrace: Datapoint } {
+  ): { approachLevel: number; closestCoveredBranchTrace: Datapoint } {
     // Construct map with key as line covered and value as datapoint that coveres that line
     const linesTraceMap: Map<number, Datapoint> = traces
       .filter(
@@ -31,34 +31,31 @@ export class ApproachLevel {
 
     const targetIds = new Set<string>([...coveredNodes].map((node) => node.id));
 
-    const { approachLevel, ancestor } = this._findClosestAncestor(
-      cfg,
-      node.id,
-      targetIds
-    );
+    const { approachLevel, closestCoveredBranch } =
+      this._findClosestCoveredBranch(cfg, node.id, targetIds);
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
-    if (!ancestor) {
-      return { approachLevel: null, hitTrace: null };
+    if (!closestCoveredBranch) {
+      return { approachLevel: null, closestCoveredBranchTrace: null };
     }
 
-    // Retrieve trace based on lines covered by found ancestor
-    let hitTrace: Datapoint = null;
-    for (const line of ancestor.lines) {
+    // Retrieve trace based on lines covered by found closestCoveredBranch
+    let closestCoveredBranchTrace: Datapoint = null;
+    for (const line of closestCoveredBranch.lines) {
       if (linesTraceMap.has(line)) {
-        hitTrace = linesTraceMap.get(line);
+        closestCoveredBranchTrace = linesTraceMap.get(line);
         break;
       }
     }
 
-    return { approachLevel, hitTrace };
+    return { approachLevel, closestCoveredBranchTrace };
   }
 
-  static _findClosestAncestor(
+  static _findClosestCoveredBranch(
     cfg: ControlFlowGraph,
     from: string,
     targets: Set<string>
-  ): { approachLevel: number; ancestor: Node } {
+  ): { approachLevel: number; closestCoveredBranch: Node } {
     const rotatedAdjList = cfg.getRotatedAdjacencyList();
 
     const visitedNodeIdSet = new Set<string>([from]);
@@ -83,7 +80,7 @@ export class ApproachLevel {
         if (targets.has(nextNodeId)) {
           return {
             approachLevel: currentDistance + pairOfParent.second,
-            ancestor: cfg.getNodeById(nextNodeId),
+            closestCoveredBranch: cfg.getNodeById(nextNodeId),
           };
         }
         // add element to queue and visited nodes to continue search
@@ -96,7 +93,7 @@ export class ApproachLevel {
     }
     return {
       approachLevel: -1,
-      ancestor: null,
+      closestCoveredBranch: null,
     };
   }
 }
