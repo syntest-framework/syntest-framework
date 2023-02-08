@@ -57,12 +57,39 @@ export class ControlFlowGraph {
     return node;
   }
 
+  getNodesOfType(type: NodeType): Node[] {
+    return this._nodes.filter((n: Node) => n.type == type);
+  }
+
   getNodesByLineNumbers(lineNumbers: Set<number>): Set<Node> {
     return new Set<Node>(
-      this.nodes.filter((node) =>
+      this._nodes.filter((node) =>
         node.lines.some((nodeLine) => lineNumbers.has(nodeLine))
       )
     );
+  }
+
+  // Returns Node that contain specified line number and is of a given type
+  getNodeByLineOfType(lineNumber: number, type: NodeType): Node {
+    return this._nodes.find((n: Node) => {
+      return n.type == type && n.lines.includes(lineNumber);
+    });
+  }
+
+  // Returns list of node IDs that have an outgoing edge to the target node
+  getParents(targetNodeId: string): Node[] {
+    const selectedIds: string[] = this._edges
+      .filter((e: Edge) => e.to == targetNodeId)
+      .map((e: Edge) => e.from);
+    return selectedIds.map((id: string) => this.getNodeById(id));
+  }
+
+  // Returns list of node IDs that have an outgoing edge from the target node
+  getChildren(targetNodeId: string): Node[] {
+    const selectedIds: string[] = this._edges
+      .filter((e: Edge) => e.from == targetNodeId)
+      .map((e: Edge) => e.to);
+    return selectedIds.map((id: string) => this.getNodeById(id));
   }
 
   /*
