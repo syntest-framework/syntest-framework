@@ -38,7 +38,7 @@ jobs:
 
       # Building
       - name: Core - Build
-        run: npm run lerna:build:compile
+        run: npm run lerna:build
 
       # Versioning
       - name: "Core - Version"

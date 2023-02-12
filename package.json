@@ -28,7 +28,7 @@
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "lerna:build:compile": "lerna run build:compile",
+    "lerna:build": "lerna run build",
     "lerna:build:watch": "lerna run build:watch",
     "lerna:clean": "lerna run --parallel clean",
     "lerna:clean:dist": "lerna run --parallel clean:dist",
