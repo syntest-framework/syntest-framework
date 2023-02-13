@@ -27,6 +27,7 @@ import {
   SearchAlgorithmOptions,
 } from "../../plugin/SearchAlgorithmPlugin";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { pluginRequiresOptions } from "../../Diagnostics";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
@@ -100,10 +101,10 @@ export class RandomSearchFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.encodingSampler) {
-      throw new Error("RandomSearch requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("RandomSearch requires runner option.");
+      throw new Error(pluginRequiresOptions("RandomSearch", "runner"));
     }
     return new RandomSearch(
       new SimpleObjectiveManager<T>(options.runner),

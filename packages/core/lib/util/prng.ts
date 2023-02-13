@@ -21,6 +21,7 @@ import { CONFIG } from "../Configuration";
 
 import seedrandom = require("seedrandom");
 import { Charset } from "./Charset";
+import { emptyArray } from "../Diagnostics";
 
 let seed: string | null = null;
 let random = null;
@@ -94,7 +95,7 @@ export const prng = {
   },
   pickOne: <T>(options: T[]): T => {
     if (!options.length) {
-      throw new Error("Cannot pick one of an empty array!!!");
+      throw new Error(emptyArray("options"));
     }
 
     const value = generator();

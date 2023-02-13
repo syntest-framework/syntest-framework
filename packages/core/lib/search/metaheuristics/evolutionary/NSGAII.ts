@@ -28,6 +28,7 @@ import {
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { fastNonDomSorting, crowdingDistance } from "../../..";
+import { pluginRequiresOptions } from "../../../Diagnostics";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -140,13 +141,13 @@ export class NSGAIIFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.encodingSampler) {
-      throw new Error("NSGAII requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("NSGAII requires runner option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("NSGAII requires crossover option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "crossover"));
     }
     return new NSGAII<T>(
       new SimpleObjectiveManager<T>(options.runner),

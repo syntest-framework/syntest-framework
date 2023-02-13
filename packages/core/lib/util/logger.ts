@@ -18,6 +18,7 @@
 
 import { createLogger, format, LoggerOptions, transports } from "winston";
 import { CONFIG } from "../Configuration";
+import { singleTonNotSet } from "../Diagnostics";
 
 // define the custom settings for each transport (file, console)
 function getLoggerSettings(logDirectory: string): unknown {
@@ -131,9 +132,7 @@ let logger: any = null;
 // instantiate a new Winston Logger with the settings defined above
 export function getLogger(): unknown {
   if (!logger) {
-    throw new Error(
-      "You have to call setupLogger before the program can start"
-    );
+    throw new Error(singleTonNotSet("logger"));
   }
   return logger;
 }

@@ -18,6 +18,7 @@
 
 import { Encoding } from "..";
 import { CONFIG } from "..";
+import { PluginEnum, pluginNotFound } from "../Diagnostics";
 import { PluginManager } from "../plugin/PluginManager";
 import { EncodingSampler } from "../search/EncodingSampler";
 
@@ -32,9 +33,7 @@ export function createEncodingSamplerFromConfig<T extends Encoding>(
   const sampler = CONFIG.sampler;
 
   if (!pluginManager.getSamplers().includes(sampler)) {
-    throw new Error(
-      `Specified sampler: ${sampler} not found in pluginManager.`
-    );
+    throw new Error(pluginNotFound(PluginEnum.sampler, sampler));
   }
 
   return pluginManager.getSampler(sampler).createSamplerOperator({});

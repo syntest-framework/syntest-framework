@@ -34,6 +34,7 @@ import {
 } from "../../../plugin/SearchAlgorithmPlugin";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
+import { pluginRequiresOptions, shouldNeverHappen } from "../../../Diagnostics";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -59,9 +60,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       this._objectiveManager.getCurrentObjectives().size == 0 &&
       this._objectiveManager.getUncoveredObjectives().size != 0
     )
-      throw Error(
-        "This should never happen. There is a likely bug in the objective manager"
-      );
+      throw Error(shouldNeverHappen("Objective Manager"));
 
     if (
       this._objectiveManager.getCurrentObjectives().size == 0 &&
@@ -308,13 +307,13 @@ export class MOSAFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.encodingSampler) {
-      throw new Error("MOSA requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("MOSA requires runner option.");
+      throw new Error(pluginRequiresOptions("MOSA", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("MOSA requires crossover option.");
+      throw new Error(pluginRequiresOptions("MOSA", "crossover"));
     }
     return new MOSAFamily<T>(
       new UncoveredObjectiveManager<T>(options.runner),
@@ -348,13 +347,13 @@ export class DynaMOSAFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.encodingSampler) {
-      throw new Error("DynaMOSA requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("DynaMOSA requires runner option.");
+      throw new Error(pluginRequiresOptions("DynaMOSA", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("DynaMOSA requires crossover option.");
+      throw new Error(pluginRequiresOptions("DynaMOSA", "crossover"));
     }
     return new MOSAFamily<T>(
       new StructuralObjectiveManager<T>(options.runner),

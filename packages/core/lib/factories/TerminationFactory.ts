@@ -18,6 +18,7 @@
 
 import { CONFIG, Encoding, TerminationManager } from "..";
 import { PluginManager } from "../../lib/plugin/PluginManager";
+import { PluginEnum, pluginNotFound } from "../Diagnostics";
 
 /**
  * Factory for creating an instance of a termination manager from the config.
@@ -34,9 +35,7 @@ export function createTerminationManagerFromConfig<T extends Encoding>(
 
   for (const trigger of terminationTriggers) {
     if (!pluginManager.getTerminationTriggers().includes(trigger)) {
-      throw new Error(
-        `Specified trigger: ${trigger} not found in pluginManager.`
-      );
+      throw new Error(pluginNotFound(PluginEnum.terminationTrigger, trigger));
     }
     terminationManager.addTrigger(
       pluginManager.getTerminationTrigger(trigger).createTerminationTrigger({})

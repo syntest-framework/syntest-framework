@@ -7,6 +7,7 @@ import {
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { tournamentSelection } from "../../../lib/search/operators/selection/TournamentSelection";
 import { createStubInstance } from "sinon";
+import { minimumValue } from "../../../lib/Diagnostics";
 
 const expect = chai.expect;
 
@@ -45,7 +46,7 @@ describe("Tournament selection", function () {
     //fit('Null my value throws', () => {
     expect(() => {
       tournamentSelection([ind1, ind2], 1);
-    }).throws("The tournament size should be greater than 1 ");
+    }).throws(minimumValue("tournament size", 2, 1));
   });
 
   it("Comparison by rank", () => {

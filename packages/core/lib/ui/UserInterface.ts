@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { singleTonNotSet } from "../Diagnostics";
+
 export abstract class UserInterface {
   silent: boolean;
   verbose: boolean;
@@ -46,7 +48,7 @@ let userInterface: UserInterface;
 
 export function getUserInterface(): UserInterface {
   if (!userInterface) {
-    throw new Error("The UserInterface has not been set yet!");
+    throw new Error(singleTonNotSet("user-interface"));
   }
 
   return userInterface;

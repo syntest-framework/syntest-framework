@@ -25,6 +25,7 @@ import {
 } from "@syntest/core";
 import { Sfuzz } from "./Sfuzz";
 import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
+import { pluginRequiresOptions } from "@syntest/core/lib/Diagnostics";
 
 /**
  * This example plugin logs the program state at the start of the initialization phase of the program.
@@ -44,13 +45,13 @@ export default class ExamplePlugin<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.encodingSampler) {
-      throw new Error("SFuzz requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("SFuzz requires runner option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("SFuzz requires crossover option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "crossover"));
     }
     return new Sfuzz<T>(
       new SfuzzObjectiveManager<T>(options.runner),

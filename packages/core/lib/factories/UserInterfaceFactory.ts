@@ -18,6 +18,7 @@
 
 import { Encoding } from "..";
 import { CONFIG } from "..";
+import { PluginEnum, pluginNotFound } from "../Diagnostics";
 import { PluginManager } from "../plugin/PluginManager";
 import { UserInterface } from "../ui/UserInterface";
 
@@ -32,9 +33,7 @@ export function createUserInterfaceFromConfig<T extends Encoding>(
   const userInterface = CONFIG.userInterface;
 
   if (!pluginManager.getUserInterfaces().includes(userInterface)) {
-    throw new Error(
-      `Specified user interface: ${userInterface} not found in pluginManager.`
-    );
+    throw new Error(pluginNotFound(PluginEnum.userInterface, userInterface));
   }
 
   return pluginManager.getUserInterface(userInterface).createUserInterface({});

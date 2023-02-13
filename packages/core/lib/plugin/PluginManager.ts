@@ -15,6 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+  PluginEnum,
+  pluginAlreadyRegistered,
+  pluginCannotBeLoaded,
+  pluginHasNoRegister,
+} from "../Diagnostics";
 import { Encoding } from "../search/Encoding";
 import { CrossoverPlugin } from "./CrossoverPlugin";
 import { ListenerPlugin } from "./ListenerPlugin";
@@ -167,21 +173,19 @@ export class PluginManager<T extends Encoding> {
       const pluginInstance: PluginInterface<T> = new plugin.default();
 
       if (!pluginInstance.register) {
-        throw new Error(
-          `Could not load plugin\nPlugin has no register function\nPlugin: ${pluginPath}`
-        );
+        throw new Error(pluginHasNoRegister(pluginPath));
       }
 
       pluginInstance.register(this);
     } catch (e) {
-      console.trace(e);
+      throw new Error(pluginCannotBeLoaded(pluginPath));
     }
   }
 
   async registerListener(plugin: ListenerPlugin<T>): Promise<void> {
     if (this._listeners.has(plugin.name)) {
       throw new Error(
-        `Plugin with name: ${plugin.name} is already registered as a listener plugin.`
+        pluginAlreadyRegistered(PluginEnum.listener, plugin.name)
       );
     }
     this._listeners.set(plugin.name, plugin);
@@ -192,7 +196,7 @@ export class PluginManager<T extends Encoding> {
   ): Promise<void> {
     if (this._searchAlgorithms.has(plugin.name)) {
       throw new Error(
-        `Plugin with name: ${plugin.name} is already registered as a search algorithm plugin.`
+        pluginAlreadyRegistered(PluginEnum.searchAlgorithm, plugin.name)
       );
     }
     this._searchAlgorithms.set(plugin.name, plugin);
@@ -201,7 +205,7 @@ export class PluginManager<T extends Encoding> {
   async registerCrossover(plugin: CrossoverPlugin<T>): Promise<void> {
     if (this._crossoverOperators.has(plugin.name)) {
       throw new Error(
-        `Plugin with name: ${plugin.name} is already registered as a crossover plugin.`
+        pluginAlreadyRegistered(PluginEnum.crossover, plugin.name)
       );
     }
     this._crossoverOperators.set(plugin.name, plugin);
@@ -209,9 +213,7 @@ export class PluginManager<T extends Encoding> {
 
   async registerSampler(plugin: SamplerPlugin<T>): Promise<void> {
     if (this._samplers.has(plugin.name)) {
-      throw new Error(
-        `Plugin with name: ${plugin.name} is already registered as a sampler plugin.`
-      );
+      throw new Error(pluginAlreadyRegistered(PluginEnum.sampler, plugin.name));
     }
     this._samplers.set(plugin.name, plugin);
   }
@@ -219,7 +221,7 @@ export class PluginManager<T extends Encoding> {
   async registerTermination(plugin: TerminationPlugin<T>): Promise<void> {
     if (this._terminationTriggers.has(plugin.name)) {
       throw new Error(
-        `Plugin with name: ${plugin.name} is already registered as a termination trigger plugin.`
+        pluginAlreadyRegistered(PluginEnum.terminationTrigger, plugin.name)
       );
     }
     this._terminationTriggers.set(plugin.name, plugin);
@@ -228,7 +230,7 @@ export class PluginManager<T extends Encoding> {
   async registerUserInterface(plugin: UserInterfacePlugin<T>): Promise<void> {
     if (this._userInterfaces.has(plugin.name)) {
       throw new Error(
-        `Plugin with name: ${plugin.name} is already registered as a user-interface plugin.`
+        pluginAlreadyRegistered(PluginEnum.userInterface, plugin.name)
       );
     }
     this._userInterfaces.set(plugin.name, plugin);

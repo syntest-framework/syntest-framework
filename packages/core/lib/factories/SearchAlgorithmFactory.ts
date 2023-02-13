@@ -21,6 +21,7 @@ import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 import { CONFIG } from "../Configuration";
 import { PluginManager } from "../plugin/PluginManager";
 import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
+import { PluginEnum, pluginNotFound } from "../Diagnostics";
 
 /**
  * Factory for creating an instance of a specific search algorithm from the config.
@@ -39,9 +40,7 @@ export function createSearchAlgorithmFromConfig<T extends Encoding>(
   const algorithm = CONFIG.algorithm;
 
   if (!pluginManager.getSearchAlgorithms().includes(algorithm)) {
-    throw new Error(
-      `Specified algorithm: ${algorithm} not found in pluginManager.`
-    );
+    throw new Error(pluginNotFound(PluginEnum.searchAlgorithm, algorithm));
   }
 
   return pluginManager.getSearchAlgorithm(algorithm).createSearchAlgorithm({
