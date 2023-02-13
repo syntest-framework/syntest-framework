@@ -17,7 +17,7 @@
  */
 import { EncodingRunner } from "../search/EncodingRunner";
 import { EncodingSampler } from "../search/EncodingSampler";
-import { Crossover, Encoding } from "..";
+import { CrossoverOperator, Encoding } from "..";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
 import { PluginInterface } from "./PluginInterface";
@@ -26,7 +26,7 @@ export type SearchAlgorithmOptions<T extends Encoding> = {
   objectiveManager?: ObjectiveManager<T>;
   encodingSampler?: EncodingSampler<T>;
   runner?: EncodingRunner<T>;
-  crossover?: Crossover<T>;
+  crossover?: CrossoverOperator<T>;
 };
 
 export interface SearchAlgorithmPlugin<T extends Encoding>

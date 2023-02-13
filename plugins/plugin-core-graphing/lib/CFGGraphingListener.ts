@@ -16,19 +16,12 @@
  * limitations under the License.
  */
 
-import {
-  CONFIG,
-  Encoding,
-  ListenerInterface,
-  ProgramState,
-} from "@syntest/core";
+import { CONFIG, Encoding, Listener, ProgramState } from "@syntest/core";
 import { createSimulation } from "./D3Simulation";
 import { GraphOptions } from "./GraphingPlugin";
 import fs = require("fs");
 
-export class CFGGraphingListener<T extends Encoding>
-  implements ListenerInterface<T>
-{
+export class CFGGraphingListener<T extends Encoding> implements Listener<T> {
   private done: Map<string, Set<string>>;
 
   constructor() {

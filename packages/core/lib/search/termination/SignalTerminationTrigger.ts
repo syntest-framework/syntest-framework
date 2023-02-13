@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { TerminationPlugin } from "../../plugin/TerminationPlugin";
+import { TerminationTriggerPlugin } from "../../plugin/TerminationTriggerPlugin";
 import { Encoding } from "../Encoding";
 import { TerminationTrigger } from "./TerminationTrigger";
 
@@ -62,7 +62,7 @@ export class SignalTerminationTrigger implements TerminationTrigger {
  * @author Dimitri Stallenberg
  */
 export class SignalTerminationTriggerFactory<T extends Encoding>
-  implements TerminationPlugin<T>
+  implements TerminationTriggerPlugin<T>
 {
   name = "signal";
 

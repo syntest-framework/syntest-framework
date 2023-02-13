@@ -19,6 +19,7 @@
 import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
+import { CreatePluginTemplate } from "./commands/CreatePluginTemplate";
 
 // This type declaration removes the [key: string]: unknown index from type T.
 export type RemoveIndex<T> = {
@@ -69,8 +70,8 @@ export class Configuration {
     return configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args);
   }
 
-  configureOptions(programName: string) {
-    const yargs = Yargs.usage(`Usage: ${programName} [options]`)
+  configureCommands(programName: string) {
+    return Yargs.usage(`Usage: ${programName} [options]`)
       .example(
         `${programName} -r ./src`,
         "Running the tool with target directory 'src'"
@@ -79,8 +80,34 @@ export class Configuration {
         `${programName} -r ./src --population_size 10`,
         "Setting the population size"
       )
-      .epilog("visit https://syntest.org for more documentation");
+      .epilog("visit https://syntest.org for more documentation")
+      .command(
+        "create-core-plugin-template",
+        "This command creates a plugin template for the SynTest Core",
+        {
+          "plugin-name": {
+            default: "plugin-core-example",
+            type: "string",
+            group: "Create plugin options:",
+          },
+          "plugin-type": {
+            choices: [
+              "CrossoverOperator",
+              "Listener",
+              "Sampler",
+              "SearchAlgorithm",
+              "TerminationTrigger",
+              "UserInterface",
+            ],
+            type: "string",
+            group: "Create plugin options:",
+          },
+        },
+        CreatePluginTemplate
+      );
+  }
 
+  configureOptions<T>(yargs: Yargs.Argv<T>) {
     // Here we chain all the configure functions to create a single options object that contains everything.
     const options1 = this.configureGeneralOptions(yargs);
     const options2 = this.configureTargetOptions(options1);
@@ -514,7 +541,9 @@ export class Configuration {
   }
 }
 
-const configured = new Configuration().configureOptions("");
-export type OptionsObject = typeof configured;
-const parsed = configured.parseSync(["-r", "./src"]);
+const configuration = new Configuration();
+const configured1 = configuration.configureCommands("");
+const configured2 = configuration.configureOptions(configured1);
+export type OptionsObject = typeof configured2;
+const parsed = configured2.parseSync(["-r", "./src"]);
 export type ArgumentsObject = typeof parsed;

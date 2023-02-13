@@ -28,7 +28,7 @@ import { ProgramState } from "./ProgramState";
  * on[EVENT]Start
  * on[EVENT]Complete
  */
-export interface ListenerInterface<T extends Encoding> {
+export interface Listener<T extends Encoding> {
   // called from launcher
   onInitializeStart?(state: ProgramState<T>): void;
   onInitializeComplete?(state: ProgramState<T>): void;

@@ -15,27 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { Encoding } from "..";
-import { CONFIG } from "..";
-import { PluginManager } from "../plugin/PluginManager";
-import { EncodingSampler } from "../search/EncodingSampler";
+import { TerminationTrigger } from "../search/termination/TerminationTrigger";
+import { PluginInterface } from "./PluginInterface";
 
-/**
- * Factory for creating an instance of a specific sampler from the config.
- *
- * @author Dimitri Stallenberg
- */
-export function createEncodingSamplerFromConfig<T extends Encoding>(
-  pluginManager: PluginManager<T>
-): EncodingSampler<T> {
-  const sampler = CONFIG.sampler;
+export type TerminationTriggerOptions<T extends Encoding> = unknown;
 
-  if (!pluginManager.getSamplers().includes(sampler)) {
-    throw new Error(
-      `Specified sampler: ${sampler} not found in pluginManager.`
-    );
-  }
-
-  return pluginManager.getSampler(sampler).createSamplerOperator({});
+export interface TerminationTriggerPlugin<T extends Encoding>
+  extends PluginInterface<T> {
+  createTerminationTrigger<O extends TerminationTriggerOptions<T>>(
+    options: O
+  ): TerminationTrigger;
 }

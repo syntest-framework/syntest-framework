@@ -28,26 +28,29 @@ export * from "./analysis/static/TargetMetaData";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
 
+// Commands
+export * from "./commands/CreatePluginTemplate";
+
 // Event System
 export * from "./event/EventManager";
-export * from "./event/ListenerInterface";
+export * from "./event/Listener";
 export * from "./event/ProgramState";
 
 // Factories
-export * from "./factories/CrossoverFactory";
-export * from "./factories/SamplerFactory";
+export * from "./factories/CrossoverOperatorFactory";
+export * from "./factories/EncodingSamplerFactory";
 export * from "./factories/SearchAlgorithmFactory";
-export * from "./factories/TerminationFactory";
+export * from "./factories/TerminationTriggerFactory";
 export * from "./factories/UserInterfaceFactory";
 
 // Plugin
-export * from "./plugin/CrossoverPlugin";
+export * from "./plugin/CrossoverOperatorPlugin";
+export * from "./plugin/EncodingSamplerPlugin";
 export * from "./plugin/ListenerPlugin";
 export * from "./plugin/PluginInterface";
 export * from "./plugin/PluginManager";
-export * from "./plugin/SamplerPlugin";
 export * from "./plugin/SearchAlgorithmPlugin";
-export * from "./plugin/TerminationPlugin";
+export * from "./plugin/TerminationTriggerPlugin";
 export * from "./plugin/UserInterfacePlugin";
 
 // Search
@@ -96,7 +99,7 @@ export * from "./search/objective/managers/StructuralObjectiveManager";
 export * from "./search/objective/managers/UncoveredObjectiveManager";
 
 // - Operator
-export * from "./search/operators/crossover/Crossover";
+export * from "./search/operators/crossover/CrossoverOperator";
 
 export * from "./search/operators/ranking/CrowdingDistance";
 export * from "./search/operators/ranking/FastNonDomSorting";

@@ -16,7 +16,12 @@
  * limitations under the License.
  */
 
-import { Crossover, EncodingSampler, Encoding, EncodingRunner } from "..";
+import {
+  CrossoverOperator,
+  EncodingSampler,
+  Encoding,
+  EncodingRunner,
+} from "..";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 import { CONFIG } from "../Configuration";
 import { PluginManager } from "../plugin/PluginManager";
@@ -34,7 +39,7 @@ export function createSearchAlgorithmFromConfig<T extends Encoding>(
   objectiveManager: ObjectiveManager<T>,
   encodingSampler: EncodingSampler<T>,
   runner: EncodingRunner<T>,
-  crossover: Crossover<T>
+  crossover: CrossoverOperator<T>
 ): SearchAlgorithm<T> {
   const algorithm = CONFIG.algorithm;
 

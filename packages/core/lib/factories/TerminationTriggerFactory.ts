@@ -17,7 +17,7 @@
  */
 
 import { CONFIG, Encoding, TerminationManager } from "..";
-import { PluginManager } from "../../lib/plugin/PluginManager";
+import { PluginManager } from "../plugin/PluginManager";
 
 /**
  * Factory for creating an instance of a termination manager from the config.

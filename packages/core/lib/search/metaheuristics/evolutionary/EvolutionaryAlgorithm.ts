@@ -19,7 +19,7 @@
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../../operators/crossover/Crossover";
+import { CrossoverOperator } from "../../operators/crossover/CrossoverOperator";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { CONFIG } from "../../../Configuration";
@@ -53,7 +53,7 @@ export abstract class EvolutionaryAlgorithm<
    */
   protected _populationSize: number;
 
-  protected _crossover: Crossover<T>;
+  protected _crossover: CrossoverOperator<T>;
 
   /**
    * Constructor.
@@ -67,7 +67,7 @@ export abstract class EvolutionaryAlgorithm<
   protected constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: CrossoverOperator<T>
   ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;

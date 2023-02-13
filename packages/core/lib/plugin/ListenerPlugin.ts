@@ -15,13 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, ListenerInterface } from "..";
+import { Encoding, Listener } from "..";
 import { PluginInterface } from "./PluginInterface";
 
 export type ListenerOptions<T extends Encoding> = unknown;
 
 export interface ListenerPlugin<T extends Encoding> extends PluginInterface<T> {
-  createListener<O extends ListenerOptions<T>>(
-    options: O
-  ): ListenerInterface<T>;
+  createListener<O extends ListenerOptions<T>>(options: O): Listener<T>;
 }

@@ -73,8 +73,10 @@ export abstract class Launcher<T extends Encoding> {
       // Remove binary call from args
       args = yargHelper.hideBin(args);
 
+      // Configure commands
+      const yargs0 = this.configuration.configureCommands(this.programName);
       // Configure base options
-      const yargs1 = this.configuration.configureOptions(this.programName);
+      const yargs1 = this.configuration.configureOptions(yargs0);
       // Parse the arguments and config using only the base options
       const baseArguments = await this.configuration.processArguments(
         yargs1,
@@ -131,7 +133,7 @@ export abstract class Launcher<T extends Encoding> {
     this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
 
     // register standard termination triggers
-    this.pluginManager.registerTermination(
+    this.pluginManager.registerTerminationTrigger(
       new SignalTerminationTriggerFactory()
     );
 

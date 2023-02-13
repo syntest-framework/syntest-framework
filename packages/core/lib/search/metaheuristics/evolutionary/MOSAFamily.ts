@@ -25,7 +25,7 @@ import {
   UncoveredObjectiveManager,
   StructuralObjectiveManager,
   Encoding,
-  Crossover,
+  CrossoverOperator,
   crowdingDistance,
 } from "../../..";
 import {
@@ -49,7 +49,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: CrossoverOperator<T>
   ) {
     super(objectiveManager, encodingSampler, crossover);
   }

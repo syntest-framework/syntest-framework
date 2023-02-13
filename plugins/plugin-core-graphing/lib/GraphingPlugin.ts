@@ -19,7 +19,7 @@
 import {
   Encoding,
   ListenerPlugin,
-  ListenerInterface,
+  Listener,
   CONFIG,
   PluginManager,
 } from "@syntest/core";
@@ -37,11 +37,11 @@ export default class GraphingPlugin<T extends Encoding>
 {
   name = "Graphing";
 
-  register(pluginManager: PluginManager<T>) {
+  register(pluginManager: PluginManager<T>): void {
     pluginManager.registerListener(this);
   }
 
-  createListener(): ListenerInterface<T> {
+  createListener(): Listener<T> {
     return new CFGGraphingListener<T>();
   }
 

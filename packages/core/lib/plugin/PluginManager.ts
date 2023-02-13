@@ -16,21 +16,21 @@
  * limitations under the License.
  */
 import { Encoding } from "../search/Encoding";
-import { CrossoverPlugin } from "./CrossoverPlugin";
+import { CrossoverOperatorPlugin } from "./CrossoverOperatorPlugin";
 import { ListenerPlugin } from "./ListenerPlugin";
 import { PluginInterface } from "./PluginInterface";
-import { SamplerPlugin } from "./SamplerPlugin";
+import { EncodingSamplerPlugin } from "./EncodingSamplerPlugin";
 import { SearchAlgorithmPlugin } from "./SearchAlgorithmPlugin";
-import { TerminationPlugin } from "./TerminationPlugin";
+import { TerminationTriggerPlugin } from "./TerminationTriggerPlugin";
 import { UserInterfacePlugin } from "./UserInterfacePlugin";
 import Yargs = require("yargs");
 
 export class PluginManager<T extends Encoding> {
   private _listeners: Map<string, ListenerPlugin<T>>;
   private _searchAlgorithms: Map<string, SearchAlgorithmPlugin<T>>;
-  private _crossoverOperators: Map<string, CrossoverPlugin<T>>;
-  private _samplers: Map<string, SamplerPlugin<T>>;
-  private _terminationTriggers: Map<string, TerminationPlugin<T>>;
+  private _crossoverOperators: Map<string, CrossoverOperatorPlugin<T>>;
+  private _samplers: Map<string, EncodingSamplerPlugin<T>>;
+  private _terminationTriggers: Map<string, TerminationTriggerPlugin<T>>;
   private _userInterfaces: Map<string, UserInterfacePlugin<T>>;
 
   constructor() {
@@ -74,15 +74,15 @@ export class PluginManager<T extends Encoding> {
     return this._searchAlgorithms.get(name);
   }
 
-  getCrossoverOperator(name: string): CrossoverPlugin<T> {
+  getCrossoverOperator(name: string): CrossoverOperatorPlugin<T> {
     return this._crossoverOperators.get(name);
   }
 
-  getSampler(name: string): SamplerPlugin<T> {
+  getSampler(name: string): EncodingSamplerPlugin<T> {
     return this._samplers.get(name);
   }
 
-  getTerminationTrigger(name: string): TerminationPlugin<T> {
+  getTerminationTrigger(name: string): TerminationTriggerPlugin<T> {
     return this._terminationTriggers.get(name);
   }
 
@@ -198,7 +198,9 @@ export class PluginManager<T extends Encoding> {
     this._searchAlgorithms.set(plugin.name, plugin);
   }
 
-  async registerCrossover(plugin: CrossoverPlugin<T>): Promise<void> {
+  async registerCrossoverOperator(
+    plugin: CrossoverOperatorPlugin<T>
+  ): Promise<void> {
     if (this._crossoverOperators.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a crossover plugin.`
@@ -207,7 +209,7 @@ export class PluginManager<T extends Encoding> {
     this._crossoverOperators.set(plugin.name, plugin);
   }
 
-  async registerSampler(plugin: SamplerPlugin<T>): Promise<void> {
+  async registerSampler(plugin: EncodingSamplerPlugin<T>): Promise<void> {
     if (this._samplers.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a sampler plugin.`
@@ -216,7 +218,9 @@ export class PluginManager<T extends Encoding> {
     this._samplers.set(plugin.name, plugin);
   }
 
-  async registerTermination(plugin: TerminationPlugin<T>): Promise<void> {
+  async registerTerminationTrigger(
+    plugin: TerminationTriggerPlugin<T>
+  ): Promise<void> {
     if (this._terminationTriggers.has(plugin.name)) {
       throw new Error(
         `Plugin with name: ${plugin.name} is already registered as a termination trigger plugin.`

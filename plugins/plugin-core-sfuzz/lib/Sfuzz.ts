@@ -20,7 +20,7 @@ import {
   Encoding,
   MOSAFamily,
   EncodingSampler,
-  Crossover,
+  CrossoverOperator,
   getUserInterface,
   ObjectiveManager,
   SearchAlgorithmPlugin,
@@ -43,7 +43,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: CrossoverOperator<T>
   ) {
     super(objectiveManager, encodingSampler, crossover);
   }

@@ -15,15 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "..";
-import { TerminationTrigger } from "../search/termination/TerminationTrigger";
-import { PluginInterface } from "./PluginInterface";
 
-export type TerminationOptions<T extends Encoding> = unknown;
+import { CrossoverOperator, Encoding } from "..";
+import { CONFIG } from "../Configuration";
+import { PluginManager } from "../plugin/PluginManager";
 
-export interface TerminationPlugin<T extends Encoding>
-  extends PluginInterface<T> {
-  createTerminationTrigger<O extends TerminationOptions<T>>(
-    options: O
-  ): TerminationTrigger;
+/**
+ * Factory for creating an instance of a specific crossover operator from the config.
+ *
+ * @author Dimitri Stallenberg
+ */
+export function createCrossoverFromConfig<T extends Encoding>(
+  pluginManager: PluginManager<T>
+): CrossoverOperator<T> {
+  const crossover = CONFIG.crossover;
+
+  if (!pluginManager.getCrossoverOperators().includes(crossover)) {
+    throw new Error(
+      `Specified crossover: ${crossover} not found in pluginManager.`
+    );
+  }
+
+  return pluginManager
+    .getCrossoverOperator(crossover)
+    .createCrossoverOperator({});
 }

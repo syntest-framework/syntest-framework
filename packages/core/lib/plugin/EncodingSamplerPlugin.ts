@@ -15,28 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Encoding } from "..";
+import { EncodingSampler } from "../search/EncodingSampler";
+import { PluginInterface } from "./PluginInterface";
 
-import { Crossover, Encoding } from "..";
-import { CONFIG } from "../Configuration";
-import { PluginManager } from "../plugin/PluginManager";
+export type EncodingSamplerOptions<T extends Encoding> = unknown;
 
-/**
- * Factory for creating an instance of a specific crossover operator from the config.
- *
- * @author Dimitri Stallenberg
- */
-export function createCrossoverFromConfig<T extends Encoding>(
-  pluginManager: PluginManager<T>
-): Crossover<T> {
-  const crossover = CONFIG.crossover;
-
-  if (!pluginManager.getCrossoverOperators().includes(crossover)) {
-    throw new Error(
-      `Specified crossover: ${crossover} not found in pluginManager.`
-    );
-  }
-
-  return pluginManager
-    .getCrossoverOperator(crossover)
-    .createCrossoverOperator({});
+export interface EncodingSamplerPlugin<T extends Encoding>
+  extends PluginInterface<T> {
+  createEncodingSampler<O extends EncodingSamplerOptions<T>>(
+    options: O
+  ): EncodingSampler<T>;
 }

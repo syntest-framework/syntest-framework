@@ -19,7 +19,7 @@
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { EncodingSampler } from "../../EncodingSampler";
 import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
-import { Crossover } from "../../operators/crossover/Crossover";
+import { CrossoverOperator } from "../../operators/crossover/CrossoverOperator";
 import { Encoding } from "../../Encoding";
 import {
   SearchAlgorithmPlugin,
@@ -51,7 +51,7 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: CrossoverOperator<T>
   ) {
     super(objectiveManager, encodingSampler, crossover);
   }
