@@ -22,6 +22,9 @@
     "/dist",
     "/NOTICE"
   ],
+  "bin": {
+    "syntest-core": "dist/bin.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syntest-framework/syntest-core.git"

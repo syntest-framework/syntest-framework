@@ -80,31 +80,7 @@ export class Configuration {
         `${programName} -r ./src --population_size 10`,
         "Setting the population size"
       )
-      .epilog("visit https://syntest.org for more documentation")
-      .command(
-        "create-core-plugin-template",
-        "This command creates a plugin template for the SynTest Core",
-        {
-          "plugin-name": {
-            default: "plugin-core-example",
-            type: "string",
-            group: "Create plugin options:",
-          },
-          "plugin-type": {
-            choices: [
-              "CrossoverOperator",
-              "Listener",
-              "Sampler",
-              "SearchAlgorithm",
-              "TerminationTrigger",
-              "UserInterface",
-            ],
-            type: "string",
-            group: "Create plugin options:",
-          },
-        },
-        CreatePluginTemplate
-      );
+      .epilog("visit https://syntest.org for more documentation");
   }
 
   configureOptions<T>(yargs: Yargs.Argv<T>) {
