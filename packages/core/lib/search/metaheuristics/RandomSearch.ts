@@ -102,6 +102,9 @@ export class RandomSearchFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("RandomSearch requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error("RandomSearch requires encodingSampler option.");
     }

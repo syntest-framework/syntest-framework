@@ -35,6 +35,10 @@ import { EventManager } from "../../event/EventManager";
  * @author Mitchell Olsthoorn
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
+  /**
+   * Manager that passes event emisions to the eventlisteners.
+   * @protected
+   */
   protected _eventManager: EventManager<T>;
 
   /**

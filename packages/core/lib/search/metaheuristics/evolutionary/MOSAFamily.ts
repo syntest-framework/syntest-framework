@@ -354,7 +354,7 @@ export class DynaMOSAFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("MOSA requires eventManager option.");
+      throw new Error("DynaMOSA requires eventManager option.");
     }
     if (!options.encodingSampler) {
       throw new Error("DynaMOSA requires encodingSampler option.");
