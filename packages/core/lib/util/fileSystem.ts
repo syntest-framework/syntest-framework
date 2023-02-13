@@ -26,7 +26,7 @@ export async function createDirectoryStructure() {
     recursive: true,
   });
   await mkdirSync(CONFIG.logDirectory, { recursive: true });
-  await mkdirSync(CONFIG.finalSuiteDirectory, {
+  await mkdirSync(CONFIG.testDirectory, {
     recursive: true,
   });
 }
@@ -43,7 +43,7 @@ export async function deleteTempDirectories() {
   await rmdirSync(CONFIG.tempLogDirectory, { recursive: true });
   await rmdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
 
-  await rmdirSync(`.syntest`, { recursive: true });
+  await rmdirSync(CONFIG.tempSyntestDirectory, { recursive: true });
 }
 
 export async function clearDirectory(directory: string) {
