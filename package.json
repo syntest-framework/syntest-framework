@@ -37,7 +37,8 @@
     "lerna:lint": "lerna run --parallel lint",
     "lerna:lint:fix": "lerna run --parallel lint:fix",
     "lerna:test": "lerna run --parallel test",
-    "lerna:test:coverage": "lerna run --parallel test:coverage",
+    "lerna:test:coverage": "lerna run --stream test:coverage",
+    "lerna:test:coverage:ci": "lerna run --parallel test:coverage:ci",
     "lerna:test:watch": "lerna run --parallel test:watch",
     "postinstall": "husky install & lerna bootstrap --force-local"
   },
