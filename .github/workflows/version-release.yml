@@ -1,13 +1,15 @@
 name: version-release
 
 on:
-  push:
-    types: [created]
-    branches:
-      - 'release/**'
+  create:
 
 jobs:
   version-release:
+    name: Release - Version
+    # Only run when new release branches are created
+    if: >
+      (github.ref_type == 'branch') &&
+      startsWith(github.ref_name, 'release/')
     runs-on: ubuntu-latest
     steps:
       # Cloning
