@@ -1,19 +1,40 @@
+/*
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest Framework - SynTest Core.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { Target } from "./Target";
 import { CFG } from "@syntest/cfg-core";
 import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
 import { CONFIG } from "../../Configuration";
+import { ActionDescription } from "./ActionDescription";
 
 export abstract class TargetPool {
   private _targets: Target[];
 
   abstract getSource(targetPath: string): string;
   abstract getTargetMap(targetPath: string): Map<string, TargetMetaData>;
-  abstract getFunctionMap(
+  abstract getFunctionMap<A extends ActionDescription>(
+    targetPath: string
+  ): Map<string, Map<string, A>>;
+  abstract getFunctionMapSpecific<A extends ActionDescription>(
     targetPath: string,
     targetName: string
-  ): Map<string, Map<string, unknown>>;
+  ): Map<string, A>;
 
   abstract getCFG(targetPath: string, targetName: string): CFG;
   abstract getAST(targetPath: string): unknown;
