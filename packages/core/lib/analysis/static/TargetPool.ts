@@ -28,10 +28,10 @@ export abstract class TargetPool {
 
   abstract getSource(targetPath: string): string;
   abstract getTargetMap(targetPath: string): Map<string, TargetMetaData>;
-  abstract getFunctionMap<A extends ActionDescription>(
+  abstract getFunctionMaps<A extends ActionDescription>(
     targetPath: string
   ): Map<string, Map<string, A>>;
-  abstract getFunctionMapSpecific<A extends ActionDescription>(
+  abstract getFunctionMap<A extends ActionDescription>(
     targetPath: string,
     targetName: string
   ): Map<string, A>;
