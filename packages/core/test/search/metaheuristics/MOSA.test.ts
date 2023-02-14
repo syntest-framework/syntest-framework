@@ -1,7 +1,5 @@
 import * as chai from "chai";
 import {
-  setUserInterface,
-  CommandLineInterface,
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
@@ -13,7 +11,6 @@ import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import { BranchObjectiveFunction } from "../../../lib";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
-import { createStubInstance } from "sinon";
 import * as configuration from "../../../lib/Configuration";
 
 const expect = chai.expect;
@@ -22,10 +19,6 @@ const expect = chai.expect;
  * @author Annibale Panichella
  */
 describe("Test MOSA", function () {
-  before(() => {
-    setUserInterface(createStubInstance(CommandLineInterface));
-  });
-
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {

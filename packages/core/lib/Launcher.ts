@@ -101,11 +101,10 @@ export abstract class Launcher<T extends Encoding> {
       // Initialize the configuration object
       this.configuration.initialize(argValues);
 
-      // Set logger singleton
-      setupLogger(this.pluginManager);
-
       // Set user interface
       this._userInterface = createUserInterfaceFromConfig(this.pluginManager);
+      // Set logger singleton
+      setupLogger(this.userInterface);
 
       // Register all listener plugins
       for (const pluginName of this.pluginManager.getListeners()) {

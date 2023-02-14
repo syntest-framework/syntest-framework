@@ -1,12 +1,7 @@
 import * as chai from "chai";
-import {
-  BranchObjectiveFunction,
-  CommandLineInterface,
-  setUserInterface,
-} from "../../../lib";
+import { BranchObjectiveFunction } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { tournamentSelection } from "../../../lib/search/operators/selection/TournamentSelection";
-import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -18,10 +13,6 @@ global.Math = mockMath;
  * @author Annibale Panichella
  */
 describe("Tournament selection", function () {
-  before(() => {
-    setUserInterface(createStubInstance(CommandLineInterface));
-  });
-
   it("Small Tournament size", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,

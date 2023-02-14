@@ -1,12 +1,7 @@
 import * as chai from "chai";
-import {
-  CommandLineInterface,
-  crowdingDistance,
-  setUserInterface,
-} from "../../../lib";
+import { crowdingDistance } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { BranchObjectiveFunction, ObjectiveFunction } from "../../../lib";
-import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -15,10 +10,6 @@ const expect = chai.expect;
  */
 
 describe("Crowding distance", function () {
-  before(() => {
-    setUserInterface(createStubInstance(CommandLineInterface));
-  });
-
   it("empty front", () => {
     crowdingDistance([], new Set<ObjectiveFunction<DummyEncodingMock>>());
   });

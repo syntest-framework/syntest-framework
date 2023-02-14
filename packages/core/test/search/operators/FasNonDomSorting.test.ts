@@ -1,12 +1,7 @@
 import * as chai from "chai";
-import {
-  BranchObjectiveFunction,
-  CommandLineInterface,
-  setUserInterface,
-} from "../../../lib";
+import { BranchObjectiveFunction } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { fastNonDomSorting } from "../../../lib/search/operators/ranking/FastNonDomSorting";
-import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -14,10 +9,6 @@ const expect = chai.expect;
  * @author Annibale Panichella
  */
 describe("Fast non-dominated sorting", function () {
-  before(() => {
-    setUserInterface(createStubInstance(CommandLineInterface));
-  });
-
   it("Sort three solutions", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       null,

@@ -1,12 +1,7 @@
 import * as chai from "chai";
 import { DominanceComparator } from "../../../lib/search/comparators/DominanceComparator";
-import {
-  BranchObjectiveFunction,
-  CommandLineInterface,
-  setUserInterface,
-} from "../../../lib";
+import { BranchObjectiveFunction } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
-import { createStubInstance } from "sinon";
 
 const expect = chai.expect;
 
@@ -14,10 +9,6 @@ const expect = chai.expect;
  * @author Annibale Panichella
  */
 describe("Dominance comparator", function () {
-  before(() => {
-    setUserInterface(createStubInstance(CommandLineInterface));
-  });
-
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {

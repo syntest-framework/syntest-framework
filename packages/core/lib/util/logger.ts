@@ -6,15 +6,14 @@ import {
   transports,
 } from "winston";
 import { CONFIG } from "../Configuration";
-import path = require("path");
-import { createUserInterfaceFromConfig } from "../factories/UserInterfaceFactory";
-import { PluginManager } from "../plugin/PluginManager";
+import * as path from "path";
 import { Encoding } from "../search/Encoding";
+import { UserInterface } from "../ui/UserInterface";
 
 export let LOGGER: Logger;
 
 export function setupLogger<T extends Encoding>(
-  pluginManager: PluginManager<T>
+  userInterface?: UserInterface<T>
 ) {
   const fileTransportOptions: transports.FileTransportOptions = {
     maxsize: 5242880, // 5MB
@@ -47,13 +46,13 @@ export function setupLogger<T extends Encoding>(
             filename: path.join(CONFIG.logDirectory, `${logLevel}.log`),
           })
       ),
-      createUserInterfaceFromConfig(pluginManager),
-      new transports.Console({
-        format: format.cli(),
-        level: CONFIG.consoleLogLevel,
-        stderrLevels: ["fatal", "error", "warn"],
-        debugStdout: false,
-      }),
+      userInterface ||
+        new transports.Console({
+          format: format.cli(),
+          level: CONFIG.consoleLogLevel,
+          stderrLevels: ["fatal", "error", "warn"],
+          debugStdout: false,
+        }),
     ],
   };
 
