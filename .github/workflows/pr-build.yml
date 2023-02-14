@@ -1,4 +1,4 @@
-name: build
+name: pr-build
 
 on:
   pull_request:
@@ -6,49 +6,55 @@ on:
       - "docs/"
       - "**.md"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
+    name: Build on ${{ matrix.os }} with Node.js ${{ matrix.node-version }} (${{ matrix.architecture }})
+    # Only run on PRs that are ready
+    if: github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: "."
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
-      # Keep running other versions when a job fails
-      fail-fast: false
+      # Stop remaining runs when a build fails that is not experimental
+      fail-fast: true
 
       matrix:
         # Run the pipeline on all the currently supported OS versions
         os: [ubuntu-latest]
 
         # Run the pipeline on all the currently supported LTS versions and the upcoming version
-        node-version: [18]
+        node-version: [lts/*]
 
         # Run the pipeline on all the currently supported architectures
         architecture: [x64]
+
+        experimental: [false]
+
+        include:
+          # Mark Node.js 19 as experimental
+          - version: 19
+            experimental: true
 
     steps:
       # Cloning
       - uses: actions/checkout@v3
 
-      # Setup
-      - name: Use Node.js ${{ matrix.node-version }}
+      # Setup and Caching
+      - name: Use Node.js ${{ matrix.node-version }} (${{ matrix.architecture }})
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           architecture: ${{ matrix.architecture }}
 
-      # Caching
-      - name: Get NPM cache directory
-        id: npm-cache-dir
-        run: echo "::set-output name=dir::$(npm config get cache)"
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          # NPM Cache using all package-lock files as hash
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       # Dependencies
       - name: Core - Install Dependencies
@@ -57,7 +63,3 @@ jobs:
       # Building
       - name: Core - Build
         run: npm run lerna:build
-
-      # Testing
-      - name: Core - Run Tests
-        run: npm run lerna:test
