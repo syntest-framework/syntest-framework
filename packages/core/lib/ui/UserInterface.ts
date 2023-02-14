@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { singleTonNotSet } from "../Diagnostics";
+import { singletonNotSet } from "../Diagnostics";
 
 export abstract class UserInterface {
   silent: boolean;
@@ -48,7 +48,7 @@ let userInterface: UserInterface;
 
 export function getUserInterface(): UserInterface {
   if (!userInterface) {
-    throw new Error(singleTonNotSet("user-interface"));
+    throw new Error(singletonNotSet("user-interface"));
   }
 
   return userInterface;

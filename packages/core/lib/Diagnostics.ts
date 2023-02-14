@@ -27,9 +27,9 @@ export const minimumValue = (name: string, minimum: number, actual: number) =>
 export const maximumValue = (name: string, maximum: number, actual: number) =>
   `The '${name}' should be smaller than or equal to ${maximum} but is ${actual}.`;
 
-export const singleTonNotSet = (name: string) =>
+export const singletonNotSet = (name: string) =>
   `The ${name} singleton has not been set yet!`;
-export const singleTonAlreadySet = (name: string) =>
+export const singletonAlreadySet = (name: string) =>
   `The ${name} singleton has already been set!`;
 
 export const emptyArray = (variableName: string) =>
