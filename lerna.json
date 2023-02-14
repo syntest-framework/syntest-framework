@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "useWorkspaces": false,
+  "useWorkspaces": true,
   "version": "independent",
   "ignoreChanges": [],
   "conventionalCommits": true,
@@ -8,6 +8,5 @@
     "version": {
       "message": "chore(release): publish new version"
     }
-  },
-  "packages": ["packages/*", "plugins/*"]
+  }
 }

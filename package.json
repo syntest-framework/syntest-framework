@@ -40,8 +40,12 @@
     "lerna:test:coverage": "lerna run --stream test:coverage",
     "lerna:test:coverage:ci": "lerna run --parallel test:coverage:ci",
     "lerna:test:watch": "lerna run --parallel test:watch",
-    "postinstall": "husky install & lerna bootstrap --force-local"
+    "postinstall": "husky install"
   },
+  "workspaces": [
+    "packages/*",
+    "plugins/*"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
