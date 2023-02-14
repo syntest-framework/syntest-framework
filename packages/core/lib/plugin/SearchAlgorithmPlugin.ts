@@ -17,12 +17,13 @@
  */
 import { EncodingRunner } from "../search/EncodingRunner";
 import { EncodingSampler } from "../search/EncodingSampler";
-import { Crossover, Encoding } from "..";
+import { Crossover, Encoding, EventManager } from "..";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
 import { PluginInterface } from "./PluginInterface";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
+  eventManager?: EventManager<T>;
   objectiveManager?: ObjectiveManager<T>;
   encodingSampler?: EncodingSampler<T>;
   runner?: EncodingRunner<T>;
