@@ -1,10 +1,4 @@
-import {
-  Configuration,
-  ArgumentsObject,
-  setupLogger,
-  PluginManager,
-  UserInterface,
-} from "../lib";
+import { Configuration, ArgumentsObject, setupLogger } from "../lib";
 // globals
 
 // setup
