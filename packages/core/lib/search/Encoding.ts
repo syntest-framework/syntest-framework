@@ -19,9 +19,9 @@
 import { ExecutionResult } from "./ExecutionResult";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { prng } from "../util/prng";
-import { getUserInterface } from "../ui/UserInterface";
 import { EncodingSampler } from "./EncodingSampler";
 import { Decoder } from "./Decoder";
+import { LOGGER } from "../util/logger";
 
 /**
  * Encoding of the search problem.
@@ -55,7 +55,7 @@ export abstract class Encoding {
     this._id = prng.uniqueId(20);
     this._objectives = new Map<ObjectiveFunction<Encoding>, number>();
     this._assertions = new Map();
-    getUserInterface().debug(`Created test case: ${this._id}`);
+    LOGGER.debug(`Created test case: ${this._id}`);
   }
 
   abstract mutate(sampler: EncodingSampler<Encoding>): Encoding;

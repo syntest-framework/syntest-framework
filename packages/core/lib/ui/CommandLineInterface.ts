@@ -17,27 +17,41 @@
  */
 
 import { UserInterface } from "./UserInterface";
-import { getLogger } from "../util/logger";
 import * as cliProgress from "cli-progress";
 
 import chalk = require("chalk");
 import figlet = require("figlet");
+import { Encoding } from "../search/Encoding";
+import { ProgramState } from "../event/ProgramState";
 
-export class CommandLineInterface extends UserInterface {
+export class CommandLineInterface<T extends Encoding> extends UserInterface<T> {
+  private ct: string = chalk.bold.green(">");
+  private ds: string = chalk.bold.yellow(">");
+
   protected showProgressBar: boolean;
   protected progressValue: number;
   protected budgetValue: number;
   protected bar: cliProgress.SingleBar;
 
-  constructor(silent = false, verbose = false) {
-    super(silent, verbose);
+  asciiArt(text: string): void {
+    console.log(
+      chalk.yellow(figlet.textSync(text, { horizontalLayout: "full" }))
+    );
   }
 
-  asciiArt(text: string): string {
-    return chalk.yellow(figlet.textSync(text, { horizontalLayout: "full" }));
+  header(header: string): void {
+    console.log("\n" + chalk.green(chalk.bold(`${header}`)) + "\n");
   }
 
-  startProgressBar(): void {
+  subheader(subheader: string): void {
+    console.log(`\n${chalk.bold(subheader)}: \n`);
+  }
+
+  property(property: string, value: string): void {
+    console.log(`${this.ct} ${property}: ${value}\n`);
+  }
+
+  onSearchStart(state: ProgramState<T>): void {
     this.showProgressBar = true;
 
     this.bar = new cliProgress.SingleBar({
@@ -53,7 +67,10 @@ export class CommandLineInterface extends UserInterface {
     });
   }
 
-  updateProgressBar(value: number, budget: number): void {
+  onSearchIterationComplete(state: ProgramState<T>): void {
+    const value = state.algorithm.progress("branch");
+    const budget = state.budgetManager.getBudget();
+
     this.progressValue = value;
     this.budgetValue = budget;
 
@@ -62,28 +79,28 @@ export class CommandLineInterface extends UserInterface {
     });
   }
 
-  stopProgressBar(): void {
+  onSearchComplete(state: ProgramState<T>): void {
     this.showProgressBar = false;
     this.bar.stop();
   }
 
-  log(type: string, text: string): void {
-    getLogger()[type](text);
-  }
+  // log(type: string, text: string): void {
+  //   getLogger()[type](text);
+  // }
 
-  debug(text: string): void {
-    this.log("debug", text);
-  }
+  // debug(text: string): void {
+  //   this.log("debug", text);
+  // }
 
-  info(text: string): void {
-    this.log("info", text);
-  }
+  // info(text: string): void {
+  //   this.log("info", text);
+  // }
 
-  error(text: string): void {
-    this.log("error", text);
-  }
+  // error(text: string): void {
+  //   this.log("error", text);
+  // }
 
-  report(text: string, args: string[]): void {
-    this.info(`${text}: ${args.join(", ")}`);
-  }
+  // report(text: string, args: string[]): void {
+  //   this.info(`${text}: ${args.join(", ")}`);
+  // }
 }

@@ -16,7 +16,12 @@
  * limitations under the License.
  */
 
-import { Encoding } from ".";
+import {
+  Encoding,
+  UserInterface,
+  createUserInterfaceFromConfig,
+  setupLogger,
+} from ".";
 import { Configuration } from "./Configuration";
 import { EventManager } from "./event/EventManager";
 import { PluginManager } from "./plugin/PluginManager";
@@ -30,12 +35,15 @@ import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
 import yargHelper = require("yargs/helpers");
+import { LOGGER } from "./util/logger";
+import { EventLogger } from "./event/EventLogger";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
   private _pluginManager: PluginManager<T>;
   private _programName: string;
   private _configuration: Configuration;
+  private _userInterface: UserInterface<T>;
 
   get eventManager() {
     return this._eventManager;
@@ -55,6 +63,10 @@ export abstract class Launcher<T extends Encoding> {
 
   get configuration() {
     return this._configuration;
+  }
+
+  get userInterface() {
+    return this._userInterface;
   }
 
   constructor(
@@ -89,6 +101,12 @@ export abstract class Launcher<T extends Encoding> {
       // Initialize the configuration object
       this.configuration.initialize(argValues);
 
+      // Set logger singleton
+      setupLogger(this.pluginManager);
+
+      // Set user interface
+      this._userInterface = createUserInterfaceFromConfig(this.pluginManager);
+
       // Register all listener plugins
       for (const pluginName of this.pluginManager.getListeners()) {
         const plugin = this.pluginManager.getListener(pluginName);
@@ -112,6 +130,7 @@ export abstract class Launcher<T extends Encoding> {
       this.eventManager.emitEvent("onExit");
       await this.exit();
     } catch (e) {
+      LOGGER.error(e);
       console.log(e);
       console.trace(e);
     }
@@ -134,6 +153,9 @@ export abstract class Launcher<T extends Encoding> {
     this.pluginManager.registerTermination(
       new SignalTerminationTriggerFactory()
     );
+
+    // register standard listener
+    this.pluginManager.registerListener(new EventLogger());
 
     // load external plugins
     for (const plugin of plugins) {

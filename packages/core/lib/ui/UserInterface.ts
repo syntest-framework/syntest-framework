@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,43 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { format } from "winston";
+import { ListenerInterface } from "../event/ListenerInterface";
+import { Encoding } from "../search/Encoding";
+import Transport = require("winston-transport");
+import { CONFIG } from "../Configuration";
+import clear = require("clear");
 
-export abstract class UserInterface {
-  silent: boolean;
-  verbose: boolean;
+export abstract class UserInterface<T extends Encoding>
+  extends Transport
+  implements ListenerInterface<T>
+{
+  // This empty function is required because typescripts weak type detection requires atleast one overlapping property.
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onEvent(): void {}
 
-  constructor(silent = false, verbose = false) {
-    this.silent = silent;
-    this.verbose = verbose;
+  format = format.cli();
+  level = CONFIG.consoleLogLevel;
+  stderrLevels = ["fatal", "error", "warn"];
+  debugStdout = false;
+
+  clear(): void {
+    clear();
   }
 
-  abstract report(text: string, args: string[]): void;
+  abstract asciiArt(text: string): void;
+  // abstract showProperties(): void;
+  abstract header(header: string): void;
 
-  abstract log(type: string, text: string): void;
-
-  abstract debug(text: string): void;
-
-  abstract info(text: string): void;
-
-  abstract error(text: string): void;
-
-  abstract startProgressBar(): void;
-
-  abstract updateProgressBar(value: number, budget: number): void;
-
-  abstract stopProgressBar(): void;
-}
-
-let userInterface: UserInterface;
-
-export function getUserInterface(): UserInterface {
-  if (!userInterface) {
-    throw new Error("The UserInterface has not been set yet!");
-  }
-
-  return userInterface;
-}
-
-export function setUserInterface(ui: UserInterface): void {
-  userInterface = ui;
+  abstract subheader(subheader: string): void;
+  abstract property(property: string, value: string): void;
 }

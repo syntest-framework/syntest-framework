@@ -44,6 +44,10 @@ export class EventManager<T extends Encoding> {
       if (typeof listener[event] !== "function") {
         continue;
       }
+      listener.onEvent(event, this.state);
+      if (event === "onEvent") {
+        continue;
+      }
       listener[event](this.state);
     }
   }

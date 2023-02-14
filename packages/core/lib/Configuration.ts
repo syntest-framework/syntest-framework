@@ -319,7 +319,7 @@ export class Configuration {
             hidden: false,
             type: "string",
           },
-          "log-to-file": {
+          "file-log-level": {
             alias: [],
             default: ["info", "warn", "error"],
             description: "Which levels should be logged to file",

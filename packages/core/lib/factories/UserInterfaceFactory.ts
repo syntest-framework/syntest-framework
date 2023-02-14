@@ -28,7 +28,7 @@ import { UserInterface } from "../ui/UserInterface";
  */
 export function createUserInterfaceFromConfig<T extends Encoding>(
   pluginManager: PluginManager<T>
-): UserInterface {
+): UserInterface<T> {
   const userInterface = CONFIG.userInterface;
 
   if (!pluginManager.getUserInterfaces().includes(userInterface)) {

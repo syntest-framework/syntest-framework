@@ -41,7 +41,7 @@ export class SignalTerminationTrigger implements TerminationTrigger {
    * @param signal the type of signal
    */
   public handle(signal: string): void {
-    // TODO: use framework logger
+    // TODO: use framework LOGGER
     console.log(
       `Received ${signal}. Stopping search. Press Control-D to exit.`
     );

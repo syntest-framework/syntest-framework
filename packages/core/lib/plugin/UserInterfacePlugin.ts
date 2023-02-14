@@ -25,5 +25,5 @@ export interface UserInterfacePlugin<T extends Encoding>
   extends PluginInterface<T> {
   createUserInterface<O extends UserInterfaceOptions>(
     options: O
-  ): UserInterface;
+  ): UserInterface<T>;
 }

@@ -20,7 +20,7 @@
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { CFG, Edge } from "@syntest/cfg-core";
-import { getUserInterface } from "../ui/UserInterface";
+import { LOGGER } from "../util/logger";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Graph, alg } = require("@dagrejs/graphlib");
@@ -113,7 +113,7 @@ export abstract class SearchSubject<T extends Encoding> {
         );
       });
       if (!edge) {
-        getUserInterface().error(`Edge not found during dijkstra operation.`);
+        LOGGER.error(`Edge not found during dijkstra operation.`);
         process.exit(1);
       }
 

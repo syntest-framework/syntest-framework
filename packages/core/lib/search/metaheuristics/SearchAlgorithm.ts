@@ -21,7 +21,6 @@ import { Archive } from "../Archive";
 import { SearchSubject } from "../SearchSubject";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { BudgetManager } from "../budget/BudgetManager";
-import { getUserInterface } from "../../ui/UserInterface";
 import { TerminationManager } from "../termination/TerminationManager";
 import { SearchListener } from "../SearchListener";
 import { ExecutionResult } from "../ExecutionResult";
@@ -112,17 +111,11 @@ export abstract class SearchAlgorithm<T extends Encoding> {
 
     // Start initialization budget tracking
     budgetManager.initializationStarted();
-    getUserInterface().startProgressBar();
 
     // Inform listeners that the search started
     this._listeners.forEach((listener) => {
       listener.searchStarted(this, budgetManager, terminationManager);
     });
-
-    getUserInterface().updateProgressBar(
-      this.progress("branch"),
-      budgetManager.getBudget()
-    );
 
     this._eventManager.emitEvent("onSearchInitializationStart");
 
@@ -138,10 +131,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       listener.initializationDone(this, budgetManager, terminationManager)
     );
 
-    getUserInterface().updateProgressBar(
-      this.progress("branch"),
-      budgetManager.getBudget()
-    );
     budgetManager.searchStarted();
 
     this._eventManager.emitEvent("onSearchStart");
@@ -165,15 +154,10 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       this._listeners.forEach((listener) =>
         listener.iteration(this, budgetManager, terminationManager)
       );
-      getUserInterface().updateProgressBar(
-        this.progress("branch"),
-        budgetManager.getBudget()
-      );
     }
 
     // Stop search budget tracking
     budgetManager.searchStopped();
-    getUserInterface().stopProgressBar();
 
     this._eventManager.emitEvent("onSearchComplete");
 

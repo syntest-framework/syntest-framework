@@ -66,7 +66,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       return; // the search should end
 
     // non-dominated sorting
-    getUserInterface().debug(
+    LOGGER.debug(
       "Number of objectives = " +
         this._objectiveManager.getCurrentObjectives().size
     );
@@ -76,7 +76,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       this._objectiveManager.getCurrentObjectives()
     );
 
-    getUserInterface().debug("First front size = " + F[0].length);
+    LOGGER.debug("First front size = " + F[0].length);
 
     // select new population
     this._population = F[0];
