@@ -8,8 +8,10 @@ export const aliases: string[] = ["start", "r"];
 export const description = "Run the tool";
 
 export const builder = (yargs: Argv) => {
-  yargs = yargs.usage("Usage: $0 run [options]").version(false);
-  return Configuration.configureBaseOptions(yargs);
+  return Configuration.configureBaseOptions(yargs)
+    .usage("Usage: $0 run [options]")
+    .version(false)
+    .help(true);
 };
 
 export const handler = (argv) => {

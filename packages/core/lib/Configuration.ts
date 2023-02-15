@@ -145,7 +145,9 @@ export class Configuration {
         `${programName} run -r ./src --population_size 10`,
         "Setting the population size"
       )
-      .epilog("visit https://syntest.org for more documentation");
+      .epilog("visit https://syntest.org for more documentation")
+      .help(false)
+      .version(false);
   }
 
   static configureCommands(yargs: Yargs.Argv, additionalCommandsDir?: string) {
@@ -155,7 +157,7 @@ export class Configuration {
       yargs = yargs.commandDir(additionalCommandsDir);
     }
 
-    return yargs.demandCommand();
+    return yargs.demandCommand().help(true).version(true);
   }
 
   static configureBaseOptions(yargs: Yargs.Argv) {
