@@ -25,6 +25,12 @@ import { TerminationPlugin } from "./TerminationPlugin";
 import { UserInterfacePlugin } from "./UserInterfacePlugin";
 import Yargs = require("yargs");
 
+export let pluginManager: PluginManager<Encoding>;
+
+export function createPluginManager<T extends Encoding>() {
+  pluginManager = new PluginManager<T>();
+}
+
 export class PluginManager<T extends Encoding> {
   private _listeners: Map<string, ListenerPlugin<T>>;
   private _searchAlgorithms: Map<string, SearchAlgorithmPlugin<T>>;

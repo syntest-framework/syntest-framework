@@ -159,7 +159,6 @@ export class Configuration {
   }
 
   static configureBaseOptions(yargs: Yargs.Argv) {
-    yargs = Configuration.configureGeneralOptions(yargs);
     yargs = Configuration.configureTargetOptions(yargs);
     yargs = Configuration.configureStorageOptions(yargs);
     yargs = Configuration.configureAlgorithmOptions(yargs);

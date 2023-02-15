@@ -19,7 +19,7 @@
 import { Encoding } from ".";
 import { Configuration } from "./Configuration";
 import { EventManager } from "./event/EventManager";
-import { PluginManager } from "./plugin/PluginManager";
+import { PluginManager, pluginManager } from "./plugin/PluginManager";
 import {
   DynaMOSAFactory,
   MOSAFactory,
@@ -32,34 +32,28 @@ import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
-  private _pluginManager: PluginManager<T>;
 
   get eventManager() {
     return this._eventManager;
-  }
-
-  get pluginManager() {
-    return this._pluginManager;
   }
 
   get programState() {
     return this._eventManager.state;
   }
 
-  constructor(eventManager: EventManager<T>, pluginManager: PluginManager<T>) {
+  constructor(eventManager: EventManager<T>) {
     this._eventManager = eventManager;
-    this._pluginManager = pluginManager;
   }
 
   public async run(): Promise<void> {
     try {
       // Register all listener plugins
-      for (const pluginName of this.pluginManager.getListeners()) {
-        const plugin = this.pluginManager.getListener(pluginName);
+      for (const pluginName of pluginManager.getListeners()) {
+        const plugin = pluginManager.getListener(pluginName);
         this.eventManager.registerListener(plugin.createListener({}));
       }
 
-      await this.pluginManager.prepare();
+      await pluginManager.prepare();
       this.eventManager.emitEvent("onInitializeStart");
       await this.initialize();
       this.eventManager.emitEvent("onInitializeComplete");
@@ -72,40 +66,13 @@ export abstract class Launcher<T extends Encoding> {
       this.eventManager.emitEvent("onPostprocessStart");
       await this.postprocess();
       this.eventManager.emitEvent("onPostprocessComplete");
-      await this.pluginManager.cleanup();
+      await pluginManager.cleanup();
       this.eventManager.emitEvent("onExit");
       await this.exit();
     } catch (e) {
       console.log(e);
       console.trace(e);
     }
-  }
-
-  /**
-   * This function should configure the argument options in the language specific tool.
-   * @param yargs
-   */
-  abstract addOptions<Y>(yargs: Yargs.Argv<Y>): Yargs.Argv<Y>;
-
-  async registerPlugins<Y>(plugins: string[], yargs: Yargs.Argv<Y>) {
-    // register standard search algorithms
-    this.pluginManager.registerSearchAlgorithm(new RandomSearchFactory());
-    this.pluginManager.registerSearchAlgorithm(new NSGAIIFactory());
-    this.pluginManager.registerSearchAlgorithm(new MOSAFactory());
-    this.pluginManager.registerSearchAlgorithm(new DynaMOSAFactory());
-
-    // register standard termination triggers
-    this.pluginManager.registerTermination(
-      new SignalTerminationTriggerFactory()
-    );
-
-    // load external plugins
-    for (const plugin of plugins) {
-      await this.pluginManager.loadPlugin(plugin);
-    }
-
-    // add plugin options
-    return this.pluginManager.addPluginOptions(yargs);
   }
 
   abstract initialize(): Promise<void>;
