@@ -20,28 +20,93 @@ import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
 
-// This type declaration removes the [key: string]: unknown index from type T.
-export type RemoveIndex<T> = {
-  [K in keyof T as string extends K
-    ? never
-    : number extends K
-    ? never
-    : K]: T[K];
+export type GeneralOptions = {
+  plugins: string[];
+  userInterface: string;
 };
 
-// We do not want the [key: string]: unknown index that yargs gives as our config.
-// RemoveIndex<T> removes this for us.
-export let CONFIG: Readonly<RemoveIndex<ArgumentsObject>>;
+export type TargetOptions = {
+  targetRootDirectory: string;
+  include: string[];
+  exclude: string[];
+};
+
+export type StorageOptions = {
+  statisticsDirectory: string;
+  logDirectory: string;
+  testDirectory: string;
+  tempLogDirectory: string;
+  tempTestDirectory: string;
+  tempInstrumentedDirectory: string;
+};
+
+export type AlgorithmOptions = {
+  algorithm: string;
+  populationSize: number;
+  crossover: string;
+  sampler: string;
+  terminationTriggers: string[];
+};
+
+export type BudgetOptions = {
+  totalTimeBudget: number;
+  searchTimeBudget: number;
+  iterationBudget: number;
+  evaluationBudget: number;
+};
+
+export type LoggingOptions = {
+  consoleLogLevel: string;
+  logToFile: string[];
+};
+
+export type PostProcessingOptions = {
+  testMinimization: boolean;
+};
+
+export type SamplingOptions = {
+  seed: string;
+  maxDepth: number;
+  maxActionStatements: number;
+  constantPool: boolean;
+  exploreIllegalValues: boolean;
+  resampleGeneProbability: number;
+  deltaMutationProbability: number;
+  sampleExistingValueProbability: number;
+  crossoverProbability: number;
+  constantPoolProbability: number;
+  sampleFunctionOutputAsArgument: number;
+  stringAlphabet: string;
+  stringMaxLength: number;
+  numericMaxValue: number;
+};
+
+export type ResearchModeOptions = {
+  configuration: string;
+  outputProperties: string[];
+};
+
+export type ArgumentsObject = GeneralOptions &
+  TargetOptions &
+  StorageOptions &
+  AlgorithmOptions &
+  BudgetOptions &
+  LoggingOptions &
+  PostProcessingOptions &
+  SamplingOptions &
+  ResearchModeOptions;
+
+export let CONFIG: Readonly<ArgumentsObject>;
 export class Configuration {
-  initialize(argumentValues: ArgumentsObject) {
+  static initialize<A extends ArgumentsObject>(argumentValues: Readonly<A>) {
     if (CONFIG) {
       throw Error("Already initialized the config singleton!");
     }
 
-    CONFIG = <Readonly<RemoveIndex<ArgumentsObject>>>(<unknown>argumentValues);
+    CONFIG = argumentValues;
   }
 
-  loadFile(cwd?: string) {
+  static loadFile(cwd?: string) {
     cwd = cwd || process.env.SYNTEST_CWD || process.cwd();
     const configPath = path.join(cwd, ".syntest.js");
     let config;
@@ -60,43 +125,54 @@ export class Configuration {
     return config;
   }
 
-  processArguments<O extends OptionsObject>(
-    yargs: O,
-    args: string[]
-  ): ArgumentsObject {
-    const config = this.loadFile();
+  static processArguments(yargs: Yargs.Argv, args: string[]): ArgumentsObject {
+    const config = Configuration.loadFile();
     const configuredArgs = yargs.config(config);
-    return configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args);
+    return <ArgumentsObject>(
+      (<unknown>(
+        configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args)
+      ))
+    );
   }
 
-  configureOptions(programName: string) {
-    const yargs = Yargs.usage(`Usage: ${programName} [options]`)
+  static configureUsage(programName: string) {
+    return Yargs.usage(`Usage: ${programName} <command> [options]`)
       .example(
-        `${programName} -r ./src`,
+        `${programName} run -r ./src`,
         "Running the tool with target directory 'src'"
       )
       .example(
-        `${programName} -r ./src --population_size 10`,
+        `${programName} run -r ./src --population_size 10`,
         "Setting the population size"
       )
       .epilog("visit https://syntest.org for more documentation");
-
-    // Here we chain all the configure functions to create a single options object that contains everything.
-    const options1 = this.configureGeneralOptions(yargs);
-    const options2 = this.configureTargetOptions(options1);
-    const options3 = this.configureStorageOptions(options2);
-    const options4 = this.configureAlgorithmOptions(options3);
-    const options5 = this.configureBudgetOptions(options4);
-    const options6 = this.configureLoggingOptions(options5);
-    const options7 = this.configurePostProcessingOptions(options6);
-    const options8 = this.configureSamplingOptions(options7);
-    const options9 = this.configureResearchModeOptions(options8);
-
-    // In case there are hidden options we hide them from the help menu.
-    return options9.showHidden(false);
   }
 
-  configureGeneralOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureCommands(yargs: Yargs.Argv, additionalCommandsDir?: string) {
+    yargs = yargs.commandDir("./commands");
+
+    if (additionalCommandsDir) {
+      yargs = yargs.commandDir(additionalCommandsDir);
+    }
+
+    return yargs.demandCommand();
+  }
+
+  static configureBaseOptions(yargs: Yargs.Argv) {
+    yargs = Configuration.configureGeneralOptions(yargs);
+    yargs = Configuration.configureTargetOptions(yargs);
+    yargs = Configuration.configureStorageOptions(yargs);
+    yargs = Configuration.configureAlgorithmOptions(yargs);
+    yargs = Configuration.configureBudgetOptions(yargs);
+    yargs = Configuration.configureLoggingOptions(yargs);
+    yargs = Configuration.configurePostProcessingOptions(yargs);
+    yargs = Configuration.configureSamplingOptions(yargs);
+    yargs = Configuration.configureResearchModeOptions(yargs);
+
+    return yargs;
+  }
+
+  static configureGeneralOptions(yargs: Yargs.Argv) {
     return (
       yargs
         // plugins
@@ -121,7 +197,7 @@ export class Configuration {
     );
   }
 
-  configureTargetOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureTargetOptions(yargs: Yargs.Argv) {
     return yargs.options({
       // Files
       "target-root-directory": {
@@ -154,7 +230,7 @@ export class Configuration {
     });
   }
 
-  configureStorageOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureStorageOptions(yargs: Yargs.Argv) {
     return yargs.options({
       // directories
       "statistics-directory": {
@@ -175,19 +251,10 @@ export class Configuration {
         normalize: true,
         type: "string",
       },
-      "final-suite-directory": {
+      "test-directory": {
         alias: [],
         default: "syntest/tests",
         description: "The path where the final test suite should be saved",
-        group: "Directory options:",
-        hidden: false,
-        normalize: true,
-        type: "string",
-      },
-      "temp-test-directory": {
-        alias: [],
-        default: ".syntest/tests",
-        description: "Path to the temporary test directory",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -197,6 +264,15 @@ export class Configuration {
         alias: [],
         default: ".syntest/logs",
         description: "Path to the temporary log directory",
+        group: "Directory options:",
+        hidden: false,
+        normalize: true,
+        type: "string",
+      },
+      "temp-test-directory": {
+        alias: [],
+        default: ".syntest/tests",
+        description: "Path to the temporary test directory",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -214,7 +290,7 @@ export class Configuration {
     });
   }
 
-  configureAlgorithmOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureAlgorithmOptions(yargs: Yargs.Argv) {
     return (
       yargs
         // algorithm settings
@@ -264,7 +340,7 @@ export class Configuration {
     );
   }
 
-  configureBudgetOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureBudgetOptions(yargs: Yargs.Argv) {
     return (
       yargs
         // time settings
@@ -305,7 +381,7 @@ export class Configuration {
     );
   }
 
-  configureLoggingOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureLoggingOptions(yargs: Yargs.Argv) {
     return (
       yargs
         // logging
@@ -331,7 +407,7 @@ export class Configuration {
     );
   }
 
-  configurePostProcessingOptions<T>(yargs: Yargs.Argv<T>) {
+  static configurePostProcessingOptions(yargs: Yargs.Argv) {
     return (
       yargs
         // post processing
@@ -348,7 +424,7 @@ export class Configuration {
     );
   }
 
-  configureSamplingOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureSamplingOptions(yargs: Yargs.Argv): Yargs.Argv {
     return (
       yargs
         // random number generator settings
@@ -481,7 +557,7 @@ export class Configuration {
     );
   }
 
-  configureResearchModeOptions<T>(yargs: Yargs.Argv<T>) {
+  static configureResearchModeOptions(yargs: Yargs.Argv) {
     return (
       yargs
         // Research mode options
@@ -513,8 +589,3 @@ export class Configuration {
     );
   }
 }
-
-const configured = new Configuration().configureOptions("");
-export type OptionsObject = typeof configured;
-const parsed = configured.parseSync(["-r", "./src"]);
-export type ArgumentsObject = typeof parsed;

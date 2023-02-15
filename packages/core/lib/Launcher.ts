@@ -29,13 +29,10 @@ import Yargs = require("yargs");
 import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
 import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
 import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
-import yargHelper = require("yargs/helpers");
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
   private _pluginManager: PluginManager<T>;
-  private _programName: string;
-  private _configuration: Configuration;
 
   get eventManager() {
     return this._eventManager;
@@ -49,46 +46,13 @@ export abstract class Launcher<T extends Encoding> {
     return this._eventManager.state;
   }
 
-  get programName() {
-    return this._programName;
-  }
-
-  get configuration() {
-    return this._configuration;
-  }
-
-  constructor(
-    programName: string,
-    eventManager: EventManager<T>,
-    pluginManager: PluginManager<T>
-  ) {
-    this._programName = programName;
+  constructor(eventManager: EventManager<T>, pluginManager: PluginManager<T>) {
     this._eventManager = eventManager;
     this._pluginManager = pluginManager;
-    this._configuration = new Configuration();
   }
 
-  public async run(args: string[]): Promise<void> {
+  public async run(): Promise<void> {
     try {
-      // Remove binary call from args
-      args = yargHelper.hideBin(args);
-
-      // Configure base options
-      const yargs1 = this.configuration.configureOptions(this.programName);
-      // Parse the arguments and config using only the base options
-      const baseArguments = await this.configuration.processArguments(
-        yargs1,
-        args
-      );
-      // Add the language specific tool options
-      const yargs2 = await this.addOptions(yargs1);
-      // Register the plugins and add the plugin options
-      const yargs3 = await this.registerPlugins(baseArguments.plugins, yargs2);
-      // Parse the arguments and config using all options
-      const argValues = await this.configuration.processArguments(yargs3, args);
-      // Initialize the configuration object
-      this.configuration.initialize(argValues);
-
       // Register all listener plugins
       for (const pluginName of this.pluginManager.getListeners()) {
         const plugin = this.pluginManager.getListener(pluginName);
