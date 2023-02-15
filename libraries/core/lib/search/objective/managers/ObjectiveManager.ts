@@ -25,6 +25,7 @@ import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import * as crypto from "crypto";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { TerminationManager } from "../../termination/TerminationManager";
+import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
 
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.
@@ -61,6 +62,12 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * @protected
    */
   protected _runner: EncodingRunner<T>;
+
+  /**
+   * List of secondary objectives.
+   * @protected
+   */
+  protected _secondaryObjectives: Set<SecondaryObjectiveComparator<T>>;
 
   /**
    * The subject of the search.
@@ -143,8 +150,35 @@ export abstract class ObjectiveManager<T extends Encoding> {
       const distance = objectiveFunction.calculateDistance(encoding);
       encoding.setDistance(objectiveFunction, distance);
 
-      // Update the objectives
-      this._updateObjectives(objectiveFunction, encoding, distance);
+      // When the objective is covered, update the objectives and the archive
+      if (distance === 0.0) {
+        // Update the objectives
+        this._updateObjectives(objectiveFunction, encoding, distance);
+
+        if (!this._archive.has(objectiveFunction)) {
+          this._archive.update(objectiveFunction, encoding);
+        } else {
+          // If the objective is already in the archive we use secondary objectives
+          const currentEncoding = this._archive.getEncoding(objectiveFunction);
+
+          // Look at secondary objectives when two solutions are found
+          for (const secondaryObjective of this._secondaryObjectives) {
+            const comparison = secondaryObjective.compare(
+              encoding,
+              currentEncoding
+            );
+
+            // If one of the two encodings is better, don't evaluate the next objectives
+            if (comparison != 0) {
+              // Override the encoding if the current one is better
+              if (comparison > 0) {
+                this._archive.update(objectiveFunction, encoding);
+              }
+              break;
+            }
+          }
+        }
+      }
     });
 
     // Create separate exception objective when an exception occurred in the execution
