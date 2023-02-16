@@ -5,8 +5,8 @@
     "passes": 16,
     "pending": 0,
     "failures": 0,
-    "start": "2023-02-16T14:18:07.489Z",
-    "end": "2023-02-16T14:18:07.496Z",
+    "start": "2023-02-16T15:05:09.608Z",
+    "end": "2023-02-16T15:05:09.615Z",
     "duration": 7
   },
   "tests": [
@@ -14,7 +14,7 @@
       "title": "1 branch",
       "fullTitle": "CFG ancestors search 1 branch",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -23,7 +23,7 @@
       "title": "CFG1 Target G, Path went to F",
       "fullTitle": "CFG ancestors search CFG1 Target G, Path went to F",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -86,7 +86,7 @@
       "title": "CFG2 Target M, Path went to S through H",
       "fullTitle": "CFG ancestors search CFG2 Target M, Path went to S through H",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -131,7 +131,7 @@
       "title": "CFG2 Target S, Path went to B immidiately",
       "fullTitle": "CFG ancestors search CFG2 Target S, Path went to B immidiately",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -162,7 +162,7 @@
       "title": "1 branch",
       "fullTitle": "CFG ancestors search 1 branch",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -171,7 +171,7 @@
       "title": "CFG1 Target G, Path went to F",
       "fullTitle": "CFG ancestors search CFG1 Target G, Path went to F",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -234,7 +234,7 @@
       "title": "CFG2 Target M, Path went to S through H",
       "fullTitle": "CFG ancestors search CFG2 Target M, Path went to S through H",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -279,7 +279,7 @@
       "title": "CFG2 Target S, Path went to B immidiately",
       "fullTitle": "CFG ancestors search CFG2 Target S, Path went to B immidiately",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/cfg-core/test/findAncestor.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}

@@ -5,16 +5,16 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2023-02-16T14:18:07.926Z",
-    "end": "2023-02-16T14:18:07.970Z",
-    "duration": 44
+    "start": "2023-02-16T15:05:09.949Z",
+    "end": "2023-02-16T15:05:09.996Z",
+    "duration": 47
   },
   "tests": [
     {
       "title": "SimpleTest",
       "fullTitle": "simulationTest SimpleTest",
       "file": "/Users/dimitrist/Documents/git/syntest-core/plugins/plugin-core-graphing/test/simulation.test.ts",
-      "duration": 44,
+      "duration": 45,
       "currentRetry": 0,
       "speed": "medium",
       "err": {}
@@ -27,7 +27,7 @@
       "title": "SimpleTest",
       "fullTitle": "simulationTest SimpleTest",
       "file": "/Users/dimitrist/Documents/git/syntest-core/plugins/plugin-core-graphing/test/simulation.test.ts",
-      "duration": 44,
+      "duration": 45,
       "currentRetry": 0,
       "speed": "medium",
       "err": {}

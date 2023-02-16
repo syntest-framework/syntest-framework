@@ -5,9 +5,9 @@
     "passes": 24,
     "pending": 0,
     "failures": 0,
-    "start": "2023-02-16T14:18:09.597Z",
-    "end": "2023-02-16T14:18:09.636Z",
-    "duration": 39
+    "start": "2023-02-16T15:05:12.926Z",
+    "end": "2023-02-16T15:05:12.963Z",
+    "duration": 37
   },
   "tests": [
     {
@@ -23,7 +23,7 @@
       "title": "Test Non Dominated front",
       "fullTitle": "Test MOSA Test Non Dominated front",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/metaheuristics/MOSA.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -68,7 +68,7 @@
       "title": "Greater Than",
       "fullTitle": "Branch distance Greater Than",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/objective/BranchDistance.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -131,7 +131,7 @@
       "title": "Front with more than two solutions",
       "fullTitle": "Crowding distance Front with more than two solutions",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/CrowdingDistance.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -185,7 +185,7 @@
       "title": "Sort three solutions",
       "fullTitle": "Fast non-dominated sorting Sort three solutions",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/FasNonDomSorting.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -194,7 +194,7 @@
       "title": "Small Tournament size",
       "fullTitle": "Tournament selection Small Tournament size",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/TournamentSelection.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -203,7 +203,7 @@
       "title": "Comparison by rank",
       "fullTitle": "Tournament selection Comparison by rank",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/TournamentSelection.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -221,7 +221,7 @@
       "title": "Gaussian random variables follow a gaussian distribution",
       "fullTitle": "PRNG Gaussian random variables follow a gaussian distribution",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/util/prng.test.ts",
-      "duration": 24,
+      "duration": 20,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -243,7 +243,7 @@
       "title": "Test Non Dominated front",
       "fullTitle": "Test MOSA Test Non Dominated front",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/metaheuristics/MOSA.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -288,7 +288,7 @@
       "title": "Greater Than",
       "fullTitle": "Branch distance Greater Than",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/objective/BranchDistance.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -351,7 +351,7 @@
       "title": "Front with more than two solutions",
       "fullTitle": "Crowding distance Front with more than two solutions",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/CrowdingDistance.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -405,7 +405,7 @@
       "title": "Sort three solutions",
       "fullTitle": "Fast non-dominated sorting Sort three solutions",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/FasNonDomSorting.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -414,7 +414,7 @@
       "title": "Small Tournament size",
       "fullTitle": "Tournament selection Small Tournament size",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/TournamentSelection.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -423,7 +423,7 @@
       "title": "Comparison by rank",
       "fullTitle": "Tournament selection Comparison by rank",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/search/operators/TournamentSelection.test.ts",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -441,7 +441,7 @@
       "title": "Gaussian random variables follow a gaussian distribution",
       "fullTitle": "PRNG Gaussian random variables follow a gaussian distribution",
       "file": "/Users/dimitrist/Documents/git/syntest-core/packages/core/test/util/prng.test.ts",
-      "duration": 24,
+      "duration": 20,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}

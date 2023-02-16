@@ -5,16 +5,16 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2023-02-16T14:18:07.421Z",
-    "end": "2023-02-16T14:18:07.423Z",
-    "duration": 2
+    "start": "2023-02-16T15:05:10.065Z",
+    "end": "2023-02-16T15:05:10.066Z",
+    "duration": 1
   },
   "tests": [
     {
       "title": "test",
       "fullTitle": "example test test",
       "file": "/Users/dimitrist/Documents/git/syntest-core/plugins/plugin-core-sfuzz/test/example.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
@@ -27,7 +27,7 @@
       "title": "test",
       "fullTitle": "example test test",
       "file": "/Users/dimitrist/Documents/git/syntest-core/plugins/plugin-core-sfuzz/test/example.test.ts",
-      "duration": 0,
+      "duration": 1,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}

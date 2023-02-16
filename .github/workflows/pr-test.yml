@@ -109,12 +109,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: coverage-results
-      
-      - name: Display structure of downloaded files
-        run: ls -R
-      
-      - name: Display structure of downloaded files
-        run: echo ${{ github.workspace }}/${{ matrix.package }}/coverage/lcov.info
 
       # Run the Coveralls action which uploads the lcov.info file
       - name: Coveralls(${{ matrix.package }})
