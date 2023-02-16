@@ -31,7 +31,7 @@ import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
  *
  * @author Dimitri Stallenberg
  */
-export default class ExamplePlugin<T extends Encoding>
+export default class SfuzzPlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "Sfuzz";

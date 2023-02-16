@@ -17,4 +17,4 @@
  */
 
 // Plugin
-export * from "./GraphingPlugin";
+export * as plugin from "./GraphingPlugin";
