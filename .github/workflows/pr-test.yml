@@ -55,7 +55,11 @@ jobs:
 
       # Dependencies
       - name: Core - Install Dependencies
-        run: npm install
+        run: npm ci
+
+      # Building
+      - name: Core - Build
+        run: npm run build
 
       # Testing
       - name: Core - Run Tests

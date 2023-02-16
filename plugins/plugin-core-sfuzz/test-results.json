@@ -1,0 +1,36 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2023-02-16T14:18:07.421Z",
+    "end": "2023-02-16T14:18:07.423Z",
+    "duration": 2
+  },
+  "tests": [
+    {
+      "title": "test",
+      "fullTitle": "example test test",
+      "file": "/Users/dimitrist/Documents/git/syntest-core/plugins/plugin-core-sfuzz/test/example.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "test",
+      "fullTitle": "example test test",
+      "file": "/Users/dimitrist/Documents/git/syntest-core/plugins/plugin-core-sfuzz/test/example.test.ts",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ]
+}
