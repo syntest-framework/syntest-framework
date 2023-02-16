@@ -17,4 +17,4 @@
  */
 
 // Plugin
-export * from "./SfuzzPlugin";
+export * as plugin from "./SfuzzPlugin";
