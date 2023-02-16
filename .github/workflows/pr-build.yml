@@ -17,7 +17,6 @@ jobs:
     defaults:
       run:
         working-directory: "."
-    continue-on-error: ${{ matrix.experimental }}
     strategy:
       # Stop remaining runs when a build fails that is not experimental
       fail-fast: true
@@ -31,13 +30,6 @@ jobs:
 
         # Run the pipeline on all the currently supported architectures
         architecture: [x64]
-
-        experimental: [false]
-
-        include:
-          # Mark Node.js 19 as experimental
-          - node-version: 19
-            experimental: true
 
     steps:
       # Cloning
