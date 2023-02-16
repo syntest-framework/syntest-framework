@@ -63,7 +63,7 @@ jobs:
       - name: Core - Run Tests
         id: test
         # Generate lcov.info file and Mocha test report
-        run: npm run lerna:test:coverage:ci
+        run: npm run test:coverage:ci
 
       # Artifact
       - name: Core - Upload Test Results

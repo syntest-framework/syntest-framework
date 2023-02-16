@@ -49,7 +49,7 @@ jobs:
 
       # Building
       - name: Core - Build
-        run: npm run lerna:build
+        run: npm run build
 
       # Versioning and publishing
       - name: "Core - Version and publish"

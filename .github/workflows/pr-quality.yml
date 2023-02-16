@@ -39,8 +39,8 @@ jobs:
 
       # Formatting
       - name: Core - Run Formatter
-        run: npm run lerna:format:check
+        run: npm run format:check
 
       # Linting
       - name: Core - Run Linter
-        run: npm run lerna:lint
+        run: npm run lint

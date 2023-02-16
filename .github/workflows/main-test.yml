@@ -37,7 +37,7 @@ jobs:
       # Testing
       - name: Core - Run Tests
         # Generate lcov.info file
-        run: npm run lerna:test:coverage:ci
+        run: npm run test:coverage:ci
 
       # Artifact
       - name: Core - Upload Test Results
