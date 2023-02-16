@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Build on ${{ matrix.os }} with Node.js ${{ matrix.node-version }} (${{ matrix.architecture }})
+  build:
+    name: Build
     runs-on: ${{ matrix.os }}
     defaults:
       run:

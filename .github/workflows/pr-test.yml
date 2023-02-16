@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   test:
-    name: Test on ${{ matrix.os }} with Node.js ${{ matrix.node-version }} (${{ matrix.architecture }})
+    name: Test
     runs-on: ${{ matrix.os }}
     defaults:
       run:
