@@ -9,6 +9,10 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+  
+env:
+  NODE_COVERALLS_DEBUG: 1
+  COVERALLS_DEBUG: true
 
 jobs:
   test:
@@ -119,7 +123,7 @@ jobs:
           # We collect all coverages in parallel
           parallel: true
           flag-name: ${{ matrix.package }}
-          base-path: ${{ matrix.package }}
+          base-path: ${{ github.workspace }}/${{ matrix.package }}/
           path-to-lcov: ${{ github.workspace }}/${{ matrix.package }}/coverage/lcov.info
 
   # Indicate sending coverage to Coveralls is finished
