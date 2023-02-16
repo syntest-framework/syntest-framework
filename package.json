@@ -29,7 +29,7 @@
   "scripts": {
     "lint-staged": "lint-staged",
     "build": "lerna run build",
-    "build:watch": "lerna run build:watch",
+    "build:watch": "lerna watch -- lerna run build --since",
     "clean": "lerna run clean",
     "clean:dist": "lerna run clean:dist",
     "format": "lerna run format",
@@ -39,14 +39,13 @@
     "test": "lerna run test",
     "test:coverage": "lerna run --stream test:coverage",
     "test:coverage:ci": "lerna run test:coverage:ci",
-    "test:watch": "lerna run test:watch",
+    "test:watch": "lerna watch -- lerna run test --since",
     "postinstall": "husky install"
   },
   "workspaces": [
     "packages/*",
     "plugins/*"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
     "@commitlint/config-conventional": "17.4.2",
@@ -66,6 +65,7 @@
     "lerna": "6.4.1",
     "lint-staged": "13.1.0",
     "mocha": "10.2.0",
+    "nx": "^15.7.1",
     "nyc": "15.1.0",
     "prettier": "2.8.1",
     "sinon": "15.0.1",
