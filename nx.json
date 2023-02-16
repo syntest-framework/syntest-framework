@@ -12,13 +12,22 @@
           "test",
           "test:coverage",
           "test:coverage:ci"
-        ]
+        ],
+        "parallel": 10
       }
     }
+  },
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*.ts",
+      "{projectRoot}/**/*.js",
+      "{projectRoot}/**/*.json"
+    ]
   },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["default"],
       "outputs": ["{projectRoot}/dist"]
     },
     "format": {
@@ -28,9 +37,11 @@
       "outputs": ["{projectRoot}/lib"]
     },
     "test:coverage": {
+      "inputs": ["default"],
       "outputs": ["{projectRoot}/coverage"]
     },
     "test:coverage:ci": {
+      "inputs": ["default"],
       "outputs": ["{projectRoot}/coverage"]
     }
   }
