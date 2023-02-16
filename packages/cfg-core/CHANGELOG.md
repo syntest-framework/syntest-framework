@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0](https://github.com/syntest-framework/syntest-core/compare/@syntest/cfg-core@0.2.0-beta.5...@syntest/cfg-core@0.2.0) (2023-02-16)
+
+**Note:** Version bump only for package @syntest/cfg-core
+
 ## 0.2.0-beta.5 (2023-02-16)
 
 **Note:** Version bump only for package @syntest/cfg-core
