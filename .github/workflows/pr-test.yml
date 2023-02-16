@@ -119,7 +119,7 @@ jobs:
           # We collect all coverages in parallel
           parallel: true
           flag-name: ${{ matrix.package }}
-          base-path: ${{ matrix.package }}
+          base-path: ${{ github.workspace }}/${{ matrix.package }}
 
   # Indicate sending coverage to Coveralls is finished
   coverage-finished:
