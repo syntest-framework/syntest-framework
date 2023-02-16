@@ -81,7 +81,7 @@ jobs:
           reporter: mocha-json
 
       # Mark job as successful even if the artifact or test report fails
-      – run: exit 0
+      - run: exit 0
         if: ${{ steps.test.outcome == 'success' }}
 
   # Send coverage information to Coveralls
@@ -106,7 +106,7 @@ jobs:
 
     steps:
       # Download test results
-      – uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: coverage-results
 
