@@ -68,7 +68,7 @@ jobs:
 
     steps:
       # Download test results
-      – uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: coverage-results
 

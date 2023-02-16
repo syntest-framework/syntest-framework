@@ -13,8 +13,6 @@ concurrency:
 jobs:
   test:
     name: Build on ${{ matrix.os }} with Node.js ${{ matrix.node-version }} (${{ matrix.architecture }})
-    # Only run on PRs that are ready
-    if: github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
     defaults:
       run:
