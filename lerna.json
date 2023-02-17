@@ -3,8 +3,6 @@
   "useWorkspaces": true,
   "version": "independent",
   "ignoreChanges": ["**/*.md", "**/test/**/*.test.ts"],
-  "conventionalCommits": true,
-  "changelogPreset": "conventionalcommits",
   "command": {
     "version": {
       "message": "chore(release): publish new version"
