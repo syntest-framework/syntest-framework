@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Decoding } from "../Statement";
@@ -45,7 +45,7 @@ export class StringStatement extends PrimitiveStatement<string> {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler): StringStatement {
-    if (prng.nextBoolean(Properties.resample_gene_probability)) {
+    if (prng.nextBoolean(CONFIG.resampleGeneProbability)) {
       return sampler.sampleString(
         this.identifierDescription,
         this.type,

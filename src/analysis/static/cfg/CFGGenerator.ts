@@ -18,7 +18,7 @@
 
 import { traverse } from "@babel/core";
 import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
-import { CFG } from "@syntest/core";
+import { CFG } from "@syntest/cfg-core";
 import * as t from "@babel/types";
 
 /**

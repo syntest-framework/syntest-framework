@@ -25,10 +25,10 @@ import {
   NodeType,
   Operation,
   PlaceholderNode,
-  prng,
   RootNode,
-} from "@syntest/core";
+} from "@syntest/cfg-core";
 import * as t from "@babel/types";
+import { prng } from "@syntest/core";
 
 interface ReturnValue {
   childNodes: Node[];

@@ -18,7 +18,7 @@
 
 import { BranchObjectiveFunction, Encoding } from "@syntest/core";
 import { BranchDistance } from "./BranchDistance";
-import { Node, NodeType } from "@syntest/core";
+import { Node, NodeType } from "@syntest/cfg-core";
 
 export class JavaScriptBranchObjectiveFunction<
   T extends Encoding

@@ -1,6 +1,12 @@
 #!/usr/bin/env node
+import { EventManager, PluginManager } from "@syntest/core";
+import { JavaScriptLauncher } from "./JavaScriptLauncher";
+import { JavaScriptTestCase } from "./testcase/JavaScriptTestCase";
 
-import { Launcher } from "./Launcher";
+const name = "syntest-javascript";
+const state = {};
+const eventManager = new EventManager<JavaScriptTestCase>(state);
+const pluginManager = new PluginManager<JavaScriptTestCase>();
 
-const launcher = new Launcher();
-launcher.run();
+const launcher = new JavaScriptLauncher(name, eventManager, pluginManager);
+launcher.run(process.argv);

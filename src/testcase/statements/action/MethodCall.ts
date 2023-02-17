@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./ActionStatement";
 import { Decoding, Statement } from "../Statement";
@@ -55,7 +55,7 @@ export class MethodCall extends ActionStatement {
     if (args.length !== 0) {
       const index = prng.nextInt(0, args.length - 1);
 
-      if (prng.nextBoolean(Properties.resample_gene_probability)) {
+      if (prng.nextBoolean(CONFIG.resampleGeneProbability)) {
         // TODO should be different property
         args[index] = sampler.sampleArgument(
           depth + 1,
@@ -109,7 +109,7 @@ export class MethodCall extends ActionStatement {
     let decoded = `const ${this.varName} = await ${objectVariable}.${this.functionName}(${args})`;
 
     if (options.addLogs) {
-      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      const logDir = path.join(CONFIG.tempLogDirectory, id, this.varName);
       decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 

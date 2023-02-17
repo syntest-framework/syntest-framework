@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./RootStatement";
 import { Decoding, Statement } from "../Statement";
@@ -81,7 +81,7 @@ export class RootObject extends RootStatement {
             // 10% chance to delete the call
           } else {
             // 80% chance to just mutate the call
-            if (Properties.resample_gene_probability) {
+            if (CONFIG.resampleGeneProbability) {
               finalCalls.push(sampler.sampleMethodCall(depth + 1));
             } else {
               finalCalls.push(calls[i].mutate(sampler, depth + 1));
@@ -127,7 +127,7 @@ export class RootObject extends RootStatement {
     let decoded = `const ${this.varName} = ${this.type}`;
 
     if (options.addLogs) {
-      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      const logDir = path.join(CONFIG.tempLogDirectory, id, this.varName);
       decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 

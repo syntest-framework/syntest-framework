@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./RootStatement";
 import { Decoding, Statement } from "../Statement";
@@ -79,7 +79,7 @@ export class ConstructorCall extends RootStatement {
       // go over each arg
       for (let i = 0; i < args.length; i++) {
         if (prng.nextBoolean(1 / args.length)) {
-          if (prng.nextBoolean(Properties.resample_gene_probability)) {
+          if (prng.nextBoolean(CONFIG.resampleGeneProbability)) {
             // TODO should be different property
             args[i] = sampler.sampleArgument(
               depth + 1,
@@ -115,7 +115,7 @@ export class ConstructorCall extends RootStatement {
             // 10% chance to delete the call
           } else {
             // 80% chance to just mutate the call
-            if (Properties.resample_gene_probability) {
+            if (CONFIG.resampleGeneProbability) {
               finalCalls.push(sampler.sampleMethodCall(depth + 1));
             } else {
               finalCalls.push(calls[i].mutate(sampler, depth + 1));
@@ -176,7 +176,7 @@ export class ConstructorCall extends RootStatement {
     let decoded = `const ${this.varName} = new ${this.constructorName}(${args})`;
 
     if (options.addLogs) {
-      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      const logDir = path.join(CONFIG.tempLogDirectory, id, this.varName);
       decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -83,7 +83,7 @@ export class ArrayStatement extends Statement {
             // 10% chance to delete the child
           } else {
             // 80% chance to just mutate the child
-            if (Properties.resample_gene_probability) {
+            if (CONFIG.resampleGeneProbability) {
               finalChildren.push(
                 sampler.sampleArgument(depth + 1, {
                   name: "arrayValue",
@@ -128,7 +128,7 @@ export class ArrayStatement extends Statement {
     let decoded = `const ${this.varName} = [${children}]`;
 
     if (options.addLogs) {
-      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      const logDir = path.join(CONFIG.tempLogDirectory, id, this.varName);
       decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Decoder, Properties } from "@syntest/core";
+import { CONFIG, Decoder } from "@syntest/core";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import * as path from "path";
 import { ConstructorCall } from "../testcase/statements/root/ConstructorCall";
@@ -67,7 +67,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       if (addLogs) {
         testString.push(
           `\t\tawait fs.mkdirSync('${path.join(
-            Properties.temp_log_directory,
+            CONFIG.tempLogDirectory,
             testCase.id
           )}', { recursive: true })\n
           \t\tlet count = 0;
@@ -104,7 +104,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         testString.push(`} catch (e) {`);
         testString.push(
           `await fs.writeFileSync('${path.join(
-            Properties.temp_log_directory,
+            CONFIG.tempLogDirectory,
             testCase.id,
             "error"
           )}', '' + count)`
@@ -270,8 +270,8 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
   getImport(sourceDir: string, dependency: Export): string {
     const _path = dependency.filePath.replace(
-      path.resolve(Properties.target_root_directory),
-      path.join(sourceDir, path.basename(Properties.target_root_directory))
+      path.resolve(CONFIG.targetRootDirectory),
+      path.join(sourceDir, path.basename(CONFIG.targetRootDirectory))
     );
 
     if (dependency.module) {

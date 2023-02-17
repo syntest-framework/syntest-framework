@@ -18,7 +18,7 @@
 
 import { JavaScriptTestCaseSampler } from "./JavaScriptTestCaseSampler";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { ConstructorCall } from "../statements/root/ConstructorCall";
 import { MethodCall } from "../statements/action/MethodCall";
 import { BoolStatement } from "../statements/primitive/BoolStatement";
@@ -41,6 +41,7 @@ import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
 import { ActionVisibility } from "../../analysis/static/parsing/ActionVisibility";
 import { JavaScriptTargetPool } from "../../analysis/static/JavaScriptTargetPool";
 import { RootObject } from "../statements/root/RootObject";
+import { JavaScriptArguments } from "../../JavaScriptLauncher";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   private targetPool: JavaScriptTargetPool;
@@ -116,7 +117,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         ActionType.METHOD
       );
       const nCalls =
-        methods.length && prng.nextInt(1, Properties.max_action_statements);
+        methods.length && prng.nextInt(1, CONFIG.maxActionStatements);
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1));
       }
@@ -137,7 +138,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         ActionType.METHOD
       );
       const nCalls =
-        methods.length && prng.nextInt(1, Properties.max_action_statements);
+        methods.length && prng.nextInt(1, CONFIG.maxActionStatements);
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1));
       }
@@ -177,7 +178,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         ActionType.METHOD
       );
       const nCalls =
-        methods.length && prng.nextInt(1, Properties.max_action_statements);
+        methods.length && prng.nextInt(1, CONFIG.maxActionStatements);
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1));
       }
@@ -195,7 +196,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         ActionType.METHOD
       );
       const nCalls =
-        methods.length && prng.nextInt(1, Properties.max_action_statements);
+        methods.length && prng.nextInt(1, CONFIG.maxActionStatements);
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1));
       }
@@ -245,11 +246,11 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     let chosenType: string;
 
     if (
-      Properties["type_inference_mode"] === "proportional" ||
-      Properties["type_inference_mode"] === "none"
+      (<JavaScriptArguments>CONFIG).typeInferenceMode === "proportional" ||
+      (<JavaScriptArguments>CONFIG).typeInferenceMode === "none"
     ) {
       chosenType = identifierDescription.typeProbabilityMap.getRandomType();
-    } else if (Properties["type_inference_mode"] === "ranked") {
+    } else if ((<JavaScriptArguments>CONFIG).typeInferenceMode === "ranked") {
       chosenType =
         identifierDescription.typeProbabilityMap.getHighestProbabilityType();
     } else {
@@ -257,7 +258,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     }
 
     // this ensures that there is a chance of trying a random other identifierDescription
-    if (prng.nextBoolean(Properties["random_type_probability"])) {
+    if (prng.nextBoolean((<JavaScriptArguments>CONFIG).randomTypeProbability)) {
       chosenType = "any";
     }
 
@@ -390,7 +391,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
               a.visibility === ActionVisibility.PUBLIC
           );
           const nCalls =
-            methods.length && prng.nextInt(1, Properties.max_action_statements);
+            methods.length && prng.nextInt(1, CONFIG.maxActionStatements);
           for (let i = 0; i < nCalls; i++) {
             const action: ActionDescription = prng.pickOne(methods);
             const args: Statement[] = action.parameters.map((param) => {
@@ -438,8 +439,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
             TypeEnum.STRING,
             prng.uniqueId(),
             p,
-            Properties.string_alphabet,
-            Properties.string_maxlength
+            CONFIG.stringAlphabet,
+            CONFIG.stringMaxLength
           )
         );
 
@@ -476,8 +477,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
             TypeEnum.STRING,
             prng.uniqueId(),
             f,
-            Properties.string_alphabet,
-            Properties.string_maxlength
+            CONFIG.stringAlphabet,
+            CONFIG.stringMaxLength
           )
         );
 
@@ -544,8 +545,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   sampleString(
     identifierDescription: IdentifierDescription = null,
     type: string = null,
-    alphabet = Properties.string_alphabet,
-    maxlength = Properties.string_maxlength
+    alphabet = CONFIG.stringAlphabet,
+    maxlength = CONFIG.stringMaxLength
   ): StringStatement {
     if (!type) {
       type = TypeEnum.STRING;

@@ -17,7 +17,7 @@
  */
 
 // TODO
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -44,7 +44,7 @@ export class ArrowFunctionStatement extends Statement {
     depth: number
   ): ArrowFunctionStatement {
     // TODO mutate returnvalue identifierDescription
-    if (prng.nextBoolean(Properties.resample_gene_probability)) {
+    if (prng.nextBoolean(CONFIG.resampleGeneProbability)) {
       // TODO should be different property
       return new ArrowFunctionStatement(
         this.identifierDescription,

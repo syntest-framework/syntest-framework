@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { getUserInterface, Encoding, Decoder, Properties } from "@syntest/core";
+import { getUserInterface, Encoding, Decoder, CONFIG } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
 import { RootStatement } from "./statements/root/RootStatement";
 
@@ -40,7 +40,7 @@ export class JavaScriptTestCase extends Encoding {
 
   mutate(sampler: JavaScriptTestCaseSampler) {
     getUserInterface().debug(`Mutating test case: ${this._id}`);
-    if (Properties.resample_gene_probability) {
+    if (CONFIG.resampleGeneProbability) {
       return sampler.sample();
     } else {
       return new JavaScriptTestCase(this._root.mutate(sampler, 0));

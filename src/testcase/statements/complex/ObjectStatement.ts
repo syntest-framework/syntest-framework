@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng, Properties } from "@syntest/core";
+import { CONFIG, prng } from "@syntest/core";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
@@ -101,7 +101,7 @@ export class ObjectStatement extends Statement {
 
             finalKeys.push(keys[i]);
 
-            if (Properties.resample_gene_probability) {
+            if (CONFIG.resampleGeneProbability) {
               const propertyType = this.identifierDescription.typeProbabilityMap
                 .getPropertyTypes(this.type)
                 .get(keys[i].varName);
@@ -153,7 +153,7 @@ export class ObjectStatement extends Statement {
     let decoded = `const ${this.varName} = {\n${children}\n\t}`;
 
     if (options.addLogs) {
-      const logDir = path.join(Properties.temp_log_directory, id, this.varName);
+      const logDir = path.join(CONFIG.tempLogDirectory, id, this.varName);
       decoded += `\nawait fs.writeFileSync('${logDir}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
     }
 
