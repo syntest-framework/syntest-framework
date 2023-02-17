@@ -1,6 +1,6 @@
 {
   "name": "@syntest/javascript",
-  "version": "0.0.1",
+  "version": "0.0.2-beta.0",
   "description": "SynTest JavaScript is a tool for automatically generating test cases for the JavaScript language",
   "keywords": [
     "syntest",
@@ -61,7 +61,6 @@
     "original-require": "1.0.1",
     "regenerator-runtime": "0.13.9"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
   },
