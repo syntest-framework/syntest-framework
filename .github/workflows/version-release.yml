@@ -45,4 +45,4 @@ jobs:
       - name: "Core - Version"
         env:
           GH_TOKEN: ${{ secrets.SYNTEST_CI }}
-        run: npx lerna version --conventional-commits --conventional-graduate  --changelog-preset conventionalcommits --create-release github --yes --loglevel silly
+        run: npx lerna version --conventional-commits --conventional-graduate --create-release github --yes --loglevel silly
