@@ -57,7 +57,7 @@ jobs:
           GH_TOKEN: ${{ secrets.SYNTEST_CI }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
         run: |
-          npx lerna version --conventional-commits --conventional-prerelease --preid beta --no-changelog --no-git-tag-version --yes --loglevel silly
+          npx lerna version --conventional-commits --conventional-prerelease --changelog-preset conventionalcommits --preid beta --no-changelog --no-git-tag-version --yes --loglevel silly
           git add .
           git commit -m "chore(release): release beta version"
           git push
