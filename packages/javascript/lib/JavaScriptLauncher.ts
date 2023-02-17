@@ -40,7 +40,6 @@ import {
   StatisticsCollector,
   StatisticsSearchListener,
   SummaryWriter,
-  Target,
   TotalTimeBudget,
 } from "@syntest/core";
 

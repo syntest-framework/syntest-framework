@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Archive, CONFIG, getUserInterface, TargetPool } from "@syntest/core";
+import { Archive, CONFIG, getUserInterface } from "@syntest/core";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import {
   readdirSync,

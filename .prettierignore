@@ -2,4 +2,6 @@
 dist/
 node_modules/
 .*
-LICENSE*
+*.jpg
+NOTICE
+Dockerfile

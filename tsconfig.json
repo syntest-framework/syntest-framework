@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig-base.json",
-  "files": [],
-  "include": [],
-  "exclude": [],
-  "references": [{ "path": "src/" }]
-}

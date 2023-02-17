@@ -1,0 +1,58 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "format",
+          "format:check",
+          "lint",
+          "lint:fix",
+          "test",
+          "test:coverage",
+          "test:coverage:ci"
+        ],
+        "parallel": 10
+      }
+    }
+  },
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*.ts",
+      "{projectRoot}/**/*.js",
+      "{projectRoot}/**/*.json"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["default"],
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "format": {
+      "outputs": ["{projectRoot}/lib"]
+    },
+    "lint:fix": {
+      "outputs": ["{projectRoot}/lib"]
+    },
+    "test": {
+      "dependsOn": ["build", "^build"],
+      "inputs": ["default"]
+    },
+    "test:coverage": {
+      "dependsOn": ["build", "^build"],
+      "inputs": ["default"],
+      "outputs": ["{projectRoot}/coverage"]
+    },
+    "test:coverage:ci": {
+      "dependsOn": ["build", "^build"],
+      "inputs": ["default"],
+      "outputs": ["{projectRoot}/coverage"]
+    },
+    "test:watch": {
+      "dependsOn": ["build", "^build"],
+      "inputs": ["default"]
+    }
+  }
+}
