@@ -1,0 +1,64 @@
+name: publish-prerelease
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  publish-prerelease:
+    name: Pre-release - Publish
+    # Only run when merging branches that are not releases
+    if: >
+      (github.event.pull_request.merged == true) &&
+      !startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-latest
+    steps:
+      # Cloning
+      - uses: actions/checkout@v3
+        with:
+          # Use CI token that can override branch protection
+          token: ${{ secrets.SYNTEST_CI }}
+
+      # Setup, Caching, and .npmrc file to publish to npm
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+
+          # NPM Cache using all package-lock files as hash
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+          # NPM Publishing settings
+          registry-url: 'https://registry.npmjs.org'
+          always-auth: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
+
+      # Configure git user
+      - name: Config git user
+        run: |
+          git config --global user.name 'SynTest CI'
+          git config --global user.email 'info@syntest.org'
+        
+      # Dependencies
+      - name: Core - Install Dependencies
+        run: npm ci
+
+      # Building
+      - name: Core - Build
+        run: npm run build
+
+      # Versioning and publishing
+      - name: "Core - Version and publish"
+        env:
+          GH_TOKEN: ${{ secrets.SYNTEST_CI }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
+        run: |
+          npx lerna version --conventional-commits --conventional-prerelease --changelog-preset conventionalcommits --preid beta --no-changelog --no-git-tag-version --yes --loglevel silly
+          git add .
+          git commit -m "chore(release): release beta version"
+          git push
+          npx lerna publish from-package --dist-tag beta --yes --loglevel silly
