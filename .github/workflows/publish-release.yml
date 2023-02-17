@@ -55,4 +55,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SYNTEST_CI }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
-        run: npx lerna publish from-git --yes --loglevel silly
+        run: npx lerna publish from-package --yes --loglevel silly
