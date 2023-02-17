@@ -25,9 +25,6 @@ async function main() {
   // Parse the arguments and config using only the base options
   const baseArguments = await Configuration.processArguments(yargs, args);
 
-  // Configure commands and sub options
-  yargs = Configuration.configureCommands(yargs);
-
   // register standard search algorithms
   pluginManager.registerSearchAlgorithm(new RandomSearchFactory());
   pluginManager.registerSearchAlgorithm(new NSGAIIFactory());
@@ -36,6 +33,9 @@ async function main() {
 
   // register standard termination triggers
   pluginManager.registerTermination(new SignalTerminationTriggerFactory());
+
+  // Configure commands and sub options
+  yargs = Configuration.configureCommands(yargs);
 
   // load external plugins
   for (const plugin of baseArguments.plugins) {

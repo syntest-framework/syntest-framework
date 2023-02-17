@@ -16,19 +16,8 @@
  * limitations under the License.
  */
 
-import { Encoding } from ".";
-import { Configuration } from "./Configuration";
+import { Encoding, pluginManager } from ".";
 import { EventManager } from "./event/EventManager";
-import { PluginManager, pluginManager } from "./plugin/PluginManager";
-import {
-  DynaMOSAFactory,
-  MOSAFactory,
-} from "./search/metaheuristics/evolutionary/MOSAFamily";
-import Yargs = require("yargs");
-
-import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
-import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
-import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
 
 export abstract class Launcher<T extends Encoding> {
   private _eventManager: EventManager<T>;
