@@ -87,7 +87,6 @@ export class JavaScriptLauncher extends Launcher<JavaScriptTestCase> {
   private dependencyMap: Map<string, Export[]>;
 
   private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>();
-  private timings = [];
 
   addOptions<Y>(yargs: Yargs.Argv<Y>) {
     return yargs
@@ -155,6 +154,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptTestCase> {
     const importGenerator = new ImportGenerator();
     const exportGenerator = new ExportGenerator();
     const targetPool = new JavaScriptTargetPool(
+      this.eventManager,
       abstractSyntaxTreeGenerator,
       targetMapGenerator,
       controlFlowGraphGenerator,
@@ -414,6 +414,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptTestCase> {
     const sampler = new JavaScriptRandomSampler(currentSubject, targetPool);
     const crossover = new JavaScriptTreeCrossover();
     const algorithm = createSearchAlgorithmFromConfig(
+      this.eventManager,
       this.pluginManager,
       null,
       sampler,
@@ -472,23 +473,9 @@ export class JavaScriptLauncher extends Launcher<JavaScriptTestCase> {
       evaluationBudget
     );
 
-    collector.recordVariable(
-      RuntimeVariable.INSTRUMENTATION_TIME,
-      `${
-        (this.timings.find((x) => x.what === "end instrumenting").time -
-          this.timings.find((x) => x.what === "start instrumenting").time) /
-        1000
-      }`
-    );
+    collector.recordVariable(RuntimeVariable.INSTRUMENTATION_TIME, `unknown`);
 
-    collector.recordVariable(
-      RuntimeVariable.TYPE_RESOLVING_TIME,
-      `${
-        (this.timings.find((x) => x.what === "end type resolving").time -
-          this.timings.find((x) => x.what === "start type resolving").time) /
-        1000
-      }`
-    );
+    collector.recordVariable(RuntimeVariable.TYPE_RESOLVING_TIME, `unknown`);
 
     collectCoverageData(collector, archive, "branch");
     collectCoverageData(collector, archive, "statement");
@@ -504,6 +491,8 @@ export class JavaScriptLauncher extends Launcher<JavaScriptTestCase> {
 
     await clearDirectory(CONFIG.tempTestDirectory);
     await clearDirectory(CONFIG.tempLogDirectory);
+
+    return archive;
   }
 
   async exit(): Promise<void> {

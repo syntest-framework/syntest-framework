@@ -20,7 +20,12 @@ import * as path from "path";
 import { CFG } from "@syntest/cfg-core";
 import { getAllFiles, readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
-import { CONFIG, TargetMetaData, TargetPool } from "@syntest/core";
+import {
+  CONFIG,
+  EventManager,
+  TargetMetaData,
+  TargetPool,
+} from "@syntest/core";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
 import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
 import { ImportGenerator } from "./dependency/ImportGenerator";
@@ -40,6 +45,7 @@ import { TypeProbability } from "./types/resolving/TypeProbability";
 import { Instrumenter } from "../../instrumentation/Instrumenter";
 import { ExportType } from "./dependency/IdentifierVisitor";
 import * as t from "@babel/types";
+import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";
 // eslint-disable-next-line
 const { outputFileSync, copySync } = require("fs-extra");
 
@@ -48,7 +54,7 @@ export interface JavaScriptTargetMetaData extends TargetMetaData {
   export: Export;
 }
 
-export class JavaScriptTargetPool extends TargetPool {
+export class JavaScriptTargetPool extends TargetPool<JavaScriptTestCase> {
   protected abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator;
   protected targetMapGenerator: TargetMapGenerator;
   protected controlFlowGraphGenerator: ControlFlowGraphGenerator;
@@ -81,6 +87,7 @@ export class JavaScriptTargetPool extends TargetPool {
   protected _exportMap: Map<string, Export[]>;
 
   constructor(
+    eventManager: EventManager<JavaScriptTestCase>,
     abstractSyntaxTreeGenerator: AbstractSyntaxTreeGenerator,
     targetMapGenerator: TargetMapGenerator,
     controlFlowGraphGenerator: ControlFlowGraphGenerator,
@@ -88,7 +95,7 @@ export class JavaScriptTargetPool extends TargetPool {
     exportGenerator: ExportGenerator,
     typeResolver: TypeResolver
   ) {
-    super();
+    super(eventManager);
     this.abstractSyntaxTreeGenerator = abstractSyntaxTreeGenerator;
     this.targetMapGenerator = targetMapGenerator;
     this.controlFlowGraphGenerator = controlFlowGraphGenerator;

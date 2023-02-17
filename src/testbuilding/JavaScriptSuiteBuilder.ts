@@ -31,6 +31,7 @@ import cloneDeep = require("lodash.clonedeep");
 
 import { Runner } from "mocha";
 import { JavaScriptRunner } from "../testcase/execution/JavaScriptRunner";
+import { JavaScriptTargetPool } from "../analysis/static/JavaScriptTargetPool";
 
 export class JavaScriptSuiteBuilder {
   private decoder: JavaScriptDecoder;
@@ -91,7 +92,11 @@ export class JavaScriptSuiteBuilder {
     return paths;
   }
 
-  async runSuite(paths: string[], report: boolean, targetPool: TargetPool) {
+  async runSuite(
+    paths: string[],
+    report: boolean,
+    targetPool: JavaScriptTargetPool
+  ) {
     const runner: Runner = await this.runner.run(paths);
 
     const stats = runner.stats;
