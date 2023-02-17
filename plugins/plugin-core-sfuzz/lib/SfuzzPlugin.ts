@@ -32,7 +32,7 @@ import { pluginRequiresOptions } from "@syntest/core/lib/Diagnostics";
  *
  * @author Dimitri Stallenberg
  */
-export default class ExamplePlugin<T extends Encoding>
+export default class SfuzzPlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "Sfuzz";
@@ -44,6 +44,9 @@ export default class ExamplePlugin<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("SFuzz requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
     }
@@ -54,6 +57,7 @@ export default class ExamplePlugin<T extends Encoding>
       throw new Error(pluginRequiresOptions("Sfuzz", "crossover"));
     }
     return new Sfuzz<T>(
+      options.eventManager,
       new SfuzzObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover

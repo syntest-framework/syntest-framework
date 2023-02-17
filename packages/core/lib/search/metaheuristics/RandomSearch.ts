@@ -28,6 +28,7 @@ import {
 } from "../../plugin/SearchAlgorithmPlugin";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { pluginRequiresOptions } from "../../Diagnostics";
+import { EventManager } from "../../event/EventManager";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
@@ -40,14 +41,16 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
   /**
    * Constructor.
    *
+   * @param eventManager The event manager
    * @param encodingSampler The encoding sampler
    * @param runner The encoding execution runner
    */
   constructor(
+    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>
   ) {
-    super(objectiveManager);
+    super(eventManager, objectiveManager);
     this._encodingSampler = encodingSampler;
   }
 
@@ -100,6 +103,9 @@ export class RandomSearchFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("RandomSearch requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
     }
@@ -107,6 +113,7 @@ export class RandomSearchFactory<T extends Encoding>
       throw new Error(pluginRequiresOptions("RandomSearch", "runner"));
     }
     return new RandomSearch(
+      options.eventManager,
       new SimpleObjectiveManager<T>(options.runner),
       options.encodingSampler
     );

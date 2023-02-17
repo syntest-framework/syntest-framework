@@ -26,6 +26,7 @@ import {
   SearchAlgorithmPlugin,
   SearchAlgorithm,
   SearchAlgorithmOptions,
+  EventManager,
 } from "@syntest/core";
 import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
 import { shouldNeverHappen } from "@syntest/core/lib/Diagnostics";
@@ -42,11 +43,12 @@ import { shouldNeverHappen } from "@syntest/core/lib/Diagnostics";
  */
 export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
+    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>
   ) {
-    super(objectiveManager, encodingSampler, crossover);
+    super(eventManager, objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(): void {

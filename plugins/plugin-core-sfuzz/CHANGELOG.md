@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.0-beta.5 (2023-02-16)
+
+**Note:** Version bump only for package @syntest/plugin-core-sfuzz
+
+## 0.2.0-beta.4 (2023-02-14)
+
+**Note:** Version bump only for package @syntest/plugin-core-sfuzz
+
+## 0.2.0-beta.3 (2023-02-13)
+
+### Features
+
+- add event emissions in search algorithm and target pool ([#201](https://github.com/syntest-framework/syntest-core/issues/201)) ([c5e499a](https://github.com/syntest-framework/syntest-core/commit/c5e499af53097b6881416528d914795f67ab541d))
+
 ## 0.2.0-beta.2 (2023-02-03)
 
 **Note:** Version bump only for package @syntest/plugin-core-sfuzz

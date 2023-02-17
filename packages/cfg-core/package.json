@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cfg-core",
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0-beta.5",
   "description": "A Control Flow Graph package",
   "keywords": [
     "syntest",
@@ -27,7 +27,7 @@
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
-    "build:compile": "tsc --build",
+    "build": "tsc --build",
     "build:watch": "tsc --build --watch",
     "clean": "rm -rf .nyc_output dist node_modules",
     "clean:dist": "rm -rf dist",
@@ -36,7 +36,8 @@
     "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
     "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
     "test": "mocha --config ../../.mocharc.json",
-    "test:coverage": "nyc mocha --config ../../.mocharc.json",
+    "test:coverage": "nyc --reporter=text --reporter=html mocha --config ../../.mocharc.json",
+    "test:coverage:ci": "nyc --reporter=lcovonly mocha --config ../../.mocharc.json --reporter json --reporter-option output=test-results.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "engines": {

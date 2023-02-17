@@ -27,6 +27,7 @@ import {
   Encoding,
   Crossover,
   crowdingDistance,
+  EventManager,
 } from "../../..";
 import {
   SearchAlgorithmPlugin,
@@ -48,11 +49,12 @@ import { pluginRequiresOptions, shouldNeverHappen } from "../../../Diagnostics";
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
+    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>
   ) {
-    super(objectiveManager, encodingSampler, crossover);
+    super(eventManager, objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(size: number): void {
@@ -306,6 +308,9 @@ export class MOSAFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("MOSA requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
     }
@@ -316,6 +321,7 @@ export class MOSAFactory<T extends Encoding>
       throw new Error(pluginRequiresOptions("MOSA", "crossover"));
     }
     return new MOSAFamily<T>(
+      options.eventManager,
       new UncoveredObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover
@@ -346,6 +352,9 @@ export class DynaMOSAFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("DynaMOSA requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
     }
@@ -356,6 +365,7 @@ export class DynaMOSAFactory<T extends Encoding>
       throw new Error(pluginRequiresOptions("DynaMOSA", "crossover"));
     }
     return new MOSAFamily<T>(
+      options.eventManager,
       new StructuralObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover
