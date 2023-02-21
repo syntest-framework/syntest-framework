@@ -16,27 +16,6 @@
  * limitations under the License.
  */
 
-import { traverse } from "@babel/core";
-import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
-import { CFG } from "@syntest/cfg-core";
-import * as t from "@babel/types";
-
-/**
- * Exports generator for targets.
- *
- * @author Dimitri Stallenberg
- */
-export class CFGGenerator {
-  /**
-   * Generate function map for specified target.
-   *
-   * @param targetPath The path of the AST
-   * @param targetAST The AST of the target
-   */
-  generate(targetPath: string, targetAST: t.Node): CFG {
-    const visitor = new ControlFlowGraphVisitor(targetPath);
-    traverse(targetAST, visitor);
-
-    return visitor.cfg;
-  }
-}
+export * from "./CFGGenerator";
+export * from "./ControlFlowGraphGenerator";
+export * from "./ControlFlowGraphVisitor";

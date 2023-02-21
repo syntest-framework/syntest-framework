@@ -64,7 +64,7 @@ import {
 } from "./utils/collection";
 import Messages from "./ui/Messages";
 import { JavaScriptCommandLineInterface } from "./ui/JavaScriptCommandLineInterface";
-import { ControlFlowGraphGenerator } from "./analysis/static/cfg/ControlFlowGraphGenerator";
+import { ControlFlowGraphGenerator } from "@syntest/cfg-javascript";
 import { ImportGenerator } from "./analysis/static/dependency/ImportGenerator";
 import { ExportGenerator } from "./analysis/static/dependency/ExportGenerator";
 import { Export } from "./analysis/static/dependency/ExportVisitor";

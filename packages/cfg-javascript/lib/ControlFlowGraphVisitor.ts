@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { Visitor } from "../Visitor";
 import {
   BranchNode,
   CFG,
@@ -27,7 +26,7 @@ import {
   RootNode,
 } from "@syntest/cfg-core";
 
-export class ControlFlowGraphVisitor extends Visitor {
+export class ControlFlowGraphVisitor {
   private _cfg: CFG;
 
   // private _nodeStack: Node[][]
@@ -42,8 +41,7 @@ export class ControlFlowGraphVisitor extends Visitor {
 
   private _nodeStack: Node[];
 
-  constructor(filePath: string) {
-    super(filePath);
+  constructor() {
     this._cfg = new CFG();
 
     this._trackingLeaves = [];

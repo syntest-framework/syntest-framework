@@ -20,6 +20,9 @@
     "type": "git",
     "url": "git+https://github.com/syntest-framework/syntest-javascript.git"
   },
+  "bin": {
+    "syntest-javascript": "./packages/javascript/dist/bin.js"
+  },
   "scripts": {
     "lint-staged": "lint-staged",
     "build": "lerna run build",

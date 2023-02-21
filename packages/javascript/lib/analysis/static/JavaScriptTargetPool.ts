@@ -27,7 +27,7 @@ import {
   TargetPool,
 } from "@syntest/core";
 import { TargetMapGenerator } from "./map/TargetMapGenerator";
-import { ControlFlowGraphGenerator } from "./cfg/ControlFlowGraphGenerator";
+import { ControlFlowGraphGenerator } from "@syntest/cfg-javascript";
 import { ImportGenerator } from "./dependency/ImportGenerator";
 import { ExportGenerator } from "./dependency/ExportGenerator";
 import { existsSync, lstatSync } from "fs";
