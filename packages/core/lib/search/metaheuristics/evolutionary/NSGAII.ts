@@ -143,7 +143,7 @@ export class NSGAIIFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("NSGAII requires eventManager option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "eventManager"));
     }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));

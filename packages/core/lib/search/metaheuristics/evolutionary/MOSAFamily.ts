@@ -309,7 +309,7 @@ export class MOSAFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("MOSA requires eventManager option.");
+      throw new Error(pluginRequiresOptions("MOSA", "eventManager"));
     }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
@@ -353,7 +353,7 @@ export class DynaMOSAFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("DynaMOSA requires eventManager option.");
+      throw new Error(pluginRequiresOptions("DynaMOSA", "eventManager"));
     }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));

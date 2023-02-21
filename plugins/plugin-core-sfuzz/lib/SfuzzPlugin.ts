@@ -45,7 +45,7 @@ export default class SfuzzPlugin<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("SFuzz requires eventManager option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "eventManager"));
     }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
