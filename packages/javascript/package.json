@@ -20,7 +20,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "/dist",
-    "/NOTICE"
+    "/NOTICE",
+    "/README.md"
   ],
   "bin": {
     "syntest-javascript": "dist/bin.js"
