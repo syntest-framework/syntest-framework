@@ -36,6 +36,7 @@ export default class SfuzzPlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "Sfuzz";
+  type: "Search Algorithm";
 
   register(pluginManager: PluginManager<T>) {
     pluginManager.registerSearchAlgorithm(this);

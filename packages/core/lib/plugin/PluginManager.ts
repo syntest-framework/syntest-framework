@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 import {
-  PluginEnum,
   pluginAlreadyRegistered,
   pluginCannotBeLoaded,
   pluginHasNoRegister,
@@ -184,9 +183,7 @@ export class PluginManager<T extends Encoding> {
 
   async registerListener(plugin: ListenerPlugin<T>): Promise<void> {
     if (this._listeners.has(plugin.name)) {
-      throw new Error(
-        pluginAlreadyRegistered(PluginEnum.listener, plugin.name)
-      );
+      throw new Error(pluginAlreadyRegistered(plugin.name, plugin.type));
     }
     this._listeners.set(plugin.name, plugin);
   }
@@ -195,43 +192,35 @@ export class PluginManager<T extends Encoding> {
     plugin: SearchAlgorithmPlugin<T>
   ): Promise<void> {
     if (this._searchAlgorithms.has(plugin.name)) {
-      throw new Error(
-        pluginAlreadyRegistered(PluginEnum.searchAlgorithm, plugin.name)
-      );
+      throw new Error(pluginAlreadyRegistered(plugin.name, plugin.type));
     }
     this._searchAlgorithms.set(plugin.name, plugin);
   }
 
   async registerCrossover(plugin: CrossoverPlugin<T>): Promise<void> {
     if (this._crossoverOperators.has(plugin.name)) {
-      throw new Error(
-        pluginAlreadyRegistered(PluginEnum.crossover, plugin.name)
-      );
+      throw new Error(pluginAlreadyRegistered(plugin.name, plugin.type));
     }
     this._crossoverOperators.set(plugin.name, plugin);
   }
 
   async registerSampler(plugin: SamplerPlugin<T>): Promise<void> {
     if (this._samplers.has(plugin.name)) {
-      throw new Error(pluginAlreadyRegistered(PluginEnum.sampler, plugin.name));
+      throw new Error(pluginAlreadyRegistered(plugin.name, plugin.type));
     }
     this._samplers.set(plugin.name, plugin);
   }
 
   async registerTermination(plugin: TerminationPlugin<T>): Promise<void> {
     if (this._terminationTriggers.has(plugin.name)) {
-      throw new Error(
-        pluginAlreadyRegistered(PluginEnum.terminationTrigger, plugin.name)
-      );
+      throw new Error(pluginAlreadyRegistered(plugin.name, plugin.type));
     }
     this._terminationTriggers.set(plugin.name, plugin);
   }
 
   async registerUserInterface(plugin: UserInterfacePlugin<T>): Promise<void> {
     if (this._userInterfaces.has(plugin.name)) {
-      throw new Error(
-        pluginAlreadyRegistered(PluginEnum.userInterface, plugin.name)
-      );
+      throw new Error(pluginAlreadyRegistered(plugin.name, plugin.type));
     }
     this._userInterfaces.set(plugin.name, plugin);
   }

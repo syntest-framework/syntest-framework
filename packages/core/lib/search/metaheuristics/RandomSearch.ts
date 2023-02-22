@@ -95,6 +95,7 @@ export class RandomSearchFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "RandomSearch";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function

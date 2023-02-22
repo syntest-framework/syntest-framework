@@ -36,6 +36,7 @@ import {
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { pluginRequiresOptions, shouldNeverHappen } from "../../../Diagnostics";
+import { Options } from "yargs";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -300,6 +301,7 @@ export class MOSAFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "MOSA";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -344,6 +346,7 @@ export class DynaMOSAFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "DynaMOSA";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function

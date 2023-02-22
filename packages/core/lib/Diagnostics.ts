@@ -16,20 +16,18 @@
  * limitations under the License.
  */
 
-import { PluginEnum } from "./plugin/PluginEnum";
-
 /**
  * This file is meant to provide consistent error messages throughout the tool.
  */
 
-export const pluginNotFound = (plugin: PluginEnum, name: string) =>
-  `${plugin} plugin not found\nSpecified ${plugin} plugin: '${name}' not found in pluginManager.`;
+export const pluginNotFound = (name: string, type: string) =>
+  `${type} plugin not found\nSpecified ${type} plugin: '${name}' not found in pluginManager.`;
 export const pluginHasNoRegister = (path: string) =>
   `Could not load plugin\nPlugin has no register function\nPlugin: ${path}`;
 export const pluginCannotBeLoaded = (path: string) =>
   `Could not load plugin\nReason Unknown\nPlugin: ${path}`;
-export const pluginAlreadyRegistered = (plugin: PluginEnum, name: string) =>
-  `Plugin already registered\nPlugin with name: '${name}' is already registered as a ${plugin.toLowerCase()} plugin.`;
+export const pluginAlreadyRegistered = (name: string, type: string) =>
+  `Plugin already registered\nPlugin with name: '${name}' is already registered as a ${type.toLowerCase()} plugin.`;
 
 export const pluginRequiresOptions = (pluginName: string, option: string) =>
   `${pluginName} plugin requires '${option}' option`;

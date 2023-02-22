@@ -65,6 +65,7 @@ export class SignalTerminationTriggerFactory<T extends Encoding>
   implements TerminationPlugin<T>
 {
   name = "signal";
+  type: "Termination Trigger";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function

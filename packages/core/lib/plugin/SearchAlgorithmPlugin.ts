@@ -32,6 +32,8 @@ export type SearchAlgorithmOptions<T extends Encoding> = {
 
 export interface SearchAlgorithmPlugin<T extends Encoding>
   extends PluginInterface<T> {
+  type: "Search Algorithm";
+
   createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(
     options: O
   ): SearchAlgorithm<T>;

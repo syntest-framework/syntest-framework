@@ -23,6 +23,8 @@ export type TerminationOptions<T extends Encoding> = unknown;
 
 export interface TerminationPlugin<T extends Encoding>
   extends PluginInterface<T> {
+  type: "Termination Trigger";
+
   createTerminationTrigger<O extends TerminationOptions<T>>(
     options: O
   ): TerminationTrigger;
