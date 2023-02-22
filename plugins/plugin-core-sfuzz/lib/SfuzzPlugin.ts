@@ -31,7 +31,7 @@ import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
  *
  * @author Dimitri Stallenberg
  */
-export default class ExamplePlugin<T extends Encoding>
+export default class SfuzzPlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "Sfuzz";
@@ -43,6 +43,9 @@ export default class ExamplePlugin<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error("SFuzz requires eventManager option.");
+    }
     if (!options.encodingSampler) {
       throw new Error("SFuzz requires encodingSampler option.");
     }
@@ -53,6 +56,7 @@ export default class ExamplePlugin<T extends Encoding>
       throw new Error("SFuzz requires crossover option.");
     }
     return new Sfuzz<T>(
+      options.eventManager,
       new SfuzzObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover

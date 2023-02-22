@@ -50,12 +50,14 @@ export interface ListenerInterface<T extends Encoding> {
   // called from search algorithm
   onSearchInitializationStart?(state: ProgramState<T>): void;
   onSearchInitializationComplete?(state: ProgramState<T>): void;
-  onSearchSearchStart?(state: ProgramState<T>): void;
+  onSearchStart?(state: ProgramState<T>): void;
   onSearchComplete?(state: ProgramState<T>): void;
   onSearchIterationStart?(state: ProgramState<T>): void;
   onSearchIterationComplete?(state: ProgramState<T>): void;
 
   // called from targetpool
+  onTargetLoadStart?(state: ProgramState<T>): void;
+  onTargetLoadComplete?(state: ProgramState<T>): void;
   onSourceResolvingStart?(state: ProgramState<T>): void;
   onSourceResolvingComplete?(state: ProgramState<T>): void;
   onTargetResolvingStart?(state: ProgramState<T>): void;
