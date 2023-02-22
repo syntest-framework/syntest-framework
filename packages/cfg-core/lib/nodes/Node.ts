@@ -33,9 +33,9 @@ export interface Node {
 }
 
 export enum NodeType {
-  Intermediary,
-  Branch,
-  Placeholder,
-  Root,
-  Normal,
+  Intermediary = "intermediary",
+  Branch = "branch",
+  Placeholder = "placeholder",
+  Root = "root",
+  Normal = "normal",
 }

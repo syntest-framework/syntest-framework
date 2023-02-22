@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { Target } from "./Target";
-import { CFG } from "@syntest/cfg-core";
+import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
@@ -43,7 +43,7 @@ export abstract class TargetPool<T extends Encoding> {
     targetName: string
   ): Map<string, A>;
 
-  abstract getCFG(targetPath: string, targetName: string): CFG;
+  abstract getCFG(targetPath: string, targetName: string): ControlFlowGraph;
   abstract getAST(targetPath: string): unknown;
 
   loadTargets(): void {
