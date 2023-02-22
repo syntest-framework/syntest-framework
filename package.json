@@ -1,7 +1,7 @@
 {
   "name": "@syntest/core",
   "version": "0.2.0",
-  "description": "The common core of the SynTest Framework",
+  "description": "Monorepo containing the various core parts of the SynTest ecosystem.",
   "keywords": [
     "syntest",
     "automatic-test-generation"
