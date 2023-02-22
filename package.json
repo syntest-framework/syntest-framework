@@ -1,7 +1,7 @@
 {
   "name": "@syntest/core",
   "version": "0.2.0",
-  "description": "The common core of the SynTest Framework",
+  "description": "Monorepo containing the various core parts of the SynTest ecosystem.",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -15,12 +15,6 @@
     "Annibale Panichella",
     "Mitchell Olsthoorn",
     "Dimitri Stallenberg"
-  ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "/dist",
-    "/NOTICE"
   ],
   "repository": {
     "type": "git",
@@ -65,7 +59,7 @@
     "lerna": "6.4.1",
     "lint-staged": "13.1.0",
     "mocha": "10.2.0",
-    "nx": "^15.7.1",
+    "nx": "15.7.1",
     "nyc": "15.1.0",
     "prettier": "2.8.1",
     "sinon": "15.0.1",
