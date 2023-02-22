@@ -16,12 +16,6 @@
     "Mitchell Olsthoorn",
     "Dimitri Stallenberg"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "/dist",
-    "/NOTICE"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
