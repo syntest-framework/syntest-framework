@@ -206,15 +206,6 @@ export class Configuration {
         normalize: true,
         type: "string",
       },
-      "temp-syntest-directory": {
-        alias: [],
-        default: ".syntest",
-        description: "The path where all temporary files should be saved",
-        group: "Directory options:",
-        hidden: false,
-        normalize: true,
-        type: "string",
-      },
       "temp-test-directory": {
         alias: [],
         default: "tests",
