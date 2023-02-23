@@ -1,7 +1,5 @@
 import * as chai from "chai";
 import {
-  setUserInterface,
-  CommandLineInterface,
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
@@ -13,8 +11,6 @@ import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import { BranchObjectiveFunction } from "../../../lib";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
-import { createStubInstance } from "sinon";
-import * as configuration from "../../../lib/Configuration";
 
 const expect = chai.expect;
 
@@ -22,10 +18,6 @@ const expect = chai.expect;
  * @author Annibale Panichella
  */
 describe("Test MOSA", function () {
-  before(() => {
-    setUserInterface(createStubInstance(CommandLineInterface));
-  });
-
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {
@@ -64,7 +56,9 @@ describe("Test MOSA", function () {
       new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
-      mockedCrossover
+      mockedCrossover,
+      50,
+      0.8
     );
     const frontZero = mosa.preferenceCriterion(
       [ind1 as DummyEncodingMock, ind2, ind3],
@@ -100,7 +94,9 @@ describe("Test MOSA", function () {
       new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
-      mockedCrossover
+      mockedCrossover,
+      50,
+      0.8
     );
     const front = mosa.getNonDominatedFront(objectives, [
       ind1,
@@ -117,9 +113,6 @@ describe("Test MOSA", function () {
   });
 
   it("Test Preference Sorting", () => {
-    // This test requires a defined population size.
-    Object.defineProperty(configuration.CONFIG, "populationSize", { value: 4 });
-
     const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
 
@@ -140,7 +133,9 @@ describe("Test MOSA", function () {
       new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
-      mockedCrossover
+      mockedCrossover,
+      4,
+      0.8
     );
     const front = mosa.preferenceSortingAlgorithm(
       [ind1, ind2, ind3, ind4],
@@ -182,7 +177,9 @@ describe("Test MOSA", function () {
       new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
-      mockedCrossover
+      mockedCrossover,
+      50,
+      0.8
     );
 
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
