@@ -21,15 +21,10 @@ import {
   MOSAFamily,
   EncodingSampler,
   Crossover,
-  getUserInterface,
   ObjectiveManager,
-  SearchAlgorithmPlugin,
-  SearchAlgorithm,
-  SearchAlgorithmOptions,
   EventManager,
 } from "@syntest/core";
-import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
-import { shouldNeverHappen } from "@syntest/core/lib/Diagnostics";
+import { shouldNeverHappen } from "@syntest/core";
 
 /**
  * sFuzz
@@ -46,9 +41,18 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
     eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: Crossover<T>,
+    populationSize: number,
+    crossoverProbability: number
   ) {
-    super(eventManager, objectiveManager, encodingSampler, crossover);
+    super(
+      eventManager,
+      objectiveManager,
+      encodingSampler,
+      crossover,
+      populationSize,
+      crossoverProbability
+    );
   }
 
   protected _environmentalSelection(): void {
@@ -65,17 +69,17 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       return; // the search should end
 
     // non-dominated sorting
-    getUserInterface().debug(
-      "Number of objectives = " +
-        this._objectiveManager.getCurrentObjectives().size
-    );
+    // getUserInterface().debug(
+    //   "Number of objectives = " +
+    //     this._objectiveManager.getCurrentObjectives().size
+    // );
 
     const F = this.preferenceSortingAlgorithm(
       this._population,
       this._objectiveManager.getCurrentObjectives()
     );
 
-    getUserInterface().debug("First front size = " + F[0].length);
+    // getUserInterface().debug("First front size = " + F[0].length);
 
     // select new population
     this._population = F[0];

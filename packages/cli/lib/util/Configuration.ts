@@ -1,5 +1,23 @@
 import Yargs = require("yargs");
 
+export type GeneralOptions = {
+  config: string;
+  applications: string[];
+  plugins: string[];
+  userInterface: string;
+};
+
+export type StorageOptions = {
+  logDirectory: string;
+  syntestDirectory: string;
+  tempSyntestDirectory: string;
+};
+
+export type LoggingOptions = {
+  consoleLogLevel: string;
+  logToFile: string[];
+};
+
 export class Configuration {
   static configureUsage() {
     return (
@@ -67,8 +85,33 @@ export class Configuration {
           normalize: true,
           type: "string",
         })
+        // logging options
+        .options("log-directory", {
+          alias: [],
+          default: "logs",
+          description: "The path where the logs should be saved",
+          group: "Directory options:",
+          hidden: false,
+          normalize: true,
+          type: "string",
+        })
+        .options("console-log-level", {
+          alias: [],
+          choices: ["debug", "error", "warn", "info", "verbose", "silly"],
+          default: "debug",
+          description: "Log level of the tool",
+          group: "Logging options:",
+          hidden: false,
+          type: "string",
+        })
+        .options("log-to-file", {
+          alias: [],
+          default: ["info", "warn", "error"],
+          description: "Which levels should be logged to file",
+          group: "Logging options:",
+          hidden: false,
+          type: "array",
+        })
     );
-    // TODO log directory?
-    // TODO log settings?
   }
 }

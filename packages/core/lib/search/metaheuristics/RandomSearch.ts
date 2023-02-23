@@ -19,15 +19,9 @@
 import { SearchAlgorithm } from "./SearchAlgorithm";
 import { Encoding } from "../Encoding";
 import { EncodingSampler } from "../EncodingSampler";
-import { SimpleObjectiveManager } from "../objective/managers/SimpleObjectiveManager";
 import { BudgetManager } from "../budget/BudgetManager";
 import { TerminationManager } from "../termination/TerminationManager";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../../plugin/SearchAlgorithmPlugin";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
-import { pluginRequiresOptions } from "../../Diagnostics";
 import { EventManager } from "../../event/EventManager";
 
 /**
@@ -82,41 +76,6 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
       randomEncoding,
       budgetManager,
       terminationManager
-    );
-  }
-}
-
-/**
- * Factory plugin for RandomSearch
- *
- * @author Dimitri Stallenberg
- */
-export class RandomSearchFactory<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "RandomSearch";
-  type: "Search Algorithm";
-
-  // This function is not implemented since it is an internal plugin
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  register() {}
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("RandomSearch", "eventManager"));
-    }
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
-    }
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("RandomSearch", "runner"));
-    }
-    return new RandomSearch(
-      options.eventManager,
-      new SimpleObjectiveManager<T>(options.runner),
-      options.encodingSampler
     );
   }
 }

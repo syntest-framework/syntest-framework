@@ -20,7 +20,6 @@ import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
-import { CONFIG } from "../../Configuration";
 import { ActionDescription } from "./ActionDescription";
 import { EventManager } from "../../event/EventManager";
 import { Encoding } from "../../search/Encoding";
@@ -46,24 +45,14 @@ export abstract class TargetPool<T extends Encoding> {
   abstract getCFG(targetPath: string, targetName: string): ControlFlowGraph;
   abstract getAST(targetPath: string): unknown;
 
-  loadTargets(): void {
+  loadTargets(include: string[], exclude: string[]): void {
     this.eventManager.emitEvent("onTargetLoadStart");
-    let includes = CONFIG.include;
-    let excludes = CONFIG.exclude;
-
-    if (typeof includes === "string") {
-      includes = [includes];
-    }
-
-    if (typeof excludes === "string") {
-      excludes = [excludes];
-    }
 
     // Mapping filepath -> targets
     const includedMap = new Map<string, string[]>();
     const excludedMap = new Map<string, string[]>();
 
-    includes.forEach((include) => {
+    include.forEach((include) => {
       let _path;
       let target;
       if (include.includes(":")) {
@@ -87,7 +76,7 @@ export abstract class TargetPool<T extends Encoding> {
     });
 
     // only exclude files if all contracts are excluded
-    excludes.forEach((exclude) => {
+    exclude.forEach((exclude) => {
       let _path;
       let target;
       if (exclude.includes(":")) {

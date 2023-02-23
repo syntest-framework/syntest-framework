@@ -19,24 +19,15 @@
 import {
   ObjectiveManager,
   EncodingSampler,
-  getUserInterface,
   ObjectiveFunction,
-  SearchAlgorithm,
-  UncoveredObjectiveManager,
-  StructuralObjectiveManager,
   Encoding,
   Crossover,
   crowdingDistance,
   EventManager,
 } from "../../..";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../../../plugin/SearchAlgorithmPlugin";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
-import { pluginRequiresOptions, shouldNeverHappen } from "../../../Diagnostics";
-import { Options } from "yargs";
+import { shouldNeverHappen } from "../../../util/diagnostics";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -45,7 +36,7 @@ import { Options } from "yargs";
  * Reformulating Branch Coverage as a Many-Objective Optimization Problem
  * A. Panichella; F. K. Kifetew; P. Tonella
  *
- * @author Mitchell Olsthoorn
+../../../util/DiagnosticsOlsthoorn
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
@@ -53,9 +44,18 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: Crossover<T>,
+    populationSize: number,
+    crossoverProbability: number
   ) {
-    super(eventManager, objectiveManager, encodingSampler, crossover);
+    super(
+      eventManager,
+      objectiveManager,
+      encodingSampler,
+      crossover,
+      populationSize,
+      crossoverProbability
+    );
   }
 
   protected _environmentalSelection(size: number): void {
@@ -72,10 +72,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       return; // the search should end
 
     // non-dominated sorting
-    getUserInterface().debug(
-      "Number of objectives = " +
-        this._objectiveManager.getCurrentObjectives().size
-    );
+    // getUserInterface().debug(
+    //   "Number of objectives = " +
+    //     this._objectiveManager.getCurrentObjectives().size
+    // );
 
     const F = this.preferenceSortingAlgorithm(
       this._population,
@@ -87,7 +87,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    getUserInterface().debug("First front size = " + F[0].length);
+    // getUserInterface().debug("First front size = " + F[0].length);
 
     // Obtain the next front
     let currentFront: T[] = F[index];
@@ -148,14 +148,14 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     const fronts: T[][] = [[]];
 
     if (objectiveFunctions === null) {
-      getUserInterface().debug(
-        "It looks like a bug in MOSA: the set of objectives cannot be null"
-      );
+      // getUserInterface().debug(
+      //   "It looks like a bug in MOSA: the set of objectives cannot be null"
+      // );
       return fronts;
     }
 
     if (objectiveFunctions.size === 0) {
-      getUserInterface().debug("Trivial case: no objectives for the sorting");
+      // getUserInterface().debug("Trivial case: no objectives for the sorting");
       return fronts;
     }
 
@@ -167,9 +167,9 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       individual.setRank(0);
     }
 
-    getUserInterface().debug("First front size :" + frontZero.length);
-    getUserInterface().debug("Pop size :" + this._populationSize);
-    getUserInterface().debug("Pop + Off size :" + population.length);
+    // getUserInterface().debug("First front size :" + frontZero.length);
+    // getUserInterface().debug("Pop size :" + this._populationSize);
+    // getUserInterface().debug("Pop + Off size :" + population.length);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: T[] = population;
@@ -204,10 +204,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       frontIndex += 1;
     }
 
-    getUserInterface().debug("Number of fronts :" + fronts.length);
-    getUserInterface().debug("Front zero size :" + fronts[0].length);
-    getUserInterface().debug("# selected solutions :" + selectedSolutions);
-    getUserInterface().debug("Pop size :" + this._populationSize);
+    // getUserInterface().debug("Number of fronts :" + fronts.length);
+    // getUserInterface().debug("Front zero size :" + fronts[0].length);
+    // getUserInterface().debug("# selected solutions :" + selectedSolutions);
+    // getUserInterface().debug("Pop size :" + this._populationSize);
     return fronts;
   }
 
@@ -289,89 +289,5 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       if (!frontZero.includes(chosen)) frontZero.push(chosen);
     }
     return frontZero;
-  }
-}
-
-/**
- * Factory plugin for MOSA
- *
- * @author Dimitri Stallenberg
- */
-export class MOSAFactory<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "MOSA";
-  type: "Search Algorithm";
-
-  // This function is not implemented since it is an internal plugin
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  register() {}
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("MOSA", "eventManager"));
-    }
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
-    }
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("MOSA", "runner"));
-    }
-    if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("MOSA", "crossover"));
-    }
-    return new MOSAFamily<T>(
-      options.eventManager,
-      new UncoveredObjectiveManager<T>(options.runner),
-      options.encodingSampler,
-      options.crossover
-    );
-  }
-}
-
-/**
- * Factory plugin for DynaMOSA
- *
- * Dynamic Many-Objective Sorting Algorithm (DynaMOSA).
- *
- * Based on:
- * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
- * A. Panichella; F. K. Kifetew; P. Tonella
- *
- * @author Dimitri Stallenberg
- */
-export class DynaMOSAFactory<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "DynaMOSA";
-  type: "Search Algorithm";
-
-  // This function is not implemented since it is an internal plugin
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  register() {}
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "eventManager"));
-    }
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
-    }
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "runner"));
-    }
-    if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "crossover"));
-    }
-    return new MOSAFamily<T>(
-      options.eventManager,
-      new StructuralObjectiveManager<T>(options.runner),
-      options.encodingSampler,
-      options.crossover
-    );
   }
 }

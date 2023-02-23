@@ -17,8 +17,7 @@
  */
 
 import { createLogger, format, LoggerOptions, transports } from "winston";
-import { CONFIG } from "../Configuration";
-import { singletonNotSet } from "../Diagnostics";
+import { singletonNotSet } from "./diagnostics";
 
 // define the custom settings for each transport (file, console)
 function getLoggerSettings(logDirectory: string): unknown {
@@ -137,16 +136,16 @@ export function getLogger(): unknown {
   return logger;
 }
 
-export function setupLogger(): void {
+export function setupLogger(logDirectory: string, logToFile: string[]): void {
   if (logger) {
     // close existing one before creating a new one.
     logger.close();
   }
-  const settings = getLoggerSettings(CONFIG.logDirectory);
+  const settings = getLoggerSettings(logDirectory);
 
   const options: LoggerOptions = <LoggerOptions>{
     transports: [
-      ...CONFIG.logToFile.map(
+      ...logToFile.map(
         (logLevel: string) => new transports.File(settings[logLevel])
       ),
     ],

@@ -16,8 +16,6 @@
  * limitations under the License.
  */
 
-import { TerminationPlugin } from "../../plugin/TerminationPlugin";
-import { Encoding } from "../Encoding";
 import { TerminationTrigger } from "./TerminationTrigger";
 
 /**
@@ -53,25 +51,5 @@ export class SignalTerminationTrigger implements TerminationTrigger {
    */
   public isTriggered(): boolean {
     return this._triggered;
-  }
-}
-
-/**
- * Factory plugin for SignalTerminationTrigger
- *
- * @author Dimitri Stallenberg
- */
-export class SignalTerminationTriggerFactory<T extends Encoding>
-  implements TerminationPlugin<T>
-{
-  name = "signal";
-  type: "Termination Trigger";
-
-  // This function is not implemented since it is an internal plugin
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  register() {}
-
-  createTerminationTrigger(): SignalTerminationTrigger {
-    return new SignalTerminationTrigger();
   }
 }

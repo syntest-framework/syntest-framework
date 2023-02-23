@@ -17,29 +17,41 @@
  */
 
 import BigNumber from "bignumber.js";
-import { CONFIG } from "../Configuration";
 
 import seedrandom = require("seedrandom");
 import { Charset } from "./Charset";
-import { emptyArray } from "../Diagnostics";
+import {
+  emptyArray,
+  singletonAlreadySet,
+  singletonNotSet,
+} from "./diagnostics";
 
-let seed: string | null = null;
+let usedSeed: string | null = null;
 let random = null;
 
-export function getSeed(): string {
-  if (!seed) {
-    seed = CONFIG.seed;
+export function getSeed(seed?: string): string {
+  if (!usedSeed) {
+    usedSeed = seed;
 
     if (!seed) {
-      seed = `${seedrandom()()}`;
+      usedSeed = `${seedrandom()()}`;
     }
   }
-  return seed;
+
+  return usedSeed;
+}
+
+export function initializePseudoRandomNumberGenerator(seed?: string) {
+  if (random) {
+    throw new Error(singletonAlreadySet("PseudoRandomNumberGenerator"));
+  }
+
+  random = seedrandom(getSeed(seed));
 }
 
 function generator() {
   if (!random) {
-    random = seedrandom(getSeed());
+    throw new Error(singletonNotSet("PseudoRandomNumberGenerator"));
   }
 
   return random();

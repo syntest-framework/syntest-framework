@@ -15,15 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crossover, Encoding } from "@syntest/core";
-import { PluginInterface } from "../PluginInterface";
+import {
+  Crossover,
+  Encoding,
+  EncodingRunner,
+  EncodingSampler,
+  EventManager,
+  SearchAlgorithm,
+  ObjectiveManager,
+} from "@syntest/core";
+import { PluginInterface } from "@syntest/cli";
 
-export type CrossoverOptions<T extends Encoding> = unknown;
+export type SearchAlgorithmOptions<T extends Encoding> = {
+  eventManager?: EventManager<T>;
+  objectiveManager?: ObjectiveManager<T>;
+  encodingSampler?: EncodingSampler<T>;
+  runner?: EncodingRunner<T>;
+  crossover?: Crossover<T>;
+  populationSize?: number;
+  crossoverProbability?: number;
+};
 
-export interface CrossoverPlugin<T extends Encoding> extends PluginInterface {
-  type: "Crossover";
+export interface SearchAlgorithmPlugin<T extends Encoding>
+  extends PluginInterface {
+  type: "Search Algorithm";
 
-  createCrossoverOperator<O extends CrossoverOptions<T>>(
+  createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(
     options: O
-  ): Crossover<T>;
+  ): SearchAlgorithm<T>;
 }

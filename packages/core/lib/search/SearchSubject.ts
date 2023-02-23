@@ -19,8 +19,7 @@
 
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
-import { ControlFlowGraph, Edge } from "@syntest/cfg-core";
-import { getUserInterface } from "../ui/UserInterface";
+import { ControlFlowGraph } from "@syntest/cfg-core";
 
 /**
  * Subject of the search process.

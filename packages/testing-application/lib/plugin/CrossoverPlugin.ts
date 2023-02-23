@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "@syntest/core";
-import { PluginInterface } from "../PluginInterface";
+import { Crossover, Encoding } from "@syntest/core";
+import { PluginInterface } from "@syntest/cli";
 
-export type UserInterfaceOptions = unknown;
+export type CrossoverOptions<T extends Encoding> = unknown;
 
-export interface UserInterfacePlugin extends PluginInterface {
-  type: "User Interface";
+export interface CrossoverPlugin<T extends Encoding> extends PluginInterface {
+  type: "Crossover";
 
-  createUserInterface<O extends UserInterfaceOptions>(
+  createCrossoverOperator<O extends CrossoverOptions<T>>(
     options: O
-  ): UserInterface;
+  ): Crossover<T>;
 }

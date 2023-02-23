@@ -16,16 +16,11 @@
  * limitations under the License.
  */
 
-import {
-  Encoding,
-  ListenerPlugin,
-  ListenerInterface,
-  CONFIG,
-  PluginManager,
-} from "@syntest/core";
+import { Encoding, ListenerInterface } from "@syntest/core";
 import { CFGGraphingListener } from "./CFGGraphingListener";
 import Yargs = require("yargs");
 import { mkdirSync } from "fs";
+import { CONFIG, ListenerPlugin } from "@syntest/testing-application";
 
 /**
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
@@ -37,10 +32,6 @@ export default class GraphingPlugin<T extends Encoding>
 {
   name = "Graphing";
   type: "Listener";
-
-  register(pluginManager: PluginManager<T>) {
-    pluginManager.registerListener(this);
-  }
 
   createListener(): ListenerInterface<T> {
     return new CFGGraphingListener<T>();

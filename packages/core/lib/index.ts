@@ -16,12 +16,6 @@
  * limitations under the License.
  */
 
-// Configuration
-export * from "./Configuration";
-
-// Launcher
-export * from "../../cli/lib/Launcher";
-
 // Static Analysis
 export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetMetaData";
@@ -32,23 +26,6 @@ export * from "./analysis/static/targetUtil";
 export * from "./event/EventManager";
 export * from "./event/ListenerInterface";
 export * from "./event/ProgramState";
-
-// Factories
-export * from "./factories/CrossoverFactory";
-export * from "./factories/SamplerFactory";
-export * from "./factories/SearchAlgorithmFactory";
-export * from "./factories/TerminationFactory";
-export * from "./factories/UserInterfaceFactory";
-
-// Plugin
-export * from "./plugin/CrossoverPlugin";
-export * from "./plugin/ListenerPlugin";
-export * from "./plugin/PluginInterface";
-export * from "../../cli/lib/PluginManager";
-export * from "./plugin/SamplerPlugin";
-export * from "./plugin/SearchAlgorithmPlugin";
-export * from "./plugin/TerminationPlugin";
-export * from "./plugin/UserInterfacePlugin";
 
 // Search
 export * from "./search/Archive";
@@ -116,14 +93,8 @@ export * from "./statistics/StatisticsCollector";
 export * from "./statistics/StatisticsSearchListener";
 export * from "./statistics/SummaryWriter";
 
-// UI
-export * from "./ui/CommandLineInterface";
-export * from "./ui/MonitorCommandLineInterface";
-export * from "./ui/UserInterface";
-
 // Util
 export * from "./util/Datapoint";
 export * from "./util/Charset";
-export * from "./util/fileSystem";
-export * from "./util/logger";
+export * from "./util/diagnostics";
 export * from "./util/prng";

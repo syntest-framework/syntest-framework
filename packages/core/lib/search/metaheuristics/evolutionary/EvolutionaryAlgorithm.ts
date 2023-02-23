@@ -22,7 +22,6 @@ import { EncodingSampler } from "../../EncodingSampler";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
-import { CONFIG } from "../../../Configuration";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { Encoding } from "../../Encoding";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
@@ -54,6 +53,12 @@ export abstract class EvolutionaryAlgorithm<
    */
   protected _populationSize: number;
 
+  /**
+   * The probability to perform crossover.
+   * @protected
+   */
+  protected _crossoverProbability: number;
+
   protected _crossover: Crossover<T>;
 
   /**
@@ -70,13 +75,16 @@ export abstract class EvolutionaryAlgorithm<
     eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: Crossover<T>,
+    populationSize: number,
+    crossoverProbability: number
   ) {
     super(eventManager, objectiveManager);
     this._encodingSampler = encodingSampler;
-    this._population = [];
-    this._populationSize = CONFIG.populationSize;
     this._crossover = crossover;
+    this._population = [];
+    this._populationSize = populationSize;
+    this._crossoverProbability = crossoverProbability;
   }
 
   /**
@@ -87,7 +95,7 @@ export abstract class EvolutionaryAlgorithm<
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<void> {
-    for (let i = 0; i < CONFIG.populationSize; i++) {
+    for (let i = 0; i < this._populationSize; i++) {
       this._population.push(this._encodingSampler.sample());
     }
 
@@ -141,7 +149,7 @@ export abstract class EvolutionaryAlgorithm<
       const parentA = tournamentSelection(this._population, rounds);
       const parentB = tournamentSelection(this._population, rounds);
 
-      if (prng.nextDouble(0, 1) <= CONFIG.crossoverProbability) {
+      if (prng.nextDouble(0, 1) <= this._crossoverProbability) {
         const children = this._crossover.crossOver([parentA, parentB]);
 
         for (const child of children) {

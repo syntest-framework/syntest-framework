@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { singletonNotSet } from "../Diagnostics";
+import { singletonNotSet } from "../util/diagnostics";
 
 export abstract class UserInterface {
   silent: boolean;

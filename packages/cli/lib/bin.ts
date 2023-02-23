@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import yargHelper = require("yargs/helpers");
-import { Configuration } from "./utils/Configuration";
+import { Configuration } from "./util/Configuration";
 import { ModuleManager } from "./ModuleManager";
 
 async function main() {

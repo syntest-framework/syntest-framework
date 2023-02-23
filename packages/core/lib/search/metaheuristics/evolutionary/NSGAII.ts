@@ -18,16 +18,10 @@
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { EncodingSampler } from "../../EncodingSampler";
-import { SimpleObjectiveManager } from "../../objective/managers/SimpleObjectiveManager";
 import { Crossover } from "../../operators/crossover/Crossover";
 import { Encoding } from "../../Encoding";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../../../plugin/SearchAlgorithmPlugin";
-import { SearchAlgorithm } from "../SearchAlgorithm";
+
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { pluginRequiresOptions } from "../../../Diagnostics";
 import { fastNonDomSorting, crowdingDistance, EventManager } from "../../..";
 
 /**
@@ -37,8 +31,7 @@ import { fastNonDomSorting, crowdingDistance, EventManager } from "../../..";
  * A fast and elitist multiobjective genetic algorithm: NSGA-II
  * K. Deb; A. Pratap; S. Agarwal; T. Meyarivan
  *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
+ * @author Mitchell Ols../../../util/Diagnosticsnibale Panichella
  * @author Dimitri Stallenberg
  */
 export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
@@ -54,9 +47,18 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>
+    crossover: Crossover<T>,
+    populationSize: number,
+    crossoverProbability: number
   ) {
-    super(eventManager, objectiveManager, encodingSampler, crossover);
+    super(
+      eventManager,
+      objectiveManager,
+      encodingSampler,
+      crossover,
+      populationSize,
+      crossoverProbability
+    );
   }
 
   /**
@@ -122,44 +124,5 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     }
 
     this._population = nextPopulation;
-  }
-}
-
-/**
- * Factory plugin for NSGAII
- *
- * @author Dimitri Stallenberg
- */
-export class NSGAIIFactory<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "NSGAII";
-  type: "Search Algorithm";
-
-  // This function is not implemented since it is an internal plugin
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  register() {}
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("NSGAII", "eventManager"));
-    }
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
-    }
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("NSGAII", "runner"));
-    }
-    if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("NSGAII", "crossover"));
-    }
-    return new NSGAII<T>(
-      options.eventManager,
-      new SimpleObjectiveManager<T>(options.runner),
-      options.encodingSampler,
-      options.crossover
-    );
   }
 }

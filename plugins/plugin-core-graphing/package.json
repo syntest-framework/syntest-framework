@@ -43,6 +43,7 @@
   "dependencies": {
     "@syntest/cfg-core": "^0.2.1-beta.3",
     "@syntest/core": "^0.3.1-beta.3",
+    "@syntest/testing-application": "^0.1.0",
     "d3": "6.7.0",
     "jsdom": "^21.1.0"
   },

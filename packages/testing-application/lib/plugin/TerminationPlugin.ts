@@ -15,30 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Crossover,
-  Encoding,
-  EncodingRunner,
-  EncodingSampler,
-  EventManager,
-  SearchAlgorithm,
-  ObjectiveManager,
-} from "@syntest/core";
-import { PluginInterface } from "../PluginInterface";
+import { Encoding, TerminationTrigger } from "@syntest/core";
+import { PluginInterface } from "@syntest/cli";
 
-export type SearchAlgorithmOptions<T extends Encoding> = {
-  eventManager?: EventManager<T>;
-  objectiveManager?: ObjectiveManager<T>;
-  encodingSampler?: EncodingSampler<T>;
-  runner?: EncodingRunner<T>;
-  crossover?: Crossover<T>;
-};
+export type TerminationOptions<T extends Encoding> = unknown;
 
-export interface SearchAlgorithmPlugin<T extends Encoding>
-  extends PluginInterface {
-  type: "Search Algorithm";
+export interface TerminationPlugin<T extends Encoding> extends PluginInterface {
+  type: "Termination Trigger";
 
-  createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(
+  createTerminationTrigger<O extends TerminationOptions<T>>(
     options: O
-  ): SearchAlgorithm<T>;
+  ): TerminationTrigger;
 }

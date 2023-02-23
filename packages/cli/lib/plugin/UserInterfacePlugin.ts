@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, TerminationTrigger } from "@syntest/core";
-import { PluginInterface } from "../PluginInterface";
+import { UserInterface } from "../userInterfaces/UserInterface";
+import { PluginInterface } from "../moduleInterfaces/PluginInterface";
 
-export type TerminationOptions<T extends Encoding> = unknown;
+export type UserInterfaceOptions = unknown;
 
-export interface TerminationPlugin<T extends Encoding> extends PluginInterface {
-  type: "Termination Trigger";
+export interface UserInterfacePlugin extends PluginInterface {
+  type: "User Interface";
 
-  createTerminationTrigger<O extends TerminationOptions<T>>(
+  createUserInterface<O extends UserInterfaceOptions>(
     options: O
-  ): TerminationTrigger;
+  ): UserInterface;
 }

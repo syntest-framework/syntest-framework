@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { Encoding, ListenerInterface } from "@syntest/core";
-import { PluginInterface } from "../PluginInterface";
+import { PluginInterface } from "@syntest/cli";
 
 export type ListenerOptions<T extends Encoding> = unknown;
 

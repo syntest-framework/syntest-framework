@@ -19,9 +19,10 @@
 /**
  * This file is meant to provide consistent error messages throughout the tool.
  */
-
+export const pluginsNotFound = (type: string) =>
+  `No plugins of type: '${type}' found in moduleManager.`;
 export const pluginNotFound = (name: string, type: string) =>
-  `${type} plugin not found\nSpecified ${type} plugin: '${name}' not found in pluginManager.`;
+  `${type} plugin not found\nSpecified ${type} plugin: '${name}' not found in moduleManager.`;
 export const pluginHasNoRegister = (path: string) =>
   `Could not load plugin\nPlugin has no register function\nPlugin: ${path}`;
 export const pluginCannotBeLoaded = (path: string) =>
@@ -35,5 +36,7 @@ export const pluginRequiresOptions = (pluginName: string, option: string) =>
 export const shouldNeverHappen = (bugLocation: string) =>
   `This should never happen.\nThere is likely a bug in the ${bugLocation}.`;
 
+export const singletonNotSet = (name: string) =>
+  `The ${name} singleton has not been set yet!`;
 export const singletonAlreadySet = (name: string) =>
   `The ${name} singleton has already been set!`;

@@ -5,9 +5,9 @@ import Yargs = require("yargs");
 import { PluginInterface } from "./moduleInterfaces/PluginInterface";
 import {
   pluginAlreadyRegistered,
-  pluginHasNoRegister,
   pluginNotFound,
-} from "./utils/Diagnostics";
+  pluginsNotFound,
+} from "./util/diagnostics";
 import { ApplicationInterface } from "./moduleInterfaces/ApplicationInterface";
 
 export class ModuleManager {
@@ -39,6 +39,14 @@ export class ModuleManager {
     }
 
     return this._plugins.get(type).get(name);
+  }
+
+  getPluginsOfType(type: string) {
+    if (!this._plugins.has(type)) {
+      throw new Error(pluginsNotFound(type));
+    }
+
+    return this._plugins.get(type);
   }
 
   async prepare() {

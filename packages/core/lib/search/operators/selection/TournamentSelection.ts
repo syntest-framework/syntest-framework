@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { minimumValue } from "../../../Diagnostics";
+import { minimumValue } from "../../../util/diagnostics";
 import { prng } from "../../../util/prng";
 import { Encoding } from "../../Encoding";
 
