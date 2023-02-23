@@ -19,6 +19,7 @@
 import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
+import { singletonAlreadySet } from "./Diagnostics";
 
 // This type declaration removes the [key: string]: unknown index from type T.
 export type RemoveIndex<T> = {
@@ -35,7 +36,7 @@ export let CONFIG: Readonly<RemoveIndex<ArgumentsObject>>;
 export class Configuration {
   initialize(argumentValues: ArgumentsObject) {
     if (CONFIG) {
-      throw Error("Already initialized the config singleton!");
+      throw new Error(singletonAlreadySet("config"));
     }
 
     CONFIG = <Readonly<RemoveIndex<ArgumentsObject>>>(<unknown>argumentValues);

@@ -27,6 +27,7 @@ import {
   SearchAlgorithmOptions,
 } from "../../plugin/SearchAlgorithmPlugin";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { pluginRequiresOptions } from "../../Diagnostics";
 import { EventManager } from "../../event/EventManager";
 
 /**
@@ -94,6 +95,7 @@ export class RandomSearchFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "RandomSearch";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -103,13 +105,13 @@ export class RandomSearchFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("RandomSearch requires eventManager option.");
+      throw new Error(pluginRequiresOptions("RandomSearch", "eventManager"));
     }
     if (!options.encodingSampler) {
-      throw new Error("RandomSearch requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("RandomSearch requires runner option.");
+      throw new Error(pluginRequiresOptions("RandomSearch", "runner"));
     }
     return new RandomSearch(
       options.eventManager,

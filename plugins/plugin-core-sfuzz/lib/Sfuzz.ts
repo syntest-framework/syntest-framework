@@ -29,6 +29,7 @@ import {
   EventManager,
 } from "@syntest/core";
 import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
+import { shouldNeverHappen } from "@syntest/core/lib/Diagnostics";
 
 /**
  * sFuzz
@@ -55,9 +56,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       this._objectiveManager.getCurrentObjectives().size == 0 &&
       this._objectiveManager.getUncoveredObjectives().size != 0
     )
-      throw Error(
-        "This should never happen. There is a likely bug in the objective manager"
-      );
+      throw Error(shouldNeverHappen("objective manager"));
 
     if (
       this._objectiveManager.getCurrentObjectives().size == 0 &&

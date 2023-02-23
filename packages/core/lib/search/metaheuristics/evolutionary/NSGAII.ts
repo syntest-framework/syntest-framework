@@ -27,6 +27,7 @@ import {
 } from "../../../plugin/SearchAlgorithmPlugin";
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+import { pluginRequiresOptions } from "../../../Diagnostics";
 import { fastNonDomSorting, crowdingDistance, EventManager } from "../../..";
 
 /**
@@ -133,6 +134,7 @@ export class NSGAIIFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "NSGAII";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -142,16 +144,16 @@ export class NSGAIIFactory<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("NSGAII requires eventManager option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "eventManager"));
     }
     if (!options.encodingSampler) {
-      throw new Error("NSGAII requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("NSGAII requires runner option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("NSGAII requires crossover option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "crossover"));
     }
     return new NSGAII<T>(
       options.eventManager,

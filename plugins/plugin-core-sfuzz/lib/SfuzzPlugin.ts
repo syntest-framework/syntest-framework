@@ -25,6 +25,7 @@ import {
 } from "@syntest/core";
 import { Sfuzz } from "./Sfuzz";
 import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
+import { pluginRequiresOptions } from "@syntest/core/lib/Diagnostics";
 
 /**
  * This example plugin logs the program state at the start of the initialization phase of the program.
@@ -35,6 +36,7 @@ export default class SfuzzPlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "Sfuzz";
+  type: "Search Algorithm";
 
   register(pluginManager: PluginManager<T>) {
     pluginManager.registerSearchAlgorithm(this);
@@ -44,16 +46,16 @@ export default class SfuzzPlugin<T extends Encoding>
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error("SFuzz requires eventManager option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "eventManager"));
     }
     if (!options.encodingSampler) {
-      throw new Error("SFuzz requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("SFuzz requires runner option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("SFuzz requires crossover option.");
+      throw new Error(pluginRequiresOptions("Sfuzz", "crossover"));
     }
     return new Sfuzz<T>(
       options.eventManager,
