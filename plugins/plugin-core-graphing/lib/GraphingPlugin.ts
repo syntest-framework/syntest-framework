@@ -36,6 +36,7 @@ export default class GraphingPlugin<T extends Encoding>
   implements ListenerPlugin<T>
 {
   name = "Graphing";
+  type: "Listener";
 
   register(pluginManager: PluginManager<T>) {
     pluginManager.registerListener(this);

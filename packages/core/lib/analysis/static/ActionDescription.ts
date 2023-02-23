@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-import { CFG } from "./CFG";
-
-export interface CFGFactory {
-  convertAST(AST: unknown): CFG;
+export interface ActionDescription {
+  /**
+   * Name of the action
+   */
+  name: string;
 }

@@ -1,13 +1,11 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "useWorkspaces": false,
+  "useWorkspaces": true,
   "version": "independent",
-  "ignoreChanges": [],
-  "conventionalCommits": true,
+  "ignoreChanges": ["**/*.md", "**/test/**/*.test.ts"],
   "command": {
     "version": {
       "message": "chore(release): publish new version"
     }
-  },
-  "packages": ["packages/*", "plugins/*"]
+  }
 }

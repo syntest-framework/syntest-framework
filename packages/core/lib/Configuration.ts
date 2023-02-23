@@ -19,6 +19,7 @@
 import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
+import { singletonAlreadySet } from "./Diagnostics";
 
 // This type declaration removes the [key: string]: unknown index from type T.
 export type RemoveIndex<T> = {
@@ -35,7 +36,7 @@ export let CONFIG: Readonly<RemoveIndex<ArgumentsObject>>;
 export class Configuration {
   initialize(argumentValues: ArgumentsObject) {
     if (CONFIG) {
-      throw Error("Already initialized the config singleton!");
+      throw new Error(singletonAlreadySet("config"));
     }
 
     CONFIG = <Readonly<RemoveIndex<ArgumentsObject>>>(<unknown>argumentValues);
@@ -191,6 +192,15 @@ export class Configuration {
         default: "tests",
         description:
           "The path where the final test suite should be saved (within the syntest-directory)",
+        group: "Directory options:",
+        hidden: false,
+        normalize: true,
+        type: "string",
+      },
+      "temp-syntest-directory": {
+        alias: [],
+        default: ".syntest",
+        description: "The path where all temporary files should be saved",
         group: "Directory options:",
         hidden: false,
         normalize: true,

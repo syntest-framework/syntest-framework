@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { minimumValue } from "../../../Diagnostics";
 import { prng } from "../../../util/prng";
 import { Encoding } from "../../Encoding";
 
@@ -32,7 +33,7 @@ export function tournamentSelection<T extends Encoding>(
   tournamentSize: number
 ): T {
   if (tournamentSize < 2)
-    throw new Error("The tournament size should be greater than 1 ");
+    throw new Error(minimumValue("tournament size", 2, tournamentSize));
 
   let winner = prng.pickOne(population);
 

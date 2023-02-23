@@ -21,6 +21,7 @@ import Yargs = require("yargs");
 
 export interface PluginInterface<T extends Encoding> {
   name: Readonly<string>;
+  type: Readonly<string>;
 
   register(pluginManager: PluginManager<T>): void;
   /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,17 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "..";
-import { TerminationTrigger } from "../search/termination/TerminationTrigger";
-import { PluginInterface } from "./PluginInterface";
 
-export type TerminationOptions<T extends Encoding> = unknown;
+import { ControlFlowGraph } from "./ControlFlowGraph";
 
-export interface TerminationPlugin<T extends Encoding>
-  extends PluginInterface<T> {
-  type: "Termination Trigger";
-
-  createTerminationTrigger<O extends TerminationOptions<T>>(
-    options: O
-  ): TerminationTrigger;
+export interface ControlFlowGraphFactory {
+  convertAST(AST: unknown): ControlFlowGraph;
 }
