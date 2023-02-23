@@ -128,7 +128,7 @@ export class Configuration {
         alias: ["r"],
         demandOption: true,
         description: "The root directory where all targets are in",
-        group: "File options:",
+        group: "Target options:",
         hidden: false,
         normalize: true,
         type: "string",
@@ -137,7 +137,7 @@ export class Configuration {
         alias: ["i"],
         default: ["./src/**/*.*"],
         description: "Files/Directories to include",
-        group: "File options:",
+        group: "Target options:",
         hidden: false,
         normalize: true,
         type: "array",
@@ -146,7 +146,7 @@ export class Configuration {
         alias: ["e"],
         default: [],
         description: "Files/Directories to exclude",
-        group: "File options:",
+        group: "Target options:",
         hidden: false,
         normalize: true,
         type: "array",
@@ -157,6 +157,15 @@ export class Configuration {
   configureStorageOptions<T>(yargs: Yargs.Argv<T>) {
     return yargs.options({
       // directories
+      "syntest-directory": {
+        alias: [],
+        default: "syntest",
+        description: "The path where everything should be saved",
+        group: "Directory options:",
+        hidden: false,
+        normalize: true,
+        type: "string",
+      },
       "statistics-directory": {
         alias: [],
         default: "syntest/statistics",
@@ -175,10 +184,19 @@ export class Configuration {
         normalize: true,
         type: "string",
       },
-      "final-suite-directory": {
+      "test-directory": {
         alias: [],
         default: "syntest/tests",
         description: "The path where the final test suite should be saved",
+        group: "Directory options:",
+        hidden: false,
+        normalize: true,
+        type: "string",
+      },
+      "temp-syntest-directory": {
+        alias: [],
+        default: ".syntest",
+        description: "The path where all temporary files should be saved",
         group: "Directory options:",
         hidden: false,
         normalize: true,
