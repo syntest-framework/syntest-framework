@@ -20,7 +20,7 @@
 export * from "./Configuration";
 
 // Launcher
-export * from "./Launcher";
+export * from "../../cli/lib/Launcher";
 
 // Static Analysis
 export * from "./analysis/static/Target";
@@ -44,7 +44,7 @@ export * from "./factories/UserInterfaceFactory";
 export * from "./plugin/CrossoverPlugin";
 export * from "./plugin/ListenerPlugin";
 export * from "./plugin/PluginInterface";
-export * from "./plugin/PluginManager";
+export * from "../../cli/lib/PluginManager";
 export * from "./plugin/SamplerPlugin";
 export * from "./plugin/SearchAlgorithmPlugin";
 export * from "./plugin/TerminationPlugin";

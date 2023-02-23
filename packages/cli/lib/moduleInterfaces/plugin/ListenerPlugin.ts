@@ -15,26 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Encoding, ListenerInterface } from "@syntest/core";
+import { PluginInterface } from "../PluginInterface";
 
-import { Encoding } from "..";
-import { CONFIG } from "..";
-import { pluginNotFound } from "../Diagnostics";
-import { PluginManager } from "../plugin/PluginManager";
-import { EncodingSampler } from "../search/EncodingSampler";
+export type ListenerOptions<T extends Encoding> = unknown;
 
-/**
- * Factory for creating an instance of a specific sampler from the config.
- *
- * @author Dimitri Stallenberg
- */
-export function createEncodingSamplerFromConfig<T extends Encoding>(
-  pluginManager: PluginManager<T>
-): EncodingSampler<T> {
-  const sampler = CONFIG.sampler;
+export interface ListenerPlugin<T extends Encoding> extends PluginInterface {
+  type: "Listener";
 
-  if (!pluginManager.getSamplers().includes(sampler)) {
-    throw new Error(pluginNotFound(sampler, "Sampler"));
-  }
-
-  return pluginManager.getSampler(sampler).createSamplerOperator({});
+  createListener<O extends ListenerOptions<T>>(
+    options: O
+  ): ListenerInterface<T>;
 }

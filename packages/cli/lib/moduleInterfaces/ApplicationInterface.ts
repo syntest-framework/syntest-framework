@@ -15,17 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "..";
-import { UserInterface } from "../ui/UserInterface";
-import { PluginInterface } from "./PluginInterface";
 
-export type UserInterfaceOptions = unknown;
+import yargs = require("yargs");
 
-export interface UserInterfacePlugin<T extends Encoding>
-  extends PluginInterface<T> {
-  type: "User Interface";
+export interface ApplicationInterface {
+  name: Readonly<string>;
 
-  createUserInterface<O extends UserInterfaceOptions>(
-    options: O
-  ): UserInterface;
+  getCommandModules(): Promise<yargs.CommandModule[]>;
+  /**
+   * Called after the initialization step of the tool
+   */
+  prepare?(): Promise<void>;
+  /**
+   * Called before the exit step of the tool
+   */
+  cleanup?(): Promise<void>;
 }

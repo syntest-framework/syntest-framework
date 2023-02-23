@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, ListenerInterface } from "..";
-import { PluginInterface } from "./PluginInterface";
+import { Encoding, EncodingSampler } from "@syntest/core";
+import { PluginInterface } from "../PluginInterface";
 
-export type ListenerOptions<T extends Encoding> = unknown;
+export type SamplerOptions<T extends Encoding> = unknown;
 
-export interface ListenerPlugin<T extends Encoding> extends PluginInterface<T> {
-  type: "Listener";
+export interface SamplerPlugin<T extends Encoding> extends PluginInterface {
+  type: "Sampler";
 
-  createListener<O extends ListenerOptions<T>>(
+  createSamplerOperator<O extends SamplerOptions<T>>(
     options: O
-  ): ListenerInterface<T>;
+  ): EncodingSampler<T>;
 }

@@ -15,12 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { EncodingRunner } from "../search/EncodingRunner";
-import { EncodingSampler } from "../search/EncodingSampler";
-import { Crossover, Encoding, EventManager } from "..";
-import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
-import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
-import { PluginInterface } from "./PluginInterface";
+import {
+  Crossover,
+  Encoding,
+  EncodingRunner,
+  EncodingSampler,
+  EventManager,
+  SearchAlgorithm,
+  ObjectiveManager,
+} from "@syntest/core";
+import { PluginInterface } from "../PluginInterface";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
   eventManager?: EventManager<T>;
@@ -31,7 +35,7 @@ export type SearchAlgorithmOptions<T extends Encoding> = {
 };
 
 export interface SearchAlgorithmPlugin<T extends Encoding>
-  extends PluginInterface<T> {
+  extends PluginInterface {
   type: "Search Algorithm";
 
   createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(

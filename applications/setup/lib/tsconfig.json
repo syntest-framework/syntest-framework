@@ -5,10 +5,5 @@
     "rootDir": ".",
     "composite": true
   },
-  "include": [
-    "**/*.ts",
-    "../../cli/lib/PluginManager.ts",
-    "../../cli/lib/Launcher.ts",
-    "../../cli/lib/Launcher.ts"
-  ]
+  "include": ["**/*.ts"]
 }

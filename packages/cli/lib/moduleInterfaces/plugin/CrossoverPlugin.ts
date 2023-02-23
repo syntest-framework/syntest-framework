@@ -15,25 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../search/Encoding";
-import { PluginManager } from "./PluginManager";
-import Yargs = require("yargs");
+import { Crossover, Encoding } from "@syntest/core";
+import { PluginInterface } from "../PluginInterface";
 
-export interface PluginInterface<T extends Encoding> {
-  name: Readonly<string>;
-  type: Readonly<string>;
+export type CrossoverOptions<T extends Encoding> = unknown;
 
-  register(pluginManager: PluginManager<T>): void;
-  /**
-   * Should return a map of optionName -> yargsConfig
-   */
-  getConfig?(): Promise<Map<string, Yargs.Options>>;
-  /**
-   * Called after the initialization step of the tool
-   */
-  prepare?(): Promise<void>;
-  /**
-   * Called before the exit step of the tool
-   */
-  cleanup?(): Promise<void>;
+export interface CrossoverPlugin<T extends Encoding> extends PluginInterface {
+  type: "Crossover";
+
+  createCrossoverOperator<O extends CrossoverOptions<T>>(
+    options: O
+  ): Crossover<T>;
 }

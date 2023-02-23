@@ -19,15 +19,15 @@ import {
   pluginAlreadyRegistered,
   pluginCannotBeLoaded,
   pluginHasNoRegister,
-} from "../Diagnostics";
-import { Encoding } from "../search/Encoding";
-import { CrossoverPlugin } from "./CrossoverPlugin";
-import { ListenerPlugin } from "./ListenerPlugin";
-import { PluginInterface } from "./PluginInterface";
-import { SamplerPlugin } from "./SamplerPlugin";
-import { SearchAlgorithmPlugin } from "./SearchAlgorithmPlugin";
-import { TerminationPlugin } from "./TerminationPlugin";
-import { UserInterfacePlugin } from "./UserInterfacePlugin";
+} from "../../core/lib/Diagnostics";
+import { Encoding } from "../../core/lib/search/Encoding";
+import { CrossoverPlugin } from "../../core/lib/plugin/CrossoverPlugin";
+import { ListenerPlugin } from "../../core/lib/plugin/ListenerPlugin";
+import { PluginInterface } from "../../core/lib/plugin/PluginInterface";
+import { SamplerPlugin } from "../../core/lib/plugin/SamplerPlugin";
+import { SearchAlgorithmPlugin } from "../../core/lib/plugin/SearchAlgorithmPlugin";
+import { TerminationPlugin } from "../../core/lib/plugin/TerminationPlugin";
+import { UserInterfacePlugin } from "../../core/lib/plugin/UserInterfacePlugin";
 import Yargs = require("yargs");
 
 export class PluginManager<T extends Encoding> {

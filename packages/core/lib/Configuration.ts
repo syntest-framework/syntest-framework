@@ -42,34 +42,6 @@ export class Configuration {
     CONFIG = <Readonly<RemoveIndex<ArgumentsObject>>>(<unknown>argumentValues);
   }
 
-  loadFile(cwd?: string) {
-    cwd = cwd || process.env.SYNTEST_CWD || process.cwd();
-    const configPath = path.join(cwd, ".syntest.js");
-    let config;
-    // Catch syntestjs syntax errors
-    if (shell.test("-e", configPath)) {
-      try {
-        config = require(configPath);
-      } catch (error) {
-        throw new Error(error);
-      }
-      // Config is optional
-    } else {
-      config = {};
-    }
-
-    return config;
-  }
-
-  processArguments<O extends OptionsObject>(
-    yargs: O,
-    args: string[]
-  ): ArgumentsObject {
-    const config = this.loadFile();
-    const configuredArgs = yargs.config(config);
-    return configuredArgs.wrap(configuredArgs.terminalWidth()).parseSync(args);
-  }
-
   configureOptions(programName: string) {
     const yargs = Yargs.usage(`Usage: ${programName} [options]`)
       .example(
@@ -95,31 +67,6 @@ export class Configuration {
 
     // In case there are hidden options we hide them from the help menu.
     return options9.showHidden(false);
-  }
-
-  configureGeneralOptions<T>(yargs: Yargs.Argv<T>) {
-    return (
-      yargs
-        // plugins
-        .option("plugins", {
-          alias: ["p"],
-          array: true,
-          default: [],
-          description: "List of dependencies or paths to plugins to load",
-          group: "General options:",
-          hidden: false,
-          type: "string",
-        })
-        // ui
-        .option("user-interface", {
-          alias: [],
-          default: "regular",
-          description: "The user interface you use",
-          group: "General options:",
-          hidden: false,
-          type: "string",
-        })
-    );
   }
 
   configureTargetOptions<T>(yargs: Yargs.Argv<T>) {
@@ -158,15 +105,6 @@ export class Configuration {
   configureStorageOptions<T>(yargs: Yargs.Argv<T>) {
     return yargs.options({
       // directories
-      "syntest-directory": {
-        alias: [],
-        default: "syntest",
-        description: "The path where everything should be saved",
-        group: "Directory options:",
-        hidden: false,
-        normalize: true,
-        type: "string",
-      },
       "statistics-directory": {
         alias: [],
         default: "syntest/statistics",
@@ -189,15 +127,6 @@ export class Configuration {
         alias: [],
         default: "syntest/tests",
         description: "The path where the final test suite should be saved",
-        group: "Directory options:",
-        hidden: false,
-        normalize: true,
-        type: "string",
-      },
-      "temp-syntest-directory": {
-        alias: [],
-        default: ".syntest",
-        description: "The path where all temporary files should be saved",
         group: "Directory options:",
         hidden: false,
         normalize: true,

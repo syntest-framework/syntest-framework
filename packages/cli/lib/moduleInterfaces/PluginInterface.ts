@@ -15,16 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "..";
-import { EncodingSampler } from "../search/EncodingSampler";
-import { PluginInterface } from "./PluginInterface";
+import Yargs = require("yargs");
 
-export type SamplerOptions<T extends Encoding> = unknown;
+export interface PluginInterface {
+  name: Readonly<string>;
+  type: Readonly<string>;
 
-export interface SamplerPlugin<T extends Encoding> extends PluginInterface<T> {
-  type: "Sampler";
-
-  createSamplerOperator<O extends SamplerOptions<T>>(
-    options: O
-  ): EncodingSampler<T>;
+  /**
+   * Should return a map of optionName -> yargsConfig
+   */
+  getOptions?(): Promise<Map<string, Yargs.Options>>;
+  /**
+   * Called after the initialization step of the tool
+   */
+  prepare?(): Promise<void>;
+  /**
+   * Called before the exit step of the tool
+   */
+  cleanup?(): Promise<void>;
 }

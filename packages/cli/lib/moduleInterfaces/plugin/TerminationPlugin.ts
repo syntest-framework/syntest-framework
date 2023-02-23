@@ -15,27 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Encoding, TerminationTrigger } from "@syntest/core";
+import { PluginInterface } from "../PluginInterface";
 
-import { Crossover, Encoding } from "..";
-import { CONFIG } from "../Configuration";
-import { pluginNotFound } from "../Diagnostics";
-import { PluginManager } from "../plugin/PluginManager";
+export type TerminationOptions<T extends Encoding> = unknown;
 
-/**
- * Factory for creating an instance of a specific crossover operator from the config.
- *
- * @author Dimitri Stallenberg
- */
-export function createCrossoverFromConfig<T extends Encoding>(
-  pluginManager: PluginManager<T>
-): Crossover<T> {
-  const crossover = CONFIG.crossover;
+export interface TerminationPlugin<T extends Encoding> extends PluginInterface {
+  type: "Termination Trigger";
 
-  if (!pluginManager.getCrossoverOperators().includes(crossover)) {
-    throw new Error(pluginNotFound(crossover, "Crossover"));
-  }
-
-  return pluginManager
-    .getCrossoverOperator(crossover)
-    .createCrossoverOperator({});
+  createTerminationTrigger<O extends TerminationOptions<T>>(
+    options: O
+  ): TerminationTrigger;
 }

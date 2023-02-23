@@ -16,20 +16,20 @@
  * limitations under the License.
  */
 
-import { Encoding } from ".";
-import { Configuration } from "./Configuration";
-import { EventManager } from "./event/EventManager";
-import { PluginManager } from "./plugin/PluginManager";
+import { Encoding } from "../../core/lib";
+import { Configuration } from "../../core/lib/Configuration";
+import { EventManager } from "../../core/lib/event/EventManager";
+import { PluginManager } from "./PluginManager";
 
 import {
   DynaMOSAFactory,
   MOSAFactory,
-} from "./search/metaheuristics/evolutionary/MOSAFamily";
+} from "../../core/lib/search/metaheuristics/evolutionary/MOSAFamily";
 import Yargs = require("yargs");
 
-import { RandomSearchFactory } from "./search/metaheuristics/RandomSearch";
-import { SignalTerminationTriggerFactory } from "./search/termination/SignalTerminationTrigger";
-import { NSGAIIFactory } from "./search/metaheuristics/evolutionary/NSGAII";
+import { RandomSearchFactory } from "../../core/lib/search/metaheuristics/RandomSearch";
+import { SignalTerminationTriggerFactory } from "../../core/lib/search/termination/SignalTerminationTrigger";
+import { NSGAIIFactory } from "../../core/lib/search/metaheuristics/evolutionary/NSGAII";
 import yargHelper = require("yargs/helpers");
 
 export abstract class Launcher<T extends Encoding> {
