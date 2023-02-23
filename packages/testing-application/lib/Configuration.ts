@@ -151,8 +151,9 @@ export class Configuration {
       // directories
       "statistics-directory": {
         alias: [],
-        default: "syntest/statistics",
-        description: "The path where the csv should be saved",
+        default: "statistics",
+        description:
+          "The path where the csv should be saved (within the syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -160,8 +161,9 @@ export class Configuration {
       },
       "test-directory": {
         alias: [],
-        default: "syntest/tests",
-        description: "The path where the final test suite should be saved",
+        default: "tests",
+        description:
+          "The path where the final test suite should be saved (within the syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -169,8 +171,9 @@ export class Configuration {
       },
       "temp-test-directory": {
         alias: [],
-        default: ".syntest/tests",
-        description: "Path to the temporary test directory",
+        default: "tests",
+        description:
+          "Path to the temporary test directory (within the temp-syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -178,8 +181,9 @@ export class Configuration {
       },
       "temp-log-directory": {
         alias: [],
-        default: ".syntest/logs",
-        description: "Path to the temporary log directory",
+        default: "logs",
+        description:
+          "Path to the temporary log directory (within the temp-syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -187,8 +191,9 @@ export class Configuration {
       },
       "temp-instrumented-directory": {
         alias: [],
-        default: ".syntest/instrumented",
-        description: "Path to the temporary instrumented directory",
+        default: "instrumented",
+        description:
+          "Path to the temporary instrumented directory (within the temp-syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
