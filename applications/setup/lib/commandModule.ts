@@ -3,7 +3,7 @@ import { Argv } from "yargs";
 export const command = "setup";
 
 export const aliases: string[] = [];
-export const description = "Setup the requirements for the SynTest tool";
+export const describe = "Setup the requirements for the SynTest tool";
 
 export const builder = (yargs: Argv) => {
   return yargs
@@ -25,6 +25,9 @@ export const builder = (yargs: Argv) => {
 
 export const handler = (argv) => {
   console.log("called with args", argv);
+  setTimeout(() => {
+    console.log("time");
+  }, 2000);
   //   Configuration.initialize(argv);
   // example
   // const eventManager = new EventManager({})

@@ -22,6 +22,7 @@ export class ModuleManager {
   private _plugins: Map<string, Map<string, PluginInterface>>;
 
   constructor() {
+    this._applications = new Map();
     this._plugins = new Map();
   }
 

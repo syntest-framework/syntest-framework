@@ -18,6 +18,8 @@ export type LoggingOptions = {
   logToFile: string[];
 };
 
+export type BaseOptions = GeneralOptions & StorageOptions & LoggingOptions;
+
 export class Configuration {
   static configureUsage() {
     return (

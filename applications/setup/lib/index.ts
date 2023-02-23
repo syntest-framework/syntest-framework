@@ -1,1 +1,1 @@
-export * as syntestCommandModule from "./commandModule";
+export * as syntestApplication from "./SetupApplication";
