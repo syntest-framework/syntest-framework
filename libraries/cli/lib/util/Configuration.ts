@@ -38,6 +38,8 @@ export type BaseOptions = GeneralOptions & StorageOptions & LoggingOptions;
 
 export enum OptionGroups {
   General = "General Options:",
+  Storage = "Storage Options:",
+  Logging = "Logging Options:",
 }
 
 export class Configuration {
@@ -56,7 +58,7 @@ export class Configuration {
           alias: ["c"],
           default: ".syntest.json",
           description: "The syntest configuration file",
-          group: "General options:",
+          group: OptionGroups.General,
           hidden: false,
           config: true,
           type: "string",
@@ -66,7 +68,7 @@ export class Configuration {
           array: true,
           default: [],
           description: "List of dependencies or paths to modules to load",
-          group: "General options:",
+          group: OptionGroups.General,
           hidden: false,
           type: "string",
         })
@@ -75,7 +77,7 @@ export class Configuration {
           alias: [],
           default: "regular",
           description: "The user interface you use",
-          group: "General options:",
+          group: OptionGroups.General,
           hidden: false,
           type: "string",
         })
@@ -84,7 +86,7 @@ export class Configuration {
           alias: [],
           default: "syntest",
           description: "The path where everything should be saved",
-          group: "Storage options:",
+          group: OptionGroups.Storage,
           hidden: false,
           normalize: true,
           type: "string",
@@ -93,7 +95,7 @@ export class Configuration {
           alias: [],
           default: ".syntest",
           description: "The path where all temporary files should be saved",
-          group: "Storage options:",
+          group: OptionGroups.Storage,
           hidden: false,
           normalize: true,
           type: "string",
@@ -103,7 +105,7 @@ export class Configuration {
           alias: [],
           default: "logs",
           description: "The path where the logs should be saved",
-          group: "Logging options:",
+          group: OptionGroups.Logging,
           hidden: false,
           normalize: true,
           type: "string",
@@ -113,7 +115,7 @@ export class Configuration {
           choices: ["debug", "error", "warn", "info", "verbose", "silly"],
           default: "debug",
           description: "Log level of the tool",
-          group: "Logging options:",
+          group: OptionGroups.Logging,
           hidden: false,
           type: "string",
         })
@@ -121,7 +123,7 @@ export class Configuration {
           alias: [],
           default: ["info", "warn", "error"],
           description: "Which levels should be logged to file",
-          group: "Logging options:",
+          group: OptionGroups.Logging,
           hidden: false,
           type: "array",
         })

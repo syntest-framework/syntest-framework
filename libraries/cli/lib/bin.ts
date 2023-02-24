@@ -31,6 +31,9 @@ async function main() {
   const args = yargHelper.hideBin(process.argv);
 
   // Configure base usage
+  // We disable help and version here because,
+  // we don't want the help command to be triggered
+  // when we did not configure the commands and options from the added modules yet
   let yargs = Configuration.configureUsage().help(false).version(false);
 
   // Configure general options
