@@ -51,7 +51,6 @@
     "figlet": "1.5.2",
     "global-modules": "2.0.0",
     "globby": "11.0.4",
-    "shelljs": "0.8.5",
     "winston": "3.8.2",
     "yargs": "17.6.2"
   },

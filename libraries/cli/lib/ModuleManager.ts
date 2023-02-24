@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import * as path from "path";
-import shell = require("shelljs");
+import { existsSync } from "fs";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
 import { Plugin } from "./module/Plugin";
@@ -97,19 +97,19 @@ export class ModuleManager {
     if (module.startsWith("file:")) {
       // It is a file path
       modulePath = path.resolve(module.replace("file:", ""));
-      if (!shell.test("-e", modulePath)) {
+      if (!existsSync(modulePath)) {
         throw new Error(`Filepath does not lead to an module, path: ${module}`);
       }
     } else {
       // It is a npm package
       modulePath = path.resolve(path.join("node_modules", module));
 
-      if (!shell.test("-e", modulePath)) {
+      if (!existsSync(modulePath)) {
         // it is not locally installed lets try global
         modulePath = path.resolve(path.join(globalModules, module));
       }
 
-      if (!shell.test("-e", modulePath)) {
+      if (!existsSync(modulePath)) {
         // it is not installed locally nor globally
         // TODO maybe auto install?
         throw new Error(
