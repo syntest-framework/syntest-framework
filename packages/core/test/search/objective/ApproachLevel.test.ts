@@ -5,10 +5,10 @@ import * as chai from "chai";
 const expect = chai.expect;
 
 describe("CFG ancestors search", function () {
-  const cfgMini = new ControlFlowGraph();
-  const CFG1 = new ControlFlowGraph();
-  const CFG2 = new ControlFlowGraph();
-  const CFG3 = new ControlFlowGraph();
+  let cfgMini: ControlFlowGraph;
+  let CFG1: ControlFlowGraph;
+  let CFG2: ControlFlowGraph;
+  let CFG3: ControlFlowGraph;
 
   beforeEach(function () {
     let nodes;
@@ -45,8 +45,7 @@ describe("CFG ancestors search", function () {
       { from: "1", to: "3", branchType: false },
       { from: "ROOT", to: "1" },
     ];
-    cfgMini.nodes = nodes;
-    cfgMini.edges = edges;
+    cfgMini = new ControlFlowGraph(nodes, edges);
 
     // Construct CFG1
     for (let i = 65; i < 70; i++) {
@@ -69,8 +68,7 @@ describe("CFG ancestors search", function () {
       { from: "E", to: "A" },
       { from: "ROOT", to: "A" },
     ];
-    CFG1.nodes = nodes;
-    CFG1.edges = edges;
+    CFG1 = new ControlFlowGraph(nodes, edges);
 
     // Construct CFG2
     nodes = [
@@ -128,8 +126,7 @@ describe("CFG ancestors search", function () {
 
       { from: "ROOT", to: "A" },
     ];
-    CFG2.nodes = nodes;
-    CFG2.edges = edges;
+    CFG2 = new ControlFlowGraph(nodes, edges);
 
     // Construct CFG3
 
@@ -171,20 +168,19 @@ describe("CFG ancestors search", function () {
       { from: "ROOT", to: "A" },
     ];
 
-    CFG3.nodes = nodes;
-    CFG3.edges = edges;
+    CFG3 = new ControlFlowGraph(nodes, edges);
   });
 
   it("1 branch", () => {
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         cfgMini,
         "2",
         new Set<string>(["ROOT", "1", "3"])
       )
     ).to.eql({
       approachLevel: 1,
-      ancestor: cfgMini.getNodeById("1"),
+      closestCoveredBranch: cfgMini.getNodeById("1"),
     });
   });
 
@@ -192,50 +188,50 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> A -> B
     // Try to find approachLevel from G
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
         new Set<string>(["ROOT", "A", "C", "D", "F", "A", "B"])
       )
-    ).to.eql({ approachLevel: 1, ancestor: CFG1.getNodeById("D") });
+    ).to.eql({ approachLevel: 1, closestCoveredBranch: CFG1.getNodeById("D") });
   });
 
   it("CFG1 Target G, Path went to E", () => {
     // Path that was covered: A -> C -> E -> A -> B
     // Try to find approachLevel from G
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
       )
-    ).to.eql({ approachLevel: 2, ancestor: CFG1.getNodeById("C") });
+    ).to.eql({ approachLevel: 2, closestCoveredBranch: CFG1.getNodeById("C") });
   });
 
   it("CFG1 Target G, Path went to E and looped", () => {
     // Path that was covered: A -> C -> E -> A -> C -> D -> F -> A -> B
     // Try to find approachLevel from G
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
         new Set<string>(["ROOT", "A", "C", "E", "A", "C", "D", "F", "A", "B"])
       )
-    ).to.eql({ approachLevel: 1, ancestor: CFG1.getNodeById("D") });
+    ).to.eql({ approachLevel: 1, closestCoveredBranch: CFG1.getNodeById("D") });
   });
 
   it("CFG1 Target E, Path went to B", () => {
     // Path that was covered: A -> B
     // Try to find approachLevel from E
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG1,
         "E",
         new Set<string>(["ROOT", "A", "B"])
       )
     ).to.eql({
       approachLevel: 2,
-      ancestor: CFG1.getNodeById("A"),
+      closestCoveredBranch: CFG1.getNodeById("A"),
     });
   });
 
@@ -243,14 +239,14 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> B
     // Try to find approachLevel from F
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG1,
         "F",
         new Set<string>(["ROOT", "A", "B"])
       )
     ).to.eql({
       approachLevel: 3,
-      ancestor: CFG1.getNodeById("A"),
+      closestCoveredBranch: CFG1.getNodeById("A"),
     });
   });
 
@@ -258,7 +254,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from E
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "E",
         new Set<string>([
@@ -275,14 +271,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({ approachLevel: 1, ancestor: CFG2.getNodeById("C") });
+    ).to.eql({ approachLevel: 1, closestCoveredBranch: CFG2.getNodeById("C") });
   });
 
   it("CFG2 Target I, Path went to S through H", () => {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from I
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "I",
         new Set<string>([
@@ -299,14 +295,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({ approachLevel: 1, ancestor: CFG2.getNodeById("F") });
+    ).to.eql({ approachLevel: 1, closestCoveredBranch: CFG2.getNodeById("F") });
   });
 
   it("CFG2 Target M, Path went to S through H", () => {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from M
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "M",
         new Set<string>([
@@ -323,14 +319,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({ approachLevel: 2, ancestor: CFG2.getNodeById("F") });
+    ).to.eql({ approachLevel: 2, closestCoveredBranch: CFG2.getNodeById("F") });
   });
 
   it("CFG2 Target N, Path went to S through H", () => {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from N
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "N",
         new Set<string>([
@@ -347,14 +343,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({ approachLevel: 2, ancestor: CFG2.getNodeById("F") });
+    ).to.eql({ approachLevel: 2, closestCoveredBranch: CFG2.getNodeById("F") });
   });
 
   it("CFG2 Target R, Path went to S through H and Q", () => {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from R
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "R",
         new Set<string>([
@@ -371,60 +367,60 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({ approachLevel: 1, ancestor: CFG2.getNodeById("P") });
+    ).to.eql({ approachLevel: 1, closestCoveredBranch: CFG2.getNodeById("P") });
   });
 
   it("CFG2 Target R, Path went to E and B", () => {
     // Path that was covered: A -> C -> E -> A -> B
     // Try to find approachLevel from R
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "R",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
       )
-    ).to.eql({ approachLevel: 3, ancestor: CFG2.getNodeById("C") });
+    ).to.eql({ approachLevel: 3, closestCoveredBranch: CFG2.getNodeById("C") });
   });
 
   it("CFG2 Target S, Path went to E and B", () => {
     // Path that was covered: A -> C -> E -> A -> B
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "S",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
       )
-    ).to.eql({ approachLevel: 3, ancestor: CFG2.getNodeById("C") });
+    ).to.eql({ approachLevel: 3, closestCoveredBranch: CFG2.getNodeById("C") });
   });
 
-  it("CFG2 Target S, Path went to B immidiately", () => {
+  it("CFG2 Target S, Path went to B immediately", () => {
     // Path that was covered: A -> B
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG2,
         "S",
         new Set<string>(["ROOT", "A", "B"])
       )
     ).to.eql({
       approachLevel: 4,
-      ancestor: CFG2.getNodeById("A"),
+      closestCoveredBranch: CFG2.getNodeById("A"),
     });
   });
 
-  it("CFG3 Target S, Path went to B immidiately", () => {
+  it("CFG3 Target S, Path went to B immediately", () => {
     // Path that was covered: A -> B
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG3,
         "S",
         new Set<string>(["ROOT", "A", "B"])
       )
     ).to.eql({
       approachLevel: 2,
-      ancestor: CFG3.getNodeById("A"),
+      closestCoveredBranch: CFG3.getNodeById("A"),
     });
   });
 
@@ -432,14 +428,14 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> E -> S
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestAncestor(
+      ApproachLevel._findClosestCoveredBranch(
         CFG3,
         "R",
         new Set<string>(["ROOT", "A", "C", "E", "S"])
       )
     ).to.eql({
       approachLevel: 3,
-      ancestor: CFG3.getNodeById("C"),
+      closestCoveredBranch: CFG3.getNodeById("C"),
     });
   });
 });

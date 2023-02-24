@@ -18,6 +18,7 @@
 
 import { Crossover, Encoding } from "..";
 import { CONFIG } from "../Configuration";
+import { pluginNotFound } from "../Diagnostics";
 import { PluginManager } from "../plugin/PluginManager";
 
 /**
@@ -31,9 +32,7 @@ export function createCrossoverFromConfig<T extends Encoding>(
   const crossover = CONFIG.crossover;
 
   if (!pluginManager.getCrossoverOperators().includes(crossover)) {
-    throw new Error(
-      `Specified crossover: ${crossover} not found in pluginManager.`
-    );
+    throw new Error(pluginNotFound(crossover, "Crossover"));
   }
 
   return pluginManager

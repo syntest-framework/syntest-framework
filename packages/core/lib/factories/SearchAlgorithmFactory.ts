@@ -16,11 +16,18 @@
  * limitations under the License.
  */
 
-import { Crossover, EncodingSampler, Encoding, EncodingRunner } from "..";
+import {
+  Crossover,
+  EncodingSampler,
+  Encoding,
+  EncodingRunner,
+  EventManager,
+} from "..";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 import { CONFIG } from "../Configuration";
 import { PluginManager } from "../plugin/PluginManager";
 import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager";
+import { pluginNotFound } from "../Diagnostics";
 
 /**
  * Factory for creating an instance of a specific search algorithm from the config.
@@ -30,6 +37,7 @@ import { ObjectiveManager } from "../search/objective/managers/ObjectiveManager"
  * @author Dimitri Stallenberg
  */
 export function createSearchAlgorithmFromConfig<T extends Encoding>(
+  eventManager: EventManager<T>,
   pluginManager: PluginManager<T>,
   objectiveManager: ObjectiveManager<T>,
   encodingSampler: EncodingSampler<T>,
@@ -39,12 +47,11 @@ export function createSearchAlgorithmFromConfig<T extends Encoding>(
   const algorithm = CONFIG.algorithm;
 
   if (!pluginManager.getSearchAlgorithms().includes(algorithm)) {
-    throw new Error(
-      `Specified algorithm: ${algorithm} not found in pluginManager.`
-    );
+    throw new Error(pluginNotFound(algorithm, "Search Algorithm"));
   }
 
   return pluginManager.getSearchAlgorithm(algorithm).createSearchAlgorithm({
+    eventManager,
     objectiveManager,
     encodingSampler,
     runner,

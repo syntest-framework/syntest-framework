@@ -53,12 +53,6 @@ export abstract class SearchSubject<T extends Encoding> {
   protected _objectives: Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>;
 
   /**
-   *
-   * @protected
-   */
-  protected _paths: any;
-
-  /**
    * Constructor.
    *
    * @param name Name of the subject

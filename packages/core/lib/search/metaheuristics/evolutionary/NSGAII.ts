@@ -27,7 +27,8 @@ import {
 } from "../../../plugin/SearchAlgorithmPlugin";
 import { SearchAlgorithm } from "../SearchAlgorithm";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { fastNonDomSorting, crowdingDistance } from "../../..";
+import { pluginRequiresOptions } from "../../../Diagnostics";
+import { fastNonDomSorting, crowdingDistance, EventManager } from "../../..";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -44,16 +45,18 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   /**
    * Constructor.
    *
+   * @param eventManager The event manager
    * @param encodingSampler The encoding sampler
    * @param runner The runner
    * @param crossover The crossover operator to apply
    */
   constructor(
+    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>
   ) {
-    super(objectiveManager, encodingSampler, crossover);
+    super(eventManager, objectiveManager, encodingSampler, crossover);
   }
 
   /**
@@ -131,6 +134,7 @@ export class NSGAIIFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "NSGAII";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -139,16 +143,20 @@ export class NSGAIIFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error(pluginRequiresOptions("NSGAII", "eventManager"));
+    }
     if (!options.encodingSampler) {
-      throw new Error("NSGAII requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("NSGAII requires runner option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("NSGAII requires crossover option.");
+      throw new Error(pluginRequiresOptions("NSGAII", "crossover"));
     }
     return new NSGAII<T>(
+      options.eventManager,
       new SimpleObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover

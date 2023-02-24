@@ -27,6 +27,7 @@ import {
   Encoding,
   Crossover,
   crowdingDistance,
+  EventManager,
 } from "../../..";
 import {
   SearchAlgorithmPlugin,
@@ -34,6 +35,8 @@ import {
 } from "../../../plugin/SearchAlgorithmPlugin";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
+import { pluginRequiresOptions, shouldNeverHappen } from "../../../Diagnostics";
+import { Options } from "yargs";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -47,11 +50,12 @@ import { DominanceComparator } from "../../comparators/DominanceComparator";
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   constructor(
+    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>
   ) {
-    super(objectiveManager, encodingSampler, crossover);
+    super(eventManager, objectiveManager, encodingSampler, crossover);
   }
 
   protected _environmentalSelection(size: number): void {
@@ -59,9 +63,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       this._objectiveManager.getCurrentObjectives().size == 0 &&
       this._objectiveManager.getUncoveredObjectives().size != 0
     )
-      throw Error(
-        "This should never happen. There is a likely bug in the objective manager"
-      );
+      throw Error(shouldNeverHappen("Objective Manager"));
 
     if (
       this._objectiveManager.getCurrentObjectives().size == 0 &&
@@ -299,6 +301,7 @@ export class MOSAFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "MOSA";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -307,16 +310,20 @@ export class MOSAFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error(pluginRequiresOptions("MOSA", "eventManager"));
+    }
     if (!options.encodingSampler) {
-      throw new Error("MOSA requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("MOSA requires runner option.");
+      throw new Error(pluginRequiresOptions("MOSA", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("MOSA requires crossover option.");
+      throw new Error(pluginRequiresOptions("MOSA", "crossover"));
     }
     return new MOSAFamily<T>(
+      options.eventManager,
       new UncoveredObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover
@@ -339,6 +346,7 @@ export class DynaMOSAFactory<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
   name = "DynaMOSA";
+  type: "Search Algorithm";
 
   // This function is not implemented since it is an internal plugin
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -347,16 +355,20 @@ export class DynaMOSAFactory<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
+    if (!options.eventManager) {
+      throw new Error(pluginRequiresOptions("DynaMOSA", "eventManager"));
+    }
     if (!options.encodingSampler) {
-      throw new Error("DynaMOSA requires encodingSampler option.");
+      throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error("DynaMOSA requires runner option.");
+      throw new Error(pluginRequiresOptions("DynaMOSA", "runner"));
     }
     if (!options.crossover) {
-      throw new Error("DynaMOSA requires crossover option.");
+      throw new Error(pluginRequiresOptions("DynaMOSA", "crossover"));
     }
     return new MOSAFamily<T>(
+      options.eventManager,
       new StructuralObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover

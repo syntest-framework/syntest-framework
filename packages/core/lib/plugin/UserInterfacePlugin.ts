@@ -23,6 +23,8 @@ export type UserInterfaceOptions = unknown;
 
 export interface UserInterfacePlugin<T extends Encoding>
   extends PluginInterface<T> {
+  type: "User Interface";
+
   createUserInterface<O extends UserInterfaceOptions>(
     options: O
   ): UserInterface;

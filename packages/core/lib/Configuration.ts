@@ -19,6 +19,7 @@
 import Yargs = require("yargs");
 import * as path from "path";
 import shell = require("shelljs");
+import { singletonAlreadySet } from "./Diagnostics";
 
 // This type declaration removes the [key: string]: unknown index from type T.
 export type RemoveIndex<T> = {
@@ -35,7 +36,7 @@ export let CONFIG: Readonly<RemoveIndex<ArgumentsObject>>;
 export class Configuration {
   initialize(argumentValues: ArgumentsObject) {
     if (CONFIG) {
-      throw Error("Already initialized the config singleton!");
+      throw new Error(singletonAlreadySet("config"));
     }
 
     CONFIG = <Readonly<RemoveIndex<ArgumentsObject>>>(<unknown>argumentValues);
@@ -128,7 +129,7 @@ export class Configuration {
         alias: ["r"],
         demandOption: true,
         description: "The root directory where all targets are in",
-        group: "File options:",
+        group: "Target options:",
         hidden: false,
         normalize: true,
         type: "string",
@@ -137,7 +138,7 @@ export class Configuration {
         alias: ["i"],
         default: ["./src/**/*.*"],
         description: "Files/Directories to include",
-        group: "File options:",
+        group: "Target options:",
         hidden: false,
         normalize: true,
         type: "array",
@@ -146,7 +147,7 @@ export class Configuration {
         alias: ["e"],
         default: [],
         description: "Files/Directories to exclude",
-        group: "File options:",
+        group: "Target options:",
         hidden: false,
         normalize: true,
         type: "array",
@@ -157,10 +158,20 @@ export class Configuration {
   configureStorageOptions<T>(yargs: Yargs.Argv<T>) {
     return yargs.options({
       // directories
+      "syntest-directory": {
+        alias: [],
+        default: "syntest",
+        description: "The path where everything should be saved",
+        group: "Directory options:",
+        hidden: false,
+        normalize: true,
+        type: "string",
+      },
       "statistics-directory": {
         alias: [],
-        default: "syntest/statistics",
-        description: "The path where the csv should be saved",
+        default: "statistics",
+        description:
+          "The path where the csv should be saved (within the syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -168,17 +179,28 @@ export class Configuration {
       },
       "log-directory": {
         alias: [],
-        default: "syntest/logs",
-        description: "The path where the logs should be saved",
+        default: "logs",
+        description:
+          "The path where the logs should be saved (within the syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
         type: "string",
       },
-      "final-suite-directory": {
+      "test-directory": {
         alias: [],
-        default: "syntest/tests",
-        description: "The path where the final test suite should be saved",
+        default: "tests",
+        description:
+          "The path where the final test suite should be saved (within the syntest-directory)",
+        group: "Directory options:",
+        hidden: false,
+        normalize: true,
+        type: "string",
+      },
+      "temp-syntest-directory": {
+        alias: [],
+        default: ".syntest",
+        description: "The path where all temporary files should be saved",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -186,8 +208,9 @@ export class Configuration {
       },
       "temp-test-directory": {
         alias: [],
-        default: ".syntest/tests",
-        description: "Path to the temporary test directory",
+        default: "tests",
+        description:
+          "Path to the temporary test directory (within the temp-syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -195,8 +218,9 @@ export class Configuration {
       },
       "temp-log-directory": {
         alias: [],
-        default: ".syntest/logs",
-        description: "Path to the temporary log directory",
+        default: "logs",
+        description:
+          "Path to the temporary log directory (within the temp-syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,
@@ -204,8 +228,9 @@ export class Configuration {
       },
       "temp-instrumented-directory": {
         alias: [],
-        default: ".syntest/instrumented",
-        description: "Path to the temporary instrumented directory",
+        default: "instrumented",
+        description:
+          "Path to the temporary instrumented directory (within the temp-syntest-directory)",
         group: "Directory options:",
         hidden: false,
         normalize: true,

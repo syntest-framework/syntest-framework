@@ -1,13 +1,15 @@
 name: version-release
 
 on:
-  push:
-    types: [created]
-    branches:
-      - 'release/**'
+  create:
 
 jobs:
   version-release:
+    name: Release - Version
+    # Only run when new release branches are created
+    if: >
+      (github.ref_type == 'branch') &&
+      startsWith(github.ref_name, 'release/')
     runs-on: ubuntu-latest
     steps:
       # Cloning
@@ -15,15 +17,15 @@ jobs:
         with:
           token: ${{ secrets.SYNTEST_CI }}
 
-      # Setup .npmrc file to publish to npm
-      - name: Use Node.js 18
+      # Setup and Caching
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
-          always-auth: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
+          node-version: lts/*
+
+          # NPM Cache using all package-lock files as hash
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       # Configure git user
       - name: Config git user
@@ -31,19 +33,16 @@ jobs:
           git config --global user.name 'SynTest CI'
           git config --global user.email 'info@syntest.org'
 
-      # Bootstrapping
+      # Dependencies
       - name: Core - Install Dependencies
-        run: |
-          npm ci
+        run: npm ci
 
       # Building
       - name: Core - Build
-        run: npm run lerna:build:compile
+        run: npm run build
 
       # Versioning
       - name: "Core - Version"
         env:
           GH_TOKEN: ${{ secrets.SYNTEST_CI }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
-        run: |
-          npx lerna version --conventional-commits --conventional-graduate  --changelog-preset conventionalcommits --create-release github --yes --loglevel silly
+        run: npx lerna version --conventional-commits --conventional-graduate --changelog-preset conventionalcommits --create-release github --yes --loglevel silly

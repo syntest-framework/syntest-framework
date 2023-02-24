@@ -22,14 +22,14 @@
  * @author Dimitri Stallenberg
  */
 export interface Node {
-  type: NodeType;
+  readonly type: NodeType;
 
-  id: string;
+  readonly id: string;
 
-  lines: number[];
-  statements: string[];
+  readonly lines: readonly number[];
+  readonly statements: string[];
 
-  description?: string;
+  readonly description?: string;
 }
 
 export enum NodeType {

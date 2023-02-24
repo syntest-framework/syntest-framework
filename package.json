@@ -1,7 +1,7 @@
 {
   "name": "@syntest/core",
   "version": "0.2.0",
-  "description": "The common core of the SynTest Framework",
+  "description": "Monorepo containing the various core parts of the SynTest ecosystem.",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -16,31 +16,30 @@
     "Mitchell Olsthoorn",
     "Dimitri Stallenberg"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "/dist",
-    "/NOTICE"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "lerna:build:compile": "lerna run build:compile",
-    "lerna:build:watch": "lerna run build:watch",
-    "lerna:clean": "lerna run --parallel clean",
-    "lerna:clean:dist": "lerna run --parallel clean:dist",
-    "lerna:format": "lerna run --parallel format",
-    "lerna:format:check": "lerna run --parallel format:check",
-    "lerna:lint": "lerna run --parallel lint",
-    "lerna:lint:fix": "lerna run --parallel lint:fix",
-    "lerna:test": "lerna run --parallel test",
-    "lerna:test:coverage": "lerna run --parallel test:coverage",
-    "lerna:test:watch": "lerna run --parallel test:watch",
-    "postinstall": "husky install & lerna bootstrap --force-local"
+    "build": "lerna run build",
+    "build:watch": "lerna watch -- lerna run build --since",
+    "clean": "lerna run clean",
+    "clean:dist": "lerna run clean:dist",
+    "format": "lerna run format",
+    "format:check": "lerna run format:check",
+    "lint": "lerna run lint",
+    "lint:fix": "lerna run lint:fix",
+    "test": "lerna run test",
+    "test:coverage": "lerna run --stream test:coverage",
+    "test:coverage:ci": "lerna run test:coverage:ci",
+    "test:watch": "lerna watch -- lerna run test --since",
+    "postinstall": "husky install"
   },
+  "workspaces": [
+    "packages/*",
+    "plugins/*"
+  ],
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
     "@commitlint/config-conventional": "17.4.2",
@@ -60,6 +59,7 @@
     "lerna": "6.4.1",
     "lint-staged": "13.1.0",
     "mocha": "10.2.0",
+    "nx": "15.7.1",
     "nyc": "15.1.0",
     "prettier": "2.8.1",
     "sinon": "15.0.1",

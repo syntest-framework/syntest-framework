@@ -1,14 +1,14 @@
 import { Datapoint } from "../..";
 import { ControlFlowGraph, Node } from "@syntest/cfg-core";
-import { Pair } from "@syntest/cfg-core/dist/Pair";
+import { Pair } from "@syntest/cfg-core/dist/util/Pair";
 
 export class ApproachLevel {
   public static calculate(
     cfg: ControlFlowGraph,
     node: Node,
     traces: Datapoint[]
-  ): { approachLevel: number; hitTrace: Datapoint } {
-    // Construct map with key as line covered and value as datapoint that coveres that line
+  ): { approachLevel: number; closestCoveredBranchTrace: Datapoint } {
+    // Construct map with key as line covered and value as datapoint that covers that line
     const linesTraceMap: Map<number, Datapoint> = traces
       .filter(
         (trace) =>
@@ -27,38 +27,37 @@ export class ApproachLevel {
     const coveredLines = new Set<number>(linesTraceMap.keys());
 
     // Based on set of covered lines, filter CFG nodes that were covered and get their strings
-    const coveredNodes = cfg.getNodesByLineNumbers(coveredLines);
+    const coveredNodes = new Set<Node>(
+      cfg.filterNodesByLineNumbers(coveredLines)
+    );
 
     const targetIds = new Set<string>([...coveredNodes].map((node) => node.id));
 
-    const { approachLevel, ancestor } = this._findClosestAncestor(
-      cfg,
-      node.id,
-      targetIds
-    );
+    const { approachLevel, closestCoveredBranch } =
+      this._findClosestCoveredBranch(cfg, node.id, targetIds);
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
-    if (!ancestor) {
-      return { approachLevel: null, hitTrace: null };
+    if (!closestCoveredBranch) {
+      return { approachLevel: null, closestCoveredBranchTrace: null };
     }
 
-    // Retrieve trace based on lines covered by found ancestor
-    let hitTrace: Datapoint = null;
-    for (const line of ancestor.lines) {
+    // Retrieve trace based on lines covered by found closestCoveredBranch
+    let closestCoveredBranchTrace: Datapoint = null;
+    for (const line of closestCoveredBranch.lines) {
       if (linesTraceMap.has(line)) {
-        hitTrace = linesTraceMap.get(line);
+        closestCoveredBranchTrace = linesTraceMap.get(line);
         break;
       }
     }
 
-    return { approachLevel, hitTrace };
+    return { approachLevel, closestCoveredBranchTrace };
   }
 
-  static _findClosestAncestor(
+  static _findClosestCoveredBranch(
     cfg: ControlFlowGraph,
     from: string,
     targets: Set<string>
-  ): { approachLevel: number; ancestor: Node } {
+  ): { approachLevel: number; closestCoveredBranch: Node } {
     const rotatedAdjList = cfg.getRotatedAdjacencyList();
 
     const visitedNodeIdSet = new Set<string>([from]);
@@ -70,7 +69,7 @@ export class ApproachLevel {
       const currentDistance: number = current.first;
       const currentNodeId: string = current.second;
 
-      // get all neigbors of currently considered node
+      // get all neighbors of currently considered node
       const parentsOfCurrent = rotatedAdjList.get(currentNodeId);
 
       for (const pairOfParent of parentsOfCurrent) {
@@ -83,7 +82,7 @@ export class ApproachLevel {
         if (targets.has(nextNodeId)) {
           return {
             approachLevel: currentDistance + pairOfParent.second,
-            ancestor: cfg.getNodeById(nextNodeId),
+            closestCoveredBranch: cfg.getNodeById(nextNodeId),
           };
         }
         // add element to queue and visited nodes to continue search
@@ -96,7 +95,7 @@ export class ApproachLevel {
     }
     return {
       approachLevel: -1,
-      ancestor: null,
+      closestCoveredBranch: null,
     };
   }
 }
