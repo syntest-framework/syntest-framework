@@ -22,8 +22,8 @@ import { Pair } from "./util/Pair";
 import { deepCopy } from "./util/DeepCopy";
 
 export class ControlFlowGraph {
-  private _nodes: Node[];
-  private _edges: Edge[];
+  private readonly _nodes: Node[];
+  private readonly _edges: Edge[];
 
   constructor(nodes: Node[], edges: Edge[]) {
     this._nodes = deepCopy<Node[]>(nodes);
