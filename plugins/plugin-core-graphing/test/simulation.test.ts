@@ -5,8 +5,6 @@ const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", async () => {
-    const cfg: ControlFlowGraph = new ControlFlowGraph();
-
     const nodes = [
       {
         type: NodeType.Root,
@@ -37,8 +35,7 @@ describe("simulationTest", () => {
       { from: "E", to: "A" },
       { from: "ROOT", to: "A" },
     ];
-    cfg.nodes = nodes;
-    cfg.edges = edges;
+    const cfg = new ControlFlowGraph(nodes, edges);
 
     const svgHtml = await createSimulation(cfg);
 

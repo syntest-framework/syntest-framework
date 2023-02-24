@@ -41,8 +41,6 @@
     "test:coverage:ci": "nyc --reporter=lcovonly mocha --config ../../.mocharc.json --reporter json --reporter-option output=test-results.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
-  "dependencies": {},
-  "devDependencies": {},
   "engines": {
     "node": ">=10.24.0"
   }
