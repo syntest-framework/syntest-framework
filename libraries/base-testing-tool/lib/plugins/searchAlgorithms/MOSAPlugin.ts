@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Sfuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,41 +15,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { Encoding, SearchAlgorithm } from "@syntest/core";
-import { Sfuzz } from "./Sfuzz";
-import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
 import { pluginRequiresOptions } from "@syntest/cli";
+import {
+  Encoding,
+  SearchAlgorithm,
+  MOSAFamily,
+  UncoveredObjectiveManager,
+} from "@syntest/core";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
-} from "@syntest/base-testing-tool";
+} from "../SearchAlgorithmPlugin";
 
 /**
- * This example plugin logs the program state at the start of the initialization phase of the program.
+ * Plugin for MOSA
  *
  * @author Dimitri Stallenberg
  */
-export default class SfuzzPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
-  name = "Sfuzz";
+export class MOSAPlugin<T extends Encoding>
+  implements SearchAlgorithmPlugin<T>
+{
+  name = "MOSA";
   type: "Search Algorithm";
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
     if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "eventManager"));
+      throw new Error(pluginRequiresOptions("MOSA", "eventManager"));
     }
     if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
+      throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
     }
     if (!options.runner) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "runner"));
+      throw new Error(pluginRequiresOptions("MOSA", "runner"));
     }
     if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "crossover"));
+      throw new Error(pluginRequiresOptions("MOSA", "crossover"));
     }
     if (!options.populationSize) {
       throw new Error(pluginRequiresOptions("DynaMOSA", "populationSize"));
@@ -59,9 +61,9 @@ export default class SfuzzPlugin<
         pluginRequiresOptions("DynaMOSA", "crossoverProbability")
       );
     }
-    return new Sfuzz<T>(
+    return new MOSAFamily<T>(
       options.eventManager,
-      new SfuzzObjectiveManager<T>(options.runner),
+      new UncoveredObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover,
       options.populationSize,

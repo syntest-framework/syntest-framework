@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-sfuzz",
-  "version": "0.3.0-beta.1",
-  "description": "A plugin for the SynTest Core containing the Sfuzz modules",
+  "name": "@syntest/init",
+  "version": "0.1.0",
+  "description": "The setup application of the SynTest Framework",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -20,7 +20,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "/dist",
-    "/NOTICE"
+    "/NOTICE",
+    "README.md"
   ],
   "repository": {
     "type": "git",
@@ -41,8 +42,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/core": "^0.4.0-beta.1",
-    "@syntest/base-testing-tool": "^0.1.0"
+    "@syntest/cli": "^0.1.0"
   },
   "engines": {
     "node": ">=10.24.0"

@@ -20,7 +20,7 @@ import { Encoding, ListenerInterface } from "@syntest/core";
 import { CFGGraphingListener } from "./CFGGraphingListener";
 import Yargs = require("yargs");
 import { mkdirSync } from "fs";
-import { CONFIG, ListenerPlugin } from "@syntest/testing-application";
+import { CONFIG, ListenerPlugin } from "@syntest/base-testing-tool";
 
 /**
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
