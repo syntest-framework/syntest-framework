@@ -23,7 +23,7 @@ export function deepCopy<T>(instance: T): T {
       [key: string]: any;
     };
     for (const attr in instance) {
-      if (Object.hasOwn(copyInstance, attr))
+      if (Object.prototype.hasOwnProperty.call(copyInstance, attr))
         copyInstance[attr] = deepCopy<any>(instance[attr]);
     }
     return copyInstance as T;
