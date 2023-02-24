@@ -37,10 +37,16 @@ export default class InitModule implements Module {
     });
 
     const commands = [
-      new Command(this.name, "configxx", commandOptions, (args) => {
-        console.log("config subcommand given!");
-        console.log(args);
-      }),
+      new Command(
+        this.name,
+        "xsubcommandxx",
+        "thorough description",
+        commandOptions,
+        (args) => {
+          console.log("config subcommand given!");
+          console.log(args);
+        }
+      ),
     ];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
@@ -57,6 +63,7 @@ export default class InitModule implements Module {
     const initTool = new Tool(
       this.name,
       labels,
+      "init description",
       commands,
       additionalOptions,
       (args) => {

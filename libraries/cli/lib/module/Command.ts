@@ -23,16 +23,18 @@ export class Command implements Yargs.CommandModule {
   options: Map<string, Yargs.Options>;
   handler: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>;
 
-  describe: "text for desribe";
+  describe: string;
 
   constructor(
     tool: string,
     name: string,
+    description: string,
     options: Map<string, Yargs.Options>,
     handler: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
   ) {
     this.tool = tool;
     this.command = name;
+    this.describe = description;
     this.options = options;
     this.handler = handler;
   }

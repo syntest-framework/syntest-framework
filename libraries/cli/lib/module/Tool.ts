@@ -29,17 +29,19 @@ export class Tool implements Yargs.CommandModule {
   toolOptions: Map<string, Yargs.Options>;
 
   handler: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>;
-  describe: "text for desribe";
+  describe: string;
 
   constructor(
     name: string,
     labels: string[],
+    describe: string,
     commands: Command[],
     toolOptions: Map<string, Yargs.Options>,
     handler: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
   ) {
     this.name = name;
     this.labels = labels;
+    this.describe = describe;
     this.command = name;
     this.commands = commands;
     this.toolOptions = toolOptions;
@@ -136,6 +138,7 @@ export class Tool implements Yargs.CommandModule {
       yargs = yargs.option(option, this.toolOptions.get(option));
     }
 
+    console.log("called");
     return yargs.usage(`Usage: $0 ${this.command} <command> [options]`);
   };
 }
