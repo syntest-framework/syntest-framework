@@ -21,8 +21,9 @@ import { Plugin } from "@syntest/cli";
 export type TerminationOptions<T extends Encoding> = unknown;
 
 export abstract class TerminationPlugin<T extends Encoding> extends Plugin {
-  type: "Termination Trigger";
-
+  constructor(name: string) {
+    super("Termination Trigger", name);
+  }
   abstract createTerminationTrigger<O extends TerminationOptions<T>>(
     options: O
   ): TerminationTrigger;

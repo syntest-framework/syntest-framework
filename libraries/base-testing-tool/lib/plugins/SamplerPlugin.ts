@@ -21,7 +21,9 @@ import { Plugin } from "@syntest/cli";
 export type SamplerOptions<T extends Encoding> = unknown;
 
 export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
-  type: "Sampler";
+  constructor(name: string) {
+    super("Sampler", name);
+  }
 
   abstract createSamplerOperator<O extends SamplerOptions<T>>(
     options: O

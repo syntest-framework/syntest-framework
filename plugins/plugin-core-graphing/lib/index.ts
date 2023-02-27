@@ -16,5 +16,4 @@
  * limitations under the License.
  */
 
-// Plugin
-export * as plugin from "./GraphingPlugin";
+export * as module from "./GraphingModule";

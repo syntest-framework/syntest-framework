@@ -15,17 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crossover, Encoding } from "@syntest/core";
-import { Plugin } from "@syntest/cli";
 
-export type CrossoverOptions<T extends Encoding> = unknown;
+import { Module, Plugin, Tool } from "@syntest/cli";
+import GraphingPlugin, { GraphOptions } from "./GraphingPlugin";
+import { mkdirSync } from "fs";
+import { CONFIG } from "@syntest/base-testing-tool";
 
-export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
-  constructor(name: string) {
-    super("Crossover", name);
+export default class GraphingModule extends Module {
+  async getTools(): Promise<Tool[]> {
+    return [];
+  }
+  async getPlugins(): Promise<Plugin[]> {
+    return [new GraphingPlugin()];
   }
 
-  abstract createCrossoverOperator<O extends CrossoverOptions<T>>(
-    options: O
-  ): Crossover<T>;
+  async prepare(): Promise<void> {
+    await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
+      recursive: true,
+    });
+  }
 }

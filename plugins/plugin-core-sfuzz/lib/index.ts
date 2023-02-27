@@ -17,4 +17,4 @@
  */
 
 // Plugin
-export * as syntestPlugin from "./SfuzzPlugin";
+export * as module from "./SfuzzModule";

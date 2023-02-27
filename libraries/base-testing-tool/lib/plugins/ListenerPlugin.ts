@@ -21,7 +21,9 @@ import { Plugin } from "@syntest/cli";
 export type ListenerOptions<T extends Encoding> = unknown;
 
 export abstract class ListenerPlugin<T extends Encoding> extends Plugin {
-  type: "Listener";
+  constructor(name: string) {
+    super("Listener", name);
+  }
 
   abstract createListener<O extends ListenerOptions<T>>(
     options: O

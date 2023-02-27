@@ -15,17 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crossover, Encoding } from "@syntest/core";
-import { Plugin } from "@syntest/cli";
 
-export type CrossoverOptions<T extends Encoding> = unknown;
+import { Module, Plugin, Tool } from "@syntest/cli";
+import SfuzzPlugin from "./SfuzzPlugin";
 
-export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
-  constructor(name: string) {
-    super("Crossover", name);
+export default class GraphingModule extends Module {
+  async getTools(): Promise<Tool[]> {
+    return [];
   }
-
-  abstract createCrossoverOperator<O extends CrossoverOptions<T>>(
-    options: O
-  ): Crossover<T>;
+  async getPlugins(): Promise<Plugin[]> {
+    return [new SfuzzPlugin()];
+  }
 }

@@ -19,42 +19,51 @@
 import { Encoding, ListenerInterface } from "@syntest/core";
 import { CFGGraphingListener } from "./CFGGraphingListener";
 import Yargs = require("yargs");
-import { mkdirSync } from "fs";
-import { CONFIG, ListenerPlugin } from "@syntest/base-testing-tool";
+import { ListenerPlugin } from "@syntest/base-testing-tool";
+import { OptionGroups } from "@syntest/cli";
 
 /**
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
  *
  * @author Dimitri Stallenberg
  */
-export default class GraphingPlugin<T extends Encoding>
-  implements ListenerPlugin<T>
-{
-  name = "Graphing";
-  type: "Listener";
+export default class GraphingPlugin<
+  T extends Encoding
+> extends ListenerPlugin<T> {
+  constructor() {
+    super("Graphing");
+  }
 
   createListener(): ListenerInterface<T> {
     return new CFGGraphingListener<T>();
   }
 
-  async getConfig() {
-    const map = new Map<string, Yargs.Options>();
-    map.set("cfg-directory", {
+  async getCommandOptions(
+    tool: string,
+    labels: string[],
+    command: string
+  ): Promise<Map<string, Yargs.Options>> {
+    if (!labels.includes("testing")) {
+      return;
+    }
+
+    if (command !== "test") {
+      return;
+    }
+
+    const optionsMap = new Map<string, Yargs.Options>();
+
+    optionsMap.set("cfg-directory", {
       alias: [],
-      default: "syntest/cfg",
+      default: "cfg",
       description: "The path where the csv should be saved",
-      group: "Directory options:",
+      group: OptionGroups.Storage,
       hidden: false,
       normalize: true,
       type: "string",
     });
-    return map;
-  }
 
-  async prepare() {
-    await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
-      recursive: true,
-    });
+    return optionsMap;
   }
 }
 

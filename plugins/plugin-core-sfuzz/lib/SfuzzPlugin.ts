@@ -33,8 +33,9 @@ import {
 export default class SfuzzPlugin<
   T extends Encoding
 > extends SearchAlgorithmPlugin<T> {
-  name = "Sfuzz";
-  type: "Search Algorithm";
+  constructor() {
+    super("Sfuzz");
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
