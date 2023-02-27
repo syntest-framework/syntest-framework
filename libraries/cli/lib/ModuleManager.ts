@@ -23,7 +23,17 @@ import { Plugin } from "./module/Plugin";
 import { Tool } from "./module/Tool";
 import { Module } from "./module/Module";
 
-import { pluginNotFound, pluginsNotFound } from "./util/diagnostics";
+import {
+  moduleAlreadyLoaded,
+  moduleCannotBeLoaded,
+  moduleNotCorrectlyImplemented,
+  moduleNotInstalled,
+  modulePathNotFound,
+  pluginAlreadyLoaded,
+  pluginNotFound,
+  pluginsNotFound,
+  toolAlreadyLoaded,
+} from "./util/diagnostics";
 
 export class ModuleManager {
   static instance: ModuleManager;
@@ -98,7 +108,7 @@ export class ModuleManager {
       // It is a file path
       modulePath = path.resolve(module.replace("file:", ""));
       if (!existsSync(modulePath)) {
-        throw new Error(`Filepath does not lead to an module, path: ${module}`);
+        throw new Error(modulePathNotFound(module));
       }
     } else {
       // It is a npm package
@@ -112,9 +122,7 @@ export class ModuleManager {
       if (!existsSync(modulePath)) {
         // it is not installed locally nor globally
         // TODO maybe auto install?
-        throw new Error(
-          `Package is not installed locally or globally, package: ${module}`
-        );
+        throw new Error(moduleNotInstalled(module));
       }
     }
 
@@ -125,21 +133,21 @@ export class ModuleManager {
     const modulePath = await this.getModulePath(moduleId);
     const { module } = await import(modulePath);
 
-    if (this.modules.has(module.name)) {
-      throw new Error(`Module is loaded twice: ${module.name}`);
-    }
-
     const moduleInstance: Module = new module.default();
 
     // check requirements
     if (!moduleInstance.name) {
-      throw new Error("SynTest module misses required name property!");
+      throw new Error(moduleNotCorrectlyImplemented("name", moduleId));
     }
     if (!moduleInstance.getTools) {
-      throw new Error("SynTest module misses required getTools function!");
+      throw new Error(moduleNotCorrectlyImplemented("getTools", moduleId));
     }
     if (!moduleInstance.getPlugins) {
-      throw new Error("SynTest module misses required getTools function!");
+      throw new Error(moduleNotCorrectlyImplemented("getPlugins", moduleId));
+    }
+
+    if (this.modules.has(moduleInstance.name)) {
+      throw new Error(moduleAlreadyLoaded(moduleInstance.name, moduleId));
     }
 
     this.modules.set(moduleInstance.name, moduleInstance);
@@ -151,14 +159,14 @@ export class ModuleManager {
         await this.loadModule(module);
       } catch (e) {
         console.log(e);
-        throw new Error(`Failed to load module: ${module}`);
+        throw new Error(moduleCannotBeLoaded(module));
       }
     }
 
     for (const module of this.modules.values()) {
       for (const tool of await module.getTools()) {
         if (this.tools.has(tool.name)) {
-          throw new Error(`Two or more tools have the same name: ${tool.name}`);
+          throw new Error(toolAlreadyLoaded(tool.name));
         }
 
         this.tools.set(tool.name, tool);
@@ -172,9 +180,7 @@ export class ModuleManager {
         }
 
         if (this.plugins.get(plugin.type).has(plugin.name)) {
-          throw new Error(
-            `Two or more plugins of type '${plugin.type}' have the same name: ${plugin.name}`
-          );
+          throw new Error(pluginAlreadyLoaded(plugin.name, plugin.type));
         }
 
         this.plugins.get(plugin.type).set(plugin.name, plugin);

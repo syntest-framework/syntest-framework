@@ -18,6 +18,7 @@
 import Yargs = require("yargs");
 import { Plugin } from "./Plugin";
 import { Command } from "./Command";
+import { cannotAddChoicesToOptionWithoutChoices } from "../util/diagnostics";
 
 export class Tool implements Yargs.CommandModule {
   name: Readonly<string>;
@@ -88,7 +89,7 @@ export class Tool implements Yargs.CommandModule {
 
           if (addedChoices.length && !this.toolOptions.get(option).choices) {
             throw new Error(
-              "Cannot add choices to option that does not have choices specified"
+              cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
             );
           }
 
@@ -114,7 +115,7 @@ export class Tool implements Yargs.CommandModule {
 
           if (addedChoices.length && !command.options[option].choices) {
             throw new Error(
-              "Cannot add choices to option that does not have choices specified"
+              cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
             );
           }
 
