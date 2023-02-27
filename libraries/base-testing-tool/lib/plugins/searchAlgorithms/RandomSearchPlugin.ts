@@ -34,7 +34,7 @@ import { pluginRequiresOptions } from "@syntest/cli";
 export class RandomSearchPlugin<T extends Encoding>
   implements SearchAlgorithmPlugin<T>
 {
-  name = "RandomSearch";
+  name = "Random";
   type: "Search Algorithm";
 
   createSearchAlgorithm(

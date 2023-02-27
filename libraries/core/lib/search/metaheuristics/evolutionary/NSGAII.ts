@@ -31,7 +31,8 @@ import { fastNonDomSorting, crowdingDistance, EventManager } from "../../..";
  * A fast and elitist multiobjective genetic algorithm: NSGA-II
  * K. Deb; A. Pratap; S. Agarwal; T. Meyarivan
  *
- * @author Mitchell Ols../../../util/Diagnosticsnibale Panichella
+ * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
 export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {

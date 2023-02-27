@@ -36,7 +36,7 @@ import { shouldNeverHappen } from "../../../util/diagnostics";
  * Reformulating Branch Coverage as a Many-Objective Optimization Problem
  * A. Panichella; F. K. Kifetew; P. Tonella
  *
-../../../util/DiagnosticsOlsthoorn
+ * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
