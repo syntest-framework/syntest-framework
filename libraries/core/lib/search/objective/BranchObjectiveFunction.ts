@@ -18,7 +18,7 @@
 
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
-import { Node, NodeType } from "@syntest/cfg-core";
+import { ControlFlowGraph, Node, NodeType } from "@syntest/cfg-core";
 import { SearchSubject } from "../SearchSubject";
 import { BranchDistance } from "../objective/BranchDistance";
 import { Datapoint } from "../../util/Datapoint";
@@ -97,9 +97,10 @@ export class BranchObjectiveFunction<T extends Encoding>
     }
 
     // find the corresponding branch node inside the cfg
-    const branchNode = this._subject.cfg.nodes.find((n: Node) => {
-      return n.type === NodeType.Branch && n.lines.includes(this._line);
-    });
+    const branchNode = this._subject.cfg.findNodeOfTypeByLine(
+      this._line,
+      NodeType.Branch
+    );
 
     // TODO maybe childNode is not required.
     const childEdge = this._subject.cfg.edges.find((edge) => {

@@ -24,11 +24,11 @@ import { Node, NodeType } from "./Node";
  * @author Dimitri Stallenberg
  */
 export interface BranchNode extends Node {
-  type: NodeType.Branch;
+  readonly type: NodeType.Branch;
 
-  condition: Operation;
+  readonly condition: Operation;
 
-  probe: boolean;
+  readonly probe: boolean;
 }
 
 /**
@@ -37,6 +37,6 @@ export interface BranchNode extends Node {
  * @author Dimitri Stallenberg
  */
 export interface Operation {
-  type: string;
-  operator: string;
+  readonly type: string;
+  readonly operator: string;
 }
