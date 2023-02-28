@@ -32,11 +32,10 @@ import {
  *
  * @author Dimitri Stallenberg
  */
-export class NSGAIIPlugin<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "NSGAII";
-  type: "Search Algorithm";
+export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("NSGAII");
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>

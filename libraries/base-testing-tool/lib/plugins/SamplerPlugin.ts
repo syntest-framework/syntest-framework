@@ -17,12 +17,13 @@
  */
 import { Encoding, EncodingSampler } from "@syntest/core";
 import { Plugin } from "@syntest/cli";
+import { PluginType } from "./PluginType";
 
 export type SamplerOptions<T extends Encoding> = unknown;
 
 export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
   constructor(name: string) {
-    super("Sampler", name);
+    super(PluginType.Sampler, name);
   }
 
   abstract createSamplerOperator<O extends SamplerOptions<T>>(

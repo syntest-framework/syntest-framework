@@ -25,6 +25,7 @@ import {
   ObjectiveManager,
 } from "@syntest/core";
 import { Plugin } from "@syntest/cli";
+import { PluginType } from "./PluginType";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
   eventManager?: EventManager<T>;
@@ -38,7 +39,7 @@ export type SearchAlgorithmOptions<T extends Encoding> = {
 
 export abstract class SearchAlgorithmPlugin<T extends Encoding> extends Plugin {
   constructor(name: string) {
-    super("Search Algorithm", name);
+    super(PluginType.SearchAlgorithm, name);
   }
 
   abstract createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(

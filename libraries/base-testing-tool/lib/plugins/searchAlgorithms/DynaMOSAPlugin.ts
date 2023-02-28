@@ -38,11 +38,12 @@ import {
  *
  * @author Dimitri Stallenberg
  */
-export class DynaMOSAPlugin<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "DynaMOSA";
-  type: "Search Algorithm";
+export class DynaMOSAPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("DynaMOSA");
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>

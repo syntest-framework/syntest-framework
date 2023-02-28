@@ -15,18 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "../userInterfaces/UserInterface";
-import { Plugin } from "../module/Plugin";
-import { PluginType } from "./PluginType";
-
-export type UserInterfaceOptions = unknown;
-
-export abstract class UserInterfacePlugin extends Plugin {
-  constructor(name: string) {
-    super(PluginType.UserInterface, name);
-  }
-
-  abstract createUserInterface<O extends UserInterfaceOptions>(
-    options: O
-  ): UserInterface;
+export enum PluginType {
+  UserInterface = "UserInterface",
 }

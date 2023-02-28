@@ -23,11 +23,12 @@ import { Encoding, SignalTerminationTrigger } from "@syntest/core";
  *
  * @author Dimitri Stallenberg
  */
-export class SignalTerminationTriggerPlugin<T extends Encoding>
-  implements TerminationPlugin<T>
-{
-  name = "signal";
-  type: "Termination Trigger";
+export class SignalTerminationTriggerPlugin<
+  T extends Encoding
+> extends TerminationPlugin<T> {
+  constructor() {
+    super("Signal");
+  }
 
   createTerminationTrigger(): SignalTerminationTrigger {
     return new SignalTerminationTrigger();
