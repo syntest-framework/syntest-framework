@@ -103,6 +103,7 @@ jobs:
           - libraries/cfg-core
           - libraries/cli
           - libraries/core
+          - libraries/log
           - plugins/plugin-core-graphing
           - plugins/plugin-core-sfuzz
           - tools/init
