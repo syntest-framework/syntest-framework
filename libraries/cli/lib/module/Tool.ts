@@ -87,7 +87,11 @@ export class Tool implements Yargs.CommandModule {
             option
           );
 
-          if (addedChoices.length && !this.toolOptions.get(option).choices) {
+          if (addedChoices.length === 0) {
+            continue;
+          }
+
+          if (!this.toolOptions.get(option).choices) {
             throw new Error(
               cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
             );
@@ -113,7 +117,11 @@ export class Tool implements Yargs.CommandModule {
             option
           );
 
-          if (addedChoices.length && !command.options[option].choices) {
+          if (addedChoices.length === 0) {
+            continue;
+          }
+
+          if (!command.options[option].choices) {
             throw new Error(
               cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
             );
@@ -138,7 +146,6 @@ export class Tool implements Yargs.CommandModule {
       yargs = yargs.option(option, this.toolOptions.get(option));
     }
 
-    console.log("called");
     return yargs.usage(`Usage: $0 ${this.command} <command> [options]`);
   };
 }
