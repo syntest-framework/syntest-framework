@@ -127,4 +127,3 @@ export * from "./util/Charset";
 export * from "./util/fileSystem";
 export * from "./util/logger";
 export * from "./util/prng";
-export * from "./util/Pair";
