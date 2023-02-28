@@ -24,7 +24,7 @@ import {
 } from "winston";
 import * as path from "path";
 
-export let LOGGER: Logger;
+let baseLoggerOptions: LoggerOptions;
 
 export function setupLogger(
   logDirectory: string,
@@ -36,7 +36,7 @@ export function setupLogger(
     maxFiles: 1,
   };
 
-  const loggerOptions: LoggerOptions = {
+  baseLoggerOptions = {
     levels: {
       error: 0,
       warn: 1,
@@ -70,13 +70,13 @@ export function setupLogger(
       }),
     ],
   };
+}
 
-  const searchLoggerOptions: LoggerOptions = {
-    ...loggerOptions,
+export function getLogger(context: string): Logger {
+  return createLogger({
+    ...baseLoggerOptions,
     defaultMeta: {
-      module: "search-algorithm",
+      context: context,
     },
-  };
-
-  LOGGER = createLogger(searchLoggerOptions);
+  });
 }

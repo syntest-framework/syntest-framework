@@ -27,7 +27,7 @@ import {
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { shouldNeverHappen } from "../../../util/diagnostics";
-import { LOGGER } from "@syntest/log";
+import { getLogger } from "@syntest/log";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -40,6 +40,8 @@ import { LOGGER } from "@syntest/log";
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+  static LOGGER = getLogger("MOSAFamily");
+
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
@@ -70,7 +72,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       return; // the search should end
 
     // non-dominated sorting
-    LOGGER.debug(
+    MOSAFamily.LOGGER.debug(
       "Number of objectives = " +
         this._objectiveManager.getCurrentObjectives().size
     );
@@ -85,7 +87,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    LOGGER.debug("First front size = " + F[0].length);
+    MOSAFamily.LOGGER.debug("First front size = " + F[0].length);
 
     // Obtain the next front
     let currentFront: T[] = F[index];
@@ -146,14 +148,14 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     const fronts: T[][] = [[]];
 
     if (objectiveFunctions === null) {
-      LOGGER.debug(
+      MOSAFamily.LOGGER.debug(
         "It looks like a bug in MOSA: the set of objectives cannot be null"
       );
       return fronts;
     }
 
     if (objectiveFunctions.size === 0) {
-      LOGGER.debug("Trivial case: no objectives for the sorting");
+      MOSAFamily.LOGGER.debug("Trivial case: no objectives for the sorting");
       return fronts;
     }
 
@@ -165,9 +167,9 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       individual.setRank(0);
     }
 
-    LOGGER.debug("First front size :" + frontZero.length);
-    LOGGER.debug("Pop size :" + this._populationSize);
-    LOGGER.debug("Pop + Off size :" + population.length);
+    MOSAFamily.LOGGER.debug("First front size :" + frontZero.length);
+    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
+    MOSAFamily.LOGGER.debug("Pop + Off size :" + population.length);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: T[] = population;
@@ -202,10 +204,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       frontIndex += 1;
     }
 
-    LOGGER.debug("Number of fronts :" + fronts.length);
-    LOGGER.debug("Front zero size :" + fronts[0].length);
-    LOGGER.debug("# selected solutions :" + selectedSolutions);
-    LOGGER.debug("Pop size :" + this._populationSize);
+    MOSAFamily.LOGGER.debug("Number of fronts :" + fronts.length);
+    MOSAFamily.LOGGER.debug("Front zero size :" + fronts[0].length);
+    MOSAFamily.LOGGER.debug("# selected solutions :" + selectedSolutions);
+    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
     return fronts;
   }
 

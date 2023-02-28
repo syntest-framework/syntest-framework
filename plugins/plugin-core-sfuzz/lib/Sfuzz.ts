@@ -24,7 +24,7 @@ import {
   ObjectiveManager,
 } from "@syntest/core";
 import { shouldNeverHappen } from "@syntest/core";
-import { LOGGER } from "@syntest/log";
+import { getLogger } from "@syntest/log";
 
 /**
  * sFuzz
@@ -37,6 +37,8 @@ import { LOGGER } from "@syntest/log";
  * @author Annibale Panichella
  */
 export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
+  static LOGGER = getLogger("Sfuzz");
+
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
@@ -67,7 +69,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       return; // the search should end
 
     // non-dominated sorting
-    LOGGER.debug(
+    Sfuzz.LOGGER.debug(
       "Number of objectives = " +
         this._objectiveManager.getCurrentObjectives().size
     );
@@ -77,7 +79,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       this._objectiveManager.getCurrentObjectives()
     );
 
-    LOGGER.debug("First front size = " + F[0].length);
+    Sfuzz.LOGGER.debug("First front size = " + F[0].length);
 
     // select new population
     this._population = F[0];

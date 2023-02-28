@@ -20,15 +20,12 @@
 import yargHelper = require("yargs/helpers");
 import { BaseOptions, Configuration } from "./util/Configuration";
 import { ModuleManager } from "./ModuleManager";
-import { setupLogger, LOGGER } from "@syntest/log";
+import { getLogger, setupLogger } from "@syntest/log";
 import * as path from "path";
 import { UserInterfacePlugin } from "./module/plugins/UserInterfacePlugin";
 import { ListenerPlugin } from "./module/plugins/ListenerPlugin";
 
 async function main() {
-  // setup module manager
-  ModuleManager.initializeModuleManager();
-
   // remove binary call from args
   const args = yargHelper.hideBin(process.argv);
 
@@ -53,6 +50,10 @@ async function main() {
     (<BaseOptions>(<unknown>baseArguments)).fileLogLevel,
     (<BaseOptions>(<unknown>baseArguments)).consoleLogLevel
   );
+  const LOGGER = getLogger("cli");
+
+  // setup module manager
+  ModuleManager.initializeModuleManager();
 
   yargs = yargs.showHelpOnFail(true);
 

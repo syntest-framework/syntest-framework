@@ -26,6 +26,7 @@ import { SearchListener } from "../SearchListener";
 import { ExecutionResult } from "../ExecutionResult";
 import { Events } from "../../util/Events";
 import TypedEmitter from "typed-emitter";
+import { getLogger } from "@syntest/log";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -35,6 +36,7 @@ import TypedEmitter from "typed-emitter";
  * @author Mitchell Olsthoorn
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
+  static LOGGER = getLogger("SearchAlgorithm");
   /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected
@@ -97,6 +99,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<Archive<T>> {
+    SearchAlgorithm.LOGGER.info("Starting search");
     // Load search subject into the objective manager
     this._objectiveManager.load(subject);
 
