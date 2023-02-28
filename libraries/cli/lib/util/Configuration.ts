@@ -31,7 +31,7 @@ export type StorageOptions = {
 export type LoggingOptions = {
   logDirectory: string;
   consoleLogLevel: string;
-  logToFile: string[];
+  fileLogLevel: string[];
 };
 
 export type BaseOptions = GeneralOptions & StorageOptions & LoggingOptions;
@@ -119,7 +119,7 @@ export class Configuration {
           hidden: false,
           type: "string",
         })
-        .options("log-to-file", {
+        .options("file-log-level", {
           alias: [],
           default: ["info", "warn", "error"],
           description: "Which levels should be logged to file",

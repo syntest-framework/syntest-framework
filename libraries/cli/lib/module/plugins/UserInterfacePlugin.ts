@@ -15,15 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "../userInterfaces/UserInterface";
-import { Plugin } from "../module/Plugin";
-
-export type UserInterfaceOptions = unknown;
+import { UserInterface } from "../../userInterfaces/UserInterface";
+import { Plugin } from "../Plugin";
 
 export interface UserInterfacePlugin extends Plugin {
   type: "User Interface";
 
-  createUserInterface<O extends UserInterfaceOptions>(
-    options: O
-  ): UserInterface;
+  createUserInterface(): UserInterface;
 }

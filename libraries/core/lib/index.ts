@@ -22,11 +22,6 @@ export * from "./analysis/static/TargetMetaData";
 export * from "./analysis/static/TargetPool";
 export * from "./analysis/static/targetUtil";
 
-// Event System
-export * from "./event/EventManager";
-export * from "./event/ListenerInterface";
-export * from "./event/ProgramState";
-
 // Search
 export * from "./search/Archive";
 export * from "./search/Decoder";
@@ -97,4 +92,5 @@ export * from "./statistics/SummaryWriter";
 export * from "./util/Datapoint";
 export * from "./util/Charset";
 export * from "./util/diagnostics";
+export * from "./util/Events";
 export * from "./util/prng";

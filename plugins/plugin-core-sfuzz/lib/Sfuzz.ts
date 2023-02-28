@@ -22,9 +22,9 @@ import {
   EncodingSampler,
   Crossover,
   ObjectiveManager,
-  EventManager,
 } from "@syntest/core";
 import { shouldNeverHappen } from "@syntest/core";
+import { LOGGER } from "@syntest/log";
 
 /**
  * sFuzz
@@ -38,7 +38,6 @@ import { shouldNeverHappen } from "@syntest/core";
  */
 export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
-    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>,
@@ -46,7 +45,6 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
     crossoverProbability: number
   ) {
     super(
-      eventManager,
       objectiveManager,
       encodingSampler,
       crossover,
@@ -69,17 +67,17 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       return; // the search should end
 
     // non-dominated sorting
-    // getUserInterface().debug(
-    //   "Number of objectives = " +
-    //     this._objectiveManager.getCurrentObjectives().size
-    // );
+    LOGGER.debug(
+      "Number of objectives = " +
+        this._objectiveManager.getCurrentObjectives().size
+    );
 
     const F = this.preferenceSortingAlgorithm(
       this._population,
       this._objectiveManager.getCurrentObjectives()
     );
 
-    // getUserInterface().debug("First front size = " + F[0].length);
+    LOGGER.debug("First front size = " + F[0].length);
 
     // select new population
     this._population = F[0];

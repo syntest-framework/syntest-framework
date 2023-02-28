@@ -25,7 +25,6 @@ import { BudgetManager } from "../../budget/BudgetManager";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { Encoding } from "../../Encoding";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
-import { EventManager } from "../../../event/EventManager";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -64,7 +63,6 @@ export abstract class EvolutionaryAlgorithm<
   /**
    * Constructor.
    *
-   * @param eventManager The event manager
    * @param objectiveManager The objective manager used by the specific algorithm
    * @param encodingSampler The encoding sampler used by the specific algorithm
    * @param crossover The crossover operator to apply
@@ -72,14 +70,13 @@ export abstract class EvolutionaryAlgorithm<
    * @protected
    */
   protected constructor(
-    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>,
     populationSize: number,
     crossoverProbability: number
   ) {
-    super(eventManager, objectiveManager);
+    super(objectiveManager);
     this._encodingSampler = encodingSampler;
     this._crossover = crossover;
     this._population = [];

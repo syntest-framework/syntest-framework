@@ -23,7 +23,6 @@ export * from "./plugins/searchAlgorithms/RandomSearchPlugin";
 export * from "./plugins/terminationTriggers/SignalTerminationTriggerPlugin";
 
 export * from "./plugins/CrossoverPlugin";
-export * from "./plugins/ListenerPlugin";
 export * from "./plugins/SamplerPlugin";
 export * from "./plugins/SearchAlgorithmPlugin";
 export * from "./plugins/TerminationPlugin";

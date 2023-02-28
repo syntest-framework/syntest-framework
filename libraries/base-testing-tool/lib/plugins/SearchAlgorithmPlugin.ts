@@ -20,14 +20,12 @@ import {
   Encoding,
   EncodingRunner,
   EncodingSampler,
-  EventManager,
   SearchAlgorithm,
   ObjectiveManager,
 } from "@syntest/core";
 import { Plugin } from "@syntest/cli";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
-  eventManager?: EventManager<T>;
   objectiveManager?: ObjectiveManager<T>;
   encodingSampler?: EncodingSampler<T>;
   runner?: EncodingRunner<T>;

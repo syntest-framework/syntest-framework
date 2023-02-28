@@ -16,55 +16,35 @@
  * limitations under the License.
  */
 
-import { ModuleManager } from "@syntest/cli";
-import { Encoding, EventManager } from "@syntest/core";
-import { ListenerPlugin } from "./plugins/ListenerPlugin";
+import { Events } from "@syntest/core";
+import TypedEventEmitter from "typed-emitter";
 
-export abstract class Launcher<T extends Encoding> {
-  private _eventManager: EventManager<T>;
+export abstract class Launcher {
   private _programName: string;
-
-  get eventManager() {
-    return this._eventManager;
-  }
-
-  get programState() {
-    return this._eventManager.state;
-  }
 
   get programName() {
     return this._programName;
   }
 
-  constructor(programName: string, eventManager: EventManager<T>) {
+  constructor(programName: string) {
     this._programName = programName;
-    this._eventManager = eventManager;
   }
 
   public async run(): Promise<void> {
     try {
-      // Register all listener plugins
-      for (const plugin of ModuleManager.instance
-        .getPluginsOfType("Listener")
-        .values()) {
-        this.eventManager.registerListener(
-          (<ListenerPlugin<Encoding>>plugin).createListener({})
-        );
-      }
-
-      this.eventManager.emitEvent("onInitializeStart");
+      (<TypedEventEmitter<Events>>process).emit("initializeStart");
       await this.initialize();
-      this.eventManager.emitEvent("onInitializeComplete");
-      this.eventManager.emitEvent("onPreprocessStart");
+      (<TypedEventEmitter<Events>>process).emit("initializeComplete");
+      (<TypedEventEmitter<Events>>process).emit("preprocessStart");
       await this.preprocess();
-      this.eventManager.emitEvent("onPreprocessComplete");
-      this.eventManager.emitEvent("onProcessStart");
+      (<TypedEventEmitter<Events>>process).emit("preprocessComplete");
+      (<TypedEventEmitter<Events>>process).emit("processStart");
       await this.process();
-      this.eventManager.emitEvent("onProcessComplete");
-      this.eventManager.emitEvent("onPostprocessStart");
+      (<TypedEventEmitter<Events>>process).emit("processComplete");
+      (<TypedEventEmitter<Events>>process).emit("postprocessStart");
       await this.postprocess();
-      this.eventManager.emitEvent("onPostprocessComplete");
-      this.eventManager.emitEvent("onExit");
+      (<TypedEventEmitter<Events>>process).emit("postprocessComplete");
+      (<TypedEventEmitter<Events>>process).emit("exit");
       await this.exit();
     } catch (e) {
       console.log(e);

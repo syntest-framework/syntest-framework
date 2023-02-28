@@ -16,44 +16,31 @@
  * limitations under the License.
  */
 
-import { singletonNotSet } from "../util/diagnostics";
+import chalk = require("chalk");
+import figlet = require("figlet");
 
 export abstract class UserInterface {
-  silent: boolean;
-  verbose: boolean;
+  abstract setupEventListener(): void;
 
-  constructor(silent = false, verbose = false) {
-    this.silent = silent;
-    this.verbose = verbose;
+  print(text: string): void {
+    console.log(text);
   }
 
-  abstract report(text: string, args: string[]): void;
-
-  abstract log(type: string, text: string): void;
-
-  abstract debug(text: string): void;
-
-  abstract info(text: string): void;
-
-  abstract error(text: string): void;
-
-  abstract startProgressBar(): void;
-
-  abstract updateProgressBar(value: number, budget: number): void;
-
-  abstract stopProgressBar(): void;
-}
-
-let userInterface: UserInterface;
-
-export function getUserInterface(): UserInterface {
-  if (!userInterface) {
-    throw new Error(singletonNotSet("user-interface"));
+  printTitle(): void {
+    this.print(
+      chalk.yellow(figlet.textSync("SynTest", { horizontalLayout: "full" }))
+    );
   }
 
-  return userInterface;
-}
+  printHeader(text: string): void {
+    this.print(chalk.yellow(`\n${text}`));
+  }
 
-export function setUserInterface(ui: UserInterface): void {
-  userInterface = ui;
+  printError(text: string): void {
+    this.print(chalk.red(text));
+  }
+
+  printWarning(text: string): void {
+    this.print(chalk.yellow(text));
+  }
 }

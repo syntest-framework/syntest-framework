@@ -21,16 +21,12 @@ import * as path from "path";
 import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
 import { ActionDescription } from "./ActionDescription";
-import { EventManager } from "../../event/EventManager";
 import { Encoding } from "../../search/Encoding";
+import TypedEventEmitter from "typed-emitter";
+import { Events } from "../../util/Events";
 
 export abstract class TargetPool<T extends Encoding> {
   protected _targets: Target[];
-  protected eventManager: EventManager<T>;
-
-  constructor(eventManager: EventManager<T>) {
-    this.eventManager = eventManager;
-  }
 
   abstract getSource(targetPath: string): string;
   abstract getTargetMap(targetPath: string): Map<string, TargetMetaData>;
@@ -46,7 +42,7 @@ export abstract class TargetPool<T extends Encoding> {
   abstract getAST(targetPath: string): unknown;
 
   loadTargets(include: string[], exclude: string[]): void {
-    this.eventManager.emitEvent("onTargetLoadStart");
+    (<TypedEventEmitter<Events>>process).emit("targetLoadStart", this);
 
     // Mapping filepath -> targets
     const includedMap = new Map<string, string[]>();
@@ -149,7 +145,7 @@ export abstract class TargetPool<T extends Encoding> {
     }
 
     this._targets = targets;
-    this.eventManager.emitEvent("onTargetLoadComplete");
+    (<TypedEventEmitter<Events>>process).emit("targetLoadComplete", this);
   }
 
   get targets(): Target[] {

@@ -41,9 +41,6 @@ export class MOSAPlugin<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("MOSA", "eventManager"));
-    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
     }
@@ -62,7 +59,6 @@ export class MOSAPlugin<T extends Encoding>
       );
     }
     return new MOSAFamily<T>(
-      options.eventManager,
       new UncoveredObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover,

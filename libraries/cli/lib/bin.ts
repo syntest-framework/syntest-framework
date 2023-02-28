@@ -20,14 +20,16 @@
 import yargHelper = require("yargs/helpers");
 import { BaseOptions, Configuration } from "./util/Configuration";
 import { ModuleManager } from "./ModuleManager";
-import { setupLogger } from "./util/logger";
+import { setupLogger, LOGGER } from "@syntest/log";
 import * as path from "path";
+import { UserInterfacePlugin } from "./module/plugins/UserInterfacePlugin";
+import { ListenerPlugin } from "./module/plugins/ListenerPlugin";
 
 async function main() {
-  // Setup module manager
+  // setup module manager
   ModuleManager.initializeModuleManager();
 
-  // Remove binary call from args
+  // remove binary call from args
   const args = yargHelper.hideBin(process.argv);
 
   // Configure base usage
@@ -36,18 +38,11 @@ async function main() {
   // when we did not configure the commands and options from the added modules yet
   let yargs = Configuration.configureUsage().help(false).version(false);
 
-  // Configure general options
+  // configure general options
   yargs = Configuration.configureOptions(yargs);
 
-  // Parse the arguments and config using only the base options
+  // [arse the arguments and config using only the base options
   const baseArguments = yargs.wrap(yargs.terminalWidth()).parseSync(args);
-
-  yargs = yargs.showHelpOnFail(true);
-
-  // Import defined modules
-  const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
-  await ModuleManager.instance.loadModules(modules);
-  yargs = await ModuleManager.instance.configureModules(yargs);
 
   // setup logger
   setupLogger(
@@ -55,16 +50,71 @@ async function main() {
       (<BaseOptions>(<unknown>baseArguments)).syntestDirectory,
       (<BaseOptions>(<unknown>baseArguments)).logDirectory
     ),
-    (<BaseOptions>(<unknown>baseArguments)).logToFile
+    (<BaseOptions>(<unknown>baseArguments)).fileLogLevel,
+    (<BaseOptions>(<unknown>baseArguments)).consoleLogLevel
   );
 
+  yargs = yargs.showHelpOnFail(true);
+
+  // import defined modules
+  const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
+  LOGGER.info("Loading modules...", modules);
+  await ModuleManager.instance.loadModules(modules);
+  yargs = await ModuleManager.instance.configureModules(yargs);
+
+  // setup user interface
+  const userInterfacePlugin = ModuleManager.instance.getPlugin(
+    "User Interface",
+    (<BaseOptions>(<unknown>baseArguments)).userInterface
+  );
+  const userInterface = (<UserInterfacePlugin>(
+    userInterfacePlugin
+  )).createUserInterface();
+  userInterface.printTitle();
+  userInterface.setupEventListener();
+
   // setup cleanup on exit handler
-  process.on("exit", () => {
+  process.on("exit", (code) => {
+    if (code !== 0) {
+      LOGGER.error("Process exited with code: " + code);
+      userInterface.printError("Process exited with code: " + code);
+    }
+    LOGGER.info("Cleaning up...");
     ModuleManager.instance.cleanup();
+    LOGGER.info("Cleanup done! Exiting...");
   });
 
-  // execute program
+  userInterface.printHeader("Modules loaded:");
+
+  for (const module of ModuleManager.instance.modules.values()) {
+    LOGGER.info("Module loaded: " + module.name);
+    userInterface.print(`- Module: ${module.name} (${module.version})`);
+    userInterface.print(`  - Tools:`);
+    for (const tool of await module.getTools()) {
+      LOGGER.info(`- Tool loaded: ${tool.name}`);
+      userInterface.print(`  - ${tool.name}`);
+    }
+    userInterface.print(`  - Plugins:`);
+    for (const plugin of await module.getPlugins()) {
+      LOGGER.info(`- Plugin loaded: ${plugin.name}`);
+      userInterface.print(`  - ${plugin.name}`);
+    }
+  }
+
+  // register all listener plugins
+  for (const plugin of ModuleManager.instance
+    .getPluginsOfType("Listener")
+    .values()) {
+    (<ListenerPlugin>plugin).setupEventListener();
+  }
+
+  // prepare modules
+  LOGGER.info("Preparing modules...");
   await ModuleManager.instance.prepare();
+  LOGGER.info("Modules prepared!");
+
+  // execute program
+  LOGGER.info("Executing program...");
   await yargs
     .wrap(yargs.terminalWidth())
     .help(true)

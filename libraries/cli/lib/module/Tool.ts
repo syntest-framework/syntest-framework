@@ -138,7 +138,6 @@ export class Tool implements Yargs.CommandModule {
       yargs = yargs.option(option, this.toolOptions.get(option));
     }
 
-    console.log("called");
     return yargs.usage(`Usage: $0 ${this.command} <command> [options]`);
   };
 }

@@ -22,7 +22,6 @@ import { EncodingSampler } from "../EncodingSampler";
 import { BudgetManager } from "../budget/BudgetManager";
 import { TerminationManager } from "../termination/TerminationManager";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
-import { EventManager } from "../../event/EventManager";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
@@ -40,11 +39,10 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
    * @param runner The encoding execution runner
    */
   constructor(
-    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>
   ) {
-    super(eventManager, objectiveManager);
+    super(objectiveManager);
     this._encodingSampler = encodingSampler;
   }
 

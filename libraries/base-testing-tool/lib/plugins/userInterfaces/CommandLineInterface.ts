@@ -16,12 +16,16 @@
  * limitations under the License.
  */
 
-import { UserInterface } from "./UserInterface";
-import { getLogger } from "../util/logger";
+import { UserInterface } from "@syntest/cli";
 import * as cliProgress from "cli-progress";
 
-import chalk = require("chalk");
-import figlet = require("figlet");
+import TypedEventEmitter from "typed-emitter";
+import {
+  Events,
+  SearchAlgorithm,
+  BudgetManager,
+  Encoding,
+} from "@syntest/core";
 
 export class CommandLineInterface extends UserInterface {
   protected showProgressBar: boolean;
@@ -29,12 +33,47 @@ export class CommandLineInterface extends UserInterface {
   protected budgetValue: number;
   protected bar: cliProgress.SingleBar;
 
-  constructor(silent = false, verbose = false) {
-    super(silent, verbose);
-  }
+  setupEventListener(): void {
+    (<TypedEventEmitter<Events>>process).on(
+      "searchInitializationStart",
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        budgetManager: BudgetManager<E>
+      ) => {
+        this.startProgressBar();
+        this.updateProgressBar(
+          searchAlgorithm.progress("branch"),
+          budgetManager.getBudget()
+        );
+      }
+    );
 
-  asciiArt(text: string): string {
-    return chalk.yellow(figlet.textSync(text, { horizontalLayout: "full" }));
+    (<TypedEventEmitter<Events>>process).on(
+      "searchIterationComplete",
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        budgetManager: BudgetManager<E>
+      ) => {
+        this.updateProgressBar(
+          searchAlgorithm.progress("branch"),
+          budgetManager.getBudget()
+        );
+      }
+    );
+
+    (<TypedEventEmitter<Events>>process).on(
+      "searchComplete",
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        budgetManager: BudgetManager<E>
+      ) => {
+        this.updateProgressBar(
+          searchAlgorithm.progress("branch"),
+          budgetManager.getBudget()
+        );
+        this.stopProgressBar();
+      }
+    );
   }
 
   startProgressBar(): void {
@@ -65,25 +104,5 @@ export class CommandLineInterface extends UserInterface {
   stopProgressBar(): void {
     this.showProgressBar = false;
     this.bar.stop();
-  }
-
-  log(type: string, text: string): void {
-    getLogger()[type](text);
-  }
-
-  debug(text: string): void {
-    this.log("debug", text);
-  }
-
-  info(text: string): void {
-    this.log("info", text);
-  }
-
-  error(text: string): void {
-    this.log("error", text);
-  }
-
-  report(text: string, args: string[]): void {
-    this.info(`${text}: ${args.join(", ")}`);
   }
 }

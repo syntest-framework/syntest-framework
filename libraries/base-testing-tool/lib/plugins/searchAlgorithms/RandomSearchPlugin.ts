@@ -40,9 +40,6 @@ export class RandomSearchPlugin<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("RandomSearch", "eventManager"));
-    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
     }
@@ -50,7 +47,6 @@ export class RandomSearchPlugin<T extends Encoding>
       throw new Error(pluginRequiresOptions("RandomSearch", "runner"));
     }
     return new RandomSearch(
-      options.eventManager,
       new SimpleObjectiveManager<T>(options.runner),
       options.encodingSampler
     );

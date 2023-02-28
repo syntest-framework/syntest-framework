@@ -45,6 +45,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
+    "@syntest/log": "^0.1.0",
     "chalk": "4.1.1",
     "clear": "0.1.0",
     "cli-progress": "3.11.2",

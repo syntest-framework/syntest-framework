@@ -100,7 +100,6 @@ export type ArgumentsObject = GeneralOptions &
   ResearchModeOptions;
 
 export let CONFIG: Readonly<ArgumentsObject>;
-
 export class Configuration {
   initialize<A extends ArgumentsObject>(argumentValues: Readonly<A>) {
     if (CONFIG) {

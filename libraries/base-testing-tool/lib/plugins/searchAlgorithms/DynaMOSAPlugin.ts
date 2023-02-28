@@ -47,9 +47,6 @@ export class DynaMOSAPlugin<T extends Encoding>
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "eventManager"));
-    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
     }
@@ -68,7 +65,6 @@ export class DynaMOSAPlugin<T extends Encoding>
       );
     }
     return new MOSAFamily<T>(
-      options.eventManager,
       new StructuralObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover,

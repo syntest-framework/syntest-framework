@@ -19,7 +19,7 @@
 import { Command, Module, Plugin, Tool } from "@syntest/cli";
 import yargs = require("yargs");
 
-export default class InitModule implements Module {
+export default class InitModule extends Module {
   name = "init";
 
   async getTools(): Promise<Tool[]> {
