@@ -19,7 +19,7 @@
 import { Node, NodeType } from "./nodes/Node";
 import { Edge } from "./Edge";
 import { Pair } from "./util/Pair";
-import { cloneDeep } from "lodash.clonedeep";
+import cloneDeep = require("lodash.clonedeep");
 
 export class ControlFlowGraph {
   private readonly _nodes: Node[];
