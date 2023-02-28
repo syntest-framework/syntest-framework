@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { ControlFlowGraph, NodeType } from "@syntest/cfg-core";
-import { createSimulation } from "../lib/D3Simulation";
+import { ControlFlowGraph, NodeType, RootNode, Node } from "../lib";
+
 const expect = chai.expect;
 
-describe("simulationTest", () => {
-  it("SimpleTest", async () => {
-    const nodes = [
+describe("CFG Immutability check", function () {
+  it("get nodes works properly with immutability", () => {
+    const nodes: Node[] = [
       {
         type: NodeType.Root,
         id: "ROOT",
@@ -31,31 +31,31 @@ describe("simulationTest", () => {
       },
     ];
 
-    // Construct CFG
-    for (let i = 65; i < 72; i++) {
+    for (let i = 65; i < "E".charCodeAt(0) + 1; i++) {
       nodes.push({
         type: NodeType.Intermediary,
         id: String.fromCharCode(i),
-        lines: [],
+        lines: [26],
         statements: [],
       });
     }
-    const edges = [
-      { from: "A", to: "B", branchType: false },
-      { from: "A", to: "C", branchType: true },
-      { from: "C", to: "D", branchType: true },
-      { from: "C", to: "E", branchType: false },
-      { from: "D", to: "F", branchType: true },
-      { from: "D", to: "G", branchType: false },
-      { from: "F", to: "A" },
-      { from: "G", to: "A" },
-      { from: "E", to: "A" },
-      { from: "ROOT", to: "A" },
-    ];
-    const cfg = new ControlFlowGraph(nodes, edges);
+    const cfg = new ControlFlowGraph(nodes, []);
+    const retrievedNodes: Node[] = cfg.nodes;
+    const rootNode = cfg.nodes.at(0);
+    expect(rootNode?.lines).to.empty;
+    // nodes.at(0)!.lines = [23]; // <- this will not compile because of readonly
+    expect(nodes.at(0)!.lines).to.empty;
+    // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
+    nodes.push({
+      type: NodeType.Normal,
+      id: "dummy",
+      lines: [],
+      statements: [],
+    });
+    expect(cfg.nodes.at(1)?.lines).to.eql([26]);
+    expect(cfg.nodes.length).to.not.equal(nodes.length);
+    // expect(cfg.get_nodes().at(0)?.lines = [23]).to.throw(); <- this will not compile
 
-    const svgHtml = await createSimulation(cfg);
-
-    expect(svgHtml);
+    console.log(retrievedNodes);
   });
 });

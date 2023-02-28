@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 export * from "./module/plugins/UserInterfacePlugin";
+export * from "./module/plugins/PluginType";
 export * from "./module/plugins/ListenerPlugin";
 
 export * from "./module/Command";

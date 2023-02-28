@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cfg-core",
-  "version": "0.3.0-beta.1",
+  "version": "0.3.0-beta.2",
   "description": "A Control Flow Graph package",
   "keywords": [
     "syntest",
@@ -45,5 +45,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0"
   }
 }

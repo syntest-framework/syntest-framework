@@ -24,5 +24,5 @@ import { Node, NodeType } from "./Node";
  * @author Dimitri Stallenberg
  */
 export interface RootNode extends Node {
-  type: NodeType.Root;
+  readonly type: NodeType.Root;
 }

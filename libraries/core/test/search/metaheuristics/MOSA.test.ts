@@ -20,7 +20,6 @@ import {
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
-  EventManager,
 } from "../../../lib";
 import { MOSAFamily } from "../../../lib/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
@@ -70,7 +69,6 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSAFamily(
-      new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover,
@@ -108,7 +106,6 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSAFamily(
-      new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover,
@@ -147,7 +144,6 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSAFamily(
-      new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover,
@@ -191,7 +187,6 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MockedMOSA(
-      new EventManager({}),
       new UncoveredObjectiveManager(mockedRunner),
       mockedSampler,
       mockedCrossover,
