@@ -17,12 +17,13 @@
  */
 import { Crossover, Encoding } from "@syntest/core";
 import { Plugin } from "@syntest/cli";
+import { PluginType } from "./PluginType";
 
 export type CrossoverOptions<T extends Encoding> = unknown;
 
 export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
   constructor(name: string) {
-    super("Crossover", name);
+    super(PluginType.Crossover, name);
   }
 
   abstract createCrossoverOperator<O extends CrossoverOptions<T>>(

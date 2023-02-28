@@ -181,9 +181,7 @@ export class ModuleManager {
 
         this.tools.set(tool.name, tool);
       }
-    }
 
-    for (const module of this.modules.values()) {
       for (const plugin of await module.getPlugins()) {
         if (!this.plugins.has(plugin.type)) {
           this.plugins.set(plugin.type, new Map());

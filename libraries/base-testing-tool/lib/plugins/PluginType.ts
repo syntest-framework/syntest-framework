@@ -15,13 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "../Plugin";
-import { PluginType } from "./PluginType";
-
-export abstract class ListenerPlugin extends Plugin {
-  constructor(name: string) {
-    super(PluginType.Listener, name);
-  }
-
-  abstract setupEventListener(): void;
+export enum PluginType {
+  Crossover = "Crossover",
+  Listener = "Listener",
+  Sampler = "Sampler",
+  SearchAlgorithm = "SearchAlgorithm",
+  TerminationTrigger = "TerminationTrigger",
 }

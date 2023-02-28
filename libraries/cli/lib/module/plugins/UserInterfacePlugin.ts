@@ -17,9 +17,12 @@
  */
 import { UserInterface } from "../../userInterfaces/UserInterface";
 import { Plugin } from "../Plugin";
+import { PluginType } from "./PluginType";
 
-export interface UserInterfacePlugin extends Plugin {
-  type: "User Interface";
+export abstract class UserInterfacePlugin extends Plugin {
+  constructor(name: string) {
+    super(PluginType.UserInterface, name);
+  }
 
-  createUserInterface(): UserInterface;
+  abstract createUserInterface(): UserInterface;
 }

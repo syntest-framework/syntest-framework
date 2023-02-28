@@ -32,11 +32,10 @@ import {
  *
  * @author Dimitri Stallenberg
  */
-export class MOSAPlugin<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "MOSA";
-  type: "Search Algorithm";
+export class MOSAPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("MOSA");
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>

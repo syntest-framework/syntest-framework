@@ -31,11 +31,12 @@ import { pluginRequiresOptions } from "@syntest/cli";
  *
  * @author Dimitri Stallenberg
  */
-export class RandomSearchPlugin<T extends Encoding>
-  implements SearchAlgorithmPlugin<T>
-{
-  name = "Random";
-  type: "Search Algorithm";
+export class RandomSearchPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("Random");
+  }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
