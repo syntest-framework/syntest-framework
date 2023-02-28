@@ -78,6 +78,10 @@ export class Tool implements Yargs.CommandModule {
       }
     }
 
+    /**
+     * These two loops are separated because we need to be able to add choices to options that are added by plugins.
+     * If the two loops are combined, the choices will be added to the original options, not the options added by plugins.
+     */
     for (const plugin of plugins) {
       if (plugin.getToolOptionChoices) {
         for (const option of this.toolOptions.keys()) {
