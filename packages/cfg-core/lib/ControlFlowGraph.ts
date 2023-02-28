@@ -19,15 +19,15 @@
 import { Node, NodeType } from "./nodes/Node";
 import { Edge } from "./Edge";
 import { Pair } from "./util/Pair";
-import { deepCopy } from "./util/DeepCopy";
+import { cloneDeep } from "lodash";
 
 export class ControlFlowGraph {
   private readonly _nodes: Node[];
   private readonly _edges: Edge[];
 
   constructor(nodes: Node[], edges: Edge[]) {
-    this._nodes = deepCopy<Node[]>(nodes);
-    this._edges = deepCopy<Edge[]>(edges);
+    this._nodes = cloneDeep(nodes);
+    this._edges = cloneDeep(edges);
   }
 
   get nodes(): Node[] {

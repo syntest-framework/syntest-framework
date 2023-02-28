@@ -15,12 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./ControlFlowGraph";
-export * from "./ControlFlowGraphFactory";
 
-export * from "./Edge";
-export * from "./util/Pair";
-export * from "./nodes/Node";
-export * from "./nodes/BranchNode";
-export * from "./nodes/PlaceholderNode";
-export * from "./nodes/RootNode";
+export interface Pair<T, U> {
+  first: T;
+  second: U;
+}

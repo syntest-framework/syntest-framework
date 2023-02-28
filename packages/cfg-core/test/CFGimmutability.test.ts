@@ -26,8 +26,9 @@ describe("CFG Immutability check", function () {
     const retrievedNodes: Node[] = cfg.nodes;
     const rootNode = cfg.nodes.at(0);
     expect(rootNode?.lines).to.empty;
-    // nodes.at(0).lines = [23]; <- this will not compile because of readonly
-    // nodes.at(0).lines[0] = 23; <- this will not compile because of readonly
+    // nodes.at(0)!.lines = [23]; // <- this will not compile because of readonly
+    expect(nodes.at(0)!.lines).to.empty;
+    // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
     nodes.push({
       type: NodeType.Normal,
       id: "dummy",

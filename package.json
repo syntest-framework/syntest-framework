@@ -74,5 +74,8 @@
       "prettier --config .prettierrc.json --ignore-path .prettierignore --write .",
       "eslint --config .eslintrc.json --ignore-path .eslintignore . --fix"
     ]
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }
