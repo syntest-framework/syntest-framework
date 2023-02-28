@@ -37,8 +37,9 @@
     "postinstall": "husky install"
   },
   "workspaces": [
-    "packages/*",
-    "plugins/*"
+    "libraries/*",
+    "plugins/*",
+    "tools/*"
   ],
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
@@ -55,6 +56,7 @@
     "commitlint": "17.4.2",
     "eslint": "8.29.0",
     "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-notice": "^0.9.10",
     "husky": "8.0.3",
     "lerna": "6.4.1",
     "lint-staged": "13.1.0",

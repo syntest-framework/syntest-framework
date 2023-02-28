@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
-    "clean": "rm -rf .nyc_output dist node_modules",
+    "clean": "rm -rf .nyc_output dist node_modules coverage",
     "clean:dist": "rm -rf dist",
     "format": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
@@ -41,7 +41,9 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
+    "@syntest/base-testing-tool": "^0.1.0",
     "@syntest/cfg-core": "^0.3.0-beta.2",
+    "@syntest/cli": "^0.1.0",
     "@syntest/core": "^0.4.0-beta.2",
     "d3": "6.7.0",
     "jsdom": "^21.1.0"

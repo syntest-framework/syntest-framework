@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Graphing Plugin.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,11 @@
  * limitations under the License.
  */
 
-import {
-  CONFIG,
-  Encoding,
-  ListenerInterface,
-  ProgramState,
-} from "@syntest/core";
+import { Encoding, ListenerInterface, ProgramState } from "@syntest/core";
 import { createSimulation } from "./D3Simulation";
 import { GraphOptions } from "./GraphingPlugin";
 import fs = require("fs");
+import { CONFIG } from "@syntest/base-testing-tool";
 
 export class CFGGraphingListener<T extends Encoding>
   implements ListenerInterface<T>

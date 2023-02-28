@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Graphing Plugin.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +16,54 @@
  * limitations under the License.
  */
 
-import {
-  Encoding,
-  ListenerPlugin,
-  ListenerInterface,
-  CONFIG,
-  PluginManager,
-} from "@syntest/core";
+import { Encoding, ListenerInterface } from "@syntest/core";
 import { CFGGraphingListener } from "./CFGGraphingListener";
 import Yargs = require("yargs");
-import { mkdirSync } from "fs";
+import { ListenerPlugin } from "@syntest/base-testing-tool";
+import { OptionGroups } from "@syntest/cli";
 
 /**
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
  *
  * @author Dimitri Stallenberg
  */
-export default class GraphingPlugin<T extends Encoding>
-  implements ListenerPlugin<T>
-{
-  name = "Graphing";
-  type: "Listener";
-
-  register(pluginManager: PluginManager<T>) {
-    pluginManager.registerListener(this);
+export default class GraphingPlugin<
+  T extends Encoding
+> extends ListenerPlugin<T> {
+  constructor() {
+    super("Graphing");
   }
 
   createListener(): ListenerInterface<T> {
     return new CFGGraphingListener<T>();
   }
 
-  async getConfig() {
-    const map = new Map<string, Yargs.Options>();
-    map.set("cfg-directory", {
+  async getCommandOptions(
+    tool: string,
+    labels: string[],
+    command: string
+  ): Promise<Map<string, Yargs.Options>> {
+    if (!labels.includes("testing")) {
+      return;
+    }
+
+    if (command !== "test") {
+      return;
+    }
+
+    const optionsMap = new Map<string, Yargs.Options>();
+
+    optionsMap.set("cfg-directory", {
       alias: [],
-      default: "syntest/cfg",
+      default: "cfg",
       description: "The path where the csv should be saved",
-      group: "Directory options:",
+      group: OptionGroups.Storage,
       hidden: false,
       normalize: true,
       type: "string",
     });
-    return map;
-  }
 
-  async prepare() {
-    await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
-      recursive: true,
-    });
+    return optionsMap;
   }
 }
 
