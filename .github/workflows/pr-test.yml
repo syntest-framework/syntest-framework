@@ -99,10 +99,13 @@ jobs:
       matrix:
         # Collect coverage for all packages and plugins
         package:
-          - packages/cfg-core
-          - packages/core
+          - libraries/base-testing-tool
+          - libraries/cfg-core
+          - libraries/cli
+          - libraries/core
           - plugins/plugin-core-graphing
           - plugins/plugin-core-sfuzz
+          - tools/init
 
     steps:
       # Download test results

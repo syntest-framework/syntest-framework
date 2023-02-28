@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
-    "clean": "rm -rf .nyc_output dist node_modules",
+    "clean": "rm -rf .nyc_output dist node_modules coverage",
     "clean:dist": "rm -rf dist",
     "format": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",

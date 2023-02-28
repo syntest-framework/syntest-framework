@@ -1,0 +1,36 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2023-02-28T12:39:45.731Z",
+    "end": "2023-02-28T12:39:45.733Z",
+    "duration": 2
+  },
+  "tests": [
+    {
+      "title": "test",
+      "fullTitle": "example test test",
+      "file": "/Users/dimitrist/Documents/git/syntest/syntest-core/tools/init/test/example.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "test",
+      "fullTitle": "example test test",
+      "file": "/Users/dimitrist/Documents/git/syntest/syntest-core/tools/init/test/example.test.ts",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ]
+}
