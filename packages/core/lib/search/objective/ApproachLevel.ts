@@ -1,6 +1,5 @@
 import { Datapoint } from "../..";
-import { ControlFlowGraph, Node } from "@syntest/cfg-core";
-import { Pair } from "@syntest/cfg-core/dist/Pair";
+import { ControlFlowGraph, Node, Pair } from "@syntest/cfg-core";
 
 export class ApproachLevel {
   public static calculate(
@@ -8,7 +7,7 @@ export class ApproachLevel {
     node: Node,
     traces: Datapoint[]
   ): { approachLevel: number; closestCoveredBranchTrace: Datapoint } {
-    // Construct map with key as line covered and value as datapoint that coveres that line
+    // Construct map with key as line covered and value as datapoint that covers that line
     const linesTraceMap: Map<number, Datapoint> = traces
       .filter(
         (trace) =>
@@ -27,7 +26,9 @@ export class ApproachLevel {
     const coveredLines = new Set<number>(linesTraceMap.keys());
 
     // Based on set of covered lines, filter CFG nodes that were covered and get their strings
-    const coveredNodes = cfg.getNodesByLineNumbers(coveredLines);
+    const coveredNodes = new Set<Node>(
+      cfg.filterNodesByLineNumbers(coveredLines)
+    );
 
     const targetIds = new Set<string>([...coveredNodes].map((node) => node.id));
 
@@ -67,7 +68,7 @@ export class ApproachLevel {
       const currentDistance: number = current.first;
       const currentNodeId: string = current.second;
 
-      // get all neigbors of currently considered node
+      // get all neighbors of currently considered node
       const parentsOfCurrent = rotatedAdjList.get(currentNodeId);
 
       for (const pairOfParent of parentsOfCurrent) {

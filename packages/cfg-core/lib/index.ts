@@ -19,6 +19,7 @@ export * from "./ControlFlowGraph";
 export * from "./ControlFlowGraphFactory";
 
 export * from "./Edge";
+export * from "./util/Pair";
 export * from "./nodes/Node";
 export * from "./nodes/BranchNode";
 export * from "./nodes/PlaceholderNode";

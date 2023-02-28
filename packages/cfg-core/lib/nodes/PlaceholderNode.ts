@@ -24,5 +24,5 @@ import { Node, NodeType } from "./Node";
  * @author Dimitri Stallenberg
  */
 export interface PlaceholderNode extends Node {
-  type: NodeType.Placeholder;
+  readonly type: NodeType.Placeholder;
 }

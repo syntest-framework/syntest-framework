@@ -5,10 +5,10 @@ import * as chai from "chai";
 const expect = chai.expect;
 
 describe("CFG ancestors search", function () {
-  const cfgMini = new ControlFlowGraph();
-  const CFG1 = new ControlFlowGraph();
-  const CFG2 = new ControlFlowGraph();
-  const CFG3 = new ControlFlowGraph();
+  let cfgMini: ControlFlowGraph;
+  let CFG1: ControlFlowGraph;
+  let CFG2: ControlFlowGraph;
+  let CFG3: ControlFlowGraph;
 
   beforeEach(function () {
     let nodes;
@@ -45,8 +45,7 @@ describe("CFG ancestors search", function () {
       { from: "1", to: "3", branchType: false },
       { from: "ROOT", to: "1" },
     ];
-    cfgMini.nodes = nodes;
-    cfgMini.edges = edges;
+    cfgMini = new ControlFlowGraph(nodes, edges);
 
     // Construct CFG1
     for (let i = 65; i < 70; i++) {
@@ -69,8 +68,7 @@ describe("CFG ancestors search", function () {
       { from: "E", to: "A" },
       { from: "ROOT", to: "A" },
     ];
-    CFG1.nodes = nodes;
-    CFG1.edges = edges;
+    CFG1 = new ControlFlowGraph(nodes, edges);
 
     // Construct CFG2
     nodes = [
@@ -128,8 +126,7 @@ describe("CFG ancestors search", function () {
 
       { from: "ROOT", to: "A" },
     ];
-    CFG2.nodes = nodes;
-    CFG2.edges = edges;
+    CFG2 = new ControlFlowGraph(nodes, edges);
 
     // Construct CFG3
 
@@ -171,8 +168,7 @@ describe("CFG ancestors search", function () {
       { from: "ROOT", to: "A" },
     ];
 
-    CFG3.nodes = nodes;
-    CFG3.edges = edges;
+    CFG3 = new ControlFlowGraph(nodes, edges);
   });
 
   it("1 branch", () => {
@@ -398,7 +394,7 @@ describe("CFG ancestors search", function () {
     ).to.eql({ approachLevel: 3, closestCoveredBranch: CFG2.getNodeById("C") });
   });
 
-  it("CFG2 Target S, Path went to B immidiately", () => {
+  it("CFG2 Target S, Path went to B immediately", () => {
     // Path that was covered: A -> B
     // Try to find approachLevel from S
     expect(
@@ -413,7 +409,7 @@ describe("CFG ancestors search", function () {
     });
   });
 
-  it("CFG3 Target S, Path went to B immidiately", () => {
+  it("CFG3 Target S, Path went to B immediately", () => {
     // Path that was covered: A -> B
     // Try to find approachLevel from S
     expect(
