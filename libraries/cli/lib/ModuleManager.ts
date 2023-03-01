@@ -91,9 +91,9 @@ export class ModuleManager {
     ModuleManager.LOGGER.info("Preparing modules");
     for (const module of this.modules.values()) {
       if (module.prepare) {
-        ModuleManager.LOGGER.info("Preparing module: " + module.name + "");
+        ModuleManager.LOGGER.info(`Preparing module: ${module.name}`);
         await module.prepare();
-        ModuleManager.LOGGER.info("Module prepared: " + module.name + "");
+        ModuleManager.LOGGER.info(`Module prepared: ${module.name}`);
       }
     }
   }
@@ -102,9 +102,9 @@ export class ModuleManager {
     ModuleManager.LOGGER.info("Cleaning up modules");
     for (const module of this.modules.values()) {
       if (module.cleanup) {
-        ModuleManager.LOGGER.info("Cleaning up module: " + module.name + "");
+        ModuleManager.LOGGER.info(`Cleaning up module: ${module.name}`);
         await module.cleanup();
-        ModuleManager.LOGGER.info("Module cleaned up: " + module.name + "");
+        ModuleManager.LOGGER.info(`Module cleaned up: ${module.name}`);
       }
     }
   }
@@ -138,7 +138,7 @@ export class ModuleManager {
   }
 
   async loadModule(moduleId: string) {
-    ModuleManager.LOGGER.info("Loading module: " + moduleId + "");
+    ModuleManager.LOGGER.info(`Loading module: ${moduleId}`);
     const modulePath = await this.getModulePath(moduleId);
     const { module } = await import(modulePath);
 
@@ -160,7 +160,7 @@ export class ModuleManager {
     }
 
     this.modules.set(moduleInstance.name, moduleInstance);
-    ModuleManager.LOGGER.info("Module loaded: " + moduleId + "");
+    ModuleManager.LOGGER.info(`Module loaded: ${moduleId}`);
   }
 
   async loadModules(modules: string[]) {
