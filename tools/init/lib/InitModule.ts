@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-import { Command, Module, Plugin, Tool } from "@syntest/cli";
+import { Module, Plugin, Tool } from "@syntest/cli";
 import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
+import { getModuleCommand } from "./commands/module";
 
 export default class InitModule extends Module {
   constructor() {
@@ -28,7 +29,10 @@ export default class InitModule extends Module {
 
   async getTools(): Promise<Tool[]> {
     const labels = ["init"];
-    const commands = [getConfigCommand(this.name, this.modules)];
+    const commands = [
+      getConfigCommand(this.name, this.modules),
+      getModuleCommand(this.name),
+    ];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
 

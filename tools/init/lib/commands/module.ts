@@ -16,39 +16,100 @@
  * limitations under the License.
  */
 import { Command } from "@syntest/cli";
+import { writeFileSync } from "fs";
 import Yargs = require("yargs");
+import * as path from "path";
+import shell = require("shelljs");
 
-export function getConfigCommand(tool: string): Command {
+export type ModuleOptions = {
+  moduleName: string;
+};
+
+export function getModuleCommand(tool: string): Command {
   const options = new Map<string, Yargs.Options>();
 
-  options.set("plugin-name", {
-    default: "plugin-core-example",
+  options.set("module-name", {
     type: "string",
-    group: "Create plugin options:",
-    demandOption: true,
-  });
-  options.set("plugin-type", {
-    default: "Listener",
-    choices: [
-      "CrossoverOperator",
-      "Listener",
-      "EncodingSampler",
-      "SearchAlgorithm",
-      "TerminationTrigger",
-      "UserInterface",
-    ],
-    type: "string",
-    group: "Create plugin options:",
+    group: "Create module options:",
     demandOption: true,
   });
 
   return new Command(
     tool,
-    "config",
-    "Create a configuration file for the tool.",
+    "module",
+    "Create a module for the syntest tool.",
     options,
     (args: Yargs.ArgumentsCamelCase) => {
-      console.log("Not implemented yet.");
+      if (!shell.which("git")) {
+        shell.echo("Sorry, this script requires git");
+        shell.exit(1);
+      }
+
+      if (!shell.which("npm")) {
+        shell.echo("Sorry, this script requires npm");
+        shell.exit(1);
+      }
+
+      shell.exec(
+        "git clone git@github.com:syntest-framework/syntest-core-plugin-template.git"
+      );
+
+      shell.mv(
+        "syntest-core-plugin-template",
+        (<ModuleOptions>(<unknown>args)).moduleName
+      );
+      shell.cd((<ModuleOptions>(<unknown>args)).moduleName);
+      shell.rm("-rf", ".git");
+      shell.exec("npm install");
+
+      writeFileSync(
+        path.join("lib", "index.ts"),
+        getIndexFile(`./${(<ModuleOptions>(<unknown>args)).moduleName}`)
+      );
+      writeFileSync(
+        path.join("lib", `${(<ModuleOptions>(<unknown>args)).moduleName}.ts`),
+        getModuleFile((<ModuleOptions>(<unknown>args)).moduleName)
+      );
     }
   );
+}
+
+function getIndexFile(modulePath: string) {
+  return `
+  export * as module from "${modulePath}";
+  `;
+}
+
+function getModuleFile(moduleName: string) {
+  return `
+  import { Module } from "@syntest/cli";
+  import { getTools } from "./tools";
+  
+  export default class ${moduleName} extends Module {
+    
+    constructor() {
+      super("${moduleName}", require("../package.json").version);
+    }
+
+    async prepare(): Promise<void> {
+      // Optional: Add your preparation code here
+    }
+
+    async cleanup(): Promise<void> {
+      // Optional: Add your cleanup code here
+    }
+
+    async getTools(): Promise<Tool[]> {
+      return [
+        // Add your tools here
+      ]
+    }
+
+    async getPlugins(): Promise<Plugin[]> {
+      return [
+        // Add your plugins here
+      ]
+    }
+  };
+  `;
 }
