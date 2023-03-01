@@ -1,6 +1,6 @@
 {
-  "name": "@syntest/log",
-  "version": "0.1.0",
+  "name": "@syntest/logging",
+  "version": "0.0.1",
   "description": "The log library of the SynTest Framework",
   "keywords": [
     "syntest",

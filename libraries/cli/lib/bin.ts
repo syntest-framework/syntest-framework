@@ -20,7 +20,7 @@
 import yargHelper = require("yargs/helpers");
 import { BaseOptions, Configuration } from "./util/Configuration";
 import { ModuleManager } from "./ModuleManager";
-import { getLogger, setupLogger } from "@syntest/log";
+import { getLogger, setupLogger } from "../../logging/dist";
 import * as path from "path";
 import { UserInterfacePlugin } from "./module/plugins/UserInterfacePlugin";
 import { ListenerPlugin } from "./module/plugins/ListenerPlugin";

@@ -34,7 +34,7 @@ import {
   pluginsNotFound,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
-import { getLogger } from "@syntest/log";
+import { getLogger } from "../../logging/dist";
 
 export class ModuleManager {
   static LOGGER = getLogger("ModuleManager");
