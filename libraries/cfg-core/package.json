@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cfg-core",
-  "version": "0.3.0-beta.2",
+  "version": "0.3.0-beta.3",
   "description": "A Control Flow Graph package",
   "keywords": [
     "syntest",

@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-graphing",
-  "version": "0.3.0-beta.2",
+  "version": "0.3.0-beta.3",
   "description": "A listener plugin for the SynTest Core containing graphing functionalities",
   "keywords": [
     "syntest",
@@ -41,10 +41,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-testing-tool": "^0.1.0",
-    "@syntest/cfg-core": "^0.3.0-beta.2",
-    "@syntest/cli": "^0.1.0",
-    "@syntest/core": "^0.4.0-beta.2",
+    "@syntest/base-testing-tool": "^0.2.0-beta.0",
+    "@syntest/cfg-core": "^0.3.0-beta.3",
+    "@syntest/cli": "^0.2.0-beta.0",
+    "@syntest/core": "^0.4.0-beta.3",
     "d3": "6.7.0",
     "jsdom": "^21.1.0"
   },
