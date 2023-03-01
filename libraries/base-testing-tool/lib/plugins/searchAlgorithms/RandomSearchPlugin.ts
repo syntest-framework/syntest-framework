@@ -35,7 +35,7 @@ export class RandomSearchPlugin<
   T extends Encoding
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("Random");
+    super("Random", "Random search algorithm");
   }
 
   createSearchAlgorithm(

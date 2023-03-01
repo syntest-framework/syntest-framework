@@ -75,7 +75,7 @@ export class Configuration {
         // ui
         .option("user-interface", {
           alias: [],
-          default: "regular",
+          default: "default",
           description: "The user interface you use",
           group: OptionGroups.General,
           hidden: false,
@@ -112,8 +112,16 @@ export class Configuration {
         })
         .options("console-log-level", {
           alias: [],
-          choices: ["debug", "error", "warn", "info", "verbose", "silly"],
-          default: "debug",
+          choices: [
+            "silent",
+            "debug",
+            "error",
+            "warn",
+            "info",
+            "verbose",
+            "silly",
+          ],
+          default: "error",
           description: "Log level of the tool",
           group: OptionGroups.Logging,
           hidden: false,

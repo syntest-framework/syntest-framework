@@ -19,8 +19,8 @@ import { Plugin } from "../Plugin";
 import { PluginType } from "./PluginType";
 
 export abstract class ListenerPlugin extends Plugin {
-  constructor(name: string) {
-    super(PluginType.Listener, name);
+  constructor(name: string, describe: string) {
+    super(PluginType.Listener, name, describe);
   }
 
   abstract setupEventListener(): void;

@@ -34,7 +34,7 @@ import {
  */
 export class MOSAPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("MOSA");
+    super("MOSA", "Many-Objective Sorting Algorithm");
   }
 
   createSearchAlgorithm(

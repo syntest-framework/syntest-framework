@@ -15,14 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "../../userInterfaces/UserInterface";
+import { UserInterface } from "../../user-interfaces/UserInterface";
 import { Plugin } from "../Plugin";
 import { PluginType } from "./PluginType";
 
 export abstract class UserInterfacePlugin extends Plugin {
-  constructor(name: string) {
-    super(PluginType.UserInterface, name);
+  constructor(name: string, describe: string) {
+    super(PluginType.UserInterface, name, describe);
   }
 
   abstract createUserInterface(): UserInterface;
+}
+
+export class DefaultUserInterfacePlugin extends UserInterfacePlugin {
+  constructor() {
+    super("default", "Default user interface");
+  }
+
+  createUserInterface(): UserInterface {
+    return new UserInterface();
+  }
 }

@@ -26,7 +26,7 @@ import { SearchListener } from "../SearchListener";
 import { ExecutionResult } from "../ExecutionResult";
 import { Events } from "../../util/Events";
 import TypedEmitter from "typed-emitter";
-import { getLogger } from "@syntest/log";
+import { getLogger } from "@syntest/logging";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.

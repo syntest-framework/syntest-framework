@@ -36,7 +36,7 @@ export type GraphOptions = {
  */
 export default class GraphingPlugin extends ListenerPlugin {
   constructor() {
-    super("Graphing");
+    super("Graphing", "Creates a graph of the CFG");
   }
 
   setupEventListener(): void {

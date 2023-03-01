@@ -20,10 +20,12 @@ import Yargs = require("yargs");
 export abstract class Plugin {
   public type: Readonly<string>;
   public name: Readonly<string>;
+  public describe: Readonly<string>;
 
-  constructor(type: string, name: string) {
+  constructor(type: string, name: string, describe: string) {
     this.type = type;
     this.name = name;
+    this.describe = describe;
   }
 }
 

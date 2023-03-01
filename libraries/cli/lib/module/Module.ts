@@ -20,6 +20,12 @@ import { Tool } from "./Tool";
 
 export abstract class Module {
   name: Readonly<string>;
+  version: Readonly<string>;
+
+  constructor(name: string, version: string) {
+    this.name = name;
+    this.version = version;
+  }
 
   abstract getTools(): Promise<Tool[]>;
   abstract getPlugins(): Promise<Plugin[]>;
@@ -30,7 +36,6 @@ export abstract class Module {
  * This is called 'merging' it allows an abstract class to have optional methods.
  */
 export interface Module {
-  version: Readonly<string>;
   /**
    * Called after the initialization step
    */

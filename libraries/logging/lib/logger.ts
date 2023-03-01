@@ -62,14 +62,19 @@ export function setupLogger(
             filename: path.join(logDirectory, `${logLevel}.log`),
           })
       ),
+    ],
+  };
+
+  if (consoleLogLevel !== "silent") {
+    (<unknown[]>baseLoggerOptions.transports).push(
       new transports.Console({
         format: format.cli(),
         level: consoleLogLevel,
         stderrLevels: ["fatal", "error", "warn"],
         debugStdout: false,
-      }),
-    ],
-  };
+      })
+    );
+  }
 }
 
 export function getLogger(context: string): Logger {
