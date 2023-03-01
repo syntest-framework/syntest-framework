@@ -17,7 +17,6 @@
  */
 export enum PluginType {
   Crossover = "Crossover",
-  Listener = "Listener",
   Sampler = "Sampler",
   SearchAlgorithm = "SearchAlgorithm",
   TerminationTrigger = "TerminationTrigger",

@@ -34,15 +34,12 @@ import {
  */
 export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("NSGAII");
+    super("NSGAII", "NSGAII search algorithm");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("NSGAII", "eventManager"));
-    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
     }
@@ -61,7 +58,6 @@ export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
       );
     }
     return new NSGAII<T>(
-      options.eventManager,
       new SimpleObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover,

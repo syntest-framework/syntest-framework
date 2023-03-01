@@ -15,13 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { Encoding, TargetPool } from "..";
-import { Archive } from "../search/Archive";
-import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
-
-export interface ProgramState<T extends Encoding> {
-  targetPool?: TargetPool<T>;
-  archive?: Archive<T>;
-  algorithm?: SearchAlgorithm<T>;
-}
+export * from "./logger";

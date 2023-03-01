@@ -22,8 +22,8 @@ import { PluginType } from "./PluginType";
 export type TerminationOptions<T extends Encoding> = unknown;
 
 export abstract class TerminationPlugin<T extends Encoding> extends Plugin {
-  constructor(name: string) {
-    super(PluginType.TerminationTrigger, name);
+  constructor(name: string, describe: string) {
+    super(PluginType.TerminationTrigger, name, describe);
   }
   abstract createTerminationTrigger<O extends TerminationOptions<T>>(
     options: O

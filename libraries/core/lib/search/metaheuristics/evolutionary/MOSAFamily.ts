@@ -23,11 +23,11 @@ import {
   Encoding,
   Crossover,
   crowdingDistance,
-  EventManager,
 } from "../../..";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { shouldNeverHappen } from "../../../util/diagnostics";
+import { getLogger } from "@syntest/logging";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -40,8 +40,9 @@ import { shouldNeverHappen } from "../../../util/diagnostics";
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+  static LOGGER = getLogger("MOSAFamily");
+
   constructor(
-    eventManager: EventManager<T>,
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     crossover: Crossover<T>,
@@ -49,7 +50,6 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     crossoverProbability: number
   ) {
     super(
-      eventManager,
       objectiveManager,
       encodingSampler,
       crossover,
@@ -72,10 +72,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       return; // the search should end
 
     // non-dominated sorting
-    // getUserInterface().debug(
-    //   "Number of objectives = " +
-    //     this._objectiveManager.getCurrentObjectives().size
-    // );
+    MOSAFamily.LOGGER.debug(
+      "Number of objectives = " +
+        this._objectiveManager.getCurrentObjectives().size
+    );
 
     const F = this.preferenceSortingAlgorithm(
       this._population,
@@ -87,7 +87,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    // getUserInterface().debug("First front size = " + F[0].length);
+    MOSAFamily.LOGGER.debug("First front size = " + F[0].length);
 
     // Obtain the next front
     let currentFront: T[] = F[index];
@@ -148,14 +148,14 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     const fronts: T[][] = [[]];
 
     if (objectiveFunctions === null) {
-      // getUserInterface().debug(
-      //   "It looks like a bug in MOSA: the set of objectives cannot be null"
-      // );
+      MOSAFamily.LOGGER.debug(
+        "It looks like a bug in MOSA: the set of objectives cannot be null"
+      );
       return fronts;
     }
 
     if (objectiveFunctions.size === 0) {
-      // getUserInterface().debug("Trivial case: no objectives for the sorting");
+      MOSAFamily.LOGGER.debug("Trivial case: no objectives for the sorting");
       return fronts;
     }
 
@@ -167,9 +167,9 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       individual.setRank(0);
     }
 
-    // getUserInterface().debug("First front size :" + frontZero.length);
-    // getUserInterface().debug("Pop size :" + this._populationSize);
-    // getUserInterface().debug("Pop + Off size :" + population.length);
+    MOSAFamily.LOGGER.debug("First front size :" + frontZero.length);
+    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
+    MOSAFamily.LOGGER.debug("Pop + Off size :" + population.length);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: T[] = population;
@@ -204,10 +204,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       frontIndex += 1;
     }
 
-    // getUserInterface().debug("Number of fronts :" + fronts.length);
-    // getUserInterface().debug("Front zero size :" + fronts[0].length);
-    // getUserInterface().debug("# selected solutions :" + selectedSolutions);
-    // getUserInterface().debug("Pop size :" + this._populationSize);
+    MOSAFamily.LOGGER.debug("Number of fronts :" + fronts.length);
+    MOSAFamily.LOGGER.debug("Front zero size :" + fronts[0].length);
+    MOSAFamily.LOGGER.debug("# selected solutions :" + selectedSolutions);
+    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
     return fronts;
   }
 

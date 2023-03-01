@@ -43,7 +43,8 @@
   "dependencies": {
     "@syntest/base-testing-tool": "^0.2.0-beta.0",
     "@syntest/cli": "^0.2.0-beta.0",
-    "@syntest/core": "^0.4.0-beta.3"
+    "@syntest/core": "^0.4.0-beta.3",
+    "@syntest/logging": "*"
   },
   "engines": {
     "node": ">=10.24.0"

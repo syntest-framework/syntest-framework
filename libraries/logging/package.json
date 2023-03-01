@@ -1,10 +1,10 @@
 {
-  "name": "@syntest/cfg-core",
-  "version": "0.3.0-beta.3",
-  "description": "A Control Flow Graph package",
+  "name": "@syntest/logging",
+  "version": "0.0.1",
+  "description": "The log library of the SynTest Framework",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "automatic-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
@@ -20,7 +20,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "/dist",
-    "/NOTICE"
+    "NOTICE",
+    "README.md"
   ],
   "repository": {
     "type": "git",
@@ -29,7 +30,7 @@
   "scripts": {
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
-    "clean": "rm -rf .nyc_output dist node_modules coverage",
+    "clean": "rm -rf .nyc_output dist node_modules",
     "clean:dist": "rm -rf dist",
     "format": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
@@ -41,8 +42,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "lodash.clonedeep": "^4.5.0",
-    "@syntest/logging": "*"
+    "winston": "3.8.2"
   },
   "engines": {
     "node": ">=10.24.0"

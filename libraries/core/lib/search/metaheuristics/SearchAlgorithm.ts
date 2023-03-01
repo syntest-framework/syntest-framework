@@ -24,7 +24,9 @@ import { BudgetManager } from "../budget/BudgetManager";
 import { TerminationManager } from "../termination/TerminationManager";
 import { SearchListener } from "../SearchListener";
 import { ExecutionResult } from "../ExecutionResult";
-import { EventManager } from "../../event/EventManager";
+import { Events } from "../../util/Events";
+import TypedEmitter from "typed-emitter";
+import { getLogger } from "@syntest/logging";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -34,12 +36,7 @@ import { EventManager } from "../../event/EventManager";
  * @author Mitchell Olsthoorn
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
-  /**
-   * Manager that passes event emisions to the eventlisteners.
-   * @protected
-   */
-  protected _eventManager: EventManager<T>;
-
+  static LOGGER = getLogger("SearchAlgorithm");
   /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected
@@ -61,11 +58,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * @param objectiveManager The objective manager
    * @protected
    */
-  protected constructor(
-    eventManager: EventManager<T>,
-    objectiveManager: ObjectiveManager<T>
-  ) {
-    this._eventManager = eventManager;
+  protected constructor(objectiveManager: ObjectiveManager<T>) {
     this._objectiveManager = objectiveManager;
     this._listeners = [];
   }
@@ -106,24 +99,23 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<Archive<T>> {
+    SearchAlgorithm.LOGGER.info("Starting search");
     // Load search subject into the objective manager
     this._objectiveManager.load(subject);
 
     // Start initialization budget tracking
     budgetManager.initializationStarted();
-    // getUserInterface().startProgressBar();
 
     // Inform listeners that the search started
     this._listeners.forEach((listener) => {
       listener.searchStarted(this, budgetManager, terminationManager);
     });
 
-    // getUserInterface().updateProgressBar(
-    //   this.progress("branch"),
-    //   budgetManager.getBudget()
-    // );
-
-    this._eventManager.emitEvent("onSearchInitializationStart");
+    (<TypedEmitter<Events>>process).emit(
+      "searchInitializationStart",
+      this,
+      budgetManager
+    );
 
     // Initialize search process
     await this._initialize(budgetManager, terminationManager);
@@ -131,19 +123,19 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     // Stop initialization budget tracking, inform the listeners, and start search budget tracking
     budgetManager.initializationStopped();
 
-    this._eventManager.emitEvent("onSearchInitializationComplete");
+    (<TypedEmitter<Events>>process).emit(
+      "searchInitializationComplete",
+      this,
+      budgetManager
+    );
 
     this._listeners.forEach((listener) =>
       listener.initializationDone(this, budgetManager, terminationManager)
     );
 
-    // getUserInterface().updateProgressBar(
-    //   this.progress("branch"),
-    //   budgetManager.getBudget()
-    // );
     budgetManager.searchStarted();
 
-    this._eventManager.emitEvent("onSearchStart");
+    (<TypedEmitter<Events>>process).emit("searchStart", this, budgetManager);
 
     // Start search until the budget has expired, a termination trigger has been triggered, or there are no more objectives
     while (
@@ -151,7 +143,11 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       budgetManager.hasBudgetLeft() &&
       !terminationManager.isTriggered()
     ) {
-      this._eventManager.emitEvent("onSearchIterationStart");
+      (<TypedEmitter<Events>>process).emit(
+        "searchIterationStart",
+        this,
+        budgetManager
+      );
 
       // Start next iteration of the search process
       await this._iterate(budgetManager, terminationManager);
@@ -159,22 +155,21 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       // Inform the budget manager and listeners that an iteration happened
       budgetManager.iteration(this);
 
-      this._eventManager.emitEvent("onSearchIterationComplete");
+      (<TypedEmitter<Events>>process).emit(
+        "searchIterationComplete",
+        this,
+        budgetManager
+      );
 
       this._listeners.forEach((listener) =>
         listener.iteration(this, budgetManager, terminationManager)
       );
-      // getUserInterface().updateProgressBar(
-      //   this.progress("branch"),
-      //   budgetManager.getBudget()
-      // );
     }
 
     // Stop search budget tracking
     budgetManager.searchStopped();
-    // getUserInterface().stopProgressBar();
 
-    this._eventManager.emitEvent("onSearchComplete");
+    (<TypedEmitter<Events>>process).emit("searchComplete", this, budgetManager);
 
     // Inform listeners that the search stopped
     this._listeners.forEach((listener) => {

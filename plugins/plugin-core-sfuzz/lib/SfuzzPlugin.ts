@@ -34,15 +34,12 @@ export default class SfuzzPlugin<
   T extends Encoding
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("Sfuzz");
+    super("Sfuzz", "Sfuzz search algorithm");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.eventManager) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "eventManager"));
-    }
     if (!options.encodingSampler) {
       throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
     }
@@ -61,7 +58,6 @@ export default class SfuzzPlugin<
       );
     }
     return new Sfuzz<T>(
-      options.eventManager,
       new SfuzzObjectiveManager<T>(options.runner),
       options.encodingSampler,
       options.crossover,

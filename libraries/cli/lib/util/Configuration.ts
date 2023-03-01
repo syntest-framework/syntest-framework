@@ -31,7 +31,7 @@ export type StorageOptions = {
 export type LoggingOptions = {
   logDirectory: string;
   consoleLogLevel: string;
-  logToFile: string[];
+  fileLogLevel: string[];
 };
 
 export type BaseOptions = GeneralOptions & StorageOptions & LoggingOptions;
@@ -75,7 +75,7 @@ export class Configuration {
         // ui
         .option("user-interface", {
           alias: [],
-          default: "regular",
+          default: "default",
           description: "The user interface you use",
           group: OptionGroups.General,
           hidden: false,
@@ -112,14 +112,22 @@ export class Configuration {
         })
         .options("console-log-level", {
           alias: [],
-          choices: ["debug", "error", "warn", "info", "verbose", "silly"],
-          default: "debug",
+          choices: [
+            "silent",
+            "debug",
+            "error",
+            "warn",
+            "info",
+            "verbose",
+            "silly",
+          ],
+          default: "error",
           description: "Log level of the tool",
           group: OptionGroups.Logging,
           hidden: false,
           type: "string",
         })
-        .options("log-to-file", {
+        .options("file-log-level", {
           alias: [],
           default: ["info", "warn", "error"],
           description: "Which levels should be logged to file",

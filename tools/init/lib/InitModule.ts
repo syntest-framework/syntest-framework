@@ -19,8 +19,11 @@
 import { Command, Module, Plugin, Tool } from "@syntest/cli";
 import yargs = require("yargs");
 
-export default class InitModule implements Module {
-  name = "init";
+export default class InitModule extends Module {
+  constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    super("init", require("../package.json").version);
+  }
 
   async getTools(): Promise<Tool[]> {
     const labels = ["init"];

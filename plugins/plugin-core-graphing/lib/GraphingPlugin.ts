@@ -16,26 +16,34 @@
  * limitations under the License.
  */
 
-import { Encoding, ListenerInterface } from "@syntest/core";
-import { CFGGraphingListener } from "./CFGGraphingListener";
+import { Encoding, Events, TargetPool } from "@syntest/core";
 import Yargs = require("yargs");
-import { ListenerPlugin } from "@syntest/base-testing-tool";
-import { OptionGroups } from "@syntest/cli";
+import { ListenerPlugin, OptionGroups } from "@syntest/cli";
+import { CONFIG } from "@syntest/base-testing-tool";
+import { createSimulation } from "./D3Simulation";
+import { writeFileSync } from "fs";
+import { ControlFlowGraph } from "@syntest/cfg-core";
+import TypedEventEmitter from "typed-emitter";
+
+export type GraphOptions = {
+  cfgDirectory: string;
+};
 
 /**
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
  *
  * @author Dimitri Stallenberg
  */
-export default class GraphingPlugin<
-  T extends Encoding
-> extends ListenerPlugin<T> {
+export default class GraphingPlugin extends ListenerPlugin {
   constructor() {
-    super("Graphing");
+    super("Graphing", "Creates a graph of the CFG");
   }
 
-  createListener(): ListenerInterface<T> {
-    return new CFGGraphingListener<T>();
+  setupEventListener(): void {
+    (<TypedEventEmitter<Events>>process).on(
+      "controlFlowGraphResolvingComplete",
+      this.controlFlowGraphResolvingComplete
+    );
   }
 
   async getCommandOptions(
@@ -65,8 +73,15 @@ export default class GraphingPlugin<
 
     return optionsMap;
   }
-}
 
-export type GraphOptions = {
-  cfgDirectory: string;
-};
+  controlFlowGraphResolvingComplete<E extends Encoding>(
+    targetPool: TargetPool<E>,
+    cfg: ControlFlowGraph
+  ): void {
+    const svgHtml = createSimulation(cfg);
+
+    const base = (<GraphOptions>(<unknown>CONFIG)).cfgDirectory;
+    const path = `${base}/test.svg`;
+    writeFileSync(path, svgHtml);
+  }
+}

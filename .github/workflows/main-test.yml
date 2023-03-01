@@ -65,6 +65,7 @@ jobs:
           - libraries/cfg-core
           - libraries/cli
           - libraries/core
+          - libraries/logging
           - plugins/plugin-core-graphing
           - plugins/plugin-core-sfuzz
           - tools/init
