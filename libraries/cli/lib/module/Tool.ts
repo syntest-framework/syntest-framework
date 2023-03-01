@@ -37,7 +37,7 @@ export class Tool implements Yargs.CommandModule {
     describe: string,
     commands: Command[],
     toolOptions: Map<string, Yargs.Options>,
-    handler: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
+    handler?: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
   ) {
     this.name = name;
     this.labels = labels;
@@ -45,7 +45,12 @@ export class Tool implements Yargs.CommandModule {
     this.command = name;
     this.commands = commands;
     this.toolOptions = toolOptions;
-    this.handler = handler;
+    this.handler =
+      handler ||
+      (() => {
+        // Do nothing
+        throw new Error(`Tool ${name} requires a subcommand.`);
+      });
   }
 
   async addPluginOptions(plugins: Plugin[]): Promise<void> {

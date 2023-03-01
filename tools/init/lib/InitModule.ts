@@ -17,6 +17,7 @@
  */
 
 import { Command, Module, Plugin, Tool } from "@syntest/cli";
+import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
 
 export default class InitModule extends Module {
@@ -36,18 +37,7 @@ export default class InitModule extends Module {
       type: "string",
     });
 
-    const commands = [
-      new Command(
-        this.name,
-        "xsubcommandxx",
-        "thorough description",
-        commandOptions,
-        (args) => {
-          console.log("config subcommand given!");
-          console.log(args);
-        }
-      ),
-    ];
+    const commands = [getConfigCommand(this.name)];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
     additionalOptions.set("test", {
