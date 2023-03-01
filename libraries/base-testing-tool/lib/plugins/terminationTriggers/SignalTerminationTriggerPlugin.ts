@@ -27,7 +27,7 @@ export class SignalTerminationTriggerPlugin<
   T extends Encoding
 > extends TerminationPlugin<T> {
   constructor() {
-    super("Signal");
+    super("Signal", "Terminates the search when a signal is received");
   }
 
   createTerminationTrigger(): SignalTerminationTrigger {

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { UserInterface } from "@syntest/cli";
+import { UserInterface, UserInterfacePlugin } from "@syntest/cli";
 import * as cliProgress from "cli-progress";
 
 import TypedEventEmitter from "typed-emitter";
@@ -26,6 +26,16 @@ import {
   BudgetManager,
   Encoding,
 } from "@syntest/core";
+
+export class CommandLineInterfacePlugin extends UserInterfacePlugin {
+  constructor() {
+    super("cli", "Command Line Interface");
+  }
+
+  createUserInterface(): UserInterface {
+    return new CommandLineInterface();
+  }
+}
 
 export class CommandLineInterface extends UserInterface {
   protected showProgressBar: boolean;

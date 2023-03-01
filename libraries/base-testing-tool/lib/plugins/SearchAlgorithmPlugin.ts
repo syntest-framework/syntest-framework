@@ -36,8 +36,8 @@ export type SearchAlgorithmOptions<T extends Encoding> = {
 };
 
 export abstract class SearchAlgorithmPlugin<T extends Encoding> extends Plugin {
-  constructor(name: string) {
-    super(PluginType.SearchAlgorithm, name);
+  constructor(name: string, describe: string) {
+    super(PluginType.SearchAlgorithm, name, describe);
   }
 
   abstract createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(

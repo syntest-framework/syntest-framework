@@ -22,8 +22,8 @@ import { PluginType } from "./PluginType";
 export type CrossoverOptions<T extends Encoding> = unknown;
 
 export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
-  constructor(name: string) {
-    super(PluginType.Crossover, name);
+  constructor(name: string, describe: string) {
+    super(PluginType.Crossover, name, describe);
   }
 
   abstract createCrossoverOperator<O extends CrossoverOptions<T>>(

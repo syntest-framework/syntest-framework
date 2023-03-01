@@ -34,7 +34,7 @@ import {
  */
 export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("NSGAII");
+    super("NSGAII", "NSGAII search algorithm");
   }
 
   createSearchAlgorithm(
