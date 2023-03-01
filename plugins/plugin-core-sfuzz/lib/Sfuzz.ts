@@ -24,7 +24,7 @@ import {
   ObjectiveManager,
 } from "@syntest/core";
 import { shouldNeverHappen } from "@syntest/core";
-import { getLogger } from "@syntest/log";
+import { getLogger } from "@syntest/logging";
 
 /**
  * sFuzz

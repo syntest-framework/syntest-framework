@@ -20,9 +20,19 @@ import { Plugin } from "../Plugin";
 import { PluginType } from "./PluginType";
 
 export abstract class UserInterfacePlugin extends Plugin {
-  constructor(name: string) {
-    super(PluginType.UserInterface, name);
+  constructor(name: string, describe: string) {
+    super(PluginType.UserInterface, name, describe);
   }
 
   abstract createUserInterface(): UserInterface;
+}
+
+export class DefaultUserInterfacePlugin extends UserInterfacePlugin {
+  constructor() {
+    super("default", "Default user interface");
+  }
+
+  createUserInterface(): UserInterface {
+    return new UserInterface();
+  }
 }

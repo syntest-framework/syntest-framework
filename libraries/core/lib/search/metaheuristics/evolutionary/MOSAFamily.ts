@@ -27,7 +27,7 @@ import {
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { shouldNeverHappen } from "../../../util/diagnostics";
-import { getLogger } from "@syntest/log";
+import { getLogger } from "@syntest/logging";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).

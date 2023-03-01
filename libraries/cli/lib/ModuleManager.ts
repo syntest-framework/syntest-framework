@@ -34,14 +34,15 @@ import {
   pluginsNotFound,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
-import { getLogger } from "../../logging/dist";
+import { getLogger } from "@syntest/logging";
 
 export class ModuleManager {
-  static LOGGER = getLogger("ModuleManager");
+  static LOGGER;
   static instance: ModuleManager;
 
   static initializeModuleManager() {
-    this.instance = new ModuleManager();
+    ModuleManager.instance = new ModuleManager();
+    ModuleManager.LOGGER = getLogger("ModuleManager");
   }
 
   private _modules: Map<string, Module>;
@@ -67,7 +68,7 @@ export class ModuleManager {
     return this._plugins;
   }
 
-  getPlugin(type: string, name: string) {
+  getPlugin(type: string, name: string): Plugin {
     if (!this._plugins.has(type)) {
       throw new Error(pluginNotFound(name, type));
     }
@@ -79,9 +80,9 @@ export class ModuleManager {
     return this._plugins.get(type).get(name);
   }
 
-  getPluginsOfType(type: string) {
+  getPluginsOfType(type: string): Map<string, Plugin> {
     if (!this._plugins.has(type)) {
-      throw new Error(pluginsNotFound(type));
+      return new Map();
     }
 
     return this._plugins.get(type);
@@ -175,25 +176,35 @@ export class ModuleManager {
 
     for (const module of this.modules.values()) {
       for (const tool of await module.getTools()) {
-        if (this.tools.has(tool.name)) {
-          throw new Error(toolAlreadyLoaded(tool.name));
-        }
-
-        this.tools.set(tool.name, tool);
+        this.loadTool(tool);
       }
 
       for (const plugin of await module.getPlugins()) {
-        if (!this.plugins.has(plugin.type)) {
-          this.plugins.set(plugin.type, new Map());
-        }
-
-        if (this.plugins.get(plugin.type).has(plugin.name)) {
-          throw new Error(pluginAlreadyLoaded(plugin.name, plugin.type));
-        }
-
-        this.plugins.get(plugin.type).set(plugin.name, plugin);
+        this.loadPlugin(plugin);
       }
     }
+  }
+
+  loadTool(tool: Tool) {
+    if (this.tools.has(tool.name)) {
+      throw new Error(toolAlreadyLoaded(tool.name));
+    }
+
+    ModuleManager.LOGGER.info(`Tool loaded: ${tool.name}`);
+    this.tools.set(tool.name, tool);
+  }
+
+  loadPlugin(plugin: Plugin) {
+    if (!this.plugins.has(plugin.type)) {
+      this.plugins.set(plugin.type, new Map());
+    }
+
+    if (this.plugins.get(plugin.type).has(plugin.name)) {
+      throw new Error(pluginAlreadyLoaded(plugin.name, plugin.type));
+    }
+
+    ModuleManager.LOGGER.info(`- Plugin loaded: ${plugin.name}`);
+    this.plugins.get(plugin.type).set(plugin.name, plugin);
   }
 
   async configureModules(yargs: Yargs.Argv) {

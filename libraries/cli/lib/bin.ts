@@ -20,10 +20,14 @@
 import yargHelper = require("yargs/helpers");
 import { BaseOptions, Configuration } from "./util/Configuration";
 import { ModuleManager } from "./ModuleManager";
-import { getLogger, setupLogger } from "../../logging/dist";
+import { getLogger, setupLogger } from "@syntest/logging";
 import * as path from "path";
-import { UserInterfacePlugin } from "./module/plugins/UserInterfacePlugin";
+import {
+  DefaultUserInterfacePlugin,
+  UserInterfacePlugin,
+} from "./module/plugins/UserInterfacePlugin";
 import { ListenerPlugin } from "./module/plugins/ListenerPlugin";
+import { PluginType } from "./module/plugins/PluginType";
 
 async function main() {
   // Remove binary call from args
@@ -63,18 +67,18 @@ async function main() {
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
   LOGGER.info("Loading modules...", modules);
   await ModuleManager.instance.loadModules(modules);
+  await ModuleManager.instance.loadPlugin(new DefaultUserInterfacePlugin());
   yargs = await ModuleManager.instance.configureModules(yargs);
 
   // Setup user interface
   const userInterfacePlugin = ModuleManager.instance.getPlugin(
-    "User Interface",
+    PluginType.UserInterface,
     (<BaseOptions>(<unknown>baseArguments)).userInterface
   );
   const userInterface = (<UserInterfacePlugin>(
     userInterfacePlugin
   )).createUserInterface();
   userInterface.printTitle();
-  userInterface.setupEventListener();
 
   // Setup cleanup on exit handler
   process.on("exit", (code) => {
@@ -88,25 +92,11 @@ async function main() {
   });
 
   userInterface.printHeader("Modules loaded:");
-
-  for (const module of ModuleManager.instance.modules.values()) {
-    LOGGER.info("Module loaded: " + module.name);
-    userInterface.print(`- Module: ${module.name} (${module.version})`);
-    userInterface.print(`  - Tools:`);
-    for (const tool of await module.getTools()) {
-      LOGGER.info(`- Tool loaded: ${tool.name}`);
-      userInterface.print(`  - ${tool.name}`);
-    }
-    userInterface.print(`  - Plugins:`);
-    for (const plugin of await module.getPlugins()) {
-      LOGGER.info(`- Plugin loaded: ${plugin.name}`);
-      userInterface.print(`  - ${plugin.name}`);
-    }
-  }
+  userInterface.printModules([...ModuleManager.instance.modules.values()]);
 
   // Register all listener plugins
   for (const plugin of ModuleManager.instance
-    .getPluginsOfType("Listener")
+    .getPluginsOfType(PluginType.Listener)
     .values()) {
     (<ListenerPlugin>plugin).setupEventListener();
   }
@@ -116,12 +106,16 @@ async function main() {
   await ModuleManager.instance.prepare();
   LOGGER.info("Modules prepared!");
 
+  const versions = [...ModuleManager.instance.modules.values()]
+    .map((module) => `${module.name} (${module.version})`)
+    .join("\n");
+
   // Execute program
   LOGGER.info("Executing program...");
   await yargs
     .wrap(yargs.terminalWidth())
     .help(true)
-    .version(true) // TODO should be the versions of all plugins and packages
+    .version(versions)
     .showHidden(false)
     .demandCommand()
     .parse(args);

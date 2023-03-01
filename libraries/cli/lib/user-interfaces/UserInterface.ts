@@ -18,9 +18,22 @@
 
 import chalk = require("chalk");
 import figlet = require("figlet");
+import { Module } from "../module/Module";
 
-export abstract class UserInterface {
-  abstract setupEventListener(): void;
+export class UserInterface {
+  async printModules(modules: Module[]): Promise<void> {
+    for (const module of modules) {
+      this.print(`- Module: ${module.name} (${module.version})`);
+      this.print(`  - Tools:`);
+      for (const tool of await module.getTools()) {
+        this.print(`    - ${tool.name}: ${tool.describe}`);
+      }
+      this.print(`  - Plugins:`);
+      for (const plugin of await module.getPlugins()) {
+        this.print(`    - ${plugin.name}: ${plugin.describe}`);
+      }
+    }
+  }
 
   print(text: string): void {
     console.log(text);

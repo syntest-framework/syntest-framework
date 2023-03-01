@@ -44,7 +44,7 @@
   "dependencies": {
     "@dagrejs/graphlib": "2.1.4",
     "@syntest/cfg-core": "^0.3.0-beta.2",
-    "@syntest/log": "^0.1.0",
+    "@syntest/logging": "*",
     "bignumber.js": "9.0.1",
     "fast-csv": "4.3.6",
     "seedrandom": "3.0.5"
