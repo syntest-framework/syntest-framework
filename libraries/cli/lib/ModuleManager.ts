@@ -203,7 +203,9 @@ export class ModuleManager {
       throw new Error(pluginAlreadyLoaded(plugin.name, plugin.type));
     }
 
-    ModuleManager.LOGGER.info(`- Plugin loaded: ${plugin.name}`);
+    ModuleManager.LOGGER.info(
+      `- Plugin loaded: ${plugin.type} - ${plugin.name}`
+    );
     this.plugins.get(plugin.type).set(plugin.name, plugin);
   }
 

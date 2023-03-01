@@ -41,12 +41,19 @@ export class UserInterface {
 
   printTitle(): void {
     this.print(
-      chalk.yellow(figlet.textSync("SynTest", { horizontalLayout: "full" }))
+      chalk.bold(
+        chalk.greenBright(
+          figlet.textSync("SynTest", {
+            horizontalLayout: "full",
+            font: "rectangles",
+          })
+        )
+      )
     );
   }
 
   printHeader(text: string): void {
-    this.print(chalk.yellow(`\n${text}`));
+    this.print(chalk.bgGreen(chalk.black(chalk.bold(`\n ${text} `))));
   }
 
   printError(text: string): void {

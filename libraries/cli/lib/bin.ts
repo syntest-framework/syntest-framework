@@ -91,7 +91,7 @@ async function main() {
     LOGGER.info("Cleanup done! Exiting...");
   });
 
-  userInterface.printHeader("Modules loaded:");
+  userInterface.printHeader("Modules loaded");
   userInterface.printModules([...ModuleManager.instance.modules.values()]);
 
   // Register all listener plugins
