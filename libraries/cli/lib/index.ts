@@ -24,7 +24,7 @@ export * from "./module/Module";
 export * from "./module/Plugin";
 export * from "./module/Tool";
 
-export * from "./userInterfaces/UserInterface";
+export * from "./user-interfaces/UserInterface";
 
 export * from "./util/Configuration";
 export * from "./util/diagnostics";

@@ -26,22 +26,24 @@ import { UserInterfacePlugin } from "./module/plugins/UserInterfacePlugin";
 import { ListenerPlugin } from "./module/plugins/ListenerPlugin";
 
 async function main() {
-  // remove binary call from args
+  // Remove binary call from args
   const args = yargHelper.hideBin(process.argv);
 
-  // Configure base usage
-  // We disable help and version here because,
-  // we don't want the help command to be triggered
-  // when we did not configure the commands and options from the added modules yet
+  /**
+   * Configure base usage
+   *
+   * We disable help and version here because, we don't want the help command to be triggered.
+   * When we did not configure the commands and options from the added modules yet.
+   */
   let yargs = Configuration.configureUsage().help(false).version(false);
 
-  // configure general options
+  // Configure general options
   yargs = Configuration.configureOptions(yargs);
 
-  // [arse the arguments and config using only the base options
+  // Parse the arguments and config using only the base options
   const baseArguments = yargs.wrap(yargs.terminalWidth()).parseSync(args);
 
-  // setup logger
+  // Setup logger
   setupLogger(
     path.join(
       (<BaseOptions>(<unknown>baseArguments)).syntestDirectory,
@@ -52,18 +54,18 @@ async function main() {
   );
   const LOGGER = getLogger("cli");
 
-  // setup module manager
+  // Setup module manager
   ModuleManager.initializeModuleManager();
 
   yargs = yargs.showHelpOnFail(true);
 
-  // import defined modules
+  // Import defined modules
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
   LOGGER.info("Loading modules...", modules);
   await ModuleManager.instance.loadModules(modules);
   yargs = await ModuleManager.instance.configureModules(yargs);
 
-  // setup user interface
+  // Setup user interface
   const userInterfacePlugin = ModuleManager.instance.getPlugin(
     "User Interface",
     (<BaseOptions>(<unknown>baseArguments)).userInterface
@@ -74,7 +76,7 @@ async function main() {
   userInterface.printTitle();
   userInterface.setupEventListener();
 
-  // setup cleanup on exit handler
+  // Setup cleanup on exit handler
   process.on("exit", (code) => {
     if (code !== 0) {
       LOGGER.error("Process exited with code: " + code);
@@ -102,19 +104,19 @@ async function main() {
     }
   }
 
-  // register all listener plugins
+  // Register all listener plugins
   for (const plugin of ModuleManager.instance
     .getPluginsOfType("Listener")
     .values()) {
     (<ListenerPlugin>plugin).setupEventListener();
   }
 
-  // prepare modules
+  // Prepare modules
   LOGGER.info("Preparing modules...");
   await ModuleManager.instance.prepare();
   LOGGER.info("Modules prepared!");
 
-  // execute program
+  // Execute program
   LOGGER.info("Executing program...");
   await yargs
     .wrap(yargs.terminalWidth())

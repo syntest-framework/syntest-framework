@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "../../userInterfaces/UserInterface";
+import { UserInterface } from "../../user-interfaces/UserInterface";
 import { Plugin } from "../Plugin";
 import { PluginType } from "./PluginType";
 
