@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.SYNTEST_CI }}
           
       # Setup, Caching, and .npmrc file to publish to npm
-      - name: Use Node.js
+      - name: Use latest Node.js LTS version
         uses: actions/setup-node@v3
         with:
           node-version: lts/*

@@ -18,7 +18,7 @@ jobs:
           token: ${{ secrets.SYNTEST_CI }}
 
       # Setup and Caching
-      - name: Use Node.js
+      - name: Use latest Node.js LTS version
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
