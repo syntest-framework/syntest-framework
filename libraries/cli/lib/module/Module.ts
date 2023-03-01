@@ -21,14 +21,23 @@ import { Tool } from "./Tool";
 export abstract class Module {
   name: Readonly<string>;
   version: Readonly<string>;
+  _modules: Module[];
 
   constructor(name: string, version: string) {
     this.name = name;
     this.version = version;
   }
 
-  abstract getTools(): Promise<Tool[]>;
-  abstract getPlugins(): Promise<Plugin[]>;
+  set modules(modules: Module[]) {
+    this._modules = modules;
+  }
+
+  get modules() {
+    return this._modules;
+  }
+
+  abstract getTools(): Promise<Tool[]> | Tool[];
+  abstract getPlugins(): Promise<Plugin[]> | Plugin[];
 }
 
 /**
@@ -39,9 +48,9 @@ export interface Module {
   /**
    * Called after the initialization step
    */
-  prepare?(): Promise<void>;
+  prepare?(): Promise<void> | void;
   /**
    * Called before the exit step
    */
-  cleanup?(): Promise<void>;
+  cleanup?(): Promise<void> | void;
 }

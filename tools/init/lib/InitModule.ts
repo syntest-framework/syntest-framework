@@ -28,41 +28,16 @@ export default class InitModule extends Module {
 
   async getTools(): Promise<Tool[]> {
     const labels = ["init"];
-
-    const commandOptions: Map<string, yargs.Options> = new Map();
-    commandOptions.set("test-config", {
-      alias: [],
-      default: "test",
-      description: "test test",
-      group: "Test options:",
-      hidden: false,
-      normalize: true,
-      type: "string",
-    });
-
-    const commands = [getConfigCommand(this.name)];
+    const commands = [getConfigCommand(this.name, this.modules)];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
-    additionalOptions.set("test", {
-      alias: [],
-      default: "test",
-      description: "test test",
-      group: "Test options:",
-      hidden: false,
-      normalize: true,
-      type: "string",
-    });
 
     const initTool = new Tool(
       this.name,
       labels,
-      "init description",
+      "A tool for initializing SynTest projects.",
       commands,
-      additionalOptions,
-      (args) => {
-        console.log("no subcommand given");
-        console.log(args);
-      }
+      additionalOptions
     );
 
     return [initTool];

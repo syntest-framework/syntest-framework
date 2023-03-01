@@ -138,9 +138,7 @@ export class ModuleManager {
     return modulePath;
   }
 
-  async loadModule(moduleId: string) {
-    ModuleManager.LOGGER.info(`Loading module: ${moduleId}`);
-    const modulePath = await this.getModulePath(moduleId);
+  async loadModule(moduleId: string, modulePath: string) {
     const { module } = await import(modulePath);
 
     const moduleInstance: Module = new module.default();
@@ -165,9 +163,12 @@ export class ModuleManager {
   }
 
   async loadModules(modules: string[]) {
+    // Load modules
     for (const module of modules) {
       try {
-        await this.loadModule(module);
+        ModuleManager.LOGGER.info(`Loading module: ${module}`);
+        const modulePath = await this.getModulePath(module);
+        await this.loadModule(module, modulePath);
       } catch (e) {
         console.log(e);
         throw new Error(moduleCannotBeLoaded(module));
@@ -175,10 +176,15 @@ export class ModuleManager {
     }
 
     for (const module of this.modules.values()) {
+      // Inform the module about the other modules
+      module.modules = [...this.modules.values()];
+
+      // Load tools
       for (const tool of await module.getTools()) {
         this.loadTool(tool);
       }
 
+      // Load plugins
       for (const plugin of await module.getPlugins()) {
         this.loadPlugin(plugin);
       }

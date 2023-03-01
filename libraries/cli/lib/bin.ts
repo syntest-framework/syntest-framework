@@ -65,6 +65,8 @@ async function main() {
 
   // Import defined modules
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
+  LOGGER.info("Loading standard modules...");
+  await ModuleManager.instance.loadModule("@syntest/init", "@syntest/init");
   LOGGER.info("Loading modules...", modules);
   await ModuleManager.instance.loadModules(modules);
   await ModuleManager.instance.loadPlugin(new DefaultUserInterfacePlugin());

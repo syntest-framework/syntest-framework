@@ -45,12 +45,7 @@ export class Tool implements Yargs.CommandModule {
     this.command = name;
     this.commands = commands;
     this.toolOptions = toolOptions;
-    this.handler =
-      handler ||
-      (() => {
-        // Do nothing
-        throw new Error(`Tool ${name} requires a subcommand.`);
-      });
+    this.handler = handler;
   }
 
   async addPluginOptions(plugins: Plugin[]): Promise<void> {
@@ -153,6 +148,11 @@ export class Tool implements Yargs.CommandModule {
 
     for (const option of this.toolOptions.keys()) {
       yargs = yargs.option(option, this.toolOptions.get(option));
+    }
+
+    // if no handler is provided, demand a subcommand
+    if (!this.handler) {
+      yargs = yargs.demandCommand();
     }
 
     return yargs.usage(`Usage: $0 ${this.command} <command> [options]`);
