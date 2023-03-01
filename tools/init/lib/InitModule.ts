@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/cli";
+import { Module, Plugin, Tool } from "@syntest/module";
 import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
 import { getModuleCommand } from "./commands/module";

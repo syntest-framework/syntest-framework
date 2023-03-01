@@ -31,17 +31,28 @@ import {
   modulePathNotFound,
   pluginAlreadyLoaded,
   pluginNotFound,
-  pluginsNotFound,
+  singletonAlreadySet,
+  singletonNotSet,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
 import { getLogger } from "@syntest/logging";
 
 export class ModuleManager {
   static LOGGER;
-  static instance: ModuleManager;
+  private static _instance: ModuleManager;
+
+  static get instance() {
+    if (!ModuleManager._instance) {
+      throw new Error(singletonNotSet("ModuleManager"));
+    }
+    return ModuleManager._instance;
+  }
 
   static initializeModuleManager() {
-    ModuleManager.instance = new ModuleManager();
+    if (ModuleManager._instance) {
+      throw new Error(singletonAlreadySet("ModuleManager"));
+    }
+    ModuleManager._instance = new ModuleManager();
     ModuleManager.LOGGER = getLogger("ModuleManager");
   }
 

@@ -18,7 +18,7 @@
 
 import chalk = require("chalk");
 import figlet = require("figlet");
-import { Module } from "../module/Module";
+import { Module } from "@syntest/module";
 
 export class UserInterface {
   async printModules(modules: Module[]): Promise<void> {

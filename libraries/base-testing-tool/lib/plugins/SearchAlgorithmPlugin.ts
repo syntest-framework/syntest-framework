@@ -23,7 +23,7 @@ import {
   SearchAlgorithm,
   ObjectiveManager,
 } from "@syntest/core";
-import { Plugin } from "@syntest/cli";
+import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {

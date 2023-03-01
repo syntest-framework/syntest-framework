@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "../../user-interfaces/UserInterface";
-import { Plugin } from "../Plugin";
-import { PluginType } from "./PluginType";
+import { UserInterface } from "../user-interfaces/UserInterface";
+import { Plugin, PluginType } from "@syntest/module";
 
 export abstract class UserInterfacePlugin extends Plugin {
   constructor(name: string, describe: string) {

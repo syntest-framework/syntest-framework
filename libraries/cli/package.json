@@ -47,6 +47,7 @@
   "dependencies": {
     "@syntest/init": "^0.2.0-beta.0",
     "@syntest/logging": "*",
+    "@syntest/module": "^0.0.1",
     "chalk": "4.1.1",
     "clear": "0.1.0",
     "cli-progress": "3.11.2",

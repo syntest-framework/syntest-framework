@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/cli";
+import { Module, Plugin, Tool } from "@syntest/module";
 import SfuzzPlugin from "./SfuzzPlugin";
 
 export default class GraphingModule extends Module {

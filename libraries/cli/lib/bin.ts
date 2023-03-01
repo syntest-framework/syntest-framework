@@ -18,16 +18,14 @@
  */
 
 import yargHelper = require("yargs/helpers");
-import { BaseOptions, Configuration } from "./util/Configuration";
-import { ModuleManager } from "./ModuleManager";
+import { BaseOptions, Configuration } from "./Configuration";
+import { ModuleManager, PluginType, ListenerPlugin } from "@syntest/module";
 import { getLogger, setupLogger } from "@syntest/logging";
 import * as path from "path";
 import {
   DefaultUserInterfacePlugin,
   UserInterfacePlugin,
-} from "./module/plugins/UserInterfacePlugin";
-import { ListenerPlugin } from "./module/plugins/ListenerPlugin";
-import { PluginType } from "./module/plugins/PluginType";
+} from "./plugins/UserInterfacePlugin";
 
 async function main() {
   // Remove binary call from args

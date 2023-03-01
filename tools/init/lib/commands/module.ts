@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Command } from "@syntest/cli";
+import { Command } from "@syntest/module";
 import { writeFileSync } from "fs";
 import Yargs = require("yargs");
 import * as path from "path";
@@ -82,7 +82,7 @@ function getIndexFile(modulePath: string) {
 
 function getModuleFile(moduleName: string) {
   return `
-  import { Module } from "@syntest/cli";
+  import { Module } from "@syntest/module";
   import { getTools } from "./tools";
   
   export default class ${moduleName} extends Module {

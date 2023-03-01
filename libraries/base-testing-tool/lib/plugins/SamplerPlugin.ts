@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { Encoding, EncodingSampler } from "@syntest/core";
-import { Plugin } from "@syntest/cli";
+import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
 
 export type SamplerOptions<T extends Encoding> = unknown;

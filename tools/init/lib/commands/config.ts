@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Command, Module } from "@syntest/cli";
+import { Command, Module } from "@syntest/module";
 import { writeFileSync } from "fs";
 import Yargs = require("yargs");
 import * as path from "path";

@@ -15,6 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./logger";
+import Yargs = require("yargs");
 
-export * from "./Configuration";
+export type ModuleOptions = {
+  modules: string[];
+};
+
+export enum OptionGroups {
+  Module = "Module Options:",
+}
+
+export class Configuration {
+  static configureOptions(yargs: Yargs.Argv) {
+    return yargs.option("modules", {
+      alias: ["m"],
+      array: true,
+      default: [],
+      description: "List of dependencies or paths to modules to load",
+      group: OptionGroups.Module,
+      hidden: false,
+      type: "string",
+    });
+  }
+}

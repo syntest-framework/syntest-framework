@@ -25,7 +25,7 @@ import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "../SearchAlgorithmPlugin";
-import { pluginRequiresOptions } from "@syntest/cli";
+import { pluginRequiresOptions } from "@syntest/module";
 /**
  * Plugin for RandomSearch
  *

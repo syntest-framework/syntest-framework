@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-graphing",
-  "version": "0.3.0-beta.3",
-  "description": "A listener plugin for the SynTest Core containing graphing functionalities",
+  "name": "@syntest/module",
+  "version": "0.0.1",
+  "description": "The module library of the SynTest Framework",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -20,7 +20,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "/dist",
-    "/NOTICE"
+    "/NOTICE",
+    "README.md"
   ],
   "repository": {
     "type": "git",
@@ -41,19 +42,11 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-testing-tool": "^0.2.0-beta.0",
-    "@syntest/cfg-core": "^0.3.0-beta.3",
-    "@syntest/module": "*",
-    "@syntest/core": "^0.4.0-beta.3",
     "@syntest/logging": "*",
-    "d3": "6.7.0",
-    "jsdom": "^21.1.0"
+    "global-modules": "2.0.0"
   },
   "engines": {
     "node": ">=10.24.0"
-  },
-  "devDependencies": {
-    "@types/d3": "^7.4.0"
   },
   "publishConfig": {
     "access": "public"
