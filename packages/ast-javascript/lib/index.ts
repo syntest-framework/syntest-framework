@@ -16,27 +16,8 @@
  * limitations under the License.
  */
 
-import { IdentifierDescription } from "./IdentifierDescription";
-import { ActionType } from "./ActionType";
-import { ActionVisibility } from "./ActionVisibility";
-import { Scope } from "@syntest/ast-javascript";
-
-/**
- * Interface for a Action Description.
- *
- * @author Dimitri Stallenberg
- */
-export interface ActionDescription {
-  scope: Scope;
-  name: string;
-  type: ActionType;
-
-  visibility: ActionVisibility;
-
-  isConstructor: boolean;
-  isStatic: boolean;
-  isAsync: boolean;
-
-  parameters: IdentifierDescription[];
-  returnParameter: IdentifierDescription;
-}
+export * from "./AbstractSyntaxTreeGenerator";
+export * from "./AbstractSyntaxTreeVisitor";
+export * from "./defaultBabelConfig";
+export * from "./Element";
+export * from "./Scope";

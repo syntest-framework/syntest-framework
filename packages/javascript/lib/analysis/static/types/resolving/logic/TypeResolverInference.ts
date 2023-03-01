@@ -19,10 +19,9 @@
 import { TypeResolver } from "../TypeResolver";
 import { elementTypeToTypingType, TypeEnum } from "../TypeEnum";
 import { Relation, RelationType } from "../../discovery/Relation";
-import { Element } from "../../discovery/Element";
+import { Element, Scope } from "@syntest/ast-javascript";
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 import { TypeProbability } from "../TypeProbability";
-import { Scope } from "../../discovery/Scope";
 import { createAnonObject } from "./ObjectMatcher";
 
 export class TypeResolverInference extends TypeResolver {

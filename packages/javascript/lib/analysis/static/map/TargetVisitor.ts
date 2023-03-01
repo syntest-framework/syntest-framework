@@ -21,12 +21,12 @@ import { ActionType } from "../parsing/ActionType";
 import { ActionVisibility } from "../parsing/ActionVisibility";
 import { ActionDescription } from "../parsing/ActionDescription";
 import { TypeProbability } from "../types/resolving/TypeProbability";
-import { Visitor } from "../Visitor";
+import { AbstractSyntaxTreeVisitor } from "@syntest/ast-javascript";
 import { IdentifierDescription } from "../parsing/IdentifierDescription";
 import { ComplexObject } from "../types/discovery/object/ComplexObject";
 import * as t from "@babel/types";
 
-export class TargetVisitor extends Visitor {
+export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   private _targetMap: Map<string, TargetMetaData>;
   private _functionMap: Map<string, Map<string, ActionDescription>>;
 

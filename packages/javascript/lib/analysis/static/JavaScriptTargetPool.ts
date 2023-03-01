@@ -19,7 +19,7 @@
 import * as path from "path";
 import { CFG } from "@syntest/cfg-core";
 import { getAllFiles, readFile } from "../../utils/fileSystem";
-import { AbstractSyntaxTreeGenerator } from "./ast/AbstractSyntaxTreeGenerator";
+import { AbstractSyntaxTreeGenerator } from "@syntest/ast-javascript";
 import {
   CONFIG,
   EventManager,
@@ -39,7 +39,7 @@ import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
 import { ComplexObject } from "./types/discovery/object/ComplexObject";
 import { ActionDescription } from "./parsing/ActionDescription";
 import { Relation } from "./types/discovery/Relation";
-import { Element } from "./types/discovery/Element";
+import { Element } from "@syntest/ast-javascript";
 import { TypeEnum } from "./types/resolving/TypeEnum";
 import { TypeProbability } from "./types/resolving/TypeProbability";
 import { Instrumenter } from "../../instrumentation/Instrumenter";
@@ -163,8 +163,7 @@ export class JavaScriptTargetPool extends TargetPool<JavaScriptTestCase> {
       //   )
       // );
       return this.abstractSyntaxTreeGenerator.generate(
-        this.getSource(targetPath),
-        absoluteTargetPath
+        this.getSource(targetPath)
       );
     }
 

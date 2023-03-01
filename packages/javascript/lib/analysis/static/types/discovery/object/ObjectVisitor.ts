@@ -17,10 +17,10 @@
  */
 
 import { ComplexObject } from "./ComplexObject";
-import { Visitor } from "../../../Visitor";
+import { AbstractSyntaxTreeVisitor } from "@syntest/ast-javascript";
 import { Export } from "../../../dependency/ExportVisitor";
 
-export class ObjectVisitor extends Visitor {
+export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   private _exports: Export[];
   private _objects: ComplexObject[];
   private _objectStack: ComplexObject[];

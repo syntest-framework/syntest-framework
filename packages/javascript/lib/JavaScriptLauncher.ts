@@ -48,7 +48,7 @@ import {
   JavaScriptTargetMetaData,
   JavaScriptTargetPool,
 } from "./analysis/static/JavaScriptTargetPool";
-import { AbstractSyntaxTreeGenerator } from "./analysis/static/ast/AbstractSyntaxTreeGenerator";
+import { AbstractSyntaxTreeGenerator } from "@syntest/ast-javascript";
 import * as path from "path";
 import { TargetMapGenerator } from "./analysis/static/map/TargetMapGenerator";
 import { JavaScriptSubject } from "./search/JavaScriptSubject";

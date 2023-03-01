@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-import { Visitor } from "../Visitor";
+import { AbstractSyntaxTreeVisitor } from "@syntest/ast-javascript";
 
-export class ImportVisitor extends Visitor {
+export class ImportVisitor extends AbstractSyntaxTreeVisitor {
   private _imports: Set<string>;
 
   constructor(filePath) {

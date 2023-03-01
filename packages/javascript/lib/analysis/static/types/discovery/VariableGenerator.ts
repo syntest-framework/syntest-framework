@@ -19,7 +19,7 @@
 import { traverse } from "@babel/core";
 import { VariableVisitor } from "./VariableVisitor";
 import * as t from "@babel/types";
-import { Element } from "./Element";
+import { Element } from "@syntest/ast-javascript";
 import { Relation } from "./Relation";
 /**
  * Typing generator for targets.

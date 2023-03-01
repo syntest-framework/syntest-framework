@@ -18,7 +18,7 @@
 
 import { TransformOptions, transformSync } from "@babel/core";
 import { Visitor } from "./Visitor";
-import { defaultBabelOptions } from "../configs/DefaultBabelConfig";
+import { defaultBabelOptions } from "@syntest/ast-javascript";
 
 export interface OutputObject {
   fileCoverage?: any;

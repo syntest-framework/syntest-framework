@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Element } from "./Element";
+import { Element } from "@syntest/ast-javascript";
 import { TypeProbability } from "../resolving/TypeProbability";
 
 export class ElementTypeMap {

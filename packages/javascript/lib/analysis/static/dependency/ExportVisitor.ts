@@ -17,7 +17,7 @@
  */
 
 import { ExportType } from "./IdentifierVisitor";
-import { Visitor } from "../Visitor";
+import { AbstractSyntaxTreeVisitor } from "@syntest/ast-javascript";
 
 export interface Export {
   name: string;
@@ -27,7 +27,7 @@ export interface Export {
   filePath: string;
 }
 
-export class ExportVisitor extends Visitor {
+export class ExportVisitor extends AbstractSyntaxTreeVisitor {
   // TODO other export types such as module.export or exports.
 
   private _exports: Export[];

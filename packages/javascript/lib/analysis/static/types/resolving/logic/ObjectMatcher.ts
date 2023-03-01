@@ -18,7 +18,7 @@
 
 import { ComplexObject } from "../../discovery/object/ComplexObject";
 import { TypeProbability } from "../TypeProbability";
-import { Element, ElementType } from "../../discovery/Element";
+import { Element, ElementType } from "@syntest/ast-javascript";
 import { Relation, RelationType } from "../../discovery/Relation";
 import { TypeEnum } from "../TypeEnum";
 

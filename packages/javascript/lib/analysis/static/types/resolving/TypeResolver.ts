@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 
-import { Element, ElementType } from "../discovery/Element";
+import { Element, ElementType, Scope } from "@syntest/ast-javascript";
 import { Relation, RelationType } from "../discovery/Relation";
 import { ComplexObject } from "../discovery/object/ComplexObject";
 import { TypeProbability } from "./TypeProbability";
-import { Scope } from "../discovery/Scope";
 
 /**
  * Abstract TypeResolver class

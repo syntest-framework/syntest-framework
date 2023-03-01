@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { ElementType } from "../discovery/Element";
+import { ElementType } from "@syntest/ast-javascript";
 
 export enum TypeEnum {
   ANY = "any",

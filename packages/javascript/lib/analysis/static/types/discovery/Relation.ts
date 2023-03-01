@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Element } from "./Element";
+import { Element } from "@syntest/ast-javascript";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators
 // TODO add missing

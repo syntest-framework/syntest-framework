@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-import { Element, ElementType, getElementId } from "./Element";
+import { Element, ElementType, getElementId } from "@syntest/ast-javascript";
 import { getRelationType, Relation, RelationType } from "./Relation";
-import { Visitor } from "../../Visitor";
+import { AbstractSyntaxTreeVisitor } from "@syntest/ast-javascript";
 
 // TODO return
-export class VariableVisitor extends Visitor {
+export class VariableVisitor extends AbstractSyntaxTreeVisitor {
   private _relations: Relation[];
   private _wrapperElementIsRelation: Map<string, Relation>;
 

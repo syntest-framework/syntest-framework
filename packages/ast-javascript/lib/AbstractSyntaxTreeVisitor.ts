@@ -16,23 +16,76 @@
  * limitations under the License.
  */
 
-import { Scope } from "./types/discovery/Scope";
-import { Element, ElementType } from "./types/discovery/Element";
+import { NodePath } from "@babel/core";
+import { TraverseOptions } from "@babel/traverse";
+import * as t from "@babel/types";
+import { Scope } from "./Scope";
+import { Element, ElementType } from "./Element";
 
-export abstract class Visitor {
+export class AbstractSyntaxTreeVisitor implements TraverseOptions {
   private _filePath: string;
-  private _scopeIdOffset: number = undefined;
 
-  // TODO functionExpression has no id
-  private _thisScopes: string[] = ["ClassDeclaration", "FunctionDeclaration"];
-  private _thisScopeStack: number[];
-  private _thisScopeStackNames: string[];
+  private _nodeId: number;
+  private _scopeIdOffset: number;
+
+  private _thisScopes: Set<string> = new Set([
+    "ClassDeclaration",
+    "FunctionDeclaration",
+  ]);
+  private _thisScopeStack: number[] = [];
+  private _thisScopeStackNames: string[] = [];
+
+  get filePath() {
+    return this._filePath;
+  }
+
+  get nodeId() {
+    return this.nodeId;
+  }
+
+  get scopeIdOffset() {
+    return this._scopeIdOffset;
+  }
 
   constructor(filePath: string) {
     this._filePath = filePath;
-    this._thisScopeStack = [];
-    this._thisScopeStackNames = [];
+    this._nodeId = 0;
   }
+
+  enter = () => {
+    this._nodeId += 1;
+  };
+
+  Program = {
+    enter: (path: NodePath<t.Program>) => {
+      // console.log(path.scope)
+      if (this._scopeIdOffset === undefined) {
+        this._scopeIdOffset = path.scope["uid"];
+        this._thisScopeStack.push(path.scope["uid"]);
+        this._thisScopeStackNames.push("global");
+      }
+    },
+  };
+
+  Scopable = {
+    enter: (path: NodePath<t.Scopable>) => {
+      if (!this._thisScopes.has(path.node.type)) {
+        return;
+      }
+
+      const id: string = path.node["id"]?.name || "anon";
+      this._thisScopeStack.push(path.scope["uid"]);
+      this._thisScopeStackNames.push(id);
+    },
+    exit: (path: NodePath<t.Scopable>) => {
+      if (!this._thisScopes.has(path.node.type)) {
+        return;
+      }
+
+      this._thisScopeStack.pop();
+      this._thisScopeStackNames.pop();
+    },
+  };
 
   private _getCurrentThisScopeId() {
     if (!this._thisScopeStack.length) {
@@ -49,35 +102,6 @@ export abstract class Visitor {
 
     return this._thisScopeStackNames[this._thisScopeStackNames.length - 1];
   }
-
-  Program: (path) => void = (path) => {
-    // this is required because babel does not reset its uid counter
-    if (this._scopeIdOffset === undefined) {
-      this._scopeIdOffset = path.scope.uid;
-      this._thisScopeStack.push(path.scope.uid);
-      this._thisScopeStackNames.push("global");
-    }
-  };
-
-  Scope = {
-    enter: (path) => {
-      if (!this._thisScopes.includes(path.node.type)) {
-        return;
-      }
-
-      const id: string = path.node.id?.name || "anon";
-      this._thisScopeStack.push(path.scope.uid);
-      this._thisScopeStackNames.push(id);
-    },
-    exit: (path) => {
-      if (!this._thisScopes.includes(path.node.type)) {
-        return;
-      }
-
-      this._thisScopeStack.pop();
-      this._thisScopeStackNames.pop();
-    },
-  };
 
   _getScope(path): Scope {
     if (path.node.type === "ThisExpression") {
@@ -199,8 +223,8 @@ export abstract class Visitor {
     // }
   }
 
-  _getElement(path): Element {
-    const uid = path.scope.getBlockParent()?.uid;
+  _getElement(path: NodePath<t.Node>): Element {
+    const uid = path.scope.getBlockParent()["uid"];
 
     const scope: Scope = {
       filePath: this.filePath,
@@ -212,7 +236,7 @@ export abstract class Visitor {
       return {
         scope: scope,
         type: ElementType.Identifier,
-        value: "#" + path.node.name,
+        value: "#" + path.node.id.name,
       };
     }
 
@@ -228,19 +252,19 @@ export abstract class Visitor {
         return {
           scope: scope,
           type: ElementType.StringConstant,
-          value: path.node.value,
+          value: path.getSource(),
         };
       case "NumericLiteral":
         return {
           scope: scope,
           type: ElementType.NumericalConstant,
-          value: path.node.value,
+          value: `${path.node.value}`,
         };
       case "BooleanLiteral":
         return {
           scope: scope,
           type: ElementType.BooleanConstant,
-          value: path.node.value,
+          value: `${path.node.value}`,
         };
       case "RegExpLiteral":
         return {
@@ -308,7 +332,6 @@ export abstract class Visitor {
       path.node.type === "AssignmentExpression" ||
       path.node.type === "AssignmentPattern" ||
       path.node.type === "ArrayPattern" ||
-      path.node.type === "PrivateName" ||
       path.node.type === "MetaProperty"
     ) {
       // TODO should be default
@@ -319,19 +342,7 @@ export abstract class Visitor {
       };
     }
     throw new Error(
-      `Cannot get element: "${path.node.name}" -> ${path.node.type}\n${this.filePath}`
+      `Cannot get element: "${path.node["name"]}" -> ${path.node.type}\n${this.filePath}`
     );
-  }
-
-  get filePath(): string {
-    return this._filePath;
-  }
-
-  get scopeIdOffset(): number {
-    return this._scopeIdOffset;
-  }
-
-  set scopeIdOffset(value: number) {
-    this._scopeIdOffset = value;
   }
 }

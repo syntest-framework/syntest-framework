@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Visitor } from "../Visitor";
+import { AbstractSyntaxTreeVisitor } from "@syntest/ast-javascript";
 
 export enum ExportType {
   function,
@@ -25,7 +25,7 @@ export enum ExportType {
   unknown,
 }
 
-export class IdentifierVisitor extends Visitor {
+export class IdentifierVisitor extends AbstractSyntaxTreeVisitor {
   private _identifiers: Map<string, ExportType>;
 
   get identifiers(): Map<string, ExportType> {

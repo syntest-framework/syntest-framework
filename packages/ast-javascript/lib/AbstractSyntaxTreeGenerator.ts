@@ -16,14 +16,13 @@
  * limitations under the License.
  */
 
-import { defaultBabelOptions } from "../../../configs/DefaultBabelConfig";
+import { defaultBabelOptions } from "./defaultBabelConfig";
 import { transformSync } from "@babel/core";
+import * as t from "@babel/types";
 
 export class AbstractSyntaxTreeGenerator {
-  generate(source: string, target: string | null) {
+  generate(source: string): t.Node {
     const options = JSON.parse(JSON.stringify(defaultBabelOptions));
-
-    options.filename = target || String(new Date().getTime()) + ".js";
 
     const codeMap = transformSync(source, options);
 
