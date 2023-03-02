@@ -138,13 +138,6 @@ export class UserInterface {
     }
 
     return str;
-
-    // return "{bar} {percentag/e}% | ETA: {eta}s | {value}/{total} | {meta}";
-    // if (params.value >= params.total){
-    //   return '# ' + chalk.grey(payload.task) + '   ' + chalk.green(params.value + '/' + params.total) + ' --[' + bar + ']-- ';
-    // }else{
-    //     return '# ' + payload.task + '   ' + chalk.yellow(params.value + '/' + params.total) + ' --[' + bar + ']-- ';
-    // }
   }
 
   // Private internal styling methods
