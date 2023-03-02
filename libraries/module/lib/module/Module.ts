@@ -16,19 +16,39 @@
  * limitations under the License.
  */
 import { Plugin } from "./Plugin";
+import { Preset } from "./Preset";
 import { Tool } from "./Tool";
-
+import { UserInterface } from "@syntest/cli-graphics";
 export abstract class Module {
   name: Readonly<string>;
   version: Readonly<string>;
+  _modules: Module[];
+  _userInterface: UserInterface;
 
   constructor(name: string, version: string) {
     this.name = name;
     this.version = version;
   }
 
-  abstract getTools(): Promise<Tool[]>;
-  abstract getPlugins(): Promise<Plugin[]>;
+  set modules(modules: Module[]) {
+    this._modules = modules;
+  }
+
+  get modules() {
+    return this._modules;
+  }
+
+  set userInterface(userInterface: UserInterface) {
+    this._userInterface = userInterface;
+  }
+
+  get userInterface() {
+    return this._userInterface;
+  }
+
+  abstract getTools(): Promise<Tool[]> | Tool[];
+  abstract getPlugins(): Promise<Plugin[]> | Plugin[];
+  abstract getPresets(): Promise<Preset[]> | Preset[];
 }
 
 /**
@@ -39,9 +59,9 @@ export interface Module {
   /**
    * Called after the initialization step
    */
-  prepare?(): Promise<void>;
+  prepare?(): Promise<void> | void;
   /**
    * Called before the exit step
    */
-  cleanup?(): Promise<void>;
+  cleanup?(): Promise<void> | void;
 }

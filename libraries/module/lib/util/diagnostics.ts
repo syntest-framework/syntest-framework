@@ -54,12 +54,14 @@ export const cannotAddChoicesToOptionWithoutChoices = (
 ) =>
   `Could not add choices to option.\nOption '${option}' does not have choices defined.\nPlugin '${plugin}' tries to add choices to option '${option}'.`;
 
+// Presets
+export const presetAlreadyLoaded = (name: string) =>
+  `Could not load preset\nPreset with name '${name}' is already loaded.`;
+export const presetNotFound = (name: string) =>
+  `Could not load preset\nPreset with name '${name}' not found.`;
+
 // Singletons
 export const singletonNotSet = (name: string) =>
   `The ${name} singleton has not been set yet!`;
 export const singletonAlreadySet = (name: string) =>
   `The ${name} singleton has already been set!`;
-
-// Misc
-export const shouldNeverHappen = (bugLocation: string) =>
-  `This should never happen.\nThere is likely a bug in the ${bugLocation}.`;

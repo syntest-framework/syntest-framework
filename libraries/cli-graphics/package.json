@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/core",
-  "version": "0.4.0-beta.6",
-  "description": "The common core of the SynTest Framework",
+  "name": "@syntest/cli-graphics",
+  "version": "0.1.0-beta.0",
+  "description": "The cli graphics library of the SynTest Framework",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -20,7 +20,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "/dist",
-    "NOTICE",
+    "/NOTICE",
     "README.md"
   ],
   "repository": {
@@ -42,12 +42,12 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@dagrejs/graphlib": "2.1.4",
-    "@syntest/cfg-core": "^0.3.0-beta.6",
-    "@syntest/logging": "^0.1.0-beta.2",
-    "bignumber.js": "9.0.1",
-    "fast-csv": "4.3.6",
-    "seedrandom": "3.0.5"
+    "@syntest/logging": "*",
+    "chalk": "4.1.1",
+    "clear": "0.1.0",
+    "cli-progress": "3.11.2",
+    "figlet": "1.5.2",
+    "table": "^6.8.1"
   },
   "engines": {
     "node": ">=10.24.0"

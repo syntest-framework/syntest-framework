@@ -15,6 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./logger";
+import { ItemizationItem, UserInterface } from "../../lib/UserInterface";
 
-export * from "./Configuration";
+export class UserInterfaceExtends extends UserInterface {
+  itemization(items: ItemizationItem[], indentation?: number): string {
+    return super.itemization(items, indentation);
+  }
+}

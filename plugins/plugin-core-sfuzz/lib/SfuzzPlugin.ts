@@ -24,7 +24,7 @@ import {
 } from "@syntest/core";
 import { Sfuzz } from "./Sfuzz";
 import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
-import { pluginRequiresOptions } from "@syntest/cli";
+import { pluginRequiresOptions } from "@syntest/module";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/cli";
+import { Module, Plugin, Tool } from "@syntest/module";
 import GraphingPlugin, { GraphOptions } from "./GraphingPlugin";
 import { mkdirSync } from "fs";
 import { CONFIG } from "@syntest/base-testing-tool";

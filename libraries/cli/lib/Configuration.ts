@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 import Yargs = require("yargs");
+import { LoggingOptions } from "@syntest/logging";
+import { ModuleOptions } from "@syntest/module";
 
 export type GeneralOptions = {
   config: string;
-  modules: string[];
-  userInterface: string;
+  preset: string;
 };
 
 export type StorageOptions = {
@@ -28,18 +29,14 @@ export type StorageOptions = {
   tempSyntestDirectory: string;
 };
 
-export type LoggingOptions = {
-  logDirectory: string;
-  consoleLogLevel: string;
-  fileLogLevel: string[];
-};
-
-export type BaseOptions = GeneralOptions & StorageOptions & LoggingOptions;
+export type BaseOptions = GeneralOptions &
+  StorageOptions &
+  LoggingOptions &
+  ModuleOptions;
 
 export enum OptionGroups {
   General = "General Options:",
   Storage = "Storage Options:",
-  Logging = "Logging Options:",
 }
 
 export class Configuration {
@@ -63,20 +60,11 @@ export class Configuration {
           config: true,
           type: "string",
         })
-        .option("modules", {
-          alias: ["m"],
-          array: true,
-          default: [],
-          description: "List of dependencies or paths to modules to load",
-          group: OptionGroups.General,
-          hidden: false,
-          type: "string",
-        })
-        // ui
-        .option("user-interface", {
+        .option("preset", {
           alias: [],
-          default: "default",
-          description: "The user interface you use",
+          choices: ["none"],
+          default: "none",
+          description: "The preset you want to use",
           group: OptionGroups.General,
           hidden: false,
           type: "string",
@@ -99,41 +87,6 @@ export class Configuration {
           hidden: false,
           normalize: true,
           type: "string",
-        })
-        // logging options
-        .options("log-directory", {
-          alias: [],
-          default: "logs",
-          description: "The path where the logs should be saved",
-          group: OptionGroups.Logging,
-          hidden: false,
-          normalize: true,
-          type: "string",
-        })
-        .options("console-log-level", {
-          alias: [],
-          choices: [
-            "silent",
-            "debug",
-            "error",
-            "warn",
-            "info",
-            "verbose",
-            "silly",
-          ],
-          default: "error",
-          description: "Log level of the tool",
-          group: OptionGroups.Logging,
-          hidden: false,
-          type: "string",
-        })
-        .options("file-log-level", {
-          alias: [],
-          default: ["info", "warn", "error"],
-          description: "Which levels should be logged to file",
-          group: OptionGroups.Logging,
-          hidden: false,
-          type: "array",
         })
     );
   }

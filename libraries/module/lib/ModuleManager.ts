@@ -22,6 +22,7 @@ import Yargs = require("yargs");
 import { Plugin } from "./module/Plugin";
 import { Tool } from "./module/Tool";
 import { Module } from "./module/Module";
+import { UserInterface } from "@syntest/cli-graphics";
 
 import {
   moduleAlreadyLoaded,
@@ -31,17 +32,31 @@ import {
   modulePathNotFound,
   pluginAlreadyLoaded,
   pluginNotFound,
-  pluginsNotFound,
+  presetAlreadyLoaded,
+  presetNotFound,
+  singletonAlreadySet,
+  singletonNotSet,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
 import { getLogger } from "@syntest/logging";
+import { Preset } from "./module/Preset";
 
 export class ModuleManager {
   static LOGGER;
-  static instance: ModuleManager;
+  private static _instance: ModuleManager;
+
+  static get instance() {
+    if (!ModuleManager._instance) {
+      throw new Error(singletonNotSet("ModuleManager"));
+    }
+    return ModuleManager._instance;
+  }
 
   static initializeModuleManager() {
-    ModuleManager.instance = new ModuleManager();
+    if (ModuleManager._instance) {
+      throw new Error(singletonAlreadySet("ModuleManager"));
+    }
+    ModuleManager._instance = new ModuleManager();
     ModuleManager.LOGGER = getLogger("ModuleManager");
   }
 
@@ -49,11 +64,13 @@ export class ModuleManager {
   private _tools: Map<string, Tool>;
   // type -> name -> plugin
   private _plugins: Map<string, Map<string, Plugin>>;
+  private _presets: Map<string, Preset>;
 
   constructor() {
     this._modules = new Map();
     this._tools = new Map();
     this._plugins = new Map();
+    this._presets = new Map();
   }
 
   get modules() {
@@ -66,6 +83,10 @@ export class ModuleManager {
 
   get plugins() {
     return this._plugins;
+  }
+
+  get presets() {
+    return this._presets;
   }
 
   getPlugin(type: string, name: string): Plugin {
@@ -138,9 +159,7 @@ export class ModuleManager {
     return modulePath;
   }
 
-  async loadModule(moduleId: string) {
-    ModuleManager.LOGGER.info(`Loading module: ${moduleId}`);
-    const modulePath = await this.getModulePath(moduleId);
+  async loadModule(moduleId: string, modulePath: string) {
     const { module } = await import(modulePath);
 
     const moduleInstance: Module = new module.default();
@@ -164,10 +183,13 @@ export class ModuleManager {
     ModuleManager.LOGGER.info(`Module loaded: ${moduleId}`);
   }
 
-  async loadModules(modules: string[]) {
+  async loadModules(modules: string[], userInterface: UserInterface) {
+    // Load modules
     for (const module of modules) {
       try {
-        await this.loadModule(module);
+        ModuleManager.LOGGER.info(`Loading module: ${module}`);
+        const modulePath = await this.getModulePath(module);
+        await this.loadModule(module, modulePath);
       } catch (e) {
         console.log(e);
         throw new Error(moduleCannotBeLoaded(module));
@@ -175,14 +197,34 @@ export class ModuleManager {
     }
 
     for (const module of this.modules.values()) {
+      // Inform the module about the other modules
+      module.modules = [...this.modules.values()];
+      module.userInterface = userInterface;
+
+      // Load tools
       for (const tool of await module.getTools()) {
         this.loadTool(tool);
       }
 
+      // Load plugins
       for (const plugin of await module.getPlugins()) {
         this.loadPlugin(plugin);
       }
+
+      // Load presets
+      for (const preset of await module.getPresets()) {
+        this.loadPreset(preset);
+      }
     }
+  }
+
+  loadPreset(preset: Preset) {
+    if (this.presets.has(preset.name)) {
+      throw new Error(presetAlreadyLoaded(preset.name));
+    }
+
+    ModuleManager.LOGGER.info(`Preset loaded: ${preset.name}`);
+    this.presets.set(preset.name, preset);
   }
 
   loadTool(tool: Tool) {
@@ -209,7 +251,7 @@ export class ModuleManager {
     this.plugins.get(plugin.type).set(plugin.name, plugin);
   }
 
-  async configureModules(yargs: Yargs.Argv) {
+  async configureModules(yargs: Yargs.Argv, preset: string) {
     ModuleManager.LOGGER.info("Configuring modules");
     for (const tool of this.tools.values()) {
       const plugins = [];
@@ -221,6 +263,16 @@ export class ModuleManager {
       await tool.addPluginOptions(plugins);
       yargs = yargs.command(tool);
     }
+
+    ModuleManager.LOGGER.info("Setting preset");
+    if (!this.presets.has(preset)) {
+      throw new Error(presetNotFound(preset));
+    }
+
+    yargs = yargs.middleware(
+      <Yargs.MiddlewareFunction>(<unknown>this.presets.get(preset).modifyArgs)
+    );
+
     return yargs;
   }
 }
