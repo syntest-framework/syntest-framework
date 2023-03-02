@@ -21,17 +21,4 @@ export class UserInterfaceExtends extends UserInterface {
   itemization(items: ItemizationItem[], indentation?: number): string {
     return super.itemization(items, indentation);
   }
-
-  title(text: string) {
-    return super.title(text);
-  }
-
-  table(
-    title: string,
-    headers: string[],
-    rows: string[][],
-    footers: string[]
-  ): string {
-    return super.table(title, headers, rows, footers);
-  }
 }

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { UserInterface } from "../lib/user-interfaces/UserInterface";
+import { Configuration } from "../lib/Configuration";
 const expect = chai.expect;
 
 /**
@@ -24,7 +24,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", async () => {
-    new UserInterface();
+    new Configuration();
     expect(true);
   });
 });
