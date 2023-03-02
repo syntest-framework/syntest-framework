@@ -21,7 +21,7 @@ import {
   MOSAFamily,
   StructuralObjectiveManager,
 } from "@syntest/core";
-import { pluginRequiresOptions } from "@syntest/cli";
+import { pluginRequiresOptions } from "@syntest/module";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,

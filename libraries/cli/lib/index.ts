@@ -15,18 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./module/plugins/UserInterfacePlugin";
-export * from "./module/plugins/PluginType";
-export * from "./module/plugins/ListenerPlugin";
-
-export * from "./module/Command";
-export * from "./module/Module";
-export * from "./module/Plugin";
-export * from "./module/Tool";
-
-export * from "./user-interfaces/UserInterface";
-
-export * from "./util/Configuration";
-export * from "./util/diagnostics";
-
-export * from "./ModuleManager";
+export * from "./Configuration";

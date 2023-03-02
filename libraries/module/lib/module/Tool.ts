@@ -37,7 +37,7 @@ export class Tool implements Yargs.CommandModule {
     describe: string,
     commands: Command[],
     toolOptions: Map<string, Yargs.Options>,
-    handler: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
+    handler?: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
   ) {
     this.name = name;
     this.labels = labels;
@@ -148,6 +148,11 @@ export class Tool implements Yargs.CommandModule {
 
     for (const option of this.toolOptions.keys()) {
       yargs = yargs.option(option, this.toolOptions.get(option));
+    }
+
+    // if no handler is provided, demand a subcommand
+    if (!this.handler) {
+      yargs = yargs.demandCommand();
     }
 
     return yargs.usage(`Usage: $0 ${this.command} <command> [options]`);

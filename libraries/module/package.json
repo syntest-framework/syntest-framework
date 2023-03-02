@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/init",
-  "version": "0.2.0-beta.2",
-  "description": "The setup application of the SynTest Framework",
+  "name": "@syntest/module",
+  "version": "0.0.1",
+  "description": "The module library of the SynTest Framework",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -42,10 +42,9 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/module": "^0.0.1",
+    "@syntest/cli-graphics": "^0.0.1",
     "@syntest/logging": "*",
-    "@syntest/cli-graphics": "*",
-    "shelljs": "^0.8.5"
+    "global-modules": "2.0.0"
   },
   "engines": {
     "node": ">=10.24.0"

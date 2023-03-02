@@ -18,18 +18,26 @@
  */
 
 import yargHelper = require("yargs/helpers");
-import { BaseOptions, Configuration } from "./util/Configuration";
-import { ModuleManager } from "./ModuleManager";
-import { getLogger, setupLogger } from "@syntest/logging";
-import * as path from "path";
+import { BaseOptions, Configuration } from "./Configuration";
 import {
-  DefaultUserInterfacePlugin,
-  UserInterfacePlugin,
-} from "./module/plugins/UserInterfacePlugin";
-import { ListenerPlugin } from "./module/plugins/ListenerPlugin";
-import { PluginType } from "./module/plugins/PluginType";
+  ModuleManager,
+  PluginType,
+  ListenerPlugin,
+  Configuration as ModuleConfiguration,
+} from "@syntest/module";
+import {
+  getLogger,
+  setupLogger,
+  Configuration as LogConfiguration,
+} from "@syntest/logging";
+import * as path from "path";
+import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
 
 async function main() {
+  // Setup user interface
+  const userInterface = new UserInterface();
+  userInterface.printTitle("SynTest");
+
   // Remove binary call from args
   const args = yargHelper.hideBin(process.argv);
 
@@ -43,6 +51,8 @@ async function main() {
 
   // Configure general options
   yargs = Configuration.configureOptions(yargs);
+  yargs = LogConfiguration.configureOptions(yargs);
+  yargs = ModuleConfiguration.configureOptions(yargs);
 
   // Parse the arguments and config using only the base options
   const baseArguments = yargs.wrap(yargs.terminalWidth()).parseSync(args);
@@ -65,20 +75,11 @@ async function main() {
 
   // Import defined modules
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
+  LOGGER.info("Loading standard modules...");
+  await ModuleManager.instance.loadModule("@syntest/init", "@syntest/init");
   LOGGER.info("Loading modules...", modules);
-  await ModuleManager.instance.loadModules(modules);
-  await ModuleManager.instance.loadPlugin(new DefaultUserInterfacePlugin());
+  await ModuleManager.instance.loadModules(modules, userInterface);
   yargs = await ModuleManager.instance.configureModules(yargs);
-
-  // Setup user interface
-  const userInterfacePlugin = ModuleManager.instance.getPlugin(
-    PluginType.UserInterface,
-    (<BaseOptions>(<unknown>baseArguments)).userInterface
-  );
-  const userInterface = (<UserInterfacePlugin>(
-    userInterfacePlugin
-  )).createUserInterface();
-  userInterface.printTitle();
 
   // Setup cleanup on exit handler
   process.on("exit", (code) => {
@@ -91,8 +92,28 @@ async function main() {
     LOGGER.info("Cleanup done! Exiting...");
   });
 
-  userInterface.printHeader("Modules loaded");
-  userInterface.printModules([...ModuleManager.instance.modules.values()]);
+  const itemization: ItemizationItem[] = [];
+  for (const module of ModuleManager.instance.modules.values()) {
+    itemization.push({
+      text: `Module: ${module.name} (${module.version})`,
+      subItems: [
+        {
+          text: `Tools: ${(await module.getTools()).length ? "" : "[]"}`,
+          subItems: (await module.getTools()).map((tool) => ({
+            text: `${tool.name}: ${tool.describe}`,
+          })),
+        },
+        {
+          text: `Plugins: ${(await module.getPlugins()).length ? "" : "[]"}`,
+          subItems: (await module.getPlugins()).map((plugin) => ({
+            text: `${plugin.name}: ${plugin.describe}`,
+          })),
+        },
+      ],
+    });
+  }
+
+  userInterface.printItemization("Module loaded:", itemization);
 
   // Register all listener plugins
   for (const plugin of ModuleManager.instance

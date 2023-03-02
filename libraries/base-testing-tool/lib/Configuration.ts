@@ -18,11 +18,11 @@
 
 import Yargs = require("yargs");
 import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
+import { LoggingOptions } from "@syntest/logging";
 import {
   GeneralOptions,
-  LoggingOptions,
   StorageOptions as CliStorageOptions,
-  OptionGroups as baseOptionGroups,
+  OptionGroups as CliOptionGroups,
 } from "@syntest/cli";
 
 export enum OptionGroups {
@@ -162,7 +162,7 @@ export class Configuration {
         default: "statistics",
         description:
           "The path where the csv should be saved (within the syntest-directory)",
-        group: baseOptionGroups.Storage,
+        group: CliOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -172,7 +172,7 @@ export class Configuration {
         default: "tests",
         description:
           "The path where the final test suite should be saved (within the syntest-directory)",
-        group: baseOptionGroups.Storage,
+        group: CliOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -182,7 +182,7 @@ export class Configuration {
         default: "tests",
         description:
           "Path to the temporary test directory (within the temp-syntest-directory)",
-        group: baseOptionGroups.Storage,
+        group: CliOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -192,7 +192,7 @@ export class Configuration {
         default: "logs",
         description:
           "Path to the temporary log directory (within the temp-syntest-directory)",
-        group: baseOptionGroups.Storage,
+        group: CliOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -202,7 +202,7 @@ export class Configuration {
         default: "instrumented",
         description:
           "Path to the temporary instrumented directory (within the temp-syntest-directory)",
-        group: baseOptionGroups.Storage,
+        group: CliOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",

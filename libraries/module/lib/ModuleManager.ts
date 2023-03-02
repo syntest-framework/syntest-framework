@@ -22,6 +22,7 @@ import Yargs = require("yargs");
 import { Plugin } from "./module/Plugin";
 import { Tool } from "./module/Tool";
 import { Module } from "./module/Module";
+import { UserInterface } from "@syntest/cli-graphics";
 
 import {
   moduleAlreadyLoaded,
@@ -31,17 +32,28 @@ import {
   modulePathNotFound,
   pluginAlreadyLoaded,
   pluginNotFound,
-  pluginsNotFound,
+  singletonAlreadySet,
+  singletonNotSet,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
 import { getLogger } from "@syntest/logging";
 
 export class ModuleManager {
   static LOGGER;
-  static instance: ModuleManager;
+  private static _instance: ModuleManager;
+
+  static get instance() {
+    if (!ModuleManager._instance) {
+      throw new Error(singletonNotSet("ModuleManager"));
+    }
+    return ModuleManager._instance;
+  }
 
   static initializeModuleManager() {
-    ModuleManager.instance = new ModuleManager();
+    if (ModuleManager._instance) {
+      throw new Error(singletonAlreadySet("ModuleManager"));
+    }
+    ModuleManager._instance = new ModuleManager();
     ModuleManager.LOGGER = getLogger("ModuleManager");
   }
 
@@ -138,9 +150,7 @@ export class ModuleManager {
     return modulePath;
   }
 
-  async loadModule(moduleId: string) {
-    ModuleManager.LOGGER.info(`Loading module: ${moduleId}`);
-    const modulePath = await this.getModulePath(moduleId);
+  async loadModule(moduleId: string, modulePath: string) {
     const { module } = await import(modulePath);
 
     const moduleInstance: Module = new module.default();
@@ -164,10 +174,13 @@ export class ModuleManager {
     ModuleManager.LOGGER.info(`Module loaded: ${moduleId}`);
   }
 
-  async loadModules(modules: string[]) {
+  async loadModules(modules: string[], userInterface: UserInterface) {
+    // Load modules
     for (const module of modules) {
       try {
-        await this.loadModule(module);
+        ModuleManager.LOGGER.info(`Loading module: ${module}`);
+        const modulePath = await this.getModulePath(module);
+        await this.loadModule(module, modulePath);
       } catch (e) {
         console.log(e);
         throw new Error(moduleCannotBeLoaded(module));
@@ -175,10 +188,16 @@ export class ModuleManager {
     }
 
     for (const module of this.modules.values()) {
+      // Inform the module about the other modules
+      module.modules = [...this.modules.values()];
+      module.userInterface = userInterface;
+
+      // Load tools
       for (const tool of await module.getTools()) {
         this.loadTool(tool);
       }
 
+      // Load plugins
       for (const plugin of await module.getPlugins()) {
         this.loadPlugin(plugin);
       }
