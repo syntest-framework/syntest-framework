@@ -20,6 +20,7 @@ jobs:
         with:
           # Use CI token that can override branch protection
           token: ${{ secrets.SYNTEST_CI }}
+          fetch-depth: 0
 
       # Setup, Caching, and .npmrc file to publish to npm
       - name: Use latest Node.js LTS version
@@ -51,14 +52,19 @@ jobs:
       - name: Core - Build
         run: npm run build
 
-      # Versioning and publishing
-      - name: "Core - Version and publish"
+      # Versioning
+      - name: "Core - Version"
         env:
           GH_TOKEN: ${{ secrets.SYNTEST_CI }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
         run: |
           npx lerna version --conventional-commits --conventional-prerelease --changelog-preset conventionalcommits --preid beta --no-changelog --no-git-tag-version --yes --loglevel silly
           git add .
           git commit -m "chore(release): release beta version"
           git push
-          npx lerna publish from-package --dist-tag beta --yes --loglevel silly
+      
+      # Publishing
+      - name: "Core - Publish"
+        env:
+          GH_TOKEN: ${{ secrets.SYNTEST_CI }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
+        run: npx lerna publish from-package --dist-tag beta --yes --loglevel silly
