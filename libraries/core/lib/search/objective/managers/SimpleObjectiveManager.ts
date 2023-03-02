@@ -20,7 +20,6 @@ import { ObjectiveManager } from "./ObjectiveManager";
 import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
-import { EncodingRunner } from "../../EncodingRunner";
 
 /**
  * A simple objective manager that always evaluates an encoding on all objectives.
@@ -31,23 +30,10 @@ export class SimpleObjectiveManager<
   T extends Encoding
 > extends ObjectiveManager<T> {
   /**
-   * Constructor.
-   *
-   * @param runner Encoding runner
-   */
-  public constructor(runner: EncodingRunner<T>) {
-    super(runner);
-  }
-
-  /**
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>,
-    encoding: T,
-    distance: number
-  ): void {
+  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
     // Remove objective from the uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
 

@@ -17,11 +17,13 @@
  */
 
 import {
+  BudgetManager,
   Encoding,
-  ObjectiveFunction,
+  ExceptionObjectiveFunction,
   StructuralObjectiveManager,
-  EncodingRunner,
+  TerminationManager,
 } from "@syntest/core";
+import * as crypto from "crypto";
 
 /**
  * sFuzz objective manager
@@ -37,55 +39,67 @@ export class SfuzzObjectiveManager<
   T extends Encoding
 > extends StructuralObjectiveManager<T> {
   /**
-   * Constructor.
-   *
-   * @param runner Encoding runner
+   * @inheritdoc
    */
-  constructor(runner: EncodingRunner<T>) {
-    super(runner);
-  }
-
-  /**
-   * @inheritDoc
-   * @protected
-   */
-  protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>,
+  public async evaluateOne(
     encoding: T,
-    distance: number
-  ): void {
-    // When objective is covered update objectives
-    if (distance === 0.0) {
-      // Remove objective from the current and uncovered objectives
-      this._uncoveredObjectives.delete(objectiveFunction);
-      this._currentObjectives.delete(objectiveFunction);
+    budgetManager: BudgetManager<T>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    terminationManager: TerminationManager
+  ): Promise<void> {
+    // Execute the encoding
+    const result = await this._runner.execute(this._subject, encoding);
+    budgetManager.evaluation(encoding);
 
-      // Add objective to the covered objectives and update the archive
-      this._coveredObjectives.add(objectiveFunction);
-      if (!this._archive.has(objectiveFunction)) {
-        this._archive.update(objectiveFunction, encoding);
+    // Store the execution result in the encoding
+    encoding.setExecutionResult(result);
+
+    // For all current objectives
+    this._currentObjectives.forEach((objectiveFunction) => {
+      // Calculate and store the distance
+      const distance = objectiveFunction.calculateDistance(encoding);
+      if (distance > 1) {
+        // This is to ignore the approach level
+        encoding.setDistance(objectiveFunction, 1);
       } else {
-        // If the objective is already in the archive we save the shortest encoding
-        const currentEncoding = this._archive.getEncoding(objectiveFunction);
-        if (currentEncoding.getLength() > encoding.getLength())
-          this._archive.update(objectiveFunction, encoding);
+        encoding.setDistance(objectiveFunction, distance);
       }
 
-      // Add the child objectives to the current objectives
-      this._subject
-        .getChildObjectives(objectiveFunction)
-        .forEach((objective) => {
-          if (
-            !this._coveredObjectives.has(objective) &&
-            !this._currentObjectives.has(objective)
-          )
-            this._currentObjectives.add(objective);
-        });
-    }
+      // When the objective is covered, update the objectives and the archive
+      if (distance === 0.0) {
+        // Update the objectives
+        this._updateObjectives(objectiveFunction);
 
-    if (distance > 1) {
-      // This is to ignore the approach level
-      encoding.setDistance(objectiveFunction, 1);
+        // Update the archive
+        this._updateArchive(objectiveFunction, encoding);
+      }
+    });
+
+    // Create separate exception objective when an exception occurred in the execution
+    if (result.hasExceptions()) {
+      // TODO there must be a better way
+      //  investigate error patterns somehow
+
+      const hash = crypto
+        .createHash("md5")
+        .update(result.getExceptions())
+        .digest("hex");
+
+      const numOfExceptions = this._archive
+        .getObjectives()
+        .filter((objective) => objective instanceof ExceptionObjectiveFunction)
+        .filter((objective) => objective.getIdentifier() === hash).length;
+      if (numOfExceptions === 0) {
+        // TODO this makes the archive become too large crashing the tool
+        this._archive.update(
+          new ExceptionObjectiveFunction(
+            this._subject,
+            hash,
+            result.getExceptions()
+          ),
+          encoding
+        );
+      }
     }
   }
 }

@@ -20,7 +20,6 @@ import { ObjectiveManager } from "./ObjectiveManager";
 import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
-import { EncodingRunner } from "../../EncodingRunner";
 import { NodeType } from "@syntest/cfg-core";
 
 /**
@@ -32,23 +31,10 @@ export class StructuralObjectiveManager<
   T extends Encoding
 > extends ObjectiveManager<T> {
   /**
-   * Constructor.
-   *
-   * @param runner Encoding runner
-   */
-  constructor(runner: EncodingRunner<T>) {
-    super(runner);
-  }
-
-  /**
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>,
-    encoding: T,
-    distance: number
-  ): void {
+  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
     this._currentObjectives.delete(objectiveFunction);

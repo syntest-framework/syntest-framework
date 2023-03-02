@@ -19,6 +19,7 @@ import {
   Encoding,
   RandomSearch,
   SearchAlgorithm,
+  SecondaryObjectiveComparator,
   SimpleObjectiveManager,
 } from "@syntest/core";
 import {
@@ -26,6 +27,7 @@ import {
   SearchAlgorithmOptions,
 } from "../SearchAlgorithmPlugin";
 import { pluginRequiresOptions } from "@syntest/cli";
+
 /**
  * Plugin for RandomSearch
  *
@@ -41,14 +43,16 @@ export class RandomSearchPlugin<
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
-    }
     if (!options.runner) {
       throw new Error(pluginRequiresOptions("RandomSearch", "runner"));
     }
+    if (!options.encodingSampler) {
+      throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
+    }
+
+    const secondaryObjectives = new Set<SecondaryObjectiveComparator<T>>();
     return new RandomSearch(
-      new SimpleObjectiveManager<T>(options.runner),
+      new SimpleObjectiveManager<T>(options.runner, secondaryObjectives),
       options.encodingSampler
     );
   }

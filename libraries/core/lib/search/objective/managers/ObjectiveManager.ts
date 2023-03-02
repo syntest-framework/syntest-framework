@@ -79,14 +79,18 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * Constructor.
    *
    * @param runner Encoding runner
-   * @protected
+   * @param secondaryObjectives Secondary objectives to use
    */
-  protected constructor(runner: EncodingRunner<T>) {
+  constructor(
+    runner: EncodingRunner<T>,
+    secondaryObjectives: Set<SecondaryObjectiveComparator<T>>
+  ) {
     this._archive = new Archive<T>();
     this._currentObjectives = new Set<ObjectiveFunction<T>>();
     this._coveredObjectives = new Set<ObjectiveFunction<T>>();
     this._uncoveredObjectives = new Set<ObjectiveFunction<T>>();
     this._runner = runner;
+    this._secondaryObjectives = secondaryObjectives;
   }
 
   /**
@@ -98,10 +102,44 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * @protected
    */
   protected abstract _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>,
-    encoding: T,
-    distance: number
+    objectiveFunction: ObjectiveFunction<T>
   ): void;
+
+  /**
+   * Update the archive.
+   *
+   * @param objectiveFunction
+   * @param encoding
+   * @protected
+   */
+  protected _updateArchive(
+    objectiveFunction: ObjectiveFunction<T>,
+    encoding: T
+  ) {
+    if (!this._archive.has(objectiveFunction)) {
+      this._archive.update(objectiveFunction, encoding);
+    } else {
+      // If the objective is already in the archive we use secondary objectives
+      const currentEncoding = this._archive.getEncoding(objectiveFunction);
+
+      // Look at secondary objectives when two solutions are found
+      for (const secondaryObjective of this._secondaryObjectives) {
+        const comparison = secondaryObjective.compare(
+          encoding,
+          currentEncoding
+        );
+
+        // If one of the two encodings is better, don't evaluate the next objectives
+        if (comparison != 0) {
+          // Override the encoding if the current one is better
+          if (comparison > 0) {
+            this._archive.update(objectiveFunction, encoding);
+          }
+          break;
+        }
+      }
+    }
+  }
 
   /**
    * Evaluate multiple encodings on the current objectives.
@@ -153,31 +191,10 @@ export abstract class ObjectiveManager<T extends Encoding> {
       // When the objective is covered, update the objectives and the archive
       if (distance === 0.0) {
         // Update the objectives
-        this._updateObjectives(objectiveFunction, encoding, distance);
+        this._updateObjectives(objectiveFunction);
 
-        if (!this._archive.has(objectiveFunction)) {
-          this._archive.update(objectiveFunction, encoding);
-        } else {
-          // If the objective is already in the archive we use secondary objectives
-          const currentEncoding = this._archive.getEncoding(objectiveFunction);
-
-          // Look at secondary objectives when two solutions are found
-          for (const secondaryObjective of this._secondaryObjectives) {
-            const comparison = secondaryObjective.compare(
-              encoding,
-              currentEncoding
-            );
-
-            // If one of the two encodings is better, don't evaluate the next objectives
-            if (comparison != 0) {
-              // Override the encoding if the current one is better
-              if (comparison > 0) {
-                this._archive.update(objectiveFunction, encoding);
-              }
-              break;
-            }
-          }
-        }
+        // Update the archive
+        this._updateArchive(objectiveFunction, encoding);
       }
     });
 
