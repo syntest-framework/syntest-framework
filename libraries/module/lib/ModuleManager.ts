@@ -22,6 +22,7 @@ import Yargs = require("yargs");
 import { Plugin } from "./module/Plugin";
 import { Tool } from "./module/Tool";
 import { Module } from "./module/Module";
+import { UserInterface } from "@syntest/cli-graphics";
 
 import {
   moduleAlreadyLoaded,
@@ -173,7 +174,7 @@ export class ModuleManager {
     ModuleManager.LOGGER.info(`Module loaded: ${moduleId}`);
   }
 
-  async loadModules(modules: string[]) {
+  async loadModules(modules: string[], userInterface: UserInterface) {
     // Load modules
     for (const module of modules) {
       try {
@@ -189,6 +190,7 @@ export class ModuleManager {
     for (const module of this.modules.values()) {
       // Inform the module about the other modules
       module.modules = [...this.modules.values()];
+      module.userInterface = userInterface;
 
       // Load tools
       for (const tool of await module.getTools()) {

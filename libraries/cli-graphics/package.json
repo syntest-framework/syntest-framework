@@ -43,7 +43,11 @@
   },
   "dependencies": {
     "@syntest/logging": "*",
-    "global-modules": "2.0.0"
+    "chalk": "4.1.1",
+    "clear": "0.1.0",
+    "cli-progress": "3.11.2",
+    "figlet": "1.5.2",
+    "table": "^6.8.1"
   },
   "engines": {
     "node": ">=10.24.0"

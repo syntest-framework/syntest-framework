@@ -15,8 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./plugins/UserInterfacePlugin";
-
-export * from "./user-interfaces/UserInterface";
-
 export * from "./Configuration";

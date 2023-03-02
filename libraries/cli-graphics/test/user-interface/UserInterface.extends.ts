@@ -15,7 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  UserInterface = "UserInterface",
-  Listener = "Listener",
+import { ItemizationItem, UserInterface } from "../../lib/UserInterface";
+
+export class UserInterfaceExtends extends UserInterface {
+  itemization(items: ItemizationItem[], indentation?: number): string {
+    return super.itemization(items, indentation);
+  }
+
+  title(text: string) {
+    return super.title(text);
+  }
+
+  table(
+    title: string,
+    headers: string[],
+    rows: string[][],
+    footers: string[]
+  ): string {
+    return super.table(title, headers, rows, footers);
+  }
 }

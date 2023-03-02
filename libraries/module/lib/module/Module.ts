@@ -17,11 +17,12 @@
  */
 import { Plugin } from "./Plugin";
 import { Tool } from "./Tool";
-
+import { UserInterface } from "@syntest/cli-graphics";
 export abstract class Module {
   name: Readonly<string>;
   version: Readonly<string>;
   _modules: Module[];
+  _userInterface: UserInterface;
 
   constructor(name: string, version: string) {
     this.name = name;
@@ -34,6 +35,14 @@ export abstract class Module {
 
   get modules() {
     return this._modules;
+  }
+
+  set userInterface(userInterface: UserInterface) {
+    this._userInterface = userInterface;
+  }
+
+  get userInterface() {
+    return this._userInterface;
   }
 
   abstract getTools(): Promise<Tool[]> | Tool[];
