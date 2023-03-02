@@ -43,8 +43,9 @@
   },
   "dependencies": {
     "@syntest/module": "^0.0.1",
-    "shelljs": "^0.8.5",
-    "@syntest/cli": "^0.2.0-beta.2"
+    "@syntest/logging": "*",
+    "@syntest/cli-graphics": "*",
+    "shelljs": "^0.8.5"
   },
   "engines": {
     "node": ">=10.24.0"
