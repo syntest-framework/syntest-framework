@@ -28,7 +28,7 @@ export class UserInterface {
   private print(text: string): void {
     // If we are using progress bars, we need to print to above the bars
     if (this.barObject) {
-      this.barObject.log(text);
+      this.barObject.log(text + "\n");
       return;
     }
     console.log(text);
@@ -79,6 +79,8 @@ export class UserInterface {
       {
         hideCursor: true,
         format: this.barFormatter,
+        barCompleteChar: "\u2588",
+        barIncompleteChar: "\u2591",
       },
       cliProgress.Presets.shades_grey
     );
@@ -89,6 +91,9 @@ export class UserInterface {
   }
 
   updateProgressBar(bar: BarObject): void {
+    if (!this.bars) {
+      throw new Error("Progress bars have not been started yet");
+    }
     if (!this.bars.has(bar.name)) {
       throw new Error(`Progress bar with name ${bar.name} does not exist`);
     }
@@ -106,8 +111,35 @@ export class UserInterface {
     this.barObject.stop();
   }
 
-  protected barFormatter(options, params, payload): string {
-    return "{bar} {percentage}% | ETA: {eta}s | {value}/{total} | {meta}";
+  protected barFormatter(
+    options: cliProgress.Options,
+    params: cliProgress.Params,
+    payload: Payload
+  ): string {
+    const bar =
+      chalk.green(
+        options.barCompleteString.substring(
+          0,
+          Math.round(params.progress * options.barsize)
+        )
+      ) +
+      options.barIncompleteString.substring(
+        0,
+        options.barsize - Math.round(params.progress * options.barsize)
+      );
+
+    const percentage = Math.round(params.progress * 100);
+    const str = `${bar} ${percentage}% | ETA: ${params.eta}s | ${
+      params.value
+    }/${params.total} | ${payload.meta || ""}`;
+
+    if (params.value >= params.total) {
+      return chalk.greenBright(str);
+    }
+
+    return str;
+
+    // return "{bar} {percentag/e}% | ETA: {eta}s | {value}/{total} | {meta}";
     // if (params.value >= params.total){
     //   return '# ' + chalk.grey(payload.task) + '   ' + chalk.green(params.value + '/' + params.total) + ' --[' + bar + ']-- ';
     // }else{
@@ -190,5 +222,9 @@ export type BarObject = {
   name: string;
   value: number;
   maxValue: number;
+  meta: string;
+};
+
+type Payload = {
   meta: string;
 };

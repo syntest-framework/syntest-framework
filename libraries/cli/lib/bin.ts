@@ -19,11 +19,19 @@
 
 import yargHelper = require("yargs/helpers");
 import { BaseOptions, Configuration } from "./Configuration";
-import { ModuleManager, PluginType, ListenerPlugin } from "@syntest/module";
-import { getLogger, setupLogger } from "@syntest/logging";
+import {
+  ModuleManager,
+  PluginType,
+  ListenerPlugin,
+  Configuration as ModuleConfiguration,
+} from "@syntest/module";
+import {
+  getLogger,
+  setupLogger,
+  Configuration as LogConfiguration,
+} from "@syntest/logging";
 import * as path from "path";
 import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
-import { use } from "chai";
 
 async function main() {
   // Setup user interface
@@ -43,6 +51,8 @@ async function main() {
 
   // Configure general options
   yargs = Configuration.configureOptions(yargs);
+  yargs = LogConfiguration.configureOptions(yargs);
+  yargs = ModuleConfiguration.configureOptions(yargs);
 
   // Parse the arguments and config using only the base options
   const baseArguments = yargs.wrap(yargs.terminalWidth()).parseSync(args);
@@ -88,13 +98,13 @@ async function main() {
       text: `Module: ${module.name} (${module.version})`,
       subItems: [
         {
-          text: "Tools:",
+          text: `Tools: ${(await module.getTools()).length ? "" : "[]"}`,
           subItems: (await module.getTools()).map((tool) => ({
             text: `${tool.name}: ${tool.describe}`,
           })),
         },
         {
-          text: "Plugins:",
+          text: `Plugins: ${(await module.getPlugins()).length ? "" : "[]"}`,
           subItems: (await module.getPlugins()).map((plugin) => ({
             text: `${plugin.name}: ${plugin.describe}`,
           })),
