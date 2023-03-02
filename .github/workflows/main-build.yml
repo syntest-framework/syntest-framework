@@ -1,7 +1,9 @@
-name: pr-quality
+name: main-build
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
     paths-ignore:
       - "docs/"
       - "**.md"
@@ -11,8 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  quality:
-    name: Verify Code Quality
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       # Cloning
@@ -32,10 +34,6 @@ jobs:
       - name: Core - Install Dependencies
         run: npm ci
 
-      # Formatting
-      - name: Core - Run Formatter
-        run: npm run format:check
-
-      # Linting
-      - name: Core - Run Linter
-        run: npm run lint
+      # Building
+      - name: Core - Build
+        run: npm run build
