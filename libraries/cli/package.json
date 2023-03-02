@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli",
-  "version": "0.2.0-beta.0",
+  "version": "0.2.0-beta.2",
   "description": "The cli of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@syntest/init": "^0.2.0-beta.0",
-    "@syntest/logging": "*",
+    "@syntest/logging": "^0.1.0-beta.1",
     "@syntest/module": "^0.0.1",
     "chalk": "4.1.1",
     "clear": "0.1.0",

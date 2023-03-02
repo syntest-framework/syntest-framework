@@ -1,7 +1,9 @@
-name: pr-quality
+name: main-quality
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
     paths-ignore:
       - "docs/"
       - "**.md"

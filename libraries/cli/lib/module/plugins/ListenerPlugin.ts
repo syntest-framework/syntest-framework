@@ -15,3 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Plugin } from "@syntest/module";
+import { PluginType } from "./PluginType";
+
+export abstract class ListenerPlugin extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.Listener, name, describe);
+  }
+
+  abstract setupEventListener(): void;
+}
