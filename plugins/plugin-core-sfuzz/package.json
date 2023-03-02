@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-sfuzz",
-  "version": "1.0.0-beta.0",
+  "version": "0.4.0-beta.0",
   "description": "A plugin for the SynTest Core containing the Sfuzz modules",
   "keywords": [
     "syntest",
