@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli",
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0-beta.3",
   "description": "The cli of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -45,10 +45,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.0.1",
-    "@syntest/init": "^0.2.0-beta.0",
-    "@syntest/logging": "^0.1.0-beta.1",
-    "@syntest/module": "^0.0.1",
+    "@syntest/cli-graphics": "^0.1.0-beta.0",
+    "@syntest/init": "^0.2.0-beta.3",
+    "@syntest/logging": "^0.1.0-beta.2",
+    "@syntest/module": "^0.1.0-beta.0",
     "global-modules": "2.0.0",
     "globby": "11.0.4",
     "yargs": "17.6.2"
