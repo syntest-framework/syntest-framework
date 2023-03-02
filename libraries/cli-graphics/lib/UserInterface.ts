@@ -22,10 +22,10 @@ import { table } from "table";
 import * as cliProgress from "cli-progress";
 
 export class UserInterface {
-  private barObject: cliProgress.MultiBar;
-  private bars: Map<string, cliProgress.Bar>;
+  protected barObject: cliProgress.MultiBar;
+  protected bars: Map<string, cliProgress.Bar>;
 
-  private print(text: string): void {
+  protected print(text: string): void {
     // If we are using progress bars, we need to print to above the bars
     if (this.barObject) {
       this.barObject.log(text + "\n");
@@ -35,7 +35,7 @@ export class UserInterface {
   }
 
   // Text manipulation methods
-  indent(text: string, amount: number): string {
+  protected indent(text: string, amount: number): string {
     return " ".repeat(amount) + text;
   }
 
@@ -109,6 +109,8 @@ export class UserInterface {
 
   stopProgressBars(): void {
     this.barObject.stop();
+    this.barObject = undefined;
+    this.bars = undefined;
   }
 
   protected barFormatter(
