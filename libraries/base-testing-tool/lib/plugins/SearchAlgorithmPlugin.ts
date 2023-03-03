@@ -20,8 +20,8 @@ import {
   Encoding,
   EncodingRunner,
   EncodingSampler,
-  SearchAlgorithm,
   ObjectiveManager,
+  SearchAlgorithm,
 } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 

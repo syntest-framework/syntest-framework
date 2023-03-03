@@ -17,15 +17,15 @@
  */
 import {
   Encoding,
-  SearchAlgorithm,
   MOSAFamily,
+  SearchAlgorithm,
   StructuralObjectiveManager,
 } from "@syntest/core";
 import { pluginRequiresOptions } from "@syntest/module";
 
 import {
-  SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
 } from "../SearchAlgorithmPlugin";
 
 /**

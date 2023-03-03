@@ -24,8 +24,8 @@ import {
 import { pluginRequiresOptions } from "@syntest/module";
 
 import {
-  SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
 } from "../SearchAlgorithmPlugin";
 /**
  * Plugin for RandomSearch

@@ -17,8 +17,8 @@
  */
 
 import {
-  SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
 } from "@syntest/base-testing-tool";
 import { Encoding, SearchAlgorithm } from "@syntest/core";
 import { pluginRequiresOptions } from "@syntest/module";

@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import { BranchNode, ControlFlowGraph, NodeType, RootNode, Node } from "../lib";
+import { BranchNode, ControlFlowGraph, Node, NodeType, RootNode } from "../lib";
 
 const expect = chai.expect;
 

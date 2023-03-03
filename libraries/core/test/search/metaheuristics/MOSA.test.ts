@@ -18,10 +18,10 @@
 import * as chai from "chai";
 
 import {
+  BranchObjectiveFunction,
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
-  BranchObjectiveFunction,
 } from "../../../lib";
 import { MOSAFamily } from "../../../lib/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";

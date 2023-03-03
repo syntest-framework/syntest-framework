@@ -43,6 +43,12 @@
         "newlines-between": "always"
       }
     ],
+    "sort-imports": ["error",
+      {
+        "ignoreDeclarationSort": true,
+        "ignoreCase": true
+      }
+    ],
     "notice/notice":["error",
       { 
         "templateFile": "./LICENSE.header.ts",

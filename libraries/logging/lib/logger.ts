@@ -18,10 +18,10 @@
 import * as path from "path";
 
 import {
-  Logger,
-  LoggerOptions,
   createLogger,
   format,
+  Logger,
+  LoggerOptions,
   transports,
 } from "winston";
 

@@ -19,12 +19,12 @@
 import { getLogger } from "@syntest/logging";
 
 import {
-  ObjectiveManager,
-  EncodingSampler,
-  ObjectiveFunction,
-  Encoding,
   Crossover,
   crowdingDistance,
+  Encoding,
+  EncodingSampler,
+  ObjectiveFunction,
+  ObjectiveManager,
 } from "../../..";
 import { shouldNeverHappen } from "../../../util/diagnostics";
 import { DominanceComparator } from "../../comparators/DominanceComparator";

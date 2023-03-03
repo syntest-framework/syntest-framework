@@ -17,9 +17,9 @@
  */
 
 import {
-  GeneralOptions,
-  StorageOptions as CliStorageOptions,
   OptionGroups as CliOptionGroups,
+  StorageOptions as CliStorageOptions,
+  GeneralOptions,
 } from "@syntest/cli";
 import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
 import { LoggingOptions } from "@syntest/logging";

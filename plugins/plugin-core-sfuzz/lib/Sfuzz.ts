@@ -17,10 +17,10 @@
  */
 
 import {
-  Encoding,
-  MOSAFamily,
-  EncodingSampler,
   Crossover,
+  Encoding,
+  EncodingSampler,
+  MOSAFamily,
   ObjectiveManager,
   shouldNeverHappen,
 } from "@syntest/core";

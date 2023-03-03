@@ -17,10 +17,10 @@
  */
 
 import {
-  ControlFlowGraph,
-  Node,
   BranchNode,
+  ControlFlowGraph,
   Edge,
+  Node,
   NodeType,
 } from "@syntest/cfg-core";
 

@@ -18,8 +18,8 @@
 import * as chai from "chai";
 
 import {
-  crowdingDistance,
   BranchObjectiveFunction,
+  crowdingDistance,
   ObjectiveFunction,
 } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";

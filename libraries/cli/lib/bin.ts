@@ -19,17 +19,17 @@
 
 import * as path from "path";
 
-import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
+import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
 import {
   getLogger,
-  setupLogger,
   Configuration as LogConfiguration,
+  setupLogger,
 } from "@syntest/logging";
 import {
-  ModuleManager,
-  PluginType,
   ListenerPlugin,
   Configuration as ModuleConfiguration,
+  ModuleManager,
+  PluginType,
 } from "@syntest/module";
 import yargHelper = require("yargs/helpers");
 

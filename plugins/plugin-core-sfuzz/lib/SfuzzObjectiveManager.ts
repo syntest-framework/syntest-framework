@@ -18,9 +18,9 @@
 
 import {
   Encoding,
+  EncodingRunner,
   ObjectiveFunction,
   StructuralObjectiveManager,
-  EncodingRunner,
 } from "@syntest/core";
 
 /**
