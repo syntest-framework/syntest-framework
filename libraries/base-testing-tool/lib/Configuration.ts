@@ -213,6 +213,7 @@ export class Configuration {
   configureAlgorithmOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // algorithm settings
         .options({
           algorithm: {
@@ -263,6 +264,7 @@ export class Configuration {
   configureBudgetOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // time settings
         .options({
           "total-time-budget": {
@@ -304,6 +306,7 @@ export class Configuration {
   configurePostProcessingOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // post processing
         .options({
           "test-minimization": {
@@ -321,6 +324,7 @@ export class Configuration {
   configureSamplingOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // random number generator settings
         .options({
           seed: {
@@ -332,6 +336,7 @@ export class Configuration {
             hidden: false,
             type: "string",
           },
+
           // sampling settings
           "max-depth": {
             alias: [],
@@ -358,6 +363,7 @@ export class Configuration {
             hidden: false,
             type: "boolean",
           },
+
           // mutation settings
           "explore-illegal-values": {
             alias: [],
@@ -368,6 +374,7 @@ export class Configuration {
             hidden: false,
             type: "boolean",
           },
+
           // probability settings
           "resample-gene-probability": {
             alias: [],
@@ -421,6 +428,7 @@ export class Configuration {
             hidden: false,
             type: "number",
           },
+
           // gene defaults
           "string-alphabet": {
             alias: [],
@@ -454,6 +462,7 @@ export class Configuration {
   configureResearchModeOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // Research mode options
         // TODO should be moved to research mode plugin
         .options({

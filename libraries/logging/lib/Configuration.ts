@@ -31,6 +31,7 @@ export class Configuration {
   static configureOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // logging options
         .options("log-directory", {
           alias: [],

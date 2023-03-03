@@ -43,6 +43,7 @@ export interface Plugin {
     tool: string,
     labels: string[]
   ): Promise<Map<string, Yargs.Options>>;
+
   /**
    *
    * @param tool the tool the plugin provides additional choices for

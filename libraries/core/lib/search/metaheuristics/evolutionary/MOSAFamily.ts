@@ -271,10 +271,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         if (
           population[index].getDistance(objective) <
           chosen.getDistance(objective)
-        )
+        ) {
           // if lower fitness, than it is better
           chosen = population[index];
-        else if (
+        } else if (
           population[index].getDistance(objective) ==
           chosen.getDistance(objective)
         ) {

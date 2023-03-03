@@ -27,6 +27,7 @@ import {
   SearchAlgorithmOptions,
   SearchAlgorithmPlugin,
 } from "../SearchAlgorithmPlugin";
+
 /**
  * Plugin for RandomSearch
  *

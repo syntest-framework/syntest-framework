@@ -43,6 +43,7 @@ export class Configuration {
   static configureUsage() {
     return (
       Yargs.usage(`Usage: syntest <tool> <command> [options]`)
+
         // TODO examples
         .epilog("visit https://syntest.org for more documentation")
     );
@@ -60,6 +61,7 @@ export class Configuration {
           config: true,
           type: "string",
         })
+
         // ui
         .option("user-interface", {
           alias: [],
@@ -69,6 +71,7 @@ export class Configuration {
           hidden: false,
           type: "string",
         })
+
         // storage
         .options("syntest-directory", {
           alias: [],

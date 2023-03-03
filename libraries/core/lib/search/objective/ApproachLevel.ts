@@ -91,10 +91,12 @@ export class ApproachLevel {
 
       for (const pairOfParent of parentsOfCurrent) {
         const nextNodeId = pairOfParent.first;
+
         // ignore if already visited node
         if (visitedNodeIdSet.has(nextNodeId)) {
           continue;
         }
+
         // return if one of targets nodes was found
         if (targets.has(nextNodeId)) {
           return {
@@ -102,6 +104,7 @@ export class ApproachLevel {
             closestCoveredBranch: cfg.getNodeById(nextNodeId),
           };
         }
+
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(nextNodeId);
         searchQueue.push({

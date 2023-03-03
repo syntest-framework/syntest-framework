@@ -38,6 +38,7 @@ import { TerminationManager } from "../termination/TerminationManager";
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
   static LOGGER = getLogger("SearchAlgorithm");
+
   /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected
@@ -101,6 +102,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     terminationManager: TerminationManager
   ): Promise<Archive<T>> {
     SearchAlgorithm.LOGGER.info("Starting search");
+
     // Load search subject into the objective manager
     this._objectiveManager.load(subject);
 
@@ -195,6 +197,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     for (const key of this._objectiveManager.getArchive().getObjectives()) {
       const test = this._objectiveManager.getArchive().getEncoding(key);
       const result: ExecutionResult = test.getExecutionResult();
+
       // TODO this does not work when there are files with the same name in different directories!!
       const paths = key.getSubject().path.split("/");
       const fileName = paths[paths.length - 1];
@@ -223,6 +226,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     for (const key of this._objectiveManager.getArchive().getObjectives()) {
       const test = this._objectiveManager.getArchive().getEncoding(key);
       const result: ExecutionResult = test.getExecutionResult();
+
       // TODO this does not work when there are files with the same name in different directories!!
       const paths = key.getSubject().path.split("/");
       const fileName = paths[paths.length - 1];
@@ -243,6 +247,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     }
     return total.size - covered.size;
   }
+
   /**
    * The progress of the search process.
    */

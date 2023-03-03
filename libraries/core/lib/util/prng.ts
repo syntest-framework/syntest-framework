@@ -90,6 +90,7 @@ export const prng = {
     const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min);
   },
+
   /**
    * Uses the Box-Muller transform to get a gaussian random variable.
    *

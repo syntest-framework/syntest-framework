@@ -60,6 +60,7 @@ export class ModuleManager {
 
   private _modules: Map<string, Module>;
   private _tools: Map<string, Tool>;
+
   // type -> name -> plugin
   private _plugins: Map<string, Map<string, Plugin>>;
 

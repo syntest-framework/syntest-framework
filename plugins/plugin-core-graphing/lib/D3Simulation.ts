@@ -143,6 +143,7 @@ export function createSimulation(cfg: ControlFlowGraph) {
       const dx = x2 - x1;
       const dy = y2 - y1;
       const dr = Math.sqrt(dx * dx + dy * dy);
+
       // Defaults for normal edge.
       let drx = dr;
       let dry = dr;

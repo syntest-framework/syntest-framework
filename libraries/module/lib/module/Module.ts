@@ -60,6 +60,7 @@ export interface Module {
    * Called after the initialization step
    */
   prepare?(): Promise<void> | void;
+
   /**
    * Called before the exit step
    */

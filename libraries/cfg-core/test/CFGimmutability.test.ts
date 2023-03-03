@@ -44,8 +44,10 @@ describe("CFG Immutability check", function () {
     const retrievedNodes: Node[] = cfg.nodes;
     const rootNode = cfg.nodes.at(0);
     expect(rootNode?.lines).to.empty;
+
     // nodes.at(0)!.lines = [23]; // <- this will not compile because of readonly
     expect(nodes.at(0)!.lines).to.empty;
+
     // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
     nodes.push({
       type: NodeType.Normal,
@@ -55,6 +57,7 @@ describe("CFG Immutability check", function () {
     });
     expect(cfg.nodes.at(1)?.lines).to.eql([26]);
     expect(cfg.nodes.length).to.not.equal(nodes.length);
+
     // expect(cfg.get_nodes().at(0)?.lines = [23]).to.throw(); <- this will not compile
 
     console.log(retrievedNodes);

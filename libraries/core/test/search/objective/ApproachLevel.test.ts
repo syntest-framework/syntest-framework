@@ -31,6 +31,7 @@ describe("CFG ancestors search", function () {
   beforeEach(function () {
     let nodes;
     let edges;
+
     // Construct cfgMini
     nodes = [
       {
@@ -106,6 +107,7 @@ describe("CFG ancestors search", function () {
         statements: [],
       });
     }
+
     // false branch on the picture is always on the left
     edges = [
       { from: "A", to: "B", branchType: false },
