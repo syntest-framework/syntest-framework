@@ -18,7 +18,7 @@
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
-    //"project": true,
+    //"project": "./lib/tsconfig.json",
     //"tsconfigRootDir": "."
   },
   "settings": {
