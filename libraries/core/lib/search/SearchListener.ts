@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
+import { BudgetManager } from "./budget/BudgetManager";
 import { Encoding } from "./Encoding";
 import { SearchAlgorithm } from "./metaheuristics/SearchAlgorithm";
-import { BudgetManager } from "./budget/BudgetManager";
 import { TerminationManager } from "./termination/TerminationManager";
 
 export interface SearchListener<T extends Encoding> {

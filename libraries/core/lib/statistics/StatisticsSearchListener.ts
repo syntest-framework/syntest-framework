@@ -16,13 +16,14 @@
  * limitations under the License.
  */
 
-import { SearchListener } from "../search/SearchListener";
+import { BudgetManager } from "../search/budget/BudgetManager";
 import { Encoding } from "../search/Encoding";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
-import { BudgetManager } from "../search/budget/BudgetManager";
+import { SearchListener } from "../search/SearchListener";
 import { TerminationManager } from "../search/termination/TerminationManager";
-import { StatisticsCollector } from "./StatisticsCollector";
+
 import { RuntimeVariable } from "./RuntimeVariable";
+import { StatisticsCollector } from "./StatisticsCollector";
 
 /**
  * A search listener that updates the statistics over time.

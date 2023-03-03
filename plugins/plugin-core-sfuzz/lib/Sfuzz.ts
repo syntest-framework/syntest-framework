@@ -22,8 +22,8 @@ import {
   EncodingSampler,
   Crossover,
   ObjectiveManager,
+  shouldNeverHappen,
 } from "@syntest/core";
-import { shouldNeverHappen } from "@syntest/core";
 import { getLogger } from "@syntest/logging";
 
 /**

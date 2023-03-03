@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-import { Budget } from "./Budget";
 import { Encoding } from "../Encoding";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+
+import { Budget } from "./Budget";
 
 /**
  * Budget for the number of iterations performed during the search process.

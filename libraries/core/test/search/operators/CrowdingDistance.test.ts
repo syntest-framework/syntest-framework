@@ -16,9 +16,13 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { crowdingDistance } from "../../../lib";
+
+import {
+  crowdingDistance,
+  BranchObjectiveFunction,
+  ObjectiveFunction,
+} from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
-import { BranchObjectiveFunction, ObjectiveFunction } from "../../../lib";
 
 const expect = chai.expect;
 

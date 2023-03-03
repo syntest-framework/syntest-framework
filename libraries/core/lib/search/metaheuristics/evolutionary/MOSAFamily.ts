@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { getLogger } from "@syntest/logging";
+
 import {
   ObjectiveManager,
   EncodingSampler,
@@ -24,10 +26,10 @@ import {
   Crossover,
   crowdingDistance,
 } from "../../..";
-import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
-import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { shouldNeverHappen } from "../../../util/diagnostics";
-import { getLogger } from "@syntest/logging";
+import { DominanceComparator } from "../../comparators/DominanceComparator";
+
+import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).

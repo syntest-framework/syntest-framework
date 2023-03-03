@@ -16,15 +16,16 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../Encoding";
-import { ObjectiveFunction } from "../ObjectiveFunction";
-import { Archive } from "../../Archive";
-import { SearchSubject } from "../../SearchSubject";
-import { EncodingRunner } from "../../EncodingRunner";
-import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import * as crypto from "crypto";
+
+import { Archive } from "../../Archive";
 import { BudgetManager } from "../../budget/BudgetManager";
+import { Encoding } from "../../Encoding";
+import { EncodingRunner } from "../../EncodingRunner";
+import { SearchSubject } from "../../SearchSubject";
 import { TerminationManager } from "../../termination/TerminationManager";
+import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
+import { ObjectiveFunction } from "../ObjectiveFunction";
 
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.

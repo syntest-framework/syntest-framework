@@ -17,6 +17,7 @@
  */
 import { Encoding, TerminationTrigger } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export type TerminationOptions<T extends Encoding> = unknown;

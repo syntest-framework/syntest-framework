@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Command } from "@syntest/module";
 import { writeFileSync } from "fs";
-import Yargs = require("yargs");
 import * as path from "path";
+
+import { Command } from "@syntest/module";
 import shell = require("shelljs");
+import Yargs = require("yargs");
 
 export type ModuleOptions = {
   moduleName: string;

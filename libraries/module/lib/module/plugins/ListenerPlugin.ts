@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { Plugin } from "../Plugin";
+
 import { PluginType } from "./PluginType";
 
 export abstract class ListenerPlugin extends Plugin {

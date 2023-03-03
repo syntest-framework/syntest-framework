@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 
 export class DominanceComparator {
   /**

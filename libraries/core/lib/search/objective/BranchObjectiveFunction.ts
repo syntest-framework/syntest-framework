@@ -16,12 +16,14 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
-import { Encoding } from "../Encoding";
 import { ControlFlowGraph, Node, NodeType } from "@syntest/cfg-core";
-import { SearchSubject } from "../SearchSubject";
-import { BranchDistance } from "../objective/BranchDistance";
+
 import { Datapoint } from "../../util/Datapoint";
+import { Encoding } from "../Encoding";
+import { BranchDistance } from "../objective/BranchDistance";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
+import { SearchSubject } from "../SearchSubject";
+
 import { ApproachLevel } from "./ApproachLevel";
 
 /**

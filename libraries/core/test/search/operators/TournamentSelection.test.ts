@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import { BranchObjectiveFunction } from "../../../lib";
-import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { tournamentSelection } from "../../../lib/search/operators/selection/TournamentSelection";
 import { minimumValue } from "../../../lib/util/diagnostics";
+import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 

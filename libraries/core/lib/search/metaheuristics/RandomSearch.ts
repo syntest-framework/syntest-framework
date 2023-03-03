@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
-import { SearchAlgorithm } from "./SearchAlgorithm";
+import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
 import { EncodingSampler } from "../EncodingSampler";
-import { BudgetManager } from "../budget/BudgetManager";
-import { TerminationManager } from "../termination/TerminationManager";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { TerminationManager } from "../termination/TerminationManager";
+
+import { SearchAlgorithm } from "./SearchAlgorithm";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.

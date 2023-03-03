@@ -17,8 +17,9 @@
  */
 
 import { Encoding } from "../Encoding";
-import { Budget } from "./Budget";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+
+import { Budget } from "./Budget";
 
 /**
  * Budget for the number of iteration performed without progress during the search process.

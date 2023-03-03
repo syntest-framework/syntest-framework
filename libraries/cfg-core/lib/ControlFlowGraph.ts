@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
-import { Node, NodeType } from "./nodes/Node";
-import { Edge } from "./Edge";
-import { Pair } from "./util/Pair";
 import cloneDeep = require("lodash.clonedeep");
+
+import { Edge } from "./Edge";
+import { Node, NodeType } from "./nodes/Node";
+import { Pair } from "./util/Pair";
 
 export class ControlFlowGraph {
   private readonly _nodes: Node[];

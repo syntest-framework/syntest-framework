@@ -16,15 +16,17 @@
  * limitations under the License.
  */
 
-import { Encoding, Events, TargetPool } from "@syntest/core";
-import Yargs = require("yargs");
-import { ListenerPlugin } from "@syntest/module";
-import { OptionGroups as CliOptionGroups } from "@syntest/cli";
-import { CONFIG } from "@syntest/base-testing-tool";
-import { createSimulation } from "./D3Simulation";
 import { writeFileSync } from "fs";
+
+import { CONFIG } from "@syntest/base-testing-tool";
 import { ControlFlowGraph } from "@syntest/cfg-core";
+import { OptionGroups as CliOptionGroups } from "@syntest/cli";
+import { Encoding, Events, TargetPool } from "@syntest/core";
+import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
+import Yargs = require("yargs");
+
+import { createSimulation } from "./D3Simulation";
 
 export type GraphOptions = {
   cfgDirectory: string;

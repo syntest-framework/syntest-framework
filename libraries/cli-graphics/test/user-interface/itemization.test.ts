@@ -16,8 +16,11 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { UserInterfaceExtends } from "./UserInterface.extends";
+
 import { ItemizationItem } from "../../lib/UserInterface";
+
+import { UserInterfaceExtends } from "./UserInterface.extends";
+
 const expect = chai.expect;
 
 /**

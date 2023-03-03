@@ -17,6 +17,7 @@
  */
 
 import { Encoding } from "../Encoding";
+
 import { BudgetListener } from "./BudgetListener";
 
 /**

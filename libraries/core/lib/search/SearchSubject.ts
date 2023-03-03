@@ -17,9 +17,10 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ObjectiveFunction } from "./objective/ObjectiveFunction";
-import { Encoding } from "./Encoding";
 import { ControlFlowGraph } from "@syntest/cfg-core";
+
+import { Encoding } from "./Encoding";
+import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 
 /**
  * Subject of the search process.

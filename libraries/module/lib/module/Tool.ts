@@ -16,9 +16,11 @@
  * limitations under the License.
  */
 import Yargs = require("yargs");
-import { Plugin } from "./Plugin";
-import { Command } from "./Command";
+
 import { cannotAddChoicesToOptionWithoutChoices } from "../util/diagnostics";
+
+import { Command } from "./Command";
+import { Plugin } from "./Plugin";
 
 export class Tool implements Yargs.CommandModule {
   name: Readonly<string>;

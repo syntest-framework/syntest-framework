@@ -15,9 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { UserInterface } from "@syntest/cli-graphics";
+
 import { Plugin } from "./Plugin";
 import { Tool } from "./Tool";
-import { UserInterface } from "@syntest/cli-graphics";
+
 export abstract class Module {
   name: Readonly<string>;
   version: Readonly<string>;

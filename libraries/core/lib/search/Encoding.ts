@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
+import { prng } from "../util/prng";
+
+import { Decoder } from "./Decoder";
+import { EncodingSampler } from "./EncodingSampler";
 import { ExecutionResult } from "./ExecutionResult";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
-import { prng } from "../util/prng";
-import { EncodingSampler } from "./EncodingSampler";
-import { Decoder } from "./Decoder";
 
 /**
  * Encoding of the search problem.

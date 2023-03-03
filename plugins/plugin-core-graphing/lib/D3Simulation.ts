@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import fs = require("fs");
+
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as d3 from "d3";
-import fs = require("fs");
 
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";

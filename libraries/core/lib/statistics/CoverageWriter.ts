@@ -16,11 +16,14 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../search/Encoding";
-import { StatisticsCollector } from "./StatisticsCollector";
-import * as csv from "@fast-csv/format";
-import { RuntimeVariable } from "./RuntimeVariable";
 import * as fs from "fs";
+
+import * as csv from "@fast-csv/format";
+
+import { Encoding } from "../search/Encoding";
+
+import { RuntimeVariable } from "./RuntimeVariable";
+import { StatisticsCollector } from "./StatisticsCollector";
 
 /**
  * Writer for the coverage over time statistics.

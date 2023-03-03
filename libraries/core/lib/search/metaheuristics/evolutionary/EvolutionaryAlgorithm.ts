@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-import { SearchAlgorithm } from "../SearchAlgorithm";
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../../operators/crossover/Crossover";
 import { prng } from "../../../util/prng";
 import { BudgetManager } from "../../budget/BudgetManager";
-import { TerminationManager } from "../../termination/TerminationManager";
 import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+import { Crossover } from "../../operators/crossover/Crossover";
 import { tournamentSelection } from "../../operators/selection/TournamentSelection";
+import { TerminationManager } from "../../termination/TerminationManager";
+import { SearchAlgorithm } from "../SearchAlgorithm";
 
 /**
  * Base class for Evolutionary Algorithms (EA).

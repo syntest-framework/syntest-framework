@@ -16,14 +16,15 @@
  * limitations under the License.
  */
 
-import { Encoding, SearchAlgorithm } from "@syntest/core";
-import { Sfuzz } from "./Sfuzz";
-import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
-import { pluginRequiresOptions } from "@syntest/module";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "@syntest/base-testing-tool";
+import { Encoding, SearchAlgorithm } from "@syntest/core";
+import { pluginRequiresOptions } from "@syntest/module";
+
+import { Sfuzz } from "./Sfuzz";
+import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
 
 /**
  * This example plugin logs the program state at the start of the initialization phase of the program.

@@ -15,9 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
 import { ControlFlowGraph, NodeType } from "@syntest/cfg-core";
+import * as chai from "chai";
+
 import { createSimulation } from "../lib/D3Simulation";
+
 const expect = chai.expect;
 
 describe("simulationTest", () => {

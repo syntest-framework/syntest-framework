@@ -16,17 +16,18 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import {
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
+  BranchObjectiveFunction,
 } from "../../../lib";
 import { MOSAFamily } from "../../../lib/search/metaheuristics/evolutionary/MOSAFamily";
+import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { BranchObjectiveFunction } from "../../../lib";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
-import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 
 const expect = chai.expect;
 

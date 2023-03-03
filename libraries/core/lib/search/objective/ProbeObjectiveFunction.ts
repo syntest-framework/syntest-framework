@@ -17,8 +17,9 @@
  */
 
 import { Encoding } from "../Encoding";
-import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
+
+import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 
 /**
  *

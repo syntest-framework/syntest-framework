@@ -16,12 +16,14 @@
  * limitations under the License.
  */
 
-import { ObjectiveManager } from "./ObjectiveManager";
+import { NodeType } from "@syntest/cfg-core";
+
 import { Encoding } from "../../Encoding";
+import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
-import { EncodingRunner } from "../../EncodingRunner";
-import { NodeType } from "@syntest/cfg-core";
+
+import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.

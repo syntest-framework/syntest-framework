@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
-import { ObjectiveManager } from "./ObjectiveManager";
 import { Encoding } from "../../Encoding";
+import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
-import { EncodingRunner } from "../../EncodingRunner";
+
+import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * A simple objective manager that always evaluates an encoding on all objectives.

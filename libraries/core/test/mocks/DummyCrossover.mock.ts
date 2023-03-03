@@ -17,6 +17,7 @@
  */
 import { Crossover } from "../../lib";
 import { minimumValue } from "../../lib/util/diagnostics";
+
 import { DummyEncodingMock } from "./DummyEncoding.mock";
 
 export class DummyCrossover implements Crossover<DummyEncodingMock> {

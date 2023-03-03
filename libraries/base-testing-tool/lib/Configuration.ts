@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-import Yargs = require("yargs");
-import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
-import { LoggingOptions } from "@syntest/logging";
 import {
   GeneralOptions,
   StorageOptions as CliStorageOptions,
   OptionGroups as CliOptionGroups,
 } from "@syntest/cli";
+import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
+import { LoggingOptions } from "@syntest/logging";
+import Yargs = require("yargs");
 
 export enum OptionGroups {
   Target = "Target Options:",

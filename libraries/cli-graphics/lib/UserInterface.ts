@@ -17,9 +17,9 @@
  */
 
 import chalk = require("chalk");
+import * as cliProgress from "cli-progress";
 import figlet = require("figlet");
 import { table } from "table";
-import * as cliProgress from "cli-progress";
 
 export class UserInterface {
   protected barObject: cliProgress.MultiBar;

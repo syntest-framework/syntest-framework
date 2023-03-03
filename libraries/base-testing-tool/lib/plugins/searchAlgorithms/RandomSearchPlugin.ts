@@ -21,11 +21,12 @@ import {
   SearchAlgorithm,
   SimpleObjectiveManager,
 } from "@syntest/core";
+import { pluginRequiresOptions } from "@syntest/module";
+
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "../SearchAlgorithmPlugin";
-import { pluginRequiresOptions } from "@syntest/module";
 /**
  * Plugin for RandomSearch
  *

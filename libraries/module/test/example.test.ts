@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import { ModuleManager } from "../lib/ModuleManager";
+
 const expect = chai.expect;
 
 /**

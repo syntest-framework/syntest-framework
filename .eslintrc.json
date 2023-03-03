@@ -7,15 +7,42 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    //"plugin:@typescript-eslint/recommended-requiring-type-checking",
+    //"plugin:unicorn/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:promise/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
+    //"project": true,
+    //"tsconfigRootDir": "."
   },
-  "plugins": ["@typescript-eslint", "notice"],
+  "settings": {
+    "import/resolver": {
+      "typescript": true,
+      "node": true
+    }
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "notice"
+  ],
   "rules": {
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/order": ["error",
+      {
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always"
+      }
+    ],
     "notice/notice":["error",
       { 
         "templateFile": "./LICENSE.header.ts",

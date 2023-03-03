@@ -17,8 +17,8 @@
  */
 
 import BigNumber from "bignumber.js";
-
 import seedrandom = require("seedrandom");
+
 import { Charset } from "./Charset";
 import {
   emptyArray,

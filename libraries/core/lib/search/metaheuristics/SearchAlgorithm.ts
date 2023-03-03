@@ -16,17 +16,18 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { Archive } from "../Archive";
-import { SearchSubject } from "../SearchSubject";
-import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
-import { BudgetManager } from "../budget/BudgetManager";
-import { TerminationManager } from "../termination/TerminationManager";
-import { SearchListener } from "../SearchListener";
-import { ExecutionResult } from "../ExecutionResult";
-import { Events } from "../../util/Events";
-import TypedEmitter from "typed-emitter";
 import { getLogger } from "@syntest/logging";
+import TypedEmitter from "typed-emitter";
+
+import { Events } from "../../util/Events";
+import { Archive } from "../Archive";
+import { BudgetManager } from "../budget/BudgetManager";
+import { Encoding } from "../Encoding";
+import { ExecutionResult } from "../ExecutionResult";
+import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { SearchListener } from "../SearchListener";
+import { SearchSubject } from "../SearchSubject";
+import { TerminationManager } from "../termination/TerminationManager";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.

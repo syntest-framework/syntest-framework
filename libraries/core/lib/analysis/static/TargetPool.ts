@@ -15,15 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Target } from "./Target";
-import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as path from "path";
-import { TargetMetaData } from "./TargetMetaData";
+
+import { ControlFlowGraph } from "@syntest/cfg-core";
 import globby = require("globby");
-import { ActionDescription } from "./ActionDescription";
-import { Encoding } from "../../search/Encoding";
 import TypedEventEmitter from "typed-emitter";
+
+import { Encoding } from "../../search/Encoding";
 import { Events } from "../../util/Events";
+
+import { ActionDescription } from "./ActionDescription";
+import { Target } from "./Target";
+import { TargetMetaData } from "./TargetMetaData";
 
 export abstract class TargetPool<T extends Encoding> {
   protected _targets: Target[];

@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
-import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../../operators/crossover/Crossover";
-import { Encoding } from "../../Encoding";
-
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { fastNonDomSorting, crowdingDistance } from "../../..";
+import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+import { Crossover } from "../../operators/crossover/Crossover";
+
+import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).

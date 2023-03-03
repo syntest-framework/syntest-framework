@@ -17,6 +17,7 @@
  */
 
 import { Module, Plugin, Tool } from "@syntest/module";
+
 import SfuzzPlugin from "./SfuzzPlugin";
 
 export default class GraphingModule extends Module {

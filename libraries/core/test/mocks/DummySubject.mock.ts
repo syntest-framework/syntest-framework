@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { Encoding, ObjectiveFunction, SearchSubject } from "../../lib";
+
 import { DummyCFG } from "./DummyCFG.mock";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {

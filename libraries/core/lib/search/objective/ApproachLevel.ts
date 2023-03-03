@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Datapoint } from "../..";
 import { ControlFlowGraph, Node, Pair } from "@syntest/cfg-core";
+
+import { Datapoint } from "../..";
 
 export class ApproachLevel {
   public static calculate(

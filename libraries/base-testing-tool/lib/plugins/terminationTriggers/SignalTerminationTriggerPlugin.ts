@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TerminationPlugin } from "../TerminationPlugin";
 import { Encoding, SignalTerminationTrigger } from "@syntest/core";
+
+import { TerminationPlugin } from "../TerminationPlugin";
 
 /**
  * Plugin for SignalTerminationTrigger

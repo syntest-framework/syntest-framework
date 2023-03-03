@@ -17,21 +17,23 @@
  * limitations under the License.
  */
 
-import yargHelper = require("yargs/helpers");
-import { BaseOptions, Configuration } from "./Configuration";
+import * as path from "path";
+
+import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
+import {
+  getLogger,
+  setupLogger,
+  Configuration as LogConfiguration,
+} from "@syntest/logging";
 import {
   ModuleManager,
   PluginType,
   ListenerPlugin,
   Configuration as ModuleConfiguration,
 } from "@syntest/module";
-import {
-  getLogger,
-  setupLogger,
-  Configuration as LogConfiguration,
-} from "@syntest/logging";
-import * as path from "path";
-import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
+import yargHelper = require("yargs/helpers");
+
+import { BaseOptions, Configuration } from "./Configuration";
 
 async function main() {
   // Setup user interface

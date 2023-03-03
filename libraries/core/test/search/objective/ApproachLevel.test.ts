@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 import { ControlFlowGraph, NodeType } from "@syntest/cfg-core";
-import { ApproachLevel } from "../../../lib";
 import * as chai from "chai";
+
+import { ApproachLevel } from "../../../lib";
 
 const expect = chai.expect;
 

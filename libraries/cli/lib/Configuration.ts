@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Yargs = require("yargs");
 import { LoggingOptions } from "@syntest/logging";
 import { ModuleOptions } from "@syntest/module";
+import Yargs = require("yargs");
 
 export type GeneralOptions = {
   config: string;

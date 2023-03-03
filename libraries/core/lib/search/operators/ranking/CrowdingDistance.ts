@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 import { Encoding } from "../../Encoding";
+import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 
 /**
  * Compute the crowding distance for all individual int the front. This is a

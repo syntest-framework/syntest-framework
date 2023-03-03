@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import { BranchNode, ControlFlowGraph, NodeType, RootNode, Node } from "../lib";
 
 const expect = chai.expect;

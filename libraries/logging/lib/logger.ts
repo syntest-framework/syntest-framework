@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as path from "path";
+
 import {
   Logger,
   LoggerOptions,
@@ -22,7 +24,6 @@ import {
   format,
   transports,
 } from "winston";
-import * as path from "path";
 
 let baseLoggerOptions: LoggerOptions;
 

@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { ExecutionResult } from "./ExecutionResult";
 import { Encoding } from "./Encoding";
+import { ExecutionResult } from "./ExecutionResult";
 import { SearchSubject } from "./SearchSubject";
 
 /**

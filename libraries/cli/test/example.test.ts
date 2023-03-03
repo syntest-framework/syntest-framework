@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import { Configuration } from "../lib/Configuration";
+
 const expect = chai.expect;
 
 /**

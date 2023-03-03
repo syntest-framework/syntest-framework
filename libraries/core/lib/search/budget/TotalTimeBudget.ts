@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-import { Budget } from "./Budget";
 import { Encoding } from "../Encoding";
+
+import { Budget } from "./Budget";
 import { SearchTimeBudget } from "./SearchTimeBudget";
 
 /**

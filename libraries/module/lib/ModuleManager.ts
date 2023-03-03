@@ -15,15 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as path from "path";
 import { existsSync } from "fs";
+import * as path from "path";
+
+import { UserInterface } from "@syntest/cli-graphics";
+import { getLogger } from "@syntest/logging";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
+
+import { Module } from "./module/Module";
 import { Plugin } from "./module/Plugin";
 import { Tool } from "./module/Tool";
-import { Module } from "./module/Module";
-import { UserInterface } from "@syntest/cli-graphics";
-
 import {
   moduleAlreadyLoaded,
   moduleCannotBeLoaded,
@@ -36,7 +38,6 @@ import {
   singletonNotSet,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
-import { getLogger } from "@syntest/logging";
 
 export class ModuleManager {
   static LOGGER;

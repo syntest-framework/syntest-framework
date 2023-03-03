@@ -17,9 +17,10 @@
  */
 
 import { ControlFlowGraph } from "@syntest/cfg-core";
+
 import { TargetPool } from "../analysis/static/TargetPool";
-import { Encoding } from "../search/Encoding";
 import { BudgetManager } from "../search/budget/BudgetManager";
+import { Encoding } from "../search/Encoding";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 
 export type Events = {

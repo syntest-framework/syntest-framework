@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { DominanceComparator } from "../../../lib/search/comparators/DominanceComparator";
-import { BranchObjectiveFunction } from "../../../lib";
-import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { createStubInstance } from "sinon";
+
+import { BranchObjectiveFunction } from "../../../lib";
+import { DominanceComparator } from "../../../lib/search/comparators/DominanceComparator";
+import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 

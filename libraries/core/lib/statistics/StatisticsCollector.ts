@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-import { RuntimeVariable } from "./RuntimeVariable";
 import { TotalTimeBudget } from "../search/budget/TotalTimeBudget";
 import { Encoding } from "../search/Encoding";
+
+import { RuntimeVariable } from "./RuntimeVariable";
 
 /**
  * Collector for runtime statistics.

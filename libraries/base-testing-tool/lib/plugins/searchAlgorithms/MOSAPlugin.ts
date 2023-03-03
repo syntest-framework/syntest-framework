@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { pluginRequiresOptions } from "@syntest/module";
 import {
   Encoding,
   SearchAlgorithm,
   MOSAFamily,
   UncoveredObjectiveManager,
 } from "@syntest/core";
+import { pluginRequiresOptions } from "@syntest/module";
+
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
