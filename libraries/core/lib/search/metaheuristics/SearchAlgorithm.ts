@@ -22,7 +22,6 @@ import { SearchSubject } from "../SearchSubject";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { BudgetManager } from "../budget/BudgetManager";
 import { TerminationManager } from "../termination/TerminationManager";
-import { SearchListener } from "../SearchListener";
 import { ExecutionResult } from "../ExecutionResult";
 import { Events } from "../../util/Events";
 import TypedEmitter from "typed-emitter";
@@ -44,14 +43,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   protected _objectiveManager: ObjectiveManager<T>;
 
   /**
-   * List of search listeners.
-   *
-   * These listeners can be used to notify other services with updates about the search process.
-   * @protected
-   */
-  protected _listeners: SearchListener<T>[];
-
-  /**
    * Abstract constructor.
    *
    * @param eventManager The event manager
@@ -60,7 +51,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    */
   protected constructor(objectiveManager: ObjectiveManager<T>) {
     this._objectiveManager = objectiveManager;
-    this._listeners = [];
   }
 
   /**
@@ -106,15 +96,12 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     // Start initialization budget tracking
     budgetManager.initializationStarted();
 
-    // Inform listeners that the search started
-    this._listeners.forEach((listener) => {
-      listener.searchStarted(this, budgetManager, terminationManager);
-    });
-
     (<TypedEmitter<Events>>process).emit(
       "searchInitializationStart",
       this,
-      budgetManager
+      subject,
+      budgetManager,
+      terminationManager
     );
 
     // Initialize search process
@@ -126,16 +113,20 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     (<TypedEmitter<Events>>process).emit(
       "searchInitializationComplete",
       this,
-      budgetManager
-    );
-
-    this._listeners.forEach((listener) =>
-      listener.initializationDone(this, budgetManager, terminationManager)
+      subject,
+      budgetManager,
+      terminationManager
     );
 
     budgetManager.searchStarted();
 
-    (<TypedEmitter<Events>>process).emit("searchStart", this, budgetManager);
+    (<TypedEmitter<Events>>process).emit(
+      "searchStart",
+      this,
+      subject,
+      budgetManager,
+      terminationManager
+    );
 
     // Start search until the budget has expired, a termination trigger has been triggered, or there are no more objectives
     while (
@@ -146,7 +137,9 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       (<TypedEmitter<Events>>process).emit(
         "searchIterationStart",
         this,
-        budgetManager
+        subject,
+        budgetManager,
+        terminationManager
       );
 
       // Start next iteration of the search process
@@ -158,23 +151,22 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       (<TypedEmitter<Events>>process).emit(
         "searchIterationComplete",
         this,
-        budgetManager
-      );
-
-      this._listeners.forEach((listener) =>
-        listener.iteration(this, budgetManager, terminationManager)
+        subject,
+        budgetManager,
+        terminationManager
       );
     }
 
     // Stop search budget tracking
     budgetManager.searchStopped();
 
-    (<TypedEmitter<Events>>process).emit("searchComplete", this, budgetManager);
-
-    // Inform listeners that the search stopped
-    this._listeners.forEach((listener) => {
-      listener.searchStarted(this, budgetManager, terminationManager);
-    });
+    (<TypedEmitter<Events>>process).emit(
+      "searchComplete",
+      this,
+      subject,
+      budgetManager,
+      terminationManager
+    );
 
     // Return the archive of covered objectives
     return this._objectiveManager.getArchive();
@@ -254,25 +246,5 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       100;
     const factor = 10 ** 2;
     return Math.round(progress * factor) / factor;
-  }
-
-  /**
-   * Add a search listener to monitor the search process.
-   *
-   * @param listener The listener to add
-   */
-  public addListener(listener: SearchListener<T>): SearchAlgorithm<T> {
-    this._listeners.push(listener);
-    return this;
-  }
-
-  /**
-   * Remove a search listener from the search process.
-   *
-   * @param listener The listener to remove
-   */
-  public removeListener(listener: SearchListener<T>): SearchAlgorithm<T> {
-    this._listeners.slice(this._listeners.indexOf(listener), 1);
-    return this;
   }
 }

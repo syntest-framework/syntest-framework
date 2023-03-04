@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../search/Encoding";
 import { StatisticsCollector } from "./StatisticsCollector";
 import * as csv from "@fast-csv/format";
 import { RuntimeVariable } from "./RuntimeVariable";
@@ -27,7 +26,7 @@ import * as fs from "fs";
  *
  * @author Mitchell Olsthoorn
  */
-export class CoverageWriter<T extends Encoding> {
+export class CoverageWriter {
   protected VARIABLES: RuntimeVariable[] = [RuntimeVariable.SUBJECT];
 
   protected EVENT_VARIABLES: RuntimeVariable[] = [
@@ -56,7 +55,7 @@ export class CoverageWriter<T extends Encoding> {
    * @param collector The collector for the statistics
    * @param filePath The file path to write to
    */
-  write(collector: StatisticsCollector<T>, filePath: string): void {
+  write(collector: StatisticsCollector, filePath: string): void {
     const staticVariables = collector.getVariables();
     const events = collector.getEventVariables();
 

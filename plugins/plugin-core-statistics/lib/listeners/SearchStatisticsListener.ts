@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,38 +15,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+  BudgetManager,
+  Encoding,
+  Events,
+  SearchAlgorithm,
+  SearchSubject,
+  TerminationManager,
+} from "@syntest/core";
+import { ListenerPlugin } from "@syntest/module";
+import TypedEventEmitter from "typed-emitter";
+import { StatisticsCollector } from "../statistics/StatisticsCollector";
+import { Timing } from "../statistics/Timing";
+import { RuntimeVariable } from "../statistics/RuntimeVariable";
 
-import { SearchListener } from "../search/SearchListener";
-import { Encoding } from "../search/Encoding";
-import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
-import { BudgetManager } from "../search/budget/BudgetManager";
-import { TerminationManager } from "../search/termination/TerminationManager";
-import { StatisticsCollector } from "./StatisticsCollector";
-import { RuntimeVariable } from "./RuntimeVariable";
-
-/**
- * A search listener that updates the statistics over time.
- *
- * TODO: possible use setInterval to update the statistics at a fixed interval
- *
- * @author Mitchell Olsthoorn
- */
-export class StatisticsSearchListener<T extends Encoding>
-  implements SearchListener<T>
-{
+export class SearchStatisticsListener extends ListenerPlugin {
   /**
    * The statistics collector
    * @protected
    */
-  protected collector: StatisticsCollector<T>;
+  protected _collector: StatisticsCollector;
+  protected timing: Timing;
 
   /**
    * Constructor.
    *
    * @param collector The collector to use
    */
-  constructor(collector: StatisticsCollector<T>) {
-    this.collector = collector;
+  constructor(collector: StatisticsCollector, timing: Timing) {
+    super(
+      "SearchStatisticsListener",
+      "A listener that collects statistics about the search process."
+    );
+    this._collector = collector;
+    this.timing = timing;
+  }
+
+  get collector() {
+    return this._collector;
   }
 
   /**
@@ -56,13 +62,18 @@ export class StatisticsSearchListener<T extends Encoding>
    * @param budgetManager The budget manager
    * @param terminationManager The termination manager
    */
-  update(
+  update<T extends Encoding>(
     searchAlgorithm: SearchAlgorithm<T>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    subject: SearchSubject<T>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     budgetManager: BudgetManager<T>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     terminationManager: TerminationManager
   ): void {
+    const searchTime = this.timing.getTimeSinceLastEvent("searchStart");
+    const eventTime = Math.round(searchTime * 10) / 10;
+
     const coveredBranches = searchAlgorithm.getCovered("branch");
     const totalBranches =
       coveredBranches + searchAlgorithm.getUncovered("branch");
@@ -80,101 +91,93 @@ export class StatisticsSearchListener<T extends Encoding>
     const total = coveredBranches + searchAlgorithm.getUncovered();
 
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.COVERED_BRANCHES,
       coveredBranches
     );
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.TOTAL_BRANCHES,
       totalBranches
     );
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.BRANCH_COVERAGE,
       searchAlgorithm.progress("branch")
     );
 
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.COVERED_FUNCTIONS,
       coveredFunctions
     );
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.TOTAL_FUNCTIONS,
       totalFunctions
     );
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.FUNCTION_COVERAGE,
       searchAlgorithm.progress("function")
     );
 
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.COVERED_EXCEPTIONS,
       coveredExceptions
     );
 
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.COVERED_PROBES,
       coveredProbes
     );
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.TOTAL_PROBES,
       totalProbes
     );
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.PROBE_COVERAGE,
       searchAlgorithm.progress("probe")
     );
 
     this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.COVERED_OBJECTIVES,
       covered
     );
-    this.collector.recordEventVariable(RuntimeVariable.TOTAL_OBJECTIVES, total);
     this.collector.recordEventVariable(
+      eventTime,
+      RuntimeVariable.TOTAL_OBJECTIVES,
+      total
+    );
+    this.collector.recordEventVariable(
+      eventTime,
       RuntimeVariable.COVERAGE,
       searchAlgorithm.progress("mixed")
     );
   }
 
-  /**
-   * @inheritDoc
-   */
-  searchStarted(
-    searchAlgorithm: SearchAlgorithm<T>,
-    budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
-  ): void {
-    this.update(searchAlgorithm, budgetManager, terminationManager);
-  }
+  setupEventListener(): void {
+    (<TypedEventEmitter<Events>>process).on("searchStart", () => {
+      this.timing.recordEventTime("searchStart");
+    });
 
-  /**
-   * @inheritDoc
-   */
-  initializationDone(
-    searchAlgorithm: SearchAlgorithm<T>,
-    budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
-  ): void {
-    this.update(searchAlgorithm, budgetManager, terminationManager);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  searchStopped(
-    searchAlgorithm: SearchAlgorithm<T>,
-    budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
-  ): void {
-    this.update(searchAlgorithm, budgetManager, terminationManager);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  iteration(
-    searchAlgorithm: SearchAlgorithm<T>,
-    budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
-  ): void {
-    this.update(searchAlgorithm, budgetManager, terminationManager);
+    (<TypedEventEmitter<Events>>process).on(
+      "searchInitializationStart",
+      this.update
+    );
+    (<TypedEventEmitter<Events>>process).on(
+      "searchInitializationComplete",
+      this.update
+    );
+    (<TypedEventEmitter<Events>>process).on(
+      "searchIterationComplete",
+      this.update
+    );
+    (<TypedEventEmitter<Events>>process).on("searchComplete", this.update);
   }
 }

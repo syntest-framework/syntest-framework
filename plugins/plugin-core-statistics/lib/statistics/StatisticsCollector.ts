@@ -17,15 +17,13 @@
  */
 
 import { RuntimeVariable } from "./RuntimeVariable";
-import { TotalTimeBudget } from "../search/budget/TotalTimeBudget";
-import { Encoding } from "../search/Encoding";
 
 /**
  * Collector for runtime statistics.
  *
  * @author Mitchell Olsthoorn
  */
-export class StatisticsCollector<T extends Encoding> {
+export class StatisticsCollector {
   /**
    * Mapping from runtime variable to value.
    * @protected
@@ -39,18 +37,9 @@ export class StatisticsCollector<T extends Encoding> {
   protected _eventVariables: Map<number, Map<RuntimeVariable, string>>;
 
   /**
-   * Total search time budget from the search process.
-   * @protected
-   */
-  protected _timeBudget: TotalTimeBudget<T>;
-
-  /**
    * Constructor.
-   *
-   * @param timeBudget The time budget to use for tracking time
    */
-  constructor(timeBudget: TotalTimeBudget<T>) {
-    this._timeBudget = timeBudget;
+  constructor() {
     this._variables = new Map<RuntimeVariable, string>();
     this._eventVariables = new Map<number, Map<number, string>>();
   }
@@ -64,7 +53,7 @@ export class StatisticsCollector<T extends Encoding> {
   public recordVariable(
     variable: RuntimeVariable,
     value: string
-  ): StatisticsCollector<T> {
+  ): StatisticsCollector {
     this._variables.set(variable, value);
     return this;
   }
@@ -74,16 +63,15 @@ export class StatisticsCollector<T extends Encoding> {
    *
    * The event is recorded at the current time of the search process.
    *
+   * @param eventTime The time of the event
    * @param variable The variable type to record
    * @param value The variable value
    */
   public recordEventVariable(
+    eventTime: number,
     variable: RuntimeVariable,
     value: string | number
-  ): StatisticsCollector<T> {
-    // 1/10th second accuracy
-    const eventTime = Math.round(this._timeBudget.getUsedBudget() * 10) / 10;
-
+  ): StatisticsCollector {
     // If other events already exist on this event time add it, otherwise create a new one
     if (this._eventVariables.has(eventTime)) {
       this._eventVariables.get(eventTime).set(variable, `${value}`);

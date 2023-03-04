@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../search/Encoding";
 import { StatisticsCollector } from "./StatisticsCollector";
 import * as csv from "@fast-csv/format";
 import { RuntimeVariable } from "./RuntimeVariable";
@@ -27,7 +26,7 @@ import * as fs from "fs";
  *
  * @author Mitchell Olsthoorn
  */
-export class SummaryWriter<T extends Encoding> {
+export class SummaryWriter {
   protected VARIABLES: RuntimeVariable[] = [
     RuntimeVariable.SUBJECT,
     RuntimeVariable.CONFIGURATION,
@@ -64,7 +63,7 @@ export class SummaryWriter<T extends Encoding> {
    * @param collector The collector for the statistics
    * @param filePath The file path to write to
    */
-  public write(collector: StatisticsCollector<T>, filePath: string): void {
+  public write(collector: StatisticsCollector, filePath: string): void {
     const variables = collector.getVariables();
 
     // For each enabled statistic, copy the data from the collector over

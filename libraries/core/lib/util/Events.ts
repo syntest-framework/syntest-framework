@@ -21,6 +21,8 @@ import { TargetPool } from "../analysis/static/TargetPool";
 import { Encoding } from "../search/Encoding";
 import { BudgetManager } from "../search/budget/BudgetManager";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
+import { SearchSubject } from "../search/SearchSubject";
+import { TerminationManager } from "../search/termination/TerminationManager";
 
 export type Events = {
   initializeStart: () => void;
@@ -42,27 +44,39 @@ export type Events = {
 
   searchInitializationStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchInitializationComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchIterationStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchIterationComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
 
   targetLoadStart: <E extends Encoding>(targetPool: TargetPool<E>) => void;
