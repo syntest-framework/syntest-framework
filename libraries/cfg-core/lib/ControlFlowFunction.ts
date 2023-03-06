@@ -15,8 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
-export interface Pair<T, U> {
-  first: T;
-  second: U;
+/**
+ * Control Flow Function
+ */
+export interface ControlFlowFunction {
+  id: string;
+  name: string;
+  graph: ControlFlowGraph;
 }
