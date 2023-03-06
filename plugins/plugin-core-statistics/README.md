@@ -1,1 +1,1 @@
-# Sfuzz plugin for SynTest Core
+# Statistics plugin for SynTest Core
