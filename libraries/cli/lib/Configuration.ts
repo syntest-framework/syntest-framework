@@ -16,27 +16,9 @@
  * limitations under the License.
  */
 import Yargs = require("yargs");
-import { LoggingOptions } from "@syntest/logging";
-import { ModuleOptions } from "@syntest/module";
-
-export type GeneralOptions = {
-  config: string;
-  userInterface: string;
-};
-
-export type StorageOptions = {
-  syntestDirectory: string;
-  tempSyntestDirectory: string;
-};
-
-export type BaseOptions = GeneralOptions &
-  StorageOptions &
-  LoggingOptions &
-  ModuleOptions;
 
 export enum OptionGroups {
   General = "General Options:",
-  Storage = "Storage Options:",
 }
 
 export class Configuration {
@@ -49,45 +31,14 @@ export class Configuration {
   }
 
   static configureOptions(yargs: Yargs.Argv) {
-    return (
-      yargs
-        .option("config", {
-          alias: ["c"],
-          default: ".syntest.json",
-          description: "The syntest configuration file",
-          group: OptionGroups.General,
-          hidden: false,
-          config: true,
-          type: "string",
-        })
-        // ui
-        .option("user-interface", {
-          alias: [],
-          default: "default",
-          description: "The user interface you use",
-          group: OptionGroups.General,
-          hidden: false,
-          type: "string",
-        })
-        // storage
-        .options("syntest-directory", {
-          alias: [],
-          default: "syntest",
-          description: "The path where everything should be saved",
-          group: OptionGroups.Storage,
-          hidden: false,
-          normalize: true,
-          type: "string",
-        })
-        .options("temp-syntest-directory", {
-          alias: [],
-          default: ".syntest",
-          description: "The path where all temporary files should be saved",
-          group: OptionGroups.Storage,
-          hidden: false,
-          normalize: true,
-          type: "string",
-        })
-    );
+    return yargs.option("config", {
+      alias: ["c"],
+      default: ".syntest.json",
+      description: "The syntest configuration file",
+      group: OptionGroups.General,
+      hidden: false,
+      config: true,
+      type: "string",
+    });
   }
 }

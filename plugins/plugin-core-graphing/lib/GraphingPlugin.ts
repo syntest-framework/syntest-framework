@@ -19,7 +19,6 @@
 import { Encoding, Events, TargetPool } from "@syntest/core";
 import Yargs = require("yargs");
 import { ListenerPlugin } from "@syntest/module";
-import { OptionGroups as CliOptionGroups } from "@syntest/cli";
 import { CONFIG } from "@syntest/base-testing-tool";
 import { createSimulation } from "./D3Simulation";
 import { writeFileSync } from "fs";
@@ -66,7 +65,7 @@ export default class GraphingPlugin extends ListenerPlugin {
       alias: [],
       default: "cfg",
       description: "The path where the csv should be saved",
-      group: CliOptionGroups.Storage,
+      group: "Graphing Options:",
       hidden: false,
       normalize: true,
       type: "string",

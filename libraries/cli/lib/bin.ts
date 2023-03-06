@@ -18,7 +18,8 @@
  */
 
 import yargHelper = require("yargs/helpers");
-import { BaseOptions, Configuration } from "./Configuration";
+import { BaseOptions } from "@syntest/module";
+import { Configuration } from "./Configuration";
 import {
   ModuleManager,
   PluginType,
