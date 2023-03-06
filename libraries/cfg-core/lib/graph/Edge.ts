@@ -25,6 +25,7 @@ export interface Edge {
   readonly id: string;
   readonly type: EdgeType;
   readonly label: string;
+  readonly description?: string;
 
   readonly source: Node;
   readonly target: Node;

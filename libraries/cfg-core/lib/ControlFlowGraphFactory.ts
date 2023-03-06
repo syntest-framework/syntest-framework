@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { ControlFlowGraph } from "./ControlFlowGraph";
+import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
 export interface ControlFlowGraphFactory {
   convertAST(AST: unknown): ControlFlowGraph;

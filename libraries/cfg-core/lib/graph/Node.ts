@@ -22,9 +22,10 @@ import { NodeType } from "./NodeType";
  * Represents a basic block in a control flow graph.
  */
 export interface Node {
-  readonly id: number;
+  readonly id: string;
   readonly type: NodeType;
   readonly label: string;
+  readonly description?: string;
 
   readonly incomingEdges: Edge[];
   readonly outgoingEdges: Edge[];

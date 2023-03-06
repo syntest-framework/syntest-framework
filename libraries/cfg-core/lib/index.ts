@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./ControlFlowGraph";
-export * from "./ControlFlowGraphFactory";
+export * from "./algorithms/edgeContraction";
 
-export * from "./Edge";
-export * from "./util/Pair";
-export * from "./nodes/Node";
-export * from "./nodes/BranchNode";
-export * from "./nodes/PlaceholderNode";
-export * from "./nodes/RootNode";
+export * from "./graph/ControlFlowGraph";
+export * from "./graph/Edge";
+export * from "./graph/EdgeType";
+export * from "./graph/Node";
+export * from "./graph/NodeType";
+
+export * from "./ControlFlowFunction";
+export * from "./ControlFlowGraphFactory";
+export * from "./ControlFlowProgram";
