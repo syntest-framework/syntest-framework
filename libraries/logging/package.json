@@ -1,6 +1,6 @@
 {
   "name": "@syntest/logging",
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.3",
   "description": "The log library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -19,7 +19,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist",
+    "dist",
     "NOTICE",
     "README.md"
   ],
