@@ -23,38 +23,50 @@ import cloneDeep = require("lodash.clonedeep");
 /**
  * Represents a control flow graph.
  */
-export class ControlFlowGraph {
-  private readonly entry: Node;
-  private readonly successExit: Node;
-  private readonly errorExit: Node;
-  private readonly _nodes: Node[];
-  private readonly _edges: Edge[];
+export class ControlFlowGraph<S> {
+  private readonly _entry: Node<S>;
+  private readonly _successExit: Node<S>;
+  private readonly _errorExit: Node<S>;
+  private readonly _nodes: Node<S>[];
+  private readonly _edges: Edge<S>[];
 
   constructor(
-    entry: Node,
-    successExit: Node,
-    errorExit: Node,
-    nodes: Node[],
-    edges: Edge[]
+    entry: Node<S>,
+    successExit: Node<S>,
+    errorExit: Node<S>,
+    nodes: Node<S>[],
+    edges: Edge<S>[]
   ) {
-    this.entry = entry;
-    this.successExit = successExit;
-    this.errorExit = errorExit;
+    this._entry = entry;
+    this._successExit = successExit;
+    this._errorExit = errorExit;
     this._nodes = cloneDeep(nodes);
     this._edges = cloneDeep(edges);
   }
 
-  get nodes(): Node[] {
+  get entry(): Node<S> {
+    return this._entry;
+  }
+
+  get successExit(): Node<S> {
+    return this._successExit;
+  }
+
+  get errorExit(): Node<S> {
+    return this._errorExit;
+  }
+
+  get nodes(): Node<S>[] {
     return this._nodes;
   }
 
-  get edges(): Edge[] {
+  get edges(): Edge<S>[] {
     return this._edges;
   }
 
   // Successively applies a filter method on initial list of nodes with specified predicates
-  filterNodesByPredicates(...predicates: ((n: Node) => boolean)[]) {
-    let filteredList: Node[] = this._nodes;
+  filterNodesByPredicates(...predicates: ((n: Node<S>) => boolean)[]) {
+    let filteredList: Node<S>[] = this._nodes;
     for (const predicate of predicates) {
       filteredList = filteredList.filter(predicate);
     }
@@ -62,54 +74,54 @@ export class ControlFlowGraph {
   }
 
   // Applies a find method on list of nodes with a given predicate
-  findNodeByPredicate(predicate: (n: Node) => boolean) {
+  findNodeByPredicate(predicate: (n: Node<S>) => boolean) {
     return this._nodes.find(predicate);
   }
 
   // Retrieves Node object based on its id
-  getNodeById(nodeId: string): Node {
-    const node = this._nodes.find((node: Node) => node.id === nodeId);
+  getNodeById(nodeId: string): Node<S> {
+    const node = this._nodes.find((node: Node<S>) => node.id === nodeId);
     return node;
   }
 
   // Filters list of nodes, returning only nodes of a given type
-  filterNodesOfType(type: NodeType): Node[] {
-    return this._nodes.filter((n: Node) => n.type === type);
+  filterNodesOfType(type: NodeType): Node<S>[] {
+    return this._nodes.filter((n: Node<S>) => n.type === type);
   }
 
   // Filters list of nodes by specified line numbers,
   // returning only nodes that contain AT LEAST ONE OF the given line numbers
-  filterNodesByLineNumbers(lineNumbers: Set<number>): Node[] {
+  filterNodesByLineNumbers(lineNumbers: Set<number>): Node<S>[] {
     return this._nodes.filter((node) =>
       node.metadata.lineNumbers.some((nodeLine) => lineNumbers.has(nodeLine))
     );
   }
 
   // Returns Node that contains specified line number and is of a given type
-  findNodeOfTypeByLine(lineNumber: number, type: NodeType): Node {
-    return this._nodes.find((n: Node) => {
+  findNodeOfTypeByLine(lineNumber: number, type: NodeType): Node<S> {
+    return this._nodes.find((n: Node<S>) => {
       return n.type === type && n.metadata.lineNumbers.includes(lineNumber);
     });
   }
 
   // Returns list of nodes that have an outgoing edge to the target node
-  getParents(targetNodeId: string): Node[] {
+  getParents(targetNodeId: string): Node<S>[] {
     const selectedIds = new Set<string>(
       this._edges
-        .filter((e: Edge) => e.target.id === targetNodeId)
-        .map((e: Edge) => e.source.id)
+        .filter((e: Edge<S>) => e.target.id === targetNodeId)
+        .map((e: Edge<S>) => e.source.id)
     );
-    return this._nodes.filter((node: Node) => selectedIds.has(node.id));
+    return this._nodes.filter((node: Node<S>) => selectedIds.has(node.id));
   }
 
   // Returns list of nodes that have an outgoing edge from the target node
-  getChildren(targetNodeId: string): Node[] {
+  getChildren(targetNodeId: string): Node<S>[] {
     const selectedIds = new Set<string>(
       this._edges
-        .filter((e: Edge) => e.source.id === targetNodeId)
-        .map((e: Edge) => e.target.id)
+        .filter((e: Edge<S>) => e.source.id === targetNodeId)
+        .map((e: Edge<S>) => e.target.id)
     );
-    return this._nodes.filter((node: Node) => selectedIds.has(node.id));
+    return this._nodes.filter((node: Node<S>) => selectedIds.has(node.id));
   }
 
   /*

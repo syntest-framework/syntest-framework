@@ -21,21 +21,65 @@ import { NodeType } from "./NodeType";
 /**
  * Represents a basic block in a control flow graph.
  */
-export interface Node {
+export class Node<S> {
   readonly id: string;
   readonly type: NodeType;
   readonly label: string;
   readonly description?: string;
 
-  readonly incomingEdges: Edge[];
-  readonly outgoingEdges: Edge[];
+  readonly incomingEdges: Edge<S>[];
+  readonly outgoingEdges: Edge<S>[];
 
   /**
    * The ordered list of statements in this node.
    */
-  readonly statements: unknown[];
-  readonly metadata: {
-    readonly [key: string]: unknown;
-    readonly lineNumbers: number[];
-  };
+  readonly statements: S[];
+  readonly metadata: MetaData;
+
+  constructor(
+    id: string,
+    type: NodeType,
+    label: string,
+    statements: S[],
+    metadata: MetaData,
+    description?: string
+  ) {
+    this.id = id;
+    this.type = type;
+    this.label = label;
+    this.statements = statements;
+    this.metadata = metadata;
+    this.description = description;
+    this.incomingEdges = [];
+    this.outgoingEdges = [];
+  }
+
+  makeImmutable(): void {
+    Object.freeze(this);
+    Object.freeze(this.incomingEdges);
+    Object.freeze(this.outgoingEdges);
+    Object.freeze(this.statements);
+    Object.freeze(this.metadata);
+  }
+
+  addIncomingEdge(edge: Edge<S>): void {
+    this.incomingEdges.push(edge);
+  }
+
+  addOutgoingEdge(edge: Edge<S>): void {
+    this.outgoingEdges.push(edge);
+  }
+
+  addIncomingEdges(edges: Edge<S>[]): void {
+    this.incomingEdges.push(...edges);
+  }
+
+  addOutgoingEdges(edges: Edge<S>[]): void {
+    this.outgoingEdges.push(...edges);
+  }
 }
+
+export type MetaData = {
+  readonly [key: string]: unknown;
+  readonly lineNumbers: number[];
+};

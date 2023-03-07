@@ -29,9 +29,9 @@ import { NodeType } from "../graph/NodeType";
  * @param controlFlowGraph the control flow graph to contract
  * @returns the contracted control flow graph
  */
-export function edgeContraction(
-  controlFlowGraph: ControlFlowGraph
-): ControlFlowGraph {
+export function edgeContraction<S>(
+  controlFlowGraph: ControlFlowGraph<S>
+): ControlFlowGraph<S> {
   let changed = true;
 
   // Perform edge contraction until no more changes are made
@@ -46,7 +46,7 @@ export function edgeContraction(
     /**
      * Perform BFS to find a node with only one incoming and one outgoing edge.
      */
-    const queue: Edge[] = [];
+    const queue: Edge<S>[] = [];
 
     queue.push(...controlFlowGraph.entry.outgoingEdges);
 
@@ -72,11 +72,11 @@ export function edgeContraction(
   return controlFlowGraph;
 }
 
-function mergeNodes(
-  controlFlowGraph: ControlFlowGraph,
-  node1: Node,
-  node2: Node
-): ControlFlowGraph {
+function mergeNodes<S>(
+  controlFlowGraph: ControlFlowGraph<S>,
+  node1: Node<S>,
+  node2: Node<S>
+): ControlFlowGraph<S> {
   if (node1.outgoingEdges.length !== 1) {
     throw new Error("Node 1 has more than one outgoing edge");
   }
@@ -97,21 +97,29 @@ function mergeNodes(
     throw new Error("Cannot merge entry node with success or error exit node");
   }
 
-  const newNode: Node = {
-    id: node1.id + node2.id, // TODO we should have a special function for this maybe based on the statements
-    type: isEntry
+  const newNode: Node<S> = new Node<S>(
+    node1.id + node2.id, // TODO we should have a special function for this maybe based on the statements
+    isEntry
       ? NodeType.ENTRY
       : isSuccessExit
       ? NodeType.EXIT
       : isErrorExit
       ? NodeType.EXIT
       : NodeType.NORMAL,
-    label: node1.label,
+    node1.label + node2.label,
+    [...node1.statements, ...node2.statements],
+    {
+      ...node1.metadata,
+      ...node2.metadata,
+      lineNumbers: [
+        ...node1.metadata.lineNumbers,
+        ...node2.metadata.lineNumbers,
+      ],
+    }
+  );
 
-    incomingEdges: node1.incomingEdges,
-    outgoingEdges: node2.outgoingEdges,
-    statements: [...node1.statements, ...node2.statements],
-  };
+  newNode.addIncomingEdges(node2.incomingEdges);
+  newNode.addOutgoingEdges(node1.outgoingEdges);
 
   const newNodes = controlFlowGraph.nodes
     .filter((node) => node !== node1 && node !== node2)
@@ -128,11 +136,11 @@ function mergeNodes(
     throw new Error("Something went wrong while merging edges");
   }
 
-  return {
-    entry: isEntry ? newNode : controlFlowGraph.entry,
-    successExit: isSuccessExit ? newNode : controlFlowGraph.successExit,
-    errorExit: isErrorExit ? newNode : controlFlowGraph.errorExit,
-    nodes: newNodes,
-    edges: newEdges,
-  };
+  return new ControlFlowGraph(
+    isEntry ? newNode : controlFlowGraph.entry,
+    isSuccessExit ? newNode : controlFlowGraph.successExit,
+    isErrorExit ? newNode : controlFlowGraph.errorExit,
+    newNodes,
+    newEdges
+  );
 }

@@ -21,12 +21,28 @@ import { EdgeType } from "./EdgeType";
 /**
  * Represents a jump between two basic blocks in a control flow graph.
  */
-export interface Edge {
+export class Edge<S> {
   readonly id: string;
   readonly type: EdgeType;
   readonly label: string;
   readonly description?: string;
 
-  readonly source: Node;
-  readonly target: Node;
+  readonly source: Node<S>;
+  readonly target: Node<S>;
+
+  constructor(
+    id: string,
+    type: EdgeType,
+    label: string,
+    source: Node<S>,
+    target: Node<S>,
+    description?: string
+  ) {
+    this.id = id;
+    this.type = type;
+    this.label = label;
+    this.description = description;
+    this.source = source;
+    this.target = target;
+  }
 }
