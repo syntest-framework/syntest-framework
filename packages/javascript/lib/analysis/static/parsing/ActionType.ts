@@ -23,6 +23,8 @@
  */
 export enum ActionType {
   METHOD = "method",
+  GET = "get",
+  SET = "set",
   CONSTRUCTOR = "constructor",
   FUNCTION = "function",
 }

@@ -42,6 +42,8 @@ import { ActionVisibility } from "../../analysis/static/parsing/ActionVisibility
 import { JavaScriptTargetPool } from "../../analysis/static/JavaScriptTargetPool";
 import { RootObject } from "../statements/root/RootObject";
 import { JavaScriptArguments } from "../../JavaScriptLauncher";
+import { Getter } from "../statements/action/Getter";
+import { Setter } from "../statements/action/Setter";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   private targetPool: JavaScriptTargetPool;
@@ -116,8 +118,16 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       const methods = (<JavaScriptSubject>this._subject).getPossibleActions(
         ActionType.METHOD
       );
+      const getters = (<JavaScriptSubject>this._subject).getPossibleActions(
+        ActionType.GET
+      );
+      const setters = (<JavaScriptSubject>this._subject).getPossibleActions(
+        ActionType.SET
+      );
+
       const nCalls =
-        methods.length && prng.nextInt(1, CONFIG.maxActionStatements);
+        methods.length + getters.length + setters.length &&
+        prng.nextInt(1, CONFIG.maxActionStatements);
       for (let i = 0; i < nCalls; i++) {
         calls.push(this.sampleMethodCall(depth + 1));
       }
@@ -210,24 +220,55 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     }
   }
 
-  sampleMethodCall(depth: number): MethodCall {
+  sampleMethodCall(depth: number): MethodCall | Getter | Setter {
     const action = <ActionDescription>(
-      prng.pickOne(
-        (<JavaScriptSubject>this._subject).getPossibleActions(ActionType.METHOD)
-      )
+      prng.pickOne([
+        ...(<JavaScriptSubject>this._subject).getPossibleActions(
+          ActionType.METHOD
+        ),
+        ...(<JavaScriptSubject>this._subject).getPossibleActions(
+          ActionType.GET
+        ),
+        ...(<JavaScriptSubject>this._subject).getPossibleActions(
+          ActionType.SET
+        ),
+      ])
     );
 
-    const args: Statement[] = action.parameters.map((param) => {
-      return this.sampleArgument(depth + 1, param);
-    });
+    if (action.type === ActionType.METHOD) {
+      const args: Statement[] = action.parameters.map((param) => {
+        return this.sampleArgument(depth + 1, param);
+      });
 
-    return new MethodCall(
-      action.returnParameter,
-      action.returnParameter.typeProbabilityMap.getRandomType(),
-      prng.uniqueId(),
-      action.name,
-      args
-    );
+      return new MethodCall(
+        action.returnParameter,
+        action.returnParameter.typeProbabilityMap.getRandomType(),
+        prng.uniqueId(),
+        action.name,
+        args
+      );
+    } else if (action.type === ActionType.GET) {
+      return new Getter(
+        action.returnParameter,
+        action.returnParameter.typeProbabilityMap.getRandomType(),
+        prng.uniqueId(),
+        action.name
+      );
+    } else if (action.type === ActionType.SET) {
+      // always one argument
+      const args: Statement[] = action.parameters.map((param) => {
+        return this.sampleArgument(depth + 1, param);
+      });
+      return new Setter(
+        action.returnParameter,
+        action.returnParameter.typeProbabilityMap.getRandomType(),
+        prng.uniqueId(),
+        action.name,
+        args[0]
+      );
+    }
+
+    throw new Error("Invalid action type: " + action.type);
   }
 
   sampleArgument(

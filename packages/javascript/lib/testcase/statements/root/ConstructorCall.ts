@@ -25,6 +25,8 @@ import * as path from "path";
 import { IdentifierDescription } from "../../../analysis/static/parsing/IdentifierDescription";
 import { JavaScriptSubject } from "../../../search/JavaScriptSubject";
 import { ActionType } from "../../../analysis/static/parsing/ActionType";
+import { Setter } from "../action/Setter";
+import { Getter } from "../action/Getter";
 
 /**
  * @author Dimitri Stallenberg
@@ -62,9 +64,15 @@ export class ConstructorCall extends RootStatement {
     }
 
     for (const call of calls) {
-      if (!(call instanceof MethodCall)) {
+      if (
+        !(
+          call instanceof MethodCall ||
+          call instanceof Getter ||
+          call instanceof Setter
+        )
+      ) {
         throw new Error(
-          "Constructor children must be of identifierDescription MethodCall"
+          "Constructor children must be of identifierDescription MethodCall, Getter, or Setter"
         );
       }
     }

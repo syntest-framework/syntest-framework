@@ -25,6 +25,8 @@ import { Statement } from "../statements/Statement";
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import { IdentifierDescription } from "../../analysis/static/parsing/IdentifierDescription";
 import { StringStatement } from "../statements/primitive/StringStatement";
+import { Getter } from "../statements/action/Getter";
+import { Setter } from "../statements/action/Setter";
 
 /**
  * JavaScriptRandomSampler class
@@ -37,7 +39,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   }
 
   abstract sampleConstructor(depth: number): ConstructorCall;
-  abstract sampleMethodCall(depth: number): MethodCall;
+  abstract sampleMethodCall(depth: number): MethodCall | Getter | Setter;
   abstract sampleArgument(
     depth: number,
     type: IdentifierDescription

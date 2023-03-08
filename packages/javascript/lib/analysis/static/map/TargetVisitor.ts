@@ -194,18 +194,15 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       visibility = ActionVisibility.PROTECTED;
     }
 
-    this._functionMap.get(targetName).set(functionName, {
+    this._functionMap.get(targetName).set(`${path.node.kind}#${functionName}`, {
       scope: {
         uid: `${path.scope.uid - this.scopeIdOffset}`,
         filePath: this.filePath,
       },
       name: functionName,
-      type:
-        functionName === "constructor"
-          ? ActionType.CONSTRUCTOR
-          : ActionType.METHOD,
+      type: path.node.kind,
       visibility: visibility,
-      isConstructor: functionName === "constructor",
+      isConstructor: path.node.kind === "constructor",
       parameters: path.node.params.map((x) => this._extractParam(x)),
       returnParameter: {
         name: "returnValue",

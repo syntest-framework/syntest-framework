@@ -371,6 +371,8 @@ export class JavaScriptLauncher extends Launcher<JavaScriptTestCase> {
           );
         } else if (
           func.type === ActionType.METHOD ||
+          func.type === ActionType.GET ||
+          func.type === ActionType.SET ||
           func.type === ActionType.CONSTRUCTOR
         ) {
           param.typeProbabilityMap = targetPool.typeResolver.getTyping(
