@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "docs/"
+      - "**.md"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,15 +16,12 @@ jobs:
   test:
     name: Coverage - Calculation
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "."
     steps:
       # Cloning
       - uses: actions/checkout@v3
 
       # Setup and Caching
-      - name: Use Node.js
+      - name: Use latest Node.js LTS version
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -61,6 +61,8 @@ jobs:
       matrix:
         # Collect coverage for all packages and plugins
         package:
+          - packages/ast-javascript
+          - packages/cfg-javascript
           - packages/javascript
 
     steps:

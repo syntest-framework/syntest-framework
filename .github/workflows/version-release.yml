@@ -16,9 +16,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.SYNTEST_CI }}
+          fetch-depth: 0
 
       # Setup and Caching
-      - name: Use Node.js
+      - name: Use latest Node.js LTS version
         uses: actions/setup-node@v3
         with:
           node-version: lts/*

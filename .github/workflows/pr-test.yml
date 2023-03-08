@@ -14,9 +14,6 @@ jobs:
   test:
     name: Test
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: "."
     strategy:
       # Stop remaining runs when a build fails that is not experimental
       fail-fast: true
@@ -99,6 +96,8 @@ jobs:
       matrix:
         # Collect coverage for all packages and plugins
         package:
+          - packages/ast-javascript
+          - packages/cfg-javascript
           - packages/javascript
 
     steps:

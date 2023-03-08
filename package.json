@@ -38,7 +38,10 @@
   },
   "workspaces": [
     "packages/*",
-    "plugins/*"
+    "libraries/*",
+    "plugins/*",
+    "presets/*",
+    "tools/*"
   ],
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
