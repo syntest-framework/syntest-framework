@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Yargs = require("yargs");
 import { Plugin } from "./Plugin";
 import { Tool } from "./Tool";
 import { UserInterface } from "@syntest/cli-graphics";
@@ -23,6 +24,7 @@ export abstract class Module {
   version: Readonly<string>;
   _modules: Module[];
   _userInterface: UserInterface;
+  _args: Yargs.ArgumentsCamelCase;
 
   constructor(name: string, version: string) {
     this.name = name;
@@ -43,6 +45,14 @@ export abstract class Module {
 
   get userInterface() {
     return this._userInterface;
+  }
+
+  set args(args: Yargs.ArgumentsCamelCase) {
+    this._args = args;
+  }
+
+  get args() {
+    return this._args;
   }
 
   abstract getTools(): Promise<Tool[]> | Tool[];

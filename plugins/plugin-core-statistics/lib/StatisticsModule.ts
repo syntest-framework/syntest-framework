@@ -17,13 +17,16 @@
  */
 
 import { Module, Plugin, Tool } from "@syntest/module";
-import { SearchStatisticsListener } from "./listeners/SearchStatisticsListener";
+import {
+  ResearchModeOptions,
+  SearchStatisticsListener,
+  StorageOptions,
+} from "./listeners/SearchStatisticsListener";
 import { StatisticsCollector } from "./statistics/StatisticsCollector";
 import { Timing } from "./statistics/Timing";
 import { CoverageWriter } from "./statistics/CoverageWriter";
 import { SummaryWriter } from "./statistics/SummaryWriter";
 import * as path from "path";
-import { CONFIG } from "@syntest/base-testing-tool";
 import { existsSync, mkdirSync } from "fs";
 
 export default class StatisticsModule extends Module {
@@ -47,14 +50,19 @@ export default class StatisticsModule extends Module {
   }
 
   prepare(): void | Promise<void> {
-    const statisticsDirectory = path.resolve(CONFIG.statisticsDirectory);
+    const statisticsDirectory = path.join(
+      (<{ syntestDirectory: string }>(<unknown>this.args)).syntestDirectory,
+      (<AllOptions>(<unknown>this.args)).statisticsDirectory
+    );
     if (!existsSync(statisticsDirectory)) {
       mkdirSync(statisticsDirectory);
     }
   }
 
   cleanup(): void | Promise<void> {
-    const statisticsDirectory = path.resolve(CONFIG.statisticsDirectory);
+    const statisticsDirectory = path.resolve(
+      (<AllOptions>(<unknown>this.args)).statisticsDirectory
+    );
 
     const summaryWriter = new SummaryWriter();
     summaryWriter.write(
@@ -69,3 +77,5 @@ export default class StatisticsModule extends Module {
     );
   }
 }
+
+export type AllOptions = StorageOptions & ResearchModeOptions;

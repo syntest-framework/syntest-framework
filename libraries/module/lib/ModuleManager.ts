@@ -57,6 +57,7 @@ export class ModuleManager {
     ModuleManager.LOGGER = getLogger("ModuleManager");
   }
 
+  private _args: Yargs.ArgumentsCamelCase;
   private _modules: Map<string, Module>;
   private _tools: Map<string, Tool>;
   // type -> name -> plugin
@@ -66,6 +67,13 @@ export class ModuleManager {
     this._modules = new Map();
     this._tools = new Map();
     this._plugins = new Map();
+  }
+
+  set args(args: Yargs.ArgumentsCamelCase) {
+    this._args = args;
+    for (const module of this.modules.values()) {
+      module.args = args;
+    }
   }
 
   get modules() {

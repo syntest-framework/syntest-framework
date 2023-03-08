@@ -28,6 +28,7 @@ import TypedEventEmitter from "typed-emitter";
 import { StatisticsCollector } from "../statistics/StatisticsCollector";
 import { Timing } from "../statistics/Timing";
 import { RuntimeVariable } from "../statistics/RuntimeVariable";
+import Yargs = require("yargs");
 
 export class SearchStatisticsListener extends ListenerPlugin {
   /**
@@ -180,4 +181,62 @@ export class SearchStatisticsListener extends ListenerPlugin {
     );
     (<TypedEventEmitter<Events>>process).on("searchComplete", this.update);
   }
+
+  async getToolOptions(): Promise<Map<string, Yargs.Options>> {
+    // any tool can use this listener
+    // any label can use this listener
+
+    const map = new Map<string, Yargs.Options>();
+
+    map.set("statistics-directory", {
+      alias: [],
+      default: "statistics",
+      description:
+        "The path where the csv should be saved (within the syntest-directory)",
+      group: OptionGroups.Storage,
+      hidden: false,
+      normalize: true,
+      type: "string",
+    });
+
+    map.set("configuration", {
+      alias: [],
+      default: "",
+      description: "The name of the configuration.",
+      group: OptionGroups.ResearchMode,
+      hidden: false,
+      type: "string",
+    });
+
+    map.set("output-properties", {
+      alias: [],
+      default: [
+        "timestamp",
+        "targetName",
+        "coveredBranches",
+        "totalBranches",
+        "fitnessEvaluations",
+      ],
+      description: "The values that should be written to csv",
+      group: OptionGroups.ResearchMode,
+      hidden: false,
+      type: "array",
+    });
+
+    return map;
+  }
 }
+
+export enum OptionGroups {
+  Storage = "Storage Options:",
+  ResearchMode = "Research Mode Options:",
+}
+
+export type StorageOptions = {
+  statisticsDirectory: string;
+};
+
+export type ResearchModeOptions = {
+  configuration: string;
+  outputProperties: string[];
+};

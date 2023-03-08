@@ -55,7 +55,10 @@ async function main() {
   yargs = ModuleConfiguration.configureOptions(yargs);
 
   // Parse the arguments and config using only the base options
-  const baseArguments = yargs.wrap(yargs.terminalWidth()).parseSync(args);
+  const baseArguments = yargs
+    .wrap(yargs.terminalWidth())
+    .env("SYNTEST")
+    .parseSync(args);
 
   // Setup logger
   setupLogger(
@@ -122,11 +125,6 @@ async function main() {
     (<ListenerPlugin>plugin).setupEventListener();
   }
 
-  // Prepare modules
-  LOGGER.info("Preparing modules...");
-  await ModuleManager.instance.prepare();
-  LOGGER.info("Modules prepared!");
-
   const versions = [...ModuleManager.instance.modules.values()]
     .map((module) => `${module.name} (${module.version})`)
     .join("\n");
@@ -139,6 +137,11 @@ async function main() {
     .version(versions)
     .showHidden(false)
     .demandCommand()
+    .env("SYNTEST")
+    .middleware(async (argv) => {
+      // Set the arguments in the module manager
+      ModuleManager.instance.args = argv;
+    })
     .parse(args);
 }
 
