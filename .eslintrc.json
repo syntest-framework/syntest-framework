@@ -14,8 +14,14 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "notice"],
   "rules": {
-    "no-fallthrough": "off"
+    "no-fallthrough": "off",
+    "notice/notice":["error",
+      { 
+        "templateFile": "./LICENSE.header.ts",
+        "nonMatchingTolerance": 0.8
+     }
+    ]
   }
 }
