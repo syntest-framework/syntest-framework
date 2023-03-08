@@ -103,7 +103,9 @@ export class ApproachLevel {
           // If a node has more than one outgoing edge, it is a control node
           // Only control nodes are considered in the approach level
           searchQueue.push([edge.source, currentDistance + 1]);
-        } else searchQueue.push([edge.source, currentDistance]);
+        } else {
+          searchQueue.push([edge.source, currentDistance]);
+        }
       }
     }
     return {

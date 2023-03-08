@@ -20,6 +20,14 @@ import { ControlFlowGraph } from "../graph/ControlFlowGraph";
 import { Edge } from "../graph/Edge";
 import { NodeType } from "../graph/NodeType";
 import { ContractedControlFlowGraph } from "../graph/ContractedControlFlowGraph";
+import {
+  cannotMergeEntryAndExit,
+  exactlyOneEdgeShouldBeRemoved,
+  exactlyOneNodeShouldBeRemoved,
+  notDirectlyConnected,
+  tooManyIncoming,
+  tooManyOutgoing,
+} from "../diagnostics";
 
 /**
  * Edge contraction algorithm.
@@ -102,15 +110,15 @@ function mergeNodes<S>(
   node2: string
 ): ControlFlowGraph<S> {
   if (controlFlowGraph.getOutgoingEdges(node1).length !== 1) {
-    throw new Error("Node 1 has more than one outgoing edge");
+    throw new Error(tooManyOutgoing(node1));
   }
 
   if (controlFlowGraph.getIncomingEdges(node2).length !== 1) {
-    throw new Error("Node 2 has more than one incoming edge");
+    throw new Error(tooManyIncoming(node2));
   }
 
   if (controlFlowGraph.getOutgoingEdges(node1)[0].target !== node2) {
-    throw new Error("Node 1 and Node 2 are not directly connected");
+    throw new Error(notDirectlyConnected(node1, node2));
   }
 
   const isEntry = node1 === controlFlowGraph.entry.id;
@@ -118,7 +126,7 @@ function mergeNodes<S>(
   const isErrorExit = node2 === controlFlowGraph.errorExit.id;
 
   if (isEntry && (isSuccessExit || isErrorExit)) {
-    throw new Error("Cannot merge entry node with success or error exit node");
+    throw new Error(cannotMergeEntryAndExit());
   }
 
   const node1Obj = controlFlowGraph.getNodeById(node1);
@@ -154,7 +162,9 @@ function mergeNodes<S>(
   );
 
   if (removedEdges.length !== 1) {
-    throw new Error("Something went wrong while merging edges");
+    throw new Error(
+      exactlyOneEdgeShouldBeRemoved(node1, node2, removedEdges.length)
+    );
   }
 
   const newEdges = controlFlowGraph.edges
@@ -206,11 +216,23 @@ function mergeNodes<S>(
     });
 
   if (newNodes.length !== controlFlowGraph.nodes.length - 1) {
-    throw new Error("Something went wrong while merging nodes");
+    throw new Error(
+      exactlyOneNodeShouldBeRemoved(
+        node1,
+        node2,
+        newNodes.length - controlFlowGraph.nodes.length
+      )
+    );
   }
 
   if (newEdges.length !== controlFlowGraph.edges.length - 1) {
-    throw new Error("Something went wrong while merging edges");
+    throw new Error(
+      exactlyOneEdgeShouldBeRemoved(
+        node1,
+        node2,
+        newNodes.length - controlFlowGraph.nodes.length
+      )
+    );
   }
 
   return new ControlFlowGraph(

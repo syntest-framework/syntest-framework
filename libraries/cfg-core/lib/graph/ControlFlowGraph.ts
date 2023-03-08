@@ -19,6 +19,7 @@ import { Node } from "./Node";
 import { Edge } from "./Edge";
 import { NodeType } from "./NodeType";
 import cloneDeep = require("lodash.clonedeep");
+import { duplicateNodeId } from "../diagnostics";
 
 /**
  * Represents a control flow graph.
@@ -47,7 +48,7 @@ export class ControlFlowGraph<S> {
     this._edges = cloneDeep(edges);
 
     if (new Set(this._nodes.map((x) => x.id)).size !== this._nodes.length) {
-      throw new Error("Duplicate node id found");
+      throw new Error(duplicateNodeId());
     }
 
     this._incomingEdges = this.getIncomingEdgesMap();

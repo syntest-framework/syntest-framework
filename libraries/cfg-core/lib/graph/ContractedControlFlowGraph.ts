@@ -19,6 +19,7 @@
 import { ControlFlowGraph } from "./ControlFlowGraph";
 import { Node } from "./Node";
 import { Edge } from "./Edge";
+import { duplicateNodeInMappping, nodeNotFoundInMapping } from "../diagnostics";
 
 /**
  * A contracted control flow graph.
@@ -46,7 +47,7 @@ export class ContractedControlFlowGraph<S> extends ControlFlowGraph<S> {
     for (const [key, value] of this._nodeMapping) {
       for (const node of value) {
         if (this._reverseNodeMapping.has(node))
-          throw new Error("Duplicate node found in node mapping");
+          throw new Error(duplicateNodeInMappping());
         this._reverseNodeMapping.set(node, key);
       }
     }
@@ -74,14 +75,14 @@ export class ContractedControlFlowGraph<S> extends ControlFlowGraph<S> {
 
   getParentNode(node: string): string {
     if (!this._reverseNodeMapping.has(node)) {
-      throw new Error("Node not found in reverse node mapping");
+      throw new Error(nodeNotFoundInMapping(node));
     }
     return this._reverseNodeMapping.get(node);
   }
 
   getChildNodes(node: string): string[] {
     if (!this._nodeMapping.has(node)) {
-      throw new Error("Node not found in node mapping");
+      throw new Error(nodeNotFoundInMapping(node));
     }
     return this._nodeMapping.get(node);
   }
