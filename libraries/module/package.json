@@ -1,6 +1,6 @@
 {
   "name": "@syntest/module",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "description": "The module library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -19,8 +19,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist",
-    "/NOTICE",
+    "dist",
+    "NOTICE",
     "README.md"
   ],
   "repository": {
@@ -42,7 +42,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.1.0-beta.0",
+    "@syntest/cli-graphics": "^0.1.0-beta.1",
     "@syntest/logging": "*",
     "global-modules": "2.0.0"
   },

@@ -2,8 +2,9 @@
 
 > The aim of the common core of the SynTest Framework is to extract the common parts (e.g., core infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
-[![build](https://github.com/syntest-framework/syntest-core/actions/workflows/build.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/build.yml)
-[![verify](https://github.com/syntest-framework/syntest-core/actions/workflows/verify.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/verify.yml)
+[![main-build](https://github.com/syntest-framework/syntest-core/actions/workflows/main-build.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-build.yml)
+[![main-quality](https://github.com/syntest-framework/syntest-core/actions/workflows/main-quality.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-quality.yml)
+[![main-test](https://github.com/syntest-framework/syntest-core/actions/workflows/main-test.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-test.yml)
 [![publish pre-release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml)
 [![publish release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml)
 
