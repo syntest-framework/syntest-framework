@@ -42,7 +42,7 @@ import { Relation } from "./types/discovery/Relation";
 import { Element } from "@syntest/ast-javascript";
 import { TypeEnum } from "./types/resolving/TypeEnum";
 import { TypeProbability } from "./types/resolving/TypeProbability";
-import { Instrumenter } from "../../instrumentation/Instrumenter";
+import { Instrumenter } from "@syntest/instrumentation-javascript";
 import { ExportType } from "./dependency/IdentifierVisitor";
 import * as t from "@babel/types";
 import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";

@@ -98,6 +98,7 @@ jobs:
         package:
           - packages/ast-javascript
           - packages/cfg-javascript
+          - packages/instrumentation-javascript
           - packages/javascript
 
     steps:
