@@ -17,29 +17,29 @@
  */
 
 export enum EdgeType {
-  NORMAL,
-  EXCEPTION,
-  TRUE,
-  FALSE,
+  NORMAL = "NORMAL",
+  EXCEPTION = "EXCEPTION",
+  TRUE = "TRUE",
+  FALSE = "FALSE",
 
   /**
    * A back edge is an edge that points to a block that has already been met during a depth-first (DFS) traversal of the graph. Back edges are typical of loops.
    * https://en.wikipedia.org/wiki/Control-flow_graph
    */
-  BACK_EDGE,
+  BACK_EDGE = "BACK_EDGE",
   /**
    * A critical edge is an edge which is neither the only edge leaving its source block, nor the only edge entering its destination block. These edges must be split: a new block must be created in the middle of the edge, in order to insert computations on the edge without affecting any other edges.
    * https://en.wikipedia.org/wiki/Control-flow_graph
    */
-  CRITICAL_EDGE,
+  CRITICAL_EDGE = "CRITICAL_EDGE",
   /**
    * An abnormal edge is an edge whose destination is unknown. Exception handling constructs can produce them. These edges tend to inhibit optimization.
    * https://en.wikipedia.org/wiki/Control-flow_graph
    */
-  ABNORMAL_EDGE,
+  ABNORMAL_EDGE = "ABNORMAL_EDGE",
   /**
    * An impossible edge (also known as a fake edge) is an edge which has been added to the graph solely to preserve the property that the exit block postdominates all blocks. It cannot ever be traversed.
    * https://en.wikipedia.org/wiki/Control-flow_graph
    */
-  IMPOSSIBLE_EDGE,
+  IMPOSSIBLE_EDGE = "IMPOSSIBLE_EDGE",
 }

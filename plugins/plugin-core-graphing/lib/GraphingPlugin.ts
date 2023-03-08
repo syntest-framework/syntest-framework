@@ -75,9 +75,9 @@ export default class GraphingPlugin extends ListenerPlugin {
     return optionsMap;
   }
 
-  controlFlowGraphResolvingComplete<E extends Encoding>(
-    targetPool: TargetPool<E>,
-    cfg: ControlFlowGraph
+  controlFlowGraphResolvingComplete<S>(
+    targetPool: TargetPool,
+    cfg: ControlFlowGraph<S>
   ): void {
     const svgHtml = createSimulation(cfg);
 

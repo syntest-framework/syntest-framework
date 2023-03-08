@@ -20,6 +20,8 @@
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { ControlFlowGraph } from "@syntest/cfg-core";
+import { Target } from "../analysis/static/Target";
+import { TargetPool } from "../analysis/static/TargetPool";
 
 /**
  * Subject of the search process.
@@ -28,22 +30,16 @@ import { ControlFlowGraph } from "@syntest/cfg-core";
  */
 export abstract class SearchSubject<T extends Encoding> {
   /**
-   * Path to the subject.
+   * Subject Target
    * @protected
    */
-  private readonly _path: string;
+  protected readonly _target: Target;
 
   /**
-   * Name of the subject.
+   * The target pool.
    * @protected
    */
-  protected readonly _name: string;
-
-  /**
-   * Control flow graph of the subject.
-   * @protected
-   */
-  protected readonly _cfg: ControlFlowGraph;
+  protected readonly _targetPool: TargetPool;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -59,10 +55,9 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param functions Functions of the subject
    * @protected
    */
-  protected constructor(path: string, name: string, cfg: ControlFlowGraph) {
-    this._path = path;
-    this._name = name;
-    this._cfg = cfg;
+  protected constructor(target: Target, targetPool: TargetPool) {
+    this._target = target;
+    this._targetPool = targetPool;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
   }
@@ -92,14 +87,17 @@ export abstract class SearchSubject<T extends Encoding> {
   }
 
   get name(): string {
-    return this._name;
+    return this._target.targetName;
   }
 
-  get cfg(): ControlFlowGraph {
-    return this._cfg;
+  get cfg(): ControlFlowGraph<unknown> {
+    return this._targetPool.getCFG(
+      this._target.canonicalPath,
+      this._target.targetName
+    );
   }
 
   get path(): string {
-    return this._path;
+    return this._target.canonicalPath;
   }
 }

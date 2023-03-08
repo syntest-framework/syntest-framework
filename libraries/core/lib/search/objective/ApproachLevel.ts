@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 import { Datapoint } from "../..";
-import { ControlFlowGraph, Node, Pair } from "@syntest/cfg-core";
+import { ControlFlowGraph, Node } from "@syntest/cfg-core";
 
 export class ApproachLevel {
-  public static calculate(
-    cfg: ControlFlowGraph,
-    node: Node,
+  public static calculate<S>(
+    cfg: ControlFlowGraph<S>,
+    node: Node<S>,
     traces: Datapoint[]
   ): { approachLevel: number; closestCoveredBranchTrace: Datapoint } {
     // Construct map with key as line covered and value as datapoint that covers that line
@@ -43,7 +43,7 @@ export class ApproachLevel {
     const coveredLines = new Set<number>(linesTraceMap.keys());
 
     // Based on set of covered lines, filter CFG nodes that were covered and get their strings
-    const coveredNodes = new Set<Node>(
+    const coveredNodes = new Set<Node<S>>(
       cfg.filterNodesByLineNumbers(coveredLines)
     );
 
@@ -59,7 +59,7 @@ export class ApproachLevel {
 
     // Retrieve trace based on lines covered by found closestCoveredBranch
     let closestCoveredBranchTrace: Datapoint = null;
-    for (const line of closestCoveredBranch.lines) {
+    for (const line of closestCoveredBranch.metadata.lineNumbers) {
       if (linesTraceMap.has(line)) {
         closestCoveredBranchTrace = linesTraceMap.get(line);
         break;
@@ -69,44 +69,41 @@ export class ApproachLevel {
     return { approachLevel, closestCoveredBranchTrace };
   }
 
-  static _findClosestCoveredBranch(
-    cfg: ControlFlowGraph,
+  static _findClosestCoveredBranch<S>(
+    cfg: ControlFlowGraph<S>,
     from: string,
     targets: Set<string>
-  ): { approachLevel: number; closestCoveredBranch: Node } {
-    const rotatedAdjList = cfg.getRotatedAdjacencyList();
-
+  ): { approachLevel: number; closestCoveredBranch: Node<S> } {
     const visitedNodeIdSet = new Set<string>([from]);
-    const searchQueue: Pair<number, string>[] = [{ first: 0, second: from }];
+    const searchQueue: [string, number][] = [[from, 0]];
 
-    let current = undefined;
-    while (searchQueue.length != 0) {
-      current = searchQueue.shift();
-      const currentDistance: number = current.first;
-      const currentNodeId: string = current.second;
+    while (searchQueue.length !== 0) {
+      const current = searchQueue.shift();
+      const currentNodeId: string = current[0];
+      const currentDistance: number = current[1];
 
       // get all neighbors of currently considered node
-      const parentsOfCurrent = rotatedAdjList.get(currentNodeId);
+      const incomingEdges = cfg.getIncomingEdges(currentNodeId);
 
-      for (const pairOfParent of parentsOfCurrent) {
-        const nextNodeId = pairOfParent.first;
+      for (const edge of incomingEdges) {
         // ignore if already visited node
-        if (visitedNodeIdSet.has(nextNodeId)) {
+        if (visitedNodeIdSet.has(edge.source)) {
           continue;
         }
         // return if one of targets nodes was found
-        if (targets.has(nextNodeId)) {
+        if (targets.has(edge.source)) {
           return {
-            approachLevel: currentDistance + pairOfParent.second,
-            closestCoveredBranch: cfg.getNodeById(nextNodeId),
+            approachLevel: currentDistance,
+            closestCoveredBranch: cfg.getNodeById(edge.source),
           };
         }
         // add element to queue and visited nodes to continue search
-        visitedNodeIdSet.add(nextNodeId);
-        searchQueue.push({
-          first: currentDistance + pairOfParent.second,
-          second: nextNodeId,
-        });
+        visitedNodeIdSet.add(edge.source);
+        if (cfg.getOutgoingEdges(edge.source).length > 1) {
+          // If a node has more than one outgoing edge, it is a control node
+          // Only control nodes are considered in the approach level
+          searchQueue.push([edge.source, currentDistance + 1]);
+        } else searchQueue.push([edge.source, currentDistance]);
       }
     }
     return {

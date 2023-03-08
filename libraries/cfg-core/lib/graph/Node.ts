@@ -27,9 +27,6 @@ export class Node<S> {
   readonly label: string;
   readonly description?: string;
 
-  readonly incomingEdges: Edge<S>[];
-  readonly outgoingEdges: Edge<S>[];
-
   /**
    * The ordered list of statements in this node.
    */
@@ -50,32 +47,12 @@ export class Node<S> {
     this.statements = statements;
     this.metadata = metadata;
     this.description = description;
-    this.incomingEdges = [];
-    this.outgoingEdges = [];
   }
 
   makeImmutable(): void {
     Object.freeze(this);
-    Object.freeze(this.incomingEdges);
-    Object.freeze(this.outgoingEdges);
     Object.freeze(this.statements);
     Object.freeze(this.metadata);
-  }
-
-  addIncomingEdge(edge: Edge<S>): void {
-    this.incomingEdges.push(edge);
-  }
-
-  addOutgoingEdge(edge: Edge<S>): void {
-    this.outgoingEdges.push(edge);
-  }
-
-  addIncomingEdges(edges: Edge<S>[]): void {
-    this.incomingEdges.push(...edges);
-  }
-
-  addOutgoingEdges(edges: Edge<S>[]): void {
-    this.outgoingEdges.push(...edges);
   }
 }
 

@@ -20,8 +20,8 @@ import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 /**
  * Control Flow Function
  */
-export interface ControlFlowFunction {
+export interface ControlFlowFunction<S> {
   id: string;
   name: string;
-  graph: ControlFlowGraph;
+  graph: ControlFlowGraph<S>;
 }

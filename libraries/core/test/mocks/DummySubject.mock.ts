@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 import { Encoding, ObjectiveFunction, SearchSubject } from "../../lib";
-import { DummyCFG } from "./DummyCFG.mock";
+import { DummyTargetPool } from "./DummyTargetPool.mock";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
   protected objectives: ObjectiveFunction<T>[];
 
   constructor(objectives: ObjectiveFunction<T>[]) {
-    super("", "", new DummyCFG([], []));
+    super({ canonicalPath: "", targetName: "" }, new DummyTargetPool());
     this.objectives = objectives;
   }
 

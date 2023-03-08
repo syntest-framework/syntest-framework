@@ -16,34 +16,29 @@
  * limitations under the License.
  */
 
-import {
-  ControlFlowGraph,
-  Node,
-  BranchNode,
-  Edge,
-  NodeType,
-} from "@syntest/cfg-core";
+import { ControlFlowGraph, Node, Edge, NodeType } from "@syntest/cfg-core";
 
-export function cfgToD3Graph(cfg: ControlFlowGraph, offset: number): D3Graph {
+export function cfgToD3Graph<S>(
+  cfg: ControlFlowGraph<S>,
+  offset: number
+): D3Graph {
   let count = 0;
 
   const nodes = [
-    ...cfg.nodes.map((n: Node) => {
-      let name = `(${n.lines[0]})`;
+    ...cfg.nodes.map((n: Node<S>) => {
+      let name = `(${n.metadata.lineNumbers.join(", ")})`;
 
       if (n.description && n.description.length) {
-        name = `(${n.lines[0]}: ${n.description})`;
+        name = `(${n.metadata.lineNumbers.join(", ")}: ${n.description})`;
       }
-
-      if (n.type === NodeType.Branch) {
-        name += ` ${(<BranchNode>n).condition.operator}`;
-      }
+      name += `\n${n.label}`;
+      name += `\n${n.statements.map((s) => `${s}`).join("\n")}`;
 
       const node = {
         id: n.id,
         name: name,
-        fixed: n.type === NodeType.Root,
-        root: n.type === NodeType.Root,
+        fixed: n.type === NodeType.ENTRY,
+        root: n.type === NodeType.ENTRY,
         fx: undefined,
         fy: undefined,
       };
@@ -61,10 +56,10 @@ export function cfgToD3Graph(cfg: ControlFlowGraph, offset: number): D3Graph {
   const links = [
     ...cfg.edges.map((e: Edge) => {
       return {
-        id: e.from + "-" + e.to,
-        source: e.from,
-        target: e.to,
-        type: e.branchType,
+        id: e.source + "-" + e.target,
+        source: e.source,
+        target: e.target,
+        type: e.type,
       };
     }),
   ];
@@ -87,7 +82,7 @@ export interface D3Link {
   id: string;
   source: string;
   target: string;
-  type: boolean;
+  type: string;
 }
 
 export interface D3Graph {

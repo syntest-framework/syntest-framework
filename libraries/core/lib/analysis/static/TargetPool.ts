@@ -25,7 +25,7 @@ import { Encoding } from "../../search/Encoding";
 import TypedEventEmitter from "typed-emitter";
 import { Events } from "../../util/Events";
 
-export abstract class TargetPool<T extends Encoding> {
+export abstract class TargetPool {
   protected _targets: Target[];
 
   abstract getSource(targetPath: string): string;
@@ -38,8 +38,11 @@ export abstract class TargetPool<T extends Encoding> {
     targetName: string
   ): Map<string, A>;
 
-  abstract getCFG(targetPath: string, targetName: string): ControlFlowGraph;
-  abstract getAST(targetPath: string): unknown;
+  abstract getCFG<S>(
+    targetPath: string,
+    targetName: string
+  ): ControlFlowGraph<S>;
+  abstract getAST<S>(targetPath: string): S;
 
   loadTargets(include: string[], exclude: string[]): void {
     (<TypedEventEmitter<Events>>process).emit("targetLoadStart", this);

@@ -15,27 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node } from "./Node";
 import { EdgeType } from "./EdgeType";
 
 /**
  * Represents a jump between two basic blocks in a control flow graph.
  */
-export class Edge<S> {
+export class Edge {
   readonly id: string;
   readonly type: EdgeType;
   readonly label: string;
   readonly description?: string;
 
-  readonly source: Node<S>;
-  readonly target: Node<S>;
+  readonly source: string;
+  readonly target: string;
 
   constructor(
     id: string,
     type: EdgeType,
     label: string,
-    source: Node<S>,
-    target: Node<S>,
+    source: string,
+    target: string,
     description?: string
   ) {
     this.id = id;

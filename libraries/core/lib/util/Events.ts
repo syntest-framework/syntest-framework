@@ -65,39 +65,21 @@ export type Events = {
     budgetManager: BudgetManager<E>
   ) => void;
 
-  targetLoadStart: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  targetLoadComplete: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  sourceResolvingStart: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  sourceResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
+  targetLoadStart: (targetPool: TargetPool) => void;
+  targetLoadComplete: (targetPool: TargetPool) => void;
+  sourceResolvingStart: (targetPool: TargetPool) => void;
+  sourceResolvingComplete: (targetPool: TargetPool) => void;
+  targetResolvingStart: (targetPool: TargetPool) => void;
+  targetResolvingComplete: (targetPool: TargetPool) => void;
+  functionMapResolvingStart: (targetPool: TargetPool) => void;
+  functionMapResolvingComplete: (targetPool: TargetPool) => void;
+  dependencyResolvingStart: (targetPool: TargetPool) => void;
+  dependencyResolvingComplete: (targetPool: TargetPool) => void;
+  controlFlowGraphResolvingStart: (targetPool: TargetPool) => void;
+  controlFlowGraphResolvingComplete: <S>(
+    targetPool: TargetPool,
+    cfg: ControlFlowGraph<S>
   ) => void;
-  targetResolvingStart: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  targetResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  functionMapResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  functionMapResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  dependencyResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  dependencyResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  controlFlowGraphResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  controlFlowGraphResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>,
-    cfg: ControlFlowGraph
-  ) => void;
-  abstractSyntaxTreeResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  abstractSyntaxTreeResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
+  abstractSyntaxTreeResolvingStart: (targetPool: TargetPool) => void;
+  abstractSyntaxTreeResolvingComplete: (targetPool: TargetPool) => void;
 };

@@ -28,20 +28,30 @@ export class ControlFlowGraph<S> {
   private readonly _successExit: Node<S>;
   private readonly _errorExit: Node<S>;
   private readonly _nodes: Node<S>[];
-  private readonly _edges: Edge<S>[];
+  private readonly _edges: Edge[];
+
+  private readonly _incomingEdges: Map<string, Edge[]>;
+  private readonly _outgoingEdges: Map<string, Edge[]>;
 
   constructor(
     entry: Node<S>,
     successExit: Node<S>,
     errorExit: Node<S>,
     nodes: Node<S>[],
-    edges: Edge<S>[]
+    edges: Edge[]
   ) {
     this._entry = entry;
     this._successExit = successExit;
     this._errorExit = errorExit;
     this._nodes = cloneDeep(nodes);
     this._edges = cloneDeep(edges);
+
+    if (new Set(this._nodes.map((x) => x.id)).size !== this._nodes.length) {
+      throw new Error("Duplicate node id found");
+    }
+
+    this._incomingEdges = this.getIncomingEdgesMap();
+    this._outgoingEdges = this.getOutgoingEdgesMap();
   }
 
   get entry(): Node<S> {
@@ -60,8 +70,79 @@ export class ControlFlowGraph<S> {
     return this._nodes;
   }
 
-  get edges(): Edge<S>[] {
+  get edges(): Edge[] {
     return this._edges;
+  }
+
+  getIncomingEdges(nodeId: string): Edge[] {
+    if (!this._incomingEdges.has(nodeId)) {
+      return [];
+    }
+    return this._incomingEdges.get(nodeId);
+  }
+
+  getOutgoingEdges(nodeId: string): Edge[] {
+    if (!this._outgoingEdges.has(nodeId)) {
+      return [];
+    }
+    return this._outgoingEdges.get(nodeId);
+  }
+
+  /**
+   * Builds the incoming edges map of the graph
+   * @returns
+   */
+  private getIncomingEdgesMap(): Map<string, Edge[]> {
+    const map = new Map<string, Edge[]>();
+    for (const edge of this._edges) {
+      if (!map.has(edge.target)) {
+        map.set(edge.target, []);
+      }
+      map.get(edge.target).push(edge);
+    }
+
+    return map;
+  }
+
+  /**
+   * Builds the outgoing edges map of the graph
+   * @returns
+   */
+  private getOutgoingEdgesMap(): Map<string, Edge[]> {
+    const map = new Map<string, Edge[]>();
+    for (const edge of this._edges) {
+      if (!map.has(edge.source)) {
+        map.set(edge.source, []);
+      }
+      map.get(edge.source).push(edge);
+    }
+    return map;
+  }
+
+  /**
+   * Reverses the edges of the graph
+   * @returns
+   */
+  reverse(): ControlFlowGraph<S> {
+    const reversedEdges = this._edges.map(
+      (edge) =>
+        new Edge(
+          edge.id,
+          edge.type,
+          edge.label,
+          edge.target,
+          edge.source,
+          `Reversed edge of ${edge.id}`
+        )
+    );
+
+    return new ControlFlowGraph(
+      this._successExit,
+      this._entry,
+      this._errorExit,
+      this._nodes,
+      reversedEdges
+    );
   }
 
   // Successively applies a filter method on initial list of nodes with specified predicates
@@ -108,8 +189,8 @@ export class ControlFlowGraph<S> {
   getParents(targetNodeId: string): Node<S>[] {
     const selectedIds = new Set<string>(
       this._edges
-        .filter((e: Edge<S>) => e.target.id === targetNodeId)
-        .map((e: Edge<S>) => e.source.id)
+        .filter((e: Edge) => e.target === targetNodeId)
+        .map((e: Edge) => e.source)
     );
     return this._nodes.filter((node: Node<S>) => selectedIds.has(node.id));
   }
@@ -118,30 +199,9 @@ export class ControlFlowGraph<S> {
   getChildren(targetNodeId: string): Node<S>[] {
     const selectedIds = new Set<string>(
       this._edges
-        .filter((e: Edge<S>) => e.source.id === targetNodeId)
-        .map((e: Edge<S>) => e.target.id)
+        .filter((e: Edge) => e.source === targetNodeId)
+        .map((e: Edge) => e.target)
     );
     return this._nodes.filter((node: Node<S>) => selectedIds.has(node.id));
-  }
-
-  /*
-        Method return a map that has node ids as keys, and list of pairs as a value.
-        Each of the pairs in the list of certain node represent a node of a parent as a first value, 
-        and a number that indicates if the edge that connects this two nodes has a defined branch type i.e. weight of the edge
-    */
-  getRotatedAdjacencyList(): Map<string, string[]> {
-    const adjList = new Map<string, string[]>();
-
-    for (const edge of this._edges) {
-      if (!adjList.has(edge.source.id)) {
-        adjList.set(edge.source.id, []);
-      }
-      if (!adjList.has(edge.target.id)) {
-        adjList.set(edge.target.id, []);
-      }
-      adjList.get(edge.target.id).push(edge.source.id);
-    }
-
-    return adjList;
   }
 }

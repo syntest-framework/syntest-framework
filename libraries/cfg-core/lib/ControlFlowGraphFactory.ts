@@ -19,5 +19,5 @@
 import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
 export interface ControlFlowGraphFactory {
-  convertAST(AST: unknown): ControlFlowGraph;
+  convertAST<S>(AST: S): ControlFlowGraph<S>;
 }
