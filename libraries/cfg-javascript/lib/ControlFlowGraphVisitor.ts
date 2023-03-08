@@ -18,7 +18,7 @@
 
 import {
   BranchNode,
-  CFG,
+  ControlFlowGraph,
   Node,
   NodeType,
   Operation,
@@ -27,7 +27,7 @@ import {
 } from "@syntest/cfg-core";
 
 export class ControlFlowGraphVisitor {
-  private _cfg: CFG;
+  private _cfg: ControlFlowGraph;
 
   // private _nodeStack: Node[][]
   //
@@ -42,7 +42,7 @@ export class ControlFlowGraphVisitor {
   private _nodeStack: Node[];
 
   constructor() {
-    this._cfg = new CFG();
+    this._cfg = new ControlFlowGraph();
 
     this._trackingLeaves = [];
     this._firstExit = true;
@@ -484,7 +484,7 @@ export class ControlFlowGraphVisitor {
     }
   }
 
-  get cfg(): CFG {
+  get cfg(): ControlFlowGraph {
     return this._cfg;
   }
 }

@@ -16,26 +16,27 @@
  * limitations under the License.
  */
 
-import { traverse } from "@babel/core";
-import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
-import { CFG } from "@syntest/cfg-core";
-import * as t from "@babel/types";
+import { IdentifierDescription } from "./IdentifierDescription";
+import { ActionType } from "./ActionType";
+import { ActionVisibility } from "./ActionVisibility";
+import { Scope } from "@syntest/ast-javascript";
+import { ActionDescription as CoreActionDescription } from "@syntest/core/dist/analysis/static/ActionDescription";
 
 /**
- * Exports generator for targets.
+ * Interface for a Action Description.
  *
  * @author Dimitri Stallenberg
  */
-export class CFGGenerator {
-  /**
-   * Generate function map for specified target.
-   *
-   * @param targetAST The AST of the target
-   */
-  generate(targetAST: t.Node): CFG {
-    const visitor = new ControlFlowGraphVisitor();
-    traverse(targetAST, visitor);
+export interface ActionDescription extends CoreActionDescription {
+  scope: Scope;
+  type: ActionType;
 
-    return visitor.cfg;
-  }
+  visibility: ActionVisibility;
+
+  isConstructor: boolean;
+  isStatic: boolean;
+  isAsync: boolean;
+
+  parameters: IdentifierDescription[];
+  returnParameter: IdentifierDescription;
 }

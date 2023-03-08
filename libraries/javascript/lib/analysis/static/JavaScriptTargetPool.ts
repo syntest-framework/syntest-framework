@@ -17,7 +17,7 @@
  */
 
 import * as path from "path";
-import { CFG } from "@syntest/cfg-core";
+import { ControlFlowGraph } from "@syntest/cfg-core";
 import { getAllFiles, readFile } from "../../utils/fileSystem";
 import { AbstractSyntaxTreeGenerator } from "@syntest/ast-javascript";
 import {
@@ -37,7 +37,6 @@ import { TypeResolver } from "./types/resolving/TypeResolver";
 import { VariableGenerator } from "./types/discovery/VariableGenerator";
 import { ObjectGenerator } from "./types/discovery/object/ObjectGenerator";
 import { ComplexObject } from "./types/discovery/object/ComplexObject";
-import { ActionDescription } from "./parsing/ActionDescription";
 import { Relation } from "./types/discovery/Relation";
 import { Element } from "@syntest/ast-javascript";
 import { TypeEnum } from "./types/resolving/TypeEnum";
@@ -46,6 +45,9 @@ import { Instrumenter } from "@syntest/instrumentation-javascript";
 import { ExportType } from "./dependency/IdentifierVisitor";
 import * as t from "@babel/types";
 import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";
+import { ActionDescription } from "./parsing/ActionDescription";
+import { ActionDescription as CoreActionDescription } from "@syntest/core/dist/analysis/static/ActionDescription";
+
 // eslint-disable-next-line
 const { outputFileSync, copySync } = require("fs-extra");
 
@@ -78,7 +80,7 @@ export class JavaScriptTargetPool extends TargetPool<JavaScriptTestCase> {
   >;
 
   // Mapping: filepath -> target name -> (function name -> CFG)
-  protected _controlFlowGraphs: Map<string, Map<string, CFG>>;
+  protected _controlFlowGraphs: Map<string, Map<string, ControlFlowGraph>>;
 
   // Mapping: filepath -> dependencies
   protected _dependencyMaps: Map<string, Export[]>;
@@ -110,7 +112,7 @@ export class JavaScriptTargetPool extends TargetPool<JavaScriptTestCase> {
       string,
       Map<string, Map<string, ActionDescription>>
     >();
-    this._controlFlowGraphs = new Map<string, Map<string, CFG>>();
+    this._controlFlowGraphs = new Map<string, Map<string, ControlFlowGraph>>();
 
     this._dependencyMaps = new Map();
 
@@ -170,11 +172,14 @@ export class JavaScriptTargetPool extends TargetPool<JavaScriptTestCase> {
     return this._abstractSyntaxTrees.get(absoluteTargetPath);
   }
 
-  getCFG(targetPath: string, targetName: string): CFG {
+  getCFG(targetPath: string, targetName: string): ControlFlowGraph {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._controlFlowGraphs.has(absoluteTargetPath)) {
-      this._controlFlowGraphs.set(absoluteTargetPath, new Map<string, CFG>());
+      this._controlFlowGraphs.set(
+        absoluteTargetPath,
+        new Map<string, ControlFlowGraph>()
+      );
     }
 
     if (!this._controlFlowGraphs.get(absoluteTargetPath).has(targetName)) {
@@ -276,16 +281,37 @@ export class JavaScriptTargetPool extends TargetPool<JavaScriptTestCase> {
     }
   }
 
-  getFunctionMap(
-    targetPath: string
-  ): Map<string, Map<string, ActionDescription>> {
+  getFunctionMap<A extends CoreActionDescription>(
+    targetPath: string,
+    targetName: string
+  ): Map<string, A> {
     const absoluteTargetPath = path.resolve(targetPath);
 
     if (!this._functionMaps.has(absoluteTargetPath)) {
       this.getTargetMap(absoluteTargetPath);
     }
 
-    return this._functionMaps.get(absoluteTargetPath);
+    if (!this._functionMaps.get(absoluteTargetPath).has(targetName)) {
+      return new Map();
+    }
+
+    return <Map<string, A>>(
+      (<unknown>this._functionMaps.get(absoluteTargetPath).get(targetName))
+    );
+  }
+
+  getFunctionMaps<A extends CoreActionDescription>(
+    targetPath: string
+  ): Map<string, Map<string, A>> {
+    const absoluteTargetPath = path.resolve(targetPath);
+
+    if (!this._functionMaps.has(absoluteTargetPath)) {
+      this.getTargetMap(absoluteTargetPath);
+    }
+
+    return <Map<string, Map<string, A>>>(
+      (<unknown>this._functionMaps.get(absoluteTargetPath))
+    );
   }
 
   getExports(targetPath: string): Export[] {

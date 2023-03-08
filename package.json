@@ -24,7 +24,7 @@
     "lint-staged": "lint-staged",
     "build": "lerna run build",
     "build:watch": "lerna watch -- lerna run build --since",
-    "clean": "lerna run clean",
+    "clean": "lerna run clean && rm -rf .nyc_output dist node_modules coverage",
     "clean:dist": "lerna run clean:dist",
     "format": "lerna run format",
     "format:check": "lerna run format:check",
@@ -37,7 +37,6 @@
     "postinstall": "husky install"
   },
   "workspaces": [
-    "packages/*",
     "libraries/*",
     "plugins/*",
     "presets/*",

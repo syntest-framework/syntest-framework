@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { CFG, NodeType } from "@syntest/cfg-core";
+import { ControlFlowGraph, NodeType } from "@syntest/cfg-core";
 import {
   FunctionObjectiveFunction,
   ObjectiveFunction,
@@ -59,7 +59,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
   constructor(
     path: string,
     targetMeta: JavaScriptTargetMetaData,
-    cfg: CFG,
+    cfg: ControlFlowGraph,
     functions: ActionDescription[]
   ) {
     super(path, targetMeta.name, cfg);

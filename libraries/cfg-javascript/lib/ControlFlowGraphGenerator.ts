@@ -18,8 +18,8 @@
 
 import {
   BranchNode,
-  CFG,
-  CFGFactory,
+  ControlFlowGraph,
+  ControlFlowGraphFactory,
   Edge,
   Node,
   NodeType,
@@ -35,12 +35,12 @@ interface ReturnValue {
   breakNodes: Node[];
 }
 
-export class ControlFlowGraphGenerator implements CFGFactory {
-  private cfg: CFG;
+export class ControlFlowGraphGenerator implements ControlFlowGraphFactory {
+  private cfg: ControlFlowGraph;
 
-  convertAST(ast: t.Node): CFG {
+  convertAST(ast: t.Node): ControlFlowGraph {
     // TODO the imported stuff should also be resolved...
-    this.cfg = new CFG();
+    this.cfg = new ControlFlowGraph();
 
     this.visitChild(ast, []);
 

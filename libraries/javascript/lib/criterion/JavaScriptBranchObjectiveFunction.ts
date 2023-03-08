@@ -16,7 +16,11 @@
  * limitations under the License.
  */
 
-import { BranchObjectiveFunction, Encoding } from "@syntest/core";
+import {
+  ApproachLevel,
+  BranchObjectiveFunction,
+  Encoding,
+} from "@syntest/core";
 import { BranchDistance } from "./BranchDistance";
 import { Node, NodeType } from "@syntest/cfg-core";
 
@@ -76,44 +80,31 @@ export class JavaScriptBranchObjectiveFunction<
       return node.id === childEdge.to;
     });
 
-    // find the closest covered branch to the objective branch
-    let closestHitNode = null;
-    let approachLevel = Number.MAX_VALUE;
-    for (const n of this._subject.cfg.nodes) {
-      const traces = executionResult
-        .getTraces()
-        .filter(
-          (trace) =>
-            n.lines.includes(trace.line) &&
-            (trace.type === "branch" || trace.type === "function") &&
-            trace.hits > 0
-        );
-      for (const trace of traces) {
-        const pathDistance = this._subject.getPath(n.id, childNode.id);
-        if (approachLevel > pathDistance) {
-          approachLevel = pathDistance;
-          closestHitNode = trace;
-        }
-      }
-    }
+    // Find approach level and ancestor based on node and covered nodes
+    const { approachLevel, closestCoveredBranchTrace } =
+      ApproachLevel.calculate(
+        this._subject.cfg,
+        childNode,
+        executionResult.getTraces()
+      );
 
     // if closer node (branch or probe) is not found, we return the distance to the root branch
-    if (!closestHitNode) {
+    if (!closestCoveredBranchTrace) {
       return Number.MAX_VALUE;
     }
 
     let branchDistance: number;
 
-    if (closestHitNode.type === "function") branchDistance = 1;
+    if (closestCoveredBranchTrace.type === "function") branchDistance = 1;
     else {
       const oppositeBranch = executionResult.getTraces().find(
         (trace) =>
           trace.type === "branch" &&
-          trace.id === closestHitNode.id && // Same branch id
-          trace.branchType !== closestHitNode.branchType // The opposite branch type
+          trace.id === closestCoveredBranchTrace.id && // Same branch id
+          trace.branchType !== closestCoveredBranchTrace.branchType // The opposite branch type
       );
       branchDistance = BranchDistance.branchDistance(
-        closestHitNode.condition,
+        closestCoveredBranchTrace.condition,
         oppositeBranch.condition_ast,
         <Record<string, unknown>>oppositeBranch.variables,
         this._type
