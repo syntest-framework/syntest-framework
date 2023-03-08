@@ -35,9 +35,7 @@ import {
  *
  * @author Dimitri Stallenberg
  */
-export default class SfuzzPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class SfuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("Sfuzz", "Sfuzz search algorithm");
   }

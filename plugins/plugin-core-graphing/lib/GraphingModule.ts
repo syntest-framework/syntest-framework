@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/module";
+import { Module, Plugin, Tool, Preset } from "@syntest/module";
 import GraphingPlugin, { GraphOptions } from "./GraphingPlugin";
 import { mkdirSync } from "fs";
 import { CONFIG } from "@syntest/base-testing-tool";
@@ -27,6 +27,10 @@ export default class GraphingModule extends Module {
   }
   async getPlugins(): Promise<Plugin[]> {
     return [new GraphingPlugin()];
+  }
+
+  async getPresets(): Promise<Preset[]> {
+    return [];
   }
 
   async prepare(): Promise<void> {

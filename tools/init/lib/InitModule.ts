@@ -20,6 +20,7 @@ import { Module, Plugin, Tool } from "@syntest/module";
 import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
 import { getModuleCommand } from "./commands/module";
+import { Preset } from "@syntest/module/dist/module/Preset";
 
 export default class InitModule extends Module {
   constructor() {
@@ -47,6 +48,10 @@ export default class InitModule extends Module {
     return [initTool];
   }
   async getPlugins(): Promise<Plugin[]> {
+    return [];
+  }
+
+  async getPresets(): Promise<Preset[]> {
     return [];
   }
 }

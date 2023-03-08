@@ -79,7 +79,10 @@ async function main() {
   await ModuleManager.instance.loadModule("@syntest/init", "@syntest/init");
   LOGGER.info("Loading modules...", modules);
   await ModuleManager.instance.loadModules(modules, userInterface);
-  yargs = await ModuleManager.instance.configureModules(yargs);
+  yargs = await ModuleManager.instance.configureModules(
+    yargs,
+    (<BaseOptions>(<unknown>baseArguments)).preset
+  );
 
   // Setup cleanup on exit handler
   process.on("exit", (code) => {
