@@ -48,10 +48,7 @@
     "@syntest/cli-graphics": "^0.1.0-beta.1",
     "@syntest/init": "^0.2.0-beta.4",
     "@syntest/logging": "^0.1.0-beta.3",
-    "@syntest/module": "^0.1.0-beta.1",
-    "global-modules": "2.0.0",
-    "globby": "11.0.4",
-    "yargs": "17.6.2"
+    "@syntest/module": "^0.1.0-beta.1"
   },
   "engines": {
     "node": ">=10.24.0"

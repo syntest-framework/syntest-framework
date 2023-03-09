@@ -65,7 +65,7 @@ export default class GraphingPlugin extends ListenerPlugin {
       alias: [],
       default: "cfg",
       description: "The path where the csv should be saved",
-      group: "Graphing Options:",
+      group: OptionGroups.Graphing,
       hidden: false,
       normalize: true,
       type: "string",
@@ -84,4 +84,8 @@ export default class GraphingPlugin extends ListenerPlugin {
     const path = `${base}/test.svg`;
     writeFileSync(path, svgHtml);
   }
+}
+
+export enum OptionGroups {
+  Graphing = "Graphing Options:",
 }

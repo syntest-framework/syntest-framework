@@ -43,9 +43,26 @@ export enum OptionGroups {
 }
 
 export class Configuration {
+  static configureUsage() {
+    return (
+      Yargs.usage(`Usage: syntest <tool> <command> [options]`)
+        // TODO examples
+        .epilog("visit https://syntest.org for more documentation")
+    );
+  }
+
   static configureOptions(yargs: Yargs.Argv) {
     return (
       yargs
+        .option("config", {
+          alias: ["c"],
+          default: ".syntest.json",
+          description: "The syntest configuration file",
+          group: OptionGroups.General,
+          hidden: false,
+          config: true,
+          type: "string",
+        })
         .option("modules", {
           alias: ["m"],
           array: true,
