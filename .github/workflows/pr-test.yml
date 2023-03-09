@@ -98,7 +98,6 @@ jobs:
         package:
           - libraries/base-testing-tool
           - libraries/cfg-core
-          - libraries/cli
           - libraries/core
           - libraries/logging
           - plugins/plugin-core-graphing
