@@ -125,6 +125,11 @@ async function main() {
     (<ListenerPlugin>plugin).setupEventListener();
   }
 
+  // Prepare modules
+  LOGGER.info("Preparing modules...");
+  await ModuleManager.instance.prepare();
+  LOGGER.info("Modules prepared!");
+
   const versions = [...ModuleManager.instance.modules.values()]
     .map((module) => `${module.name} (${module.version})`)
     .join("\n");
