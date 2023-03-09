@@ -15,15 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crossover } from "../../lib";
-import { minimumValue } from "../../lib/util/diagnostics";
+import { Offspring } from "../../lib";
 import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-export class DummyCrossover extends Crossover<DummyEncodingMock> {
-  crossOver(parents: DummyEncodingMock[]): DummyEncodingMock[] {
-    if (parents.length < 2) {
-      throw new Error(minimumValue("number of parents", 2, parents.length));
-    }
-    return [parents[0].copy(), parents[1].copy()];
+export class DummyOffspring extends Offspring<DummyEncodingMock> {
+  generateOffspringPopulation(
+    populationSize: number,
+    population: DummyEncodingMock[]
+  ): DummyEncodingMock[] {
+    return population;
   }
 }

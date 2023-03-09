@@ -17,16 +17,15 @@
  */
 
 import { Encoding, SearchAlgorithm } from "@syntest/core";
-import { Sfuzz } from "./Sfuzz";
-import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
-import { pluginRequiresOptions } from "@syntest/module";
+import { Sfuzz } from "../Sfuzz";
+import { SfuzzObjectiveManager } from "../SfuzzObjectiveManager";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "@syntest/base-testing-tool";
 
 /**
- * This example plugin logs the program state at the start of the initialization phase of the program.
+ * Plugin for the Sfuzz search algorithm.
  *
  * @author Dimitri Stallenberg
  */
@@ -40,29 +39,11 @@ export default class SfuzzPlugin<
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
-    }
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "runner"));
-    }
-    if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "crossover"));
-    }
-    if (!options.populationSize) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "populationSize"));
-    }
-    if (!options.crossoverProbability) {
-      throw new Error(
-        pluginRequiresOptions("DynaMOSA", "crossoverProbability")
-      );
-    }
     return new Sfuzz<T>(
-      new SfuzzObjectiveManager<T>(options.runner),
+      options.objectiveManager,
       options.encodingSampler,
-      options.crossover,
-      options.populationSize,
-      options.crossoverProbability
+      options.offspring,
+      options.populationSize
     );
   }
 }

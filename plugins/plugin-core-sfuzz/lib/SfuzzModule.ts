@@ -17,13 +17,14 @@
  */
 
 import { Module, Plugin, Tool } from "@syntest/module";
-import SfuzzPlugin from "./SfuzzPlugin";
+import SfuzzPlugin from "./plugins/SfuzzPlugin";
+import SfuzzObjectiveManagerPlugin from "./plugins/SfuzzObjectiveManagerPlugin";
 
 export default class GraphingModule extends Module {
   async getTools(): Promise<Tool[]> {
     return [];
   }
   async getPlugins(): Promise<Plugin[]> {
-    return [new SfuzzPlugin()];
+    return [new SfuzzObjectiveManagerPlugin(), new SfuzzPlugin()];
   }
 }

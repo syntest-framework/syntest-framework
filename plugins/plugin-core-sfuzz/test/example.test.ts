@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import SfuzzPlugin from "../lib/SfuzzPlugin";
+import SfuzzPlugin from "../lib/plugins/SfuzzPlugin";
 const expect = chai.expect;
 
 /**
