@@ -36,7 +36,7 @@ import { getLogger } from "@syntest/logging";
  * @author Mitchell Olsthoorn
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
-  static LOGGER = getLogger("SearchAlgorithm");
+  private static LOGGER = getLogger("SearchAlgorithm");
   /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected
