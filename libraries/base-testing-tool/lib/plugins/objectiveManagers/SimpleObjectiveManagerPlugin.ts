@@ -15,22 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TerminationTriggerPlugin } from "../TerminationTriggerPlugin";
-import { Encoding, SignalTerminationTrigger } from "@syntest/core";
+import {
+  Encoding,
+  ObjectiveManager,
+  SimpleObjectiveManager,
+} from "@syntest/core";
+import {
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+} from "../ObjectiveManagerPlugin";
 
 /**
  * Plugin for SignalTerminationTrigger
  *
  * @author Dimitri Stallenberg
  */
-export class SignalTerminationTriggerPlugin<
+export class SimpleObjectiveManagerPlugin<
   T extends Encoding
-> extends TerminationTriggerPlugin<T> {
+> extends ObjectiveManagerPlugin<T> {
   constructor() {
-    super("signal", "Terminates the search when a signal is received");
+    super("simple", "A simple objective manager");
   }
 
-  createTerminationTrigger(): SignalTerminationTrigger {
-    return new SignalTerminationTrigger();
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    return new SimpleObjectiveManager(options.runner);
   }
 }

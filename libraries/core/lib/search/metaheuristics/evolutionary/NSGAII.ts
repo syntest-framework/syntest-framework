@@ -17,11 +17,8 @@
  */
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
-import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../../operators/crossover/Crossover";
 import { Encoding } from "../../Encoding";
 
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { fastNonDomSorting, crowdingDistance } from "../../..";
 
 /**
@@ -36,29 +33,6 @@ import { fastNonDomSorting, crowdingDistance } from "../../..";
  * @author Dimitri Stallenberg
  */
 export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
-  /**
-   * Constructor.
-   *
-   * @param encodingSampler The encoding sampler
-   * @param runner The runner
-   * @param crossover The crossover operator to apply
-   */
-  constructor(
-    objectiveManager: ObjectiveManager<T>,
-    encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>,
-    populationSize: number,
-    crossoverProbability: number
-  ) {
-    super(
-      objectiveManager,
-      encodingSampler,
-      crossover,
-      populationSize,
-      crossoverProbability
-    );
-  }
-
   /**
    * @inheritDoc
    * @protected

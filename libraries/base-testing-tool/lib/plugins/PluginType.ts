@@ -17,6 +17,8 @@
  */
 export enum PluginType {
   Crossover = "Crossover",
+  ObjectiveManager = "ObjectiveManager",
+  Offspring = "Offspring",
   Sampler = "Sampler",
   SearchAlgorithm = "SearchAlgorithm",
   TerminationTrigger = "TerminationTrigger",

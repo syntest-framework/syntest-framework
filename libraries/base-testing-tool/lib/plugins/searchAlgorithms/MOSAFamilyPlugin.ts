@@ -15,54 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { pluginRequiresOptions } from "@syntest/module";
 import {
   Encoding,
   SearchAlgorithm,
   MOSAFamily,
-  UncoveredObjectiveManager,
+  StructuralObjectiveManager,
 } from "@syntest/core";
+import { pluginRequiresOptions } from "@syntest/module";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "../SearchAlgorithmPlugin";
 
 /**
- * Plugin for MOSA
+ * Plugin for MOSA Family Algorithms
  *
  * @author Dimitri Stallenberg
  */
-export class MOSAPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+export class MOSAFamilyPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("MOSA", "Many-Objective Sorting Algorithm");
+    super("MOSAFamily", "Many-Objective Sorting Algorithm");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
-    }
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("MOSA", "runner"));
-    }
-    if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("MOSA", "crossover"));
-    }
-    if (!options.populationSize) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "populationSize"));
-    }
-    if (!options.crossoverProbability) {
-      throw new Error(
-        pluginRequiresOptions("DynaMOSA", "crossoverProbability")
-      );
-    }
     return new MOSAFamily<T>(
-      new UncoveredObjectiveManager<T>(options.runner),
+      options.objectiveManager,
       options.encodingSampler,
-      options.crossover,
-      options.populationSize,
-      options.crossoverProbability
+      options.offspring,
+      options.populationSize
     );
   }
 }

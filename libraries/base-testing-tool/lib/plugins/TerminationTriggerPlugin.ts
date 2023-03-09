@@ -15,22 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, EncodingSampler, SearchSubject } from "@syntest/core";
+import { Encoding, TerminationTrigger } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
 
-export type SamplerOptions<T extends Encoding> = {
-  subject: SearchSubject<T>;
-};
+export type TerminationTriggerOptions<T extends Encoding> = unknown;
 
-export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
+export abstract class TerminationTriggerPlugin<
+  T extends Encoding
+> extends Plugin {
   constructor(name: string, describe: string) {
-    super(PluginType.Sampler, name, describe);
+    super(PluginType.TerminationTrigger, name, describe);
   }
-
-  abstract createSamplerOperator<O extends SamplerOptions<T>>(
+  abstract createTerminationTrigger<O extends TerminationTriggerOptions<T>>(
     options: O
-  ): EncodingSampler<T>;
+  ): TerminationTrigger;
 
   getCommandOptionChoices(
     tool: string,
@@ -38,7 +37,7 @@ export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
     command: string,
     option: string
   ): string[] {
-    if (option === "sampler") {
+    if (option === "termination-triggers") {
       return [this.name];
     }
 

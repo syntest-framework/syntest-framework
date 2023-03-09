@@ -15,22 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, EncodingSampler, SearchSubject } from "@syntest/core";
+import { Encoding, EncodingRunner, ObjectiveManager } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
 
-export type SamplerOptions<T extends Encoding> = {
-  subject: SearchSubject<T>;
+export type ObjectiveManagerOptions<T extends Encoding> = {
+  runner: EncodingRunner<T>;
 };
 
-export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
+export abstract class ObjectiveManagerPlugin<
+  T extends Encoding
+> extends Plugin {
   constructor(name: string, describe: string) {
-    super(PluginType.Sampler, name, describe);
+    super(PluginType.ObjectiveManager, name, describe);
   }
 
-  abstract createSamplerOperator<O extends SamplerOptions<T>>(
+  abstract createObjectiveManager<O extends ObjectiveManagerOptions<T>>(
     options: O
-  ): EncodingSampler<T>;
+  ): ObjectiveManager<T>;
 
   getCommandOptionChoices(
     tool: string,
@@ -38,7 +40,7 @@ export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
     command: string,
     option: string
   ): string[] {
-    if (option === "sampler") {
+    if (option === "objective-manager") {
       return [this.name];
     }
 

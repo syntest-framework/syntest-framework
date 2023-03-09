@@ -15,22 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TerminationTriggerPlugin } from "../TerminationTriggerPlugin";
-import { Encoding, SignalTerminationTrigger } from "@syntest/core";
+import { DefaultOffspring, Encoding, Offspring } from "@syntest/core";
+import { OffspringOptions, OffspringPlugin } from "../OffspringPlugin";
 
 /**
  * Plugin for SignalTerminationTrigger
  *
  * @author Dimitri Stallenberg
  */
-export class SignalTerminationTriggerPlugin<
+export class DefaultOffspringPlugin<
   T extends Encoding
-> extends TerminationTriggerPlugin<T> {
+> extends OffspringPlugin<T> {
   constructor() {
-    super("signal", "Terminates the search when a signal is received");
+    super("default", "A default offspring operator");
   }
 
-  createTerminationTrigger(): SignalTerminationTrigger {
-    return new SignalTerminationTrigger();
+  createOffspringOperator(options: OffspringOptions<T>): Offspring<T> {
+    return new DefaultOffspring(options.crossover, options.sampler);
   }
 }

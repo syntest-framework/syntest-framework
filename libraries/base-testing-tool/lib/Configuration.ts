@@ -50,6 +50,8 @@ export type StorageOptions = {
 export type AlgorithmOptions = {
   algorithm: string;
   populationSize: number;
+  objectiveManager: string;
+  offspring: string;
   crossover: string;
   sampler: string;
   terminationTriggers: string[];
@@ -75,7 +77,8 @@ export type SamplingOptions = {
   resampleGeneProbability: number;
   deltaMutationProbability: number;
   sampleExistingValueProbability: number;
-  crossoverProbability: number;
+  crossoverStatementProbability: number;
+  crossoverEncodingProbability: number;
   constantPoolProbability: number;
   sampleFunctionOutputAsArgument: number;
   stringAlphabet: string;
@@ -217,7 +220,8 @@ export class Configuration {
         .options({
           algorithm: {
             alias: ["a"],
-            default: "DynaMOSA",
+            default: "",
+            choices: [],
             description: "Algorithm to be used by the tool.",
             group: OptionGroups.Algorithm,
             hidden: false,
@@ -231,17 +235,37 @@ export class Configuration {
             hidden: false,
             type: "number",
           },
+          "objective-manager": {
+            alias: [],
+            default: "",
+            choices: [],
+            description: "Objective manager to be used by the tool.",
+            group: OptionGroups.Algorithm,
+            hidden: false,
+            type: "string",
+          },
           crossover: {
             alias: [],
             default: "",
+            choices: [],
             description: "Crossover operator to be used by the tool.",
+            group: OptionGroups.Algorithm,
+            hidden: false,
+            type: "string",
+          },
+          offspring: {
+            alias: [],
+            default: "",
+            choices: [],
+            description: "Offspring operator to be used by the tool.",
             group: OptionGroups.Algorithm,
             hidden: false,
             type: "string",
           },
           sampler: {
             alias: [],
-            default: "random",
+            default: "",
+            choices: [],
             description: "Sampler to be used by the tool.",
             group: OptionGroups.Algorithm,
             hidden: false,
@@ -249,12 +273,12 @@ export class Configuration {
           },
           "termination-triggers": {
             alias: [],
-            default: ["signal"],
-
+            default: [],
+            choices: [],
             description: "Termination trigger to be used by the tool.",
             group: OptionGroups.Algorithm,
             hidden: false,
-            type: "string",
+            type: "array",
           },
         })
     );

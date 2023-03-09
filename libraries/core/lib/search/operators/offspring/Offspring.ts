@@ -15,22 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TerminationTriggerPlugin } from "../TerminationTriggerPlugin";
-import { Encoding, SignalTerminationTrigger } from "@syntest/core";
+import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { Crossover } from "../crossover/Crossover";
 
-/**
- * Plugin for SignalTerminationTrigger
- *
- * @author Dimitri Stallenberg
- */
-export class SignalTerminationTriggerPlugin<
-  T extends Encoding
-> extends TerminationTriggerPlugin<T> {
-  constructor() {
-    super("signal", "Terminates the search when a signal is received");
+export abstract class Offspring<E extends Encoding> {
+  private _crossover: Crossover<E>;
+  private _sampler: EncodingSampler<E>;
+
+  constructor(crossover: Crossover<E>, sampler: EncodingSampler<E>) {
+    this._crossover = crossover;
+    this._sampler = sampler;
   }
 
-  createTerminationTrigger(): SignalTerminationTrigger {
-    return new SignalTerminationTrigger();
+  abstract generateOffspringPopulation(
+    populationSize: number,
+    population: E[]
+  ): E[];
+
+  get crossover(): Crossover<E> {
+    return this._crossover;
+  }
+
+  get sampler(): EncodingSampler<E> {
+    return this._sampler;
   }
 }

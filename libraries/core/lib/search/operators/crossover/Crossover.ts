@@ -27,6 +27,25 @@ import { Encoding } from "../../..";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export interface Crossover<T extends Encoding> {
-  crossOver(parents: T[]): T[];
+export abstract class Crossover<T extends Encoding> {
+  private _crossoverEncodingProbability: number;
+  private _crossoverStatementProbability: number;
+
+  constructor(
+    crossoverEncodingProbability: number,
+    crossoverStatementProbability: number
+  ) {
+    this._crossoverEncodingProbability = crossoverEncodingProbability;
+    this._crossoverStatementProbability = crossoverStatementProbability;
+  }
+
+  abstract crossOver(parents: T[]): T[];
+
+  get crossoverEncodingProbability(): number {
+    return this._crossoverEncodingProbability;
+  }
+
+  get crossoverStatementProbability(): number {
+    return this._crossoverStatementProbability;
+  }
 }

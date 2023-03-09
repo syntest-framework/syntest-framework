@@ -15,17 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, TerminationTrigger } from "@syntest/core";
-import { Plugin } from "@syntest/module";
-import { PluginType } from "./PluginType";
+import {
+  Encoding,
+  ObjectiveManager,
+  UncoveredObjectiveManager,
+} from "@syntest/core";
+import {
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+} from "../ObjectiveManagerPlugin";
 
-export type TerminationOptions<T extends Encoding> = unknown;
-
-export abstract class TerminationPlugin<T extends Encoding> extends Plugin {
-  constructor(name: string, describe: string) {
-    super(PluginType.TerminationTrigger, name, describe);
+/**
+ * Plugin for SignalTerminationTrigger
+ *
+ * @author Dimitri Stallenberg
+ */
+export class UncoveredObjectiveManagerPlugin<
+  T extends Encoding
+> extends ObjectiveManagerPlugin<T> {
+  constructor() {
+    super("uncovered", "An uncovered objective manager");
   }
-  abstract createTerminationTrigger<O extends TerminationOptions<T>>(
-    options: O
-  ): TerminationTrigger;
+
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    return new UncoveredObjectiveManager(options.runner);
+  }
 }

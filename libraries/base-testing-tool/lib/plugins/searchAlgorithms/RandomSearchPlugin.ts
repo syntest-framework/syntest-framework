@@ -41,15 +41,6 @@ export class RandomSearchPlugin<
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("RandomSearch", "encodingSampler"));
-    }
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("RandomSearch", "runner"));
-    }
-    return new RandomSearch(
-      new SimpleObjectiveManager<T>(options.runner),
-      options.encodingSampler
-    );
+    return new RandomSearch(options.objectiveManager, options.encodingSampler);
   }
 }

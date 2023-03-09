@@ -17,11 +17,21 @@
  */
 
 import { Events } from "@syntest/core";
+import { ModuleManager } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
+import { MOSAFamilyPlugin } from "./plugins/searchAlgorithms/MOSAFamilyPlugin";
+import { NSGAIIPlugin } from "./plugins/searchAlgorithms/NSGAIIPlugin";
+import { RandomSearchPlugin } from "./plugins/searchAlgorithms/RandomSearchPlugin";
+import { SignalTerminationTriggerPlugin } from "./plugins/terminationTriggers/SignalTerminationTriggerPlugin";
+import { SimpleObjectiveManagerPlugin } from "./plugins/objectiveManagers/SimpleObjectiveManagerPlugin";
+import { StructuralObjectiveManagerPlugin } from "./plugins/objectiveManagers/StructuralObjectiveManagerPlugin";
+import { UncoveredObjectiveManagerPlugin } from "./plugins/objectiveManagers/UncoveredObjectiveManagerPlugin";
+import { DefaultOffspringPlugin } from "./plugins/offspringOperators/DefaultOffspringPlugin";
 
 export abstract class Launcher {
   public async run(): Promise<void> {
     try {
+      this.registerBasePlugins();
       (<TypedEventEmitter<Events>>process).emit("initializeStart");
       await this.initialize();
       (<TypedEventEmitter<Events>>process).emit("initializeComplete");
@@ -40,6 +50,20 @@ export abstract class Launcher {
       console.log(e);
       console.trace(e);
     }
+  }
+
+  registerBasePlugins(): void {
+    ModuleManager.instance.loadPlugin(new SimpleObjectiveManagerPlugin());
+    ModuleManager.instance.loadPlugin(new StructuralObjectiveManagerPlugin());
+    ModuleManager.instance.loadPlugin(new UncoveredObjectiveManagerPlugin());
+
+    ModuleManager.instance.loadPlugin(new DefaultOffspringPlugin());
+
+    ModuleManager.instance.loadPlugin(new MOSAFamilyPlugin());
+    ModuleManager.instance.loadPlugin(new NSGAIIPlugin());
+    ModuleManager.instance.loadPlugin(new RandomSearchPlugin());
+
+    ModuleManager.instance.loadPlugin(new SignalTerminationTriggerPlugin());
   }
 
   abstract initialize(): Promise<void>;
