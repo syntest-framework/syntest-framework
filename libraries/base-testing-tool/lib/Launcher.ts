@@ -20,16 +20,6 @@ import { Events } from "@syntest/core";
 import TypedEventEmitter from "typed-emitter";
 
 export abstract class Launcher {
-  private _programName: string;
-
-  get programName() {
-    return this._programName;
-  }
-
-  constructor(programName: string) {
-    this._programName = programName;
-  }
-
   public async run(): Promise<void> {
     try {
       (<TypedEventEmitter<Events>>process).emit("initializeStart");
