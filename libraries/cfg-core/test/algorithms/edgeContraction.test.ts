@@ -32,29 +32,41 @@ describe("CFG edge contraction", function () {
 
   beforeEach(function () {
     // Construct cfg
-    const nodes: Node<unknown>[] = [
-      new Node("ROOT", NodeType.ENTRY, "ROOT", [], { lineNumbers: [] }),
-      new Node("1", NodeType.NORMAL, "1", [], { lineNumbers: [] }),
-      new Node("2", NodeType.NORMAL, "2", [], { lineNumbers: [] }),
-      new Node("3", NodeType.NORMAL, "3", [], { lineNumbers: [] }),
-      new Node("4", NodeType.NORMAL, "4", [], { lineNumbers: [] }),
-      new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
-    ];
+    const nodes = new Map<string, Node<unknown>>();
+
+    const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
+      lineNumbers: [],
+    });
+    const node1 = new Node("1", NodeType.NORMAL, "1", [], { lineNumbers: [] });
+    const node2 = new Node("2", NodeType.NORMAL, "2", [], { lineNumbers: [] });
+    const node3 = new Node("3", NodeType.NORMAL, "3", [], { lineNumbers: [] });
+    const node4 = new Node("4", NodeType.NORMAL, "4", [], { lineNumbers: [] });
+    const nodeExit = new Node("EXIT", NodeType.EXIT, "EXIT", [], {
+      lineNumbers: [],
+    });
+
+    nodes.set("ROOT", nodeRoot);
+    nodes.set("1", node1);
+    nodes.set("2", node2);
+    nodes.set("3", node3);
+    nodes.set("4", node4);
+    nodes.set("EXIT", nodeExit);
+
     const edges: Edge[] = [
-      new Edge("1", EdgeType.NORMAL, "1", nodes[0].id, nodes[1].id),
-      new Edge("2", EdgeType.CONDITIONAL_TRUE, "2", nodes[1].id, nodes[2].id),
-      new Edge("3", EdgeType.CONDITIONAL_FALSE, "3", nodes[1].id, nodes[3].id),
-      new Edge("4", EdgeType.NORMAL, "4", nodes[3].id, nodes[4].id),
-      new Edge("5", EdgeType.NORMAL, "5", nodes[2].id, nodes[5].id),
-      new Edge("6", EdgeType.NORMAL, "6", nodes[4].id, nodes[5].id),
+      new Edge("1", EdgeType.NORMAL, "1", "ROOT", "1"),
+      new Edge("2", EdgeType.CONDITIONAL_TRUE, "2", "1", "2"),
+      new Edge("3", EdgeType.CONDITIONAL_FALSE, "3", "1", "3"),
+      new Edge("4", EdgeType.NORMAL, "4", "3", "4"),
+      new Edge("5", EdgeType.NORMAL, "5", "2", "EXIT"),
+      new Edge("6", EdgeType.NORMAL, "6", "4", "EXIT"),
     ];
-    cfg = new ControlFlowGraph(nodes[0], nodes[5], nodes[5], nodes, edges);
+    cfg = new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges);
   });
 
   it("Two edges should be contracted", () => {
     const contractedCFG = edgeContraction(cfg);
 
-    expect(contractedCFG.nodes.length).to.equal(cfg.nodes.length - 2);
+    expect(contractedCFG.nodes.size).to.equal(cfg.nodes.size - 2);
 
     expect(contractedCFG.edges.length).to.equal(cfg.edges.length - 2);
   });

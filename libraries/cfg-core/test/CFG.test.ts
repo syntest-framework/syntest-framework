@@ -35,7 +35,10 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode],
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
       []
     );
 
@@ -61,7 +64,10 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode],
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
       []
     );
 
@@ -90,7 +96,10 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode],
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
       []
     );
 
@@ -131,7 +140,10 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode],
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
       []
     );
 
@@ -156,7 +168,10 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode],
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
       []
     );
 
@@ -191,7 +206,10 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode],
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
       []
     );
 

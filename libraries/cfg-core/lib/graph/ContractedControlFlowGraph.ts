@@ -34,7 +34,7 @@ export class ContractedControlFlowGraph<S> extends ControlFlowGraph<S> {
     entry: Node<S>,
     successExit: Node<S>,
     errorExit: Node<S>,
-    nodes: Node<S>[],
+    nodes: Map<string, Node<S>>,
     edges: Edge[],
     fullGraph: ControlFlowGraph<S>,
     nodeMapping: Map<string, string[]>
@@ -52,12 +52,12 @@ export class ContractedControlFlowGraph<S> extends ControlFlowGraph<S> {
       }
     }
 
-    for (const node of nodes) {
-      if (!this._nodeMapping.has(node.id)) {
-        this._nodeMapping.set(node.id, [node.id]);
+    for (const nodeId of nodes.keys()) {
+      if (!this._nodeMapping.has(nodeId)) {
+        this._nodeMapping.set(nodeId, [nodeId]);
       }
-      if (!this._reverseNodeMapping.has(node.id))
-        this._reverseNodeMapping.set(node.id, node.id);
+      if (!this._reverseNodeMapping.has(nodeId))
+        this._reverseNodeMapping.set(nodeId, nodeId);
     }
   }
 

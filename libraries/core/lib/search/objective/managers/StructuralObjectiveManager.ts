@@ -92,9 +92,8 @@ export class StructuralObjectiveManager<
     objectives.forEach((objective) => this._uncoveredObjectives.add(objective));
 
     // Set the current objectives
-    const rootObjectiveNodes = this._subject.cfg.nodes.filter(
-      (node) => node.type === NodeType.ENTRY
-    );
+    const rootObjectiveNodes = this._subject.cfg.getNodesByType(NodeType.ENTRY);
+
     const rootObjectiveIds = rootObjectiveNodes.map(
       (objective) => objective.id
     );

@@ -25,19 +25,24 @@ import {
   edgeContraction,
 } from "@syntest/cfg-core";
 import { createSimulation } from "../lib/D3Simulation";
-import { writeFileSync } from "fs";
+
 const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", async () => {
-    const nodes = [
-      new Node("ROOT", NodeType.ENTRY, "ROOT", [], { lineNumbers: [] }),
-      new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
-    ];
-
+    const nodes = new Map<string, Node<unknown>>();
+    const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
+      lineNumbers: [],
+    });
+    const nodeExit = new Node("EXIT", NodeType.EXIT, "EXIT", [], {
+      lineNumbers: [],
+    });
+    nodes.set("ROOT", nodeRoot);
+    nodes.set("EXIT", nodeExit);
     // Construct CFG
     for (let i = 65; i < 72; i++) {
-      nodes.push(
+      nodes.set(
+        String.fromCharCode(i),
         new Node(
           String.fromCharCode(i),
           NodeType.NORMAL,
@@ -59,7 +64,7 @@ describe("simulationTest", () => {
       new Edge("I", EdgeType.NORMAL, "I", "G", "A"),
       new Edge("J", EdgeType.NORMAL, "J", "E", "A"),
     ];
-    let cfg = new ControlFlowGraph(nodes[0], nodes[1], nodes[1], nodes, edges);
+    let cfg = new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges);
     cfg = edgeContraction(cfg);
 
     const svgHtml = await createSimulation(cfg);

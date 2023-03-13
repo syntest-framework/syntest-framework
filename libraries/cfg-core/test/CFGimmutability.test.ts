@@ -38,18 +38,26 @@ describe("CFG Immutability check", function () {
         )
       );
     }
-    const cfg = new ControlFlowGraph(nodes[0], nodes[1], nodes[1], nodes, []);
-    const retrievedNodes: Node<unknown>[] = cfg.nodes;
-    const rootNode = cfg.nodes.at(0);
-    expect(rootNode?.metadata.lineNumbers).to.empty;
+    const cfg = new ControlFlowGraph(
+      nodes[0],
+      nodes[1],
+      nodes[1],
+      nodes.reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
+      []
+    );
+    const rootNode = cfg.entry;
+    expect(rootNode.metadata.lineNumbers).to.empty;
     // nodes.at(0)!.lines = [23]; // <- this will not compile because of readonly
-    expect(nodes.at(0)!.metadata.lineNumbers).to.empty;
+    expect(rootNode.metadata.lineNumbers).to.empty;
     // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
     nodes.push(
       new Node("dummy", NodeType.NORMAL, "dummy", [], { lineNumbers: [] })
     );
-    expect(cfg.nodes.at(2)?.metadata.lineNumbers).to.eql([26]);
-    expect(cfg.nodes.length).to.not.equal(nodes.length);
+    expect(cfg.getNodeById("A")?.metadata.lineNumbers).to.eql([26]);
+    expect(cfg.nodes.size).to.not.equal(nodes.length);
     // expect(cfg.get_nodes().at(0)?.lines = [23]).to.throw(); <- this will not compile
   });
 });

@@ -39,34 +39,45 @@ describe("CFG ancestors search", function () {
   let CFG3: ContractedControlFlowGraph<unknown>;
 
   beforeEach(function () {
-    let nodes: Node<unknown>[];
+    let nodes: Map<string, Node<unknown>> = new Map();
     let edges: Edge[];
     // Construct cfgMini
-    nodes = [
-      new Node("ROOT", NodeType.ENTRY, "ROOT", [], { lineNumbers: [] }),
-      new Node("1", NodeType.NORMAL, "1", [], { lineNumbers: [] }),
-      new Node("2", NodeType.NORMAL, "2", [], { lineNumbers: [] }),
-      new Node("3", NodeType.NORMAL, "3", [], { lineNumbers: [] }),
-      new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
-    ];
+    const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
+      lineNumbers: [],
+    });
+    const node1 = new Node("1", NodeType.NORMAL, "1", [], { lineNumbers: [] });
+    const node2 = new Node("2", NodeType.NORMAL, "2", [], { lineNumbers: [] });
+    const node3 = new Node("3", NodeType.NORMAL, "3", [], { lineNumbers: [] });
+    const nodeExit = new Node("EXIT", NodeType.EXIT, "EXIT", [], {
+      lineNumbers: [],
+    });
+
+    nodes.set(nodeRoot.id, nodeRoot);
+    nodes.set(node1.id, node1);
+    nodes.set(node2.id, node2);
+    nodes.set(node3.id, node3);
+    nodes.set(nodeExit.id, nodeExit);
+
     edges = [
-      new Edge("0", EdgeType.NORMAL, "0", nodes[0].id, nodes[1].id),
-      new Edge("1", EdgeType.CONDITIONAL_TRUE, "1", nodes[1].id, nodes[2].id),
-      new Edge("2", EdgeType.CONDITIONAL_FALSE, "2", nodes[1].id, nodes[3].id),
-      new Edge("3", EdgeType.NORMAL, "3", nodes[2].id, nodes[4].id),
-      new Edge("4", EdgeType.NORMAL, "4", nodes[3].id, nodes[4].id),
+      new Edge("0", EdgeType.NORMAL, "0", nodeRoot.id, node1.id),
+      new Edge("1", EdgeType.CONDITIONAL_TRUE, "1", node1.id, node2.id),
+      new Edge("2", EdgeType.CONDITIONAL_FALSE, "2", node1.id, node3.id),
+      new Edge("3", EdgeType.NORMAL, "3", node2.id, nodeExit.id),
+      new Edge("4", EdgeType.NORMAL, "4", node3.id, nodeExit.id),
     ];
+
     cfgMini = edgeContraction(
-      new ControlFlowGraph(nodes[0], nodes[4], nodes[4], nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
 
     // Construct CFG1
-    nodes = [
-      new Node("ROOT", NodeType.ENTRY, "ROOT", [], { lineNumbers: [] }),
-      new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
-    ];
+    nodes = new Map();
+    nodes.set(nodeRoot.id, nodeRoot);
+    nodes.set(nodeExit.id, nodeExit);
+
     for (let i = 65; i < 72; i++) {
-      nodes.push(
+      nodes.set(
+        String.fromCharCode(i),
         new Node(
           String.fromCharCode(i),
           NodeType.NORMAL,
@@ -77,96 +88,30 @@ describe("CFG ancestors search", function () {
       );
     }
     edges = [
-      new Edge(
-        "0",
-        EdgeType.NORMAL,
-        "0",
-        (<Node<unknown>>nodes.find((x) => x.id === "ROOT")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id
-      ),
-      new Edge(
-        "1",
-        EdgeType.CONDITIONAL_FALSE,
-        "1",
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "B")).id
-      ),
-      new Edge(
-        "2",
-        EdgeType.CONDITIONAL_TRUE,
-        "2",
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id
-      ),
-      new Edge(
-        "3",
-        EdgeType.CONDITIONAL_TRUE,
-        "3",
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "D")).id
-      ),
-      new Edge(
-        "4",
-        EdgeType.CONDITIONAL_FALSE,
-        "4",
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "E")).id
-      ),
-      new Edge(
-        "5",
-        EdgeType.CONDITIONAL_TRUE,
-        "5",
-        (<Node<unknown>>nodes.find((x) => x.id === "D")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id
-      ),
-      new Edge(
-        "6",
-        EdgeType.CONDITIONAL_FALSE,
-        "6",
-        (<Node<unknown>>nodes.find((x) => x.id === "D")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "G")).id
-      ),
-      new Edge(
-        "7",
-        EdgeType.NORMAL,
-        "7",
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id
-      ),
-      new Edge(
-        "8",
-        EdgeType.NORMAL,
-        "8",
-        (<Node<unknown>>nodes.find((x) => x.id === "G")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id
-      ),
-      new Edge(
-        "9",
-        EdgeType.NORMAL,
-        "9",
-        (<Node<unknown>>nodes.find((x) => x.id === "E")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id
-      ),
-      new Edge(
-        "10",
-        EdgeType.NORMAL,
-        "10",
-        (<Node<unknown>>nodes.find((x) => x.id === "B")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "EXIT")).id
-      ),
+      new Edge("0", EdgeType.NORMAL, "0", "ROOT", "A"),
+      new Edge("1", EdgeType.CONDITIONAL_FALSE, "1", "A", "B"),
+      new Edge("2", EdgeType.CONDITIONAL_TRUE, "2", "A", "C"),
+      new Edge("3", EdgeType.CONDITIONAL_TRUE, "3", "C", "D"),
+      new Edge("4", EdgeType.CONDITIONAL_FALSE, "4", "C", "E"),
+      new Edge("5", EdgeType.CONDITIONAL_TRUE, "5", "D", "F"),
+      new Edge("6", EdgeType.CONDITIONAL_FALSE, "6", "D", "G"),
+      new Edge("7", EdgeType.NORMAL, "7", "F", "A"),
+      new Edge("8", EdgeType.NORMAL, "8", "G", "A"),
+      new Edge("9", EdgeType.NORMAL, "9", "E", "A"),
+      new Edge("10", EdgeType.NORMAL, "10", "B", "EXIT"),
     ];
     CFG1 = edgeContraction(
-      new ControlFlowGraph(nodes[0], nodes[1], nodes[1], nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
 
     // Construct CFG2
-    nodes = [
-      new Node("ROOT", NodeType.ENTRY, "ROOT", [], { lineNumbers: [] }),
-      new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
-    ];
+    nodes = new Map();
+    nodes.set(nodeRoot.id, nodeRoot);
+    nodes.set(nodeExit.id, nodeExit);
 
     for (let i = 65; i < "S".charCodeAt(0) + 1; i++) {
-      nodes.push(
+      nodes.set(
+        String.fromCharCode(i),
         new Node(
           String.fromCharCode(i),
           NodeType.NORMAL,
@@ -178,355 +123,67 @@ describe("CFG ancestors search", function () {
     }
     // false branch on the picture is always on the left
     edges = [
-      new Edge(
-        "1",
-        EdgeType.CONDITIONAL_FALSE,
-        "1",
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "B")).id
-      ),
-      new Edge(
-        "2",
-        EdgeType.CONDITIONAL_TRUE,
-        "2",
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id
-      ),
-      new Edge(
-        "3",
-        EdgeType.CONDITIONAL_FALSE,
-        "3",
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "D")).id
-      ),
-      new Edge(
-        "4",
-        EdgeType.CONDITIONAL_TRUE,
-        "4",
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "E")).id
-      ),
-      new Edge(
-        "5",
-        EdgeType.NORMAL,
-        "5",
-        (<Node<unknown>>nodes.find((x) => x.id === "E")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id
-      ),
-      new Edge(
-        "6",
-        EdgeType.NORMAL,
-        "6",
-        (<Node<unknown>>nodes.find((x) => x.id === "D")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id
-      ),
+      new Edge("1", EdgeType.CONDITIONAL_FALSE, "1", "A", "B"),
+      new Edge("2", EdgeType.CONDITIONAL_TRUE, "2", "A", "C"),
+      new Edge("3", EdgeType.CONDITIONAL_FALSE, "3", "C", "D"),
+      new Edge("4", EdgeType.CONDITIONAL_TRUE, "4", "C", "E"),
+      new Edge("5", EdgeType.NORMAL, "5", "E", "A"),
+      new Edge("6", EdgeType.NORMAL, "6", "D", "F"),
 
-      new Edge(
-        "7",
-        EdgeType.CONDITIONAL_TRUE,
-        "7",
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "G")).id
-      ),
-      new Edge(
-        "8",
-        EdgeType.CONDITIONAL_TRUE,
-        "8",
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "H")).id
-      ),
-      new Edge(
-        "9",
-        EdgeType.CONDITIONAL_TRUE,
-        "9",
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "I")).id
-      ),
-      new Edge(
-        "10",
-        EdgeType.NORMAL,
-        "10",
-        (<Node<unknown>>nodes.find((x) => x.id === "G")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "J")).id
-      ),
-      new Edge(
-        "11",
-        EdgeType.CONDITIONAL_FALSE,
-        "11",
-        (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "L")).id
-      ),
-      new Edge(
-        "12",
-        EdgeType.CONDITIONAL_TRUE,
-        "12",
-        (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "M")).id
-      ),
-      new Edge(
-        "13",
-        EdgeType.NORMAL,
-        "13",
-        (<Node<unknown>>nodes.find((x) => x.id === "H")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "K")).id
-      ),
-      new Edge(
-        "14",
-        EdgeType.NORMAL,
-        "14",
-        (<Node<unknown>>nodes.find((x) => x.id === "L")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "N")).id
-      ),
-      new Edge(
-        "15",
-        EdgeType.NORMAL,
-        "15",
-        (<Node<unknown>>nodes.find((x) => x.id === "M")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "N")).id
-      ),
-      new Edge(
-        "16",
-        EdgeType.NORMAL,
-        "16",
-        (<Node<unknown>>nodes.find((x) => x.id === "N")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id
-      ),
-      new Edge(
-        "17",
-        EdgeType.NORMAL,
-        "17",
-        (<Node<unknown>>nodes.find((x) => x.id === "K")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id
-      ),
-      new Edge(
-        "18",
-        EdgeType.NORMAL,
-        "18",
-        (<Node<unknown>>nodes.find((x) => x.id === "I")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id
-      ),
-      new Edge(
-        "19",
-        EdgeType.NORMAL,
-        "19",
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "P")).id
-      ),
-      new Edge(
-        "20",
-        EdgeType.CONDITIONAL_FALSE,
-        "20",
-        (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "Q")).id
-      ),
-      new Edge(
-        "21",
-        EdgeType.CONDITIONAL_TRUE,
-        "21",
-        (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "R")).id
-      ),
-      new Edge(
-        "22",
-        EdgeType.NORMAL,
-        "22",
-        (<Node<unknown>>nodes.find((x) => x.id === "Q")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "S")).id
-      ),
-      new Edge(
-        "23",
-        EdgeType.NORMAL,
-        "23",
-        (<Node<unknown>>nodes.find((x) => x.id === "R")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "S")).id
-      ),
-      new Edge(
-        "24",
-        EdgeType.NORMAL,
-        "24",
-        (<Node<unknown>>nodes.find((x) => x.id === "ROOT")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id
-      ),
+      new Edge("7", EdgeType.CONDITIONAL_TRUE, "7", "F", "G"),
+      new Edge("8", EdgeType.CONDITIONAL_TRUE, "8", "F", "H"),
+      new Edge("9", EdgeType.CONDITIONAL_TRUE, "9", "F", "I"),
+      new Edge("10", EdgeType.NORMAL, "10", "G", "J"),
+      new Edge("11", EdgeType.CONDITIONAL_FALSE, "11", "J", "L"),
+      new Edge("12", EdgeType.CONDITIONAL_TRUE, "12", "J", "M"),
+      new Edge("13", EdgeType.NORMAL, "13", "H", "K"),
+      new Edge("14", EdgeType.NORMAL, "14", "L", "N"),
+      new Edge("15", EdgeType.NORMAL, "15", "M", "N"),
+      new Edge("16", EdgeType.NORMAL, "16", "N", "O"),
+      new Edge("17", EdgeType.NORMAL, "17", "K", "O"),
+      new Edge("18", EdgeType.NORMAL, "18", "I", "O"),
+      new Edge("19", EdgeType.NORMAL, "19", "O", "P"),
+      new Edge("20", EdgeType.CONDITIONAL_FALSE, "20", "P", "Q"),
+      new Edge("21", EdgeType.CONDITIONAL_TRUE, "21", "P", "R"),
+      new Edge("22", EdgeType.NORMAL, "22", "Q", "S"),
+      new Edge("23", EdgeType.NORMAL, "23", "R", "S"),
+      new Edge("24", EdgeType.NORMAL, "24", "ROOT", "A"),
     ];
     CFG2 = edgeContraction(
-      new ControlFlowGraph(nodes[0], nodes[1], nodes[1], nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
 
     // Construct CFG3
 
     edges = [
-      new Edge(
-        "1",
-        EdgeType.CONDITIONAL_FALSE,
-        "1",
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "B")).id
-      ),
-      new Edge(
-        "2",
-        EdgeType.CONDITIONAL_TRUE,
-        "2",
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id
-      ),
-      new Edge(
-        "3",
-        EdgeType.CONDITIONAL_FALSE,
-        "3",
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "D")).id
-      ),
-      new Edge(
-        "4",
-        EdgeType.CONDITIONAL_TRUE,
-        "4",
-        (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "E")).id
-      ),
-      new Edge(
-        "5",
-        EdgeType.NORMAL,
-        "5",
-        (<Node<unknown>>nodes.find((x) => x.id === "E")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "S")).id
-      ),
-      new Edge(
-        "6",
-        EdgeType.NORMAL,
-        "6",
-        (<Node<unknown>>nodes.find((x) => x.id === "D")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id
-      ),
-      new Edge(
-        "7",
-        EdgeType.CONDITIONAL_TRUE,
-        "7",
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "G")).id
-      ),
-      new Edge(
-        "8",
-        EdgeType.CONDITIONAL_TRUE,
-        "8",
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "H")).id
-      ),
-      new Edge(
-        "9",
-        EdgeType.CONDITIONAL_TRUE,
-        "9",
-        (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "I")).id
-      ),
-      new Edge(
-        "10",
-        EdgeType.NORMAL,
-        "10",
-        (<Node<unknown>>nodes.find((x) => x.id === "G")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "J")).id
-      ),
-      new Edge(
-        "11",
-        EdgeType.CONDITIONAL_FALSE,
-        "11",
-        (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "L")).id
-      ),
-      new Edge(
-        "12",
-        EdgeType.CONDITIONAL_TRUE,
-        "12",
-        (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "M")).id
-      ),
-      new Edge(
-        "13",
-        EdgeType.NORMAL,
-        "13",
-        (<Node<unknown>>nodes.find((x) => x.id === "H")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "K")).id
-      ),
-      new Edge(
-        "14",
-        EdgeType.NORMAL,
-        "14",
-        (<Node<unknown>>nodes.find((x) => x.id === "L")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "N")).id
-      ),
-      new Edge(
-        "15",
-        EdgeType.NORMAL,
-        "15",
-        (<Node<unknown>>nodes.find((x) => x.id === "M")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "N")).id
-      ),
-      new Edge(
-        "16",
-        EdgeType.NORMAL,
-        "16",
-        (<Node<unknown>>nodes.find((x) => x.id === "N")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id
-      ),
-      new Edge(
-        "17",
-        EdgeType.NORMAL,
-        "17",
-        (<Node<unknown>>nodes.find((x) => x.id === "K")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id
-      ),
-      new Edge(
-        "18",
-        EdgeType.NORMAL,
-        "18",
-        (<Node<unknown>>nodes.find((x) => x.id === "I")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id
-      ),
-      new Edge(
-        "19",
-        EdgeType.NORMAL,
-        "19",
-        (<Node<unknown>>nodes.find((x) => x.id === "O")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "P")).id
-      ),
-      new Edge(
-        "20",
-        EdgeType.CONDITIONAL_FALSE,
-        "20",
-        (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "Q")).id
-      ),
-      new Edge(
-        "21",
-        EdgeType.CONDITIONAL_TRUE,
-        "21",
-        (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "R")).id
-      ),
-      new Edge(
-        "22",
-        EdgeType.NORMAL,
-        "22",
-        (<Node<unknown>>nodes.find((x) => x.id === "Q")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "S")).id
-      ),
-      new Edge(
-        "23",
-        EdgeType.NORMAL,
-        "23",
-        (<Node<unknown>>nodes.find((x) => x.id === "R")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "S")).id
-      ),
-      new Edge(
-        "24",
-        EdgeType.NORMAL,
-        "24",
-        (<Node<unknown>>nodes.find((x) => x.id === "ROOT")).id,
-        (<Node<unknown>>nodes.find((x) => x.id === "A")).id
-      ),
+      new Edge("1", EdgeType.CONDITIONAL_FALSE, "1", "A", "B"),
+      new Edge("2", EdgeType.CONDITIONAL_TRUE, "2", "A", "C"),
+      new Edge("3", EdgeType.CONDITIONAL_FALSE, "3", "C", "D"),
+      new Edge("4", EdgeType.CONDITIONAL_TRUE, "4", "C", "E"),
+      new Edge("5", EdgeType.NORMAL, "5", "E", "S"),
+      new Edge("6", EdgeType.NORMAL, "6", "D", "F"),
+      new Edge("7", EdgeType.CONDITIONAL_TRUE, "7", "F", "G"),
+      new Edge("8", EdgeType.CONDITIONAL_TRUE, "8", "F", "H"),
+      new Edge("9", EdgeType.CONDITIONAL_TRUE, "9", "F", "I"),
+      new Edge("10", EdgeType.NORMAL, "10", "G", "J"),
+      new Edge("11", EdgeType.CONDITIONAL_FALSE, "11", "J", "L"),
+      new Edge("12", EdgeType.CONDITIONAL_TRUE, "12", "J", "M"),
+      new Edge("13", EdgeType.NORMAL, "13", "H", "K"),
+      new Edge("14", EdgeType.NORMAL, "14", "L", "N"),
+      new Edge("15", EdgeType.NORMAL, "15", "M", "N"),
+      new Edge("16", EdgeType.NORMAL, "16", "N", "O"),
+      new Edge("17", EdgeType.NORMAL, "17", "K", "O"),
+      new Edge("18", EdgeType.NORMAL, "18", "I", "O"),
+      new Edge("19", EdgeType.NORMAL, "19", "O", "P"),
+      new Edge("20", EdgeType.CONDITIONAL_FALSE, "20", "P", "Q"),
+      new Edge("21", EdgeType.CONDITIONAL_TRUE, "21", "P", "R"),
+      new Edge("22", EdgeType.NORMAL, "22", "Q", "S"),
+      new Edge("23", EdgeType.NORMAL, "23", "R", "S"),
+      new Edge("24", EdgeType.NORMAL, "24", "ROOT", "A"),
     ];
 
     CFG3 = edgeContraction(
-      new ControlFlowGraph(nodes[0], nodes[1], nodes[1], nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
   });
 

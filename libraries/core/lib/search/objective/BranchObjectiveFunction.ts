@@ -111,9 +111,7 @@ export class BranchObjectiveFunction<T extends Encoding>
           (edge.type === EdgeType.CONDITIONAL_FALSE && this._type === false))
       );
     });
-    const childNode = this._subject.cfg.nodes.find((node) => {
-      return node.id === childEdge.target;
-    });
+    const childNode = this._subject.cfg.getNodeById(childEdge.target);
 
     // Find approach level and ancestor based on node and covered nodes
     const { approachLevel, closestCoveredBranchTrace } =

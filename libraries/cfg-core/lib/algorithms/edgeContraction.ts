@@ -49,7 +49,7 @@ export function edgeContraction<S>(
   do {
     changed = false;
 
-    if (controlFlowGraph.nodes.length === 2) {
+    if (controlFlowGraph.nodes.size === 2) {
       // Only entry and exit nodes left, so we can stop
       break;
     }
@@ -153,9 +153,12 @@ function mergeNodes<S>(
     }
   );
 
-  const newNodes = controlFlowGraph.nodes
+  const newNodes = new Map<string, Node<S>>();
+
+  [...controlFlowGraph.nodes.values()]
     .filter((node) => node.id !== node1 && node.id !== node2)
-    .concat(newNode);
+    .concat(newNode)
+    .forEach((node) => newNodes.set(node.id, node));
 
   const removedEdges = controlFlowGraph.edges.filter(
     (edge) => edge.source === node1 && edge.target === node2
@@ -215,12 +218,12 @@ function mergeNodes<S>(
       return edge;
     });
 
-  if (newNodes.length !== controlFlowGraph.nodes.length - 1) {
+  if (newNodes.size !== controlFlowGraph.nodes.size - 1) {
     throw new Error(
       exactlyOneNodeShouldBeRemoved(
         node1,
         node2,
-        newNodes.length - controlFlowGraph.nodes.length
+        newNodes.size - controlFlowGraph.nodes.size
       )
     );
   }
@@ -230,7 +233,7 @@ function mergeNodes<S>(
       exactlyOneEdgeShouldBeRemoved(
         node1,
         node2,
-        newNodes.length - controlFlowGraph.nodes.length
+        newNodes.size - controlFlowGraph.nodes.size
       )
     );
   }

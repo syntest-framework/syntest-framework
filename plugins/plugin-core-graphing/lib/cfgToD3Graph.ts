@@ -25,7 +25,7 @@ export function cfgToD3Graph<S>(
   let count = 0;
 
   const nodes = [
-    ...cfg.nodes.map((n: Node<S>) => {
+    ...[...cfg.nodes.values()].map((n: Node<S>) => {
       let name = `(${n.metadata.lineNumbers.join(", ")})`;
 
       if (n.description && n.description.length) {
