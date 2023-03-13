@@ -18,7 +18,7 @@
  */
 
 import yargHelper = require("yargs/helpers");
-import { BaseOptions, Configuration } from "./Configuration";
+import { BaseOptions } from "@syntest/module";
 import {
   ModuleManager,
   PluginType,
@@ -47,12 +47,11 @@ async function main() {
    * We disable help and version here because, we don't want the help command to be triggered.
    * When we did not configure the commands and options from the added modules yet.
    */
-  let yargs = Configuration.configureUsage().help(false).version(false);
+  let yargs = ModuleConfiguration.configureUsage().help(false).version(false);
 
   // Configure general options
-  yargs = Configuration.configureOptions(yargs);
-  yargs = LogConfiguration.configureOptions(yargs);
   yargs = ModuleConfiguration.configureOptions(yargs);
+  yargs = LogConfiguration.configureOptions(yargs);
 
   // Parse the arguments and config using only the base options
   const baseArguments = yargs.wrap(yargs.terminalWidth()).parseSync(args);
