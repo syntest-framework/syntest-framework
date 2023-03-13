@@ -19,7 +19,6 @@ import { Node } from "./Node";
 import { Edge } from "./Edge";
 import { NodeType } from "./NodeType";
 import cloneDeep = require("lodash.clonedeep");
-import { duplicateNodeId } from "../diagnostics";
 
 /**
  * Represents a control flow graph.
@@ -28,7 +27,7 @@ export class ControlFlowGraph<S> {
   private readonly _entry: Node<S>;
   private readonly _successExit: Node<S>;
   private readonly _errorExit: Node<S>;
-  private readonly _nodes: Node<S>[];
+  private readonly _nodes: Map<string, Node<S>>;
   private readonly _edges: Edge[];
 
   private readonly _incomingEdges: Map<string, Edge[]>;
@@ -38,7 +37,7 @@ export class ControlFlowGraph<S> {
     entry: Node<S>,
     successExit: Node<S>,
     errorExit: Node<S>,
-    nodes: Node<S>[],
+    nodes: Map<string, Node<S>>,
     edges: Edge[]
   ) {
     this._entry = entry;
@@ -46,10 +45,6 @@ export class ControlFlowGraph<S> {
     this._errorExit = errorExit;
     this._nodes = cloneDeep(nodes);
     this._edges = cloneDeep(edges);
-
-    if (new Set(this._nodes.map((x) => x.id)).size !== this._nodes.length) {
-      throw new Error(duplicateNodeId());
-    }
 
     this._incomingEdges = this.getIncomingEdgesMap();
     this._outgoingEdges = this.getOutgoingEdgesMap();
@@ -67,7 +62,7 @@ export class ControlFlowGraph<S> {
     return this._errorExit;
   }
 
-  get nodes(): Node<S>[] {
+  get nodes(): Map<string, Node<S>> {
     return this._nodes;
   }
 
@@ -148,7 +143,7 @@ export class ControlFlowGraph<S> {
 
   // Successively applies a filter method on initial list of nodes with specified predicates
   getNodesByPredicates(...predicates: ((n: Node<S>) => boolean)[]) {
-    let filteredList: Node<S>[] = this._nodes;
+    let filteredList: Node<S>[] = [...this._nodes.values()];
     for (const predicate of predicates) {
       filteredList = filteredList.filter(predicate);
     }
@@ -157,31 +152,30 @@ export class ControlFlowGraph<S> {
 
   // Applies a find method on list of nodes with a given predicate
   getNodeByPredicate(predicate: (n: Node<S>) => boolean) {
-    return this._nodes.find(predicate);
+    return [...this._nodes.values()].find(predicate);
   }
 
   // Retrieves Node object based on its id
   getNodeById(nodeId: string): Node<S> {
-    const node = this._nodes.find((node: Node<S>) => node.id === nodeId);
-    return node;
+    return this._nodes.get(nodeId);
   }
 
   // Filters list of nodes, returning only nodes of a given type
   getNodesByType(type: NodeType): Node<S>[] {
-    return this._nodes.filter((n: Node<S>) => n.type === type);
+    return [...this._nodes.values()].filter((n: Node<S>) => n.type === type);
   }
 
   // Filters list of nodes by specified line numbers,
   // returning only nodes that contain AT LEAST ONE OF the given line numbers
   getNodesByLineNumbers(lineNumbers: Set<number>): Node<S>[] {
-    return this._nodes.filter((node) =>
+    return [...this._nodes.values()].filter((node) =>
       node.metadata.lineNumbers.some((nodeLine) => lineNumbers.has(nodeLine))
     );
   }
 
   // Returns Node that contains specified line number and is of a given type
   getNodeOfTypeByLine(lineNumber: number, type: NodeType): Node<S> {
-    return this._nodes.find((n: Node<S>) => {
+    return [...this._nodes.values()].find((n: Node<S>) => {
       return n.type === type && n.metadata.lineNumbers.includes(lineNumber);
     });
   }
@@ -193,7 +187,9 @@ export class ControlFlowGraph<S> {
         .filter((e: Edge) => e.target === targetNodeId)
         .map((e: Edge) => e.source)
     );
-    return this._nodes.filter((node: Node<S>) => selectedIds.has(node.id));
+    return [...this._nodes.values()].filter((node: Node<S>) =>
+      selectedIds.has(node.id)
+    );
   }
 
   // Returns list of nodes that have an outgoing edge from the target node
@@ -203,6 +199,8 @@ export class ControlFlowGraph<S> {
         .filter((e: Edge) => e.source === targetNodeId)
         .map((e: Edge) => e.target)
     );
-    return this._nodes.filter((node: Node<S>) => selectedIds.has(node.id));
+    return [...this._nodes.values()].filter((node: Node<S>) =>
+      selectedIds.has(node.id)
+    );
   }
 }

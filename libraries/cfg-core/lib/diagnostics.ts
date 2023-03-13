@@ -40,8 +40,8 @@ export const exactlyOneNodeShouldBeRemoved = (
 ) =>
   `Edge Contraction error\nExactly one node should be removed when merging nodes ${node1} and ${node2}.\nRemoved: ${amount}.`;
 
-export const duplicateNodeId = () =>
-  `Control Flow Graph error\nDuplicate node id found.`;
+export const duplicateNodeId = (id: string) =>
+  `Control Flow Graph error\nDuplicate node id found.\nNode id: ${id}.`;
 export const duplicateNodeInMappping = () =>
   `Control Flow Graph error\nDuplicate node found in mapping.`;
 export const nodeNotFoundInMapping = (node: string) =>

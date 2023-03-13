@@ -47,12 +47,6 @@ export class Node<S> {
     this.metadata = metadata;
     this.description = description;
   }
-
-  makeImmutable(): void {
-    Object.freeze(this);
-    Object.freeze(this.statements);
-    Object.freeze(this.metadata);
-  }
 }
 
 export type MetaData = {
