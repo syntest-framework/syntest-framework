@@ -17,6 +17,7 @@
  */
 
 // Static Analysis
+export * from "./analysis/static/ActionDescription";
 export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetMetaData";
 export * from "./analysis/static/TargetPool";
