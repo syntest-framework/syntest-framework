@@ -44,7 +44,7 @@ export class ApproachLevel {
 
     // Based on set of covered lines, filter CFG nodes that were covered and get their strings
     const coveredNodes = new Set<Node<S>>(
-      cfg.filterNodesByLineNumbers(coveredLines)
+      cfg.getNodesByLineNumbers(coveredLines)
     );
 
     const targetIds = new Set<string>([...coveredNodes].map((node) => node.id));

@@ -107,8 +107,8 @@ export class BranchObjectiveFunction<T extends Encoding>
     const childEdge = this._subject.cfg.edges.find((edge) => {
       return (
         edge.source === branchNode.id &&
-        ((edge.type === EdgeType.TRUE && this._type === true) ||
-          (edge.type === EdgeType.FALSE && this._type === false))
+        ((edge.type === EdgeType.CONDITIONAL_TRUE && this._type === true) ||
+          (edge.type === EdgeType.CONDITIONAL_FALSE && this._type === false))
       );
     });
     const childNode = this._subject.cfg.nodes.find((node) => {

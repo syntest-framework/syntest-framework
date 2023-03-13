@@ -39,11 +39,11 @@ describe("CFG suite", function () {
       []
     );
 
-    expect(cfg.filterNodesOfType(NodeType.ENTRY)).to.deep.contain(entry);
+    expect(cfg.getNodesByType(NodeType.ENTRY)).to.deep.contain(entry);
 
-    expect(cfg.filterNodesOfType(NodeType.EXIT)).to.deep.contain(exit);
+    expect(cfg.getNodesByType(NodeType.EXIT)).to.deep.contain(exit);
 
-    expect(cfg.filterNodesOfType(NodeType.NORMAL)).to.deep.contain(branchNode);
+    expect(cfg.getNodesByType(NodeType.NORMAL)).to.deep.contain(branchNode);
   });
 
   it("findNodeByPredicate test", () => {
@@ -66,10 +66,10 @@ describe("CFG suite", function () {
     );
 
     expect(
-      cfg.findNodeByPredicate(<S>(n: Node<S>) => n.id === "2")
+      cfg.getNodeByPredicate(<S>(n: Node<S>) => n.id === "2")
     ).to.deep.equal(branchNode);
     expect(
-      cfg.findNodeByPredicate(<S>(n: Node<S>) =>
+      cfg.getNodeByPredicate(<S>(n: Node<S>) =>
         n.metadata.lineNumbers.includes(26)
       )
     ).to.deep.equal(exit);
@@ -95,21 +95,21 @@ describe("CFG suite", function () {
     );
 
     expect(
-      cfg.filterNodesByPredicates(<S>(n: Node<S>) => n.id === "2")
+      cfg.getNodesByPredicates(<S>(n: Node<S>) => n.id === "2")
     ).to.deep.equal([branchNode]);
     expect(
-      cfg.filterNodesByPredicates(<S>(n: Node<S>) =>
+      cfg.getNodesByPredicates(<S>(n: Node<S>) =>
         n.metadata.lineNumbers.includes(26)
       )
     ).to.deep.equal([entry, exit]);
     expect(
-      cfg.filterNodesByPredicates(
+      cfg.getNodesByPredicates(
         <S>(n: Node<S>) => n.metadata.lineNumbers.includes(26),
         <S>(n: Node<S>) => n.type === NodeType.ENTRY
       )
     ).to.deep.equal([entry]);
     expect(
-      cfg.filterNodesByPredicates(
+      cfg.getNodesByPredicates(
         <S>(n: Node<S>) => n.metadata.lineNumbers.includes(26),
         <S>(n: Node<S>) => n.id === "1"
       )
@@ -160,20 +160,20 @@ describe("CFG suite", function () {
       []
     );
 
-    expect(cfg.filterNodesByLineNumbers(new Set<number>([26]))).to.deep.equal([
+    expect(cfg.getNodesByLineNumbers(new Set<number>([26]))).to.deep.equal([
       entry,
       exit,
       branchNode,
     ]);
-    expect(cfg.filterNodesByLineNumbers(new Set<number>([27]))).to.deep.equal(
-      []
-    );
-    expect(cfg.filterNodesByLineNumbers(new Set<number>([32]))).to.deep.equal([
+    expect(cfg.getNodesByLineNumbers(new Set<number>([27]))).to.deep.equal([]);
+    expect(cfg.getNodesByLineNumbers(new Set<number>([32]))).to.deep.equal([
       branchNode,
     ]);
-    expect(
-      cfg.filterNodesByLineNumbers(new Set<number>([26, 32]))
-    ).to.deep.equal([entry, exit, branchNode]);
+    expect(cfg.getNodesByLineNumbers(new Set<number>([26, 32]))).to.deep.equal([
+      entry,
+      exit,
+      branchNode,
+    ]);
   });
 
   it("findNodeOfTypeByLine test", () => {
@@ -195,17 +195,17 @@ describe("CFG suite", function () {
       []
     );
 
-    expect(cfg.findNodeOfTypeByLine(26, NodeType.ENTRY)).to.deep.equal(entry);
-    expect(cfg.findNodeOfTypeByLine(32, NodeType.ENTRY)).to.deep.equal(
+    expect(cfg.getNodeOfTypeByLine(26, NodeType.ENTRY)).to.deep.equal(entry);
+    expect(cfg.getNodeOfTypeByLine(32, NodeType.ENTRY)).to.deep.equal(
       undefined
     );
-    expect(cfg.findNodeOfTypeByLine(26, NodeType.NORMAL)).to.deep.equal(
+    expect(cfg.getNodeOfTypeByLine(26, NodeType.NORMAL)).to.deep.equal(
       branchNode
     );
-    expect(cfg.findNodeOfTypeByLine(32, NodeType.NORMAL)).to.deep.equal(
+    expect(cfg.getNodeOfTypeByLine(32, NodeType.NORMAL)).to.deep.equal(
       branchNode
     );
-    expect(cfg.findNodeOfTypeByLine(27, NodeType.NORMAL)).to.deep.equal(
+    expect(cfg.getNodeOfTypeByLine(27, NodeType.NORMAL)).to.deep.equal(
       undefined
     );
   });

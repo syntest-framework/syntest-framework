@@ -42,8 +42,8 @@ describe("CFG edge contraction", function () {
     ];
     const edges: Edge[] = [
       new Edge("1", EdgeType.NORMAL, "1", nodes[0].id, nodes[1].id),
-      new Edge("2", EdgeType.TRUE, "2", nodes[1].id, nodes[2].id),
-      new Edge("3", EdgeType.FALSE, "3", nodes[1].id, nodes[3].id),
+      new Edge("2", EdgeType.CONDITIONAL_TRUE, "2", nodes[1].id, nodes[2].id),
+      new Edge("3", EdgeType.CONDITIONAL_FALSE, "3", nodes[1].id, nodes[3].id),
       new Edge("4", EdgeType.NORMAL, "4", nodes[3].id, nodes[4].id),
       new Edge("5", EdgeType.NORMAL, "5", nodes[2].id, nodes[5].id),
       new Edge("6", EdgeType.NORMAL, "6", nodes[4].id, nodes[5].id),

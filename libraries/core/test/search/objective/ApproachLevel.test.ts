@@ -51,8 +51,8 @@ describe("CFG ancestors search", function () {
     ];
     edges = [
       new Edge("0", EdgeType.NORMAL, "0", nodes[0].id, nodes[1].id),
-      new Edge("1", EdgeType.TRUE, "1", nodes[1].id, nodes[2].id),
-      new Edge("2", EdgeType.FALSE, "2", nodes[1].id, nodes[3].id),
+      new Edge("1", EdgeType.CONDITIONAL_TRUE, "1", nodes[1].id, nodes[2].id),
+      new Edge("2", EdgeType.CONDITIONAL_FALSE, "2", nodes[1].id, nodes[3].id),
       new Edge("3", EdgeType.NORMAL, "3", nodes[2].id, nodes[4].id),
       new Edge("4", EdgeType.NORMAL, "4", nodes[3].id, nodes[4].id),
     ];
@@ -86,42 +86,42 @@ describe("CFG ancestors search", function () {
       ),
       new Edge(
         "1",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "1",
         (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "B")).id
       ),
       new Edge(
         "2",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "2",
         (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id
       ),
       new Edge(
         "3",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "3",
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "D")).id
       ),
       new Edge(
         "4",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "4",
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "E")).id
       ),
       new Edge(
         "5",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "5",
         (<Node<unknown>>nodes.find((x) => x.id === "D")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "F")).id
       ),
       new Edge(
         "6",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "6",
         (<Node<unknown>>nodes.find((x) => x.id === "D")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "G")).id
@@ -180,28 +180,28 @@ describe("CFG ancestors search", function () {
     edges = [
       new Edge(
         "1",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "1",
         (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "B")).id
       ),
       new Edge(
         "2",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "2",
         (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id
       ),
       new Edge(
         "3",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "3",
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "D")).id
       ),
       new Edge(
         "4",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "4",
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "E")).id
@@ -223,21 +223,21 @@ describe("CFG ancestors search", function () {
 
       new Edge(
         "7",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "7",
         (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "G")).id
       ),
       new Edge(
         "8",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "8",
         (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "H")).id
       ),
       new Edge(
         "9",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "9",
         (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "I")).id
@@ -251,14 +251,14 @@ describe("CFG ancestors search", function () {
       ),
       new Edge(
         "11",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "11",
         (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "L")).id
       ),
       new Edge(
         "12",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "12",
         (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "M")).id
@@ -314,14 +314,14 @@ describe("CFG ancestors search", function () {
       ),
       new Edge(
         "20",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "20",
         (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "Q")).id
       ),
       new Edge(
         "21",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "21",
         (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "R")).id
@@ -357,28 +357,28 @@ describe("CFG ancestors search", function () {
     edges = [
       new Edge(
         "1",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "1",
         (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "B")).id
       ),
       new Edge(
         "2",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "2",
         (<Node<unknown>>nodes.find((x) => x.id === "A")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id
       ),
       new Edge(
         "3",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "3",
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "D")).id
       ),
       new Edge(
         "4",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "4",
         (<Node<unknown>>nodes.find((x) => x.id === "C")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "E")).id
@@ -399,21 +399,21 @@ describe("CFG ancestors search", function () {
       ),
       new Edge(
         "7",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "7",
         (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "G")).id
       ),
       new Edge(
         "8",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "8",
         (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "H")).id
       ),
       new Edge(
         "9",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "9",
         (<Node<unknown>>nodes.find((x) => x.id === "F")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "I")).id
@@ -427,14 +427,14 @@ describe("CFG ancestors search", function () {
       ),
       new Edge(
         "11",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "11",
         (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "L")).id
       ),
       new Edge(
         "12",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "12",
         (<Node<unknown>>nodes.find((x) => x.id === "J")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "M")).id
@@ -490,14 +490,14 @@ describe("CFG ancestors search", function () {
       ),
       new Edge(
         "20",
-        EdgeType.FALSE,
+        EdgeType.CONDITIONAL_FALSE,
         "20",
         (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "Q")).id
       ),
       new Edge(
         "21",
-        EdgeType.TRUE,
+        EdgeType.CONDITIONAL_TRUE,
         "21",
         (<Node<unknown>>nodes.find((x) => x.id === "P")).id,
         (<Node<unknown>>nodes.find((x) => x.id === "R")).id

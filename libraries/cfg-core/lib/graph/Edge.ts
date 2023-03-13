@@ -40,8 +40,8 @@ export class Edge {
     this.id = id;
     this.type = type;
     this.label = label;
-    this.description = description;
     this.source = source;
     this.target = target;
+    this.description = description;
   }
 }

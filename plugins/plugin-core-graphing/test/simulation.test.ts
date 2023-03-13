@@ -49,12 +49,12 @@ describe("simulationTest", () => {
     }
     const edges = [
       new Edge("A", EdgeType.NORMAL, "A", "ROOT", "A"),
-      new Edge("B", EdgeType.FALSE, "B", "A", "B"),
-      new Edge("C", EdgeType.TRUE, "C", "A", "C"),
-      new Edge("D", EdgeType.TRUE, "D", "C", "D"),
-      new Edge("E", EdgeType.FALSE, "E", "C", "E"),
-      new Edge("F", EdgeType.TRUE, "F", "D", "F"),
-      new Edge("G", EdgeType.FALSE, "G", "D", "G"),
+      new Edge("B", EdgeType.CONDITIONAL_FALSE, "B", "A", "B"),
+      new Edge("C", EdgeType.CONDITIONAL_TRUE, "C", "A", "C"),
+      new Edge("D", EdgeType.CONDITIONAL_TRUE, "D", "C", "D"),
+      new Edge("E", EdgeType.CONDITIONAL_FALSE, "E", "C", "E"),
+      new Edge("F", EdgeType.CONDITIONAL_TRUE, "F", "D", "F"),
+      new Edge("G", EdgeType.CONDITIONAL_FALSE, "G", "D", "G"),
       new Edge("H", EdgeType.NORMAL, "H", "F", "A"),
       new Edge("I", EdgeType.NORMAL, "I", "G", "A"),
       new Edge("J", EdgeType.NORMAL, "J", "E", "A"),

@@ -32,7 +32,7 @@ import {
 /**
  * Edge contraction algorithm.
  *
- * This algorithm merges nodes with only one incoming and one outgoing edge.
+ * This algorithm contracts every edge whose source has a single exit and whose destination has a single entry.
  *
  * https://en.wikipedia.org/wiki/Control-flow_graph
  * @param controlFlowGraph the control flow graph to contract
@@ -43,10 +43,10 @@ export function edgeContraction<S>(
 ): ContractedControlFlowGraph<S> {
   const original = controlFlowGraph;
   const nodeMapping = new Map<string, string[]>();
-  let changed = true;
+  let changed = false;
 
   // Perform edge contraction until no more changes are made
-  while (changed) {
+  do {
     changed = false;
 
     if (controlFlowGraph.nodes.length === 2) {
@@ -62,7 +62,7 @@ export function edgeContraction<S>(
 
     queue.push(...controlFlowGraph.getOutgoingEdges(controlFlowGraph.entry.id));
 
-    while (queue.length) {
+    while (queue.length !== 0) {
       const edge = queue.shift();
       if (visited.has(edge.id)) {
         continue;
@@ -91,7 +91,7 @@ export function edgeContraction<S>(
 
       queue.push(...controlFlowGraph.getOutgoingEdges(edge.target));
     }
-  }
+  } while (changed);
 
   return new ContractedControlFlowGraph<S>(
     controlFlowGraph.entry,

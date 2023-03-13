@@ -147,7 +147,7 @@ export class ControlFlowGraph<S> {
   }
 
   // Successively applies a filter method on initial list of nodes with specified predicates
-  filterNodesByPredicates(...predicates: ((n: Node<S>) => boolean)[]) {
+  getNodesByPredicates(...predicates: ((n: Node<S>) => boolean)[]) {
     let filteredList: Node<S>[] = this._nodes;
     for (const predicate of predicates) {
       filteredList = filteredList.filter(predicate);
@@ -156,7 +156,7 @@ export class ControlFlowGraph<S> {
   }
 
   // Applies a find method on list of nodes with a given predicate
-  findNodeByPredicate(predicate: (n: Node<S>) => boolean) {
+  getNodeByPredicate(predicate: (n: Node<S>) => boolean) {
     return this._nodes.find(predicate);
   }
 
@@ -167,20 +167,20 @@ export class ControlFlowGraph<S> {
   }
 
   // Filters list of nodes, returning only nodes of a given type
-  filterNodesOfType(type: NodeType): Node<S>[] {
+  getNodesByType(type: NodeType): Node<S>[] {
     return this._nodes.filter((n: Node<S>) => n.type === type);
   }
 
   // Filters list of nodes by specified line numbers,
   // returning only nodes that contain AT LEAST ONE OF the given line numbers
-  filterNodesByLineNumbers(lineNumbers: Set<number>): Node<S>[] {
+  getNodesByLineNumbers(lineNumbers: Set<number>): Node<S>[] {
     return this._nodes.filter((node) =>
       node.metadata.lineNumbers.some((nodeLine) => lineNumbers.has(nodeLine))
     );
   }
 
   // Returns Node that contains specified line number and is of a given type
-  findNodeOfTypeByLine(lineNumber: number, type: NodeType): Node<S> {
+  getNodeOfTypeByLine(lineNumber: number, type: NodeType): Node<S> {
     return this._nodes.find((n: Node<S>) => {
       return n.type === type && n.metadata.lineNumbers.includes(lineNumber);
     });

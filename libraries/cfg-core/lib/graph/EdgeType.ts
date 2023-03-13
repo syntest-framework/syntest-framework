@@ -19,8 +19,8 @@
 export enum EdgeType {
   NORMAL = "NORMAL",
   EXCEPTION = "EXCEPTION",
-  TRUE = "TRUE",
-  FALSE = "FALSE",
+  CONDITIONAL_TRUE = "CONDITIONAL_TRUE",
+  CONDITIONAL_FALSE = "CONDITIONAL_FALSE",
 
   /**
    * A back edge is an edge that points to a block that has already been met during a depth-first (DFS) traversal of the graph. Back edges are typical of loops.
