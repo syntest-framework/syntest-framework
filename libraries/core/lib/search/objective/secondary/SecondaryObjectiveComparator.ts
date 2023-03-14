@@ -15,16 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { SfuzzPlugin } from "../lib/SfuzzPlugin";
-const expect = chai.expect;
+import { Encoding } from "../../Encoding";
 
 /**
- * This test is only added such that the github action does not fail.
+ * Interface for secondary objectives.
+ *
+ * @author Mitchell Olsthoorn
  */
-describe("example test", () => {
-  it("test", async () => {
-    new SfuzzPlugin();
-    expect(true);
-  });
-});
+export interface SecondaryObjectiveComparator<T extends Encoding> {
+  /**
+   * Compare two objectives.
+   *
+   * Returns -1 if a < b.
+   * Returns 0 if a == b.
+   * Returns 1 if a > b.
+   *
+   * @param a The first encoding
+   * @param b The second encoding
+   */
+  compare(a: T, b: T): number;
+}

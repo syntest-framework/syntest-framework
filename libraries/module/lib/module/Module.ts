@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { Plugin } from "./Plugin";
+import { Preset } from "./Preset";
 import { Tool } from "./Tool";
 import { UserInterface } from "@syntest/cli-graphics";
 export abstract class Module {
@@ -47,6 +48,7 @@ export abstract class Module {
 
   abstract getTools(): Promise<Tool[]> | Tool[];
   abstract getPlugins(): Promise<Plugin[]> | Plugin[];
+  abstract getPresets(): Promise<Preset[]> | Preset[];
 }
 
 /**

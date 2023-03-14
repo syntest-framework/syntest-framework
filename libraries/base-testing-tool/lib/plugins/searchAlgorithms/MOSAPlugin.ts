@@ -21,6 +21,8 @@ import {
   SearchAlgorithm,
   MOSAFamily,
   UncoveredObjectiveManager,
+  LengthObjectiveComparator,
+  SecondaryObjectiveComparator,
 } from "@syntest/core";
 import {
   SearchAlgorithmPlugin,
@@ -40,11 +42,11 @@ export class MOSAPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
-    }
     if (!options.runner) {
       throw new Error(pluginRequiresOptions("MOSA", "runner"));
+    }
+    if (!options.encodingSampler) {
+      throw new Error(pluginRequiresOptions("MOSA", "encodingSampler"));
     }
     if (!options.crossover) {
       throw new Error(pluginRequiresOptions("MOSA", "crossover"));
@@ -57,8 +59,11 @@ export class MOSAPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
         pluginRequiresOptions("DynaMOSA", "crossoverProbability")
       );
     }
+
+    const secondaryObjectives = new Set<SecondaryObjectiveComparator<T>>();
+    secondaryObjectives.add(new LengthObjectiveComparator());
     return new MOSAFamily<T>(
-      new UncoveredObjectiveManager<T>(options.runner),
+      new UncoveredObjectiveManager<T>(options.runner, secondaryObjectives),
       options.encodingSampler,
       options.crossover,
       options.populationSize,
