@@ -38,7 +38,7 @@ export interface SeriesMetric {
 }
 
 export interface SeriesDistributionMetric {
-  type: MetricType.DISTRUBUTION_SERIES;
+  type: MetricType.SERIES_DISTRUBUTION;
   distributionName: string;
   seriesName: string;
   seriesType: string;
@@ -48,5 +48,45 @@ export enum MetricType {
   PROPERTY = "property",
   DISTRIBUTION = "distribution",
   SERIES = "series",
-  DISTRUBUTION_SERIES = "distribution-series",
+  SERIES_DISTRUBUTION = "series-distribution",
+}
+
+export function convertToMetric(metricStrings: string[]): Metric[] {
+  const metrics: Metric[] = [];
+
+  for (const metric of metricStrings) {
+    const metricParts = metric.split(":");
+    const type = metricParts[0];
+
+    if (type === "property" && metricParts.length === 2) {
+      metrics.push({
+        type: MetricType.PROPERTY,
+        property: metricParts[1],
+      });
+    } else if (type === "distribution" && metricParts.length === 2) {
+      metrics.push({
+        type: MetricType.DISTRIBUTION,
+        distributionName: metricParts[1],
+      });
+    } else if (type === "series" && metricParts.length === 3) {
+      metrics.push({
+        type: MetricType.SERIES,
+        seriesName: metricParts[1],
+        seriesType: metricParts[2],
+      });
+    } else if (type === "series-distribution" && metricParts.length === 4) {
+      metrics.push({
+        type: MetricType.SERIES_DISTRUBUTION,
+        distributionName: metricParts[1],
+        seriesName: metricParts[2],
+        seriesType: metricParts[3],
+      });
+    } else {
+      throw new Error(
+        `Unknown metric type: ${type}, length: ${metricParts.length}, metric: ${metric}`
+      );
+    }
+  }
+
+  return metrics;
 }

@@ -15,14 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "../Plugin";
 import { MiddleWare } from "@syntest/metric";
-import { PluginType } from "./PluginType";
+import { MiddlewarePlugin } from "@syntest/module";
 
-export abstract class MiddlewarePlugin extends Plugin {
-  constructor(name: string, describe: string) {
-    super(PluginType.MetricMiddleware, name, describe);
+export class StatisticsMetricMiddlewarePlugin extends MiddlewarePlugin {
+  createMetricMiddleware(): MiddleWare {
+    // avg
+    // std
+    // min
+    // max
+    // percentage
+    // count
+    // sum
+    // median
+    // mode
+    // variance
+    // percentile
+
+    throw new Error("Method not implemented.");
   }
-
-  abstract createMetricMiddleware(): MiddleWare;
 }

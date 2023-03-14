@@ -45,6 +45,7 @@
     "@syntest/cli-graphics": "^0.1.0-beta.0",
     "@syntest/logging": "*",
     "@syntest/module": "^0.1.0-beta.0",
+    "@syntest/metric": "*",
     "shelljs": "^0.8.5"
   },
   "engines": {

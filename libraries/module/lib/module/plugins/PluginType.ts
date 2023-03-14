@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 export enum PluginType {
-  Listener = "Listener",
-  MetricMiddleware = "metric-middleware",
+  LISTENER = "listener",
+  METRIC_MIDDLEWARE = "metric-middleware",
 }

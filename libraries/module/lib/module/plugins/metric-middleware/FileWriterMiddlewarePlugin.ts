@@ -15,16 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./module/plugins/ListenerPlugin";
-export * from "./module/plugins/MetricMiddlewarePlugin";
-export * from "./module/plugins/PluginType";
+import { Metric, MiddleWare, FileWriterMiddleware } from "@syntest/metric";
+import { MetricMiddlewarePlugin } from "../MetricMiddlewarePlugin";
 
-export * from "./module/Command";
-export * from "./module/Module";
-export * from "./module/Plugin";
-export * from "./module/Tool";
+export class FileWriterMiddlewarePlugin extends MetricMiddlewarePlugin {
+  constructor() {
+    super(
+      "FileWriterMiddlewarePlugin",
+      "A middleware that writes the metrics to a file."
+    );
+  }
 
-export * from "./util/Configuration";
-export * from "./util/diagnostics";
-
-export * from "./ModuleManager";
+  createMetricMiddleware(
+    metrics: Metric[],
+    outputMetrics: Metric[]
+  ): MiddleWare {
+    return new FileWriterMiddleware(metrics, outputMetrics);
+  }
+}

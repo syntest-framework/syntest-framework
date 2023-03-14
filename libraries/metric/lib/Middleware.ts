@@ -15,8 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Metric } from "./Metric";
 import { MetricManager } from "./MetricManager";
 
 export abstract class MiddleWare {
+  protected availableMetrics: Metric[];
+  protected outputMetrics: Metric[];
+
+  constructor(availableMetrics: Metric[], outputMetrics: Metric[]) {
+    this.availableMetrics = availableMetrics;
+    this.outputMetrics = outputMetrics;
+  }
+
   abstract run(metricManager: MetricManager): void;
 }

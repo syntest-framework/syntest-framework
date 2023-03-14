@@ -17,11 +17,6 @@
  */
 
 import { Module, Plugin, Tool } from "@syntest/module";
-import {
-  ResearchModeOptions,
-  SearchStatisticsListener,
-  StorageOptions,
-} from "./listeners/SearchStatisticsListener";
 import { StatisticsCollector } from "./statistics/StatisticsCollector";
 import { Timing } from "./statistics/Timing";
 import { CoverageWriter } from "./statistics/CoverageWriter";
@@ -31,15 +26,9 @@ import { existsSync, mkdirSync } from "fs";
 import { Metric } from "@syntest/metric";
 
 export default class StatisticsModule extends Module {
-  private searchStatisticsListener: SearchStatisticsListener;
-
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     super("Statistics", require("../package.json").version);
-    this.searchStatisticsListener = new SearchStatisticsListener(
-      new StatisticsCollector(),
-      new Timing()
-    );
   }
 
   getTools(): Tool[] | Promise<Tool[]> {
@@ -47,13 +36,14 @@ export default class StatisticsModule extends Module {
   }
 
   getPlugins(): Plugin[] | Promise<Plugin[]> {
-    return [this.searchStatisticsListener];
+    return [];
   }
 
   getMetrics(): Metric[] | Promise<Metric[]> {
     return [];
   }
 
+  // TODO
   prepare(): void | Promise<void> {
     const statisticsDirectory = path.join(
       (<{ syntestDirectory: string }>(<unknown>this.args)).syntestDirectory,

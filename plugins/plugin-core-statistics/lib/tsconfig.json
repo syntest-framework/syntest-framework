@@ -5,5 +5,9 @@
     "rootDir": ".",
     "composite": true
   },
-  "include": ["**/*.ts"]
+  "include": [
+    "**/*.ts",
+    "../../../libraries/base-testing-tool/lib/plugins/listeners/SearchMetricListener.ts",
+    "../../../libraries/base-testing-tool/lib/plugins/listeners/SearchMetricListener.ts"
+  ]
 }

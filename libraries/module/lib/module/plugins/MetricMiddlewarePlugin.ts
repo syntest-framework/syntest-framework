@@ -15,16 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./module/plugins/ListenerPlugin";
-export * from "./module/plugins/MetricMiddlewarePlugin";
-export * from "./module/plugins/PluginType";
+import { Plugin } from "../Plugin";
+import { Metric, MiddleWare } from "@syntest/metric";
+import { PluginType } from "./PluginType";
 
-export * from "./module/Command";
-export * from "./module/Module";
-export * from "./module/Plugin";
-export * from "./module/Tool";
+export abstract class MetricMiddlewarePlugin extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.METRIC_MIDDLEWARE, name, describe);
+  }
 
-export * from "./util/Configuration";
-export * from "./util/diagnostics";
-
-export * from "./ModuleManager";
+  abstract createMetricMiddleware(
+    metrics: Metric[],
+    outputMetrics: Metric[]
+  ): MiddleWare;
+}

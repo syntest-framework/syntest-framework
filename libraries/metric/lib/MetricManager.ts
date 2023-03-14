@@ -18,16 +18,18 @@
 import { singletonAlreadySet, singletonNotSet } from "./util/diagnostics";
 import { MiddleWare } from "./Middleware";
 import { getLogger } from "@syntest/logging";
-import { Metric } from "./Metric";
+import { Metric, PropertyMetric } from "./Metric";
 
 export class MetricManager {
   private static _instance: MetricManager;
+
   static LOGGER;
 
   public static get instance(): MetricManager {
     if (!MetricManager._instance) {
       throw new Error(singletonNotSet("MetricManager"));
     }
+
     return MetricManager._instance;
   }
 
@@ -41,6 +43,7 @@ export class MetricManager {
   }
 
   private middleware: MiddleWare[];
+  private metrics: Metric[];
 
   private properties: Map<string, string>;
   private distributions: Map<string, number[]>;
@@ -52,12 +55,14 @@ export class MetricManager {
 
   constructor(middleware: MiddleWare[], metrics: Metric[]) {
     this.middleware = middleware;
+    this.metrics = metrics;
+
     this.properties = new Map();
-    this.series = new Map();
     this.distributions = new Map();
+    this.series = new Map();
     this.seriesDistributions = new Map();
 
-    metrics.forEach((metric) => {
+    this.metrics.forEach((metric) => {
       switch (metric.type) {
         case "property":
           this.properties.set(metric.property, "");
@@ -69,7 +74,7 @@ export class MetricManager {
           this.series.set(metric.seriesName, new Map());
           this.series.get(metric.seriesName).set(metric.seriesType, new Map());
           break;
-        case "distribution-series":
+        case "series-distribution":
           this.seriesDistributions.set(metric.distributionName, new Map());
           this.seriesDistributions
             .get(metric.distributionName)
@@ -261,5 +266,17 @@ export class MetricManager {
     Map<string, Map<string, Map<number, number[]>>>
   > {
     return this.seriesDistributions;
+  }
+
+  collectProperties(wanted: PropertyMetric[]): Map<string, string> {
+    const properties = new Map<string, string>();
+
+    for (const property of wanted) {
+      const value = this.getProperty(property.property);
+
+      properties.set(property.property, value);
+    }
+
+    return properties;
   }
 }

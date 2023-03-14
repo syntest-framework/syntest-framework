@@ -23,12 +23,14 @@ import {
   SearchSubject,
   TerminationManager,
 } from "@syntest/core";
+
 import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
-import { StatisticsCollector } from "../statistics/StatisticsCollector";
-import { Timing } from "../statistics/Timing";
-import { RuntimeVariable } from "../statistics/RuntimeVariable";
+import { StatisticsCollector } from "../../../../../plugins/plugin-core-statistics/lib/statistics/StatisticsCollector";
+import { Timing } from "../../../../../plugins/plugin-core-statistics/lib/statistics/Timing";
+import { RuntimeVariable } from "../../../../../plugins/plugin-core-statistics/lib/statistics/RuntimeVariable";
 import Yargs = require("yargs");
+import { MetricManager } from "@syntest/metric";
 
 export class SearchStatisticsListener extends ListenerPlugin {
   /**
@@ -91,6 +93,7 @@ export class SearchStatisticsListener extends ListenerPlugin {
     const covered = searchAlgorithm.getCovered();
     const total = coveredBranches + searchAlgorithm.getUncovered();
 
+    MetricManager.instance.recordSeries();
     this.collector.recordEventVariable(
       eventTime,
       RuntimeVariable.COVERED_BRANCHES,
