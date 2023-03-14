@@ -24,6 +24,7 @@ import {
   PluginType,
   ListenerPlugin,
   Configuration as ModuleConfiguration,
+  MiddlewarePlugin,
 } from "@syntest/module";
 import {
   getLogger,
@@ -32,6 +33,7 @@ import {
 } from "@syntest/logging";
 import * as path from "path";
 import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
+import { MetricManager } from "@syntest/metric";
 
 async function main() {
   // Setup user interface
@@ -83,6 +85,18 @@ async function main() {
   LOGGER.info("Loading modules...", modules);
   await ModuleManager.instance.loadModules(modules, userInterface);
   yargs = await ModuleManager.instance.configureModules(yargs);
+
+  // Initialize the metric manager
+  const plugins = await ModuleManager.instance.getPluginsOfType(
+    PluginType.MetricMiddleware
+  );
+  const metrics = await ModuleManager.instance.getMetrics();
+  MetricManager.initialize(
+    [...plugins.values()].map((plugin) =>
+      (<MiddlewarePlugin>plugin).createMetricMiddleware()
+    ),
+    metrics
+  );
 
   // Setup cleanup on exit handler
   process.on("exit", (code) => {

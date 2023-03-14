@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "@syntest/module";
-import { MiddleWare } from "./Middleware";
+import { Plugin } from "../Plugin";
+import { MiddleWare } from "@syntest/metric";
+import { PluginType } from "./PluginType";
 
 export abstract class MiddlewarePlugin extends Plugin {
   constructor(name: string, describe: string) {
@@ -24,8 +25,4 @@ export abstract class MiddlewarePlugin extends Plugin {
   }
 
   abstract createMetricMiddleware(): MiddleWare;
-}
-
-export enum PluginType {
-  MetricMiddleware = "metric-middleware",
 }

@@ -19,6 +19,7 @@ import Yargs = require("yargs");
 import { Plugin } from "./Plugin";
 import { Tool } from "./Tool";
 import { UserInterface } from "@syntest/cli-graphics";
+import { Metric } from "@syntest/metric";
 export abstract class Module {
   name: Readonly<string>;
   version: Readonly<string>;
@@ -57,6 +58,10 @@ export abstract class Module {
 
   abstract getTools(): Promise<Tool[]> | Tool[];
   abstract getPlugins(): Promise<Plugin[]> | Plugin[];
+  /**
+   * Should return a list of metrics that are stored by this module
+   */
+  abstract getMetrics(): Promise<Metric[]> | Metric[];
 }
 
 /**

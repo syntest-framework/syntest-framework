@@ -37,6 +37,7 @@ import {
   toolAlreadyLoaded,
 } from "./util/diagnostics";
 import { getLogger } from "@syntest/logging";
+import { Metric } from "@syntest/metric";
 
 export class ModuleManager {
   static LOGGER;
@@ -106,6 +107,14 @@ export class ModuleManager {
     }
 
     return this._plugins.get(type);
+  }
+
+  async getMetrics(): Promise<Metric[]> {
+    const metrics = [];
+    for (const module of this._modules.values()) {
+      metrics.push(...(await module.getMetrics()));
+    }
+    return metrics;
   }
 
   async prepare() {

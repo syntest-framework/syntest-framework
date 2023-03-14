@@ -20,6 +20,7 @@ import { Module, Plugin, Tool } from "@syntest/module";
 import GraphingPlugin, { GraphOptions } from "./GraphingPlugin";
 import { mkdirSync } from "fs";
 import { CONFIG } from "@syntest/base-testing-tool";
+import { Metric } from "@syntest/metric";
 
 export default class GraphingModule extends Module {
   async getTools(): Promise<Tool[]> {
@@ -27,6 +28,10 @@ export default class GraphingModule extends Module {
   }
   async getPlugins(): Promise<Plugin[]> {
     return [new GraphingPlugin()];
+  }
+
+  getMetrics(): Metric[] | Promise<Metric[]> {
+    return [];
   }
 
   async prepare(): Promise<void> {

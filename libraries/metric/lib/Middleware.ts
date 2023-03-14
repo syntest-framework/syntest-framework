@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./util/Configuration";
-export * from "./util/diagnostics";
+import { MetricManager } from "./MetricManager";
 
-export * from "./MetricManager";
+export abstract class MiddleWare {
+  abstract run(metricManager: MetricManager): void;
+}

@@ -17,4 +17,5 @@
  */
 export enum PluginType {
   Listener = "Listener",
+  MetricMiddleware = "metric-middleware",
 }

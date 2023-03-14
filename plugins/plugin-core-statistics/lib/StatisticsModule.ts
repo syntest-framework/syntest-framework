@@ -28,6 +28,7 @@ import { CoverageWriter } from "./statistics/CoverageWriter";
 import { SummaryWriter } from "./statistics/SummaryWriter";
 import * as path from "path";
 import { existsSync, mkdirSync } from "fs";
+import { Metric } from "@syntest/metric";
 
 export default class StatisticsModule extends Module {
   private searchStatisticsListener: SearchStatisticsListener;
@@ -47,6 +48,10 @@ export default class StatisticsModule extends Module {
 
   getPlugins(): Plugin[] | Promise<Plugin[]> {
     return [this.searchStatisticsListener];
+  }
+
+  getMetrics(): Metric[] | Promise<Metric[]> {
+    return [];
   }
 
   prepare(): void | Promise<void> {

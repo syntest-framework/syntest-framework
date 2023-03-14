@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./module/plugins/PluginType";
 export * from "./module/plugins/ListenerPlugin";
+export * from "./module/plugins/MiddlewarePlugin";
+export * from "./module/plugins/PluginType";
 
 export * from "./module/Command";
 export * from "./module/Module";

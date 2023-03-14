@@ -18,12 +18,17 @@
 
 import { Module, Plugin, Tool } from "@syntest/module";
 import SfuzzPlugin from "./SfuzzPlugin";
+import { Metric } from "@syntest/metric";
 
-export default class GraphingModule extends Module {
+export default class SfuzzModule extends Module {
   async getTools(): Promise<Tool[]> {
     return [];
   }
   async getPlugins(): Promise<Plugin[]> {
     return [new SfuzzPlugin()];
+  }
+
+  getMetrics(): Metric[] | Promise<Metric[]> {
+    return [];
   }
 }
