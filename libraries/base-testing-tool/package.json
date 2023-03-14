@@ -1,6 +1,6 @@
 {
   "name": "@syntest/base-testing-tool",
-  "version": "0.2.0-beta.6",
+  "version": "0.2.0-beta.7",
   "description": "The base testing tool of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -42,8 +42,8 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli": "^0.2.0-beta.5",
-    "@syntest/core": "^0.4.0-beta.8",
+    "@syntest/cli": "^0.2.0-beta.6",
+    "@syntest/core": "^0.4.0-beta.9",
     "@syntest/logging": "^0.1.0-beta.3"
   },
   "engines": {
