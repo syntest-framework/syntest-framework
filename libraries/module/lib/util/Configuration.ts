@@ -20,6 +20,7 @@ import { LoggingOptions } from "@syntest/logging";
 
 export type GeneralOptions = {
   config: string;
+  preset: string;
 };
 
 export type StorageOptions = {
