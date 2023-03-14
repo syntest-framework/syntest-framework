@@ -160,6 +160,10 @@ export class ControlFlowGraph<S> {
     return this._nodes.get(nodeId);
   }
 
+  getNodesByIds(nodeIds: string[]): Node<S>[] {
+    return nodeIds.map((id) => this.getNodeById(id));
+  }
+
   // Filters list of nodes, returning only nodes of a given type
   getNodesByType(type: NodeType): Node<S>[] {
     return [...this._nodes.values()].filter((n: Node<S>) => n.type === type);

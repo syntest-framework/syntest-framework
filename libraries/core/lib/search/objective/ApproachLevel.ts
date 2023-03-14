@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { Datapoint } from "../..";
-import { ControlFlowGraph, Node } from "@syntest/cfg-core";
+import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg-core";
 
 export class ApproachLevel {
   public static calculate<S>(
@@ -24,44 +24,28 @@ export class ApproachLevel {
     node: Node<S>,
     traces: Datapoint[]
   ): { approachLevel: number; closestCoveredBranchTrace: Datapoint } {
-    // Construct map with key as line covered and value as datapoint that covers that line
-    const linesTraceMap: Map<number, Datapoint> = traces
-      .filter(
-        (trace) =>
-          (trace.type === "branch" ||
-            trace.type === "probePre" ||
-            trace.type === "probePost" ||
-            trace.type === "function") &&
-          trace.hits > 0
-      )
-      .reduce((map, trace) => {
-        map.set(trace.line, trace);
-        return map;
-      }, new Map<number, Datapoint>());
+    // Construct map with key as id covered and value as datapoint that covers that id
+    const idsTraceMap: Map<string, Datapoint> = traces.reduce((map, trace) => {
+      map.set(trace.id, trace);
+      return map;
+    }, new Map<string, Datapoint>());
 
-    // Construct set of all covered lines
-    const coveredLines = new Set<number>(linesTraceMap.keys());
-
-    // Based on set of covered lines, filter CFG nodes that were covered and get their strings
-    const coveredNodes = new Set<Node<S>>(
-      cfg.getNodesByLineNumbers(coveredLines)
-    );
-
-    const targetIds = new Set<string>([...coveredNodes].map((node) => node.id));
+    // Construct set of all covered ids
+    const coveredNodeIds = new Set<string>(idsTraceMap.keys());
 
     const { approachLevel, closestCoveredBranch } =
-      this._findClosestCoveredBranch(cfg, node.id, targetIds);
+      this._findClosestCoveredBranch(cfg, node.id, coveredNodeIds);
 
-    // if closer node (branch or probe) is not found, we return the distance to the root branch
+    // if closest node is not found, we return the distance to the root branch
     if (!closestCoveredBranch) {
       return { approachLevel: null, closestCoveredBranchTrace: null };
     }
 
-    // Retrieve trace based on lines covered by found closestCoveredBranch
+    // Retrieve trace based on ids covered by found closestCoveredBranch
     let closestCoveredBranchTrace: Datapoint = null;
-    for (const line of closestCoveredBranch.metadata.lineNumbers) {
-      if (linesTraceMap.has(line)) {
-        closestCoveredBranchTrace = linesTraceMap.get(line);
+    for (const id of closestCoveredBranch.id) {
+      if (idsTraceMap.has(id)) {
+        closestCoveredBranchTrace = idsTraceMap.get(id);
         break;
       }
     }
@@ -99,7 +83,10 @@ export class ApproachLevel {
         }
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(edge.source);
-        if (cfg.getOutgoingEdges(edge.source).length > 1) {
+        if (
+          edge.type === EdgeType.CONDITIONAL_TRUE ||
+          edge.type === EdgeType.CONDITIONAL_FALSE
+        ) {
           // If a node has more than one outgoing edge, it is a control node
           // Only control nodes are considered in the approach level
           searchQueue.push([edge.source, currentDistance + 1]);

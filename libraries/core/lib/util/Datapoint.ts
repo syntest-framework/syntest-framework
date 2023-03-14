@@ -16,8 +16,6 @@
  * limitations under the License.
  */
 
-import { EdgeType } from "@syntest/cfg-core";
-
 /**
  * @author Dimitri Stallenberg
  */
@@ -33,13 +31,4 @@ export interface Datapoint {
   condition_ast?: string;
   condition?: string;
   variables?: unknown;
-
-  // deprecated
-  locationIdx?: number;
-  branchType?: boolean;
-
-  // Deprecated
-  opcode?: string;
-  left?: number[];
-  right?: number[];
 }

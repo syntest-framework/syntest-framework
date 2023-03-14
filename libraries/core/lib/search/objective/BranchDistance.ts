@@ -18,6 +18,41 @@
 
 export class BranchDistance {
   /**
+   *  Calculate the branch distance between: covering the branch needed to get a closer approach distance
+   *  and the currently covered branch always between 0 and 1
+   * @param node
+   */
+  public static calculate(
+    conditionAST: string,
+    condition: string,
+    variables: unknown
+  ): number {
+    const trueBranch = BranchDistance._calculate(
+      conditionAST,
+      condition,
+      variables,
+      true
+    );
+
+    const falseBranch = BranchDistance._calculate(
+      conditionAST,
+      condition,
+      variables,
+      false
+    );
+
+    return Math.max(trueBranch, falseBranch);
+  }
+
+  public static _calculate(
+    conditionAST: string,
+    condition: string,
+    variables: unknown,
+    trueOrFalse: boolean
+  ): number {
+    // TODO
+  }
+  /**
    * Calculate the branch distance
    *
    * @param opcode the opcode (the comparison operator)
