@@ -16,14 +16,18 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/module";
-import SfuzzPlugin from "./SfuzzPlugin";
+import { Module, Plugin, Preset, Tool } from "@syntest/module";
+import { SfuzzPlugin } from "./SfuzzPlugin";
 
-export default class GraphingModule extends Module {
+export default class SfuzzModule extends Module {
   async getTools(): Promise<Tool[]> {
     return [];
   }
   async getPlugins(): Promise<Plugin[]> {
     return [new SfuzzPlugin()];
+  }
+
+  async getPresets(): Promise<Preset[]> {
+    return [];
   }
 }

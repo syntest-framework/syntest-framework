@@ -16,7 +16,12 @@
  * limitations under the License.
  */
 
-import { Encoding, SearchAlgorithm } from "@syntest/core";
+import {
+  Encoding,
+  LengthObjectiveComparator,
+  SearchAlgorithm,
+  SecondaryObjectiveComparator,
+} from "@syntest/core";
 import { Sfuzz } from "./Sfuzz";
 import { SfuzzObjectiveManager } from "./SfuzzObjectiveManager";
 import { pluginRequiresOptions } from "@syntest/module";
@@ -30,9 +35,7 @@ import {
  *
  * @author Dimitri Stallenberg
  */
-export default class SfuzzPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class SfuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("Sfuzz", "Sfuzz search algorithm");
   }
@@ -40,11 +43,11 @@ export default class SfuzzPlugin<
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
-    }
     if (!options.runner) {
       throw new Error(pluginRequiresOptions("Sfuzz", "runner"));
+    }
+    if (!options.encodingSampler) {
+      throw new Error(pluginRequiresOptions("Sfuzz", "encodingSampler"));
     }
     if (!options.crossover) {
       throw new Error(pluginRequiresOptions("Sfuzz", "crossover"));
@@ -57,8 +60,11 @@ export default class SfuzzPlugin<
         pluginRequiresOptions("DynaMOSA", "crossoverProbability")
       );
     }
+
+    const secondaryObjectives = new Set<SecondaryObjectiveComparator<T>>();
+    secondaryObjectives.add(new LengthObjectiveComparator());
     return new Sfuzz<T>(
-      new SfuzzObjectiveManager<T>(options.runner),
+      new SfuzzObjectiveManager<T>(options.runner, secondaryObjectives),
       options.encodingSampler,
       options.crossover,
       options.populationSize,

@@ -20,6 +20,8 @@ import {
   SearchAlgorithm,
   MOSAFamily,
   StructuralObjectiveManager,
+  SecondaryObjectiveComparator,
+  LengthObjectiveComparator,
 } from "@syntest/core";
 import { pluginRequiresOptions } from "@syntest/module";
 import {
@@ -48,11 +50,11 @@ export class DynaMOSAPlugin<
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
-    }
     if (!options.runner) {
       throw new Error(pluginRequiresOptions("DynaMOSA", "runner"));
+    }
+    if (!options.encodingSampler) {
+      throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
     }
     if (!options.crossover) {
       throw new Error(pluginRequiresOptions("DynaMOSA", "crossover"));
@@ -65,8 +67,11 @@ export class DynaMOSAPlugin<
         pluginRequiresOptions("DynaMOSA", "crossoverProbability")
       );
     }
+
+    const secondaryObjectives = new Set<SecondaryObjectiveComparator<T>>();
+    secondaryObjectives.add(new LengthObjectiveComparator());
     return new MOSAFamily<T>(
-      new StructuralObjectiveManager<T>(options.runner),
+      new StructuralObjectiveManager<T>(options.runner, secondaryObjectives),
       options.encodingSampler,
       options.crossover,
       options.populationSize,

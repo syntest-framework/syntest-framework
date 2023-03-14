@@ -15,16 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { SfuzzPlugin } from "../lib/SfuzzPlugin";
-const expect = chai.expect;
+import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
+import { Encoding } from "../../Encoding";
 
 /**
- * This test is only added such that the github action does not fail.
+ * Secondary objective that is based on the length of the encoding.
+ *
+ * @author Mitchell Olsthoorn
  */
-describe("example test", () => {
-  it("test", async () => {
-    new SfuzzPlugin();
-    expect(true);
-  });
-});
+export class LengthObjectiveComparator<T extends Encoding>
+  implements SecondaryObjectiveComparator<T>
+{
+  /**
+   * @inheritDoc
+   */
+  public compare(a: T, b: T): number {
+    if (a.getLength() < b.getLength()) return -1;
+    if (a.getLength() > b.getLength()) return 1;
+
+    // Length must be equal
+    return 0;
+  }
+}

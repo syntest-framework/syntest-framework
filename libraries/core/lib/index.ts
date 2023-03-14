@@ -69,6 +69,9 @@ export * from "./search/objective/managers/SimpleObjectiveManager";
 export * from "./search/objective/managers/StructuralObjectiveManager";
 export * from "./search/objective/managers/UncoveredObjectiveManager";
 
+export * from "./search/objective/secondary/SecondaryObjectiveComparator";
+export * from "./search/objective/secondary/LengthObjectiveComparator";
+
 // - Operator
 export * from "./search/operators/crossover/Crossover";
 

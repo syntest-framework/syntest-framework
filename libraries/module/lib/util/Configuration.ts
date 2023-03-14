@@ -20,6 +20,7 @@ import { LoggingOptions } from "@syntest/logging";
 
 export type GeneralOptions = {
   config: string;
+  preset: string;
 };
 
 export type StorageOptions = {
@@ -61,6 +62,15 @@ export class Configuration {
           group: OptionGroups.General,
           hidden: false,
           config: true,
+          type: "string",
+        })
+        .option("preset", {
+          alias: [],
+          choices: ["none"],
+          default: "none",
+          description: "The preset you want to use",
+          group: OptionGroups.General,
+          hidden: false,
           type: "string",
         })
         .option("modules", {

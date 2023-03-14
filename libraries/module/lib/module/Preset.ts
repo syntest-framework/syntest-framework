@@ -15,16 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { SfuzzPlugin } from "../lib/SfuzzPlugin";
-const expect = chai.expect;
+import Yargs = require("yargs");
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", async () => {
-    new SfuzzPlugin();
-    expect(true);
-  });
-});
+export abstract class Preset {
+  public name: Readonly<string>;
+  public describe: Readonly<string>;
+
+  constructor(name: string, describe: string) {
+    this.name = name;
+    this.describe = describe;
+  }
+
+  abstract modifyArgs(args: Yargs.ArgumentsCamelCase): Yargs.ArgumentsCamelCase;
+}
