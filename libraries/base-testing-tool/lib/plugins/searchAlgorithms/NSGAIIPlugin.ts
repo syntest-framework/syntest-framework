@@ -20,6 +20,7 @@ import {
   SearchAlgorithm,
   NSGAII,
   SimpleObjectiveManager,
+  SecondaryObjectiveComparator,
 } from "@syntest/core";
 import { pluginRequiresOptions } from "@syntest/module";
 import {
@@ -40,11 +41,11 @@ export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
-    }
     if (!options.runner) {
       throw new Error(pluginRequiresOptions("NSGAII", "runner"));
+    }
+    if (!options.encodingSampler) {
+      throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
     }
     if (!options.crossover) {
       throw new Error(pluginRequiresOptions("NSGAII", "crossover"));
@@ -57,8 +58,10 @@ export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
         pluginRequiresOptions("DynaMOSA", "crossoverProbability")
       );
     }
+
+    const secondaryObjectives = new Set<SecondaryObjectiveComparator<T>>();
     return new NSGAII<T>(
-      new SimpleObjectiveManager<T>(options.runner),
+      new SimpleObjectiveManager<T>(options.runner, secondaryObjectives),
       options.encodingSampler,
       options.crossover,
       options.populationSize,

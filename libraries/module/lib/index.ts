@@ -22,6 +22,7 @@ export * from "./module/plugins/PluginType";
 export * from "./module/Command";
 export * from "./module/Module";
 export * from "./module/Plugin";
+export * from "./module/Preset";
 export * from "./module/Tool";
 
 export * from "./util/Configuration";

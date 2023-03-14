@@ -21,6 +21,7 @@ import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
 import { getModuleCommand } from "./commands/module";
 import { Metric } from "@syntest/metric";
+import { Preset } from "@syntest/module";
 
 export default class InitModule extends Module {
   constructor() {
@@ -52,6 +53,10 @@ export default class InitModule extends Module {
   }
 
   async getMetrics(): Promise<Metric[]> {
+    return [];
+  }
+
+  async getPresets(): Promise<Preset[]> {
     return [];
   }
 }

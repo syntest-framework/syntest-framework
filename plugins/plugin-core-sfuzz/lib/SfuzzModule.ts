@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/module";
-import SfuzzPlugin from "./SfuzzPlugin";
+import { Module, Plugin, Preset, Tool } from "@syntest/module";
+import { SfuzzPlugin } from "./SfuzzPlugin";
 import { Metric } from "@syntest/metric";
 
 export default class SfuzzModule extends Module {
@@ -29,6 +29,10 @@ export default class SfuzzModule extends Module {
   }
 
   getMetrics(): Metric[] | Promise<Metric[]> {
+    return [];
+  }
+
+  async getPresets(): Promise<Preset[]> {
     return [];
   }
 }

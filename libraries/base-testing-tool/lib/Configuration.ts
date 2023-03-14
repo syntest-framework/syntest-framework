@@ -21,9 +21,9 @@ import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
 import { LoggingOptions } from "@syntest/logging";
 import {
   GeneralOptions,
-  StorageOptions as CliStorageOptions,
-  OptionGroups as CliOptionGroups,
-} from "@syntest/cli";
+  StorageOptions as ModuleStorageOptions,
+  OptionGroups as ModuleOptionGroups,
+} from "@syntest/module";
 
 export enum OptionGroups {
   Target = "Target Options:",
@@ -91,7 +91,7 @@ export type ResearchModeOptions = {
 export type ArgumentsObject = GeneralOptions &
   TargetOptions &
   StorageOptions &
-  CliStorageOptions &
+  ModuleStorageOptions &
   AlgorithmOptions &
   BudgetOptions &
   LoggingOptions &
@@ -162,7 +162,7 @@ export class Configuration {
         default: "statistics",
         description:
           "The path where the csv should be saved (within the syntest-directory)",
-        group: CliOptionGroups.Storage,
+        group: ModuleOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -172,7 +172,7 @@ export class Configuration {
         default: "tests",
         description:
           "The path where the final test suite should be saved (within the syntest-directory)",
-        group: CliOptionGroups.Storage,
+        group: ModuleOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -182,7 +182,7 @@ export class Configuration {
         default: "tests",
         description:
           "Path to the temporary test directory (within the temp-syntest-directory)",
-        group: CliOptionGroups.Storage,
+        group: ModuleOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -192,7 +192,7 @@ export class Configuration {
         default: "logs",
         description:
           "Path to the temporary log directory (within the temp-syntest-directory)",
-        group: CliOptionGroups.Storage,
+        group: ModuleOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -202,7 +202,7 @@ export class Configuration {
         default: "instrumented",
         description:
           "Path to the temporary instrumented directory (within the temp-syntest-directory)",
-        group: CliOptionGroups.Storage,
+        group: ModuleOptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",

@@ -1,1 +1,1 @@
-# The setup application of the syntest ecosystem
+# The init application of the syntest ecosystem

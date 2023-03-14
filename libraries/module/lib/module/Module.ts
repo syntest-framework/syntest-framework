@@ -17,6 +17,7 @@
  */
 import Yargs = require("yargs");
 import { Plugin } from "./Plugin";
+import { Preset } from "./Preset";
 import { Tool } from "./Tool";
 import { UserInterface } from "@syntest/cli-graphics";
 import { Metric } from "@syntest/metric";
@@ -58,6 +59,8 @@ export abstract class Module {
 
   abstract getTools(): Promise<Tool[]> | Tool[];
   abstract getPlugins(): Promise<Plugin[]> | Plugin[];
+  abstract getPresets(): Promise<Preset[]> | Preset[];
+
   /**
    * Should return a list of metrics that are stored by this module
    */

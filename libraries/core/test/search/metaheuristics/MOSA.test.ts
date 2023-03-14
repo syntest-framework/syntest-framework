@@ -69,7 +69,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedCrossover,
       50,
@@ -106,7 +106,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedCrossover,
       50,
@@ -144,7 +144,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedCrossover,
       4,
@@ -187,7 +187,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover();
 
     const mosa = new MockedMOSA(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedCrossover,
       50,

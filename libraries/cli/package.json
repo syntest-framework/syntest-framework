@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli",
-  "version": "0.2.0-beta.3",
+  "version": "0.2.0-beta.6",
   "description": "The cli of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -19,8 +19,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist",
-    "/NOTICE",
+    "dist",
+    "NOTICE",
     "README.md"
   ],
   "bin": {
@@ -39,20 +39,17 @@
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
     "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
     "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
-    "test": "mocha --config ../../.mocharc.json",
-    "test:coverage": "nyc --reporter=text --reporter=html mocha --config ../../.mocharc.json",
-    "test:coverage:ci": "nyc --reporter=lcovonly mocha --config ../../.mocharc.json --reporter json --reporter-option output=test-results.json",
-    "test:watch": "mocha --config ../../.mocharc.json --watch"
+    "test": "echo 'no tests'",
+    "test:coverage": "echo 'no tests'",
+    "test:coverage:ci": "echo 'no tests'",
+    "test:watch": "echo 'no tests'"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.1.0-beta.0",
-    "@syntest/init": "^0.2.0-beta.3",
-    "@syntest/logging": "^0.1.0-beta.2",
-    "@syntest/module": "^0.1.0-beta.0",
-    "@syntest/metric": "*",
-    "global-modules": "2.0.0",
-    "globby": "11.0.4",
-    "yargs": "17.6.2"
+    "@syntest/cli-graphics": "^0.1.0-beta.1",
+    "@syntest/init": "^0.2.0-beta.6",
+    "@syntest/logging": "^0.1.0-beta.3",
+    "@syntest/module": "^0.1.0-beta.3",
+    "@syntest/metric": "*"
   },
   "engines": {
     "node": ">=10.24.0"

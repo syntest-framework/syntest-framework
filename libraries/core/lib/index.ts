@@ -17,6 +17,7 @@
  */
 
 // Static Analysis
+export * from "./analysis/static/ActionDescription";
 export * from "./analysis/static/Target";
 export * from "./analysis/static/TargetMetaData";
 export * from "./analysis/static/TargetPool";
@@ -66,6 +67,9 @@ export * from "./search/objective/managers/ObjectiveManager";
 export * from "./search/objective/managers/SimpleObjectiveManager";
 export * from "./search/objective/managers/StructuralObjectiveManager";
 export * from "./search/objective/managers/UncoveredObjectiveManager";
+
+export * from "./search/objective/secondary/SecondaryObjectiveComparator";
+export * from "./search/objective/secondary/LengthObjectiveComparator";
 
 // - Operator
 export * from "./search/operators/crossover/Crossover";

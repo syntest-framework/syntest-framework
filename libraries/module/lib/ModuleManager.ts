@@ -32,12 +32,15 @@ import {
   modulePathNotFound,
   pluginAlreadyLoaded,
   pluginNotFound,
+  presetAlreadyLoaded,
+  presetNotFound,
   singletonAlreadySet,
   singletonNotSet,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
 import { getLogger } from "@syntest/logging";
 import { Metric } from "@syntest/metric";
+import { Preset } from "./module/Preset";
 
 export class ModuleManager {
   static LOGGER;
@@ -63,11 +66,13 @@ export class ModuleManager {
   private _tools: Map<string, Tool>;
   // type -> name -> plugin
   private _plugins: Map<string, Map<string, Plugin>>;
+  private _presets: Map<string, Preset>;
 
   constructor() {
     this._modules = new Map();
     this._tools = new Map();
     this._plugins = new Map();
+    this._presets = new Map();
   }
 
   set args(args: Yargs.ArgumentsCamelCase) {
@@ -87,6 +92,10 @@ export class ModuleManager {
 
   get plugins() {
     return this._plugins;
+  }
+
+  get presets() {
+    return this._presets;
   }
 
   getPlugin(type: string, name: string): Plugin {
@@ -218,7 +227,21 @@ export class ModuleManager {
       for (const plugin of await module.getPlugins()) {
         this.loadPlugin(plugin);
       }
+
+      // Load presets
+      for (const preset of await module.getPresets()) {
+        this.loadPreset(preset);
+      }
     }
+  }
+
+  loadPreset(preset: Preset) {
+    if (this.presets.has(preset.name)) {
+      throw new Error(presetAlreadyLoaded(preset.name));
+    }
+
+    ModuleManager.LOGGER.info(`Preset loaded: ${preset.name}`);
+    this.presets.set(preset.name, preset);
   }
 
   loadTool(tool: Tool) {
@@ -245,7 +268,7 @@ export class ModuleManager {
     this.plugins.get(plugin.type).set(plugin.name, plugin);
   }
 
-  async configureModules(yargs: Yargs.Argv) {
+  async configureModules(yargs: Yargs.Argv, preset: string) {
     ModuleManager.LOGGER.info("Configuring modules");
     for (const tool of this.tools.values()) {
       const plugins = [];
@@ -257,6 +280,16 @@ export class ModuleManager {
       await tool.addPluginOptions(plugins);
       yargs = yargs.command(tool);
     }
+
+    ModuleManager.LOGGER.info("Setting preset");
+    if (!this.presets.has(preset)) {
+      throw new Error(presetNotFound(preset));
+    }
+
+    yargs = yargs.middleware(
+      <Yargs.MiddlewareFunction>(<unknown>this.presets.get(preset).modifyArgs)
+    );
+
     return yargs;
   }
 }
