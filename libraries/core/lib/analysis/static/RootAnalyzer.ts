@@ -19,19 +19,30 @@ import { SubTarget, Target } from "./Target";
 import { ControlFlowProgram } from "@syntest/cfg-core";
 import * as path from "path";
 import { ActionDescription } from "./ActionDescription";
+import { pathNotInRootPath } from "../../util/diagnostics";
 
 export abstract class RootAnalyzer {
   protected _rootPath: string;
 
-  // path -> target context
+  // Mapping: filepath -> source code
   protected _targetMap: Map<string, Target>;
   // Mapping: filepath -> source code
   protected _sources: Map<string, string>;
 
   constructor(rootPath: string) {
-    this._rootPath = rootPath;
+    this._rootPath = path.resolve(rootPath);
     this._targetMap = new Map();
     this._sources = new Map();
+  }
+
+  resolvePath(_path: string): string {
+    const absolutePath = path.resolve(_path);
+
+    if (!absolutePath.includes(this._rootPath)) {
+      throw new Error(pathNotInRootPath(this._rootPath, absolutePath));
+    }
+
+    return absolutePath;
   }
 
   /**
@@ -70,19 +81,19 @@ export abstract class RootAnalyzer {
    * @returns
    */
   getTarget(_path: string): Target {
-    const absolutePath = path.resolve(_path);
-    const name = path.basename(absolutePath);
+    _path = this.resolvePath(_path);
+    const name = path.basename(_path);
 
-    if (!this._targetMap.has(absolutePath)) {
-      const targets = this.getSubTargets(absolutePath);
-      this._targetMap.set(absolutePath, {
-        path: absolutePath,
+    if (!this._targetMap.has(_path)) {
+      const targets = this.getSubTargets(_path);
+      this._targetMap.set(_path, {
+        path: _path,
         name: name,
         subTargets: targets,
       });
     }
 
-    return this._targetMap.get(absolutePath);
+    return this._targetMap.get(_path);
   }
 
   /**
