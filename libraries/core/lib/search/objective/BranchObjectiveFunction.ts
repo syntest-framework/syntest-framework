@@ -19,8 +19,9 @@
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
-import { BranchDistance } from "../objective/BranchDistance";
-import { ApproachLevel } from "./ApproachLevel";
+import { BranchDistance } from "./calculators/BranchDistance";
+import { ApproachLevel } from "./calculators/ApproachLevel";
+import { shouldNeverHappen } from "../../util/diagnostics";
 
 /**
  * Objective function for the branch criterion.
@@ -29,9 +30,9 @@ import { ApproachLevel } from "./ApproachLevel";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export class BranchObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T>
-{
+export class BranchObjectiveFunction<
+  T extends Encoding
+> extends ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _line: number;
@@ -46,11 +47,14 @@ export class BranchObjectiveFunction<T extends Encoding>
    * @param type
    */
   constructor(
+    approachLevel: ApproachLevel,
+    branchDistance: BranchDistance,
     subject: SearchSubject<T>,
     id: string,
     line: number,
     type: boolean
   ) {
+    super(approachLevel, branchDistance);
     this._subject = subject;
     this._id = id;
     this._line = line;
@@ -70,26 +74,26 @@ export class BranchObjectiveFunction<T extends Encoding>
     }
 
     // find the corresponding node inside the cfg
-    const node = this._subject.cfg.getNodeById(this._id);
+    const targetNode = this._subject.cfg.getNodeById(this._id);
 
-    if (!node) {
-      throw new Error(`Node with id ${this._id} not found`);
+    if (!targetNode) {
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
     // Find approach level and ancestor based on node and covered nodes
     const { approachLevel, closestCoveredBranchTrace } =
-      ApproachLevel.calculate(
+      this.approachLevel.calculate(
         this._subject.cfg,
-        node,
+        targetNode,
         executionResult.getTraces()
       );
 
     // if closest covered node is not found, we return the distance to the root branch
     if (!closestCoveredBranchTrace) {
-      return Number.MAX_VALUE;
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
-    const branchDistance = BranchDistance.calculate(
+    const branchDistance = this.branchDistance.calculate(
       closestCoveredBranchTrace.condition_ast,
       closestCoveredBranchTrace.condition,
       closestCoveredBranchTrace.variables

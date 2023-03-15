@@ -56,8 +56,8 @@ export * from "./search/metaheuristics/evolutionary/NSGAII";
 export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 
 // - Objective
-export * from "./search/objective/ApproachLevel";
-export * from "./search/objective/BranchDistance";
+export * from "./search/objective/calculators/ApproachLevel";
+export * from "./search/objective/calculators/BranchDistance";
 export * from "./search/objective/BranchObjectiveFunction";
 export * from "./search/objective/ExceptionObjectiveFunction";
 export * from "./search/objective/FunctionObjectiveFunction";

@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Datapoint } from "../..";
+import { Datapoint } from "../../..";
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg-core";
 
 export class ApproachLevel {
-  public static calculate<S>(
+  public calculate<S>(
     cfg: ControlFlowGraph<S>,
     node: Node<S>,
     traces: Datapoint[]
@@ -53,7 +53,7 @@ export class ApproachLevel {
     return { approachLevel, closestCoveredBranchTrace };
   }
 
-  static _findClosestCoveredBranch<S>(
+  _findClosestCoveredBranch<S>(
     cfg: ControlFlowGraph<S>,
     from: string,
     targets: Set<string>

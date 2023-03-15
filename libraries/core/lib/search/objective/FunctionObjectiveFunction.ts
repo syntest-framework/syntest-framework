@@ -19,6 +19,8 @@
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
+import { BranchDistance } from "./calculators/BranchDistance";
+import { ApproachLevel } from "./calculators/ApproachLevel";
 
 /**
  * Objective function for the function branch criterion.
@@ -27,9 +29,9 @@ import { SearchSubject } from "../SearchSubject";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export class FunctionObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T>
-{
+export class FunctionObjectiveFunction<
+  T extends Encoding
+> extends ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _line: number;
@@ -41,7 +43,14 @@ export class FunctionObjectiveFunction<T extends Encoding>
    * @param id
    * @param line
    */
-  constructor(subject: SearchSubject<T>, id: string, line: number) {
+  constructor(
+    approachLevel: ApproachLevel,
+    branchDistance: BranchDistance,
+    subject: SearchSubject<T>,
+    id: string,
+    line: number
+  ) {
+    super(approachLevel, branchDistance);
     this._subject = subject;
     this._id = id;
     this._line = line;
@@ -55,7 +64,7 @@ export class FunctionObjectiveFunction<T extends Encoding>
       return Number.MAX_VALUE;
     }
 
-    if (encoding.getExecutionResult().coversLine(this._line)) {
+    if (encoding.getExecutionResult().coversId(this._id)) {
       return 0;
     } else {
       return 1;

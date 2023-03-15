@@ -18,24 +18,34 @@
 
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
+import { ApproachLevel } from "./calculators/ApproachLevel";
+import { BranchDistance } from "./calculators/BranchDistance";
 
 /**
  * Function that models the objective.
  *
  * @author Mitchell Olsthoorn
  */
-export interface ObjectiveFunction<T extends Encoding> {
+export abstract class ObjectiveFunction<T extends Encoding> {
+  protected approachLevel: ApproachLevel;
+  protected branchDistance: BranchDistance;
+
+  constructor(approachLevel: ApproachLevel, branchDistance: BranchDistance) {
+    this.approachLevel = approachLevel;
+    this.branchDistance = branchDistance;
+  }
+
   /**
    * Calculate distance from the objective to an encoding.
    *
    * @param encoding Encoding
    */
-  calculateDistance(encoding: T): number;
+  abstract calculateDistance(encoding: T): number;
 
   /**
    * Return the identifier of the objective.
    */
-  getIdentifier(): string;
+  abstract getIdentifier(): string;
 
-  getSubject(): SearchSubject<T>;
+  abstract getSubject(): SearchSubject<T>;
 }

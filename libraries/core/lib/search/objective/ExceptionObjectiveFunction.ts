@@ -19,6 +19,8 @@
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
+import { ApproachLevel } from "./calculators/ApproachLevel";
+import { BranchDistance } from "./calculators/BranchDistance";
 
 /**
  * Objective function for the exception criterion.
@@ -28,9 +30,9 @@ import { SearchSubject } from "../SearchSubject";
  *
  * @author Mitchell Olsthoorn
  */
-export class ExceptionObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T>
-{
+export class ExceptionObjectiveFunction<
+  T extends Encoding
+> extends ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _message: string;
@@ -42,6 +44,7 @@ export class ExceptionObjectiveFunction<T extends Encoding>
    * @param id
    */
   constructor(subject: SearchSubject<T>, id: string, message: string) {
+    super(null, null);
     this._subject = subject;
     this._id = id;
     this._message = message;

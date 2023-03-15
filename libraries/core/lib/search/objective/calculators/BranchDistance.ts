@@ -16,25 +16,25 @@
  * limitations under the License.
  */
 
-export class BranchDistance {
+export abstract class BranchDistance {
   /**
    *  Calculate the branch distance between: covering the branch needed to get a closer approach distance
    *  and the currently covered branch always between 0 and 1
    * @param node
    */
-  public static calculate(
+  public calculate(
     conditionAST: string,
     condition: string,
     variables: unknown
   ): number {
-    const trueBranch = BranchDistance._calculate(
+    const trueBranch = this._calculate(
       conditionAST,
       condition,
       variables,
       true
     );
 
-    const falseBranch = BranchDistance._calculate(
+    const falseBranch = this._calculate(
       conditionAST,
       condition,
       variables,
@@ -44,14 +44,13 @@ export class BranchDistance {
     return Math.max(trueBranch, falseBranch);
   }
 
-  public static _calculate(
+  public abstract _calculate(
     conditionAST: string,
     condition: string,
     variables: unknown,
     trueOrFalse: boolean
-  ): number {
-    // TODO
-  }
+  ): number;
+
   /**
    * Calculate the branch distance
    *
@@ -60,7 +59,7 @@ export class BranchDistance {
    * @param right the right values of the comparison (multiple execution traces)
    * @param target the side of the branch you want to cover
    */
-  public static branchDistanceNumeric(
+  public branchDistanceNumeric(
     opcode: string,
     left: number[],
     right: number[],
@@ -123,11 +122,11 @@ export class BranchDistance {
     return this.normalize(branchDistance);
   }
 
-  private static normalize(x: number): number {
+  private normalize(x: number): number {
     return x / (x + 1);
   }
 
-  private static equalNumeric(left: number[], right: number[]): number {
+  private equalNumeric(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
     for (let index = 0; index < left.length; index++) {
       minimum = Math.min(minimum, Math.abs(left[index] - right[index]));
@@ -135,7 +134,7 @@ export class BranchDistance {
     return minimum;
   }
 
-  private static notEqualNumeric(left: number[], right: number[]): number {
+  private notEqualNumeric(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
     for (let index = 0; index < left.length; index++) {
@@ -148,7 +147,7 @@ export class BranchDistance {
     return minimum;
   }
 
-  private static greater(left: number[], right: number[]): number {
+  private greater(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
     for (let index = 0; index < left.length; index++) {
@@ -161,7 +160,7 @@ export class BranchDistance {
     return minimum;
   }
 
-  private static smallerEqual(left: number[], right: number[]): number {
+  private smallerEqual(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
     for (let index = 0; index < left.length; index++) {
@@ -174,7 +173,7 @@ export class BranchDistance {
     return minimum;
   }
 
-  private static greaterEqual(left: number[], right: number[]): number {
+  private greaterEqual(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
     for (let index = 0; index < left.length; index++) {
@@ -187,7 +186,7 @@ export class BranchDistance {
     return minimum;
   }
 
-  private static smaller(left: number[], right: number[]): number {
+  private smaller(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
     for (let index = 0; index < left.length; index++) {

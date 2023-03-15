@@ -19,20 +19,24 @@
 import { Encoding } from "../Encoding";
 import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
+import { ApproachLevel } from "./calculators/ApproachLevel";
+import { BranchDistance } from "./calculators/BranchDistance";
 
 /**
- *
+ * TODO move to solidity
  */
 export abstract class ProbeObjectiveFunction<
   T extends Encoding
 > extends BranchObjectiveFunction<T> {
   protected constructor(
+    approachLevel: ApproachLevel,
+    branchDistance: BranchDistance,
     subject: SearchSubject<T>,
     id: string,
     line: number,
     type: boolean
   ) {
-    super(subject, id, line, type);
+    super(approachLevel, branchDistance, subject, id, line, type);
   }
 
   abstract calculateDistance(encoding: T): number;
