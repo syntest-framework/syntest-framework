@@ -17,9 +17,10 @@
  */
 import * as chai from "chai";
 import { DominanceComparator } from "../../../lib/search/comparators/DominanceComparator";
-import { BranchObjectiveFunction } from "../../../lib";
+import { ApproachLevel, BranchObjectiveFunction } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { createStubInstance } from "sinon";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -31,16 +32,16 @@ describe("Dominance comparator", function () {
 
   beforeEach(function () {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      false
+      "1"
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -85,10 +86,10 @@ describe("Dominance comparator", function () {
 
   it("None dominates with three objective", () => {
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "2",
-      1,
-      false
+      "2"
     );
     objectives.add(objective2);
 

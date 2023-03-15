@@ -37,8 +37,10 @@ describe("CFG ancestors search", function () {
   let CFG1: ContractedControlFlowGraph<unknown>;
   let CFG2: ContractedControlFlowGraph<unknown>;
   let CFG3: ContractedControlFlowGraph<unknown>;
+  let approachLevel: ApproachLevel;
 
   beforeEach(function () {
+    approachLevel = new ApproachLevel();
     let nodes: Map<string, Node<unknown>> = new Map();
     let edges: Edge[];
     // Construct cfgMini
@@ -189,7 +191,7 @@ describe("CFG ancestors search", function () {
 
   it("1 branch", () => {
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         cfgMini,
         "2",
         new Set<string>(["ROOT", "1", "3", "EXIT"])
@@ -204,7 +206,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> A -> B
     // Try to find approachLevel from G
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
         new Set<string>(["ROOT", "A", "C", "D", "F", "A", "B", "EXIT"])
@@ -219,7 +221,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> E -> A -> B
     // Try to find approachLevel from G
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
@@ -234,7 +236,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> E -> A -> C -> D -> F -> A -> B
     // Try to find approachLevel from G
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
         new Set<string>(["ROOT", "A", "C", "E", "A", "C", "D", "F", "A", "B"])
@@ -249,7 +251,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> B
     // Try to find approachLevel from E
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG1,
         "E",
         new Set<string>(["ROOT", "A", "B"])
@@ -264,7 +266,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> B
     // Try to find approachLevel from F
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG1,
         "F",
         new Set<string>(["ROOT", "A", "B"])
@@ -279,7 +281,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from E
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "E",
         new Set<string>([
@@ -306,7 +308,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from I
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "I",
         new Set<string>([
@@ -333,7 +335,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from M
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "M",
         new Set<string>([
@@ -360,7 +362,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from N
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "N",
         new Set<string>([
@@ -387,7 +389,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> D -> F -> H -> K -> O -> P -> Q -> S
     // Try to find approachLevel from R
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "R",
         new Set<string>([
@@ -414,7 +416,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> E -> A -> B
     // Try to find approachLevel from R
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "R",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
@@ -429,7 +431,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> E -> A -> B
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "S",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
@@ -444,7 +446,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> B
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG2,
         "S",
         new Set<string>(["ROOT", "A", "B"])
@@ -459,7 +461,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> B
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG3,
         "S",
         new Set<string>(["ROOT", "A", "B"])
@@ -474,7 +476,7 @@ describe("CFG ancestors search", function () {
     // Path that was covered: A -> C -> E -> S
     // Try to find approachLevel from S
     expect(
-      ApproachLevel._findClosestCoveredBranch(
+      approachLevel._findClosestCoveredBranch(
         CFG3,
         "R",
         new Set<string>(["ROOT", "A", "C", "E", "S"])

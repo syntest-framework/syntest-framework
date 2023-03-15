@@ -15,28 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { Encoding } from "../Encoding";
 import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
 import { ApproachLevel } from "./calculators/ApproachLevel";
 import { BranchDistance } from "./calculators/BranchDistance";
 
-/**
- * TODO move to solidity
- */
-export abstract class ProbeObjectiveFunction<
+export abstract class ImplicitBranchObjectiveFunction<
   T extends Encoding
 > extends BranchObjectiveFunction<T> {
   protected constructor(
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
     subject: SearchSubject<T>,
-    id: string,
-    line: number,
-    type: boolean
+    id: string
   ) {
-    super(approachLevel, branchDistance, subject, id, line, type);
+    super(approachLevel, branchDistance, subject, id);
   }
 
   abstract calculateDistance(encoding: T): number;

@@ -35,30 +35,22 @@ export class BranchObjectiveFunction<
 > extends ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
-  protected _line: number;
-  protected _type: boolean;
 
   /**
    * Constructor.
    *
    * @param subject
    * @param id
-   * @param line
-   * @param type
    */
   constructor(
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
     subject: SearchSubject<T>,
-    id: string,
-    line: number,
-    type: boolean
+    id: string
   ) {
     super(approachLevel, branchDistance);
     this._subject = subject;
     this._id = id;
-    this._line = line;
-    this._type = type;
   }
 
   calculateDistance(encoding: T): number {
@@ -74,7 +66,7 @@ export class BranchObjectiveFunction<
     }
 
     // find the corresponding node inside the cfg
-    const targetNode = this._subject.cfg.getNodeById(this._id);
+    const targetNode = this._subject.cfg.graph.getNodeById(this._id);
 
     if (!targetNode) {
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
@@ -83,7 +75,7 @@ export class BranchObjectiveFunction<
     // Find approach level and ancestor based on node and covered nodes
     const { approachLevel, closestCoveredBranchTrace } =
       this.approachLevel.calculate(
-        this._subject.cfg,
+        this._subject.cfg.graph,
         targetNode,
         executionResult.getTraces()
       );

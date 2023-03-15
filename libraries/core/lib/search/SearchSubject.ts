@@ -19,8 +19,8 @@
 
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
-import { ControlFlowGraph } from "@syntest/cfg-core";
-import { Target } from "../analysis/static/Target";
+import { ControlFlowProgram } from "@syntest/cfg-core";
+import { TargetContext } from "../analysis/static/Target";
 import { TargetPool } from "../analysis/static/TargetPool";
 
 /**
@@ -33,7 +33,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Subject Target
    * @protected
    */
-  protected readonly _target: Target;
+  protected readonly _targetContext: TargetContext;
 
   /**
    * The target pool.
@@ -51,19 +51,18 @@ export abstract class SearchSubject<T extends Encoding> {
    * Constructor.
    *
    * @param name Name of the subject
-   * @param cfg Control flow graph of the subject
-   * @param functions Functions of the subject
+   * @param targetPool Targetpool
    * @protected
    */
-  protected constructor(target: Target, targetPool: TargetPool) {
-    this._target = target;
+  protected constructor(targetContext: TargetContext, targetPool: TargetPool) {
+    this._targetContext = targetContext;
     this._targetPool = targetPool;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
   }
 
   /**
-   * Extract objectives from the subject
+   * Extract objectives from the subject based on the targets.
    * @protected
    */
   protected abstract _extractObjectives(): void;
@@ -87,17 +86,14 @@ export abstract class SearchSubject<T extends Encoding> {
   }
 
   get name(): string {
-    return this._target.targetName;
+    return this._targetContext.name;
   }
 
-  get cfg(): ControlFlowGraph<unknown> {
-    return this._targetPool.getCFG(
-      this._target.canonicalPath,
-      this._target.targetName
-    );
+  get cfg(): ControlFlowProgram<unknown> {
+    return this._targetPool.getControlFlowProgram(this.path);
   }
 
   get path(): string {
-    return this._target.canonicalPath;
+    return this._targetContext.path;
   }
 }

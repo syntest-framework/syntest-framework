@@ -15,8 +15,68 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export interface TargetContext {
+  path: string;
+  name: string;
+  targets: Target[];
+}
 
-export class Target {
-  canonicalPath: string;
-  targetName: string;
+export interface Target {
+  type: TargetType;
+  id: string;
+}
+
+export interface FunctionTarget extends Target {
+  type: TargetType.FUNCTION;
+  name: string;
+}
+
+export interface ClassTarget extends Target {
+  type: TargetType.CLASS;
+  name: string;
+}
+
+export interface MethodTarget extends Target {
+  type: TargetType.METHOD;
+  className: string;
+  name: string;
+}
+
+export interface ObjectTarget extends Target {
+  type: TargetType.OBJECT;
+  name: string;
+}
+
+export interface ObjectFunctionTarget extends Target {
+  type: TargetType.OBJECT_FUNCTION;
+  objectName: string;
+  name: string;
+}
+
+export interface PathTarget extends Target {
+  type: TargetType.PATH;
+  ids: string[];
+}
+
+export interface BranchTarget extends Target {
+  type: TargetType.BRANCH;
+}
+
+export interface LineTarget extends Target {
+  type: TargetType.LINE;
+  line: number;
+}
+
+export enum TargetType {
+  FUNCTION = "function",
+
+  CLASS = "class",
+  METHOD = "method",
+
+  OBJECT = "object",
+  OBJECT_FUNCTION = "object-function",
+
+  PATH = "path",
+  BRANCH = "branch",
+  LINE = "line",
 }

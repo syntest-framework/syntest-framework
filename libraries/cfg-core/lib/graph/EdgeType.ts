@@ -17,10 +17,27 @@
  */
 
 export enum EdgeType {
+  /**
+   * A normal edge is an edge that is neither a back edge nor an abnormal edge. Normal edges are typical of control flow.
+   */
   NORMAL = "NORMAL",
+
+  /**
+   * An exception edge is an edge that is part of an exception handling statement. Exception edges are typical of try-catch statements.
+   */
   EXCEPTION = "EXCEPTION",
+
+  /**
+   * A conditional edge is an edge that is part of a conditional statement. Conditional edges are typical of if statements.
+   */
   CONDITIONAL_TRUE = "CONDITIONAL_TRUE",
   CONDITIONAL_FALSE = "CONDITIONAL_FALSE",
+
+  /**
+   * An interprocedural edge is an edge that crosses a procedure boundary. Interprocedural edges are typical of function calls.
+   * https://www.researchgate.net/profile/Katherine-Yelick/publication/228396231/figure/fig1/AS:669526194667520@1536638892015/Construction-of-the-interprocedural-control-flow-graph-of-a-program-from-the-individual.png
+   */
+  INTERPROCEDURAL = "INTERPROCEDURAL",
 
   /**
    * A back edge is an edge that points to a block that has already been met during a depth-first (DFS) traversal of the graph. Back edges are typical of loops.

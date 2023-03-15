@@ -15,32 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ControlFlowGraph } from "@syntest/cfg-core";
-import { TargetMetaData, TargetPool } from "../../lib";
+import { ControlFlowGraph, ControlFlowProgram } from "@syntest/cfg-core";
+import { Target, TargetPool } from "../../lib";
 import { ActionDescription } from "../../lib/analysis/static/ActionDescription";
 
 export class DummyTargetPool extends TargetPool {
-  getSource(targetPath: string): string {
+  getSource(path: string): string {
     throw new Error("Method not implemented.");
   }
-  getTargetMap(targetPath: string): Map<string, TargetMetaData> {
+  getTargets(path: string): Target[] {
     throw new Error("Method not implemented.");
   }
-  getFunctionMaps<A extends ActionDescription>(
-    targetPath: string
-  ): Map<string, Map<string, A>> {
-    throw new Error("Method not implemented.");
-  }
-  getFunctionMap<A extends ActionDescription>(
-    targetPath: string,
-    targetName: string
+  getActionDescriptionMap<A extends ActionDescription>(
+    path: string,
+    id: string
   ): Map<string, A> {
     throw new Error("Method not implemented.");
   }
-  getCFG<S>(targetPath: string, targetName: string): ControlFlowGraph<S> {
+  getActionDescriptionMaps<A extends ActionDescription>(
+    path: string
+  ): Map<string, Map<string, A>> {
     throw new Error("Method not implemented.");
   }
-  getAST<S>(targetPath: string): S {
+  getControlFlowProgram<S>(path: string): ControlFlowProgram<S> {
+    throw new Error("Method not implemented.");
+  }
+  getAbstractSyntaxTree<S>(path: string): S {
     throw new Error("Method not implemented.");
   }
 }

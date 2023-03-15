@@ -15,34 +15,92 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Target } from "./Target";
-import { ControlFlowGraph } from "@syntest/cfg-core";
+import { Target, TargetContext } from "./Target";
+import { ControlFlowProgram } from "@syntest/cfg-core";
 import * as path from "path";
-import { TargetMetaData } from "./TargetMetaData";
 import globby = require("globby");
 import { ActionDescription } from "./ActionDescription";
-import { Encoding } from "../../search/Encoding";
 import TypedEventEmitter from "typed-emitter";
 import { Events } from "../../util/Events";
 
 export abstract class TargetPool {
-  protected _targets: Target[];
+  // path -> target context
+  protected _targetContextMap: Map<string, TargetContext>;
 
-  abstract getSource(targetPath: string): string;
-  abstract getTargetMap(targetPath: string): Map<string, TargetMetaData>;
-  abstract getFunctionMaps<A extends ActionDescription>(
-    targetPath: string
-  ): Map<string, Map<string, A>>;
-  abstract getFunctionMap<A extends ActionDescription>(
-    targetPath: string,
-    targetName: string
+  /**
+   * Loads the source code of the target
+   * @param path
+   */
+  abstract getSource(path: string): string;
+
+  /**
+   * Loads the abstract syntax tree from the given path
+   * @param path
+   */
+  abstract getAbstractSyntaxTree<S>(path: string): S;
+
+  /**
+   * Loads the control flow program from the given path
+   * @param path
+   */
+  abstract getControlFlowProgram<S>(path: string): ControlFlowProgram<S>;
+
+  /**
+   * Loads all targets from the given path
+   * @param path
+   */
+  abstract getTargets(path: string): Target[];
+
+  /**
+   * Loads the target context from the given path
+   * @param _path
+   * @returns
+   */
+  getTargetContext(_path: string): TargetContext {
+    const absolutePath = path.resolve(_path);
+    const name = path.basename(absolutePath);
+
+    if (!this._targetContextMap.has(absolutePath)) {
+      const targets = this.getTargets(absolutePath);
+      this._targetContextMap.set(absolutePath, {
+        path: absolutePath,
+        name: name,
+        targets: targets,
+      });
+    }
+
+    return this._targetContextMap.get(absolutePath);
+  }
+
+  /**
+   * Loads a specific action description from the given path and name
+   * @param path
+   * @param id
+   */
+  abstract getActionDescriptionMap<A extends ActionDescription>(
+    path: string,
+    id: string
   ): Map<string, A>;
 
-  abstract getCFG<S>(
-    targetPath: string,
-    targetName: string
-  ): ControlFlowGraph<S>;
-  abstract getAST<S>(targetPath: string): S;
+  /**
+   * Loads all action descriptions from the given path
+   * @param path
+   */
+  abstract getActionDescriptionMaps<A extends ActionDescription>(
+    path: string
+  ): Map<string, Map<string, A>>;
+
+  private convertStringToTargetIds(included: string): string[] {
+    const options = included.split(",");
+
+    const includedIds: string[] = [];
+
+    for (const option of options) {
+      includedIds.push(option);
+    }
+
+    return includedIds;
+  }
 
   loadTargets(include: string[], exclude: string[]): void {
     (<TypedEventEmitter<Events>>process).emit("targetLoadStart", this);
@@ -53,13 +111,14 @@ export abstract class TargetPool {
 
     include.forEach((include) => {
       let _path;
-      let target;
+      let targets;
       if (include.includes(":")) {
-        _path = include.split(":")[0];
-        target = include.split(":")[1];
+        const split = include.split(":");
+        _path = split[0];
+        targets = this.convertStringToTargetIds(split[1]);
       } else {
         _path = include;
-        target = "*";
+        targets = ["*"];
       }
 
       const actualPaths = globby.sync(_path);
@@ -70,20 +129,21 @@ export abstract class TargetPool {
           includedMap.set(_path, []);
         }
 
-        includedMap.get(_path).push(target);
+        includedMap.get(_path).push(...targets);
       }
     });
 
     // only exclude files if all contracts are excluded
     exclude.forEach((exclude) => {
       let _path;
-      let target;
+      let targets;
       if (exclude.includes(":")) {
-        _path = exclude.split(":")[0];
-        target = exclude.split(":")[1];
+        const split = exclude.split(":");
+        _path = split[0];
+        targets = this.convertStringToTargetIds(split[1]);
       } else {
         _path = exclude;
-        target = "*";
+        targets = ["*"];
       }
 
       const actualPaths = globby.sync(_path);
@@ -94,7 +154,7 @@ export abstract class TargetPool {
           excludedMap.set(_path, []);
         }
 
-        excludedMap.get(_path).push(target);
+        excludedMap.get(_path).push(...targets);
       }
     });
 
@@ -115,16 +175,26 @@ export abstract class TargetPool {
       }
     }
 
-    const targets: Target[] = [];
+    const targetContexts: Map<string, TargetContext> = new Map();
 
     for (const _path of includedMap.keys()) {
+      const finalTargets = [];
+      const target = path.basename(_path);
+
+      targetContexts.set(_path, {
+        path: _path,
+        name: target,
+        targets: finalTargets,
+      });
+
       const includedTargets = includedMap.get(_path);
-      const targetMap = this.getTargetMap(_path);
-      for (const target of targetMap.keys()) {
+      const targets = this.getTargets(_path);
+
+      for (const target of targets) {
         // check if included
         if (
           !includedTargets.includes("*") &&
-          !includedTargets.includes(target)
+          !includedTargets.includes(target.id)
         ) {
           continue;
         }
@@ -134,24 +204,21 @@ export abstract class TargetPool {
           const excludedTargets = excludedMap.get(_path);
           if (
             excludedTargets.includes("*") ||
-            excludedTargets.includes(target)
+            excludedTargets.includes(target.id)
           ) {
             continue;
           }
         }
 
-        targets.push({
-          canonicalPath: _path,
-          targetName: target,
-        });
+        finalTargets.push(target);
       }
     }
 
-    this._targets = targets;
+    this._targetContextMap = targetContexts;
     (<TypedEventEmitter<Events>>process).emit("targetLoadComplete", this);
   }
 
-  get targets(): Target[] {
-    return this._targets;
+  get targets(): Map<string, TargetContext> {
+    return this._targetContextMap;
   }
 }

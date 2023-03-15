@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface TargetMetaData {
-  /**
-   * Name of the target.
-   */
-  name: string;
+import { BranchDistance } from "../../lib";
+
+export class DummyBranchDistance extends BranchDistance {
+  public _calculate(): number {
+    return 1;
+  }
 }

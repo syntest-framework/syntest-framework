@@ -22,7 +22,7 @@ export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
   protected objectives: ObjectiveFunction<T>[];
 
   constructor(objectives: ObjectiveFunction<T>[]) {
-    super({ canonicalPath: "", targetName: "" }, new DummyTargetPool());
+    super({ path: "", name: "", targets: [] }, new DummyTargetPool());
     this.objectives = objectives;
   }
 
