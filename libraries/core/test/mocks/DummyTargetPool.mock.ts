@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 import { ControlFlowGraph, ControlFlowProgram } from "@syntest/cfg-core";
-import { Target, TargetPool } from "../../lib";
+import { SubTarget, RootAnalyzer } from "../../lib";
 import { ActionDescription } from "../../lib/analysis/static/ActionDescription";
 
-export class DummyTargetPool extends TargetPool {
+export class DummyTargetPool extends RootAnalyzer {
   getSource(path: string): string {
     throw new Error("Method not implemented.");
   }
-  getTargets(path: string): Target[] {
+  getSubTargets(path: string): SubTarget[] {
     throw new Error("Method not implemented.");
   }
   getActionDescriptionMap<A extends ActionDescription>(

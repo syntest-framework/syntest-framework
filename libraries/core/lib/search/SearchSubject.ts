@@ -20,8 +20,8 @@
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { ControlFlowProgram } from "@syntest/cfg-core";
-import { TargetContext } from "../analysis/static/Target";
-import { TargetPool } from "../analysis/static/TargetPool";
+import { Target } from "../analysis/static/Target";
+import { RootAnalyzer } from "../analysis/static/RootAnalyzer";
 
 /**
  * Subject of the search process.
@@ -33,13 +33,13 @@ export abstract class SearchSubject<T extends Encoding> {
    * Subject Target
    * @protected
    */
-  protected readonly _targetContext: TargetContext;
+  protected readonly _target: Target;
 
   /**
    * The target pool.
    * @protected
    */
-  protected readonly _targetPool: TargetPool;
+  protected readonly _targetAnalyzer: RootAnalyzer;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -54,9 +54,9 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param targetPool Targetpool
    * @protected
    */
-  protected constructor(targetContext: TargetContext, targetPool: TargetPool) {
-    this._targetContext = targetContext;
-    this._targetPool = targetPool;
+  protected constructor(targetContext: Target, targetPool: RootAnalyzer) {
+    this._target = targetContext;
+    this._targetAnalyzer = targetPool;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
   }
@@ -86,14 +86,14 @@ export abstract class SearchSubject<T extends Encoding> {
   }
 
   get name(): string {
-    return this._targetContext.name;
+    return this._target.name;
   }
 
   get cfg(): ControlFlowProgram<unknown> {
-    return this._targetPool.getControlFlowProgram(this.path);
+    return this._targetAnalyzer.getControlFlowProgram(this.path);
   }
 
   get path(): string {
-    return this._targetContext.path;
+    return this._target.path;
   }
 }

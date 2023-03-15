@@ -15,80 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Target, TargetContext } from "./Target";
-import { ControlFlowProgram } from "@syntest/cfg-core";
+import TypedEventEmitter from "typed-emitter";
+import { Target } from "./Target";
+import { RootAnalyzer } from "./RootAnalyzer";
+import { Events } from "../../util/Events";
 import * as path from "path";
 import globby = require("globby");
-import { ActionDescription } from "./ActionDescription";
-import TypedEventEmitter from "typed-emitter";
-import { Events } from "../../util/Events";
 
-export abstract class TargetPool {
-  // path -> target context
-  protected _targetContextMap: Map<string, TargetContext>;
+export class TargetLoader {
+  private _targetPool: RootAnalyzer;
 
-  /**
-   * Loads the source code of the target
-   * @param path
-   */
-  abstract getSource(path: string): string;
-
-  /**
-   * Loads the abstract syntax tree from the given path
-   * @param path
-   */
-  abstract getAbstractSyntaxTree<S>(path: string): S;
-
-  /**
-   * Loads the control flow program from the given path
-   * @param path
-   */
-  abstract getControlFlowProgram<S>(path: string): ControlFlowProgram<S>;
-
-  /**
-   * Loads all targets from the given path
-   * @param path
-   */
-  abstract getTargets(path: string): Target[];
-
-  /**
-   * Loads the target context from the given path
-   * @param _path
-   * @returns
-   */
-  getTargetContext(_path: string): TargetContext {
-    const absolutePath = path.resolve(_path);
-    const name = path.basename(absolutePath);
-
-    if (!this._targetContextMap.has(absolutePath)) {
-      const targets = this.getTargets(absolutePath);
-      this._targetContextMap.set(absolutePath, {
-        path: absolutePath,
-        name: name,
-        targets: targets,
-      });
-    }
-
-    return this._targetContextMap.get(absolutePath);
+  constructor(targetPool: RootAnalyzer) {
+    this._targetPool = targetPool;
   }
-
-  /**
-   * Loads a specific action description from the given path and name
-   * @param path
-   * @param id
-   */
-  abstract getActionDescriptionMap<A extends ActionDescription>(
-    path: string,
-    id: string
-  ): Map<string, A>;
-
-  /**
-   * Loads all action descriptions from the given path
-   * @param path
-   */
-  abstract getActionDescriptionMaps<A extends ActionDescription>(
-    path: string
-  ): Map<string, Map<string, A>>;
 
   private convertStringToTargetIds(included: string): string[] {
     const options = included.split(",");
@@ -102,8 +41,11 @@ export abstract class TargetPool {
     return includedIds;
   }
 
-  loadTargets(include: string[], exclude: string[]): void {
-    (<TypedEventEmitter<Events>>process).emit("targetLoadStart", this);
+  loadTargets(include: string[], exclude: string[]): Map<string, Target> {
+    (<TypedEventEmitter<Events>>process).emit(
+      "targetLoadStart",
+      this._targetPool
+    );
 
     // Mapping filepath -> targets
     const includedMap = new Map<string, string[]>();
@@ -175,20 +117,14 @@ export abstract class TargetPool {
       }
     }
 
-    const targetContexts: Map<string, TargetContext> = new Map();
+    const targetContexts: Map<string, Target> = new Map();
 
     for (const _path of includedMap.keys()) {
       const finalTargets = [];
       const target = path.basename(_path);
 
-      targetContexts.set(_path, {
-        path: _path,
-        name: target,
-        targets: finalTargets,
-      });
-
       const includedTargets = includedMap.get(_path);
-      const targets = this.getTargets(_path);
+      const targets = this._targetPool.getSubTargets(_path);
 
       for (const target of targets) {
         // check if included
@@ -212,13 +148,18 @@ export abstract class TargetPool {
 
         finalTargets.push(target);
       }
+
+      targetContexts.set(_path, {
+        path: _path,
+        name: target,
+        subTargets: finalTargets,
+      });
     }
 
-    this._targetContextMap = targetContexts;
-    (<TypedEventEmitter<Events>>process).emit("targetLoadComplete", this);
-  }
-
-  get targets(): Map<string, TargetContext> {
-    return this._targetContextMap;
+    (<TypedEventEmitter<Events>>process).emit(
+      "targetLoadComplete",
+      this._targetPool
+    );
+    return targetContexts;
   }
 }

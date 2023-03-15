@@ -15,54 +15,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface TargetContext {
+export interface Target {
   path: string;
   name: string;
-  targets: Target[];
+  subTargets: SubTarget[];
 }
 
-export interface Target {
+export interface SubTarget {
   type: TargetType;
   id: string;
 }
 
-export interface FunctionTarget extends Target {
+export interface FunctionTarget extends SubTarget {
   type: TargetType.FUNCTION;
   name: string;
 }
 
-export interface ClassTarget extends Target {
+export interface ClassTarget extends SubTarget {
   type: TargetType.CLASS;
   name: string;
 }
 
-export interface MethodTarget extends Target {
+export interface MethodTarget extends SubTarget {
   type: TargetType.METHOD;
   className: string;
   name: string;
 }
 
-export interface ObjectTarget extends Target {
+export interface ObjectTarget extends SubTarget {
   type: TargetType.OBJECT;
   name: string;
 }
 
-export interface ObjectFunctionTarget extends Target {
+export interface ObjectFunctionTarget extends SubTarget {
   type: TargetType.OBJECT_FUNCTION;
   objectName: string;
   name: string;
 }
 
-export interface PathTarget extends Target {
+export interface PathTarget extends SubTarget {
   type: TargetType.PATH;
   ids: string[];
 }
 
-export interface BranchTarget extends Target {
+export interface BranchTarget extends SubTarget {
   type: TargetType.BRANCH;
 }
 
-export interface LineTarget extends Target {
+export interface LineTarget extends SubTarget {
   type: TargetType.LINE;
   line: number;
 }

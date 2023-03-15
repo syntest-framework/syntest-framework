@@ -17,7 +17,7 @@
  */
 
 import { ControlFlowGraph } from "@syntest/cfg-core";
-import { TargetPool } from "../analysis/static/TargetPool";
+import { RootAnalyzer } from "../analysis/static/RootAnalyzer";
 import { Encoding } from "../search/Encoding";
 import { BudgetManager } from "../search/budget/BudgetManager";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
@@ -65,21 +65,21 @@ export type Events = {
     budgetManager: BudgetManager<E>
   ) => void;
 
-  targetLoadStart: (targetPool: TargetPool) => void;
-  targetLoadComplete: (targetPool: TargetPool) => void;
-  sourceResolvingStart: (targetPool: TargetPool) => void;
-  sourceResolvingComplete: (targetPool: TargetPool) => void;
-  targetResolvingStart: (targetPool: TargetPool) => void;
-  targetResolvingComplete: (targetPool: TargetPool) => void;
-  functionMapResolvingStart: (targetPool: TargetPool) => void;
-  functionMapResolvingComplete: (targetPool: TargetPool) => void;
-  dependencyResolvingStart: (targetPool: TargetPool) => void;
-  dependencyResolvingComplete: (targetPool: TargetPool) => void;
-  controlFlowGraphResolvingStart: (targetPool: TargetPool) => void;
+  targetLoadStart: (targetPool: RootAnalyzer) => void;
+  targetLoadComplete: (targetPool: RootAnalyzer) => void;
+  sourceResolvingStart: (targetPool: RootAnalyzer) => void;
+  sourceResolvingComplete: (targetPool: RootAnalyzer) => void;
+  targetResolvingStart: (targetPool: RootAnalyzer) => void;
+  targetResolvingComplete: (targetPool: RootAnalyzer) => void;
+  functionMapResolvingStart: (targetPool: RootAnalyzer) => void;
+  functionMapResolvingComplete: (targetPool: RootAnalyzer) => void;
+  dependencyResolvingStart: (targetPool: RootAnalyzer) => void;
+  dependencyResolvingComplete: (targetPool: RootAnalyzer) => void;
+  controlFlowGraphResolvingStart: (targetPool: RootAnalyzer) => void;
   controlFlowGraphResolvingComplete: <S>(
-    targetPool: TargetPool,
+    targetPool: RootAnalyzer,
     cfg: ControlFlowGraph<S>
   ) => void;
-  abstractSyntaxTreeResolvingStart: (targetPool: TargetPool) => void;
-  abstractSyntaxTreeResolvingComplete: (targetPool: TargetPool) => void;
+  abstractSyntaxTreeResolvingStart: (targetPool: RootAnalyzer) => void;
+  abstractSyntaxTreeResolvingComplete: (targetPool: RootAnalyzer) => void;
 };

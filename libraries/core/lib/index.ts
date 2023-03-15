@@ -19,7 +19,7 @@
 // Static Analysis
 export * from "./analysis/static/ActionDescription";
 export * from "./analysis/static/Target";
-export * from "./analysis/static/TargetPool";
+export * from "./analysis/static/RootAnalyzer";
 
 // Search
 export * from "./search/Archive";
