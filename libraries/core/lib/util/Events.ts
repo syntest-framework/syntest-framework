@@ -65,21 +65,21 @@ export type Events = {
     budgetManager: BudgetManager<E>
   ) => void;
 
-  targetLoadStart: (targetPool: RootContext) => void;
-  targetLoadComplete: (targetPool: RootContext) => void;
-  sourceResolvingStart: (targetPool: RootContext) => void;
-  sourceResolvingComplete: (targetPool: RootContext) => void;
-  targetResolvingStart: (targetPool: RootContext) => void;
-  targetResolvingComplete: (targetPool: RootContext) => void;
-  functionMapResolvingStart: (targetPool: RootContext) => void;
-  functionMapResolvingComplete: (targetPool: RootContext) => void;
-  dependencyResolvingStart: (targetPool: RootContext) => void;
-  dependencyResolvingComplete: (targetPool: RootContext) => void;
-  controlFlowGraphResolvingStart: (targetPool: RootContext) => void;
+  targetLoadStart: (rootContext: RootContext) => void;
+  targetLoadComplete: (rootContext: RootContext) => void;
+  sourceResolvingStart: (rootContext: RootContext) => void;
+  sourceResolvingComplete: (rootContext: RootContext) => void;
+  targetResolvingStart: (rootContext: RootContext) => void;
+  targetResolvingComplete: (rootContext: RootContext) => void;
+  functionMapResolvingStart: (rootContext: RootContext) => void;
+  functionMapResolvingComplete: (rootContext: RootContext) => void;
+  dependencyResolvingStart: (rootContext: RootContext) => void;
+  dependencyResolvingComplete: (rootContext: RootContext) => void;
+  controlFlowGraphResolvingStart: (rootContext: RootContext) => void;
   controlFlowGraphResolvingComplete: <S>(
-    targetPool: RootContext,
+    rootContext: RootContext,
     cfg: ControlFlowGraph<S>
   ) => void;
-  abstractSyntaxTreeResolvingStart: (targetPool: RootContext) => void;
-  abstractSyntaxTreeResolvingComplete: (targetPool: RootContext) => void;
+  abstractSyntaxTreeResolvingStart: (rootContext: RootContext) => void;
+  abstractSyntaxTreeResolvingComplete: (rootContext: RootContext) => void;
 };

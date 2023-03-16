@@ -51,12 +51,12 @@ export abstract class SearchSubject<T extends Encoding> {
    * Constructor.
    *
    * @param name Name of the subject
-   * @param targetPool Targetpool
+   * @param rootContext Targetpool
    * @protected
    */
-  protected constructor(targetContext: Target, targetPool: RootContext) {
+  protected constructor(targetContext: Target, rootContext: RootContext) {
     this._target = targetContext;
-    this._targetAnalyzer = targetPool;
+    this._targetAnalyzer = rootContext;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
   }

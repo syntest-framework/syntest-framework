@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ControlFlowGraph, ControlFlowProgram } from "@syntest/cfg-core";
-import { SubTarget, RootAnalyzer } from "../../lib";
+import { ControlFlowProgram } from "@syntest/cfg-core";
+import { SubTarget, RootContext } from "../../lib";
 import { ActionDescription } from "../../lib/analysis/static/ActionDescription";
 
-export class DummyRootAnalyzer extends RootAnalyzer {
+export class DummyRootContext extends RootContext {
   getSource(path: string): string {
     throw new Error("Method not implemented.");
   }

@@ -23,10 +23,10 @@ import * as path from "path";
 import globby = require("globby");
 
 export class TargetSelector {
-  private _targetPool: RootContext;
+  private _rootContext: RootContext;
 
-  constructor(targetPool: RootContext) {
-    this._targetPool = targetPool;
+  constructor(rootContext: RootContext) {
+    this._rootContext = rootContext;
   }
 
   private convertStringToTargetIds(included: string): string[] {
@@ -44,7 +44,7 @@ export class TargetSelector {
   loadTargets(include: string[], exclude: string[]): Map<string, Target> {
     (<TypedEventEmitter<Events>>process).emit(
       "targetLoadStart",
-      this._targetPool
+      this._rootContext
     );
 
     // Mapping filepath -> targets
@@ -124,7 +124,7 @@ export class TargetSelector {
       const target = path.basename(_path);
 
       const includedTargets = includedMap.get(_path);
-      const targets = this._targetPool.getSubTargets(_path);
+      const targets = this._rootContext.getSubTargets(_path);
 
       for (const target of targets) {
         // check if included
@@ -158,7 +158,7 @@ export class TargetSelector {
 
     (<TypedEventEmitter<Events>>process).emit(
       "targetLoadComplete",
-      this._targetPool
+      this._rootContext
     );
     return targetContexts;
   }
