@@ -15,31 +15,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "../Plugin";
-import { Metric, MiddleWare } from "@syntest/metric";
-import { PluginType } from "./PluginType";
 
-export abstract class MetricMiddlewarePlugin extends Plugin {
-  constructor(name: string, describe: string) {
-    super(PluginType.METRIC_MIDDLEWARE, name, describe);
-  }
-
-  abstract createMetricMiddleware(
-    metrics: Metric[],
-    outputMetrics: Metric[]
-  ): MiddleWare;
-
-  async getToolOptionChoices(
-    tool: string,
-    labels: string[],
-    option: string
-  ): Promise<string[]> {
-    // for every tool/label
-
-    if (option === "metric-middleware-pipeline") {
-      return [this.name];
-    }
-
-    return [];
-  }
-}
+export * as module from "./MetricMiddlewareModule";

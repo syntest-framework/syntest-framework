@@ -15,34 +15,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { singletonAlreadySet, singletonNotSet } from "./util/diagnostics";
 import { MiddleWare } from "./Middleware";
 import { getLogger } from "@syntest/logging";
 import { Metric, PropertyMetric } from "./Metric";
+import {
+  distributionNotRegistered,
+  propertyNotRegistered,
+  seriesDistributionNotRegistered,
+  seriesDistributionSeriesNotRegistered,
+  seriesDistributionTypeNotRegistered,
+  seriesNotRegistered,
+  seriesTypeNotRegistered,
+} from "./util/diagnostics";
 
 export class MetricManager {
-  private static _instance: MetricManager;
-
   static LOGGER;
 
-  public static get instance(): MetricManager {
+  static _instance: MetricManager;
+
+  static get instance() {
     if (!MetricManager._instance) {
-      throw new Error(singletonNotSet("MetricManager"));
+      throw new Error("MetricManager not initialized");
     }
 
     return MetricManager._instance;
   }
 
-  public static initialize(middleware: MiddleWare[], metrics: Metric[]) {
-    if (MetricManager._instance) {
-      throw new Error(singletonAlreadySet("MetricManager"));
-    }
-
-    MetricManager._instance = new MetricManager(middleware, metrics);
-    MetricManager.LOGGER = getLogger("ModuleManager");
+  static init(metrics: Metric[]) {
+    MetricManager._instance = new MetricManager("global", metrics);
+    MetricManager.LOGGER = getLogger("MetricManager");
   }
 
-  private middleware: MiddleWare[];
+  private namespacedManagers: Map<string, MetricManager>;
+
+  getNamespaced(namespace: string) {
+    if (!this.namespacedManagers.has(namespace)) {
+      this.namespacedManagers.set(
+        namespace,
+        new MetricManager(namespace, this.metrics)
+      );
+    }
+
+    return this.namespacedManagers.get(namespace);
+  }
+
+  private namespace: string;
   private metrics: Metric[];
 
   private properties: Map<string, string>;
@@ -53,9 +70,10 @@ export class MetricManager {
     Map<string, Map<string, Map<number, number[]>>>
   >;
 
-  constructor(middleware: MiddleWare[], metrics: Metric[]) {
-    this.middleware = middleware;
+  constructor(namespace: string, metrics: Metric[]) {
+    this.namespace = namespace;
     this.metrics = metrics;
+    this.namespacedManagers = new Map();
 
     this.properties = new Map();
     this.distributions = new Map();
@@ -88,8 +106,9 @@ export class MetricManager {
     });
   }
 
-  runPipeline() {
-    this.middleware.forEach((middleware) => {
+  runPipeline(middleware: MiddleWare[]) {
+    // TODO check order of middleware
+    middleware.forEach((middleware) => {
       MetricManager.LOGGER.debug(
         `Running middleware ${middleware.constructor.name}`
       );
@@ -101,9 +120,7 @@ export class MetricManager {
     MetricManager.LOGGER.debug(`Recording property ${property} = ${value}`);
 
     if (!this.properties.has(property)) {
-      throw new Error(
-        `Cannot record property! Metric '${property}' is not registered by any module!`
-      );
+      throw new Error(propertyNotRegistered(property));
     }
 
     this.properties.set(property, value);
@@ -115,9 +132,7 @@ export class MetricManager {
     );
 
     if (!this.distributions.has(distributionName)) {
-      throw new Error(
-        `Cannot record distribution! Metric '${distributionName}' is not registered by any module!`
-      );
+      throw new Error(distributionNotRegistered(distributionName));
     }
 
     this.distributions.get(distributionName).push(value);
@@ -134,15 +149,11 @@ export class MetricManager {
     );
 
     if (!this.series.has(seriesName)) {
-      throw new Error(
-        `Cannot record series! Metric '${seriesName}' is not registered by any module!`
-      );
+      throw new Error(seriesNotRegistered(seriesName));
     }
 
     if (!this.series.get(seriesName).has(seriesType)) {
-      throw new Error(
-        `Cannot record series! Metric '${seriesName}.${seriesType}' is not registered by any module!`
-      );
+      throw new Error(seriesTypeNotRegistered(seriesName, seriesType));
     }
 
     this.series.get(seriesName).get(seriesType).set(index, value);
@@ -160,11 +171,13 @@ export class MetricManager {
     );
 
     if (!this.seriesDistributions.has(distributionName)) {
-      this.seriesDistributions.set(distributionName, new Map());
+      throw new Error(seriesDistributionNotRegistered(distributionName));
     }
 
     if (!this.seriesDistributions.get(distributionName).has(seriesName)) {
-      this.seriesDistributions.get(distributionName).set(seriesName, new Map());
+      throw new Error(
+        seriesDistributionSeriesNotRegistered(distributionName, seriesName)
+      );
     }
 
     if (
@@ -173,10 +186,13 @@ export class MetricManager {
         .get(seriesName)
         .has(seriesType)
     ) {
-      this.seriesDistributions
-        .get(distributionName)
-        .get(seriesName)
-        .set(seriesType, new Map());
+      throw new Error(
+        seriesDistributionTypeNotRegistered(
+          distributionName,
+          seriesName,
+          seriesType
+        )
+      );
     }
 
     if (

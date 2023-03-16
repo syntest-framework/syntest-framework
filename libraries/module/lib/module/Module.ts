@@ -60,11 +60,6 @@ export abstract class Module {
   abstract getTools(): Promise<Tool[]> | Tool[];
   abstract getPlugins(): Promise<Plugin[]> | Plugin[];
   abstract getPresets(): Promise<Preset[]> | Preset[];
-
-  /**
-   * Should return a list of metrics that are stored by this module
-   */
-  abstract getMetrics(): Promise<Metric[]> | Metric[];
 }
 
 /**

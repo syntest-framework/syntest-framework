@@ -20,8 +20,30 @@
  * This file is meant to provide consistent error messages throughout the tool.
  */
 
-// Singletons
-export const singletonNotSet = (name: string) =>
-  `The ${name} singleton has not been set yet!`;
-export const singletonAlreadySet = (name: string) =>
-  `The ${name} singleton has already been set!`;
+export const propertyNotRegistered = (property: string) =>
+  `Cannot record property! Metric '${property}' is not registered by any module!`;
+
+export const distributionNotRegistered = (distribution: string) =>
+  `Cannot record distribution! Metric '${distribution}' is not registered by any module!`;
+
+export const seriesNotRegistered = (series: string) =>
+  `Cannot record series! Metric '${series}' is not registered by any module!`;
+export const seriesTypeNotRegistered = (
+  seriesName: string,
+  seriesType: string
+) =>
+  `Cannot record series! Metric '${seriesName}.${seriesType}' is not registered by any module!`;
+
+export const seriesDistributionNotRegistered = (distribution: string) =>
+  `Cannot record series distribution! Metric '${distribution}' is not registered by any module!`;
+export const seriesDistributionSeriesNotRegistered = (
+  distribution: string,
+  seriesName: string
+) =>
+  `Cannot record series distribution! Metric '${distribution}.${seriesName}' is not registered by any module!`;
+export const seriesDistributionTypeNotRegistered = (
+  distribution: string,
+  seriesName: string,
+  seriesType: string
+) =>
+  `Cannot record series distribution! Metric '${distribution}.${seriesName}.${seriesType}' is not registered by any module!`;

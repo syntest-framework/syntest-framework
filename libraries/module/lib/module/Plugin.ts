@@ -36,6 +36,11 @@ export abstract class Plugin {
  */
 export interface Plugin {
   /**
+   * Should return a list of metrics that are stored by this plugin
+   */
+  getMetrics?(): Promise<Metric[]> | Metric[];
+
+  /**
    *
    * @param tool the tool the plugin provides options for
    * Should return a map of command -> yargsConfig

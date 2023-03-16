@@ -15,15 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MetricManager } from "../MetricManager";
-import { MiddleWare } from "../Middleware";
+import {
+  MiddleWare,
+  MetricManager,
+  Metric,
+  PropertyMetric,
+} from "@syntest/metric";
+
 import * as fs from "fs";
 import * as csv from "@fast-csv/format";
-import { Metric, PropertyMetric } from "../Metric";
 
-export class FileWriterMiddleware extends MiddleWare {
-  constructor(metrics: Metric[], outputMetrics: Metric[]) {
+export class FileWriterMetricMiddleware extends MiddleWare {
+  private rootOutputDir: string;
+
+  constructor(
+    metrics: Metric[],
+    outputMetrics: Metric[],
+    rootOutputDir: string
+  ) {
     super(metrics, outputMetrics);
+    this.rootOutputDir = rootOutputDir;
   }
 
   run(metricManager: MetricManager): void {

@@ -18,7 +18,8 @@
 import Yargs = require("yargs");
 
 export type ModuleOptions = {
-  "middleware-pipeline": string[];
+  "metric-middleware-pipeline": string[];
+  "output-properties": string[];
 };
 
 export enum OptionGroups {
@@ -27,14 +28,25 @@ export enum OptionGroups {
 
 export class Configuration {
   static configureOptions(yargs: Yargs.Argv) {
-    return yargs.option("middleware-pipeline", {
-      alias: [],
-      array: true,
-      default: [],
-      description: "Order of the output middleware",
-      group: OptionGroups.Metric,
-      hidden: false,
-      type: "string",
-    });
+    return yargs
+      .option("metric-middleware-pipeline", {
+        alias: [],
+        array: true,
+        choices: [],
+        default: [],
+        description: "Order of the output middleware",
+        group: OptionGroups.Metric,
+        hidden: false,
+        type: "string",
+      })
+      .option("output-properties", {
+        alias: [],
+        choices: [],
+        default: [],
+        description: "The values that should be written to csv",
+        group: OptionGroups.Metric,
+        hidden: false,
+        type: "array",
+      });
   }
 }

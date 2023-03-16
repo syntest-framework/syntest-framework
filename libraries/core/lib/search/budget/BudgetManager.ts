@@ -33,10 +33,10 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * List of currently active budgets.
    * @protected
    */
-  protected _budgets: Budget<T>[];
+  protected _budgets: Map<string, Budget<T>>;
 
   constructor() {
-    this._budgets = [];
+    this._budgets = new Map();
   }
 
   /**
@@ -45,7 +45,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * Loops over all active budgets to find the one with the lowest budget.
    */
   getBudget(): number {
-    const budget = this._budgets.reduce((minBudget, budget) =>
+    const budget = [...this._budgets.values()].reduce((minBudget, budget) =>
       budget.getRemainingBudget() / budget.getTotalBudget() <
       minBudget.getRemainingBudget() / minBudget.getTotalBudget()
         ? budget
@@ -61,7 +61,9 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * Return whether the budget manager has any budget left.
    */
   hasBudgetLeft(): boolean {
-    return this._budgets.every((budget) => budget.getRemainingBudget() > 0.0);
+    return [...this._budgets.values()].every(
+      (budget) => budget.getRemainingBudget() > 0.0
+    );
   }
 
   /**
@@ -69,9 +71,16 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to add
    */
-  addBudget(budget: Budget<T>): BudgetManager<T> {
-    this._budgets.push(budget);
+  addBudget(name: string, budget: Budget<T>): BudgetManager<T> {
+    this._budgets.set(name, budget);
     return this;
+  }
+
+  getBudgetObject(name: string): Budget<T> {
+    if (!this._budgets.has(name))
+      throw new Error(`Budget with name ${name} does not exist`);
+
+    return this._budgets.get(name);
   }
 
   /**
@@ -80,7 +89,10 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * @param budget The budget to remove
    */
   removeBudget(budget: Budget<T>): BudgetManager<T> {
-    this._budgets.slice(this._budgets.indexOf(budget), 1);
+    const name = [...this._budgets.entries()].find(
+      ([, b]) => b === budget
+    )?.[0];
+    this._budgets.delete(name);
     return this;
   }
 

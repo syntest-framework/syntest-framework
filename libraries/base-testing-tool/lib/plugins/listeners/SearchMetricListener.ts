@@ -24,38 +24,58 @@ import {
   TerminationManager,
 } from "@syntest/core";
 
-import { ListenerPlugin } from "@syntest/module";
+import { ListenerPlugin, ModuleManager } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
-import { StatisticsCollector } from "../../../../../plugins/plugin-core-statistics/lib/statistics/StatisticsCollector";
-import { Timing } from "../../../../../plugins/plugin-core-statistics/lib/statistics/Timing";
-import { RuntimeVariable } from "../../../../../plugins/plugin-core-statistics/lib/statistics/RuntimeVariable";
-import Yargs = require("yargs");
-import { MetricManager } from "@syntest/metric";
+import { Metric, MetricManager } from "@syntest/metric";
+import { metrics } from "../../Metrics";
 
 export class SearchStatisticsListener extends ListenerPlugin {
-  /**
-   * The statistics collector
-   * @protected
-   */
-  protected _collector: StatisticsCollector;
-  protected timing: Timing;
+  protected currentNamespace: string;
+  protected metricManagerMap: Map<string, MetricManager>;
 
   /**
    * Constructor.
    *
-   * @param collector The collector to use
    */
-  constructor(collector: StatisticsCollector, timing: Timing) {
+  constructor() {
     super(
       "SearchStatisticsListener",
       "A listener that collects statistics about the search process."
     );
-    this._collector = collector;
-    this.timing = timing;
+    this.metricManagerMap = new Map();
   }
 
-  get collector() {
-    return this._collector;
+  async createNewMetricManager(namespace: string) {
+    if (this.metricManagerMap.has(namespace)) {
+      throw new Error(
+        `Metric manager for namespace ${namespace} already exists`
+      );
+    }
+
+    // Initialize the metric manager
+    // const plugins = await ModuleManager.instance.getPluginsOfType(
+    //   PluginType.METRIC_MIDDLEWARE
+    // );
+    const metrics = await ModuleManager.instance.getMetrics();
+    const manager = new MetricManager(metrics);
+    this.metricManagerMap.set(namespace, manager);
+    this.currentNamespace = namespace;
+
+    return manager;
+  }
+
+  get metricManager() {
+    if (!this.currentNamespace) {
+      throw new Error("No namespace set");
+    }
+
+    if (!this.metricManagerMap.has(this.currentNamespace)) {
+      throw new Error(
+        `Metric manager for namespace ${this.currentNamespace} does not exist`
+      );
+    }
+
+    return this.metricManagerMap.get(this.currentNamespace);
   }
 
   /**
@@ -65,7 +85,123 @@ export class SearchStatisticsListener extends ListenerPlugin {
    * @param budgetManager The budget manager
    * @param terminationManager The termination manager
    */
-  update<T extends Encoding>(
+  recordSeries<T extends Encoding>(
+    searchAlgorithm: SearchAlgorithm<T>,
+    subject: SearchSubject<T>,
+    budgetManager: BudgetManager<T>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    terminationManager: TerminationManager
+  ): void {
+    const iterations = budgetManager
+      .getBudgetObject("iteration")
+      .getUsedBudget();
+    const evaluations = budgetManager
+      .getBudgetObject("evaluation")
+      .getUsedBudget();
+    let searchTime = budgetManager
+      .getBudgetObject("search-time")
+      .getUsedBudget();
+    let totalTime = budgetManager.getBudgetObject("total-time").getUsedBudget();
+
+    searchTime = Math.round(searchTime * 1000) / 1000;
+    totalTime = Math.round(totalTime * 1000) / 1000;
+
+    const coveredPaths = searchAlgorithm.getCovered("path");
+    const coveredBranches = searchAlgorithm.getCovered("branch");
+    const coveredExceptions = searchAlgorithm.getCovered("exception");
+    const coveredFunctions = searchAlgorithm.getCovered("function");
+    const coveredLines = searchAlgorithm.getCovered("lines");
+    const coveredProbes = searchAlgorithm.getCovered("probe");
+    const covered = searchAlgorithm.getCovered();
+
+    // search times
+    this.recordCoveredSeries(
+      "search-time",
+      searchTime,
+      coveredPaths,
+      coveredBranches,
+      coveredFunctions,
+      coveredLines,
+      coveredProbes,
+      covered,
+      coveredExceptions
+    );
+    this.recordCoveredSeries(
+      "total-time",
+      totalTime,
+      coveredPaths,
+      coveredBranches,
+      coveredFunctions,
+      coveredLines,
+      coveredProbes,
+      covered,
+      coveredExceptions
+    );
+    this.recordCoveredSeries(
+      "iteration",
+      iterations,
+      coveredPaths,
+      coveredBranches,
+      coveredFunctions,
+      coveredLines,
+      coveredProbes,
+      covered,
+      coveredExceptions
+    );
+    this.recordCoveredSeries(
+      "evaluation",
+      evaluations,
+      coveredPaths,
+      coveredBranches,
+      coveredFunctions,
+      coveredLines,
+      coveredProbes,
+      covered,
+      coveredExceptions
+    );
+  }
+
+  recordCoveredSeries(
+    type: string,
+    index: number,
+    coveredPaths: number,
+    coveredBranches: number,
+    coveredFunctions: number,
+    coveredLines: number,
+    coveredProbes: number,
+    covered: number,
+    coveredExceptions: number
+  ) {
+    this.metricManager.recordSeries("covered-paths", type, index, coveredPaths);
+    this.metricManager.recordSeries(
+      "covered-branches",
+      type,
+      index,
+      coveredBranches
+    );
+    this.metricManager.recordSeries(
+      "covered-exceptions",
+      type,
+      index,
+      coveredExceptions
+    );
+    this.metricManager.recordSeries(
+      "covered-functions",
+      type,
+      index,
+      coveredFunctions
+    );
+    this.metricManager.recordSeries("covered-lines", type, index, coveredLines);
+    this.metricManager.recordSeries(
+      "covered-probes",
+      type,
+      index,
+      coveredProbes
+    );
+    this.metricManager.recordSeries("covered-objectives", type, index, covered);
+  }
+
+  recordStartProperties<T extends Encoding>(
     searchAlgorithm: SearchAlgorithm<T>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     subject: SearchSubject<T>,
@@ -74,172 +210,120 @@ export class SearchStatisticsListener extends ListenerPlugin {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     terminationManager: TerminationManager
   ): void {
-    const searchTime = this.timing.getTimeSinceLastEvent("searchStart");
-    const eventTime = Math.round(searchTime * 10) / 10;
-
+    // record totals
+    const coveredPaths = searchAlgorithm.getCovered("path");
     const coveredBranches = searchAlgorithm.getCovered("branch");
+    const coveredFunctions = searchAlgorithm.getCovered("function");
+    const coveredLines = searchAlgorithm.getCovered("lines");
+    const coveredProbes = searchAlgorithm.getCovered("probe");
+    const covered = searchAlgorithm.getCovered();
+
+    // TODO check if uncovered is correct for for example dynamosa
+    const totalPaths = coveredPaths + searchAlgorithm.getUncovered("path");
     const totalBranches =
       coveredBranches + searchAlgorithm.getUncovered("branch");
-
-    const coveredFunctions = searchAlgorithm.getCovered("function");
     const totalFunctions =
-      coveredBranches + searchAlgorithm.getUncovered("function");
+      coveredFunctions + searchAlgorithm.getUncovered("function");
+    const totalLines = coveredLines + searchAlgorithm.getUncovered("lines");
+    const totalProbes = coveredProbes + searchAlgorithm.getUncovered("probe");
+    const total = covered + searchAlgorithm.getUncovered();
 
-    const coveredExceptions = searchAlgorithm.getCovered("exception");
+    this.metricManager.recordProperty("total-paths", totalPaths.toString());
+    this.metricManager.recordProperty(
+      "total-branches",
+      totalBranches.toString()
+    );
+    this.metricManager.recordProperty(
+      "total-functions",
+      totalFunctions.toString()
+    );
+    this.metricManager.recordProperty("total-lines", totalLines.toString());
+    this.metricManager.recordProperty("total-probes", totalProbes.toString());
+    this.metricManager.recordProperty("total-objectives", total.toString());
+  }
 
-    const coveredProbes = searchAlgorithm.getCovered("probe");
-    const totalProbes = coveredBranches + searchAlgorithm.getUncovered("probe");
-
-    const covered = searchAlgorithm.getCovered();
-    const total = coveredBranches + searchAlgorithm.getUncovered();
-
-    MetricManager.instance.recordSeries();
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.COVERED_BRANCHES,
-      coveredBranches
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.TOTAL_BRANCHES,
-      totalBranches
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.BRANCH_COVERAGE,
-      searchAlgorithm.progress("branch")
-    );
-
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.COVERED_FUNCTIONS,
-      coveredFunctions
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.TOTAL_FUNCTIONS,
-      totalFunctions
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.FUNCTION_COVERAGE,
-      searchAlgorithm.progress("function")
-    );
-
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.COVERED_EXCEPTIONS,
-      coveredExceptions
-    );
-
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.COVERED_PROBES,
-      coveredProbes
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.TOTAL_PROBES,
-      totalProbes
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.PROBE_COVERAGE,
-      searchAlgorithm.progress("probe")
-    );
-
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.COVERED_OBJECTIVES,
-      covered
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.TOTAL_OBJECTIVES,
-      total
-    );
-    this.collector.recordEventVariable(
-      eventTime,
-      RuntimeVariable.COVERAGE,
-      searchAlgorithm.progress("mixed")
-    );
+  recordEndProperties<T extends Encoding>(
+    searchAlgorithm: SearchAlgorithm<T>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    subject: SearchSubject<T>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    budgetManager: BudgetManager<T>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    terminationManager: TerminationManager
+  ): void {
+    // TODO
   }
 
   setupEventListener(): void {
-    (<TypedEventEmitter<Events>>process).on("searchStart", () => {
-      this.timing.recordEventTime("searchStart");
-    });
+    (<TypedEventEmitter<Events>>process).on(
+      "searchStart",
+      (
+        searchAlgorithm: SearchAlgorithm<any>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        subject: SearchSubject<any>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        budgetManager: BudgetManager<any>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        terminationManager: TerminationManager
+      ) => {
+        // create a new metric manager for this search subject
+        this.createNewMetricManager(subject.name);
+
+        this.recordStartProperties(
+          searchAlgorithm,
+          subject,
+          budgetManager,
+          terminationManager
+        );
+        this.recordSeries(
+          searchAlgorithm,
+          subject,
+          budgetManager,
+          terminationManager
+        );
+      }
+    );
 
     (<TypedEventEmitter<Events>>process).on(
       "searchInitializationStart",
-      this.update
+      this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchInitializationComplete",
-      this.update
+      this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchIterationComplete",
-      this.update
+      this.recordSeries
     );
-    (<TypedEventEmitter<Events>>process).on("searchComplete", this.update);
+    (<TypedEventEmitter<Events>>process).on(
+      "searchComplete",
+      (
+        searchAlgorithm: SearchAlgorithm<any>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        subject: SearchSubject<any>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        budgetManager: BudgetManager<any>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        terminationManager: TerminationManager
+      ) => {
+        this.recordSeries(
+          searchAlgorithm,
+          subject,
+          budgetManager,
+          terminationManager
+        );
+        this.recordEndProperties(
+          searchAlgorithm,
+          subject,
+          budgetManager,
+          terminationManager
+        );
+      }
+    );
   }
 
-  async getToolOptions(): Promise<Map<string, Yargs.Options>> {
-    // any tool can use this listener
-    // any label can use this listener
-
-    const map = new Map<string, Yargs.Options>();
-
-    map.set("statistics-directory", {
-      alias: [],
-      default: "statistics",
-      description:
-        "The path where the csv should be saved (within the syntest-directory)",
-      group: OptionGroups.Storage,
-      hidden: false,
-      normalize: true,
-      type: "string",
-    });
-
-    map.set("configuration", {
-      alias: [],
-      default: "",
-      description: "The name of the configuration.",
-      group: OptionGroups.ResearchMode,
-      hidden: false,
-      type: "string",
-    });
-
-    map.set("output-properties", {
-      alias: [],
-      default: [
-        "timestamp",
-        "targetName",
-        "coveredBranches",
-        "totalBranches",
-        "fitnessEvaluations",
-      ],
-      description: "The values that should be written to csv",
-      group: OptionGroups.ResearchMode,
-      hidden: false,
-      type: "array",
-    });
-
-    return map;
+  getMetrics(): Metric[] | Promise<Metric[]> {
+    return metrics;
   }
 }
-
-export enum OptionGroups {
-  Storage = "Storage Options:",
-  ResearchMode = "Research Mode Options:",
-}
-
-export type StorageOptions = {
-  statisticsDirectory: string;
-};
-
-export type ResearchModeOptions = {
-  configuration: string;
-  outputProperties: string[];
-};

@@ -119,10 +119,18 @@ export class ModuleManager {
   }
 
   async getMetrics(): Promise<Metric[]> {
-    const metrics = [];
-    for (const module of this._modules.values()) {
-      metrics.push(...(await module.getMetrics()));
+    const metrics: Metric[] = [];
+
+    for (const tool of this.tools.values()) {
+      metrics.push(...(await tool.getMetrics()));
     }
+
+    for (const pluginsOfType of this.plugins.values()) {
+      for (const plugin of pluginsOfType.values()) {
+        metrics.push(...(await plugin.getMetrics()));
+      }
+    }
+
     return metrics;
   }
 

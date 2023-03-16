@@ -19,6 +19,7 @@ import Yargs = require("yargs");
 import { Plugin } from "./Plugin";
 import { Command } from "./Command";
 import { cannotAddChoicesToOptionWithoutChoices } from "../util/diagnostics";
+import { Metric } from "@syntest/metric";
 
 export class Tool implements Yargs.CommandModule {
   name: Readonly<string>;
@@ -157,4 +158,11 @@ export class Tool implements Yargs.CommandModule {
 
     return yargs.usage(`Usage: $0 ${this.command} <command> [options]`);
   };
+}
+
+export interface Tool {
+  /**
+   * Should return a list of metrics that are stored by this tool
+   */
+  getMetrics?(): Promise<Metric[]> | Metric[];
 }

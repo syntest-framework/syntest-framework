@@ -24,7 +24,7 @@ import {
   PluginType,
   ListenerPlugin,
   Configuration as ModuleConfiguration,
-  MiddlewarePlugin,
+  MetricMiddlewarePlugin,
 } from "@syntest/module";
 import {
   getLogger,
@@ -88,18 +88,6 @@ async function main() {
     (<BaseOptions>(<unknown>baseArguments)).preset
   );
 
-  // Initialize the metric manager
-  const plugins = await ModuleManager.instance.getPluginsOfType(
-    PluginType.MetricMiddleware
-  );
-  const metrics = await ModuleManager.instance.getMetrics();
-  MetricManager.initialize(
-    [...plugins.values()].map((plugin) =>
-      (<MiddlewarePlugin>plugin).createMetricMiddleware()
-    ),
-    metrics
-  );
-
   // Setup cleanup on exit handler
   process.on("exit", (code) => {
     if (code !== 0) {
@@ -136,7 +124,7 @@ async function main() {
 
   // Register all listener plugins
   for (const plugin of ModuleManager.instance
-    .getPluginsOfType(PluginType.Listener)
+    .getPluginsOfType(PluginType.LISTENER)
     .values()) {
     (<ListenerPlugin>plugin).setupEventListener();
   }
