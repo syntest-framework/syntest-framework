@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Encoding, Events, TargetPool } from "@syntest/core";
+import { Events, RootAnalyzer } from "@syntest/core";
 import Yargs = require("yargs");
 import { ListenerPlugin } from "@syntest/module";
 import { CONFIG } from "@syntest/base-testing-tool";
@@ -75,7 +75,7 @@ export default class GraphingPlugin extends ListenerPlugin {
   }
 
   controlFlowGraphResolvingComplete<S>(
-    targetPool: TargetPool,
+    targetPool: RootAnalyzer,
     cfg: ControlFlowGraph<S>
   ): void {
     const svgHtml = createSimulation(cfg);
