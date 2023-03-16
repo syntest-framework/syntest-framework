@@ -19,7 +19,7 @@ import { ControlFlowGraph, ControlFlowProgram } from "@syntest/cfg-core";
 import { SubTarget, RootAnalyzer } from "../../lib";
 import { ActionDescription } from "../../lib/analysis/static/ActionDescription";
 
-export class DummyTargetPool extends RootAnalyzer {
+export class DummyRootAnalyzer extends RootAnalyzer {
   getSource(path: string): string {
     throw new Error("Method not implemented.");
   }
@@ -41,6 +41,10 @@ export class DummyTargetPool extends RootAnalyzer {
     throw new Error("Method not implemented.");
   }
   getAbstractSyntaxTree<S>(path: string): S {
+    throw new Error("Method not implemented.");
+  }
+
+  getDependencies(path: string): string[] {
     throw new Error("Method not implemented.");
   }
 }

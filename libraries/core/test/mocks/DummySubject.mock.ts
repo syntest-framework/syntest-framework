@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 import { Encoding, ObjectiveFunction, SearchSubject } from "../../lib";
-import { DummyTargetPool } from "./DummyTargetPool.mock";
+import { DummyRootAnalyzer } from "./DummyRootAnalyzer.mock";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
   protected objectives: ObjectiveFunction<T>[];
 
   constructor(objectives: ObjectiveFunction<T>[]) {
-    super({ path: "", name: "", targets: [] }, new DummyTargetPool());
+    super({ path: "", name: "", subTargets: [] }, new DummyRootAnalyzer(""));
     this.objectives = objectives;
   }
 
