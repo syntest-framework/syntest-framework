@@ -17,15 +17,15 @@
  */
 import TypedEventEmitter from "typed-emitter";
 import { Target } from "./Target";
-import { RootAnalyzer } from "./RootAnalyzer";
+import { RootContext } from "./RootContext";
 import { Events } from "../../util/Events";
 import * as path from "path";
 import globby = require("globby");
 
-export class TargetLoader {
-  private _targetPool: RootAnalyzer;
+export class TargetSelector {
+  private _targetPool: RootContext;
 
-  constructor(targetPool: RootAnalyzer) {
+  constructor(targetPool: RootContext) {
     this._targetPool = targetPool;
   }
 

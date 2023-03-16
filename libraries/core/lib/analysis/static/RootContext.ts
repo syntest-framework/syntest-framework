@@ -21,7 +21,7 @@ import * as path from "path";
 import { ActionDescription } from "./ActionDescription";
 import { pathNotInRootPath } from "../../util/diagnostics";
 
-export abstract class RootAnalyzer {
+export abstract class RootContext {
   protected _rootPath: string;
 
   // Mapping: filepath -> source code
@@ -38,11 +38,15 @@ export abstract class RootAnalyzer {
   resolvePath(_path: string): string {
     const absolutePath = path.resolve(_path);
 
-    if (!absolutePath.includes(this._rootPath)) {
+    if (!this.verifyTargetPath(absolutePath)) {
       throw new Error(pathNotInRootPath(this._rootPath, absolutePath));
     }
 
     return absolutePath;
+  }
+
+  verifyTargetPath(_path: string): boolean {
+    return _path.includes(this._rootPath);
   }
 
   /**

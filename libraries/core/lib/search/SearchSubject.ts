@@ -21,7 +21,7 @@ import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { Encoding } from "./Encoding";
 import { ControlFlowProgram } from "@syntest/cfg-core";
 import { Target } from "../analysis/static/Target";
-import { RootAnalyzer } from "../analysis/static/RootAnalyzer";
+import { RootContext } from "../analysis/static/RootContext";
 
 /**
  * Subject of the search process.
@@ -39,7 +39,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * The target pool.
    * @protected
    */
-  protected readonly _targetAnalyzer: RootAnalyzer;
+  protected readonly _targetAnalyzer: RootContext;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -54,7 +54,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param targetPool Targetpool
    * @protected
    */
-  protected constructor(targetContext: Target, targetPool: RootAnalyzer) {
+  protected constructor(targetContext: Target, targetPool: RootContext) {
     this._target = targetContext;
     this._targetAnalyzer = targetPool;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
