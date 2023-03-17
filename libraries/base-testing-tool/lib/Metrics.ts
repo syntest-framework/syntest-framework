@@ -189,6 +189,33 @@ export const metrics: Metric[] = [
     type: MetricType.PROPERTY,
     property: "total-objectives",
   },
+  // final coverage
+  {
+    type: MetricType.PROPERTY,
+    property: "final-paths",
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: "final-branches",
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: "final-functions",
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: "final-lines",
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: "final-probes",
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: "final-objectives",
+  },
+
+  // TODO
 
   // general properties
   {

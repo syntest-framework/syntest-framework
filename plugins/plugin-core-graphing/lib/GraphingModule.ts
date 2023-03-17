@@ -16,26 +16,14 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool, Preset } from "@syntest/module";
+import { Module, ModuleManager } from "@syntest/module";
 import GraphingPlugin, { GraphOptions } from "./GraphingPlugin";
 import { mkdirSync } from "fs";
 import { CONFIG } from "@syntest/base-testing-tool";
-import { Metric } from "@syntest/metric";
 
 export default class GraphingModule extends Module {
-  async getTools(): Promise<Tool[]> {
-    return [];
-  }
-  async getPlugins(): Promise<Plugin[]> {
-    return [new GraphingPlugin()];
-  }
-
-  getMetrics(): Metric[] | Promise<Metric[]> {
-    return [];
-  }
-
-  async getPresets(): Promise<Preset[]> {
-    return [];
+  async register(moduleManager: ModuleManager): Promise<void> {
+    moduleManager.registerPlugin(this.name, new GraphingPlugin());
   }
 
   async prepare(): Promise<void> {

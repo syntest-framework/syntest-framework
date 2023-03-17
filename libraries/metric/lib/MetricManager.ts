@@ -17,7 +17,13 @@
  */
 import { MiddleWare } from "./Middleware";
 import { getLogger } from "@syntest/logging";
-import { Metric, PropertyMetric } from "./Metric";
+import {
+  DistributionMetric,
+  Metric,
+  PropertyMetric,
+  SeriesDistributionMetric,
+  SeriesMetric,
+} from "./Metric";
 import {
   distributionNotRegistered,
   propertyNotRegistered,
@@ -29,38 +35,22 @@ import {
 } from "./util/diagnostics";
 
 export class MetricManager {
-  static LOGGER;
+  static LOGGER = getLogger("MetricManager");
 
-  static _instance: MetricManager;
-
-  static get instance() {
-    if (!MetricManager._instance) {
-      throw new Error("MetricManager not initialized");
-    }
-
-    return MetricManager._instance;
-  }
-
-  static init(metrics: Metric[]) {
-    MetricManager._instance = new MetricManager("global", metrics);
-    MetricManager.LOGGER = getLogger("MetricManager");
-  }
-
-  private namespacedManagers: Map<string, MetricManager>;
+  private _namespacedManagers: Map<string, MetricManager>;
 
   getNamespaced(namespace: string) {
-    if (!this.namespacedManagers.has(namespace)) {
-      this.namespacedManagers.set(
-        namespace,
-        new MetricManager(namespace, this.metrics)
-      );
+    if (!this._namespacedManagers.has(namespace)) {
+      const manager = new MetricManager(namespace);
+      manager.metrics = this.metrics;
+      this._namespacedManagers.set(namespace, manager);
     }
 
-    return this.namespacedManagers.get(namespace);
+    return this._namespacedManagers.get(namespace);
   }
 
-  private namespace: string;
-  private metrics: Metric[];
+  private _namespace: string;
+  private _metrics: Metric[];
 
   private properties: Map<string, string>;
   private distributions: Map<string, number[]>;
@@ -70,17 +60,24 @@ export class MetricManager {
     Map<string, Map<string, Map<number, number[]>>>
   >;
 
-  constructor(namespace: string, metrics: Metric[]) {
-    this.namespace = namespace;
-    this.metrics = metrics;
-    this.namespacedManagers = new Map();
+  constructor(namespace: string) {
+    this._namespace = namespace;
+    this._namespacedManagers = new Map();
 
     this.properties = new Map();
     this.distributions = new Map();
     this.series = new Map();
     this.seriesDistributions = new Map();
+  }
 
-    this.metrics.forEach((metric) => {
+  get metrics() {
+    return this._metrics;
+  }
+
+  set metrics(metrics: Metric[]) {
+    this._metrics = metrics;
+
+    this._metrics.forEach((metric) => {
       switch (metric.type) {
         case "property":
           this.properties.set(metric.property, "");
@@ -104,6 +101,14 @@ export class MetricManager {
           break;
       }
     });
+  }
+
+  get namespacedManagers() {
+    return this._namespacedManagers;
+  }
+
+  get namespace() {
+    return this._namespace;
   }
 
   runPipeline(middleware: MiddleWare[]) {
@@ -294,5 +299,73 @@ export class MetricManager {
     }
 
     return properties;
+  }
+
+  collectDistributions(wanted: DistributionMetric[]): Map<string, number[]> {
+    const distributions = new Map<string, number[]>();
+
+    for (const distribution of wanted) {
+      const value = this.getDistribution(distribution.distributionName);
+
+      distributions.set(distribution.distributionName, value);
+    }
+
+    return distributions;
+  }
+
+  collectSeries(
+    wanted: SeriesMetric[]
+  ): Map<string, Map<string, Map<number, number>>> {
+    const series = new Map<string, Map<string, Map<number, number>>>();
+
+    for (const seriesMetric of wanted) {
+      const value = this.getSeries(seriesMetric.seriesName, seriesMetric.type);
+
+      if (!series.has(seriesMetric.seriesName)) {
+        series.set(seriesMetric.seriesName, new Map());
+      }
+
+      series.get(seriesMetric.seriesName).set(seriesMetric.seriesType, value);
+    }
+
+    return series;
+  }
+
+  collectSeriesDistributions(
+    wanted: SeriesDistributionMetric[]
+  ): Map<string, Map<string, Map<string, Map<number, number[]>>>> {
+    const seriesDistributions = new Map<
+      string,
+      Map<string, Map<string, Map<number, number[]>>>
+    >();
+
+    for (const seriesDistribution of wanted) {
+      const value = this.getSeriesDistribution(
+        seriesDistribution.distributionName,
+        seriesDistribution.seriesName,
+        seriesDistribution.type
+      );
+
+      if (!seriesDistributions.has(seriesDistribution.distributionName)) {
+        seriesDistributions.set(seriesDistribution.distributionName, new Map());
+      }
+
+      if (
+        !seriesDistributions
+          .get(seriesDistribution.distributionName)
+          .has(seriesDistribution.seriesName)
+      ) {
+        seriesDistributions
+          .get(seriesDistribution.distributionName)
+          .set(seriesDistribution.seriesName, new Map());
+      }
+
+      seriesDistributions
+        .get(seriesDistribution.distributionName)
+        .get(seriesDistribution.seriesName)
+        .set(seriesDistribution.seriesType, value);
+    }
+
+    return seriesDistributions;
   }
 }

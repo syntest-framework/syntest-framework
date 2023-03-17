@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Sfuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Yargs = require("yargs");
 
-// Plugin
-export * as module from "./StatisticsModule";
+export abstract class Extension {
+  name: Readonly<string>;
+  _args: Yargs.ArgumentsCamelCase;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  set args(args: Yargs.ArgumentsCamelCase) {
+    this._args = args;
+  }
+
+  get args() {
+    return this._args;
+  }
+}

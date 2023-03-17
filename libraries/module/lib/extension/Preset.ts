@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 import Yargs = require("yargs");
+import { Extension } from "./Extension";
 
-export abstract class Preset {
-  public name: Readonly<string>;
+export abstract class Preset extends Extension {
   public describe: Readonly<string>;
 
   constructor(name: string, describe: string) {
-    this.name = name;
+    super(name);
     this.describe = describe;
   }
 

@@ -72,21 +72,28 @@ async function main() {
   );
   const LOGGER = getLogger("cli");
 
-  // Setup module manager
-  ModuleManager.initializeModuleManager();
+  // Setup metric manager
+  const metricManager = new MetricManager("global");
 
+  // Setup module manager
+  const moduleManager = new ModuleManager(metricManager, userInterface);
+
+  // Enable help on fail
   yargs = yargs.showHelpOnFail(true);
 
   // Import defined modules
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
   LOGGER.info("Loading standard modules...");
-  await ModuleManager.instance.loadModule("@syntest/init", "@syntest/init");
+  await moduleManager.loadModule("@syntest/init", "@syntest/init");
   LOGGER.info("Loading modules...", modules);
-  await ModuleManager.instance.loadModules(modules, userInterface);
-  yargs = await ModuleManager.instance.configureModules(
+  await moduleManager.loadModules(modules);
+  yargs = await moduleManager.configureModules(
     yargs,
     (<BaseOptions>(<unknown>baseArguments)).preset
   );
+
+  // Set the metrics on the metric manager
+  metricManager.metrics = await moduleManager.getMetrics();
 
   // Setup cleanup on exit handler
   process.on("exit", (code) => {
@@ -95,25 +102,35 @@ async function main() {
       userInterface.printError("Process exited with code: " + code);
     }
     LOGGER.info("Cleaning up...");
-    ModuleManager.instance.cleanup();
+    moduleManager.cleanup();
     LOGGER.info("Cleanup done! Exiting...");
   });
 
   const itemization: ItemizationItem[] = [];
-  for (const module of ModuleManager.instance.modules.values()) {
+  for (const module of moduleManager.modules.values()) {
+    const tools = moduleManager.toolsOfModule.get(module.name);
+    const plugins = moduleManager.pluginsOfModule.get(module.name);
+    const presets = moduleManager.presetsOfModule.get(module.name);
+
     itemization.push({
       text: `Module: ${module.name} (${module.version})`,
       subItems: [
         {
-          text: `Tools: ${(await module.getTools()).length ? "" : "[]"}`,
-          subItems: (await module.getTools()).map((tool) => ({
+          text: `Tools: ${tools.length ? "" : "[]"}`,
+          subItems: tools.map((tool) => ({
             text: `${tool.name}: ${tool.describe}`,
           })),
         },
         {
-          text: `Plugins: ${(await module.getPlugins()).length ? "" : "[]"}`,
-          subItems: (await module.getPlugins()).map((plugin) => ({
+          text: `Plugins: ${plugins.length ? "" : "[]"}`,
+          subItems: plugins.map((plugin) => ({
             text: `${plugin.name}: ${plugin.describe}`,
+          })),
+        },
+        {
+          text: `Presets: ${presets.length ? "" : "[]"}`,
+          subItems: presets.map((preset) => ({
+            text: `${preset.name}: ${preset.describe}`,
           })),
         },
       ],
@@ -123,7 +140,7 @@ async function main() {
   userInterface.printItemization("Module loaded:", itemization);
 
   // Register all listener plugins
-  for (const plugin of ModuleManager.instance
+  for (const plugin of moduleManager
     .getPluginsOfType(PluginType.LISTENER)
     .values()) {
     (<ListenerPlugin>plugin).setupEventListener();
@@ -131,10 +148,10 @@ async function main() {
 
   // Prepare modules
   LOGGER.info("Preparing modules...");
-  await ModuleManager.instance.prepare();
+  await moduleManager.prepare();
   LOGGER.info("Modules prepared!");
 
-  const versions = [...ModuleManager.instance.modules.values()]
+  const versions = [...moduleManager.modules.values()]
     .map((module) => `${module.name} (${module.version})`)
     .join("\n");
 
@@ -149,7 +166,7 @@ async function main() {
     .env("SYNTEST")
     .middleware(async (argv) => {
       // Set the arguments in the module manager
-      ModuleManager.instance.args = argv;
+      moduleManager.args = argv;
     })
     .parse(args);
 }

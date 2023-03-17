@@ -16,33 +16,18 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool, Preset } from "@syntest/module";
-import GraphingPlugin, {
-  GraphOptions,
-} from "./plugins/FileWriterMetricMiddlewarePlugin";
-import { mkdirSync } from "fs";
-import { CONFIG } from "@syntest/base-testing-tool";
-import { Metric } from "@syntest/metric";
+import { Module, ModuleManager } from "@syntest/module";
+import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
+import { MetricManager } from "@syntest/metric";
 
-export default class GraphingModule extends Module {
-  async getTools(): Promise<Tool[]> {
-    return [];
-  }
-  async getPlugins(): Promise<Plugin[]> {
-    return [new GraphingPlugin()];
-  }
-
-  getMetrics(): Metric[] | Promise<Metric[]> {
-    return [];
-  }
-
-  async getPresets(): Promise<Preset[]> {
-    return [];
-  }
-
-  async prepare(): Promise<void> {
-    await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
-      recursive: true,
-    });
+export default class MetricMiddlewareModule extends Module {
+  async register(
+    moduleManager: ModuleManager,
+    metricManager: MetricManager
+  ): Promise<void> {
+    moduleManager.registerPlugin(
+      this.name,
+      new FileWriterMetricMiddlewarePlugin(metricManager)
+    );
   }
 }

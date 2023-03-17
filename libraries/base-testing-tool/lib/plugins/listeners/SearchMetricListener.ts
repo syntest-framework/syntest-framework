@@ -24,44 +24,25 @@ import {
   TerminationManager,
 } from "@syntest/core";
 
-import { ListenerPlugin, ModuleManager } from "@syntest/module";
+import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
 import { Metric, MetricManager } from "@syntest/metric";
 import { metrics } from "../../Metrics";
 
 export class SearchStatisticsListener extends ListenerPlugin {
   protected currentNamespace: string;
-  protected metricManagerMap: Map<string, MetricManager>;
+  protected _metricManager: MetricManager;
 
   /**
    * Constructor.
    *
    */
-  constructor() {
+  constructor(metricManager: MetricManager) {
     super(
       "SearchStatisticsListener",
       "A listener that collects statistics about the search process."
     );
-    this.metricManagerMap = new Map();
-  }
-
-  async createNewMetricManager(namespace: string) {
-    if (this.metricManagerMap.has(namespace)) {
-      throw new Error(
-        `Metric manager for namespace ${namespace} already exists`
-      );
-    }
-
-    // Initialize the metric manager
-    // const plugins = await ModuleManager.instance.getPluginsOfType(
-    //   PluginType.METRIC_MIDDLEWARE
-    // );
-    const metrics = await ModuleManager.instance.getMetrics();
-    const manager = new MetricManager(metrics);
-    this.metricManagerMap.set(namespace, manager);
-    this.currentNamespace = namespace;
-
-    return manager;
+    this._metricManager = metricManager;
   }
 
   get metricManager() {
@@ -69,13 +50,7 @@ export class SearchStatisticsListener extends ListenerPlugin {
       throw new Error("No namespace set");
     }
 
-    if (!this.metricManagerMap.has(this.currentNamespace)) {
-      throw new Error(
-        `Metric manager for namespace ${this.currentNamespace} does not exist`
-      );
-    }
-
-    return this.metricManagerMap.get(this.currentNamespace);
+    return this._metricManager.getNamespaced(this.currentNamespace);
   }
 
   /**
@@ -251,7 +226,26 @@ export class SearchStatisticsListener extends ListenerPlugin {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     terminationManager: TerminationManager
   ): void {
-    // TODO
+    // record finals
+    const coveredPaths = searchAlgorithm.getCovered("path");
+    const coveredBranches = searchAlgorithm.getCovered("branch");
+    const coveredFunctions = searchAlgorithm.getCovered("function");
+    const coveredLines = searchAlgorithm.getCovered("lines");
+    const coveredProbes = searchAlgorithm.getCovered("probe");
+    const covered = searchAlgorithm.getCovered();
+
+    this.metricManager.recordProperty("final-paths", coveredPaths.toString());
+    this.metricManager.recordProperty(
+      "final-branches",
+      coveredBranches.toString()
+    );
+    this.metricManager.recordProperty(
+      "final-functions",
+      coveredFunctions.toString()
+    );
+    this.metricManager.recordProperty("final-lines", coveredLines.toString());
+    this.metricManager.recordProperty("final-probes", coveredProbes.toString());
+    this.metricManager.recordProperty("final-objectives", covered.toString());
   }
 
   setupEventListener(): void {
@@ -267,7 +261,7 @@ export class SearchStatisticsListener extends ListenerPlugin {
         terminationManager: TerminationManager
       ) => {
         // create a new metric manager for this search subject
-        this.createNewMetricManager(subject.name);
+        this.currentNamespace = subject.name;
 
         this.recordStartProperties(
           searchAlgorithm,

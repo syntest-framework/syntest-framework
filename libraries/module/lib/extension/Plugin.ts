@@ -17,15 +17,17 @@
  */
 import { Metric } from "@syntest/metric";
 import Yargs = require("yargs");
+import { Extension } from "./Extension";
 
-export abstract class Plugin {
+export abstract class Plugin extends Extension {
   public type: Readonly<string>;
-  public name: Readonly<string>;
   public describe: Readonly<string>;
 
+  _args: Yargs.ArgumentsCamelCase;
+
   constructor(type: string, name: string, describe: string) {
+    super(name);
     this.type = type;
-    this.name = name;
     this.describe = describe;
   }
 }

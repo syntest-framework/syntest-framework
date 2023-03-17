@@ -20,9 +20,9 @@ import { Plugin } from "./Plugin";
 import { Command } from "./Command";
 import { cannotAddChoicesToOptionWithoutChoices } from "../util/diagnostics";
 import { Metric } from "@syntest/metric";
+import { Extension } from "./Extension";
 
-export class Tool implements Yargs.CommandModule {
-  name: Readonly<string>;
+export class Tool extends Extension implements Yargs.CommandModule {
   labels: string[];
   command: Readonly<string>;
 
@@ -40,7 +40,7 @@ export class Tool implements Yargs.CommandModule {
     toolOptions: Map<string, Yargs.Options>,
     handler?: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
   ) {
-    this.name = name;
+    super(name);
     this.labels = labels;
     this.describe = describe;
     this.command = name;

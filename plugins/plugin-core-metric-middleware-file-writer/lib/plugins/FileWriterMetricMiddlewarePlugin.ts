@@ -32,19 +32,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metric, MiddleWare } from "@syntest/metric";
+import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
 import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
-
+import Yargs = require("yargs");
 export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
-  private rootOutputDir: string;
+  private metricManager: MetricManager;
 
-  constructor(rootOutputDir: string) {
+  constructor(metricManager: MetricManager) {
     super(
       "FileWriterMetricMiddlewarePlugin",
       "A middleware that writes the metrics to a file."
     );
-    this.rootOutputDir = rootOutputDir;
+    this.metricManager = metricManager;
   }
 
   createMetricMiddleware(
@@ -54,7 +54,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     return new FileWriterMetricMiddleware(
       metrics,
       outputMetrics,
-      this.rootOutputDir
+      (<StorageOptions>(<unknown>this.args)).metricsDirectory
     );
   }
 
