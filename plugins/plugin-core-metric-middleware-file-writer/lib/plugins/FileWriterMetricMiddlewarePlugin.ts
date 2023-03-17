@@ -47,13 +47,10 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     this.metricManager = metricManager;
   }
 
-  createMetricMiddleware(
-    metrics: Metric[],
-    outputMetrics: Metric[]
-  ): MiddleWare {
+  createMetricMiddleware(metrics: Metric[]): MiddleWare {
     return new FileWriterMetricMiddleware(
       metrics,
-      outputMetrics,
+      this.metricManager.outputMetrics,
       (<StorageOptions>(<unknown>this.args)).metricsDirectory
     );
   }

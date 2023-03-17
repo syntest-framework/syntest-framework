@@ -51,6 +51,7 @@ export class MetricManager {
 
   private _namespace: string;
   private _metrics: Metric[];
+  private _outputMetrics: Metric[];
 
   private properties: Map<string, string>;
   private distributions: Map<string, number[]>;
@@ -68,6 +69,51 @@ export class MetricManager {
     this.distributions = new Map();
     this.series = new Map();
     this.seriesDistributions = new Map();
+  }
+
+  get outputMetrics() {
+    if (!this._outputMetrics) {
+      throw new Error("Output metrics not set");
+    }
+    return this._outputMetrics;
+  }
+
+  setOutputMetrics(metrics: string[]) {
+    const outputMetrics = metrics.map((metric) => {
+      const split = metric.split(".");
+      const found = this.metrics.find((m) => {
+        if (m.type !== split[0]) {
+          return false;
+        }
+
+        switch (m.type) {
+          case "property":
+            return m.property === split[1];
+          case "distribution":
+            return m.distributionName === split[1];
+          case "series":
+            return m.seriesName === split[1] && m.seriesType === split[2];
+          case "series-distribution":
+            return (
+              m.distributionName === split[1] &&
+              m.seriesName === split[2] &&
+              m.seriesType === split[3]
+            );
+        }
+        return false;
+      });
+
+      if (!found) {
+        throw new Error(`Output metric ${metric} not found`);
+      }
+      return found;
+    });
+
+    this._outputMetrics = outputMetrics;
+
+    this.namespacedManagers.forEach((manager) => {
+      manager._outputMetrics = outputMetrics;
+    });
   }
 
   get metrics() {
@@ -118,6 +164,10 @@ export class MetricManager {
         `Running middleware ${middleware.constructor.name}`
       );
       middleware.run(this);
+    });
+
+    this._namespacedManagers.forEach((manager) => {
+      manager.runPipeline(middleware);
     });
   }
 

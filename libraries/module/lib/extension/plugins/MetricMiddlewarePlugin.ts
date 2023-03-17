@@ -24,10 +24,7 @@ export abstract class MetricMiddlewarePlugin extends Plugin {
     super(PluginType.METRIC_MIDDLEWARE, name, describe);
   }
 
-  abstract createMetricMiddleware(
-    metrics: Metric[],
-    outputMetrics: Metric[]
-  ): MiddleWare;
+  abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
 
   async getToolOptionChoices(
     tool: string,

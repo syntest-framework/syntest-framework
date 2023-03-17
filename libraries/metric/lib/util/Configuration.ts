@@ -17,9 +17,9 @@
  */
 import Yargs = require("yargs");
 
-export type ModuleOptions = {
-  "metric-middleware-pipeline": string[];
-  "output-properties": string[];
+export type MetricOptions = {
+  metricMiddlewarePipeline: string[];
+  outputMetrics: string[];
 };
 
 export enum OptionGroups {
@@ -39,7 +39,7 @@ export class Configuration {
         hidden: false,
         type: "string",
       })
-      .option("output-properties", {
+      .option("output-metrics", {
         alias: [],
         choices: [],
         default: [],

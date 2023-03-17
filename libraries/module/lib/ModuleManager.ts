@@ -37,8 +37,10 @@ import {
   toolAlreadyLoaded,
 } from "./util/diagnostics";
 import { getLogger } from "@syntest/logging";
-import { Metric, MetricManager } from "@syntest/metric";
+import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import { Preset } from "./extension/Preset";
+import { PluginType } from "./extension/plugins/PluginType";
+import { MetricMiddlewarePlugin } from "./extension/plugins/MetricMiddlewarePlugin";
 
 export class ModuleManager {
   static LOGGER = getLogger("ModuleManager");
@@ -169,6 +171,18 @@ export class ModuleManager {
   }
 
   async cleanup() {
+    ModuleManager.LOGGER.info("Running metric middleware pipeline");
+    const metricPlugins = <MetricMiddlewarePlugin[]>[
+      ...(await this.getPluginsOfType(PluginType.METRIC_MIDDLEWARE)).values(),
+    ];
+    const order = (<MetricOptions>(<unknown>this.args))
+      .metricMiddlewarePipeline;
+    metricPlugins.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+    const metricMiddleWare = metricPlugins.map((plugin) =>
+      plugin.createMetricMiddleware(this._metricManager.metrics)
+    );
+    this._metricManager.runPipeline(metricMiddleWare);
+
     ModuleManager.LOGGER.info("Cleaning up modules");
     for (const module of this.modules.values()) {
       if (module.cleanup) {

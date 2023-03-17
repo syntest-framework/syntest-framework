@@ -18,13 +18,12 @@
  */
 
 import yargHelper = require("yargs/helpers");
-import { BaseOptions } from "@syntest/module";
+import { BaseOptions, MetricMiddlewarePlugin } from "@syntest/module";
 import {
   ModuleManager,
   PluginType,
   ListenerPlugin,
   Configuration as ModuleConfiguration,
-  MetricMiddlewarePlugin,
 } from "@syntest/module";
 import {
   getLogger,
@@ -33,7 +32,7 @@ import {
 } from "@syntest/logging";
 import * as path from "path";
 import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
-import { MetricManager } from "@syntest/metric";
+import { MetricManager, MetricOptions } from "@syntest/metric";
 
 async function main() {
   // Setup user interface
@@ -96,7 +95,7 @@ async function main() {
   metricManager.metrics = await moduleManager.getMetrics();
 
   // Setup cleanup on exit handler
-  process.on("exit", (code) => {
+  process.on("exit", async (code) => {
     if (code !== 0) {
       LOGGER.error("Process exited with code: " + code);
       userInterface.printError("Process exited with code: " + code);
@@ -167,6 +166,9 @@ async function main() {
     .middleware(async (argv) => {
       // Set the arguments in the module manager
       moduleManager.args = argv;
+      metricManager.setOutputMetrics(
+        (<MetricOptions>(<unknown>argv)).outputMetrics
+      );
     })
     .parse(args);
 }
