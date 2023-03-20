@@ -16,43 +16,56 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { ControlFlowGraph, NodeType } from "@syntest/cfg-core";
+import {
+  ControlFlowGraph,
+  NodeType,
+  Node,
+  Edge,
+  EdgeType,
+  edgeContraction,
+} from "@syntest/cfg-core";
 import { createSimulation } from "../lib/D3Simulation";
+
 const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", async () => {
-    const nodes = [
-      {
-        type: NodeType.Root,
-        id: "ROOT",
-        lines: [],
-        statements: [],
-      },
-    ];
-
+    const nodes = new Map<string, Node<unknown>>();
+    const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
+      lineNumbers: [],
+    });
+    const nodeExit = new Node("EXIT", NodeType.EXIT, "EXIT", [], {
+      lineNumbers: [],
+    });
+    nodes.set("ROOT", nodeRoot);
+    nodes.set("EXIT", nodeExit);
     // Construct CFG
     for (let i = 65; i < 72; i++) {
-      nodes.push({
-        type: NodeType.Intermediary,
-        id: String.fromCharCode(i),
-        lines: [],
-        statements: [],
-      });
+      nodes.set(
+        String.fromCharCode(i),
+        new Node(
+          String.fromCharCode(i),
+          NodeType.NORMAL,
+          String.fromCharCode(i),
+          [],
+          { lineNumbers: [] }
+        )
+      );
     }
     const edges = [
-      { from: "A", to: "B", branchType: false },
-      { from: "A", to: "C", branchType: true },
-      { from: "C", to: "D", branchType: true },
-      { from: "C", to: "E", branchType: false },
-      { from: "D", to: "F", branchType: true },
-      { from: "D", to: "G", branchType: false },
-      { from: "F", to: "A" },
-      { from: "G", to: "A" },
-      { from: "E", to: "A" },
-      { from: "ROOT", to: "A" },
+      new Edge("A", EdgeType.NORMAL, "A", "ROOT", "A"),
+      new Edge("B", EdgeType.CONDITIONAL_FALSE, "B", "A", "B"),
+      new Edge("C", EdgeType.CONDITIONAL_TRUE, "C", "A", "C"),
+      new Edge("D", EdgeType.CONDITIONAL_TRUE, "D", "C", "D"),
+      new Edge("E", EdgeType.CONDITIONAL_FALSE, "E", "C", "E"),
+      new Edge("F", EdgeType.CONDITIONAL_TRUE, "F", "D", "F"),
+      new Edge("G", EdgeType.CONDITIONAL_FALSE, "G", "D", "G"),
+      new Edge("H", EdgeType.NORMAL, "H", "F", "A"),
+      new Edge("I", EdgeType.NORMAL, "I", "G", "A"),
+      new Edge("J", EdgeType.NORMAL, "J", "E", "A"),
     ];
-    const cfg = new ControlFlowGraph(nodes, edges);
+    let cfg = new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges);
+    cfg = edgeContraction(cfg);
 
     const svgHtml = await createSimulation(cfg);
 

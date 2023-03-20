@@ -15,14 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Encoding } from "../Encoding";
+import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
+import { SearchSubject } from "../SearchSubject";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
 
-import { Node, NodeType } from "./Node";
+export abstract class ImplicitBranchObjectiveFunction<
+  T extends Encoding
+> extends BranchObjectiveFunction<T> {
+  protected constructor(
+    approachLevel: ApproachLevel,
+    branchDistance: BranchDistance,
+    subject: SearchSubject<T>,
+    id: string
+  ) {
+    super(approachLevel, branchDistance, subject, id);
+  }
 
-/**
- * Interface for a Placeholder Node.
- *
- * @author Dimitri Stallenberg
- */
-export interface PlaceholderNode extends Node {
-  readonly type: NodeType.Placeholder;
+  abstract calculateDistance(encoding: T): number;
 }

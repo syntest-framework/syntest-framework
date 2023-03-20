@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { BranchObjectiveFunction } from "../../../lib";
+import { ApproachLevel, BranchObjectiveFunction } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { fastNonDomSorting } from "../../../lib/search/operators/ranking/FastNonDomSorting";
 import { createStubInstance } from "sinon";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -29,16 +30,16 @@ const expect = chai.expect;
 describe("Fast non-dominated sorting", function () {
   it("Sort three solutions", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      false
+      "1"
     );
     const objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);

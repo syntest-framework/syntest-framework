@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,14 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { BranchDistance } from "../../lib";
 
-import { Node, NodeType } from "./Node";
-
-/**
- * Interface for a RootNode
- *
- * @author Dimitri Stallenberg
- */
-export interface RootNode extends Node {
-  readonly type: NodeType.Root;
+export class DummyBranchDistance extends BranchDistance {
+  public _calculate(): number {
+    return 1;
+  }
 }

@@ -22,20 +22,13 @@
 export interface Datapoint {
   id: string;
   type: string;
+
   path: string;
   line: number;
 
   hits: number;
 
-  locationIdx?: number;
-  branchType?: boolean;
-
   condition_ast?: string;
   condition?: string;
   variables?: unknown;
-
-  // Deprecated
-  opcode?: string;
-  left?: number[];
-  right?: number[];
 }

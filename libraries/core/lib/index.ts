@@ -19,9 +19,7 @@
 // Static Analysis
 export * from "./analysis/static/ActionDescription";
 export * from "./analysis/static/Target";
-export * from "./analysis/static/TargetMetaData";
-export * from "./analysis/static/TargetPool";
-export * from "./analysis/static/targetUtil";
+export * from "./analysis/static/RootContext";
 
 // Search
 export * from "./search/Archive";
@@ -55,13 +53,15 @@ export * from "./search/metaheuristics/evolutionary/NSGAII";
 export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 
 // - Objective
-export * from "./search/objective/ApproachLevel";
-export * from "./search/objective/BranchDistance";
+export * from "./search/objective/heuristics/ApproachLevel";
+export * from "./search/objective/heuristics/BranchDistance";
+
 export * from "./search/objective/BranchObjectiveFunction";
+export * from "./search/objective/ControlFlowBasedObjectiveFunction";
 export * from "./search/objective/ExceptionObjectiveFunction";
 export * from "./search/objective/FunctionObjectiveFunction";
+export * from "./search/objective/ImplicitBranchObjectiveFunction";
 export * from "./search/objective/ObjectiveFunction";
-export * from "./search/objective/ProbeObjectiveFunction";
 
 export * from "./search/objective/managers/ObjectiveManager";
 export * from "./search/objective/managers/SimpleObjectiveManager";

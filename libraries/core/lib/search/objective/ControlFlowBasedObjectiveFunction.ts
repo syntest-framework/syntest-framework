@@ -17,23 +17,27 @@
  */
 
 import { Encoding } from "../Encoding";
-import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
+import { ObjectiveFunction } from "./ObjectiveFunction";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
+ * Function that models the objective.
  *
+ * @author Dimitri Stallenberg
  */
-export abstract class ProbeObjectiveFunction<
-  T extends Encoding
-> extends BranchObjectiveFunction<T> {
-  protected constructor(
-    subject: SearchSubject<T>,
-    id: string,
-    line: number,
-    type: boolean
-  ) {
-    super(subject, id, line, type);
-  }
+export abstract class ControlFlowBasedObjectiveFunction<T extends Encoding>
+  implements ObjectiveFunction<T>
+{
+  protected approachLevel: ApproachLevel;
+  protected branchDistance: BranchDistance;
 
+  constructor(approachLevel: ApproachLevel, branchDistance: BranchDistance) {
+    this.approachLevel = approachLevel;
+    this.branchDistance = branchDistance;
+  }
   abstract calculateDistance(encoding: T): number;
+  abstract getIdentifier(): string;
+  abstract getSubject(): SearchSubject<T>;
 }

@@ -15,8 +15,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { EdgeType } from "./EdgeType";
 
-export interface Pair<T, U> {
-  first: T;
-  second: U;
+/**
+ * Represents a jump between two basic blocks in a control flow graph.
+ */
+export class Edge {
+  readonly id: string;
+  readonly type: EdgeType;
+  readonly label: string;
+  readonly description?: string;
+
+  readonly source: string;
+  readonly target: string;
+
+  constructor(
+    id: string,
+    type: EdgeType,
+    label: string,
+    source: string,
+    target: string,
+    description?: string
+  ) {
+    this.id = id;
+    this.type = type;
+    this.label = label;
+    this.source = source;
+    this.target = target;
+    this.description = description;
+  }
 }

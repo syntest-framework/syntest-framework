@@ -1,0 +1,81 @@
+/*
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ *
+ * This file is part of SynTest Framework - SynTest Core.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import {
+  ControlFlowGraph,
+  Edge,
+  NodeType,
+  Node,
+  EdgeType,
+  edgeContraction,
+} from "../../lib";
+import * as chai from "chai";
+
+const expect = chai.expect;
+
+describe("CFG edge contraction", function () {
+  let cfg: ControlFlowGraph<unknown>;
+
+  beforeEach(function () {
+    // Construct cfg
+    const nodes = new Map<string, Node<unknown>>();
+
+    const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
+      lineNumbers: [],
+    });
+    const node1 = new Node("1", NodeType.NORMAL, "1", [], { lineNumbers: [] });
+    const node2 = new Node("2", NodeType.NORMAL, "2", [], { lineNumbers: [] });
+    const node3 = new Node("3", NodeType.NORMAL, "3", [], { lineNumbers: [] });
+    const node4 = new Node("4", NodeType.NORMAL, "4", [], { lineNumbers: [] });
+    const nodeExit = new Node("EXIT", NodeType.EXIT, "EXIT", [], {
+      lineNumbers: [],
+    });
+
+    nodes.set("ROOT", nodeRoot);
+    nodes.set("1", node1);
+    nodes.set("2", node2);
+    nodes.set("3", node3);
+    nodes.set("4", node4);
+    nodes.set("EXIT", nodeExit);
+
+    const edges: Edge[] = [
+      new Edge("1", EdgeType.NORMAL, "1", "ROOT", "1"),
+      new Edge("2", EdgeType.CONDITIONAL_TRUE, "2", "1", "2"),
+      new Edge("3", EdgeType.CONDITIONAL_FALSE, "3", "1", "3"),
+      new Edge("4", EdgeType.NORMAL, "4", "3", "4"),
+      new Edge("5", EdgeType.NORMAL, "5", "2", "EXIT"),
+      new Edge("6", EdgeType.NORMAL, "6", "4", "EXIT"),
+    ];
+    cfg = new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges);
+  });
+
+  it("Two edges should be contracted", () => {
+    const contractedCFG = edgeContraction(cfg);
+
+    expect(contractedCFG.nodes.size).to.equal(cfg.nodes.size - 2);
+
+    expect(contractedCFG.edges.length).to.equal(cfg.edges.length - 2);
+  });
+
+  it("Two edges should be contracted", () => {
+    const contractedCFG = edgeContraction(cfg);
+
+    expect(contractedCFG.getParentNode("1")).to.equal("ROOT");
+
+    expect(contractedCFG.getChildNodes("ROOT")).to.deep.equal(["ROOT", "1"]);
+  });
+});

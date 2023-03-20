@@ -16,13 +16,12 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
-import { NodeType } from "@syntest/cfg-core";
 import { SearchSubject } from "../SearchSubject";
-import { BranchDistance } from "../objective/BranchDistance";
-import { Datapoint } from "../../util/Datapoint";
-import { ApproachLevel } from "./ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { shouldNeverHappen } from "../../util/diagnostics";
+import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
 
 /**
  * Objective function for the branch criterion.
@@ -31,32 +30,27 @@ import { ApproachLevel } from "./ApproachLevel";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
-export class BranchObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T>
-{
+export class BranchObjectiveFunction<
+  T extends Encoding
+> extends ControlFlowBasedObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
-  protected _line: number;
-  protected _type: boolean;
 
   /**
    * Constructor.
    *
    * @param subject
    * @param id
-   * @param line
-   * @param type
    */
   constructor(
+    approachLevel: ApproachLevel,
+    branchDistance: BranchDistance,
     subject: SearchSubject<T>,
-    id: string,
-    line: number,
-    type: boolean
+    id: string
   ) {
+    super(approachLevel, branchDistance);
     this._subject = subject;
     this._id = id;
-    this._line = line;
-    this._type = type;
   }
 
   calculateDistance(encoding: T): number {
@@ -66,93 +60,39 @@ export class BranchObjectiveFunction<T extends Encoding>
       return Number.MAX_VALUE;
     }
 
-    // let's check if the line is covered
-    if (executionResult.coversLine(this._line)) {
-      const branchTrace = executionResult
-        .getTraces()
-        .find(
-          (trace) =>
-            trace.type === "branch" &&
-            trace.line === this._line &&
-            trace.branchType === this._type
-        );
-
-      if (branchTrace.hits > 0) {
-        return 0;
-      } else {
-        const oppositeBranch = executionResult.getTraces().find(
-          (trace) =>
-            trace.type === "branch" &&
-            trace.id === branchTrace.id && // Same branch id
-            trace.branchType !== this._type // The opposite branch type
-        );
-
-        return BranchDistance.branchDistanceNumeric(
-          oppositeBranch.opcode,
-          oppositeBranch.left,
-          oppositeBranch.right,
-          this._type
-        );
-      }
+    // let's check if the node is covered
+    if (executionResult.coversId(this._id)) {
+      return 0;
     }
 
-    // find the corresponding branch node inside the cfg
-    const branchNode = this._subject.cfg.findNodeOfTypeByLine(
-      this._line,
-      NodeType.Branch
-    );
+    // find the corresponding node inside the cfg
+    const targetNode = this._subject.cfg.graph.getNodeById(this._id);
 
-    // TODO maybe childNode is not required.
-    const childEdge = this._subject.cfg.edges.find((edge) => {
-      return edge.from === branchNode.id && edge.branchType === this._type;
-    });
-    const childNode = this._subject.cfg.nodes.find((node) => {
-      return node.id === childEdge.to;
-    });
+    if (!targetNode) {
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+    }
 
     // Find approach level and ancestor based on node and covered nodes
     const { approachLevel, closestCoveredBranchTrace } =
-      ApproachLevel.calculate(
-        this._subject.cfg,
-        childNode,
+      this.approachLevel.calculate(
+        this._subject.cfg.graph,
+        targetNode,
         executionResult.getTraces()
       );
 
-    // if closer node (branch or probe) is not found, we return the distance to the root branch
+    // if closest covered node is not found, we return the distance to the root branch
     if (!closestCoveredBranchTrace) {
-      return Number.MAX_VALUE;
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
-    let branchDistance: number;
-    if (closestCoveredBranchTrace.type === "function") branchDistance = 1;
-    else branchDistance = this.computeBranchDistance(closestCoveredBranchTrace);
+    const branchDistance = this.branchDistance.calculate(
+      closestCoveredBranchTrace.condition_ast,
+      closestCoveredBranchTrace.condition,
+      closestCoveredBranchTrace.variables
+    );
 
     // add the distances
     return approachLevel + branchDistance;
-  }
-
-  /**
-   *  Calculate the branch distance between: covering the branch needed to get a closer approach distance
-   *  and the currently covered branch always between 0 and 1
-   * @param node
-   * @protected
-   */
-  protected computeBranchDistance(node: Datapoint): number {
-    const trueBranch = BranchDistance.branchDistanceNumeric(
-      node.opcode,
-      node.left,
-      node.right,
-      true
-    );
-
-    const falseBranch = BranchDistance.branchDistanceNumeric(
-      node.opcode,
-      node.left,
-      node.right,
-      false
-    );
-
-    return Math.max(trueBranch, falseBranch);
   }
 
   /**
