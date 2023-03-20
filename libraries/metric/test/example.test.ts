@@ -24,7 +24,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", async () => {
-    new MetricManager([], []);
+    new MetricManager("");
     expect(true);
   });
 });

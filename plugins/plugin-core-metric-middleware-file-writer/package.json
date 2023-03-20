@@ -44,7 +44,6 @@
   "dependencies": {
     "@syntest/base-testing-tool": "^0.2.0-beta.7",
     "@syntest/cfg-core": "^0.3.0-beta.7",
-    "@syntest/cli": "^0.2.0-beta.6",
     "@syntest/core": "^0.4.0-beta.9",
     "@syntest/logging": "^0.1.0-beta.3",
     "@syntest/metric": "*",

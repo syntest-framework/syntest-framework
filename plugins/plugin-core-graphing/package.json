@@ -42,11 +42,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-testing-tool": "^0.2.0-beta.8",
-    "@syntest/cfg-core": "^0.3.0-beta.8",
-    "@syntest/cli": "^0.2.0-beta.6",
-    "@syntest/core": "^0.4.0-beta.10",
-    "@syntest/logging": "^0.1.0-beta.3",
+    "@syntest/base-testing-tool": "*",
+    "@syntest/cfg-core": "*",
+    "@syntest/core": "*",
+    "@syntest/logging": "*",
     "@syntest/metric": "*",
     "d3": "6.7.0",
     "jsdom": "^21.1.0"

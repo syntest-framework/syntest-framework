@@ -16,4 +16,4 @@
  * limitations under the License.
  */
 
-export * as module from "./MetricMiddlewareModule";
+export * as module from "./FileWriterMetricMiddlewareModule";

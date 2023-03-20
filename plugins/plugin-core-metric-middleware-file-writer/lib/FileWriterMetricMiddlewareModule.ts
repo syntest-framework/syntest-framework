@@ -21,6 +21,11 @@ import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMidd
 import { MetricManager } from "@syntest/metric";
 
 export default class MetricMiddlewareModule extends Module {
+  constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    super("file-writer-metric-middleware", require("../package.json").version);
+  }
+
   async register(
     moduleManager: ModuleManager,
     metricManager: MetricManager
