@@ -1,6 +1,6 @@
 {
   "name": "@syntest/core",
-  "version": "0.4.0-beta.9",
+  "version": "0.4.0-beta.10",
   "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@dagrejs/graphlib": "2.1.4",
-    "@syntest/cfg-core": "^0.3.0-beta.7",
+    "@syntest/cfg-core": "^0.3.0-beta.8",
     "@syntest/logging": "^0.1.0-beta.3",
     "bignumber.js": "9.0.1",
     "fast-csv": "4.3.6",
