@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { shouldNeverHappen } from "../../../util/diagnostics";
+
 export abstract class BranchDistance {
   /**
    *  Calculate the branch distance between: covering the branch needed to get a closer approach distance
@@ -40,6 +42,10 @@ export abstract class BranchDistance {
       variables,
       false
     );
+
+    if (trueBranch === falseBranch) {
+      throw new Error(shouldNeverHappen("BranchDistance"));
+    }
 
     return Math.max(trueBranch, falseBranch);
   }
