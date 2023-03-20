@@ -238,7 +238,7 @@ export class ModuleManager {
       throw new Error(moduleAlreadyLoaded(moduleInstance.name, moduleId));
     }
 
-    this.modules.set(moduleInstance.name, moduleInstance);
+    this._modules.set(moduleInstance.name, moduleInstance);
     this._presetsOfModule.set(moduleInstance.name, []);
     this._toolsOfModule.set(moduleInstance.name, []);
     this._pluginsOfModule.set(moduleInstance.name, []);
@@ -259,52 +259,52 @@ export class ModuleManager {
     }
 
     const modules = Array.from(this.modules.values());
-    for (const module of this.modules.values()) {
+    for (const module of this._modules.values()) {
       module.register(this, this._metricManager, this._userInterface, modules);
     }
   }
 
   registerPreset(module: string, preset: Preset) {
-    if (this.presets.has(preset.name)) {
+    if (this._presets.has(preset.name)) {
       throw new Error(presetAlreadyLoaded(preset.name));
     }
 
     ModuleManager.LOGGER.info(`Preset loaded: ${preset.name}`);
-    this.presets.set(preset.name, preset);
+    this._presets.set(preset.name, preset);
     this._presetsOfModule.get(module).push(preset);
   }
 
   registerTool(module: string, tool: Tool) {
-    if (this.tools.has(tool.name)) {
+    if (this._tools.has(tool.name)) {
       throw new Error(toolAlreadyLoaded(tool.name));
     }
 
     ModuleManager.LOGGER.info(`Tool loaded: ${tool.name}`);
-    this.tools.set(tool.name, tool);
+    this._tools.set(tool.name, tool);
     this._toolsOfModule.get(module).push(tool);
   }
 
   registerPlugin(module: string, plugin: Plugin) {
-    if (!this.plugins.has(plugin.type)) {
-      this.plugins.set(plugin.type, new Map());
+    if (!this._plugins.has(plugin.type)) {
+      this._plugins.set(plugin.type, new Map());
     }
 
-    if (this.plugins.get(plugin.type).has(plugin.name)) {
+    if (this._plugins.get(plugin.type).has(plugin.name)) {
       throw new Error(pluginAlreadyLoaded(plugin.name, plugin.type));
     }
 
     ModuleManager.LOGGER.info(
       `- Plugin loaded: ${plugin.type} - ${plugin.name}`
     );
-    this.plugins.get(plugin.type).set(plugin.name, plugin);
+    this._plugins.get(plugin.type).set(plugin.name, plugin);
     this._pluginsOfModule.get(module).push(plugin);
   }
 
   async configureModules(yargs: Yargs.Argv, preset: string) {
     ModuleManager.LOGGER.info("Configuring modules");
-    for (const tool of this.tools.values()) {
+    for (const tool of this._tools.values()) {
       const plugins = [];
-      for (const pluginsOfType of this.plugins.values()) {
+      for (const pluginsOfType of this._plugins.values()) {
         for (const plugin of pluginsOfType.values()) {
           plugins.push(plugin);
         }
@@ -314,12 +314,12 @@ export class ModuleManager {
     }
 
     ModuleManager.LOGGER.info("Setting preset");
-    if (!this.presets.has(preset)) {
+    if (!this._presets.has(preset)) {
       throw new Error(presetNotFound(preset));
     }
 
     yargs = yargs.middleware(
-      <Yargs.MiddlewareFunction>(<unknown>this.presets.get(preset).modifyArgs)
+      <Yargs.MiddlewareFunction>(<unknown>this._presets.get(preset).modifyArgs)
     );
 
     return yargs;

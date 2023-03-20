@@ -158,7 +158,6 @@ export class MetricManager {
   }
 
   runPipeline(middleware: MiddleWare[]) {
-    // TODO check order of middleware
     middleware.forEach((middleware) => {
       MetricManager.LOGGER.debug(
         `Running middleware ${middleware.constructor.name}`

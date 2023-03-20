@@ -18,201 +18,208 @@
 
 import { Metric, MetricType } from "@syntest/metric";
 
+export enum SeriesType {
+  SEARCH_TIME = "search-time",
+  TOTAL_TIME = "total-time",
+  ITERATION = "iteration",
+  EVALUATION = "evaluation",
+}
+
 export const metrics: Metric[] = [
   // coverage
   // search time
   {
     type: MetricType.SERIES,
-    seriesName: "covered-paths",
-    seriesType: "search-time",
+    seriesName: "paths-covered",
+    seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-branches",
-    seriesType: "search-time",
+    seriesName: "branches-covered",
+    seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-exceptions",
-    seriesType: "search-time",
+    seriesName: "exceptions-covered",
+    seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-functions",
-    seriesType: "search-time",
+    seriesName: "functions-covered",
+    seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-lines",
-    seriesType: "search-time",
+    seriesName: "lines-covered",
+    seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-probes",
-    seriesType: "search-time",
+    seriesName: "probes-covered",
+    seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-objectives",
-    seriesType: "search-time",
+    seriesName: "objectives-covered",
+    seriesType: SeriesType.SEARCH_TIME,
   },
   // total time
   {
     type: MetricType.SERIES,
-    seriesName: "covered-paths",
-    seriesType: "total-time",
+    seriesName: "paths-covered",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-branches",
-    seriesType: "total-time",
+    seriesName: "branches-covered",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-exceptions",
-    seriesType: "total-time",
+    seriesName: "exceptions-covered",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-functions",
-    seriesType: "total-time",
+    seriesName: "functions-covered",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-lines",
-    seriesType: "total-time",
+    seriesName: "lines-covered",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-probes",
-    seriesType: "total-time",
+    seriesName: "probes-covered",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-objectives",
-    seriesType: "total-time",
+    seriesName: "objectives-covered",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   // iterations
   {
     type: MetricType.SERIES,
-    seriesName: "covered-paths",
-    seriesType: "iteration",
+    seriesName: "paths-covered",
+    seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-branches",
-    seriesType: "iteration",
+    seriesName: "branches-covered",
+    seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-exceptions",
-    seriesType: "iteration",
+    seriesName: "exceptions-covered",
+    seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-functions",
-    seriesType: "iteration",
+    seriesName: "functions-covered",
+    seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-lines",
-    seriesType: "iteration",
+    seriesName: "lines-covered",
+    seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-probes",
-    seriesType: "iteration",
+    seriesName: "probes-covered",
+    seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-objectives",
-    seriesType: "iteration",
+    seriesName: "objectives-covered",
+    seriesType: SeriesType.ITERATION,
   },
   // evaluations
   {
     type: MetricType.SERIES,
-    seriesName: "covered-branches",
-    seriesType: "evaluation",
+    seriesName: "branches-covered",
+    seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-paths",
-    seriesType: "evaluation",
+    seriesName: "paths-covered",
+    seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-exceptions",
-    seriesType: "evaluation",
+    seriesName: "exceptions-covered",
+    seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-functions",
-    seriesType: "evaluation",
+    seriesName: "functions-covered",
+    seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-lines",
-    seriesType: "evaluation",
+    seriesName: "lines-covered",
+    seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-probes",
-    seriesType: "evaluation",
+    seriesName: "probes-covered",
+    seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "covered-objectives",
-    seriesType: "evaluation",
+    seriesName: "objectives-covered",
+    seriesType: SeriesType.EVALUATION,
   },
   // totals
   {
     type: MetricType.PROPERTY,
-    property: "total-paths",
+    property: "paths-total",
   },
   {
     type: MetricType.PROPERTY,
-    property: "total-branches",
+    property: "branches-total",
   },
   {
     type: MetricType.PROPERTY,
-    property: "total-functions",
+    property: "functions-total",
   },
   {
     type: MetricType.PROPERTY,
-    property: "total-lines",
+    property: "lines-total",
   },
   {
     type: MetricType.PROPERTY,
-    property: "total-probes",
+    property: "probes-total",
   },
   {
     type: MetricType.PROPERTY,
-    property: "total-objectives",
+    property: "objectives-total",
   },
   // final coverage
   {
     type: MetricType.PROPERTY,
-    property: "final-paths",
+    property: "path-coverage",
   },
   {
     type: MetricType.PROPERTY,
-    property: "final-branches",
+    property: "branch-coverage",
   },
   {
     type: MetricType.PROPERTY,
-    property: "final-functions",
+    property: "function-coverage",
   },
   {
     type: MetricType.PROPERTY,
-    property: "final-lines",
+    property: "line-coverage",
   },
   {
     type: MetricType.PROPERTY,
-    property: "final-probes",
+    property: "probe-coverage",
   },
   {
     type: MetricType.PROPERTY,
-    property: "final-objectives",
+    property: "objective-coverage",
   },
 
   // TODO
@@ -220,7 +227,7 @@ export const metrics: Metric[] = [
   // general properties
   {
     type: MetricType.PROPERTY,
-    property: "seed",
+    property: "random-seed",
   },
   {
     type: MetricType.PROPERTY,
@@ -256,11 +263,11 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.PROPERTY,
-    property: "search-time",
+    property: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: "total-time",
+    property: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,
@@ -270,7 +277,7 @@ export const metrics: Metric[] = [
   {
     type: MetricType.SERIES,
     seriesName: "archive-size",
-    seriesType: "time",
+    seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,

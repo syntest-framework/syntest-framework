@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/module";
+import { Module, ModuleManager, Tool } from "@syntest/module";
 import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
 import { getModuleCommand } from "./commands/module";
-import { Metric } from "@syntest/metric";
-import { Preset } from "@syntest/module";
+import { MetricManager } from "@syntest/metric";
+import { UserInterface } from "@syntest/cli-graphics";
 
 export default class InitModule extends Module {
   constructor() {
@@ -29,10 +29,15 @@ export default class InitModule extends Module {
     super("init", require("../package.json").version);
   }
 
-  async getTools(): Promise<Tool[]> {
+  register(
+    moduleManager: ModuleManager,
+    metricManager: MetricManager,
+    userInterface: UserInterface,
+    modules: Module[]
+  ): void | Promise<void> {
     const labels = ["init"];
     const commands = [
-      getConfigCommand(this.name, this.modules),
+      getConfigCommand(this.name, modules),
       getModuleCommand(this.name),
     ];
 
@@ -46,17 +51,6 @@ export default class InitModule extends Module {
       additionalOptions
     );
 
-    return [initTool];
-  }
-  async getPlugins(): Promise<Plugin[]> {
-    return [];
-  }
-
-  async getMetrics(): Promise<Metric[]> {
-    return [];
-  }
-
-  async getPresets(): Promise<Preset[]> {
-    return [];
+    moduleManager.registerTool(this.name, initTool);
   }
 }
