@@ -20,6 +20,7 @@ import { Budget } from "./Budget";
 import { Encoding } from "../Encoding";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { BudgetListener } from "./BudgetListener";
+import { BudgetType } from "./BudgetType";
 
 /**
  * Manager for the budget of the search process.
@@ -33,7 +34,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * List of currently active budgets.
    * @protected
    */
-  protected _budgets: Map<string, Budget<T>>;
+  protected _budgets: Map<BudgetType, Budget<T>>;
 
   constructor() {
     this._budgets = new Map();
@@ -71,12 +72,12 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to add
    */
-  addBudget(name: string, budget: Budget<T>): BudgetManager<T> {
+  addBudget(name: BudgetType, budget: Budget<T>): BudgetManager<T> {
     this._budgets.set(name, budget);
     return this;
   }
 
-  getBudgetObject(name: string): Budget<T> {
+  getBudgetObject(name: BudgetType): Budget<T> {
     if (!this._budgets.has(name))
       throw new Error(`Budget with name ${name} does not exist`);
 

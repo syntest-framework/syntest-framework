@@ -20,8 +20,6 @@ import { Module, ModuleManager, Tool } from "@syntest/module";
 import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
 import { getModuleCommand } from "./commands/module";
-import { MetricManager } from "@syntest/metric";
-import { UserInterface } from "@syntest/cli-graphics";
 
 export default class InitModule extends Module {
   constructor() {

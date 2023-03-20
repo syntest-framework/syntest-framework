@@ -26,8 +26,9 @@ import {
 
 import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
-import { Metric, MetricManager } from "@syntest/metric";
-import { metrics } from "../../Metrics";
+import { Metric, MetricManager, SeriesType } from "@syntest/metric";
+import { PropertyName, SeriesName, metrics } from "../../Metrics";
+import { BudgetType } from "@syntest/core/dist/search/budget/BudgetType";
 
 export class SearchStatisticsListener extends ListenerPlugin {
   protected currentNamespace: string;
@@ -68,15 +69,17 @@ export class SearchStatisticsListener extends ListenerPlugin {
     terminationManager: TerminationManager
   ): void {
     const iterations = budgetManager
-      .getBudgetObject("iteration")
+      .getBudgetObject(BudgetType.ITERATION)
       .getUsedBudget();
     const evaluations = budgetManager
-      .getBudgetObject("evaluation")
+      .getBudgetObject(BudgetType.EVALUATION)
       .getUsedBudget();
     let searchTime = budgetManager
-      .getBudgetObject("search-time")
+      .getBudgetObject(BudgetType.SEARCH_TIME)
       .getUsedBudget();
-    let totalTime = budgetManager.getBudgetObject("total-time").getUsedBudget();
+    let totalTime = budgetManager
+      .getBudgetObject(BudgetType.TOTAL_TIME)
+      .getUsedBudget();
 
     searchTime = Math.round(searchTime * 1000) / 1000;
     totalTime = Math.round(totalTime * 1000) / 1000;
@@ -86,52 +89,53 @@ export class SearchStatisticsListener extends ListenerPlugin {
     const coveredExceptions = searchAlgorithm.getCovered("exception");
     const coveredFunctions = searchAlgorithm.getCovered("function");
     const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredProbes = searchAlgorithm.getCovered("probe");
-    const covered = searchAlgorithm.getCovered();
+    const coveredImplicitBranches =
+      searchAlgorithm.getCovered("implicit-branch");
+    const coveredObjectives = searchAlgorithm.getCovered();
 
     // search times
     this.recordCoveredSeries(
-      "search-time",
+      SeriesType.SEARCH_TIME,
       searchTime,
       coveredPaths,
       coveredBranches,
       coveredFunctions,
       coveredLines,
-      coveredProbes,
-      covered,
+      coveredImplicitBranches,
+      coveredObjectives,
       coveredExceptions
     );
     this.recordCoveredSeries(
-      "total-time",
+      SeriesType.TOTAL_TIME,
       totalTime,
       coveredPaths,
       coveredBranches,
       coveredFunctions,
       coveredLines,
-      coveredProbes,
-      covered,
+      coveredImplicitBranches,
+      coveredObjectives,
       coveredExceptions
     );
     this.recordCoveredSeries(
-      "iteration",
+      SeriesType.ITERATION,
       iterations,
       coveredPaths,
       coveredBranches,
       coveredFunctions,
       coveredLines,
-      coveredProbes,
-      covered,
+      coveredImplicitBranches,
+      coveredObjectives,
       coveredExceptions
     );
     this.recordCoveredSeries(
-      "evaluation",
+      SeriesType.EVALUATION,
       evaluations,
       coveredPaths,
       coveredBranches,
       coveredFunctions,
       coveredLines,
-      coveredProbes,
-      covered,
+      coveredImplicitBranches,
+      coveredObjectives,
       coveredExceptions
     );
   }
@@ -143,40 +147,55 @@ export class SearchStatisticsListener extends ListenerPlugin {
     coveredBranches: number,
     coveredFunctions: number,
     coveredLines: number,
-    coveredProbes: number,
+    coveredImplicitBranches: number,
     covered: number,
     coveredExceptions: number
   ) {
-    this.metricManager.recordSeries("covered-paths", type, index, coveredPaths);
     this.metricManager.recordSeries(
-      "covered-branches",
+      SeriesName.PATHS_COVERED,
+      type,
+      index,
+      coveredPaths
+    );
+    this.metricManager.recordSeries(
+      SeriesName.BRANCHES_COVERED,
       type,
       index,
       coveredBranches
     );
     this.metricManager.recordSeries(
-      "covered-exceptions",
+      SeriesName.EXCEPTIONS_COVERED,
       type,
       index,
       coveredExceptions
     );
     this.metricManager.recordSeries(
-      "covered-functions",
+      SeriesName.FUNCTIONS_COVERED,
       type,
       index,
       coveredFunctions
     );
-    this.metricManager.recordSeries("covered-lines", type, index, coveredLines);
     this.metricManager.recordSeries(
-      "covered-probes",
+      SeriesName.LINES_COVERED,
       type,
       index,
-      coveredProbes
+      coveredLines
     );
-    this.metricManager.recordSeries("covered-objectives", type, index, covered);
+    this.metricManager.recordSeries(
+      SeriesName.IMPLICIT_BRANCHES_COVERED,
+      type,
+      index,
+      coveredImplicitBranches
+    );
+    this.metricManager.recordSeries(
+      SeriesName.OBJECTIVES_COVERED,
+      type,
+      index,
+      covered
+    );
   }
 
-  recordStartProperties<T extends Encoding>(
+  recordInitialProperties<T extends Encoding>(
     searchAlgorithm: SearchAlgorithm<T>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     subject: SearchSubject<T>,
@@ -190,34 +209,47 @@ export class SearchStatisticsListener extends ListenerPlugin {
     const coveredBranches = searchAlgorithm.getCovered("branch");
     const coveredFunctions = searchAlgorithm.getCovered("function");
     const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredProbes = searchAlgorithm.getCovered("probe");
-    const covered = searchAlgorithm.getCovered();
+    const coveredImplicitBranches =
+      searchAlgorithm.getCovered("implicit-branch");
+    const coveredObjectives = searchAlgorithm.getCovered();
 
-    // TODO check if uncovered is correct for for example dynamosa
     const totalPaths = coveredPaths + searchAlgorithm.getUncovered("path");
     const totalBranches =
       coveredBranches + searchAlgorithm.getUncovered("branch");
     const totalFunctions =
       coveredFunctions + searchAlgorithm.getUncovered("function");
     const totalLines = coveredLines + searchAlgorithm.getUncovered("lines");
-    const totalProbes = coveredProbes + searchAlgorithm.getUncovered("probe");
-    const total = covered + searchAlgorithm.getUncovered();
+    const totalImplicitBranches =
+      coveredImplicitBranches + searchAlgorithm.getUncovered("implicit-branch");
+    const total = coveredObjectives + searchAlgorithm.getUncovered();
 
-    this.metricManager.recordProperty("total-paths", totalPaths.toString());
     this.metricManager.recordProperty(
-      "total-branches",
+      PropertyName.PATHS_TOTAL,
+      totalPaths.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.BRANCHES_TOTAL,
       totalBranches.toString()
     );
     this.metricManager.recordProperty(
-      "total-functions",
+      PropertyName.FUNCTIONS_TOTAL,
       totalFunctions.toString()
     );
-    this.metricManager.recordProperty("total-lines", totalLines.toString());
-    this.metricManager.recordProperty("total-probes", totalProbes.toString());
-    this.metricManager.recordProperty("total-objectives", total.toString());
+    this.metricManager.recordProperty(
+      PropertyName.LINES_TOTAL,
+      totalLines.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.IMPLICIT_BRANCHES_TOTAL,
+      totalImplicitBranches.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.OBJECTIVES_TOTAL,
+      total.toString()
+    );
   }
 
-  recordEndProperties<T extends Encoding>(
+  recordFinalProperties<T extends Encoding>(
     searchAlgorithm: SearchAlgorithm<T>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     subject: SearchSubject<T>,
@@ -231,21 +263,34 @@ export class SearchStatisticsListener extends ListenerPlugin {
     const coveredBranches = searchAlgorithm.getCovered("branch");
     const coveredFunctions = searchAlgorithm.getCovered("function");
     const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredProbes = searchAlgorithm.getCovered("probe");
-    const covered = searchAlgorithm.getCovered();
+    const coveredImplicitBranches =
+      searchAlgorithm.getCovered("implicit-branch");
+    const coveredObjectives = searchAlgorithm.getCovered();
 
-    this.metricManager.recordProperty("final-paths", coveredPaths.toString());
     this.metricManager.recordProperty(
-      "final-branches",
+      PropertyName.PATHS_COVERED,
+      coveredPaths.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.BRANCHES_COVERED,
       coveredBranches.toString()
     );
     this.metricManager.recordProperty(
-      "final-functions",
+      PropertyName.FUNCTIONS_COVERED,
       coveredFunctions.toString()
     );
-    this.metricManager.recordProperty("final-lines", coveredLines.toString());
-    this.metricManager.recordProperty("final-probes", coveredProbes.toString());
-    this.metricManager.recordProperty("final-objectives", covered.toString());
+    this.metricManager.recordProperty(
+      PropertyName.LINES_COVERED,
+      coveredLines.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.IMPLICIT_BRANCHES_COVERED,
+      coveredImplicitBranches.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.OBJECTIVES_COVERED,
+      coveredObjectives.toString()
+    );
   }
 
   setupEventListener(): void {
@@ -263,7 +308,7 @@ export class SearchStatisticsListener extends ListenerPlugin {
         // create a new metric manager for this search subject
         this.currentNamespace = subject.name;
 
-        this.recordStartProperties(
+        this.recordInitialProperties(
           searchAlgorithm,
           subject,
           budgetManager,
@@ -307,7 +352,7 @@ export class SearchStatisticsListener extends ListenerPlugin {
           budgetManager,
           terminationManager
         );
-        this.recordEndProperties(
+        this.recordFinalProperties(
           searchAlgorithm,
           subject,
           budgetManager,

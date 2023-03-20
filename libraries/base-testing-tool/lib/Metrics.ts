@@ -15,14 +15,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Metric, MetricType, SeriesType } from "@syntest/metric";
 
-import { Metric, MetricType } from "@syntest/metric";
+export enum SeriesName {
+  PATHS_COVERED = "paths-covered",
+  BRANCHES_COVERED = "branches-covered",
+  EXCEPTIONS_COVERED = "exceptions-covered",
+  FUNCTIONS_COVERED = "functions-covered",
+  LINES_COVERED = "lines-covered",
+  IMPLICIT_BRANCHES_COVERED = "implicit-branches-covered",
+  OBJECTIVES_COVERED = "objectives-covered",
 
-export enum SeriesType {
+  ARCHIVE_SIZE = "archive-size",
+}
+
+export enum PropertyName {
+  PATHS_COVERED = "paths-covered",
+  BRANCHES_COVERED = "branches-covered",
+  EXCEPTIONS_COVERED = "exceptions-covered",
+  FUNCTIONS_COVERED = "functions-covered",
+  LINES_COVERED = "lines-covered",
+  IMPLICIT_BRANCHES_COVERED = "implicit-branches-covered",
+  OBJECTIVES_COVERED = "objectives-covered",
+
+  PATHS_TOTAL = "paths-total",
+  BRANCHES_TOTAL = "branches-total",
+  EXCEPTIONS_TOTAL = "exceptions-total",
+  FUNCTIONS_TOTAL = "functions-total",
+  LINES_TOTAL = "lines-total",
+  IMPLICIT_BRANCHES_TOTAL = "implicit-branches-total",
+  OBJECTIVES_TOTAL = "objectives-total",
+
+  RANDOM_SEED = "random-seed",
+  TARGET = "target",
+  SEARCH_ALGORITHM = "search-algorithm",
+  SEARCH_EVALUATIONS = "search-evaluations",
+  SEARCH_ITERATIONS = "search-iterations",
+  CONSTANT_POOL_ENABLED = "constant-pool-enabled",
+
+  INITIALIZATION_TIME = "initialization-time",
   SEARCH_TIME = "search-time",
   TOTAL_TIME = "total-time",
-  ITERATION = "iteration",
-  EVALUATION = "evaluation",
+  INSTRUMENTATION_TIME = "instrumentation-time",
+
+  ARCHIVE_SIZE = "archive-size",
+  MINIMIZED_ARCHIVE_SIZE = "minimized-archive-size",
 }
 
 export const metrics: Metric[] = [
@@ -30,196 +67,196 @@ export const metrics: Metric[] = [
   // search time
   {
     type: MetricType.SERIES,
-    seriesName: "paths-covered",
+    seriesName: SeriesName.PATHS_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "branches-covered",
+    seriesName: SeriesName.BRANCHES_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "exceptions-covered",
+    seriesName: SeriesName.EXCEPTIONS_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "functions-covered",
+    seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "lines-covered",
+    seriesName: SeriesName.LINES_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "probes-covered",
+    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "objectives-covered",
+    seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   // total time
   {
     type: MetricType.SERIES,
-    seriesName: "paths-covered",
+    seriesName: SeriesName.PATHS_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "branches-covered",
+    seriesName: SeriesName.BRANCHES_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "exceptions-covered",
+    seriesName: SeriesName.EXCEPTIONS_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "functions-covered",
+    seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "lines-covered",
+    seriesName: SeriesName.LINES_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "probes-covered",
+    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "objectives-covered",
+    seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   // iterations
   {
     type: MetricType.SERIES,
-    seriesName: "paths-covered",
+    seriesName: SeriesName.PATHS_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "branches-covered",
+    seriesName: SeriesName.BRANCHES_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "exceptions-covered",
+    seriesName: SeriesName.EXCEPTIONS_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "functions-covered",
+    seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "lines-covered",
+    seriesName: SeriesName.LINES_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "probes-covered",
+    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "objectives-covered",
+    seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   // evaluations
   {
     type: MetricType.SERIES,
-    seriesName: "branches-covered",
+    seriesName: SeriesName.PATHS_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "paths-covered",
+    seriesName: SeriesName.BRANCHES_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "exceptions-covered",
+    seriesName: SeriesName.EXCEPTIONS_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "functions-covered",
+    seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "lines-covered",
+    seriesName: SeriesName.LINES_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "probes-covered",
+    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: "objectives-covered",
+    seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   // totals
   {
     type: MetricType.PROPERTY,
-    property: "paths-total",
+    property: PropertyName.PATHS_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: "branches-total",
+    property: PropertyName.BRANCHES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: "functions-total",
+    property: PropertyName.FUNCTIONS_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: "lines-total",
+    property: PropertyName.LINES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: "probes-total",
+    property: PropertyName.IMPLICIT_BRANCHES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: "objectives-total",
+    property: PropertyName.OBJECTIVES_TOTAL,
   },
   // final coverage
   {
     type: MetricType.PROPERTY,
-    property: "path-coverage",
+    property: PropertyName.PATHS_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: "branch-coverage",
+    property: PropertyName.BRANCHES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: "function-coverage",
+    property: PropertyName.FUNCTIONS_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: "line-coverage",
+    property: PropertyName.LINES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: "probe-coverage",
+    property: PropertyName.IMPLICIT_BRANCHES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: "objective-coverage",
+    property: PropertyName.OBJECTIVES_COVERED,
   },
 
   // TODO
@@ -227,64 +264,59 @@ export const metrics: Metric[] = [
   // general properties
   {
     type: MetricType.PROPERTY,
-    property: "random-seed",
+    property: PropertyName.RANDOM_SEED,
   },
   {
     type: MetricType.PROPERTY,
-    property: "subject",
+    property: PropertyName.TARGET,
   },
   // search
   {
     type: MetricType.PROPERTY,
-    property: "algorithm",
+    property: PropertyName.SEARCH_ALGORITHM,
   },
   {
     type: MetricType.PROPERTY,
-    property: "evaluations",
+    property: PropertyName.SEARCH_EVALUATIONS,
   },
   {
     type: MetricType.PROPERTY,
-    property: "iterations",
+    property: PropertyName.SEARCH_ITERATIONS,
   },
   {
     type: MetricType.PROPERTY,
-    property: "constant-pool",
-  },
-  // objectives
-  {
-    type: MetricType.PROPERTY,
-    property: "objective-value",
+    property: PropertyName.CONSTANT_POOL_ENABLED,
   },
 
   // Time
   {
     type: MetricType.PROPERTY,
-    property: "initialization-time",
+    property: PropertyName.INITIALIZATION_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: SeriesType.SEARCH_TIME,
+    property: PropertyName.SEARCH_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: SeriesType.TOTAL_TIME,
+    property: PropertyName.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: "instrumentation-time",
+    property: PropertyName.INSTRUMENTATION_TIME,
   },
   // Archive
   {
     type: MetricType.SERIES,
-    seriesName: "archive-size",
+    seriesName: SeriesName.ARCHIVE_SIZE,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: "archive-size",
+    property: PropertyName.ARCHIVE_SIZE,
   },
   {
     type: MetricType.PROPERTY,
-    property: "minimized-size",
+    property: PropertyName.MINIMIZED_ARCHIVE_SIZE,
   },
 ];

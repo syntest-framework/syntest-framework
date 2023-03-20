@@ -34,6 +34,7 @@ export * from "./search/SearchSubject";
 export * from "./search/budget/Budget";
 export * from "./search/budget/BudgetListener";
 export * from "./search/budget/BudgetManager";
+export * from "./search/budget/BudgetType";
 export * from "./search/budget/EvaluationBudget";
 export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";

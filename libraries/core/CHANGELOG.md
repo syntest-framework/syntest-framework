@@ -45,7 +45,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Added
 
 - Meta-heuristic search framework with multiple search algorithms (i.e., random search, NSGA-II, MOSA, DynaMOSA)
-- Program search criteria (i.e., function coverage, branch coverage, line coverage, probe coverage)
+- Program search criteria (i.e., function coverage, branch coverage, line coverage, implicit-branch coverage)
 - Abstract program graph representation to compare different code executions paths
 - Abstract test case encoding to represent a test case in memory
 - Collector functionality to keep track of statistics regarding the search process

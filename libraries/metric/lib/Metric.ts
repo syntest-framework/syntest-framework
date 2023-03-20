@@ -34,14 +34,14 @@ export interface DistributionMetric {
 export interface SeriesMetric {
   type: MetricType.SERIES;
   seriesName: string;
-  seriesType: string;
+  seriesType: SeriesType;
 }
 
 export interface SeriesDistributionMetric {
   type: MetricType.SERIES_DISTRUBUTION;
   distributionName: string;
   seriesName: string;
-  seriesType: string;
+  seriesType: SeriesType;
 }
 
 export enum MetricType {
@@ -49,4 +49,11 @@ export enum MetricType {
   DISTRIBUTION = "distribution",
   SERIES = "series",
   SERIES_DISTRUBUTION = "series-distribution",
+}
+
+export enum SeriesType {
+  SEARCH_TIME = "search-time",
+  TOTAL_TIME = "total-time",
+  ITERATION = "iteration",
+  EVALUATION = "evaluation",
 }
