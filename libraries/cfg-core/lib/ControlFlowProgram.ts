@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,27 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ControlFlowFunction } from "./ControlFlowFunction";
+import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
 /**
- * Interface for a Node.
- *
- * @author Dimitri Stallenberg
+ * Control Flow Program
+ * While Control Flow Functions represent the control flow of a single procedure, Inter-procedural Control Flow Graphs (Control Flow Program) represent the control flow of whole programs.
+ * https://en.wikipedia.org/wiki/Control-flow_graph
  */
-export interface Node {
-  readonly type: NodeType;
-
-  readonly id: string;
-
-  readonly lines: readonly number[];
-  readonly statements: string[];
-
-  readonly description?: string;
-}
-
-export enum NodeType {
-  Intermediary = "intermediary",
-  Branch = "branch",
-  Placeholder = "placeholder",
-  Root = "root",
-  Normal = "normal",
+export interface ControlFlowProgram<S> {
+  graph: ControlFlowGraph<S>;
+  functions: ControlFlowFunction<S>[];
 }

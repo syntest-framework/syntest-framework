@@ -206,10 +206,9 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         )
         .filter((element) => element.path.includes(fileName))
         .forEach((current) => {
-          total.add(current.id + "_" + current.branchType);
+          total.add(current.id);
 
-          if (current.hits > 0)
-            covered.add(current.id + "_" + current.branchType);
+          if (current.hits > 0) covered.add(current.id);
         });
     }
     return covered.size;
@@ -234,10 +233,9 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         )
         .filter((element) => element.path.includes(fileName))
         .forEach((current) => {
-          total.add(current.id + "_" + current.branchType);
+          total.add(current.id);
 
-          if (current.hits > 0)
-            covered.add(current.id + "_" + current.branchType);
+          if (current.hits > 0) covered.add(current.id);
         });
     }
     return total.size - covered.size;

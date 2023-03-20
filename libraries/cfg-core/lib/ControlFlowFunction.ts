@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,28 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { Node, NodeType } from "./Node";
-
-/**
- * Interface for a BranchNode.
- *
- * @author Dimitri Stallenberg
- */
-export interface BranchNode extends Node {
-  readonly type: NodeType.Branch;
-
-  readonly condition: Operation;
-
-  readonly probe: boolean;
-}
+import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
 /**
- * Interface for an Operation.
- *
- * @author Dimitri Stallenberg
+ * Control Flow Function
  */
-export interface Operation {
-  readonly type: string;
-  readonly operator: string;
+export interface ControlFlowFunction<S> {
+  id: string;
+  name: string;
+  graph: ControlFlowGraph<S>;
 }

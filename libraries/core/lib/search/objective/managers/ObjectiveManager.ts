@@ -26,7 +26,6 @@ import * as crypto from "crypto";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
-
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.
  *

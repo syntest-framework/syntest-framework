@@ -17,6 +17,8 @@
  */
 import * as chai from "chai";
 import {
+  ApproachLevel,
+  BranchDistance,
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
@@ -27,6 +29,7 @@ import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import { BranchObjectiveFunction } from "../../../lib";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -37,17 +40,19 @@ describe("Test MOSA", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {
+    const branchDistance = new DummyBranchDistance();
+
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      branchDistance,
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      branchDistance,
       null,
-      "1",
-      1,
-      false
+      "1"
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);

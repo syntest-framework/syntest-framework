@@ -25,11 +25,11 @@ import { Datapoint } from "../util/Datapoint";
  */
 export interface ExecutionResult {
   /**
-   * Determine if a specific line has been covered in the traces.
+   * Determine if a specific id has been covered in the traces.
    *
-   * @param line The line to check for
+   * @param id The id to check for
    */
-  coversLine(line: number): boolean;
+  coversId(id: string): boolean;
 
   /**
    * Return the duration of the execution.
