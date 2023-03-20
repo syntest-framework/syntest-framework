@@ -35,7 +35,7 @@ export abstract class RootContext {
     this._sources = new Map();
   }
 
-  resolvePath(_path: string): string {
+  protected resolvePath(_path: string): string {
     const absolutePath = path.resolve(_path);
 
     if (!this.verifyTargetPath(absolutePath)) {
@@ -45,7 +45,7 @@ export abstract class RootContext {
     return absolutePath;
   }
 
-  verifyTargetPath(_path: string): boolean {
+  protected verifyTargetPath(_path: string): boolean {
     return _path.includes(this._rootPath);
   }
 
