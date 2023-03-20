@@ -24,18 +24,18 @@ import { SearchSubject } from "../SearchSubject";
  *
  * @author Mitchell Olsthoorn
  */
-export abstract class ObjectiveFunction<T extends Encoding> {
+export interface ObjectiveFunction<T extends Encoding> {
   /**
    * Calculate distance from the objective to an encoding.
    *
    * @param encoding Encoding
    */
-  abstract calculateDistance(encoding: T): number;
+  calculateDistance(encoding: T): number;
 
   /**
    * Return the identifier of the objective.
    */
-  abstract getIdentifier(): string;
+  getIdentifier(): string;
 
-  abstract getSubject(): SearchSubject<T>;
+  getSubject(): SearchSubject<T>;
 }

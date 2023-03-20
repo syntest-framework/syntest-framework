@@ -28,9 +28,9 @@ import { SearchSubject } from "../SearchSubject";
  *
  * @author Mitchell Olsthoorn
  */
-export class ExceptionObjectiveFunction<
-  T extends Encoding
-> extends ObjectiveFunction<T> {
+export class ExceptionObjectiveFunction<T extends Encoding>
+  implements ObjectiveFunction<T>
+{
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _message: string;
@@ -42,7 +42,6 @@ export class ExceptionObjectiveFunction<
    * @param id
    */
   constructor(subject: SearchSubject<T>, id: string, message: string) {
-    super();
     this._subject = subject;
     this._id = id;
     this._message = message;

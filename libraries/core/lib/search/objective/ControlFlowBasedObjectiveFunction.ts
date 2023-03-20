@@ -17,6 +17,7 @@
  */
 
 import { Encoding } from "../Encoding";
+import { SearchSubject } from "../SearchSubject";
 import { ObjectiveFunction } from "./ObjectiveFunction";
 import { ApproachLevel } from "./heuristics/ApproachLevel";
 import { BranchDistance } from "./heuristics/BranchDistance";
@@ -26,15 +27,17 @@ import { BranchDistance } from "./heuristics/BranchDistance";
  *
  * @author Dimitri Stallenberg
  */
-export abstract class ControlFlowBasedObjectiveFunction<
-  T extends Encoding
-> extends ObjectiveFunction<T> {
+export abstract class ControlFlowBasedObjectiveFunction<T extends Encoding>
+  implements ObjectiveFunction<T>
+{
   protected approachLevel: ApproachLevel;
   protected branchDistance: BranchDistance;
 
   constructor(approachLevel: ApproachLevel, branchDistance: BranchDistance) {
-    super();
     this.approachLevel = approachLevel;
     this.branchDistance = branchDistance;
   }
+  abstract calculateDistance(encoding: T): number;
+  abstract getIdentifier(): string;
+  abstract getSubject(): SearchSubject<T>;
 }
