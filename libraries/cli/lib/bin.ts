@@ -18,7 +18,7 @@
  */
 
 import yargHelper = require("yargs/helpers");
-import { BaseOptions, MetricMiddlewarePlugin } from "@syntest/module";
+import { BaseOptions } from "@syntest/module";
 import {
   ModuleManager,
   PluginType,
@@ -105,38 +105,7 @@ async function main() {
     LOGGER.info("Cleanup done! Exiting...");
   });
 
-  const itemization: ItemizationItem[] = [];
-  for (const module of moduleManager.modules.values()) {
-    const tools = moduleManager.toolsOfModule.get(module.name);
-    const plugins = moduleManager.pluginsOfModule.get(module.name);
-    const presets = moduleManager.presetsOfModule.get(module.name);
-
-    itemization.push({
-      text: `Module: ${module.name} (${module.version})`,
-      subItems: [
-        {
-          text: `Tools: ${tools.length ? "" : "[]"}`,
-          subItems: tools.map((tool) => ({
-            text: `${tool.name}: ${tool.describe}`,
-          })),
-        },
-        {
-          text: `Plugins: ${plugins.length ? "" : "[]"}`,
-          subItems: plugins.map((plugin) => ({
-            text: `${plugin.name}: ${plugin.describe}`,
-          })),
-        },
-        {
-          text: `Presets: ${presets.length ? "" : "[]"}`,
-          subItems: presets.map((preset) => ({
-            text: `${preset.name}: ${preset.describe}`,
-          })),
-        },
-      ],
-    });
-  }
-
-  userInterface.printItemization("Module loaded:", itemization);
+  moduleManager.printModuleVersionTable();
 
   // Register all listener plugins
   for (const plugin of moduleManager

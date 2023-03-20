@@ -42,7 +42,8 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/logging": "*"
+    "@syntest/logging": "*",
+    "yargs": "^17.7.1"
   },
   "engines": {
     "node": ">=10.24.0"

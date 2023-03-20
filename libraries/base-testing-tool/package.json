@@ -43,7 +43,10 @@
   },
   "dependencies": {
     "@syntest/core": "^0.4.0-beta.10",
-    "@syntest/logging": "^0.1.0-beta.3"
+    "@syntest/logging": "^0.1.0-beta.3",
+    "@syntest/metric": "^0.0.1",
+    "@syntest/module": "^0.1.0-beta.3",
+    "yargs": "^17.7.1"
   },
   "engines": {
     "node": ">=10.24.0"

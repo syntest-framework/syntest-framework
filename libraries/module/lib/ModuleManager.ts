@@ -41,6 +41,7 @@ import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import { Preset } from "./extension/Preset";
 import { PluginType } from "./extension/plugins/PluginType";
 import { MetricMiddlewarePlugin } from "./extension/plugins/MetricMiddlewarePlugin";
+import { ItemizationItem } from "@syntest/cli-graphics";
 
 export class ModuleManager {
   static LOGGER = getLogger("ModuleManager");
@@ -323,5 +324,40 @@ export class ModuleManager {
     );
 
     return yargs;
+  }
+
+  printModuleVersionTable() {
+    const itemization: ItemizationItem[] = [];
+    for (const module of this._modules.values()) {
+      const tools = this._toolsOfModule.get(module.name);
+      const plugins = this._pluginsOfModule.get(module.name);
+      const presets = this._presetsOfModule.get(module.name);
+
+      itemization.push({
+        text: `Module: ${module.name} (${module.version})`,
+        subItems: [
+          {
+            text: `Tools: ${tools.length ? "" : "[]"}`,
+            subItems: tools.map((tool) => ({
+              text: `${tool.name}: ${tool.describe}`,
+            })),
+          },
+          {
+            text: `Plugins: ${plugins.length ? "" : "[]"}`,
+            subItems: plugins.map((plugin) => ({
+              text: `${plugin.name}: ${plugin.describe}`,
+            })),
+          },
+          {
+            text: `Presets: ${presets.length ? "" : "[]"}`,
+            subItems: presets.map((preset) => ({
+              text: `${preset.name}: ${preset.describe}`,
+            })),
+          },
+        ],
+      });
+    }
+
+    this._userInterface.printItemization("Module loaded:", itemization);
   }
 }

@@ -47,6 +47,7 @@
     "@syntest/core": "*",
     "@syntest/logging": "*",
     "@syntest/metric": "*",
+    "@syntest/module": "*",
     "d3": "6.7.0",
     "jsdom": "^21.1.0"
   },
