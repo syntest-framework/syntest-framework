@@ -18,8 +18,8 @@
 import { Encoding } from "../Encoding";
 import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
-import { ApproachLevel } from "./calculators/ApproachLevel";
-import { BranchDistance } from "./calculators/BranchDistance";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
 
 export abstract class ImplicitBranchObjectiveFunction<
   T extends Encoding

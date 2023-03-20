@@ -36,10 +36,10 @@ export abstract class SearchSubject<T extends Encoding> {
   protected readonly _target: Target;
 
   /**
-   * The target pool.
+   * The root context.
    * @protected
    */
-  protected readonly _targetAnalyzer: RootContext;
+  protected readonly _rootContext: RootContext;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -50,13 +50,13 @@ export abstract class SearchSubject<T extends Encoding> {
   /**
    * Constructor.
    *
-   * @param name Name of the subject
-   * @param rootContext Targetpool
+   * @param target Target of the subject
+   * @param rootContext RootContext of the subject
    * @protected
    */
-  protected constructor(targetContext: Target, rootContext: RootContext) {
-    this._target = targetContext;
-    this._targetAnalyzer = rootContext;
+  protected constructor(target: Target, rootContext: RootContext) {
+    this._target = target;
+    this._rootContext = rootContext;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
   }
@@ -90,7 +90,7 @@ export abstract class SearchSubject<T extends Encoding> {
   }
 
   get cfg(): ControlFlowProgram<unknown> {
-    return this._targetAnalyzer.getControlFlowProgram(this.path);
+    return this._rootContext.getControlFlowProgram(this.path);
   }
 
   get path(): string {

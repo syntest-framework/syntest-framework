@@ -19,8 +19,8 @@
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
-import { BranchDistance } from "./calculators/BranchDistance";
-import { ApproachLevel } from "./calculators/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
 
 /**
  * Objective function for the function branch criterion.

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import TypedEventEmitter from "typed-emitter";
-import { Target } from "./Target";
+import { SubTarget, Target } from "./Target";
 import { RootContext } from "./RootContext";
 import { Events } from "../../util/Events";
 import * as path from "path";
@@ -29,19 +29,7 @@ export class TargetSelector {
     this._rootContext = rootContext;
   }
 
-  private convertStringToTargetIds(included: string): string[] {
-    const options = included.split(",");
-
-    const includedIds: string[] = [];
-
-    for (const option of options) {
-      includedIds.push(option);
-    }
-
-    return includedIds;
-  }
-
-  loadTargets(include: string[], exclude: string[]): Map<string, Target> {
+  loadTargets(include: string[], exclude: string[]): Target[] {
     (<TypedEventEmitter<Events>>process).emit(
       "targetLoadStart",
       this._rootContext
@@ -57,7 +45,7 @@ export class TargetSelector {
       if (include.includes(":")) {
         const split = include.split(":");
         _path = split[0];
-        targets = this.convertStringToTargetIds(split[1]);
+        targets = split[1].split(",");
       } else {
         _path = include;
         targets = ["*"];
@@ -75,14 +63,14 @@ export class TargetSelector {
       }
     });
 
-    // only exclude files if all contracts are excluded
+    // only exclude files if all sub-targets are excluded
     exclude.forEach((exclude) => {
       let _path;
       let targets;
       if (exclude.includes(":")) {
         const split = exclude.split(":");
         _path = split[0];
-        targets = this.convertStringToTargetIds(split[1]);
+        targets = split[1].split(",");
       } else {
         _path = exclude;
         targets = ["*"];
@@ -100,59 +88,41 @@ export class TargetSelector {
       }
     });
 
-    for (const key of excludedMap.keys()) {
-      if (includedMap.has(key)) {
-        if (excludedMap.get(key).includes("*")) {
-          // exclude all targets of the file
-          includedMap.delete(key);
-        } else {
-          // exclude specific targets in the file
-          includedMap.set(
-            key,
-            includedMap
-              .get(key)
-              .filter((target) => !excludedMap.get(key).includes(target))
-          );
-        }
-      }
-    }
-
-    const targetContexts: Map<string, Target> = new Map();
+    const targetContexts: Target[] = [];
 
     for (const _path of includedMap.keys()) {
-      const finalTargets = [];
-      const target = path.basename(_path);
+      const includedSubTargets = includedMap.get(_path);
+      const subTargets = this._rootContext.getSubTargets(_path);
 
-      const includedTargets = includedMap.get(_path);
-      const targets = this._rootContext.getSubTargets(_path);
+      const selectedSubTargets: SubTarget[] = [];
 
-      for (const target of targets) {
+      for (const target of subTargets) {
         // check if included
         if (
-          !includedTargets.includes("*") &&
-          !includedTargets.includes(target.id)
+          !includedSubTargets.includes("*") &&
+          !includedSubTargets.includes(target.id)
         ) {
           continue;
         }
 
         // check if excluded
         if (excludedMap.has(_path)) {
-          const excludedTargets = excludedMap.get(_path);
+          const excludedSubTargets = excludedMap.get(_path);
           if (
-            excludedTargets.includes("*") ||
-            excludedTargets.includes(target.id)
+            excludedSubTargets.includes("*") ||
+            excludedSubTargets.includes(target.id)
           ) {
             continue;
           }
         }
 
-        finalTargets.push(target);
+        selectedSubTargets.push(target);
       }
 
-      targetContexts.set(_path, {
+      targetContexts.push({
         path: _path,
-        name: target,
-        subTargets: finalTargets,
+        name: path.basename(_path),
+        subTargets: selectedSubTargets,
       });
     }
 

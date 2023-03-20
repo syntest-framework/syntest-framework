@@ -18,8 +18,8 @@
 
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
-import { ApproachLevel } from "./calculators/ApproachLevel";
-import { BranchDistance } from "./calculators/BranchDistance";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Function that models the objective.
