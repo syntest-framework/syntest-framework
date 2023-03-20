@@ -17,25 +17,24 @@
  */
 
 import { Encoding } from "../Encoding";
-import { SearchSubject } from "../SearchSubject";
+import { ObjectiveFunction } from "./ObjectiveFunction";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Function that models the objective.
  *
- * @author Mitchell Olsthoorn
+ * @author Dimitri Stallenberg
  */
-export abstract class ObjectiveFunction<T extends Encoding> {
-  /**
-   * Calculate distance from the objective to an encoding.
-   *
-   * @param encoding Encoding
-   */
-  abstract calculateDistance(encoding: T): number;
+export abstract class ControlFlowBasedObjectiveFunction<
+  T extends Encoding
+> extends ObjectiveFunction<T> {
+  protected approachLevel: ApproachLevel;
+  protected branchDistance: BranchDistance;
 
-  /**
-   * Return the identifier of the objective.
-   */
-  abstract getIdentifier(): string;
-
-  abstract getSubject(): SearchSubject<T>;
+  constructor(approachLevel: ApproachLevel, branchDistance: BranchDistance) {
+    super();
+    this.approachLevel = approachLevel;
+    this.branchDistance = branchDistance;
+  }
 }

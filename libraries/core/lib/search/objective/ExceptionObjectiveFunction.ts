@@ -19,8 +19,6 @@
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
-import { ApproachLevel } from "./heuristics/ApproachLevel";
-import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Objective function for the exception criterion.
@@ -44,7 +42,7 @@ export class ExceptionObjectiveFunction<
    * @param id
    */
   constructor(subject: SearchSubject<T>, id: string, message: string) {
-    super(null, null);
+    super();
     this._subject = subject;
     this._id = id;
     this._message = message;

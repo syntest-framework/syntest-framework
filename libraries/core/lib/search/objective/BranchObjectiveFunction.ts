@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
 import { BranchDistance } from "./heuristics/BranchDistance";
 import { ApproachLevel } from "./heuristics/ApproachLevel";
 import { shouldNeverHappen } from "../../util/diagnostics";
+import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
 
 /**
  * Objective function for the branch criterion.
@@ -32,7 +32,7 @@ import { shouldNeverHappen } from "../../util/diagnostics";
  */
 export class BranchObjectiveFunction<
   T extends Encoding
-> extends ObjectiveFunction<T> {
+> extends ControlFlowBasedObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
 

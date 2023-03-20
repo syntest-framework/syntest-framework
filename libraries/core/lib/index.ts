@@ -56,11 +56,13 @@ export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 // - Objective
 export * from "./search/objective/heuristics/ApproachLevel";
 export * from "./search/objective/heuristics/BranchDistance";
+
 export * from "./search/objective/BranchObjectiveFunction";
+export * from "./search/objective/ControlFlowBasedObjectiveFunction";
 export * from "./search/objective/ExceptionObjectiveFunction";
 export * from "./search/objective/FunctionObjectiveFunction";
-export * from "./search/objective/ObjectiveFunction";
 export * from "./search/objective/ImplicitBranchObjectiveFunction";
+export * from "./search/objective/ObjectiveFunction";
 
 export * from "./search/objective/managers/ObjectiveManager";
 export * from "./search/objective/managers/SimpleObjectiveManager";
