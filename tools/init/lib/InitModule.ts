@@ -29,15 +29,10 @@ export default class InitModule extends Module {
     super("init", require("../package.json").version);
   }
 
-  register(
-    moduleManager: ModuleManager,
-    metricManager: MetricManager,
-    userInterface: UserInterface,
-    modules: Module[]
-  ): void | Promise<void> {
+  register(moduleManager: ModuleManager): void | Promise<void> {
     const labels = ["init"];
     const commands = [
-      getConfigCommand(this.name, modules),
+      getConfigCommand(this.name, moduleManager),
       getModuleCommand(this.name),
     ];
 

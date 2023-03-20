@@ -78,6 +78,79 @@ export class MetricManager {
     return this._outputMetrics;
   }
 
+  getMergedNamespacedManager(namespace: string) {
+    if (!this._namespacedManagers.has(namespace)) {
+      throw new Error(`Namespace ${namespace} not registered`);
+    }
+
+    const namespaced = this.getNamespaced(namespace);
+
+    const manager = new MetricManager(`${this._namespace}.${namespace}`);
+
+    manager._metrics = this._metrics;
+    manager._outputMetrics = this._outputMetrics;
+
+    manager.properties = new Map([
+      ...this.properties,
+      ...namespaced.properties,
+    ]);
+    manager.distributions = new Map();
+
+    this.distributions.forEach((distribution, name) => {
+      manager.distributions.set(name, distribution.slice());
+    });
+
+    namespaced.distributions.forEach((distribution, name) => {
+      manager.distributions.set(name, distribution.slice());
+    });
+
+    manager.series = new Map();
+
+    this.series.forEach((seriesData, name) => {
+      manager.series.set(name, new Map());
+      seriesData.forEach((seriesTypeData, type) => {
+        manager.series.get(name).set(type, new Map(seriesTypeData));
+      });
+    });
+
+    namespaced.series.forEach((seriesData, name) => {
+      manager.series.set(name, new Map());
+      seriesData.forEach((seriesTypeData, type) => {
+        manager.series.get(name).set(type, new Map(seriesTypeData));
+      });
+    });
+
+    manager.seriesDistributions = new Map();
+
+    this.seriesDistributions.forEach((seriesDistributionData, name) => {
+      manager.seriesDistributions.set(name, new Map());
+      seriesDistributionData.forEach((seriesData, seriesName) => {
+        manager.seriesDistributions.get(name).set(seriesName, new Map());
+        seriesData.forEach((seriesTypeData, seriesType) => {
+          manager.seriesDistributions
+            .get(name)
+            .get(seriesName)
+            .set(seriesType, new Map(seriesTypeData));
+        });
+      });
+    });
+
+    namespaced.seriesDistributions.forEach((seriesDistributionData, name) => {
+      manager.seriesDistributions.set(name, new Map());
+      seriesDistributionData.forEach((seriesData, seriesName) => {
+        manager.seriesDistributions.get(name).set(seriesName, new Map());
+        seriesData.forEach((seriesTypeData, seriesType) => {
+          manager.seriesDistributions
+            .get(name)
+            .get(seriesName)
+            .set(seriesType, new Map(seriesTypeData));
+        });
+      });
+    });
+
+    return manager;
+  }
+
   setOutputMetrics(metrics: string[]) {
     const outputMetrics = metrics.map((metric) => {
       const split = metric.split(".");

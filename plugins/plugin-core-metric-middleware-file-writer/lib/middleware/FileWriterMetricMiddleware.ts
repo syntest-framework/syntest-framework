@@ -42,63 +42,30 @@ export class FileWriterMetricMiddleware extends MiddleWare {
   }
 
   run(metricManager: MetricManager): void {
-    // process global
-    const properties = metricManager.collectProperties(
-      <PropertyMetric[]>(
-        this.outputMetrics.filter((metric) => metric.type === "property")
-      )
-    );
-
-    const distributions = metricManager.collectDistributions(
-      <DistributionMetric[]>(
-        this.outputMetrics.filter((metric) => metric.type === "distribution")
-      )
-    );
-
-    const series = metricManager.collectSeries(
-      <SeriesMetric[]>(
-        this.outputMetrics.filter((metric) => metric.type === "series")
-      )
-    );
-
-    const seriesDistributions = metricManager.collectSeriesDistributions(
-      <SeriesDistributionMetric[]>(
-        this.outputMetrics.filter(
-          (metric) => metric.type === "series-distribution"
-        )
-      )
-    );
-
-    this.writePropertiesToCSV(this.rootOutputDir, "global", properties);
-    this.writeDistributionsToCSV(this.rootOutputDir, "global", distributions);
-    this.writeSeriesToCSV(this.rootOutputDir, "global", series);
-    this.writeSeriesDistributionToCSV(
-      this.rootOutputDir,
-      "global",
-      seriesDistributions
-    );
-
     // process all namespaces
-    for (const namespacedManager of metricManager.namespacedManagers.values()) {
-      const properties = namespacedManager.collectProperties(
+    for (const namespace of metricManager.namespacedManagers.keys()) {
+      // get the merged manager (global + local)
+      const mergedManager = metricManager.getMergedNamespacedManager(namespace);
+
+      const properties = mergedManager.collectProperties(
         <PropertyMetric[]>(
           this.outputMetrics.filter((metric) => metric.type === "property")
         )
       );
 
-      const distributions = namespacedManager.collectDistributions(
+      const distributions = mergedManager.collectDistributions(
         <DistributionMetric[]>(
           this.outputMetrics.filter((metric) => metric.type === "distribution")
         )
       );
 
-      const series = namespacedManager.collectSeries(
+      const series = mergedManager.collectSeries(
         <SeriesMetric[]>(
           this.outputMetrics.filter((metric) => metric.type === "series")
         )
       );
 
-      const seriesDistributions = namespacedManager.collectSeriesDistributions(
+      const seriesDistributions = mergedManager.collectSeriesDistributions(
         <SeriesDistributionMetric[]>(
           this.outputMetrics.filter(
             (metric) => metric.type === "series-distribution"
@@ -106,24 +73,16 @@ export class FileWriterMetricMiddleware extends MiddleWare {
         )
       );
 
-      this.writePropertiesToCSV(
-        this.rootOutputDir,
-        namespacedManager.namespace,
-        properties
-      );
+      this.writePropertiesToCSV(this.rootOutputDir, namespace, properties);
       this.writeDistributionsToCSV(
         this.rootOutputDir,
-        namespacedManager.namespace,
+        namespace,
         distributions
       );
-      this.writeSeriesToCSV(
-        this.rootOutputDir,
-        namespacedManager.namespace,
-        series
-      );
+      this.writeSeriesToCSV(this.rootOutputDir, namespace, series);
       this.writeSeriesDistributionToCSV(
         this.rootOutputDir,
-        namespacedManager.namespace,
+        namespace,
         seriesDistributions
       );
     }
