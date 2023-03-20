@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli",
-  "version": "0.2.0-beta.6",
+  "version": "0.2.0-beta.7",
   "description": "The cli of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -46,10 +46,10 @@
   },
   "dependencies": {
     "@syntest/cli-graphics": "^0.1.0-beta.1",
-    "@syntest/init": "^0.2.0-beta.6",
-    "@syntest/logging": "^0.1.0-beta.3",
-    "@syntest/metric": "*",
-    "@syntest/module": "^0.1.0-beta.3",
+    "@syntest/init": "^0.2.0-beta.7",
+    "@syntest/logging": "^0.1.0-beta.4",
+    "@syntest/metric": "^0.1.0-beta.0",
+    "@syntest/module": "^0.1.0-beta.4",
     "yargs": "^17.7.1"
   },
   "engines": {

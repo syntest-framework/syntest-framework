@@ -1,6 +1,6 @@
 {
   "name": "@syntest/init",
-  "version": "0.2.0-beta.6",
+  "version": "0.2.0-beta.7",
   "description": "The setup application of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -44,8 +44,8 @@
   "dependencies": {
     "@syntest/cli-graphics": "*",
     "@syntest/logging": "*",
+    "@syntest/metric": "^0.1.0-beta.0",
     "@syntest/module": "*",
-    "@syntest/metric": "*",
     "shelljs": "^0.8.5"
   },
   "engines": {
