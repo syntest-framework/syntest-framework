@@ -15,16 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { Configuration } from "../lib/util/Configuration";
-const expect = chai.expect;
-
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", async () => {
-    new Configuration();
-    expect(true);
-  });
-});
+export enum PluginType {
+  LISTENER = "listener",
+  METRIC_MIDDLEWARE = "metric-middleware",
+}

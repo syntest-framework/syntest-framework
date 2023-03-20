@@ -16,34 +16,23 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager, Tool } from "@syntest/module";
-import { getConfigCommand } from "./commands/config";
-import yargs = require("yargs");
-import { getModuleCommand } from "./commands/module";
+import { Module, ModuleManager } from "@syntest/module";
+import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
+import { MetricManager } from "@syntest/metric";
 
-export default class InitModule extends Module {
+export default class MetricMiddlewareModule extends Module {
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    super("init", require("../package.json").version);
+    super("file-writer-metric-middleware", require("../package.json").version);
   }
 
-  register(moduleManager: ModuleManager): void | Promise<void> {
-    const labels = ["init"];
-    const commands = [
-      getConfigCommand(this.name, moduleManager),
-      getModuleCommand(this.name),
-    ];
-
-    const additionalOptions: Map<string, yargs.Options> = new Map();
-
-    const initTool = new Tool(
+  async register(
+    moduleManager: ModuleManager,
+    metricManager: MetricManager
+  ): Promise<void> {
+    moduleManager.registerPlugin(
       this.name,
-      labels,
-      "A tool for initializing SynTest projects.",
-      commands,
-      additionalOptions
+      new FileWriterMetricMiddlewarePlugin(metricManager)
     );
-
-    moduleManager.registerTool(this.name, initTool);
   }
 }

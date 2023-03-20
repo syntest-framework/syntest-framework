@@ -15,16 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Yargs = require("yargs");
+import { Plugin } from "../Plugin";
+import { Metric, MiddleWare } from "@syntest/metric";
+import { PluginType } from "./PluginType";
 
-export abstract class Preset {
-  public name: Readonly<string>;
-  public describe: Readonly<string>;
-
+export abstract class MetricMiddlewarePlugin extends Plugin {
   constructor(name: string, describe: string) {
-    this.name = name;
-    this.describe = describe;
+    super(PluginType.METRIC_MIDDLEWARE, name, describe);
   }
 
-  abstract modifyArgs(args: Yargs.ArgumentsCamelCase): Yargs.ArgumentsCamelCase;
+  abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
+
+  async getToolOptionChoices(
+    tool: string,
+    labels: string[],
+    option: string
+  ): Promise<string[]> {
+    // for every tool/label
+
+    if (option === "metric-middleware-pipeline") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

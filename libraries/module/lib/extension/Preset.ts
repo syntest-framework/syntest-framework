@@ -15,6 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  Listener = "Listener",
+import Yargs = require("yargs");
+import { Extension } from "./Extension";
+
+export abstract class Preset extends Extension {
+  public describe: Readonly<string>;
+
+  constructor(name: string, describe: string) {
+    super(name);
+    this.describe = describe;
+  }
+
+  abstract modifyArgs(args: Yargs.ArgumentsCamelCase): Yargs.ArgumentsCamelCase;
 }

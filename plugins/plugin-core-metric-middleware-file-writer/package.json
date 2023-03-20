@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/logging",
-  "version": "0.1.0-beta.3",
-  "description": "The log library of the SynTest Framework",
+  "name": "@syntest/plugin-core-metric-middleware-file-writer",
+  "version": "0.0.0",
+  "description": "A metric middleware plugin for writing to file the SynTest Core containing graphing functionalities",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -30,7 +30,7 @@
   "scripts": {
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
-    "clean": "rm -rf .nyc_output dist node_modules",
+    "clean": "rm -rf .nyc_output dist node_modules coverage",
     "clean:dist": "rm -rf dist",
     "format": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
@@ -42,11 +42,18 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "winston": "3.8.2",
-    "yargs": "^17.7.1"
+    "@syntest/logging": "^0.1.0-beta.3",
+    "@syntest/metric": "*",
+    "@syntest/module": "*",
+    "d3": "6.7.0",
+    "fast-csv": "^4.3.6",
+    "jsdom": "^21.1.0"
   },
   "engines": {
     "node": ">=10.24.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.0"
   },
   "publishConfig": {
     "access": "public"

@@ -16,18 +16,11 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Preset, Tool } from "@syntest/module";
+import { Module, ModuleManager } from "@syntest/module";
 import { SfuzzPlugin } from "./SfuzzPlugin";
 
 export default class SfuzzModule extends Module {
-  async getTools(): Promise<Tool[]> {
-    return [];
-  }
-  async getPlugins(): Promise<Plugin[]> {
-    return [new SfuzzPlugin()];
-  }
-
-  async getPresets(): Promise<Preset[]> {
-    return [];
+  async register(moduleManager: ModuleManager): Promise<void> {
+    moduleManager.registerPlugin(this.name, new SfuzzPlugin());
   }
 }

@@ -42,9 +42,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.1.0-beta.1",
+    "@syntest/cli-graphics": "*",
     "@syntest/logging": "*",
-    "@syntest/module": "^0.1.0-beta.3",
+    "@syntest/module": "*",
+    "@syntest/metric": "*",
     "shelljs": "^0.8.5"
   },
   "engines": {

@@ -15,12 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Command, Module } from "@syntest/module";
+import { Command, Module, ModuleManager } from "@syntest/module";
 import { writeFileSync } from "fs";
 import Yargs = require("yargs");
 import * as path from "path";
 
-export function getConfigCommand(tool: string, modules: Module[]): Command {
+export function getConfigCommand(
+  tool: string,
+  moduleManager: ModuleManager
+): Command {
   const options = new Map<string, Yargs.Options>();
 
   return new Command(
@@ -32,16 +35,14 @@ export function getConfigCommand(tool: string, modules: Module[]): Command {
       const allOptions = {};
 
       // Set default values for each option provided by the modules
-      for (const module of modules) {
-        for (const tool of await module.getTools()) {
-          for (const [name, option] of tool.toolOptions.entries()) {
-            allOptions[name] = option.default || null;
-          }
+      for (const tool of moduleManager.tools.values()) {
+        for (const [name, option] of tool.toolOptions.entries()) {
+          allOptions[name] = option.default || null;
+        }
 
-          for (const command of tool.commands) {
-            for (const [name, option] of command.options.entries()) {
-              allOptions[name] = option.default || null;
-            }
+        for (const command of tool.commands) {
+          for (const [name, option] of command.options.entries()) {
+            allOptions[name] = option.default || null;
           }
         }
       }

@@ -15,40 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "./Plugin";
-import { Preset } from "./Preset";
-import { Tool } from "./Tool";
 import { UserInterface } from "@syntest/cli-graphics";
-export abstract class Module {
-  name: Readonly<string>;
+import { MetricManager } from "@syntest/metric";
+import { ModuleManager } from "../ModuleManager";
+import { Extension } from "./Extension";
+export abstract class Module extends Extension {
   version: Readonly<string>;
-  _modules: Module[];
-  _userInterface: UserInterface;
 
   constructor(name: string, version: string) {
-    this.name = name;
+    super(name);
     this.version = version;
   }
 
-  set modules(modules: Module[]) {
-    this._modules = modules;
-  }
-
-  get modules() {
-    return this._modules;
-  }
-
-  set userInterface(userInterface: UserInterface) {
-    this._userInterface = userInterface;
-  }
-
-  get userInterface() {
-    return this._userInterface;
-  }
-
-  abstract getTools(): Promise<Tool[]> | Tool[];
-  abstract getPlugins(): Promise<Plugin[]> | Plugin[];
-  abstract getPresets(): Promise<Preset[]> | Preset[];
+  abstract register(
+    moduleManager: ModuleManager,
+    metricManager: MetricManager,
+    userInterface: UserInterface,
+    modules: Module[]
+  ): Promise<void> | void;
 }
 
 /**

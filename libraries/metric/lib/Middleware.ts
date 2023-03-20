@@ -15,16 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { Configuration } from "../lib/util/Configuration";
-const expect = chai.expect;
+import { Metric } from "./Metric";
+import { MetricManager } from "./MetricManager";
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", async () => {
-    new Configuration();
-    expect(true);
-  });
-});
+export abstract class MiddleWare {
+  protected availableMetrics: Metric[];
+  protected outputMetrics: Metric[];
+
+  constructor(availableMetrics: Metric[], outputMetrics: Metric[]) {
+    this.availableMetrics = availableMetrics;
+    this.outputMetrics = outputMetrics;
+  }
+
+  abstract run(metricManager: MetricManager): void;
+}

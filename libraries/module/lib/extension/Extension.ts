@@ -15,16 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { Configuration } from "../lib/util/Configuration";
-const expect = chai.expect;
+import Yargs = require("yargs");
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", async () => {
-    new Configuration();
-    expect(true);
-  });
-});
+export abstract class Extension {
+  name: Readonly<string>;
+  _args: Yargs.ArgumentsCamelCase;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  set args(args: Yargs.ArgumentsCamelCase) {
+    this._args = args;
+  }
+
+  get args() {
+    return this._args;
+  }
+}

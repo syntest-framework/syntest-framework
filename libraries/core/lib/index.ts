@@ -28,13 +28,13 @@ export * from "./search/Encoding";
 export * from "./search/EncodingRunner";
 export * from "./search/EncodingSampler";
 export * from "./search/ExecutionResult";
-export * from "./search/SearchListener";
 export * from "./search/SearchSubject";
 
 // - Budget
 export * from "./search/budget/Budget";
 export * from "./search/budget/BudgetListener";
 export * from "./search/budget/BudgetManager";
+export * from "./search/budget/BudgetType";
 export * from "./search/budget/EvaluationBudget";
 export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
@@ -84,13 +84,6 @@ export * from "./search/operators/selection/TournamentSelection";
 export * from "./search/termination/SignalTerminationTrigger";
 export * from "./search/termination/TerminationManager";
 export * from "./search/termination/TerminationTrigger";
-
-// Statistics
-export * from "./statistics/CoverageWriter";
-export * from "./statistics/RuntimeVariable";
-export * from "./statistics/StatisticsCollector";
-export * from "./statistics/StatisticsSearchListener";
-export * from "./statistics/SummaryWriter";
 
 // Util
 export * from "./util/Datapoint";
