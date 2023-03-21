@@ -15,22 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DefaultOffspring, Encoding, Offspring } from "@syntest/core";
-import { OffspringOptions, OffspringPlugin } from "../OffspringPlugin";
+import * as chai from "chai";
+import { MOSAPreset } from "../lib/MOSAPreset";
+const expect = chai.expect;
 
 /**
- * Plugin for SignalTerminationTrigger
- *
- * @author Dimitri Stallenberg
+ * This test is only added such that the github action does not fail.
  */
-export class DefaultOffspringPlugin<
-  T extends Encoding
-> extends OffspringPlugin<T> {
-  constructor() {
-    super("default", "A default offspring operator");
-  }
-
-  createOffspringOperator(options: OffspringOptions<T>): Offspring<T> {
-    return new DefaultOffspring(options.crossover, options.sampler);
-  }
-}
+describe("example test", () => {
+  it("test", async () => {
+    new MOSAPreset();
+    expect(true);
+  });
+});

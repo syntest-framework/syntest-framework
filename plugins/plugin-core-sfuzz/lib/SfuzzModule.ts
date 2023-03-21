@@ -19,10 +19,12 @@
 import { Module, ModuleManager } from "@syntest/module";
 import { SfuzzPlugin } from "./plugins/SfuzzPlugin";
 import { SfuzzObjectiveManagerPlugin } from "./plugins/SfuzzObjectiveManagerPlugin";
+import SfuzzPreset from "./SfuzzPreset";
 
 export default class SfuzzModule extends Module {
   async register(moduleManager: ModuleManager): Promise<void> {
     moduleManager.registerPlugin(this.name, new SfuzzObjectiveManagerPlugin());
     moduleManager.registerPlugin(this.name, new SfuzzPlugin());
+    moduleManager.registerPreset(this.name, new SfuzzPreset());
   }
 }

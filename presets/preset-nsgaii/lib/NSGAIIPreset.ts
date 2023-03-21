@@ -27,7 +27,7 @@ export class NSGAIIPreset extends Preset {
   modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
     (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "NSGAII";
     (<ArgumentsObject>(<unknown>args)).objectiveManager = "simple";
-    (<ArgumentsObject>(<unknown>args)).offspring = "default";
+    (<ArgumentsObject>(<unknown>args)).procreation = "default";
     (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>args)).populationSize = 50;
 

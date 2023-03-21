@@ -15,14 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Procreation } from "../../lib";
-import { DummyEncodingMock } from "./DummyEncoding.mock";
+import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { Crossover } from "../crossover/Crossover";
 
-export class DummyProcreation extends Procreation<DummyEncodingMock> {
-  generateOffspringPopulation(
+export abstract class Procreation<E extends Encoding> {
+  private _crossover: Crossover<E>;
+  private _sampler: EncodingSampler<E>;
+
+  constructor(crossover: Crossover<E>, sampler: EncodingSampler<E>) {
+    this._crossover = crossover;
+    this._sampler = sampler;
+  }
+
+  abstract generateOffspringPopulation(
     populationSize: number,
-    population: DummyEncodingMock[]
-  ): DummyEncodingMock[] {
-    return population;
+    population: E[]
+  ): E[];
+
+  get crossover(): Crossover<E> {
+    return this._crossover;
+  }
+
+  get sampler(): EncodingSampler<E> {
+    return this._sampler;
   }
 }

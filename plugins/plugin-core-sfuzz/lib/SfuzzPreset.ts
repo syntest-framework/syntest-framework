@@ -15,14 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Procreation } from "../../lib";
-import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-export class DummyProcreation extends Procreation<DummyEncodingMock> {
-  generateOffspringPopulation(
-    populationSize: number,
-    population: DummyEncodingMock[]
-  ): DummyEncodingMock[] {
-    return population;
+import { ArgumentsObject } from "@syntest/base-testing-tool";
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
+
+export default class SfuzzPreset extends Preset {
+  constructor() {
+    super("Sfuzz", "Sfuzz preset");
+  }
+
+  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
+    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "Sfuzz";
+    (<ArgumentsObject>(<unknown>args)).objectiveManager = "Sfuzz";
+
+    return args;
   }
 }

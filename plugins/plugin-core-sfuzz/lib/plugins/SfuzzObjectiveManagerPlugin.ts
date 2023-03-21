@@ -17,7 +17,7 @@
  */
 
 import { Encoding, ObjectiveManager, SearchAlgorithm } from "@syntest/core";
-import { SfuzzObjectiveManager } from "../SfuzzObjectiveManager";
+import { SfuzzObjectiveManager } from "../algorithm/SfuzzObjectiveManager";
 import {
   ObjectiveManagerPlugin,
   ObjectiveManagerOptions,

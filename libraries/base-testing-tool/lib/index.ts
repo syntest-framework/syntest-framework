@@ -19,7 +19,7 @@ export * from "./plugins/objectiveManagers/SimpleObjectiveManagerPlugin";
 export * from "./plugins/objectiveManagers/StructuralObjectiveManagerPlugin";
 export * from "./plugins/objectiveManagers/UncoveredObjectiveManagerPlugin";
 
-export * from "./plugins/offspringOperators/DefaultOffspringPlugin";
+export * from "./plugins/procreation-operators/DefaultProcreationPlugin";
 
 export * from "./plugins/searchAlgorithms/MOSAFamilyPlugin";
 export * from "./plugins/searchAlgorithms/NSGAIIPlugin";
@@ -31,7 +31,7 @@ export * from "./plugins/terminationTriggers/SignalTerminationTriggerPlugin";
 
 export * from "./plugins/CrossoverPlugin";
 export * from "./plugins/ObjectiveManagerPlugin";
-export * from "./plugins/OffspringPlugin";
+export * from "./plugins/ProcreationPlugin";
 export * from "./plugins/PluginType";
 export * from "./plugins/SamplerPlugin";
 export * from "./plugins/SearchAlgorithmPlugin";

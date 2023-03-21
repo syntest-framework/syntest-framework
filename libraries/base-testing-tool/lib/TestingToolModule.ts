@@ -19,7 +19,7 @@ import { Module, ModuleManager } from "@syntest/module";
 import { SimpleObjectiveManagerPlugin } from "./plugins/objectiveManagers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objectiveManagers/StructuralObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objectiveManagers/UncoveredObjectiveManagerPlugin";
-import { DefaultOffspringPlugin } from "./plugins/offspringOperators/DefaultOffspringPlugin";
+import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
 import { MOSAFamilyPlugin } from "./plugins/searchAlgorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/searchAlgorithms/NSGAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/searchAlgorithms/RandomSearchPlugin";
@@ -41,7 +41,7 @@ export abstract class TestingToolModule extends Module {
       new UncoveredObjectiveManagerPlugin()
     );
 
-    moduleManager.registerPlugin(this.name, new DefaultOffspringPlugin());
+    moduleManager.registerPlugin(this.name, new DefaultProcreationPlugin());
 
     moduleManager.registerPlugin(this.name, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this.name, new NSGAIIPlugin());

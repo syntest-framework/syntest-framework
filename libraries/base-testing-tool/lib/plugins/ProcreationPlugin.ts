@@ -15,23 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crossover, Encoding, EncodingSampler, Offspring } from "@syntest/core";
+import {
+  Crossover,
+  Encoding,
+  EncodingSampler,
+  Procreation,
+} from "@syntest/core";
 import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
 
-export type OffspringOptions<T extends Encoding> = {
+export type ProcreationOptions<T extends Encoding> = {
   crossover: Crossover<T>;
   sampler: EncodingSampler<T>;
 };
 
-export abstract class OffspringPlugin<T extends Encoding> extends Plugin {
+export abstract class ProcreationPlugin<T extends Encoding> extends Plugin {
   constructor(name: string, describe: string) {
     super(PluginType.Offspring, name, describe);
   }
 
-  abstract createOffspringOperator<O extends OffspringOptions<T>>(
+  abstract createProcreationOperator<O extends ProcreationOptions<T>>(
     options: O
-  ): Offspring<T>;
+  ): Procreation<T>;
 
   getCommandOptionChoices(
     tool: string,
@@ -39,7 +44,7 @@ export abstract class OffspringPlugin<T extends Encoding> extends Plugin {
     command: string,
     option: string
   ): string[] {
-    if (option === "offspring") {
+    if (option === "procreation") {
       return [this.name];
     }
 

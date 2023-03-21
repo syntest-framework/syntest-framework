@@ -27,7 +27,7 @@ export class DynaMOSAPreset extends Preset {
   modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
     (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "MOSAFamily";
     (<ArgumentsObject>(<unknown>args)).objectiveManager = "structural";
-    (<ArgumentsObject>(<unknown>args)).offspring = "default";
+    (<ArgumentsObject>(<unknown>args)).procreation = "default";
     (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>args)).populationSize = 50;
 

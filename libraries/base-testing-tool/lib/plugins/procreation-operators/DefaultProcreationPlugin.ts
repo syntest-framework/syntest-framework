@@ -15,29 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../Encoding";
-import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../crossover/Crossover";
+import { DefaultProcreation, Encoding, Procreation } from "@syntest/core";
+import { ProcreationOptions, ProcreationPlugin } from "../ProcreationPlugin";
 
-export abstract class Offspring<E extends Encoding> {
-  private _crossover: Crossover<E>;
-  private _sampler: EncodingSampler<E>;
-
-  constructor(crossover: Crossover<E>, sampler: EncodingSampler<E>) {
-    this._crossover = crossover;
-    this._sampler = sampler;
+/**
+ * Plugin for SignalTerminationTrigger
+ *
+ * @author Dimitri Stallenberg
+ */
+export class DefaultProcreationPlugin<
+  T extends Encoding
+> extends ProcreationPlugin<T> {
+  constructor() {
+    super("default", "A default procreation operator");
   }
 
-  abstract generateOffspringPopulation(
-    populationSize: number,
-    population: E[]
-  ): E[];
-
-  get crossover(): Crossover<E> {
-    return this._crossover;
-  }
-
-  get sampler(): EncodingSampler<E> {
-    return this._sampler;
+  createProcreationOperator(options: ProcreationOptions<T>): Procreation<T> {
+    return new DefaultProcreation(options.crossover, options.sampler);
   }
 }

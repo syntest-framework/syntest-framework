@@ -22,7 +22,7 @@ import { EncodingSampler } from "../../EncodingSampler";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { Encoding } from "../../Encoding";
-import { Offspring } from "../../operators/offspring/Offspring";
+import { Procreation } from "../../operators/procreation/Procreation";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -53,7 +53,7 @@ export abstract class EvolutionaryAlgorithm<
   /**
    * The offspring operator to apply.
    */
-  protected _offspring: Offspring<T>;
+  protected _offspring: Procreation<T>;
 
   /**
    * Constructor.
@@ -66,7 +66,7 @@ export abstract class EvolutionaryAlgorithm<
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    offspring: Offspring<T>,
+    offspring: Procreation<T>,
     populationSize: number
   ) {
     super(objectiveManager);

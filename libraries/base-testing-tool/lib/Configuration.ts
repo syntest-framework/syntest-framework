@@ -52,7 +52,7 @@ export type AlgorithmOptions = {
   populationSize: number;
   objectiveManager: string;
   secondaryObjectives: string[];
-  offspring: string;
+  procreation: string;
   crossover: string;
   sampler: string;
   terminationTriggers: string[];
@@ -263,11 +263,11 @@ export class Configuration {
             hidden: false,
             type: "string",
           },
-          offspring: {
+          procreation: {
             alias: [],
             default: "",
             choices: [],
-            description: "Offspring operator to be used by the tool.",
+            description: "Procreation operator to be used by the tool.",
             group: OptionGroups.Algorithm,
             hidden: false,
             type: "string",
