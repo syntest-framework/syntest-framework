@@ -21,5 +21,6 @@ export enum PluginType {
   Offspring = "Offspring",
   Sampler = "Sampler",
   SearchAlgorithm = "SearchAlgorithm",
+  SecondaryObjective = "SecondaryObjective",
   TerminationTrigger = "TerminationTrigger",
 }

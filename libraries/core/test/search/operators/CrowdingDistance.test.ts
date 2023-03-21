@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { crowdingDistance } from "../../../lib";
+import { ApproachLevel, crowdingDistance } from "../../../lib";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { BranchObjectiveFunction, ObjectiveFunction } from "../../../lib";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -33,10 +34,10 @@ describe("Crowding distance", function () {
 
   it("front with one solution", () => {
     const objective = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective);
@@ -48,10 +49,10 @@ describe("Crowding distance", function () {
 
   it("front with two solutions", () => {
     const objective = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective);
@@ -66,16 +67,16 @@ describe("Crowding distance", function () {
 
   it("Front with more than two solutions", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      false
+      "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -98,10 +99,10 @@ describe("Crowding distance", function () {
 
   it("Corner case with same obj values for all individual", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);

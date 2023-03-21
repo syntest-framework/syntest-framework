@@ -17,6 +17,7 @@
  */
 import * as chai from "chai";
 import {
+  ApproachLevel,
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
@@ -28,6 +29,7 @@ import { BranchObjectiveFunction } from "../../../lib";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { DummyOffspring } from "../../mocks/DummyOffspring.mock";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -38,17 +40,19 @@ describe("Test MOSA", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {
+    const branchDistance = new DummyBranchDistance();
+
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      branchDistance,
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      branchDistance,
       null,
-      "1",
-      1,
-      false
+      "1"
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -71,7 +75,7 @@ describe("Test MOSA", function () {
     const mockedOffspring = new DummyOffspring(mockedCrossover, mockedSampler);
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedOffspring,
       50
@@ -108,7 +112,7 @@ describe("Test MOSA", function () {
     const mockedOffspring = new DummyOffspring(mockedCrossover, mockedSampler);
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedOffspring,
       50
@@ -146,7 +150,7 @@ describe("Test MOSA", function () {
     const mockedOffspring = new DummyOffspring(mockedCrossover, mockedSampler);
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedOffspring,
       4
@@ -189,7 +193,7 @@ describe("Test MOSA", function () {
     const mockedOffspring = new DummyOffspring(mockedCrossover, mockedSampler);
 
     const mosa = new MockedMOSA(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedOffspring,
       50

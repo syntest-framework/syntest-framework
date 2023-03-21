@@ -16,10 +16,9 @@
  * limitations under the License.
  */
 
-import { Encoding, Events, TargetPool } from "@syntest/core";
+import { Events, RootContext } from "@syntest/core";
 import Yargs = require("yargs");
 import { ListenerPlugin } from "@syntest/module";
-import { OptionGroups as CliOptionGroups } from "@syntest/cli";
 import { CONFIG } from "@syntest/base-testing-tool";
 import { createSimulation } from "./D3Simulation";
 import { writeFileSync } from "fs";
@@ -66,7 +65,7 @@ export default class GraphingPlugin extends ListenerPlugin {
       alias: [],
       default: "cfg",
       description: "The path where the csv should be saved",
-      group: CliOptionGroups.Storage,
+      group: OptionGroups.Graphing,
       hidden: false,
       normalize: true,
       type: "string",
@@ -75,9 +74,9 @@ export default class GraphingPlugin extends ListenerPlugin {
     return optionsMap;
   }
 
-  controlFlowGraphResolvingComplete<E extends Encoding>(
-    targetPool: TargetPool<E>,
-    cfg: ControlFlowGraph
+  controlFlowGraphResolvingComplete<S>(
+    rootContext: RootContext,
+    cfg: ControlFlowGraph<S>
   ): void {
     const svgHtml = createSimulation(cfg);
 
@@ -85,4 +84,8 @@ export default class GraphingPlugin extends ListenerPlugin {
     const path = `${base}/test.svg`;
     writeFileSync(path, svgHtml);
   }
+}
+
+export enum OptionGroups {
+  Graphing = "Graphing Options:",
 }

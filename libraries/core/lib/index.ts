@@ -19,9 +19,7 @@
 // Static Analysis
 export * from "./analysis/static/ActionDescription";
 export * from "./analysis/static/Target";
-export * from "./analysis/static/TargetMetaData";
-export * from "./analysis/static/TargetPool";
-export * from "./analysis/static/targetUtil";
+export * from "./analysis/static/RootContext";
 
 // Search
 export * from "./search/Archive";
@@ -30,13 +28,13 @@ export * from "./search/Encoding";
 export * from "./search/EncodingRunner";
 export * from "./search/EncodingSampler";
 export * from "./search/ExecutionResult";
-export * from "./search/SearchListener";
 export * from "./search/SearchSubject";
 
 // - Budget
 export * from "./search/budget/Budget";
 export * from "./search/budget/BudgetListener";
 export * from "./search/budget/BudgetManager";
+export * from "./search/budget/BudgetType";
 export * from "./search/budget/EvaluationBudget";
 export * from "./search/budget/IterationBudget";
 export * from "./search/budget/SearchTimeBudget";
@@ -56,18 +54,23 @@ export * from "./search/metaheuristics/evolutionary/NSGAII";
 export * from "./search/metaheuristics/evolutionary/MOSAFamily";
 
 // - Objective
-export * from "./search/objective/ApproachLevel";
-export * from "./search/objective/BranchDistance";
+export * from "./search/objective/heuristics/ApproachLevel";
+export * from "./search/objective/heuristics/BranchDistance";
+
 export * from "./search/objective/BranchObjectiveFunction";
+export * from "./search/objective/ControlFlowBasedObjectiveFunction";
 export * from "./search/objective/ExceptionObjectiveFunction";
 export * from "./search/objective/FunctionObjectiveFunction";
+export * from "./search/objective/ImplicitBranchObjectiveFunction";
 export * from "./search/objective/ObjectiveFunction";
-export * from "./search/objective/ProbeObjectiveFunction";
 
 export * from "./search/objective/managers/ObjectiveManager";
 export * from "./search/objective/managers/SimpleObjectiveManager";
 export * from "./search/objective/managers/StructuralObjectiveManager";
 export * from "./search/objective/managers/UncoveredObjectiveManager";
+
+export * from "./search/objective/secondary/SecondaryObjectiveComparator";
+export * from "./search/objective/secondary/LengthObjectiveComparator";
 
 // - Operator
 export * from "./search/operators/crossover/Crossover";
@@ -84,13 +87,6 @@ export * from "./search/operators/selection/TournamentSelection";
 export * from "./search/termination/SignalTerminationTrigger";
 export * from "./search/termination/TerminationManager";
 export * from "./search/termination/TerminationTrigger";
-
-// Statistics
-export * from "./statistics/CoverageWriter";
-export * from "./statistics/RuntimeVariable";
-export * from "./statistics/StatisticsCollector";
-export * from "./statistics/StatisticsSearchListener";
-export * from "./statistics/SummaryWriter";
 
 // Util
 export * from "./util/Datapoint";

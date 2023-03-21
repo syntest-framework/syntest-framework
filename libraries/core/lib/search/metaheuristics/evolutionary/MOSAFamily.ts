@@ -23,11 +23,13 @@ import { shouldNeverHappen } from "../../../util/diagnostics";
 import { getLogger } from "@syntest/logging";
 
 /**
- * Many-objective Sorting Algorithm (MOSA).
+ * Many-objective Sorting Algorithm (MOSA) family of search algorithms.
  *
  * Based on:
  * Reformulating Branch Coverage as a Many-Objective Optimization Problem
  * A. Panichella; F. K. Kifetew; P. Tonella
+ *
+ * Used by MOSA and DynaMOSA.
  *
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella

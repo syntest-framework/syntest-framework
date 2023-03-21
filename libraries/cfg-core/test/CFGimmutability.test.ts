@@ -16,46 +16,48 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { ControlFlowGraph, NodeType, RootNode, Node } from "../lib";
+import { ControlFlowGraph, NodeType, Node } from "../lib";
 
 const expect = chai.expect;
 
 describe("CFG Immutability check", function () {
   it("get nodes works properly with immutability", () => {
-    const nodes: Node[] = [
-      {
-        type: NodeType.Root,
-        id: "ROOT",
-        lines: [],
-        statements: [],
-      },
+    const nodes: Node<unknown>[] = [
+      new Node("ROOT", NodeType.ENTRY, "ROOT", [], { lineNumbers: [] }),
+      new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
     ];
 
     for (let i = 65; i < "E".charCodeAt(0) + 1; i++) {
-      nodes.push({
-        type: NodeType.Intermediary,
-        id: String.fromCharCode(i),
-        lines: [26],
-        statements: [],
-      });
+      nodes.push(
+        new Node(
+          String.fromCharCode(i),
+          NodeType.NORMAL,
+          String.fromCharCode(i),
+          [],
+          { lineNumbers: [26] }
+        )
+      );
     }
-    const cfg = new ControlFlowGraph(nodes, []);
-    const retrievedNodes: Node[] = cfg.nodes;
-    const rootNode = cfg.nodes.at(0);
-    expect(rootNode?.lines).to.empty;
+    const cfg = new ControlFlowGraph(
+      nodes[0],
+      nodes[1],
+      nodes[1],
+      nodes.reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
+      []
+    );
+    const rootNode = cfg.entry;
+    expect(rootNode.metadata.lineNumbers).to.empty;
     // nodes.at(0)!.lines = [23]; // <- this will not compile because of readonly
-    expect(nodes.at(0)!.lines).to.empty;
+    expect(rootNode.metadata.lineNumbers).to.empty;
     // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
-    nodes.push({
-      type: NodeType.Normal,
-      id: "dummy",
-      lines: [],
-      statements: [],
-    });
-    expect(cfg.nodes.at(1)?.lines).to.eql([26]);
-    expect(cfg.nodes.length).to.not.equal(nodes.length);
+    nodes.push(
+      new Node("dummy", NodeType.NORMAL, "dummy", [], { lineNumbers: [] })
+    );
+    expect(cfg.getNodeById("A")?.metadata.lineNumbers).to.eql([26]);
+    expect(cfg.nodes.size).to.not.equal(nodes.length);
     // expect(cfg.get_nodes().at(0)?.lines = [23]).to.throw(); <- this will not compile
-
-    console.log(retrievedNodes);
   });
 });

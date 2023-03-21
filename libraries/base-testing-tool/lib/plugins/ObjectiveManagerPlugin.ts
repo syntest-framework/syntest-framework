@@ -15,12 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, EncodingRunner, ObjectiveManager } from "@syntest/core";
+import {
+  Encoding,
+  EncodingRunner,
+  ObjectiveManager,
+  SecondaryObjectiveComparator,
+} from "@syntest/core";
 import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
 
 export type ObjectiveManagerOptions<T extends Encoding> = {
   runner: EncodingRunner<T>;
+  secondaryObjectives: Set<SecondaryObjectiveComparator<T>>;
 };
 
 export abstract class ObjectiveManagerPlugin<

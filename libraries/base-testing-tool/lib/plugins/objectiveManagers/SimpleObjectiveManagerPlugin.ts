@@ -40,6 +40,9 @@ export class SimpleObjectiveManagerPlugin<
   createObjectiveManager(
     options: ObjectiveManagerOptions<T>
   ): ObjectiveManager<T> {
-    return new SimpleObjectiveManager(options.runner);
+    return new SimpleObjectiveManager(
+      options.runner,
+      options.secondaryObjectives
+    );
   }
 }

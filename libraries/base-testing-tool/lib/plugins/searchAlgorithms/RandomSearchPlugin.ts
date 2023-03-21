@@ -19,6 +19,7 @@ import {
   Encoding,
   RandomSearch,
   SearchAlgorithm,
+  SecondaryObjectiveComparator,
   SimpleObjectiveManager,
 } from "@syntest/core";
 import {

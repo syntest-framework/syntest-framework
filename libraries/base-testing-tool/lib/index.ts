@@ -25,6 +25,8 @@ export * from "./plugins/searchAlgorithms/MOSAFamilyPlugin";
 export * from "./plugins/searchAlgorithms/NSGAIIPlugin";
 export * from "./plugins/searchAlgorithms/RandomSearchPlugin";
 
+export * from "./plugins/secondaryObjectives/LengthObjectiveComparatorPlugin";
+
 export * from "./plugins/terminationTriggers/SignalTerminationTriggerPlugin";
 
 export * from "./plugins/CrossoverPlugin";

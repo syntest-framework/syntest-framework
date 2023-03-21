@@ -18,7 +18,6 @@
 
 import { Encoding, SearchAlgorithm } from "@syntest/core";
 import { Sfuzz } from "../Sfuzz";
-import { SfuzzObjectiveManager } from "../SfuzzObjectiveManager";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
@@ -29,9 +28,7 @@ import {
  *
  * @author Dimitri Stallenberg
  */
-export default class SfuzzPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class SfuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("Sfuzz", "Sfuzz search algorithm");
   }

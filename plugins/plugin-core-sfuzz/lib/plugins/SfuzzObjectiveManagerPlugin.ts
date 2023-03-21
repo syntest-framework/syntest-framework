@@ -28,7 +28,7 @@ import {
  *
  * @author Dimitri Stallenberg
  */
-export default class SfuzzObjectiveManagerPlugin<
+export class SfuzzObjectiveManagerPlugin<
   T extends Encoding
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
@@ -38,6 +38,9 @@ export default class SfuzzObjectiveManagerPlugin<
   createObjectiveManager(
     options: ObjectiveManagerOptions<T>
   ): ObjectiveManager<T> {
-    return new SfuzzObjectiveManager<T>(options.runner);
+    return new SfuzzObjectiveManager<T>(
+      options.runner,
+      options.secondaryObjectives
+    );
   }
 }

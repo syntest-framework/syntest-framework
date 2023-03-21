@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { ModuleManager } from "../lib/ModuleManager";
+import { Configuration } from "../lib/util/Configuration";
 const expect = chai.expect;
 
 /**
@@ -24,7 +24,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", async () => {
-    new ModuleManager();
+    new Configuration();
     expect(true);
   });
 });

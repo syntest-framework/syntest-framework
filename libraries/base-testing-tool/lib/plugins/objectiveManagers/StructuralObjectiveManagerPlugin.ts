@@ -40,6 +40,9 @@ export class StructuralObjectiveManagerPlugin<
   createObjectiveManager(
     options: ObjectiveManagerOptions<T>
   ): ObjectiveManager<T> {
-    return new StructuralObjectiveManager(options.runner);
+    return new StructuralObjectiveManager(
+      options.runner,
+      options.secondaryObjectives
+    );
   }
 }

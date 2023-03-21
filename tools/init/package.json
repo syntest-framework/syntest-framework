@@ -1,6 +1,6 @@
 {
   "name": "@syntest/init",
-  "version": "0.2.0-beta.4",
+  "version": "0.2.0-beta.7",
   "description": "The setup application of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -42,9 +42,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.1.0-beta.1",
+    "@syntest/cli-graphics": "*",
     "@syntest/logging": "*",
-    "@syntest/module": "^0.1.0-beta.1",
+    "@syntest/metric": "^0.1.0-beta.0",
+    "@syntest/module": "*",
     "shelljs": "^0.8.5"
   },
   "engines": {

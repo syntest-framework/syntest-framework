@@ -22,7 +22,7 @@ import fs = require("fs");
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";
 
-export function createSimulation(cfg: ControlFlowGraph) {
+export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
   const width = 2000;
   const height = 2000;
   const offset = 200;

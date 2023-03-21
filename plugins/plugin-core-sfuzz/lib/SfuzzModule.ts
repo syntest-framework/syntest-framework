@@ -16,15 +16,13 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/module";
-import SfuzzPlugin from "./plugins/SfuzzPlugin";
-import SfuzzObjectiveManagerPlugin from "./plugins/SfuzzObjectiveManagerPlugin";
+import { Module, ModuleManager } from "@syntest/module";
+import { SfuzzPlugin } from "./plugins/SfuzzPlugin";
+import { SfuzzObjectiveManagerPlugin } from "./plugins/SfuzzObjectiveManagerPlugin";
 
-export default class GraphingModule extends Module {
-  async getTools(): Promise<Tool[]> {
-    return [];
-  }
-  async getPlugins(): Promise<Plugin[]> {
-    return [new SfuzzObjectiveManagerPlugin(), new SfuzzPlugin()];
+export default class SfuzzModule extends Module {
+  async register(moduleManager: ModuleManager): Promise<void> {
+    moduleManager.registerPlugin(this.name, new SfuzzObjectiveManagerPlugin());
+    moduleManager.registerPlugin(this.name, new SfuzzPlugin());
   }
 }

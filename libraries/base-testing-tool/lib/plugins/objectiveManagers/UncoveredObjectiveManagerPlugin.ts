@@ -40,6 +40,9 @@ export class UncoveredObjectiveManagerPlugin<
   createObjectiveManager(
     options: ObjectiveManagerOptions<T>
   ): ObjectiveManager<T> {
-    return new UncoveredObjectiveManager(options.runner);
+    return new UncoveredObjectiveManager(
+      options.runner,
+      options.secondaryObjectives
+    );
   }
 }

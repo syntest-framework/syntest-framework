@@ -20,6 +20,9 @@ import {
   SearchAlgorithm,
   MOSAFamily,
   StructuralObjectiveManager,
+  UncoveredObjectiveManager,
+  LengthObjectiveComparator,
+  SecondaryObjectiveComparator,
 } from "@syntest/core";
 import { pluginRequiresOptions } from "@syntest/module";
 import {

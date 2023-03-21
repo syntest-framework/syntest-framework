@@ -1,6 +1,6 @@
 {
   "name": "@syntest/core",
-  "version": "0.4.0-beta.7",
+  "version": "0.4.0-beta.11",
   "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -42,11 +42,9 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@dagrejs/graphlib": "2.1.4",
-    "@syntest/cfg-core": "^0.3.0-beta.7",
-    "@syntest/logging": "^0.1.0-beta.3",
+    "@syntest/cfg-core": "*",
+    "@syntest/logging": "*",
     "bignumber.js": "9.0.1",
-    "fast-csv": "4.3.6",
     "seedrandom": "3.0.5"
   },
   "engines": {
