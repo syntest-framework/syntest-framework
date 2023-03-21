@@ -301,7 +301,7 @@ export class Configuration {
         .options({
           "total-time-budget": {
             alias: ["t"],
-            default: 3600,
+            default: Number.MAX_SAFE_INTEGER,
             description: "Total time budget",
             group: OptionGroups.Budget,
             hidden: false,
@@ -309,7 +309,7 @@ export class Configuration {
           },
           "search-time-budget": {
             alias: [],
-            default: 3600,
+            default: Number.MAX_SAFE_INTEGER,
             description: "Search time budget",
             group: OptionGroups.Budget,
             hidden: false,

@@ -15,32 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, SearchAlgorithm, MOSAFamily } from "@syntest/core";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../SearchAlgorithmPlugin";
-
-/**
- * Plugin for MOSA Family Algorithms
- *
- * @author Dimitri Stallenberg
- */
-export class MOSAFamilyPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
-  constructor() {
-    super("MOSAFamily", "Many-Objective Sorting Algorithm");
-  }
-
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new MOSAFamily<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.offspring,
-      options.populationSize
-    );
-  }
-}
+export * as module from "./NSGAIIModule";

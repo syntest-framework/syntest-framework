@@ -15,18 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Encoding,
-  RandomSearch,
-  SearchAlgorithm,
-  SecondaryObjectiveComparator,
-  SimpleObjectiveManager,
-} from "@syntest/core";
+import { Encoding, RandomSearch, SearchAlgorithm } from "@syntest/core";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "../SearchAlgorithmPlugin";
-import { pluginRequiresOptions } from "@syntest/module";
 /**
  * Plugin for RandomSearch
  *

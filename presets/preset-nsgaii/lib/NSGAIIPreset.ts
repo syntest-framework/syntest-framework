@@ -15,32 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, SearchAlgorithm, MOSAFamily } from "@syntest/core";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../SearchAlgorithmPlugin";
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
+import { ArgumentsObject } from "@syntest/base-testing-tool";
 
-/**
- * Plugin for MOSA Family Algorithms
- *
- * @author Dimitri Stallenberg
- */
-export class MOSAFamilyPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class NSGAIIPreset extends Preset {
   constructor() {
-    super("MOSAFamily", "Many-Objective Sorting Algorithm");
+    super("NSGAII", "NSGAII preset");
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new MOSAFamily<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.offspring,
-      options.populationSize
-    );
+  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
+    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "NSGAII";
+    (<ArgumentsObject>(<unknown>args)).objectiveManager = "simple";
+    (<ArgumentsObject>(<unknown>args)).offspring = "default";
+    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
+
+    return args;
   }
 }

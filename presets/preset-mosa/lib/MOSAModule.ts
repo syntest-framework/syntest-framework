@@ -15,32 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, SearchAlgorithm, MOSAFamily } from "@syntest/core";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../SearchAlgorithmPlugin";
+import { Module, ModuleManager } from "@syntest/module";
+import { MOSAPreset } from "./MOSAPreset";
 
-/**
- * Plugin for MOSA Family Algorithms
- *
- * @author Dimitri Stallenberg
- */
-export class MOSAFamilyPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export default class MOSAModule extends Module {
   constructor() {
-    super("MOSAFamily", "Many-Objective Sorting Algorithm");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    super("MOSA", require("../package.json").version);
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new MOSAFamily<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.offspring,
-      options.populationSize
-    );
+  register(moduleManager: ModuleManager): void | Promise<void> {
+    moduleManager.registerPreset(this.name, new MOSAPreset());
   }
 }
