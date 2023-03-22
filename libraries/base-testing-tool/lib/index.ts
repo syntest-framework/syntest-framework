@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./plugins/objectiveManagers/SimpleObjectiveManagerPlugin";
-export * from "./plugins/objectiveManagers/StructuralObjectiveManagerPlugin";
-export * from "./plugins/objectiveManagers/UncoveredObjectiveManagerPlugin";
+export * from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
+export * from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
+export * from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 
 export * from "./plugins/procreation-operators/DefaultProcreationPlugin";
 
-export * from "./plugins/searchAlgorithms/MOSAFamilyPlugin";
-export * from "./plugins/searchAlgorithms/NSGAIIPlugin";
-export * from "./plugins/searchAlgorithms/RandomSearchPlugin";
+export * from "./plugins/search-algorithms/MOSAFamilyPlugin";
+export * from "./plugins/search-algorithms/NSGAIIPlugin";
+export * from "./plugins/search-algorithms/RandomSearchPlugin";
 
-export * from "./plugins/secondaryObjectives/LengthObjectiveComparatorPlugin";
+export * from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 
-export * from "./plugins/terminationTriggers/SignalTerminationTriggerPlugin";
+export * from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 
 export * from "./plugins/CrossoverPlugin";
 export * from "./plugins/ObjectiveManagerPlugin";
