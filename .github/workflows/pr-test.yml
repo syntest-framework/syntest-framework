@@ -9,10 +9,6 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-  
-env:
-  NODE_COVERALLS_DEBUG: 1
-  COVERALLS_DEBUG: true
 
 jobs:
   test:
