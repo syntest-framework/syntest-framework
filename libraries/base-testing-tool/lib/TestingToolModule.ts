@@ -26,6 +26,9 @@ import { RandomSearchPlugin } from "./plugins/searchAlgorithms/RandomSearchPlugi
 import { SignalTerminationTriggerPlugin } from "./plugins/terminationTriggers/SignalTerminationTriggerPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondaryObjectives/LengthObjectiveComparatorPlugin";
 import { SearchMetricListener } from "./plugins/listeners/SearchMetricListener";
+import { MOSAPreset } from "./presets/MOSAPreset";
+import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 
 export abstract class TestingToolModule extends Module {
   register(moduleManager: ModuleManager): void {
@@ -56,5 +59,9 @@ export abstract class TestingToolModule extends Module {
       this.name,
       new SignalTerminationTriggerPlugin()
     );
+
+    moduleManager.registerPreset(this.name, new MOSAPreset());
+    moduleManager.registerPreset(this.name, new NSGAIIPreset());
+    moduleManager.registerPreset(this.name, new DynaMOSAPreset());
   }
 }

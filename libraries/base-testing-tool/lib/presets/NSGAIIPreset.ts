@@ -15,4 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * as module from "./NSGAIIModule";
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
+import { ArgumentsObject } from "../Configuration";
+
+export class NSGAIIPreset extends Preset {
+  constructor() {
+    super("NSGAII", "NSGAII preset");
+  }
+
+  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
+    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "NSGAII";
+    (<ArgumentsObject>(<unknown>args)).objectiveManager = "simple";
+    (<ArgumentsObject>(<unknown>args)).procreation = "default";
+    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
+
+    return args;
+  }
+}

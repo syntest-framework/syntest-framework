@@ -15,16 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { MOSAPreset } from "../lib/MOSAPreset";
-const expect = chai.expect;
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
+import { ArgumentsObject } from "../Configuration";
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", async () => {
-    new MOSAPreset();
-    expect(true);
-  });
-});
+export class DynaMOSAPreset extends Preset {
+  constructor() {
+    super("DynaMOSA", "DynaMOSA preset");
+  }
+
+  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
+    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "MOSAFamily";
+    (<ArgumentsObject>(<unknown>args)).objectiveManager = "structural";
+    (<ArgumentsObject>(<unknown>args)).procreation = "default";
+    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
+
+    return args;
+  }
+}

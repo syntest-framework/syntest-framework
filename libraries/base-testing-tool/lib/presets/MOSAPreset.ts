@@ -15,16 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Module, ModuleManager } from "@syntest/module";
-import { NSGAIIPreset } from "./NSGAIIPreset";
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
+import { ArgumentsObject } from "../Configuration";
 
-export default class NSGAIIModule extends Module {
+export class MOSAPreset extends Preset {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    super("NSGAII", require("../package.json").version);
+    super("MOSA", "MOSA preset");
   }
 
-  register(moduleManager: ModuleManager): void | Promise<void> {
-    moduleManager.registerPreset(this.name, new NSGAIIPreset());
+  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
+    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "MOSAFamily";
+    (<ArgumentsObject>(<unknown>args)).objectiveManager = "uncovered";
+    (<ArgumentsObject>(<unknown>args)).procreation = "default";
+    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
+
+    return args;
   }
 }
