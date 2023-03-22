@@ -19,8 +19,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist",
-    "/NOTICE"
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
+    "NOTICE",
+    "README.md"
   ],
   "repository": {
     "type": "git",

@@ -48,8 +48,8 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["build-system", "typescript"],
+      "dependsOn": ["clean:dist", "^build"],
+      "inputs": ["build-system", "typescript", "^typescript"],
       "outputs": ["{projectRoot}/dist"]
     },
     "format": {

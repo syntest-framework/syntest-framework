@@ -15,19 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./plugins/searchAlgorithms/DynaMOSAPlugin";
-export * from "./plugins/searchAlgorithms/MOSAPlugin";
-export * from "./plugins/searchAlgorithms/NSGAIIPlugin";
-export * from "./plugins/searchAlgorithms/RandomSearchPlugin";
+export * from "./lib/plugins/searchAlgorithms/DynaMOSAPlugin";
+export * from "./lib/plugins/searchAlgorithms/MOSAPlugin";
+export * from "./lib/plugins/searchAlgorithms/NSGAIIPlugin";
+export * from "./lib/plugins/searchAlgorithms/RandomSearchPlugin";
 
-export * from "./plugins/terminationTriggers/SignalTerminationTriggerPlugin";
+export * from "./lib/plugins/terminationTriggers/SignalTerminationTriggerPlugin";
 
-export * from "./plugins/CrossoverPlugin";
-export * from "./plugins/SamplerPlugin";
-export * from "./plugins/SearchAlgorithmPlugin";
-export * from "./plugins/TerminationPlugin";
+export * from "./lib/plugins/CrossoverPlugin";
+export * from "./lib/plugins/PluginType";
+export * from "./lib/plugins/SamplerPlugin";
+export * from "./lib/plugins/SearchAlgorithmPlugin";
+export * from "./lib/plugins/TerminationPlugin";
 
-export * from "./util/fileSystem";
+export * from "./lib/util/fileSystem";
 
-export * from "./Configuration";
-export * from "./Launcher";
+export * from "./lib/Configuration";
+export * from "./lib/Launcher";
