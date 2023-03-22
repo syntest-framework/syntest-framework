@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import { BranchObjectiveFunction } from "../../../lib";
+import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
 import { tournamentSelection } from "../../../lib/search/operators/selection/TournamentSelection";
 import { minimumValue } from "../../../lib/util/diagnostics";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";

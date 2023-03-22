@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BranchObjectiveFunction, Encoding } from "../../lib";
+import { BranchObjectiveFunction, Encoding } from "../..";
 
 export class DummyEncodingMock extends Encoding {
   private static counter = 0;

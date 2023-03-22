@@ -18,7 +18,7 @@
 import { ControlFlowGraph, NodeType } from "@syntest/cfg-core";
 import * as chai from "chai";
 
-import { ApproachLevel } from "../../../lib";
+import { ApproachLevel } from "../../..";
 
 const expect = chai.expect;
 

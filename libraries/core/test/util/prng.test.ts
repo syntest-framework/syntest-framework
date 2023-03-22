@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import { prng } from "../../lib";
+import { prng } from "../..";
 
 const expect = chai.expect;
 

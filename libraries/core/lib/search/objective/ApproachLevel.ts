@@ -17,7 +17,7 @@
  */
 import { ControlFlowGraph, Node, Pair } from "@syntest/cfg-core";
 
-import { Datapoint } from "../..";
+import { Datapoint } from "../../..";
 
 export class ApproachLevel {
   public static calculate(

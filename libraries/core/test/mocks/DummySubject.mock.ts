@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, ObjectiveFunction, SearchSubject } from "../../lib";
+import { Encoding, ObjectiveFunction, SearchSubject } from "../..";
 
 import { DummyCFG } from "./DummyCFG.mock";
 

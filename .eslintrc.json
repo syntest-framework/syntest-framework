@@ -6,13 +6,13 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended"
     //"plugin:@typescript-eslint/recommended-requiring-type-checking",
     // "plugin:unicorn/recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "plugin:promise/recommended",
-    "prettier"
+    // "plugin:import/recommended",
+    // "plugin:import/typescript",
+    // "plugin:promise/recommended",
+    // "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -32,34 +32,34 @@
     "notice"
   ],
   "rules": {
-    "import/first": "error",
-    "import/newline-after-import": "error",
-    "import/no-duplicates": "error",
-    "import/order": ["error",
-      {
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        },
-        "newlines-between": "always"
-      }
-    ],
-    "sort-imports": ["error",
-      {
-        "ignoreDeclarationSort": true,
-        "ignoreCase": true
-      }
-    ],
-    "lines-around-comment": ["error",
-      { 
-        "beforeBlockComment": true,
-        "beforeLineComment": true,
-        "allowBlockStart": true,
-        "allowClassStart": true,
-        "allowObjectStart": true,
-        "allowArrayStart": true
-      }
-    ],
+    // "import/first": "error",
+    // "import/newline-after-import": "error",
+    // "import/no-duplicates": "error",
+    // "import/order": ["error",
+    //   {
+    //     "alphabetize": {
+    //       "order": "asc",
+    //       "caseInsensitive": true
+    //     },
+    //     "newlines-between": "always"
+    //   }
+    // ],
+    // "sort-imports": ["error",
+    //   {
+    //     "ignoreDeclarationSort": true,
+    //     "ignoreCase": true
+    //   }
+    // ],
+    // "lines-around-comment": ["error",
+    //   { 
+    //     "beforeBlockComment": true,
+    //     "beforeLineComment": true,
+    //     "allowBlockStart": true,
+    //     "allowClassStart": true,
+    //     "allowObjectStart": true,
+    //     "allowArrayStart": true
+    //   }
+    // ],
     "notice/notice": [
       "error",
       { 

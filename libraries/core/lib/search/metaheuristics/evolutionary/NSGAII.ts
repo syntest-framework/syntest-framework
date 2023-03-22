@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { crowdingDistance, fastNonDomSorting } from "../../..";
+import { crowdingDistance, fastNonDomSorting } from "../../../..";
 import { Encoding } from "../../Encoding";
 import { EncodingSampler } from "../../EncodingSampler";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";

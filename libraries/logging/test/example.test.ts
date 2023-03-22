@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import { setupLogger } from "../lib";
+import { setupLogger } from "../lib/logger";
 
 const expect = chai.expect;
 

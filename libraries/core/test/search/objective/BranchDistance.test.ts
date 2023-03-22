@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import { BranchDistance } from "../../../lib";
+import { BranchDistance } from "../../..";
 
 const expect = chai.expect;
 

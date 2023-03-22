@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../..";
+import { Encoding } from "../../../..";
 
 /**
  * Creates children swapping statements between the parents

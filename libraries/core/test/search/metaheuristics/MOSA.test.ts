@@ -22,7 +22,7 @@ import {
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
-} from "../../../lib";
+} from "../../..";
 import { MOSAFamily } from "../../../lib/search/metaheuristics/evolutionary/MOSAFamily";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";

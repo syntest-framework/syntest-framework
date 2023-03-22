@@ -21,7 +21,7 @@ import {
   BranchObjectiveFunction,
   crowdingDistance,
   ObjectiveFunction,
-} from "../../../lib";
+} from "../../..";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Sfuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export * from "./lib/ControlFlowGraph";
+export * from "./lib/ControlFlowGraphFactory";
 
-// Plugin
-export * as module from "./SfuzzModule";
+export * from "./lib/Edge";
+export * from "./lib/util/Pair";
+export * from "./lib/nodes/Node";
+export * from "./lib/nodes/BranchNode";
+export * from "./lib/nodes/PlaceholderNode";
+export * from "./lib/nodes/RootNode";

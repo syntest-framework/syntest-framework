@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Core Sfuzz Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./module/plugins/PluginType";
-export * from "./module/plugins/ListenerPlugin";
 
-export * from "./module/Command";
-export * from "./module/Module";
-export * from "./module/Plugin";
-export * from "./module/Tool";
-
-export * from "./util/Configuration";
-export * from "./util/diagnostics";
-
-export * from "./ModuleManager";
+// Plugin
+export * as module from "./lib/SfuzzModule";

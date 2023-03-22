@@ -18,7 +18,7 @@
 import * as chai from "chai";
 import { createStubInstance } from "sinon";
 
-import { BranchObjectiveFunction } from "../../../lib";
+import { BranchObjectiveFunction } from "../../..";
 import { DominanceComparator } from "../../../lib/search/comparators/DominanceComparator";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 

@@ -25,7 +25,7 @@ import {
   EncodingSampler,
   ObjectiveFunction,
   ObjectiveManager,
-} from "../../..";
+} from "../../../..";
 import { shouldNeverHappen } from "../../../util/diagnostics";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 
