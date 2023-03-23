@@ -23,12 +23,12 @@ import {
 } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
-import { Offspring } from "@syntest/core";
+import { Procreation } from "@syntest/core";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
   objectiveManager: ObjectiveManager<T>;
   encodingSampler: EncodingSampler<T>;
-  offspring: Offspring<T>;
+  procreation: Procreation<T>;
   populationSize: number;
 };
 

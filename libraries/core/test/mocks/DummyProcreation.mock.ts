@@ -15,33 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Encoding,
-  RandomSearch,
-  SearchAlgorithm,
-  SecondaryObjectiveComparator,
-  SimpleObjectiveManager,
-} from "@syntest/core";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../SearchAlgorithmPlugin";
-import { pluginRequiresOptions } from "@syntest/module";
-/**
- * Plugin for RandomSearch
- *
- * @author Dimitri Stallenberg
- */
-export class RandomSearchPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
-  constructor() {
-    super("Random", "Random search algorithm");
-  }
+import { Procreation } from "../../lib";
+import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new RandomSearch(options.objectiveManager, options.encodingSampler);
+export class DummyProcreation extends Procreation<DummyEncodingMock> {
+  generateOffspringPopulation(
+    populationSize: number,
+    population: DummyEncodingMock[]
+  ): DummyEncodingMock[] {
+    return population;
   }
 }

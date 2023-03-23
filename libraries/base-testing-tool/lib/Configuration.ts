@@ -52,17 +52,17 @@ export type AlgorithmOptions = {
   populationSize: number;
   objectiveManager: string;
   secondaryObjectives: string[];
-  offspring: string;
+  procreation: string;
   crossover: string;
   sampler: string;
   terminationTriggers: string[];
 };
 
 export type BudgetOptions = {
-  totalTimeBudget: number;
-  searchTimeBudget: number;
-  iterationBudget: number;
-  evaluationBudget: number;
+  totalTime: number;
+  searchTime: number;
+  iterations: number;
+  evaluations: number;
 };
 
 export type PostProcessingOptions = {
@@ -70,7 +70,7 @@ export type PostProcessingOptions = {
 };
 
 export type SamplingOptions = {
-  seed: string;
+  randomSeed: string;
   maxDepth: number;
   maxActionStatements: number;
   constantPool: boolean;
@@ -263,11 +263,11 @@ export class Configuration {
             hidden: false,
             type: "string",
           },
-          offspring: {
+          procreation: {
             alias: [],
             default: "",
             choices: [],
-            description: "Offspring operator to be used by the tool.",
+            description: "Procreation operator to be used by the tool.",
             group: OptionGroups.SearchAlgorithm,
             hidden: false,
             type: "string",
@@ -299,31 +299,31 @@ export class Configuration {
       yargs
         // time settings
         .options({
-          "total-time-budget": {
+          "total-time": {
             alias: ["t"],
-            default: 3600,
-            description: "Total time budget",
+            default: Number.MAX_SAFE_INTEGER,
+            description: "Total time budget in seconds",
             group: OptionGroups.Budget,
             hidden: false,
             type: "number",
           },
-          "search-time-budget": {
+          "search-time": {
             alias: [],
-            default: 3600,
-            description: "Search time budget",
+            default: Number.MAX_SAFE_INTEGER,
+            description: "Search time budget in seconds",
             group: OptionGroups.Budget,
             hidden: false,
             type: "number",
           },
-          "iteration-budget": {
-            alias: ["b"],
+          iterations: {
+            alias: [],
             default: Number.MAX_SAFE_INTEGER,
             description: "Iteration budget",
             group: OptionGroups.Budget,
             hidden: false,
             type: "number",
           },
-          "evaluation-budget": {
+          evaluations: {
             alias: [],
             default: Number.MAX_SAFE_INTEGER,
             description: "Evaluation budget",
@@ -357,7 +357,7 @@ export class Configuration {
       yargs
         // random number generator settings
         .options({
-          seed: {
+          "random-seed": {
             alias: ["s"],
             default: null,
             description:

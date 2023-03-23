@@ -15,29 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../Encoding";
-import { EncodingSampler } from "../../EncodingSampler";
-import { Crossover } from "../crossover/Crossover";
+import { Encoding, SearchAlgorithm, MOSAFamily } from "@syntest/core";
+import {
+  SearchAlgorithmPlugin,
+  SearchAlgorithmOptions,
+} from "../SearchAlgorithmPlugin";
 
-export abstract class Offspring<E extends Encoding> {
-  private _crossover: Crossover<E>;
-  private _sampler: EncodingSampler<E>;
-
-  constructor(crossover: Crossover<E>, sampler: EncodingSampler<E>) {
-    this._crossover = crossover;
-    this._sampler = sampler;
+/**
+ * Plugin for MOSA Family Algorithms
+ *
+ * @author Dimitri Stallenberg
+ */
+export class MOSAFamilyPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("MOSAFamily", "Many-Objective Sorting Algorithm");
   }
 
-  abstract generateOffspringPopulation(
-    populationSize: number,
-    population: E[]
-  ): E[];
-
-  get crossover(): Crossover<E> {
-    return this._crossover;
-  }
-
-  get sampler(): EncodingSampler<E> {
-    return this._sampler;
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    return new MOSAFamily<T>(
+      options.objectiveManager,
+      options.encodingSampler,
+      options.procreation,
+      options.populationSize
+    );
   }
 }

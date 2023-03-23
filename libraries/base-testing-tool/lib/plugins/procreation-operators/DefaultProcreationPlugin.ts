@@ -15,41 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Encoding,
-  SearchAlgorithm,
-  MOSAFamily,
-  StructuralObjectiveManager,
-  UncoveredObjectiveManager,
-  LengthObjectiveComparator,
-  SecondaryObjectiveComparator,
-} from "@syntest/core";
-import { pluginRequiresOptions } from "@syntest/module";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../SearchAlgorithmPlugin";
+import { DefaultProcreation, Encoding, Procreation } from "@syntest/core";
+import { ProcreationOptions, ProcreationPlugin } from "../ProcreationPlugin";
 
 /**
- * Plugin for MOSA Family Algorithms
+ * Plugin for SignalTerminationTrigger
  *
  * @author Dimitri Stallenberg
  */
-export class MOSAFamilyPlugin<
+export class DefaultProcreationPlugin<
   T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+> extends ProcreationPlugin<T> {
   constructor() {
-    super("MOSAFamily", "Many-Objective Sorting Algorithm");
+    super("default", "A default procreation operator");
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new MOSAFamily<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.offspring,
-      options.populationSize
-    );
+  createProcreationOperator(options: ProcreationOptions<T>): Procreation<T> {
+    return new DefaultProcreation(options.crossover, options.sampler);
   }
 }

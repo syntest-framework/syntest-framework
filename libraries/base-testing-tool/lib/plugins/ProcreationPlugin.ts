@@ -16,36 +16,38 @@
  * limitations under the License.
  */
 import {
+  Crossover,
   Encoding,
-  SearchAlgorithm,
-  NSGAII,
-  SimpleObjectiveManager,
-  SecondaryObjectiveComparator,
+  EncodingSampler,
+  Procreation,
 } from "@syntest/core";
-import { pluginRequiresOptions } from "@syntest/module";
-import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
-} from "../SearchAlgorithmPlugin";
+import { Plugin } from "@syntest/module";
+import { PluginType } from "./PluginType";
 
-/**
- * Plugin for NSGAII
- *
- * @author Dimitri Stallenberg
- */
-export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
-  constructor() {
-    super("NSGAII", "NSGAII search algorithm");
+export type ProcreationOptions<T extends Encoding> = {
+  crossover: Crossover<T>;
+  sampler: EncodingSampler<T>;
+};
+
+export abstract class ProcreationPlugin<T extends Encoding> extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.Offspring, name, describe);
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new NSGAII<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.offspring,
-      options.populationSize
-    );
+  abstract createProcreationOperator<O extends ProcreationOptions<T>>(
+    options: O
+  ): Procreation<T>;
+
+  getCommandOptionChoices(
+    tool: string,
+    labels: string[],
+    command: string,
+    option: string
+  ): string[] {
+    if (option === "procreation") {
+      return [this.name];
+    }
+
+    return [];
   }
 }

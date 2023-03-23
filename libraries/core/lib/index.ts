@@ -75,8 +75,8 @@ export * from "./search/objective/secondary/LengthObjectiveComparator";
 // - Operator
 export * from "./search/operators/crossover/Crossover";
 
-export * from "./search/operators/offspring/Offspring";
-export * from "./search/operators/offspring/DefaultOffspring";
+export * from "./search/operators/procreation/Procreation";
+export * from "./search/operators/procreation/DefaultProcreation";
 
 export * from "./search/operators/ranking/CrowdingDistance";
 export * from "./search/operators/ranking/FastNonDomSorting";

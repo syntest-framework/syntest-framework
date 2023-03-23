@@ -19,9 +19,9 @@
 import { prng } from "../../../util/prng";
 import { Encoding } from "../../Encoding";
 import { tournamentSelection } from "../selection/TournamentSelection";
-import { Offspring } from "./Offspring";
+import { Procreation } from "./Procreation";
 
-export class DefaultOffspring<E extends Encoding> extends Offspring<E> {
+export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
   generateOffspringPopulation(populationSize: number, population: E[]): E[] {
     const offspring = [];
 

@@ -20,9 +20,8 @@ import {
   Encoding,
   MOSAFamily,
   EncodingSampler,
-  Crossover,
   ObjectiveManager,
-  Offspring,
+  Procreation,
 } from "@syntest/core";
 import { shouldNeverHappen } from "@syntest/core";
 import { getLogger } from "@syntest/logging";
@@ -43,10 +42,10 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    offspring: Offspring<T>,
+    procreation: Procreation<T>,
     populationSize: number
   ) {
-    super(objectiveManager, encodingSampler, offspring, populationSize);
+    super(objectiveManager, encodingSampler, procreation, populationSize);
   }
 
   protected _environmentalSelection(): void {
