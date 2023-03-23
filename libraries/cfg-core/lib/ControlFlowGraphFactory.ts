@@ -18,6 +18,6 @@
 
 import { ControlFlowProgram } from "./ControlFlowProgram";
 
-export interface ControlFlowGraphFactory {
-  convertAST<S>(AST: S): ControlFlowProgram<S>;
+export interface ControlFlowGraphFactory<S> {
+  convertAST(filePath: string, AST: S): ControlFlowProgram<S>;
 }
