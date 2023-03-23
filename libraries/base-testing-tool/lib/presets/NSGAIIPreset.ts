@@ -39,7 +39,6 @@ export class NSGAIIPreset extends Preset {
     (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "NSGAII";
     (<ArgumentsObject>(<unknown>args)).objectiveManager = "simple";
     (<ArgumentsObject>(<unknown>args)).procreation = "default";
-    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>args)).populationSize = 50;
 
     return args;
