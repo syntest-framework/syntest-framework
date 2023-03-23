@@ -299,7 +299,7 @@ export class Configuration {
       yargs
         // time settings
         .options({
-          "total-time-budget": {
+          "total-time": {
             alias: ["t"],
             default: Number.MAX_SAFE_INTEGER,
             description: "Total time budget",
@@ -307,7 +307,7 @@ export class Configuration {
             hidden: false,
             type: "number",
           },
-          "search-time-budget": {
+          "search-time": {
             alias: [],
             default: Number.MAX_SAFE_INTEGER,
             description: "Search time budget",
@@ -315,7 +315,7 @@ export class Configuration {
             hidden: false,
             type: "number",
           },
-          "iteration-budget": {
+          iteration: {
             alias: ["b"],
             default: Number.MAX_SAFE_INTEGER,
             description: "Iteration budget",
@@ -323,7 +323,7 @@ export class Configuration {
             hidden: false,
             type: "number",
           },
-          "evaluation-budget": {
+          evaluation: {
             alias: [],
             default: Number.MAX_SAFE_INTEGER,
             description: "Evaluation budget",

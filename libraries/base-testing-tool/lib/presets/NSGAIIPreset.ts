@@ -19,6 +19,17 @@ import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 import { ArgumentsObject } from "../Configuration";
 
+/**
+ * Non-dominated Sorting Genetic Algorithm (NSGA-II).
+ *
+ * Based on:
+ * A fast and elitist multiobjective genetic algorithm: NSGA-II
+ * K. Deb; A. Pratap; S. Agarwal; T. Meyarivan
+ *
+ * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
+ * @author Dimitri Stallenberg
+ */
 export class NSGAIIPreset extends Preset {
   constructor() {
     super("NSGAII", "NSGAII preset");

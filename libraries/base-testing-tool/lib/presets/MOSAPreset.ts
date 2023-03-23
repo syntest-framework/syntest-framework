@@ -19,6 +19,16 @@ import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 import { ArgumentsObject } from "../Configuration";
 
+/**
+ * Many-objective Sorting Algorithm (MOSA).
+ *
+ * Based on:
+ * Reformulating Branch Coverage as a Many-Objective Optimization Problem
+ * A. Panichella; F. K. Kifetew; P. Tonella
+ *
+ * @author Mitchell Olsthoorn
+ * @author Annibale Panichella
+ */
 export class MOSAPreset extends Preset {
   constructor() {
     super("MOSA", "MOSA preset");

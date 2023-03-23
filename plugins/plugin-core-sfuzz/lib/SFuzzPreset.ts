@@ -28,6 +28,9 @@ export class SFuzzPreset extends Preset {
   modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
     (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "sFuzz";
     (<ArgumentsObject>(<unknown>args)).objectiveManager = "sFuzz";
+    (<ArgumentsObject>(<unknown>args)).procreation = "default";
+    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
 
     return args;
   }
