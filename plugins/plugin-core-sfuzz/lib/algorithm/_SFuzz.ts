@@ -42,10 +42,10 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    offspring: Procreation<T>,
+    procreation: Procreation<T>,
     populationSize: number
   ) {
-    super(objectiveManager, encodingSampler, offspring, populationSize);
+    super(objectiveManager, encodingSampler, procreation, populationSize);
   }
 
   protected _environmentalSelection(): void {

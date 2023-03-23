@@ -16,11 +16,6 @@
  * limitations under the License.
  */
 import { Module, ModuleManager } from "@syntest/module";
-import { SimpleObjectiveManagerPlugin } from "./plugins/objectiveManagers/SimpleObjectiveManagerPlugin";
-import { StructuralObjectiveManagerPlugin } from "./plugins/objectiveManagers/StructuralObjectiveManagerPlugin";
-import { UncoveredObjectiveManagerPlugin } from "./plugins/objectiveManagers/UncoveredObjectiveManagerPlugin";
-import { DefaultOffspringPlugin } from "./plugins/offspringOperators/DefaultOffspringPlugin";
-import { LengthObjectiveComparatorPlugin } from "./plugins/secondaryObjectives/LengthObjectiveComparatorPlugin";
 import { SearchMetricListener } from "./plugins/listeners/SearchMetricListener";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
@@ -30,6 +25,10 @@ import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/S
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
+import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
+import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
+import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 
 export abstract class TestingToolModule extends Module {
   register(moduleManager: ModuleManager): void {

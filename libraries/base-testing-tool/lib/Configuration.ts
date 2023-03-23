@@ -263,15 +263,6 @@ export class Configuration {
             hidden: false,
             type: "string",
           },
-          offspring: {
-            alias: [],
-            default: "",
-            choices: [],
-            description: "Offspring operator to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "string",
-          },
           procreation: {
             alias: [],
             default: "",

@@ -37,7 +37,7 @@ export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
     return new NSGAII<T>(
       options.objectiveManager,
       options.encodingSampler,
-      options.offspring,
+      options.procreation,
       options.populationSize
     );
   }

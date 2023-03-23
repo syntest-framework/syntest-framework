@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core SFuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core sFuzz Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,31 @@
  * limitations under the License.
  */
 
-import { Encoding, SearchAlgorithm } from "@syntest/core";
-import { SFuzz } from "../SFuzz";
+import { Encoding, ObjectiveManager } from "@syntest/core";
+import { SFuzzObjectiveManager } from "../algorithm/_SFuzzObjectiveManager";
 import {
-  SearchAlgorithmPlugin,
-  SearchAlgorithmOptions,
+  ObjectiveManagerPlugin,
+  ObjectiveManagerOptions,
 } from "@syntest/base-testing-tool";
 
 /**
- * Plugin for the SFuzz search algorithm.
+ * Plugin for the sFuzz objective manager.
  *
  * @author Dimitri Stallenberg
  */
-export class SFuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+export class SFuzzObjectiveManagerPlugin<
+  T extends Encoding
+> extends ObjectiveManagerPlugin<T> {
   constructor() {
-    super("SFuzz", "SFuzz search algorithm");
+    super("sFuzz", "sFuzz objective manager");
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new SFuzz<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.offspring,
-      options.populationSize
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    return new SFuzzObjectiveManager<T>(
+      options.runner,
+      options.secondaryObjectives
     );
   }
 }

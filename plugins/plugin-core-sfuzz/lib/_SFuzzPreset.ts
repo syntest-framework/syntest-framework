@@ -20,7 +20,7 @@ import { ArgumentsObject } from "@syntest/base-testing-tool";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-export default class SFuzzPreset extends Preset {
+export class SFuzzPreset extends Preset {
   constructor() {
     super("sFuzz", "sFuzz preset");
   }

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core SFuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core sFuzz Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,20 @@
  */
 
 import { Encoding, SearchAlgorithm } from "@syntest/core";
-import { SFuzz } from "../SFuzz";
+import { SFuzz } from "../algorithm/_SFuzz";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
 } from "@syntest/base-testing-tool";
 
 /**
- * Plugin for the SFuzz search algorithm.
+ * Plugin for the sFuzz search algorithm.
  *
  * @author Dimitri Stallenberg
  */
 export class SFuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("SFuzz", "SFuzz search algorithm");
+    super("sFuzz", "sFuzz search algorithm");
   }
 
   createSearchAlgorithm(
@@ -39,7 +39,7 @@ export class SFuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
     return new SFuzz<T>(
       options.objectiveManager,
       options.encodingSampler,
-      options.offspring,
+      options.procreation,
       options.populationSize
     );
   }
