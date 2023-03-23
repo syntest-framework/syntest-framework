@@ -17,7 +17,7 @@
  */
 
 import { Encoding, SearchAlgorithm } from "@syntest/core";
-import { SFuzz } from "../algorithm/_SFuzz";
+import { SFuzz } from "../algorithm/SFuzz";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
