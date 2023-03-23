@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Sfuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core sFuzz Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,4 +17,4 @@
  */
 
 // Plugin
-export * as module from "./SfuzzModule";
+export * as module from "./SFuzzModule";

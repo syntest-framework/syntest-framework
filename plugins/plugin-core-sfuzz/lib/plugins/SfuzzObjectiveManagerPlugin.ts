@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Sfuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core SFuzz Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,28 @@
  */
 
 import { Encoding, ObjectiveManager, SearchAlgorithm } from "@syntest/core";
-import { SfuzzObjectiveManager } from "../SfuzzObjectiveManager";
+import { SFuzzObjectiveManager } from "../SFuzzObjectiveManager";
 import {
   ObjectiveManagerPlugin,
   ObjectiveManagerOptions,
 } from "@syntest/base-testing-tool";
 
 /**
- * Plugin for the Sfuzz objective manager.
+ * Plugin for the SFuzz objective manager.
  *
  * @author Dimitri Stallenberg
  */
-export class SfuzzObjectiveManagerPlugin<
+export class SFuzzObjectiveManagerPlugin<
   T extends Encoding
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
-    super("Sfuzz", "Sfuzz objective manager");
+    super("SFuzz", "SFuzz objective manager");
   }
 
   createObjectiveManager(
     options: ObjectiveManagerOptions<T>
   ): ObjectiveManager<T> {
-    return new SfuzzObjectiveManager<T>(
+    return new SFuzzObjectiveManager<T>(
       options.runner,
       options.secondaryObjectives
     );
