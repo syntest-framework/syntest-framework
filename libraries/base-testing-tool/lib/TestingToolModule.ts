@@ -60,8 +60,8 @@ export abstract class TestingToolModule extends Module {
       new SignalTerminationTriggerPlugin()
     );
 
-    moduleManager.registerPreset(this.name, new MOSAPreset());
     moduleManager.registerPreset(this.name, new NSGAIIPreset());
+    moduleManager.registerPreset(this.name, new MOSAPreset());
     moduleManager.registerPreset(this.name, new DynaMOSAPreset());
   }
 }
