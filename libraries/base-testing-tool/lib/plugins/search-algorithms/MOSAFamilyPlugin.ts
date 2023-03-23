@@ -39,7 +39,7 @@ export class MOSAFamilyPlugin<
     return new MOSAFamily<T>(
       options.objectiveManager,
       options.encodingSampler,
-      options.offspring,
+      options.procreation,
       options.populationSize
     );
   }

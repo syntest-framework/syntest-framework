@@ -51,9 +51,9 @@ export abstract class EvolutionaryAlgorithm<
   protected _populationSize: number;
 
   /**
-   * The offspring operator to apply.
+   * The procreation operator to apply.
    */
-  protected _offspring: Procreation<T>;
+  protected _procreation: Procreation<T>;
 
   /**
    * Constructor.
@@ -66,12 +66,12 @@ export abstract class EvolutionaryAlgorithm<
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    offspring: Procreation<T>,
+    procreation: Procreation<T>,
     populationSize: number
   ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
-    this._offspring = offspring;
+    this._procreation = procreation;
     this._populationSize = populationSize;
 
     this._population = [];
@@ -108,7 +108,7 @@ export abstract class EvolutionaryAlgorithm<
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<void> {
-    const offspring = this._offspring.generateOffspringPopulation(
+    const offspring = this._procreation.generateOffspringPopulation(
       this._populationSize,
       this._population
     );

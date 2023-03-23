@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Sfuzz plugin.
+ * This file is part of SynTest Framework - SynTest Core sFuzz plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ import { getLogger } from "@syntest/logging";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
-  static LOGGER = getLogger("Sfuzz");
+export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
+  static LOGGER = getLogger("sFuzz");
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
@@ -62,7 +62,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       return; // the search should end
 
     // non-dominated sorting
-    Sfuzz.LOGGER.debug(
+    SFuzz.LOGGER.debug(
       "Number of objectives = " +
         this._objectiveManager.getCurrentObjectives().size
     );
@@ -72,7 +72,7 @@ export class Sfuzz<T extends Encoding> extends MOSAFamily<T> {
       this._objectiveManager.getCurrentObjectives()
     );
 
-    Sfuzz.LOGGER.debug("First front size = " + F[0].length);
+    SFuzz.LOGGER.debug("First front size = " + F[0].length);
 
     // select new population
     this._population = F[0];

@@ -28,7 +28,7 @@ import { Procreation } from "@syntest/core";
 export type SearchAlgorithmOptions<T extends Encoding> = {
   objectiveManager: ObjectiveManager<T>;
   encodingSampler: EncodingSampler<T>;
-  offspring: Procreation<T>;
+  procreation: Procreation<T>;
   populationSize: number;
 };
 

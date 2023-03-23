@@ -20,14 +20,14 @@ import { ArgumentsObject } from "@syntest/base-testing-tool";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-export default class SfuzzPreset extends Preset {
+export default class SFuzzPreset extends Preset {
   constructor() {
-    super("Sfuzz", "Sfuzz preset");
+    super("sFuzz", "sFuzz preset");
   }
 
   modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
-    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "Sfuzz";
-    (<ArgumentsObject>(<unknown>args)).objectiveManager = "Sfuzz";
+    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "sFuzz";
+    (<ArgumentsObject>(<unknown>args)).objectiveManager = "sFuzz";
 
     return args;
   }

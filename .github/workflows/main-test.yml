@@ -70,6 +70,9 @@ jobs:
           - tools/init
 
     steps:
+      # Cloning
+      - uses: actions/checkout@v3
+
       # Download test results
       - uses: actions/download-artifact@v3
         with:
@@ -84,7 +87,8 @@ jobs:
           # We collect all coverages in parallel
           parallel: true
           flag-name: ${{ matrix.package }}
-          path-to-lcov: ${{ github.workspace }}/${{ matrix.package }}/coverage/lcov.info
+          base-path: ${{ matrix.package }}/
+          path-to-lcov: ${{ matrix.package }}/coverage/lcov.info
 
   # Indicate sending coverage to Coveralls is finished
   coverage-finished:

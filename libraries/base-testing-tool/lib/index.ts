@@ -31,13 +31,20 @@ export * from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 
 export * from "./plugins/CrossoverPlugin";
 export * from "./plugins/ObjectiveManagerPlugin";
-export * from "./plugins/ProcreationPlugin";
 export * from "./plugins/PluginType";
+export * from "./plugins/ProcreationPlugin";
 export * from "./plugins/SamplerPlugin";
 export * from "./plugins/SearchAlgorithmPlugin";
+export * from "./plugins/SecondaryObjectivePlugin";
 export * from "./plugins/TerminationTriggerPlugin";
+
+export * from "./presets/DynaMOSAPreset";
+export * from "./presets/MOSAPreset";
+export * from "./presets/NSGAIIPreset";
 
 export * from "./util/fileSystem";
 
 export * from "./Configuration";
 export * from "./Launcher";
+export * from "./Metrics";
+export * from "./TestingToolModule";
