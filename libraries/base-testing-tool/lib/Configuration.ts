@@ -59,10 +59,10 @@ export type AlgorithmOptions = {
 };
 
 export type BudgetOptions = {
-  totalTimeBudget: number;
-  searchTimeBudget: number;
-  iterationBudget: number;
-  evaluationBudget: number;
+  totalTime: number;
+  searchTime: number;
+  iterations: number;
+  evaluations: number;
 };
 
 export type PostProcessingOptions = {
@@ -70,7 +70,7 @@ export type PostProcessingOptions = {
 };
 
 export type SamplingOptions = {
-  seed: string;
+  randomSeed: string;
   maxDepth: number;
   maxActionStatements: number;
   constantPool: boolean;
@@ -302,7 +302,7 @@ export class Configuration {
           "total-time": {
             alias: ["t"],
             default: Number.MAX_SAFE_INTEGER,
-            description: "Total time budget",
+            description: "Total time budget in seconds",
             group: OptionGroups.Budget,
             hidden: false,
             type: "number",
@@ -310,20 +310,20 @@ export class Configuration {
           "search-time": {
             alias: [],
             default: Number.MAX_SAFE_INTEGER,
-            description: "Search time budget",
+            description: "Search time budget in seconds",
             group: OptionGroups.Budget,
             hidden: false,
             type: "number",
           },
-          iteration: {
-            alias: ["b"],
+          iterations: {
+            alias: [],
             default: Number.MAX_SAFE_INTEGER,
             description: "Iteration budget",
             group: OptionGroups.Budget,
             hidden: false,
             type: "number",
           },
-          evaluation: {
+          evaluations: {
             alias: [],
             default: Number.MAX_SAFE_INTEGER,
             description: "Evaluation budget",
@@ -357,7 +357,7 @@ export class Configuration {
       yargs
         // random number generator settings
         .options({
-          seed: {
+          "random-seed": {
             alias: ["s"],
             default: null,
             description:
