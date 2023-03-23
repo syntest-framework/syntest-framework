@@ -78,8 +78,8 @@ export type SamplingOptions = {
   resampleGeneProbability: number;
   deltaMutationProbability: number;
   sampleExistingValueProbability: number;
-  crossoverStatementProbability: number;
-  crossoverEncodingProbability: number;
+  multiPointCrossoverProbability: number;
+  crossoverProbability: number;
   constantPoolProbability: number;
   sampleFunctionOutputAsArgument: number;
   stringAlphabet: string;
@@ -430,7 +430,16 @@ export class Configuration {
           },
           "crossover-probability": {
             alias: [],
-            default: 0.8,
+            default: 0.7,
+            description:
+              "Probability crossover happens for a certain encoding.",
+            group: OptionGroups.Sampling,
+            hidden: false,
+            type: "number",
+          },
+          "multi-point-crossover-probability": {
+            alias: [],
+            default: 0.5,
             description:
               "Probability crossover happens at a certain branch point.",
             group: OptionGroups.Sampling,
