@@ -16,16 +16,13 @@
  * limitations under the License.
  */
 
-import { writeFileSync } from "fs";
-
 import { CONFIG } from "@syntest/base-testing-tool";
 import { ControlFlowGraph } from "@syntest/cfg-core";
-import { OptionGroups as CliOptionGroups } from "@syntest/cli";
-import { Encoding, Events, TargetPool } from "@syntest/core";
+import { Events, RootContext } from "@syntest/core";
 import { ListenerPlugin } from "@syntest/module";
+import { writeFileSync } from "fs";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
-
 import { createSimulation } from "./D3Simulation";
 
 export type GraphOptions = {
@@ -37,7 +34,7 @@ export type GraphOptions = {
  *
  * @author Dimitri Stallenberg
  */
-export default class GraphingPlugin extends ListenerPlugin {
+export class GraphingPlugin extends ListenerPlugin {
   constructor() {
     super("Graphing", "Creates a graph of the CFG");
   }
@@ -68,7 +65,7 @@ export default class GraphingPlugin extends ListenerPlugin {
       alias: [],
       default: "cfg",
       description: "The path where the csv should be saved",
-      group: CliOptionGroups.Storage,
+      group: OptionGroups.Graphing,
       hidden: false,
       normalize: true,
       type: "string",
@@ -77,9 +74,9 @@ export default class GraphingPlugin extends ListenerPlugin {
     return optionsMap;
   }
 
-  controlFlowGraphResolvingComplete<E extends Encoding>(
-    targetPool: TargetPool<E>,
-    cfg: ControlFlowGraph
+  controlFlowGraphResolvingComplete<S>(
+    rootContext: RootContext,
+    cfg: ControlFlowGraph<S>
   ): void {
     const svgHtml = createSimulation(cfg);
 
@@ -87,4 +84,8 @@ export default class GraphingPlugin extends ListenerPlugin {
     const path = `${base}/test.svg`;
     writeFileSync(path, svgHtml);
   }
+}
+
+export enum OptionGroups {
+  Graphing = "Graphing Options:",
 }

@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 import {
-  Crossover,
   Encoding,
-  EncodingRunner,
   EncodingSampler,
   ObjectiveManager,
   SearchAlgorithm,
@@ -26,14 +24,13 @@ import {
 import { Plugin } from "@syntest/module";
 
 import { PluginType } from "./PluginType";
+import { Procreation } from "@syntest/core";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
-  objectiveManager?: ObjectiveManager<T>;
-  encodingSampler?: EncodingSampler<T>;
-  runner?: EncodingRunner<T>;
-  crossover?: Crossover<T>;
-  populationSize?: number;
-  crossoverProbability?: number;
+  objectiveManager: ObjectiveManager<T>;
+  encodingSampler: EncodingSampler<T>;
+  procreation: Procreation<T>;
+  populationSize: number;
 };
 
 export abstract class SearchAlgorithmPlugin<T extends Encoding> extends Plugin {
@@ -44,4 +41,17 @@ export abstract class SearchAlgorithmPlugin<T extends Encoding> extends Plugin {
   abstract createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(
     options: O
   ): SearchAlgorithm<T>;
+
+  getCommandOptionChoices(
+    tool: string,
+    labels: string[],
+    command: string,
+    option: string
+  ): string[] {
+    if (option === "search-algorithm") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

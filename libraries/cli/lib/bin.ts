@@ -17,23 +17,22 @@
  * limitations under the License.
  */
 
-import * as path from "path";
-
-import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
+import yargHelper = require("yargs/helpers");
+import { BaseOptions } from "@syntest/module";
+import {
+  ModuleManager,
+  PluginType,
+  ListenerPlugin,
+  Configuration as ModuleConfiguration,
+} from "@syntest/module";
 import {
   getLogger,
   Configuration as LogConfiguration,
   setupLogger,
 } from "@syntest/logging";
-import {
-  ListenerPlugin,
-  Configuration as ModuleConfiguration,
-  ModuleManager,
-  PluginType,
-} from "@syntest/module";
-import yargHelper = require("yargs/helpers");
-
-import { BaseOptions, Configuration } from "./Configuration";
+import * as path from "path";
+import { UserInterface } from "@syntest/cli-graphics";
+import { MetricManager, MetricOptions } from "@syntest/metric";
 
 async function main() {
   // Setup user interface
@@ -49,15 +48,17 @@ async function main() {
    * We disable help and version here because, we don't want the help command to be triggered.
    * When we did not configure the commands and options from the added modules yet.
    */
-  let yargs = Configuration.configureUsage().help(false).version(false);
+  let yargs = ModuleConfiguration.configureUsage().help(false).version(false);
 
   // Configure general options
-  yargs = Configuration.configureOptions(yargs);
-  yargs = LogConfiguration.configureOptions(yargs);
   yargs = ModuleConfiguration.configureOptions(yargs);
+  yargs = LogConfiguration.configureOptions(yargs);
 
   // Parse the arguments and config using only the base options
-  const baseArguments = yargs.wrap(yargs.terminalWidth()).parseSync(args);
+  const baseArguments = yargs
+    .wrap(yargs.terminalWidth())
+    .env("SYNTEST")
+    .parseSync(args);
 
   // Setup logger
   setupLogger(
@@ -70,66 +71,55 @@ async function main() {
   );
   const LOGGER = getLogger("cli");
 
-  // Setup module manager
-  ModuleManager.initializeModuleManager();
+  // Setup metric manager
+  const metricManager = new MetricManager("global");
 
+  // Setup module manager
+  const moduleManager = new ModuleManager(metricManager, userInterface);
+
+  // Enable help on fail
   yargs = yargs.showHelpOnFail(true);
 
   // Import defined modules
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
   LOGGER.info("Loading standard modules...");
-  await ModuleManager.instance.loadModule("@syntest/init", "@syntest/init");
+  await moduleManager.loadModule("@syntest/init", "@syntest/init");
   LOGGER.info("Loading modules...", modules);
-  await ModuleManager.instance.loadModules(modules, userInterface);
-  yargs = await ModuleManager.instance.configureModules(yargs);
+  await moduleManager.loadModules(modules);
+  yargs = await moduleManager.configureModules(
+    yargs,
+    (<BaseOptions>(<unknown>baseArguments)).preset
+  );
+
+  // Set the metrics on the metric manager
+  metricManager.metrics = await moduleManager.getMetrics();
 
   // Setup cleanup on exit handler
-  process.on("exit", (code) => {
+  process.on("exit", async (code) => {
     if (code !== 0) {
       LOGGER.error("Process exited with code: " + code);
       userInterface.printError("Process exited with code: " + code);
     }
     LOGGER.info("Cleaning up...");
-    ModuleManager.instance.cleanup();
+    moduleManager.cleanup();
     LOGGER.info("Cleanup done! Exiting...");
   });
 
-  const itemization: ItemizationItem[] = [];
-  for (const module of ModuleManager.instance.modules.values()) {
-    itemization.push({
-      text: `Module: ${module.name} (${module.version})`,
-      subItems: [
-        {
-          text: `Tools: ${(await module.getTools()).length ? "" : "[]"}`,
-          subItems: (await module.getTools()).map((tool) => ({
-            text: `${tool.name}: ${tool.describe}`,
-          })),
-        },
-        {
-          text: `Plugins: ${(await module.getPlugins()).length ? "" : "[]"}`,
-          subItems: (await module.getPlugins()).map((plugin) => ({
-            text: `${plugin.name}: ${plugin.describe}`,
-          })),
-        },
-      ],
-    });
-  }
-
-  userInterface.printItemization("Module loaded:", itemization);
+  moduleManager.printModuleVersionTable();
 
   // Register all listener plugins
-  for (const plugin of ModuleManager.instance
-    .getPluginsOfType(PluginType.Listener)
+  for (const plugin of moduleManager
+    .getPluginsOfType(PluginType.LISTENER)
     .values()) {
-    (<ListenerPlugin>plugin).setupEventListener();
+    (<ListenerPlugin>plugin).setupEventListener(metricManager);
   }
 
   // Prepare modules
   LOGGER.info("Preparing modules...");
-  await ModuleManager.instance.prepare();
+  await moduleManager.prepare();
   LOGGER.info("Modules prepared!");
 
-  const versions = [...ModuleManager.instance.modules.values()]
+  const versions = [...moduleManager.modules.values()]
     .map((module) => `${module.name} (${module.version})`)
     .join("\n");
 
@@ -141,6 +131,14 @@ async function main() {
     .version(versions)
     .showHidden(false)
     .demandCommand()
+    .env("SYNTEST")
+    .middleware(async (argv) => {
+      // Set the arguments in the module manager
+      moduleManager.args = argv;
+      metricManager.setOutputMetrics(
+        (<MetricOptions>(<unknown>argv)).outputMetrics
+      );
+    })
     .parse(args);
 }
 

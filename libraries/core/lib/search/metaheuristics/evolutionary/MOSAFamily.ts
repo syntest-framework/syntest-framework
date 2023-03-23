@@ -16,49 +16,29 @@
  * limitations under the License.
  */
 
-import { getLogger } from "@syntest/logging";
-
-import {
-  Crossover,
-  crowdingDistance,
-  Encoding,
-  EncodingSampler,
-  ObjectiveFunction,
-  ObjectiveManager,
-} from "../../../..";
-import { shouldNeverHappen } from "../../../util/diagnostics";
-import { DominanceComparator } from "../../comparators/DominanceComparator";
-
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
+import { DominanceComparator } from "../../comparators/DominanceComparator";
+import { shouldNeverHappen } from "../../../util/diagnostics";
+
+import { getLogger } from "@syntest/logging";
+import { Encoding } from "../../Encoding";
+import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 
 /**
- * Many-objective Sorting Algorithm (MOSA).
+ * Many-objective Sorting Algorithm (MOSA) family of search algorithms.
  *
  * Based on:
  * Reformulating Branch Coverage as a Many-Objective Optimization Problem
  * A. Panichella; F. K. Kifetew; P. Tonella
+ *
+ * Used by MOSA and DynaMOSA.
  *
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   static LOGGER = getLogger("MOSAFamily");
-
-  constructor(
-    objectiveManager: ObjectiveManager<T>,
-    encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>,
-    populationSize: number,
-    crossoverProbability: number
-  ) {
-    super(
-      objectiveManager,
-      encodingSampler,
-      crossover,
-      populationSize,
-      crossoverProbability
-    );
-  }
 
   protected _environmentalSelection(size: number): void {
     if (

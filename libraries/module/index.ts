@@ -15,13 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/module/plugins/PluginType";
-export * from "./lib/module/plugins/ListenerPlugin";
+export * from "./lib/extension/plugins/PluginType";
+export * from "./lib/extension/plugins/MetricMiddlewarePlugin";
+export * from "./lib/extension/plugins/ListenerPlugin";
 
-export * from "./lib/module/Command";
-export * from "./lib/module/Module";
-export * from "./lib/module/Plugin";
-export * from "./lib/module/Tool";
+export * from "./lib/extension/Command";
+export * from "./lib/extension/Extension";
+export * from "./lib/extension/Module";
+export * from "./lib/extension/Plugin";
+export * from "./lib/extension/Preset";
+export * from "./lib/extension/Tool";
 
 export * from "./lib/util/Configuration";
 export * from "./lib/util/diagnostics";

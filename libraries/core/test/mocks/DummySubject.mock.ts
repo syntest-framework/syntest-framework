@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, ObjectiveFunction, SearchSubject } from "../..";
 
-import { DummyCFG } from "./DummyCFG.mock";
+import { Encoding, ObjectiveFunction, SearchSubject } from "../..";
+import { DummyRootContext } from "./DummyRootContext.mock";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
   protected objectives: ObjectiveFunction<T>[];
 
   constructor(objectives: ObjectiveFunction<T>[]) {
-    super("", "", new DummyCFG([], []));
+    super({ path: "", name: "", subTargets: [] }, new DummyRootContext(""));
     this.objectives = objectives;
   }
 

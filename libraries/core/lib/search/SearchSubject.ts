@@ -17,10 +17,11 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ControlFlowGraph } from "@syntest/cfg-core";
-
-import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
+import { Encoding } from "./Encoding";
+import { ControlFlowProgram } from "@syntest/cfg-core";
+import { Target } from "../analysis/static/Target";
+import { RootContext } from "../analysis/static/RootContext";
 
 /**
  * Subject of the search process.
@@ -29,22 +30,16 @@ import { ObjectiveFunction } from "./objective/ObjectiveFunction";
  */
 export abstract class SearchSubject<T extends Encoding> {
   /**
-   * Path to the subject.
+   * Subject Target
    * @protected
    */
-  private readonly _path: string;
+  protected readonly _target: Target;
 
   /**
-   * Name of the subject.
+   * The root context.
    * @protected
    */
-  protected readonly _name: string;
-
-  /**
-   * Control flow graph of the subject.
-   * @protected
-   */
-  protected readonly _cfg: ControlFlowGraph;
+  protected readonly _rootContext: RootContext;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -55,21 +50,19 @@ export abstract class SearchSubject<T extends Encoding> {
   /**
    * Constructor.
    *
-   * @param name Name of the subject
-   * @param cfg Control flow graph of the subject
-   * @param functions Functions of the subject
+   * @param target Target of the subject
+   * @param rootContext RootContext of the subject
    * @protected
    */
-  protected constructor(path: string, name: string, cfg: ControlFlowGraph) {
-    this._path = path;
-    this._name = name;
-    this._cfg = cfg;
+  protected constructor(target: Target, rootContext: RootContext) {
+    this._target = target;
+    this._rootContext = rootContext;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
     this._extractObjectives();
   }
 
   /**
-   * Extract objectives from the subject
+   * Extract objectives from the subject based on the targets.
    * @protected
    */
   protected abstract _extractObjectives(): void;
@@ -93,14 +86,14 @@ export abstract class SearchSubject<T extends Encoding> {
   }
 
   get name(): string {
-    return this._name;
+    return this._target.name;
   }
 
-  get cfg(): ControlFlowGraph {
-    return this._cfg;
+  get cfg(): ControlFlowProgram<unknown> {
+    return this._rootContext.getControlFlowProgram(this.path);
   }
 
   get path(): string {
-    return this._path;
+    return this._target.path;
   }
 }

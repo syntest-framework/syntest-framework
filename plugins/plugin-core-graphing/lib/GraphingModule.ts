@@ -17,18 +17,13 @@
  */
 
 import { mkdirSync } from "fs";
-
+import { Module, ModuleManager } from "@syntest/module";
+import { GraphOptions, GraphingPlugin } from "./GraphingPlugin";
 import { CONFIG } from "@syntest/base-testing-tool";
-import { Module, Plugin, Tool } from "@syntest/module";
-
-import GraphingPlugin, { GraphOptions } from "./GraphingPlugin";
 
 export default class GraphingModule extends Module {
-  async getTools(): Promise<Tool[]> {
-    return [];
-  }
-  async getPlugins(): Promise<Plugin[]> {
-    return [new GraphingPlugin()];
+  async register(moduleManager: ModuleManager): Promise<void> {
+    moduleManager.registerPlugin(this.name, new GraphingPlugin());
   }
 
   async prepare(): Promise<void> {

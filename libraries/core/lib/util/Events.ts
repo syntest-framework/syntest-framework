@@ -18,10 +18,12 @@
 
 import { ControlFlowGraph } from "@syntest/cfg-core";
 
-import { TargetPool } from "../analysis/static/TargetPool";
+import { RootContext } from "../analysis/static/RootContext";
 import { BudgetManager } from "../search/budget/BudgetManager";
 import { Encoding } from "../search/Encoding";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
+import { SearchSubject } from "../search/SearchSubject";
+import { TerminationManager } from "../search/termination/TerminationManager";
 
 export type Events = {
   initializeStart: () => void;
@@ -43,62 +45,56 @@ export type Events = {
 
   searchInitializationStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchInitializationComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchIterationStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
   searchIterationComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    budgetManager: BudgetManager<E>
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager
   ) => void;
 
-  targetLoadStart: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  targetLoadComplete: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  sourceResolvingStart: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  sourceResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
+  targetLoadStart: (rootContext: RootContext) => void;
+  targetLoadComplete: (rootContext: RootContext) => void;
+  sourceResolvingStart: (rootContext: RootContext) => void;
+  sourceResolvingComplete: (rootContext: RootContext) => void;
+  targetResolvingStart: (rootContext: RootContext) => void;
+  targetResolvingComplete: (rootContext: RootContext) => void;
+  functionMapResolvingStart: (rootContext: RootContext) => void;
+  functionMapResolvingComplete: (rootContext: RootContext) => void;
+  dependencyResolvingStart: (rootContext: RootContext) => void;
+  dependencyResolvingComplete: (rootContext: RootContext) => void;
+  controlFlowGraphResolvingStart: (rootContext: RootContext) => void;
+  controlFlowGraphResolvingComplete: <S>(
+    rootContext: RootContext,
+    cfg: ControlFlowGraph<S>
   ) => void;
-  targetResolvingStart: <E extends Encoding>(targetPool: TargetPool<E>) => void;
-  targetResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  functionMapResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  functionMapResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  dependencyResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  dependencyResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  controlFlowGraphResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  controlFlowGraphResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>,
-    cfg: ControlFlowGraph
-  ) => void;
-  abstractSyntaxTreeResolvingStart: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
-  abstractSyntaxTreeResolvingComplete: <E extends Encoding>(
-    targetPool: TargetPool<E>
-  ) => void;
+  abstractSyntaxTreeResolvingStart: (rootContext: RootContext) => void;
+  abstractSyntaxTreeResolvingComplete: (rootContext: RootContext) => void;
 };

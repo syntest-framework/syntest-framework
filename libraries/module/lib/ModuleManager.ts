@@ -23,9 +23,10 @@ import { getLogger } from "@syntest/logging";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
 
-import { Module } from "./module/Module";
-import { Plugin } from "./module/Plugin";
-import { Tool } from "./module/Tool";
+import { Plugin } from "./extension/Plugin";
+import { Tool } from "./extension/Tool";
+import { Module } from "./extension/Module";
+
 import {
   moduleAlreadyLoaded,
   moduleCannotBeLoaded,
@@ -34,40 +35,69 @@ import {
   modulePathNotFound,
   pluginAlreadyLoaded,
   pluginNotFound,
-  singletonAlreadySet,
-  singletonNotSet,
+  presetAlreadyLoaded,
+  presetNotFound,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
 
+import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
+import { Preset } from "./extension/Preset";
+import { PluginType } from "./extension/plugins/PluginType";
+import { MetricMiddlewarePlugin } from "./extension/plugins/MetricMiddlewarePlugin";
+import { ItemizationItem } from "@syntest/cli-graphics";
+
 export class ModuleManager {
-  static LOGGER;
-  private static _instance: ModuleManager;
+  static LOGGER = getLogger("ModuleManager");
 
-  static get instance() {
-    if (!ModuleManager._instance) {
-      throw new Error(singletonNotSet("ModuleManager"));
-    }
-    return ModuleManager._instance;
-  }
+  private _metricManager: MetricManager;
+  private _userInterface: UserInterface;
 
-  static initializeModuleManager() {
-    if (ModuleManager._instance) {
-      throw new Error(singletonAlreadySet("ModuleManager"));
-    }
-    ModuleManager._instance = new ModuleManager();
-    ModuleManager.LOGGER = getLogger("ModuleManager");
-  }
+  private _args: Yargs.ArgumentsCamelCase;
 
   private _modules: Map<string, Module>;
   private _tools: Map<string, Tool>;
 
   // type -> name -> plugin
   private _plugins: Map<string, Map<string, Plugin>>;
+  private _presets: Map<string, Preset>;
 
-  constructor() {
+  private _toolsOfModule: Map<string, Tool[]>;
+  private _pluginsOfModule: Map<string, Plugin[]>;
+  private _presetsOfModule: Map<string, Preset[]>;
+
+  constructor(metricManager: MetricManager, userInterface: UserInterface) {
+    this._metricManager = metricManager;
+    this._userInterface = userInterface;
+
     this._modules = new Map();
     this._tools = new Map();
     this._plugins = new Map();
+    this._presets = new Map();
+
+    this._toolsOfModule = new Map();
+    this._pluginsOfModule = new Map();
+    this._presetsOfModule = new Map();
+  }
+
+  set args(args: Yargs.ArgumentsCamelCase) {
+    this._args = args;
+    for (const module of this.modules.values()) {
+      module.args = args;
+    }
+
+    for (const tool of this.tools.values()) {
+      tool.args = args;
+    }
+
+    for (const pluginsOfType of this.plugins.values()) {
+      for (const plugin of pluginsOfType.values()) {
+        plugin.args = args;
+      }
+    }
+
+    for (const preset of this.presets.values()) {
+      preset.args = args;
+    }
   }
 
   get modules() {
@@ -80,6 +110,22 @@ export class ModuleManager {
 
   get plugins() {
     return this._plugins;
+  }
+
+  get presets() {
+    return this._presets;
+  }
+
+  get toolsOfModule() {
+    return this._toolsOfModule;
+  }
+
+  get pluginsOfModule() {
+    return this._pluginsOfModule;
+  }
+
+  get presetsOfModule() {
+    return this._presetsOfModule;
   }
 
   getPlugin(type: string, name: string): Plugin {
@@ -102,6 +148,22 @@ export class ModuleManager {
     return this._plugins.get(type);
   }
 
+  async getMetrics(): Promise<Metric[]> {
+    const metrics: Metric[] = [];
+
+    for (const tool of this.tools.values()) {
+      metrics.push(...(await tool.getMetrics()));
+    }
+
+    for (const pluginsOfType of this.plugins.values()) {
+      for (const plugin of pluginsOfType.values()) {
+        metrics.push(...(await plugin.getMetrics()));
+      }
+    }
+
+    return metrics;
+  }
+
   async prepare() {
     ModuleManager.LOGGER.info("Preparing modules");
     for (const module of this.modules.values()) {
@@ -114,6 +176,18 @@ export class ModuleManager {
   }
 
   async cleanup() {
+    ModuleManager.LOGGER.info("Running metric middleware pipeline");
+    const metricPlugins = <MetricMiddlewarePlugin[]>[
+      ...(await this.getPluginsOfType(PluginType.METRIC_MIDDLEWARE)).values(),
+    ];
+    const order = (<MetricOptions>(<unknown>this.args))
+      .metricMiddlewarePipeline;
+    metricPlugins.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+    const metricMiddleWare = metricPlugins.map((plugin) =>
+      plugin.createMetricMiddleware(this._metricManager.metrics)
+    );
+    this._metricManager.runPipeline(metricMiddleWare);
+
     ModuleManager.LOGGER.info("Cleaning up modules");
     for (const module of this.modules.values()) {
       if (module.cleanup) {
@@ -161,24 +235,24 @@ export class ModuleManager {
     if (!moduleInstance.name) {
       throw new Error(moduleNotCorrectlyImplemented("name", moduleId));
     }
-    if (!moduleInstance.getTools) {
-      throw new Error(moduleNotCorrectlyImplemented("getTools", moduleId));
-    }
-    if (!moduleInstance.getPlugins) {
-      throw new Error(moduleNotCorrectlyImplemented("getPlugins", moduleId));
+    if (!moduleInstance.register) {
+      throw new Error(moduleNotCorrectlyImplemented("register", moduleId));
     }
 
     if (this.modules.has(moduleInstance.name)) {
       throw new Error(moduleAlreadyLoaded(moduleInstance.name, moduleId));
     }
 
-    this.modules.set(moduleInstance.name, moduleInstance);
+    this._modules.set(moduleInstance.name, moduleInstance);
+    this._presetsOfModule.set(moduleInstance.name, []);
+    this._toolsOfModule.set(moduleInstance.name, []);
+    this._pluginsOfModule.set(moduleInstance.name, []);
     ModuleManager.LOGGER.info(`Module loaded: ${moduleId}`);
   }
 
-  async loadModules(modules: string[], userInterface: UserInterface) {
+  async loadModules(modulesIds: string[]) {
     // Load modules
-    for (const module of modules) {
+    for (const module of modulesIds) {
       try {
         ModuleManager.LOGGER.info(`Loading module: ${module}`);
         const modulePath = await this.getModulePath(module);
@@ -189,52 +263,53 @@ export class ModuleManager {
       }
     }
 
-    for (const module of this.modules.values()) {
-      // Inform the module about the other modules
-      module.modules = [...this.modules.values()];
-      module.userInterface = userInterface;
-
-      // Load tools
-      for (const tool of await module.getTools()) {
-        this.loadTool(tool);
-      }
-
-      // Load plugins
-      for (const plugin of await module.getPlugins()) {
-        this.loadPlugin(plugin);
-      }
+    const modules = Array.from(this.modules.values());
+    for (const module of this._modules.values()) {
+      module.register(this, this._metricManager, this._userInterface, modules);
     }
   }
 
-  loadTool(tool: Tool) {
-    if (this.tools.has(tool.name)) {
+  registerPreset(module: string, preset: Preset) {
+    if (this._presets.has(preset.name)) {
+      throw new Error(presetAlreadyLoaded(preset.name));
+    }
+
+    ModuleManager.LOGGER.info(`Preset loaded: ${preset.name}`);
+    this._presets.set(preset.name, preset);
+    this._presetsOfModule.get(module).push(preset);
+  }
+
+  registerTool(module: string, tool: Tool) {
+    if (this._tools.has(tool.name)) {
       throw new Error(toolAlreadyLoaded(tool.name));
     }
 
     ModuleManager.LOGGER.info(`Tool loaded: ${tool.name}`);
-    this.tools.set(tool.name, tool);
+    this._tools.set(tool.name, tool);
+    this._toolsOfModule.get(module).push(tool);
   }
 
-  loadPlugin(plugin: Plugin) {
-    if (!this.plugins.has(plugin.type)) {
-      this.plugins.set(plugin.type, new Map());
+  registerPlugin(module: string, plugin: Plugin) {
+    if (!this._plugins.has(plugin.type)) {
+      this._plugins.set(plugin.type, new Map());
     }
 
-    if (this.plugins.get(plugin.type).has(plugin.name)) {
+    if (this._plugins.get(plugin.type).has(plugin.name)) {
       throw new Error(pluginAlreadyLoaded(plugin.name, plugin.type));
     }
 
     ModuleManager.LOGGER.info(
       `- Plugin loaded: ${plugin.type} - ${plugin.name}`
     );
-    this.plugins.get(plugin.type).set(plugin.name, plugin);
+    this._plugins.get(plugin.type).set(plugin.name, plugin);
+    this._pluginsOfModule.get(module).push(plugin);
   }
 
-  async configureModules(yargs: Yargs.Argv) {
+  async configureModules(yargs: Yargs.Argv, preset: string) {
     ModuleManager.LOGGER.info("Configuring modules");
-    for (const tool of this.tools.values()) {
+    for (const tool of this._tools.values()) {
       const plugins = [];
-      for (const pluginsOfType of this.plugins.values()) {
+      for (const pluginsOfType of this._plugins.values()) {
         for (const plugin of pluginsOfType.values()) {
           plugins.push(plugin);
         }
@@ -242,6 +317,51 @@ export class ModuleManager {
       await tool.addPluginOptions(plugins);
       yargs = yargs.command(tool);
     }
+
+    ModuleManager.LOGGER.info("Setting preset");
+    if (!this._presets.has(preset)) {
+      throw new Error(presetNotFound(preset));
+    }
+
+    yargs = yargs.middleware(
+      <Yargs.MiddlewareFunction>(<unknown>this._presets.get(preset).modifyArgs)
+    );
+
     return yargs;
+  }
+
+  printModuleVersionTable() {
+    const itemization: ItemizationItem[] = [];
+    for (const module of this._modules.values()) {
+      const tools = this._toolsOfModule.get(module.name);
+      const plugins = this._pluginsOfModule.get(module.name);
+      const presets = this._presetsOfModule.get(module.name);
+
+      itemization.push({
+        text: `Module: ${module.name} (${module.version})`,
+        subItems: [
+          {
+            text: `Tools: ${tools.length ? "" : "[]"}`,
+            subItems: tools.map((tool) => ({
+              text: `${tool.name}: ${tool.describe}`,
+            })),
+          },
+          {
+            text: `Plugins: ${plugins.length ? "" : "[]"}`,
+            subItems: plugins.map((plugin) => ({
+              text: `${plugin.name}: ${plugin.describe}`,
+            })),
+          },
+          {
+            text: `Presets: ${presets.length ? "" : "[]"}`,
+            subItems: presets.map((preset) => ({
+              text: `${preset.name}: ${preset.describe}`,
+            })),
+          },
+        ],
+      });
+    }
+
+    this._userInterface.printItemization("Module loaded:", itemization);
   }
 }

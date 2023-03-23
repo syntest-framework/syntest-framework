@@ -1,6 +1,6 @@
 {
   "name": "@syntest/init",
-  "version": "0.2.0-beta.3",
+  "version": "0.2.0-beta.7",
   "description": "The setup application of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -19,8 +19,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist",
-    "/NOTICE",
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
+    "NOTICE",
     "README.md"
   ],
   "repository": {
@@ -42,10 +46,12 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.1.0-beta.0",
+    "@syntest/cli-graphics": "*",
     "@syntest/logging": "*",
-    "@syntest/module": "^0.1.0-beta.0",
-    "shelljs": "^0.8.5"
+    "@syntest/metric": "^0.1.0-beta.0",
+    "@syntest/module": "*",
+    "shelljs": "^0.8.5",
+    "yargs": "^17.7.1"
   },
   "engines": {
     "node": ">=10.24.0"

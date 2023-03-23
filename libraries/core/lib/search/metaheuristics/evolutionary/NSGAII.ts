@@ -16,13 +16,10 @@
  * limitations under the License.
  */
 
-import { crowdingDistance, fastNonDomSorting } from "../../../..";
-import { Encoding } from "../../Encoding";
-import { EncodingSampler } from "../../EncodingSampler";
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { Crossover } from "../../operators/crossover/Crossover";
-
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
+import { Encoding } from "../../Encoding";
+import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
+import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -36,29 +33,6 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
  * @author Dimitri Stallenberg
  */
 export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
-  /**
-   * Constructor.
-   *
-   * @param encodingSampler The encoding sampler
-   * @param runner The runner
-   * @param crossover The crossover operator to apply
-   */
-  constructor(
-    objectiveManager: ObjectiveManager<T>,
-    encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>,
-    populationSize: number,
-    crossoverProbability: number
-  ) {
-    super(
-      objectiveManager,
-      encodingSampler,
-      crossover,
-      populationSize,
-      crossoverProbability
-    );
-  }
-
   /**
    * @inheritDoc
    * @protected

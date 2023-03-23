@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-
-import SfuzzPlugin from "../lib/SfuzzPlugin";
-
+import { SFuzzPlugin } from "../lib/plugins/SFuzzPlugin";
 const expect = chai.expect;
 
 /**
@@ -26,7 +24,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", async () => {
-    new SfuzzPlugin();
+    new SFuzzPlugin();
     expect(true);
   });
 });

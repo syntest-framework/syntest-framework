@@ -1,1 +1,1 @@
-# Sfuzz plugin for SynTest Core
+# sFuzz plugin for SynTest Core

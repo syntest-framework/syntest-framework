@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, EncodingSampler } from "@syntest/core";
+import { Encoding, EncodingSampler, SearchSubject } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 
 import { PluginType } from "./PluginType";
 
-export type SamplerOptions<T extends Encoding> = unknown;
+export type SamplerOptions<T extends Encoding> = {
+  subject: SearchSubject<T>;
+};
 
 export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
   constructor(name: string, describe: string) {
@@ -30,4 +32,17 @@ export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
   abstract createSamplerOperator<O extends SamplerOptions<T>>(
     options: O
   ): EncodingSampler<T>;
+
+  getCommandOptionChoices(
+    tool: string,
+    labels: string[],
+    command: string,
+    option: string
+  ): string[] {
+    if (option === "sampler") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

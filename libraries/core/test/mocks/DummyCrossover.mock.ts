@@ -20,7 +20,7 @@ import { minimumValue } from "../../lib/util/diagnostics";
 
 import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-export class DummyCrossover implements Crossover<DummyEncodingMock> {
+export class DummyCrossover extends Crossover<DummyEncodingMock> {
   crossOver(parents: DummyEncodingMock[]): DummyEncodingMock[] {
     if (parents.length < 2) {
       throw new Error(minimumValue("number of parents", 2, parents.length));

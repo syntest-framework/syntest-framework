@@ -16,14 +16,20 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 import { BranchDistance } from "../../..";
 
 const expect = chai.expect;
 
 describe("Branch distance", function () {
+  let branchDistance: BranchDistance;
+
+  beforeEach(() => {
+    branchDistance = new DummyBranchDistance();
+  });
   it("Equality", () => {
-    let value = BranchDistance.branchDistanceNumeric(
+    let value = branchDistance.branchDistanceNumeric(
       "EQ",
       [10, 11],
       [10, 12],
@@ -32,7 +38,7 @@ describe("Branch distance", function () {
 
     expect(value).to.equal(0);
 
-    value = BranchDistance.branchDistanceNumeric(
+    value = branchDistance.branchDistanceNumeric(
       "EQ",
       [10, 11],
       [10, 11],
@@ -42,7 +48,7 @@ describe("Branch distance", function () {
   });
 
   it("Lower Than", () => {
-    let value = BranchDistance.branchDistanceNumeric(
+    let value = branchDistance.branchDistanceNumeric(
       "LT",
       [11, 9],
       [10, 10],
@@ -51,12 +57,12 @@ describe("Branch distance", function () {
 
     expect(value).to.equal(0);
 
-    value = BranchDistance.branchDistanceNumeric("LT", [9, 9], [12, 10], false);
+    value = branchDistance.branchDistanceNumeric("LT", [9, 9], [12, 10], false);
     expect(value).to.equal(0.5);
   });
 
   it("Greater Than", () => {
-    let value = BranchDistance.branchDistanceNumeric(
+    let value = branchDistance.branchDistanceNumeric(
       "GT",
       [9, 11],
       [10, 10],
@@ -65,7 +71,7 @@ describe("Branch distance", function () {
 
     expect(value).to.equal(0);
 
-    value = BranchDistance.branchDistanceNumeric(
+    value = branchDistance.branchDistanceNumeric(
       "GT",
       [12, 11],
       [10, 10],
@@ -75,7 +81,7 @@ describe("Branch distance", function () {
   });
 
   it("Signed Lower Than", () => {
-    let value = BranchDistance.branchDistanceNumeric(
+    let value = branchDistance.branchDistanceNumeric(
       "SLT",
       [11, 9],
       [10, 10],
@@ -84,7 +90,7 @@ describe("Branch distance", function () {
 
     expect(value).to.equal(0);
 
-    value = BranchDistance.branchDistanceNumeric(
+    value = branchDistance.branchDistanceNumeric(
       "SLT",
       [9, 9],
       [12, 10],
@@ -94,7 +100,7 @@ describe("Branch distance", function () {
   });
 
   it("Signed Greater Than", () => {
-    let value = BranchDistance.branchDistanceNumeric(
+    let value = branchDistance.branchDistanceNumeric(
       "SGT",
       [9, 11],
       [10, 10],
@@ -103,7 +109,7 @@ describe("Branch distance", function () {
 
     expect(value).to.equal(0);
 
-    value = BranchDistance.branchDistanceNumeric(
+    value = branchDistance.branchDistanceNumeric(
       "SGT",
       [12, 11],
       [10, 10],
@@ -113,7 +119,7 @@ describe("Branch distance", function () {
   });
 
   it("Not Equal", () => {
-    let value = BranchDistance.branchDistanceNumeric(
+    let value = branchDistance.branchDistanceNumeric(
       "NEQ",
       [11, 10],
       [10, 10],
@@ -122,7 +128,7 @@ describe("Branch distance", function () {
 
     expect(value).to.equal(0);
 
-    value = BranchDistance.branchDistanceNumeric(
+    value = branchDistance.branchDistanceNumeric(
       "NEQ",
       [11, 11],
       [10, 10],

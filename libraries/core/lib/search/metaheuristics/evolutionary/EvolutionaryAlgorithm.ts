@@ -16,15 +16,13 @@
  * limitations under the License.
  */
 
-import { prng } from "../../../util/prng";
+import { SearchAlgorithm } from "../SearchAlgorithm";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
+import { EncodingSampler } from "../../EncodingSampler";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { Encoding } from "../../Encoding";
-import { EncodingSampler } from "../../EncodingSampler";
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { Crossover } from "../../operators/crossover/Crossover";
-import { tournamentSelection } from "../../operators/selection/TournamentSelection";
+import { Procreation } from "../../operators/procreation/Procreation";
 import { TerminationManager } from "../../termination/TerminationManager";
-import { SearchAlgorithm } from "../SearchAlgorithm";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -53,12 +51,9 @@ export abstract class EvolutionaryAlgorithm<
   protected _populationSize: number;
 
   /**
-   * The probability to perform crossover.
-   * @protected
+   * The procreation operator to apply.
    */
-  protected _crossoverProbability: number;
-
-  protected _crossover: Crossover<T>;
+  protected _procreation: Procreation<T>;
 
   /**
    * Constructor.
@@ -67,21 +62,19 @@ export abstract class EvolutionaryAlgorithm<
    * @param encodingSampler The encoding sampler used by the specific algorithm
    * @param crossover The crossover operator to apply
    *
-   * @protected
    */
-  protected constructor(
+  constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>,
-    populationSize: number,
-    crossoverProbability: number
+    procreation: Procreation<T>,
+    populationSize: number
   ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
-    this._crossover = crossover;
-    this._population = [];
+    this._procreation = procreation;
     this._populationSize = populationSize;
-    this._crossoverProbability = crossoverProbability;
+
+    this._population = [];
   }
 
   /**
@@ -115,7 +108,10 @@ export abstract class EvolutionaryAlgorithm<
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<void> {
-    const offspring = this._generateOffspring();
+    const offspring = this._procreation.generateOffspringPopulation(
+      this._populationSize,
+      this._population
+    );
     await this._objectiveManager.evaluateMany(
       offspring,
       budgetManager,
@@ -130,35 +126,6 @@ export abstract class EvolutionaryAlgorithm<
 
     this._population.push(...offspring);
     this._environmentalSelection(this._populationSize);
-  }
-
-  /**
-   * Generates offspring based on the current population.
-   *
-   * @protected
-   */
-  protected _generateOffspring(): T[] {
-    const offspring = [];
-
-    const rounds = Math.max(2, Math.round(this._populationSize / 5));
-
-    while (offspring.length < this._populationSize) {
-      const parentA = tournamentSelection(this._population, rounds);
-      const parentB = tournamentSelection(this._population, rounds);
-
-      if (prng.nextDouble(0, 1) <= this._crossoverProbability) {
-        const children = this._crossover.crossOver([parentA, parentB]);
-
-        for (const child of children) {
-          offspring.push(child.copy().mutate(this._encodingSampler));
-        }
-      } else {
-        offspring.push(parentA.copy().mutate(this._encodingSampler));
-        offspring.push(parentB.copy().mutate(this._encodingSampler));
-      }
-    }
-    offspring.push(this._encodingSampler.sample());
-    return offspring;
   }
 
   /**

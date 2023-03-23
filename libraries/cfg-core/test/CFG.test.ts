@@ -16,240 +16,214 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-
-import { BranchNode, ControlFlowGraph, Node, NodeType, RootNode } from "..";
+import { ControlFlowGraph, NodeType, Node } from "..";
 
 const expect = chai.expect;
 
 describe("CFG suite", function () {
   it("filterNodesOfType test", () => {
-    const rootNode0: RootNode = {
-      type: NodeType.Root,
-      id: "0",
-      statements: [],
-      lines: [],
-    };
-    const rootNode1: RootNode = {
-      type: NodeType.Root,
-      id: "1",
-      statements: [],
-      lines: [],
-    };
-    const branchNode: BranchNode = {
-      type: NodeType.Branch,
-      id: "2",
-      statements: [],
-      lines: [],
-      probe: true,
-      condition: {
-        type: "some operation type",
-        operator: "+",
-      },
-    };
-    const cfg = new ControlFlowGraph([rootNode0, rootNode1, branchNode], []);
+    const entry: Node<unknown> = new Node("0", NodeType.ENTRY, "root", [], {
+      lineNumbers: [],
+    });
+    const exit: Node<unknown> = new Node("1", NodeType.EXIT, "exit", [], {
+      lineNumbers: [],
+    });
+    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+      lineNumbers: [],
+    });
+    const cfg = new ControlFlowGraph(
+      entry,
+      exit,
+      exit,
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
+      []
+    );
 
-    expect(cfg.filterNodesOfType(NodeType.Root))
-      .to.deep.contain(rootNode0)
-      .to.contain(rootNode1);
-    expect(cfg.filterNodesOfType(NodeType.Branch)).to.deep.contain(branchNode);
+    expect(cfg.getNodesByType(NodeType.ENTRY)).to.deep.contain(entry);
+
+    expect(cfg.getNodesByType(NodeType.EXIT)).to.deep.contain(exit);
+
+    expect(cfg.getNodesByType(NodeType.NORMAL)).to.deep.contain(branchNode);
   });
 
   it("findNodeByPredicate test", () => {
-    const rootNode0: RootNode = {
-      type: NodeType.Root,
-      id: "0",
-      statements: [],
-      lines: [32],
-    };
-    const rootNode1: RootNode = {
-      type: NodeType.Root,
-      id: "1",
-      statements: [],
-      lines: [26],
-    };
-    const branchNode: BranchNode = {
-      type: NodeType.Branch,
-      id: "2",
-      statements: [],
-      lines: [],
-      probe: true,
-      condition: {
-        type: "some operation type",
-        operator: "+",
-      },
-    };
-    const cfg = new ControlFlowGraph([rootNode0, rootNode1, branchNode], []);
+    const entry: Node<unknown> = new Node("0", NodeType.ENTRY, "root", [], {
+      lineNumbers: [32],
+    });
+    const exit: Node<unknown> = new Node("1", NodeType.EXIT, "exit", [], {
+      lineNumbers: [26],
+    });
+    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+      lineNumbers: [],
+    });
 
-    expect(cfg.findNodeByPredicate((n: Node) => n.id === "2")).to.deep.equal(
-      branchNode
+    const cfg = new ControlFlowGraph(
+      entry,
+      exit,
+      exit,
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
+      []
     );
+
     expect(
-      cfg.findNodeByPredicate((n: Node) => n.lines.includes(26))
-    ).to.deep.equal(rootNode1);
+      cfg.getNodeByPredicate(<S>(n: Node<S>) => n.id === "2")
+    ).to.deep.equal(branchNode);
+    expect(
+      cfg.getNodeByPredicate(<S>(n: Node<S>) =>
+        n.metadata.lineNumbers.includes(26)
+      )
+    ).to.deep.equal(exit);
   });
 
   it("filterNodesByPredicates test", () => {
-    const rootNode0: RootNode = {
-      type: NodeType.Root,
-      id: "0",
-      statements: [],
-      lines: [26],
-    };
-    const rootNode1: RootNode = {
-      type: NodeType.Root,
-      id: "1",
-      statements: [],
-      lines: [26],
-    };
-    const branchNode: BranchNode = {
-      type: NodeType.Branch,
-      id: "2",
-      statements: [],
-      lines: [],
-      probe: true,
-      condition: {
-        type: "some operation type",
-        operator: "+",
-      },
-    };
-    const cfg = new ControlFlowGraph([rootNode0, rootNode1, branchNode], []);
+    const entry: Node<unknown> = new Node("0", NodeType.ENTRY, "root", [], {
+      lineNumbers: [26],
+    });
+    const exit: Node<unknown> = new Node("1", NodeType.EXIT, "exit", [], {
+      lineNumbers: [26],
+    });
+    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+      lineNumbers: [],
+    });
+
+    const cfg = new ControlFlowGraph(
+      entry,
+      exit,
+      exit,
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
+      []
+    );
 
     expect(
-      cfg.filterNodesByPredicates((n: Node) => n.id === "2")
+      cfg.getNodesByPredicates(<S>(n: Node<S>) => n.id === "2")
     ).to.deep.equal([branchNode]);
     expect(
-      cfg.filterNodesByPredicates((n: Node) => n.lines.includes(26))
-    ).to.deep.equal([rootNode0, rootNode1]);
-    expect(
-      cfg.filterNodesByPredicates(
-        (n: Node) => n.lines.includes(26),
-        (n: Node) => n.type === NodeType.Root
+      cfg.getNodesByPredicates(<S>(n: Node<S>) =>
+        n.metadata.lineNumbers.includes(26)
       )
-    ).to.deep.equal([rootNode0, rootNode1]);
+    ).to.deep.equal([entry, exit]);
     expect(
-      cfg.filterNodesByPredicates(
-        (n: Node) => n.lines.includes(26),
-        (n: Node) => n.id === "1"
+      cfg.getNodesByPredicates(
+        <S>(n: Node<S>) => n.metadata.lineNumbers.includes(26),
+        <S>(n: Node<S>) => n.type === NodeType.ENTRY
       )
-    ).to.deep.equal([rootNode1]);
+    ).to.deep.equal([entry]);
+    expect(
+      cfg.getNodesByPredicates(
+        <S>(n: Node<S>) => n.metadata.lineNumbers.includes(26),
+        <S>(n: Node<S>) => n.id === "1"
+      )
+    ).to.deep.equal([exit]);
   });
 
   it("getNodeById test", () => {
-    const rootNode0: RootNode = {
-      type: NodeType.Root,
-      id: "0",
-      statements: [],
-      lines: [26],
-    };
-    const rootNode1: RootNode = {
-      type: NodeType.Root,
-      id: "1",
-      statements: [],
-      lines: [26],
-    };
-    const branchNode: BranchNode = {
-      type: NodeType.Branch,
-      id: "2",
-      statements: [],
-      lines: [],
-      probe: true,
-      condition: {
-        type: "some operation type",
-        operator: "+",
-      },
-    };
-    const cfg = new ControlFlowGraph([rootNode0, rootNode1, branchNode], []);
+    const entry: Node<unknown> = new Node("0", NodeType.ENTRY, "root", [], {
+      lineNumbers: [26],
+    });
+    const exit: Node<unknown> = new Node("1", NodeType.EXIT, "exit", [], {
+      lineNumbers: [26],
+    });
+    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+      lineNumbers: [],
+    });
+
+    const cfg = new ControlFlowGraph(
+      entry,
+      exit,
+      exit,
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
+      []
+    );
 
     expect(cfg.getNodeById("2")).to.deep.equal(branchNode);
-    expect(cfg.getNodeById("1")).to.deep.equal(rootNode1);
-    expect(cfg.getNodeById("0")).to.deep.equal(rootNode0);
+    expect(cfg.getNodeById("1")).to.deep.equal(exit);
+    expect(cfg.getNodeById("0")).to.deep.equal(entry);
     expect(cfg.getNodeById("3")).to.deep.equal(undefined);
   });
 
   it("filterNodesByLineNumbers test", () => {
-    const rootNode0: RootNode = {
-      type: NodeType.Root,
-      id: "0",
-      statements: [],
-      lines: [26],
-    };
-    const rootNode1: RootNode = {
-      type: NodeType.Root,
-      id: "1",
-      statements: [],
-      lines: [26],
-    };
-    const branchNode: BranchNode = {
-      type: NodeType.Branch,
-      id: "2",
-      statements: [],
-      lines: [26, 32],
-      probe: true,
-      condition: {
-        type: "some operation type",
-        operator: "+",
-      },
-    };
-    const cfg = new ControlFlowGraph([rootNode0, rootNode1, branchNode], []);
+    const entry: Node<unknown> = new Node("0", NodeType.ENTRY, "root", [], {
+      lineNumbers: [26],
+    });
+    const exit: Node<unknown> = new Node("1", NodeType.EXIT, "exit", [], {
+      lineNumbers: [26],
+    });
+    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+      lineNumbers: [26, 32],
+    });
 
-    expect(cfg.filterNodesByLineNumbers(new Set<number>([26]))).to.deep.equal([
-      rootNode0,
-      rootNode1,
-      branchNode,
-    ]);
-    expect(cfg.filterNodesByLineNumbers(new Set<number>([27]))).to.deep.equal(
+    const cfg = new ControlFlowGraph(
+      entry,
+      exit,
+      exit,
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
       []
     );
-    expect(cfg.filterNodesByLineNumbers(new Set<number>([32]))).to.deep.equal([
+
+    expect(cfg.getNodesByLineNumbers(new Set<number>([26]))).to.deep.equal([
+      entry,
+      exit,
       branchNode,
     ]);
-    expect(
-      cfg.filterNodesByLineNumbers(new Set<number>([26, 32]))
-    ).to.deep.equal([rootNode0, rootNode1, branchNode]);
+    expect(cfg.getNodesByLineNumbers(new Set<number>([27]))).to.deep.equal([]);
+    expect(cfg.getNodesByLineNumbers(new Set<number>([32]))).to.deep.equal([
+      branchNode,
+    ]);
+    expect(cfg.getNodesByLineNumbers(new Set<number>([26, 32]))).to.deep.equal([
+      entry,
+      exit,
+      branchNode,
+    ]);
   });
 
   it("findNodeOfTypeByLine test", () => {
-    const rootNode0: RootNode = {
-      type: NodeType.Root,
-      id: "0",
-      statements: [],
-      lines: [26],
-    };
-    const rootNode1: RootNode = {
-      type: NodeType.Root,
-      id: "1",
-      statements: [],
-      lines: [26],
-    };
-    const branchNode: BranchNode = {
-      type: NodeType.Branch,
-      id: "2",
-      statements: [],
-      lines: [26, 32],
-      probe: true,
-      condition: {
-        type: "some operation type",
-        operator: "+",
-      },
-    };
-    const cfg = new ControlFlowGraph([rootNode0, rootNode1, branchNode], []);
+    const entry: Node<unknown> = new Node("0", NodeType.ENTRY, "root", [], {
+      lineNumbers: [26],
+    });
+    const exit: Node<unknown> = new Node("1", NodeType.EXIT, "exit", [], {
+      lineNumbers: [26],
+    });
+    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+      lineNumbers: [26, 32],
+    });
 
-    expect(cfg.findNodeOfTypeByLine(26, NodeType.Root)).to.deep.equal(
-      rootNode0
+    const cfg = new ControlFlowGraph(
+      entry,
+      exit,
+      exit,
+      [entry, exit, branchNode].reduce((map, node) => {
+        map.set(node.id, node);
+        return map;
+      }, new Map<string, Node<unknown>>()),
+      []
     );
-    expect(cfg.findNodeOfTypeByLine(32, NodeType.Root)).to.deep.equal(
+
+    expect(cfg.getNodeOfTypeByLine(26, NodeType.ENTRY)).to.deep.equal(entry);
+    expect(cfg.getNodeOfTypeByLine(32, NodeType.ENTRY)).to.deep.equal(
       undefined
     );
-    expect(cfg.findNodeOfTypeByLine(26, NodeType.Placeholder)).to.deep.equal(
-      undefined
-    );
-    expect(cfg.findNodeOfTypeByLine(26, NodeType.Branch)).to.deep.equal(
+    expect(cfg.getNodeOfTypeByLine(26, NodeType.NORMAL)).to.deep.equal(
       branchNode
     );
-    expect(cfg.findNodeOfTypeByLine(32, NodeType.Branch)).to.deep.equal(
+    expect(cfg.getNodeOfTypeByLine(32, NodeType.NORMAL)).to.deep.equal(
       branchNode
     );
-    expect(cfg.findNodeOfTypeByLine(27, NodeType.Branch)).to.deep.equal(
+    expect(cfg.getNodeOfTypeByLine(27, NodeType.NORMAL)).to.deep.equal(
       undefined
     );
   });

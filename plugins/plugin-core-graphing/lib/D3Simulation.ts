@@ -15,15 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import fs = require("fs");
-
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as d3 from "d3";
 
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";
 
-export function createSimulation(cfg: ControlFlowGraph) {
+export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
   const width = 2000;
   const height = 2000;
   const offset = 200;

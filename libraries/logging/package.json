@@ -1,6 +1,6 @@
 {
   "name": "@syntest/logging",
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.4",
   "description": "The log library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -46,7 +46,8 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "winston": "3.8.2"
+    "winston": "3.8.2",
+    "yargs": "^17.7.1"
   },
   "engines": {
     "node": ">=10.24.0"

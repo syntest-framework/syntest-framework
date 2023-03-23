@@ -20,14 +20,30 @@ import { Plugin } from "@syntest/module";
 
 import { PluginType } from "./PluginType";
 
-export type CrossoverOptions<T extends Encoding> = unknown;
+export type CrossoverOptions = {
+  crossoverEncodingProbability: number;
+  crossoverStatementProbability: number;
+};
 
 export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
   constructor(name: string, describe: string) {
     super(PluginType.Crossover, name, describe);
   }
 
-  abstract createCrossoverOperator<O extends CrossoverOptions<T>>(
+  abstract createCrossoverOperator<O extends CrossoverOptions>(
     options: O
   ): Crossover<T>;
+
+  getCommandOptionChoices(
+    tool: string,
+    labels: string[],
+    command: string,
+    option: string
+  ): string[] {
+    if (option === "crossover") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

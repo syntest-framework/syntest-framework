@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Module, Plugin, Tool } from "@syntest/module";
+import { Module, ModuleManager, Tool } from "@syntest/module";
 import yargs = require("yargs");
 
 import { getConfigCommand } from "./commands/config";
@@ -28,10 +28,10 @@ export default class InitModule extends Module {
     super("init", require("../package.json").version);
   }
 
-  async getTools(): Promise<Tool[]> {
+  register(moduleManager: ModuleManager): void | Promise<void> {
     const labels = ["init"];
     const commands = [
-      getConfigCommand(this.name, this.modules),
+      getConfigCommand(this.name, moduleManager),
       getModuleCommand(this.name),
     ];
 
@@ -45,9 +45,6 @@ export default class InitModule extends Module {
       additionalOptions
     );
 
-    return [initTool];
-  }
-  async getPlugins(): Promise<Plugin[]> {
-    return [];
+    moduleManager.registerTool(this.name, initTool);
   }
 }

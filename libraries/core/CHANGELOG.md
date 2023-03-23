@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - add event emissions in search algorithm and target pool ([#201](https://github.com/syntest-framework/syntest-core/issues/201)) ([c5e499a](https://github.com/syntest-framework/syntest-core/commit/c5e499af53097b6881416528d914795f67ab541d))
 - change changelog preset ([#198](https://github.com/syntest-framework/syntest-core/issues/198)) ([01df511](https://github.com/syntest-framework/syntest-core/commit/01df511a936cce6851259a512b6ea70760ad8dd4))
-- Extract Sfuzz as a plugin
+- Extract sFuzz as a plugin
 - Extract graphing related code as plugin
 - Extract CFG related code as a library
 - abstract Launcher class with common functions
@@ -45,7 +45,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Added
 
 - Meta-heuristic search framework with multiple search algorithms (i.e., random search, NSGA-II, MOSA, DynaMOSA)
-- Program search criteria (i.e., function coverage, branch coverage, line coverage, probe coverage)
+- Program search criteria (i.e., function coverage, branch coverage, line coverage, implicit-branch coverage)
 - Abstract program graph representation to compare different code executions paths
 - Abstract test case encoding to represent a test case in memory
 - Collector functionality to keep track of statistics regarding the search process

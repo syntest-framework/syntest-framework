@@ -15,20 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/plugins/searchAlgorithms/DynaMOSAPlugin";
-export * from "./lib/plugins/searchAlgorithms/MOSAPlugin";
-export * from "./lib/plugins/searchAlgorithms/NSGAIIPlugin";
-export * from "./lib/plugins/searchAlgorithms/RandomSearchPlugin";
+export * from "./lib/plugins/objective-managers/SimpleObjectiveManagerPlugin";
+export * from "./lib/plugins/objective-managers/StructuralObjectiveManagerPlugin";
+export * from "./lib/plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 
-export * from "./lib/plugins/terminationTriggers/SignalTerminationTriggerPlugin";
+export * from "./lib/plugins/procreation-operators/DefaultProcreationPlugin";
+
+export * from "./lib/plugins/search-algorithms/MOSAFamilyPlugin";
+export * from "./lib/plugins/search-algorithms/NSGAIIPlugin";
+export * from "./lib/plugins/search-algorithms/RandomSearchPlugin";
+
+export * from "./lib/plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
+
+export * from "./lib/plugins/termination-triggers/SignalTerminationTriggerPlugin";
 
 export * from "./lib/plugins/CrossoverPlugin";
+export * from "./lib/plugins/ObjectiveManagerPlugin";
 export * from "./lib/plugins/PluginType";
+export * from "./lib/plugins/ProcreationPlugin";
 export * from "./lib/plugins/SamplerPlugin";
 export * from "./lib/plugins/SearchAlgorithmPlugin";
-export * from "./lib/plugins/TerminationPlugin";
+export * from "./lib/plugins/SecondaryObjectivePlugin";
+export * from "./lib/plugins/TerminationTriggerPlugin";
+
+export * from "./lib/presets/DynaMOSAPreset";
+export * from "./lib/presets/MOSAPreset";
+export * from "./lib/presets/NSGAIIPreset";
 
 export * from "./lib/util/fileSystem";
 
 export * from "./lib/Configuration";
 export * from "./lib/Launcher";
+export * from "./lib/Configuration";
+export * from "./lib/Launcher";
+export * from "./lib/Metrics";
+export * from "./lib/TestingToolModule";

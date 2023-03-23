@@ -19,6 +19,7 @@ import * as chai from "chai";
 
 import {
   BranchObjectiveFunction,
+  ApproachLevel,
   EncodingRunner,
   EncodingSampler,
   UncoveredObjectiveManager,
@@ -28,6 +29,8 @@ import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
 import { MockedMOSA } from "../../mocks/MOSAAdapter";
+import { DummyProcreation } from "../../mocks/DummyProcreation.mock";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -38,17 +41,19 @@ describe("Test MOSA", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {
+    const branchDistance = new DummyBranchDistance();
+
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      branchDistance,
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      branchDistance,
       null,
-      "1",
-      1,
-      false
+      "1"
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -67,14 +72,17 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
-    const mockedCrossover = new DummyCrossover();
+    const mockedCrossover = new DummyCrossover(0.8, 0.8);
+    const mockedProcreation = new DummyProcreation(
+      mockedCrossover,
+      mockedSampler
+    );
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
-      mockedCrossover,
-      50,
-      0.8
+      mockedProcreation,
+      50
     );
     const frontZero = mosa.preferenceCriterion(
       [ind1 as DummyEncodingMock, ind2, ind3],
@@ -104,14 +112,17 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
-    const mockedCrossover = new DummyCrossover();
+    const mockedCrossover = new DummyCrossover(0.8, 0.8);
+    const mockedProcreation = new DummyProcreation(
+      mockedCrossover,
+      mockedSampler
+    );
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
-      mockedCrossover,
-      50,
-      0.8
+      mockedProcreation,
+      50
     );
     const front = mosa.getNonDominatedFront(objectives, [
       ind1,
@@ -142,14 +153,17 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
-    const mockedCrossover = new DummyCrossover();
+    const mockedCrossover = new DummyCrossover(0.8, 0.8);
+    const mockedProcreation = new DummyProcreation(
+      mockedCrossover,
+      mockedSampler
+    );
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
-      mockedCrossover,
-      4,
-      0.8
+      mockedProcreation,
+      4
     );
     const front = mosa.preferenceSortingAlgorithm(
       [ind1, ind2, ind3, ind4],
@@ -185,14 +199,17 @@ describe("Test MOSA", function () {
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
-    const mockedCrossover = new DummyCrossover();
+    const mockedCrossover = new DummyCrossover(0.8, 0.8);
+    const mockedProcreation = new DummyProcreation(
+      mockedCrossover,
+      mockedSampler
+    );
 
     const mosa = new MockedMOSA(
-      new UncoveredObjectiveManager(mockedRunner),
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
-      mockedCrossover,
-      50,
-      0.8
+      mockedProcreation,
+      50
     );
 
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);

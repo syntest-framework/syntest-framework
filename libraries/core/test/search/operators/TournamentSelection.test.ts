@@ -16,11 +16,14 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-
-import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
-import { tournamentSelection } from "../../../lib/search/operators/selection/TournamentSelection";
-import { minimumValue } from "../../../lib/util/diagnostics";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
+import {
+  BranchObjectiveFunction,
+  ApproachLevel,
+  tournamentSelection,
+  minimumValue,
+} from "../../..";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -34,16 +37,16 @@ global.Math = mockMath;
 describe("Tournament selection", function () {
   it("Small Tournament size", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      false
+      "1"
     );
 
     const ind1 = new DummyEncodingMock();
@@ -60,16 +63,16 @@ describe("Tournament selection", function () {
 
   it("Comparison by rank", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      false
+      "1"
     );
 
     const ind1 = new DummyEncodingMock();
@@ -103,16 +106,16 @@ describe("Tournament selection", function () {
 
   it("Comparison by crowding distance", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      true
+      "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
+      new ApproachLevel(),
+      new DummyBranchDistance(),
       null,
-      "1",
-      1,
-      false
+      "1"
     );
 
     const ind1 = new DummyEncodingMock();

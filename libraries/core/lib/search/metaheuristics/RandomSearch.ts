@@ -35,9 +35,7 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
   /**
    * Constructor.
    *
-   * @param eventManager The event manager
    * @param encodingSampler The encoding sampler
-   * @param runner The encoding execution runner
    */
   constructor(
     objectiveManager: ObjectiveManager<T>,
