@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Core SFuzz Plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Encoding,
-  RandomSearch,
-  SearchAlgorithm,
-  SecondaryObjectiveComparator,
-  SimpleObjectiveManager,
-} from "@syntest/core";
+
+import { Encoding, SearchAlgorithm } from "@syntest/core";
+import { SFuzz } from "../SFuzz";
 import {
   SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
-} from "../SearchAlgorithmPlugin";
-import { pluginRequiresOptions } from "@syntest/module";
+} from "@syntest/base-testing-tool";
+
 /**
- * Plugin for RandomSearch
+ * Plugin for the SFuzz search algorithm.
  *
  * @author Dimitri Stallenberg
  */
-export class RandomSearchPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class SFuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("Random", "Random search algorithm");
+    super("SFuzz", "SFuzz search algorithm");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    return new RandomSearch(options.objectiveManager, options.encodingSampler);
+    return new SFuzz<T>(
+      options.objectiveManager,
+      options.encodingSampler,
+      options.offspring,
+      options.populationSize
+    );
   }
 }

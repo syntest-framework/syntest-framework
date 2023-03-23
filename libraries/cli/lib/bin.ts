@@ -31,7 +31,7 @@ import {
   Configuration as LogConfiguration,
 } from "@syntest/logging";
 import * as path from "path";
-import { UserInterface, ItemizationItem } from "@syntest/cli-graphics";
+import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager, MetricOptions } from "@syntest/metric";
 
 async function main() {
@@ -111,7 +111,7 @@ async function main() {
   for (const plugin of moduleManager
     .getPluginsOfType(PluginType.LISTENER)
     .values()) {
-    (<ListenerPlugin>plugin).setupEventListener();
+    (<ListenerPlugin>plugin).setupEventListener(metricManager);
   }
 
   // Prepare modules

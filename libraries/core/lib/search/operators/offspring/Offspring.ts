@@ -15,16 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { SFuzzPlugin } from "../lib/plugins/SFuzzPlugin";
-const expect = chai.expect;
+import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { Crossover } from "../crossover/Crossover";
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", async () => {
-    new SFuzzPlugin();
-    expect(true);
-  });
-});
+export abstract class Offspring<E extends Encoding> {
+  private _crossover: Crossover<E>;
+  private _sampler: EncodingSampler<E>;
+
+  constructor(crossover: Crossover<E>, sampler: EncodingSampler<E>) {
+    this._crossover = crossover;
+    this._sampler = sampler;
+  }
+
+  abstract generateOffspringPopulation(
+    populationSize: number,
+    population: E[]
+  ): E[];
+
+  get crossover(): Crossover<E> {
+    return this._crossover;
+  }
+
+  get sampler(): EncodingSampler<E> {
+    return this._sampler;
+  }
+}

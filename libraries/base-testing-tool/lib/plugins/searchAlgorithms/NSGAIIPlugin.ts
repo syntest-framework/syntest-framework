@@ -41,31 +41,11 @@ export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("NSGAII", "runner"));
-    }
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("NSGAII", "encodingSampler"));
-    }
-    if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("NSGAII", "crossover"));
-    }
-    if (!options.populationSize) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "populationSize"));
-    }
-    if (!options.crossoverProbability) {
-      throw new Error(
-        pluginRequiresOptions("DynaMOSA", "crossoverProbability")
-      );
-    }
-
-    const secondaryObjectives = new Set<SecondaryObjectiveComparator<T>>();
     return new NSGAII<T>(
-      new SimpleObjectiveManager<T>(options.runner, secondaryObjectives),
+      options.objectiveManager,
       options.encodingSampler,
-      options.crossover,
-      options.populationSize,
-      options.crossoverProbability
+      options.offspring,
+      options.populationSize
     );
   }
 }

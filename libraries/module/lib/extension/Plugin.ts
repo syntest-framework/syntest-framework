@@ -50,7 +50,7 @@ export interface Plugin {
   getToolOptions?(
     tool: string,
     labels: string[]
-  ): Promise<Map<string, Yargs.Options>>;
+  ): Promise<Map<string, Yargs.Options>> | Map<string, Yargs.Options>;
   /**
    *
    * @param tool the tool the plugin provides additional choices for
@@ -60,7 +60,7 @@ export interface Plugin {
     tool: string,
     labels: string[],
     option: string
-  ): Promise<string[]>;
+  ): Promise<string[]> | string[];
 
   /**
    * @param tool the tool the plugin provides options for
@@ -71,7 +71,7 @@ export interface Plugin {
     tool: string,
     labels: string[],
     command: string
-  ): Promise<Map<string, Yargs.Options>>;
+  ): Promise<Map<string, Yargs.Options>> | Map<string, Yargs.Options>;
 
   /**
    *
@@ -84,5 +84,5 @@ export interface Plugin {
     labels: string[],
     command: string,
     option: string
-  ): Promise<string[]>;
+  ): Promise<string[]> | string[];
 }

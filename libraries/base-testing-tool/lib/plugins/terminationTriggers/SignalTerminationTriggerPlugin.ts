@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TerminationPlugin } from "../TerminationPlugin";
+import { TerminationTriggerPlugin } from "../TerminationTriggerPlugin";
 import { Encoding, SignalTerminationTrigger } from "@syntest/core";
 
 /**
@@ -25,9 +25,9 @@ import { Encoding, SignalTerminationTrigger } from "@syntest/core";
  */
 export class SignalTerminationTriggerPlugin<
   T extends Encoding
-> extends TerminationPlugin<T> {
+> extends TerminationTriggerPlugin<T> {
   constructor() {
-    super("Signal", "Terminates the search when a signal is received");
+    super("signal", "Terminates the search when a signal is received");
   }
 
   createTerminationTrigger(): SignalTerminationTrigger {

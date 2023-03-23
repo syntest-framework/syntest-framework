@@ -30,7 +30,7 @@ import { Metric, MetricManager, SeriesType } from "@syntest/metric";
 import { PropertyName, SeriesName, metrics } from "../../Metrics";
 import { BudgetType } from "@syntest/core/dist/search/budget/BudgetType";
 
-export class SearchStatisticsListener extends ListenerPlugin {
+export class SearchMetricListener extends ListenerPlugin {
   protected currentNamespace: string;
   protected _metricManager: MetricManager;
 
@@ -38,12 +38,11 @@ export class SearchStatisticsListener extends ListenerPlugin {
    * Constructor.
    *
    */
-  constructor(metricManager: MetricManager) {
+  constructor() {
     super(
-      "SearchStatisticsListener",
+      "SearchMetricListener",
       "A listener that collects statistics about the search process."
     );
-    this._metricManager = metricManager;
   }
 
   get metricManager() {
@@ -293,7 +292,9 @@ export class SearchStatisticsListener extends ListenerPlugin {
     );
   }
 
-  setupEventListener(): void {
+  setupEventListener(metricManager: MetricManager): void {
+    this._metricManager = metricManager;
+
     (<TypedEventEmitter<Events>>process).on(
       "searchStart",
       (

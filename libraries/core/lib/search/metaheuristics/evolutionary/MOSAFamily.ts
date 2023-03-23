@@ -16,14 +16,7 @@
  * limitations under the License.
  */
 
-import {
-  ObjectiveManager,
-  EncodingSampler,
-  ObjectiveFunction,
-  Encoding,
-  Crossover,
-  crowdingDistance,
-} from "../../..";
+import { ObjectiveFunction, Encoding, crowdingDistance } from "../../..";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { shouldNeverHappen } from "../../../util/diagnostics";
@@ -43,22 +36,6 @@ import { getLogger } from "@syntest/logging";
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   static LOGGER = getLogger("MOSAFamily");
-
-  constructor(
-    objectiveManager: ObjectiveManager<T>,
-    encodingSampler: EncodingSampler<T>,
-    crossover: Crossover<T>,
-    populationSize: number,
-    crossoverProbability: number
-  ) {
-    super(
-      objectiveManager,
-      encodingSampler,
-      crossover,
-      populationSize,
-      crossoverProbability
-    );
-  }
 
   protected _environmentalSelection(size: number): void {
     if (

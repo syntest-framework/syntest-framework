@@ -20,8 +20,9 @@ import {
   SearchAlgorithm,
   MOSAFamily,
   StructuralObjectiveManager,
-  SecondaryObjectiveComparator,
+  UncoveredObjectiveManager,
   LengthObjectiveComparator,
+  SecondaryObjectiveComparator,
 } from "@syntest/core";
 import { pluginRequiresOptions } from "@syntest/module";
 import {
@@ -30,52 +31,25 @@ import {
 } from "../SearchAlgorithmPlugin";
 
 /**
- * Plugin for DynaMOSA
- *
- * Dynamic Many-Objective Sorting Algorithm (DynaMOSA).
- *
- * Based on:
- * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
- * A. Panichella; F. K. Kifetew; P. Tonella
+ * Plugin for MOSA Family Algorithms
  *
  * @author Dimitri Stallenberg
  */
-export class DynaMOSAPlugin<
+export class MOSAFamilyPlugin<
   T extends Encoding
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("DynaMOSA", "Dynamic Many-Objective Sorting Algorithm");
+    super("MOSAFamily", "Many-Objective Sorting Algorithm");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    if (!options.runner) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "runner"));
-    }
-    if (!options.encodingSampler) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "encodingSampler"));
-    }
-    if (!options.crossover) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "crossover"));
-    }
-    if (!options.populationSize) {
-      throw new Error(pluginRequiresOptions("DynaMOSA", "populationSize"));
-    }
-    if (!options.crossoverProbability) {
-      throw new Error(
-        pluginRequiresOptions("DynaMOSA", "crossoverProbability")
-      );
-    }
-
-    const secondaryObjectives = new Set<SecondaryObjectiveComparator<T>>();
-    secondaryObjectives.add(new LengthObjectiveComparator());
     return new MOSAFamily<T>(
-      new StructuralObjectiveManager<T>(options.runner, secondaryObjectives),
+      options.objectiveManager,
       options.encodingSampler,
-      options.crossover,
-      options.populationSize,
-      options.crossoverProbability
+      options.offspring,
+      options.populationSize
     );
   }
 }

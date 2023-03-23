@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core Sfuzz plugin.
+ * This file is part of SynTest Framework - SynTest Core sFuzz plugin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import * as crypto from "crypto";
  * @author Mitchell Olsthoorn
  * @author Annibale Panichella
  */
-export class SfuzzObjectiveManager<
+export class SFuzzObjectiveManager<
   T extends Encoding
 > extends StructuralObjectiveManager<T> {
   /**

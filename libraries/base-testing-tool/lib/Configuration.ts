@@ -27,7 +27,7 @@ import {
 
 export enum OptionGroups {
   Target = "Target Options:",
-  Algorithm = "Algorithm Options:",
+  SearchAlgorithm = "Search Algorithm Options:",
   Budget = "Budget Options:",
   PostProccessing = "Post Proccessing Options:",
   Sampling = "Sampling Options:",
@@ -48,8 +48,11 @@ export type StorageOptions = {
 };
 
 export type AlgorithmOptions = {
-  algorithm: string;
+  searchAlgorithm: string;
   populationSize: number;
+  objectiveManager: string;
+  secondaryObjectives: string[];
+  offspring: string;
   crossover: string;
   sampler: string;
   terminationTriggers: string[];
@@ -75,6 +78,7 @@ export type SamplingOptions = {
   resampleGeneProbability: number;
   deltaMutationProbability: number;
   sampleExistingValueProbability: number;
+  multiPointCrossoverProbability: number;
   crossoverProbability: number;
   constantPoolProbability: number;
   sampleFunctionOutputAsArgument: number;
@@ -215,11 +219,12 @@ export class Configuration {
       yargs
         // algorithm settings
         .options({
-          algorithm: {
+          "search-algorithm": {
             alias: ["a"],
-            default: "DynaMOSA",
-            description: "Algorithm to be used by the tool.",
-            group: OptionGroups.Algorithm,
+            default: "",
+            choices: [],
+            description: "Search algorithm to be used by the tool.",
+            group: OptionGroups.SearchAlgorithm,
             hidden: false,
             type: "string",
           },
@@ -227,34 +232,63 @@ export class Configuration {
             alias: [],
             default: 50,
             description: "Size of the population.",
-            group: OptionGroups.Algorithm,
+            group: OptionGroups.SearchAlgorithm,
             hidden: false,
             type: "number",
+          },
+          "objective-manager": {
+            alias: [],
+            default: "",
+            choices: [],
+            description: "Objective manager to be used by the tool.",
+            group: OptionGroups.SearchAlgorithm,
+            hidden: false,
+            type: "string",
+          },
+          "secondary-objective": {
+            alias: [],
+            default: [],
+            choices: [],
+            description: "Secondary objectives to be used by the tool.",
+            group: OptionGroups.SearchAlgorithm,
+            hidden: false,
+            type: "string",
           },
           crossover: {
             alias: [],
             default: "",
+            choices: [],
             description: "Crossover operator to be used by the tool.",
-            group: OptionGroups.Algorithm,
+            group: OptionGroups.SearchAlgorithm,
+            hidden: false,
+            type: "string",
+          },
+          offspring: {
+            alias: [],
+            default: "",
+            choices: [],
+            description: "Offspring operator to be used by the tool.",
+            group: OptionGroups.SearchAlgorithm,
             hidden: false,
             type: "string",
           },
           sampler: {
             alias: [],
-            default: "random",
+            default: "",
+            choices: [],
             description: "Sampler to be used by the tool.",
-            group: OptionGroups.Algorithm,
+            group: OptionGroups.SearchAlgorithm,
             hidden: false,
             type: "string",
           },
           "termination-triggers": {
             alias: [],
             default: ["signal"],
-
+            choices: [],
             description: "Termination trigger to be used by the tool.",
-            group: OptionGroups.Algorithm,
+            group: OptionGroups.SearchAlgorithm,
             hidden: false,
-            type: "string",
+            type: "array",
           },
         })
     );
@@ -396,7 +430,16 @@ export class Configuration {
           },
           "crossover-probability": {
             alias: [],
-            default: 0.8,
+            default: 0.7,
+            description:
+              "Probability crossover happens for a certain encoding.",
+            group: OptionGroups.Sampling,
+            hidden: false,
+            type: "number",
+          },
+          "multi-point-crossover-probability": {
+            alias: [],
+            default: 0.5,
             description:
               "Probability crossover happens at a certain branch point.",
             group: OptionGroups.Sampling,

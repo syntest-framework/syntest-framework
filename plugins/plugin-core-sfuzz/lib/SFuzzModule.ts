@@ -15,16 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { SFuzzPlugin } from "../lib/plugins/SFuzzPlugin";
-const expect = chai.expect;
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", async () => {
-    new SFuzzPlugin();
-    expect(true);
-  });
-});
+import { Module, ModuleManager } from "@syntest/module";
+import { SFuzzPlugin } from "./plugins/SFuzzPlugin";
+import { SFuzzObjectiveManagerPlugin } from "./plugins/SFuzzObjectiveManagerPlugin";
+
+export default class SFuzzModule extends Module {
+  async register(moduleManager: ModuleManager): Promise<void> {
+    moduleManager.registerPlugin(this.name, new SFuzzObjectiveManagerPlugin());
+    moduleManager.registerPlugin(this.name, new SFuzzPlugin());
+  }
+}

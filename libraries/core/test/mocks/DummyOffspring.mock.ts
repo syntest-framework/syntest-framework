@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Offspring } from "../../lib";
+import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-import { Module, ModuleManager } from "@syntest/module";
-import { SfuzzPlugin } from "./SfuzzPlugin";
-
-export default class SfuzzModule extends Module {
-  async register(moduleManager: ModuleManager): Promise<void> {
-    moduleManager.registerPlugin(this.name, new SfuzzPlugin());
+export class DummyOffspring extends Offspring<DummyEncodingMock> {
+  generateOffspringPopulation(
+    populationSize: number,
+    population: DummyEncodingMock[]
+  ): DummyEncodingMock[] {
+    return population;
   }
 }

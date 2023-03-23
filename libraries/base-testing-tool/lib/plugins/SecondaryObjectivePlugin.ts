@@ -15,17 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, TerminationTrigger } from "@syntest/core";
+import { Encoding, SecondaryObjectiveComparator } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 import { PluginType } from "./PluginType";
 
-export type TerminationOptions<T extends Encoding> = unknown;
-
-export abstract class TerminationPlugin<T extends Encoding> extends Plugin {
+export abstract class SecondaryObjectivePlugin<
+  T extends Encoding
+> extends Plugin {
   constructor(name: string, describe: string) {
-    super(PluginType.TerminationTrigger, name, describe);
+    super(PluginType.SecondaryObjective, name, describe);
   }
-  abstract createTerminationTrigger<O extends TerminationOptions<T>>(
-    options: O
-  ): TerminationTrigger;
+
+  abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
+
+  async getCommandOptionChoices(
+    tool: string,
+    labels: string[],
+    command: string,
+    option: string
+  ): Promise<string[]> {
+    if (option === "secondary-objective") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

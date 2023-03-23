@@ -15,16 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { SFuzzPlugin } from "../lib/plugins/SFuzzPlugin";
-const expect = chai.expect;
+import { DefaultOffspring, Encoding, Offspring } from "@syntest/core";
+import { OffspringOptions, OffspringPlugin } from "../OffspringPlugin";
 
 /**
- * This test is only added such that the github action does not fail.
+ * Plugin for SignalTerminationTrigger
+ *
+ * @author Dimitri Stallenberg
  */
-describe("example test", () => {
-  it("test", async () => {
-    new SFuzzPlugin();
-    expect(true);
-  });
-});
+export class DefaultOffspringPlugin<
+  T extends Encoding
+> extends OffspringPlugin<T> {
+  constructor() {
+    super("default", "A default offspring operator");
+  }
+
+  createOffspringOperator(options: OffspringOptions<T>): Offspring<T> {
+    return new DefaultOffspring(options.crossover, options.sampler);
+  }
+}

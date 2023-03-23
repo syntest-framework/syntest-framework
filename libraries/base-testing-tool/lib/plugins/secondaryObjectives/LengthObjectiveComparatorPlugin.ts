@@ -15,16 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
-import { SFuzzPlugin } from "../lib/plugins/SFuzzPlugin";
-const expect = chai.expect;
+import {
+  Encoding,
+  LengthObjectiveComparator,
+  SecondaryObjectiveComparator,
+} from "@syntest/core";
 
+import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
 /**
- * This test is only added such that the github action does not fail.
+ * Plugin for RandomSearch
+ *
+ * @author Dimitri Stallenberg
  */
-describe("example test", () => {
-  it("test", async () => {
-    new SFuzzPlugin();
-    expect(true);
-  });
-});
+export class LengthObjectiveComparatorPlugin<
+  T extends Encoding
+> extends SecondaryObjectivePlugin<T> {
+  constructor() {
+    super("length", "Secondary objective based on the length of the test case");
+  }
+
+  createSecondaryObjective(): SecondaryObjectiveComparator<T> {
+    return new LengthObjectiveComparator();
+  }
+}
