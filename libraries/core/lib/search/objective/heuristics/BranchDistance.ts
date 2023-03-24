@@ -99,18 +99,8 @@ export abstract class BranchDistance {
           : this.smallerEqual(left, right);
         break;
       }
-      case "LT": {
-        branchDistance = target
-          ? this.smaller(left, right)
-          : this.greaterEqual(left, right);
-        break;
-      }
-      case "SGT": {
-        branchDistance = target
-          ? this.greater(left, right)
-          : this.smallerEqual(left, right);
-        break;
-      }
+      case "LT":
+      case "SGT":
       case "SLT": {
         branchDistance = target
           ? this.smaller(left, right)

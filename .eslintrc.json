@@ -1,9 +1,16 @@
 {
   "env": {
-    "es6": true,
+    "es2021": true,
     "mocha": true,
     "node": true
   },
+  "overrides": [
+    {
+      "files": ["*.json"],
+      "parser": "eslint-plugin-package-json-dependencies",
+      "plugins": ["package-json-dependencies"]
+    }
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -12,11 +19,12 @@
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:promise/recommended",
-    "prettier"
+    "prettier"//,
+    // "plugin:sonarjs/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2021,
     "sourceType": "module",
     "project": "./tsconfig.json",
     "tsconfigRootDir": "."
@@ -85,7 +93,12 @@
 		"unused-imports/no-unused-vars": [
 			"error",
 			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-		]
+		]//,
+    // "package-json-dependencies/no-missing-types": "error",
+    // "package-json-dependencies/alphabetically-sorted-dependencies": "error",
+    // "package-json-dependencies/controlled-versions": "error",
+    // "package-json-dependencies/better-alternatives": "error"
+
     
   }
 }

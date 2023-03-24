@@ -183,7 +183,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   }
 
   public getCovered(objectiveType = "mixed"): number {
-    const total = new Set();
     const covered = new Set();
 
     for (const key of this._objectiveManager.getArchive().getObjectives()) {
@@ -201,8 +200,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
             element.type.includes(objectiveType) || objectiveType === "mixed"
         )
         .filter((element) => element.path.includes(fileName))) {
-        total.add(current.id);
-
         if (current.hits > 0) covered.add(current.id);
       }
     }

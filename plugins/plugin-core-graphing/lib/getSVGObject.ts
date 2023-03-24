@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
@@ -16,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// D3 does not adhere to the unsafe rules so we have to disable them
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */

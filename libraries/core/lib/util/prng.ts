@@ -102,9 +102,8 @@ export const prng = {
     const u2 = generator();
 
     const mag = sigma * Math.sqrt(-2 * Math.log(u1));
-    const z0 = mag * Math.cos(2 * Math.PI * u2) + mu;
 
-    return z0;
+    return mag * Math.cos(2 * Math.PI * u2) + mu;
   },
   pickOne: <T>(options: T[]): T => {
     if (options.length === 0) {

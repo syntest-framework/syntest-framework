@@ -54,7 +54,7 @@
     "table": "^6.8.1"
   },
   "engines": {
-    "node": ">=10.24.0"
+    "node": ">=16"
   },
   "publishConfig": {
     "access": "public"

@@ -39,40 +39,30 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    * @protected
    */
   protected _environmentalSelection(size: number): void {
-    const fronts = fastNonDomSorting(
+    const F = fastNonDomSorting(
       this._population,
       this._objectiveManager.getCurrentObjectives()
     );
+
+    // select new population
     const nextPopulation = [];
     let remain = size;
     let index = 0;
-    let currentFront = fronts[index];
-    while (
-      remain > 0 &&
-      remain >= currentFront.length &&
-      currentFront.length === 0
-    ) {
-      // Assign crowding distance to individuals
-      crowdingDistance(
-        currentFront,
-        this._objectiveManager.getCurrentObjectives()
-      );
 
+    // Obtain the next front
+    let currentFront: T[] = F[index];
+
+    while (remain > 0 && remain >= currentFront.length) {
       // Add the individuals of this front
-      for (const individual of currentFront) {
-        if (nextPopulation.length < size) {
-          nextPopulation.push(individual);
-        }
-      }
+      nextPopulation.push(...currentFront);
 
       // Decrement remain
       remain = remain - currentFront.length;
 
       // Obtain the next front
       index++;
-      if (remain > 0) {
-        currentFront = fronts[index];
-      }
+
+      currentFront = F[index];
     }
 
     // Remain is less than front(index).size, insert only the best one
@@ -87,12 +77,12 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         // sort in descending order of crowding distance
         return b.getCrowdingDistance() - a.getCrowdingDistance();
       });
-      let counter = 0;
+
       for (const individual of currentFront) {
-        if (counter > remain) break;
+        if (remain === 0) break;
 
         nextPopulation.push(individual);
-        counter++;
+        remain--;
       }
     }
 
