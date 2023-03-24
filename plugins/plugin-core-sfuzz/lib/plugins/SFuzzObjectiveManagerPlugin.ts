@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
-import { Encoding, ObjectiveManager } from "@syntest/core";
-import { SFuzzObjectiveManager } from "../algorithm/SFuzzObjectiveManager";
 import {
-  ObjectiveManagerPlugin,
   ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
 } from "@syntest/base-testing-tool";
+import { Encoding, ObjectiveManager } from "@syntest/core";
+
+import { SFuzzObjectiveManager } from "../algorithm/SFuzzObjectiveManager";
 
 /**
  * Plugin for the sFuzz objective manager.

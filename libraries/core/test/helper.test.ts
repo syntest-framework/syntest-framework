@@ -17,7 +17,7 @@
  */
 // globals
 
-import { initializePseudoRandomNumberGenerator } from "..";
+import { initializePseudoRandomNumberGenerator } from "../lib/util/prng";
 
 // setup
 // This will run before all test cases.

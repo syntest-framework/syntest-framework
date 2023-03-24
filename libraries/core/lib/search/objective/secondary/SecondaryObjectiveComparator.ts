@@ -23,6 +23,7 @@ import { Encoding } from "../../Encoding";
  * @author Mitchell Olsthoorn
  */
 export interface SecondaryObjectiveComparator<T extends Encoding> {
+
   /**
    * Compare two objectives.
    *

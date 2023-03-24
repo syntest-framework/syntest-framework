@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
-import { BranchDistance } from "../../..";
+import { BranchDistance } from "../../../lib/search/objective/heuristics/BranchDistance";
+import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 

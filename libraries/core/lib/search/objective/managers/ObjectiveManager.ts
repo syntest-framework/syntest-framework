@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import * as crypto from "crypto";
+import * as crypto from "node:crypto";
 
 import { Archive } from "../../Archive";
 import { BudgetManager } from "../../budget/BudgetManager";
@@ -24,9 +24,10 @@ import { Encoding } from "../../Encoding";
 import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { TerminationManager } from "../../termination/TerminationManager";
-import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
-import { ObjectiveFunction } from "../ObjectiveFunction";
 import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
+import { ObjectiveFunction } from "../ObjectiveFunction";
+import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
+
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.
  *
@@ -116,9 +117,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     objectiveFunction: ObjectiveFunction<T>,
     encoding: T
   ) {
-    if (!this._archive.has(objectiveFunction)) {
-      this._archive.update(objectiveFunction, encoding);
-    } else {
+    if (this._archive.has(objectiveFunction)) {
       // If the objective is already in the archive we use secondary objectives
       const currentEncoding = this._archive.getEncoding(objectiveFunction);
 
@@ -138,6 +137,8 @@ export abstract class ObjectiveManager<T extends Encoding> {
           break;
         }
       }
+    } else {
+      this._archive.update(objectiveFunction, encoding);
     }
   }
 
@@ -172,8 +173,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
   public async evaluateOne(
     encoding: T,
     budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+    _terminationManager: TerminationManager
   ): Promise<void> {
     // Execute the encoding
     const result = await this._runner.execute(this._subject, encoding);
@@ -183,20 +183,20 @@ export abstract class ObjectiveManager<T extends Encoding> {
     encoding.setExecutionResult(result);
 
     // For all current objectives
-    this._currentObjectives.forEach((objectiveFunction) => {
+    for (const objectiveFunction of this._currentObjectives) {
       // Calculate and store the distance
       const distance = objectiveFunction.calculateDistance(encoding);
       encoding.setDistance(objectiveFunction, distance);
 
       // When the objective is covered, update the objectives and the archive
-      if (distance === 0.0) {
+      if (distance === 0) {
         // Update the objectives
         this._updateObjectives(objectiveFunction);
 
         // Update the archive
         this._updateArchive(objectiveFunction, encoding);
       }
-    });
+    }
 
     // Create separate exception objective when an exception occurred in the execution
     if (result.hasExceptions()) {
@@ -208,11 +208,11 @@ export abstract class ObjectiveManager<T extends Encoding> {
         .update(result.getExceptions())
         .digest("hex");
 
-      const numOfExceptions = this._archive
+      const numberOfExceptions = this._archive
         .getObjectives()
         .filter((objective) => objective instanceof ExceptionObjectiveFunction)
         .filter((objective) => objective.getIdentifier() === hash).length;
-      if (numOfExceptions === 0) {
+      if (numberOfExceptions === 0) {
         // TODO this makes the archive become too large crashing the tool
         this._archive.update(
           new ExceptionObjectiveFunction(

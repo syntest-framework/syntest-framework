@@ -16,10 +16,7 @@
  * limitations under the License.
  */
 
-import { NodeType } from "@syntest/cfg-core";
-
 import { Encoding } from "../../Encoding";
-import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
@@ -46,13 +43,15 @@ export class StructuralObjectiveManager<
     this._coveredObjectives.add(objectiveFunction);
 
     // Add the child objectives to the current objectives
-    this._subject.getChildObjectives(objectiveFunction).forEach((objective) => {
+    for (const objective of this._subject.getChildObjectives(
+      objectiveFunction
+    )) {
       if (
         !this._coveredObjectives.has(objective) &&
         !this._currentObjectives.has(objective)
       )
         this._currentObjectives.add(objective);
-    });
+    }
   }
 
   /**
@@ -66,7 +65,8 @@ export class StructuralObjectiveManager<
     const objectives = subject.getObjectives();
 
     // Add all objectives to the uncovered objectives
-    objectives.forEach((objective) => this._uncoveredObjectives.add(objective));
+    for (const objective of objectives)
+      this._uncoveredObjectives.add(objective);
 
     // Set the current objectives
     const rootObjectiveNodes = this._subject.cfg.functions.map(
@@ -78,15 +78,15 @@ export class StructuralObjectiveManager<
     );
     let rootObjectives = [];
     for (const id of rootObjectiveIds) {
-      rootObjectives = rootObjectives.concat(
-        this._subject
+      rootObjectives = [
+        ...rootObjectives,
+        ...this._subject
           .getObjectives()
-          .filter((objective) => objective.getIdentifier() === id)
-      );
+          .filter((objective) => objective.getIdentifier() === id),
+      ];
     }
 
-    rootObjectives.forEach((objective) =>
-      this._currentObjectives.add(objective)
-    );
+    for (const objective of rootObjectives)
+      this._currentObjectives.add(objective);
   }
 }

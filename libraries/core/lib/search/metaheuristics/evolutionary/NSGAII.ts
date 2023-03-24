@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
-import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { Encoding } from "../../Encoding";
-import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
+import { fastNonDomSorting } from "../../operators/ranking/FastNonDomSorting";
+
+import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -49,7 +50,7 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     while (
       remain > 0 &&
       remain >= currentFront.length &&
-      !currentFront.length
+      currentFront.length === 0
     ) {
       // Assign crowding distance to individuals
       crowdingDistance(

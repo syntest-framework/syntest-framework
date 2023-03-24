@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { getLogger } from "@syntest/logging";
+
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
 import { EncodingSampler } from "../EncodingSampler";
@@ -30,6 +32,7 @@ import { SearchAlgorithm } from "./SearchAlgorithm";
  * @author Mitchell Olsthoorn
  */
 export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
+  static LOGGER = getLogger("RandomSearch");
   protected _encodingSampler: EncodingSampler<T>;
 
   /**
@@ -49,13 +52,9 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
    * @inheritDoc
    * @protected
    */
-  protected _initialize(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-  ): void {}
+  protected _initialize(): void {
+    RandomSearch.LOGGER.debug("Initializing");
+  }
 
   /**
    * @inheritDoc

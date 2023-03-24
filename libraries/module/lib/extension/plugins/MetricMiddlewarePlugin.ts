@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "../Plugin";
 import { Metric, MiddleWare } from "@syntest/metric";
+
+import { Plugin } from "../Plugin";
+
 import { PluginType } from "./PluginType";
 
 export abstract class MetricMiddlewarePlugin extends Plugin {

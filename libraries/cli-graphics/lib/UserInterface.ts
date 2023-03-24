@@ -115,31 +115,34 @@ export class UserInterface {
 
   protected barFormatter(
     options: cliProgress.Options,
-    params: cliProgress.Params,
+    parameters: cliProgress.Params,
     payload: Payload
   ): string {
     const bar =
       chalk.green(
-        options.barCompleteString.substring(
+        options.barCompleteString.slice(
           0,
-          Math.round(params.progress * options.barsize)
+          Math.max(0, Math.round(parameters.progress * options.barsize))
         )
       ) +
-      options.barIncompleteString.substring(
+      options.barIncompleteString.slice(
         0,
-        options.barsize - Math.round(params.progress * options.barsize)
+        Math.max(
+          0,
+          options.barsize - Math.round(parameters.progress * options.barsize)
+        )
       );
 
-    const percentage = Math.round(params.progress * 100);
-    const str = `${bar} ${percentage}% | ETA: ${params.eta}s | ${
-      params.value
-    }/${params.total} | ${payload.meta || ""}`;
+    const percentage = Math.round(parameters.progress * 100);
+    const string_ = `${bar} ${percentage}% | ETA: ${parameters.eta}s | ${
+      parameters.value
+    }/${parameters.total} | ${payload.meta || ""}`;
 
-    if (params.value >= params.total) {
-      return chalk.greenBright(str);
+    if (parameters.value >= parameters.total) {
+      return chalk.greenBright(string_);
     }
 
-    return str;
+    return string_;
   }
 
   // Private internal styling methods

@@ -17,6 +17,7 @@
  */
 import { Metric } from "@syntest/metric";
 import Yargs = require("yargs");
+
 import { Extension } from "./Extension";
 
 export abstract class Plugin extends Extension {
@@ -37,6 +38,7 @@ export abstract class Plugin extends Extension {
  * This is called 'merging' it allows an abstract class to have optional methods.
  */
 export interface Plugin {
+
   /**
    * Should return a list of metrics that are stored by this plugin
    */
@@ -51,6 +53,7 @@ export interface Plugin {
     tool: string,
     labels: string[]
   ): Promise<Map<string, Yargs.Options>> | Map<string, Yargs.Options>;
+
   /**
    *
    * @param tool the tool the plugin provides additional choices for

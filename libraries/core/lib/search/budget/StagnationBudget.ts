@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { getLogger } from "@syntest/logging";
+
 import { Encoding } from "../Encoding";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
@@ -27,6 +29,8 @@ import { Budget } from "./Budget";
  * @author Mitchell Olsthoorn
  */
 export class StagnationBudget<T extends Encoding> implements Budget<T> {
+  static LOGGER = getLogger("StagnationBudget");
+
   /**
    * The current number of iterations without progress.
    * @protected
@@ -88,6 +92,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   reset(): void {
+    StagnationBudget.LOGGER.silly("reset");
     this._currentIterations = 0;
     this._bestProgress = 0;
     this._tracking = false;
@@ -96,19 +101,22 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  initializationStarted(): void {}
+  initializationStarted(): void {
+    StagnationBudget.LOGGER.silly("initializationStarted");
+  }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  initializationStopped(): void {}
+  initializationStopped(): void {
+    StagnationBudget.LOGGER.silly("initializationStopped");
+  }
 
   /**
    * @inheritDoc
    */
   searchStarted(): void {
+    StagnationBudget.LOGGER.silly("searchStarted");
     this._tracking = true;
   }
 
@@ -116,6 +124,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStopped(): void {
+    StagnationBudget.LOGGER.silly("searchStopped");
     this._tracking = false;
   }
 
@@ -123,6 +132,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   iteration(searchAlgorithm: SearchAlgorithm<T>): void {
+    StagnationBudget.LOGGER.silly("iteration");
     if (this._tracking && this._currentIterations < this._maxIterations) {
       if (searchAlgorithm.progress("branch") > this._bestProgress) {
         this._currentIterations = 0;
@@ -135,6 +145,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  evaluation(encoding: T): void {}
+  evaluation(): void {
+    StagnationBudget.LOGGER.silly("evaluation");
+  }
 }

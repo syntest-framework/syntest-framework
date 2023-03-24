@@ -24,7 +24,7 @@ import { getModuleCommand } from "./commands/module";
 
 export default class InitModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module
     super("init", require("../package.json").version);
   }
 

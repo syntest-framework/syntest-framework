@@ -22,6 +22,7 @@
  * @author Mitchell Olsthoorn
  */
 export interface TerminationTrigger {
+
   /**
    * Return if the termination trigger has been triggered.
    */

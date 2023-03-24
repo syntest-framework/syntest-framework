@@ -15,14 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Encoding } from "../../lib/search/Encoding";
 import { Procreation } from "../../lib/search/operators/procreation/Procreation";
-import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-export class DummyProcreation extends Procreation<DummyEncodingMock> {
-  generateOffspringPopulation(
-    populationSize: number,
-    population: DummyEncodingMock[]
-  ): DummyEncodingMock[] {
+export class DummyProcreation<E extends Encoding> extends Procreation<E> {
+  generateOffspringPopulation(populationSize: number, population: E[]): E[] {
     return population;
   }
 }

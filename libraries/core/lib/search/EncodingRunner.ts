@@ -24,6 +24,7 @@ import { SearchSubject } from "./SearchSubject";
  * @author Mitchell Olsthoorn
  */
 export interface EncodingRunner<T extends Encoding> {
+
   /**
    * execute the encoding.
    */

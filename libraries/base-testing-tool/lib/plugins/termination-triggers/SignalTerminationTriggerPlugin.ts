@@ -15,17 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { SignalTerminationTrigger } from "@syntest/core";
+
 import { TerminationTriggerPlugin } from "../TerminationTriggerPlugin";
-import { Encoding, SignalTerminationTrigger } from "@syntest/core";
 
 /**
  * Plugin for SignalTerminationTrigger
  *
  * @author Dimitri Stallenberg
  */
-export class SignalTerminationTriggerPlugin<
-  T extends Encoding
-> extends TerminationTriggerPlugin<T> {
+export class SignalTerminationTriggerPlugin extends TerminationTriggerPlugin {
   constructor() {
     super("signal", "Terminates the search when a signal is received");
   }

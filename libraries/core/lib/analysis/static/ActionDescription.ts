@@ -17,6 +17,7 @@
  */
 
 export interface ActionDescription {
+
   /**
    * Name of the action
    */

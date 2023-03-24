@@ -18,8 +18,8 @@
 
 import {
   Encoding,
-  MOSAFamily,
   EncodingSampler,
+  MOSAFamily,
   ObjectiveManager,
   Procreation,
   shouldNeverHappen,
@@ -50,14 +50,14 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
 
   protected _environmentalSelection(): void {
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size != 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size > 0
     )
-      throw Error(shouldNeverHappen("objective manager"));
+      throw new Error(shouldNeverHappen("objective manager"));
 
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size == 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size === 0
     )
       return; // the search should end
 

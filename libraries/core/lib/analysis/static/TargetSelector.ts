@@ -15,12 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import TypedEventEmitter from "typed-emitter";
-import { SubTarget, Target } from "./Target";
-import { RootContext } from "./RootContext";
-import { Events } from "../../util/Events";
-import * as path from "path";
+import * as path from "node:path";
+
 import globby = require("globby");
+import TypedEventEmitter from "typed-emitter";
+
+import { Events } from "../../util/Events";
+
+import { RootContext } from "./RootContext";
+import { SubTarget, Target } from "./Target";
 
 export class TargetSelector {
   private _rootContext: RootContext;
@@ -39,19 +42,19 @@ export class TargetSelector {
     const includedMap = new Map<string, string[]>();
     const excludedMap = new Map<string, string[]>();
 
-    include.forEach((include) => {
-      let _path;
+    for (const included of include) {
+      let globbedPath;
       let targets;
-      if (include.includes(":")) {
-        const split = include.split(":");
-        _path = split[0];
+      if (included.includes(":")) {
+        const split = included.split(":");
+        globbedPath = split[0];
         targets = split[1].split(",");
       } else {
-        _path = include;
+        globbedPath = included;
         targets = ["*"];
       }
 
-      const actualPaths = globby.sync(_path);
+      const actualPaths = globby.sync(globbedPath);
 
       for (let _path of actualPaths) {
         _path = path.resolve(_path);
@@ -61,22 +64,22 @@ export class TargetSelector {
 
         includedMap.get(_path).push(...targets);
       }
-    });
+    }
 
     // only exclude files if all sub-targets are excluded
-    exclude.forEach((exclude) => {
-      let _path;
+    for (const excluded of exclude) {
+      let globbedPath;
       let targets;
-      if (exclude.includes(":")) {
-        const split = exclude.split(":");
-        _path = split[0];
+      if (excluded.includes(":")) {
+        const split = excluded.split(":");
+        globbedPath = split[0];
         targets = split[1].split(",");
       } else {
-        _path = exclude;
+        globbedPath = excluded;
         targets = ["*"];
       }
 
-      const actualPaths = globby.sync(_path);
+      const actualPaths = globby.sync(globbedPath);
 
       for (let _path of actualPaths) {
         _path = path.resolve(_path);
@@ -86,7 +89,7 @@ export class TargetSelector {
 
         excludedMap.get(_path).push(...targets);
       }
-    });
+    }
 
     const targetContexts: Target[] = [];
 

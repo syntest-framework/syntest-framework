@@ -16,7 +16,10 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { ControlFlowGraph, NodeType, Node } from "..";
+
+import { ControlFlowGraph } from "../lib/graph/ControlFlowGraph";
+import { Node } from "../lib/graph/Node";
+import { NodeType } from "../lib/graph/NodeType";
 
 const expect = chai.expect;
 
@@ -27,12 +30,12 @@ describe("CFG Immutability check", function () {
       new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
     ];
 
-    for (let i = 65; i < "E".charCodeAt(0) + 1; i++) {
+    for (let index = 65; index < "E".codePointAt(0) + 1; index++) {
       nodes.push(
         new Node(
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           NodeType.NORMAL,
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           [],
           { lineNumbers: [26] }
         )
@@ -42,22 +45,22 @@ describe("CFG Immutability check", function () {
       nodes[0],
       nodes[1],
       nodes[1],
-      nodes.reduce((map, node) => {
-        map.set(node.id, node);
-        return map;
-      }, new Map<string, Node<unknown>>()),
+      new Map(nodes.map((node) => [node.id, node])),
       []
     );
     const rootNode = cfg.entry;
     expect(rootNode.metadata.lineNumbers).to.empty;
+
     // nodes.at(0)!.lines = [23]; // <- this will not compile because of readonly
     expect(rootNode.metadata.lineNumbers).to.empty;
+
     // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
     nodes.push(
       new Node("dummy", NodeType.NORMAL, "dummy", [], { lineNumbers: [] })
     );
     expect(cfg.getNodeById("A")?.metadata.lineNumbers).to.eql([26]);
     expect(cfg.nodes.size).to.not.equal(nodes.length);
+
     // expect(cfg.get_nodes().at(0)?.lines = [23]).to.throw(); <- this will not compile
   });
 });

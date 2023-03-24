@@ -17,6 +17,7 @@
  */
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
+
 import { ArgumentsObject } from "../Configuration";
 
 /**
@@ -34,13 +35,13 @@ export class DynaMOSAPreset extends Preset {
     super("DynaMOSA", "DynaMOSA preset");
   }
 
-  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
-    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "MOSAFamily";
-    (<ArgumentsObject>(<unknown>args)).objectiveManager = "structural";
-    (<ArgumentsObject>(<unknown>args)).procreation = "default";
-    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
-    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
+  modifyArgs(arguments_: ArgumentsCamelCase): ArgumentsCamelCase {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSAFamily";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "structural";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
 
-    return args;
+    return arguments_;
   }
 }

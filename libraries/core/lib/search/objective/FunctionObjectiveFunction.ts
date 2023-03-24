@@ -17,11 +17,11 @@
  */
 
 import { Encoding } from "../Encoding";
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
-import { BranchDistance } from "./heuristics/BranchDistance";
-import { ApproachLevel } from "./heuristics/ApproachLevel";
+
 import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Objective function for the function branch criterion.
@@ -65,11 +65,7 @@ export class FunctionObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    if (encoding.getExecutionResult().coversId(this._id)) {
-      return 0;
-    } else {
-      return 1;
-    }
+    return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
   }
 
   /**

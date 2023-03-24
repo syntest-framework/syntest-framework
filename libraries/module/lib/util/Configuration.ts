@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Yargs = require("yargs");
 import { LoggingOptions } from "@syntest/logging";
+import Yargs = require("yargs");
 
 export type GeneralOptions = {
   config: string;
@@ -43,16 +43,17 @@ export enum OptionGroups {
   Module = "Module Options:",
 }
 
-export class Configuration {
-  static configureUsage() {
+export const Configuration = {
+  configureUsage() {
     return (
       Yargs.usage(`Usage: syntest <tool> <command> [options]`)
+
         // TODO examples
         .epilog("visit https://syntest.org for more documentation")
     );
-  }
+  },
 
-  static configureOptions(yargs: Yargs.Argv) {
+  configureOptions(yargs: Yargs.Argv) {
     return (
       yargs
         .option("config", {
@@ -82,6 +83,7 @@ export class Configuration {
           hidden: false,
           type: "string",
         })
+
         // storage
         .options("syntest-directory", {
           alias: [],
@@ -102,5 +104,5 @@ export class Configuration {
           type: "string",
         })
     );
-  }
-}
+  },
+};

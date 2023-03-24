@@ -27,8 +27,8 @@ export enum OptionGroups {
   Logging = "Logging Options:",
 }
 
-export class Configuration {
-  static configureOptions(yargs: Yargs.Argv) {
+export const Configuration = {
+  configureOptions(yargs: Yargs.Argv) {
     return (
       yargs
 
@@ -68,5 +68,5 @@ export class Configuration {
           type: "array",
         })
     );
-  }
-}
+  },
+};

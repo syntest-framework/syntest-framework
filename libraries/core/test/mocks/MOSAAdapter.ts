@@ -23,7 +23,7 @@ import { DummySearchSubject } from "./DummySubject.mock";
 export class MockedMOSA<T extends Encoding> extends MOSAFamily<T> {
   setPopulation(population: T[], size: number) {
     this._populationSize = size;
-    population.forEach((test) => this._population.push(test));
+    for (const test of population) this._population.push(test);
   }
 
   getPopulation(): T[] {

@@ -16,13 +16,14 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager } from "@syntest/module";
-import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
 import { MetricManager } from "@syntest/metric";
+import { Module, ModuleManager } from "@syntest/module";
+
+import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
 
 export default class MetricMiddlewareModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module
     super("file-writer-metric-middleware", require("../package.json").version);
   }
 

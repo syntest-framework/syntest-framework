@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Datapoint } from "../../../util/Datapoint";
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg-core";
+
+import { Datapoint } from "../../../util/Datapoint";
 
 export class ApproachLevel {
   public calculate<S>(
@@ -25,10 +26,9 @@ export class ApproachLevel {
     traces: Datapoint[]
   ): { approachLevel: number; closestCoveredBranchTrace: Datapoint } {
     // Construct map with key as id covered and value as datapoint that covers that id
-    const idsTraceMap: Map<string, Datapoint> = traces.reduce((map, trace) => {
-      map.set(trace.id, trace);
-      return map;
-    }, new Map<string, Datapoint>());
+    const idsTraceMap: Map<string, Datapoint> = new Map(
+      traces.map((trace) => [trace.id, trace])
+    );
 
     // Construct set of all covered ids
     const coveredNodeIds = new Set<string>(idsTraceMap.keys());
@@ -38,11 +38,11 @@ export class ApproachLevel {
 
     // if closest node is not found, we return the distance to the root branch
     if (!closestCoveredBranch) {
-      return { approachLevel: null, closestCoveredBranchTrace: null };
+      return { approachLevel: undefined, closestCoveredBranchTrace: undefined };
     }
 
     // Retrieve trace based on ids covered by found closestCoveredBranch
-    let closestCoveredBranchTrace: Datapoint = null;
+    let closestCoveredBranchTrace: Datapoint;
     for (const id of closestCoveredBranch.id) {
       if (idsTraceMap.has(id)) {
         closestCoveredBranchTrace = idsTraceMap.get(id);
@@ -61,7 +61,7 @@ export class ApproachLevel {
     const visitedNodeIdSet = new Set<string>([from]);
     const searchQueue: [string, number][] = [[from, 0]];
 
-    while (searchQueue.length !== 0) {
+    while (searchQueue.length > 0) {
       const current = searchQueue.shift();
       const currentNodeId: string = current[0];
       const currentDistance: number = current[1];
@@ -74,6 +74,7 @@ export class ApproachLevel {
         if (visitedNodeIdSet.has(edge.source)) {
           continue;
         }
+
         // return if one of targets nodes was found
         if (targets.has(edge.source)) {
           return {
@@ -81,6 +82,7 @@ export class ApproachLevel {
             closestCoveredBranch: cfg.getNodeById(edge.source),
           };
         }
+
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(edge.source);
         if (
@@ -97,7 +99,7 @@ export class ApproachLevel {
     }
     return {
       approachLevel: -1,
-      closestCoveredBranch: null,
+      closestCoveredBranch: undefined,
     };
   }
 }

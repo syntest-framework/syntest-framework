@@ -15,15 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
 import {
   ControlFlowGraph,
-  NodeType,
-  Node,
   Edge,
-  EdgeType,
   edgeContraction,
+  EdgeType,
+  Node,
+  NodeType,
 } from "@syntest/cfg-core";
+import * as chai from "chai";
+
 import { createSimulation } from "../lib/D3Simulation";
 
 const expect = chai.expect;
@@ -39,14 +40,15 @@ describe("simulationTest", () => {
     });
     nodes.set("ROOT", nodeRoot);
     nodes.set("EXIT", nodeExit);
+
     // Construct CFG
-    for (let i = 65; i < 72; i++) {
+    for (let index = 65; index < 72; index++) {
       nodes.set(
-        String.fromCharCode(i),
+        String.fromCodePoint(index),
         new Node(
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           NodeType.NORMAL,
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           [],
           { lineNumbers: [] }
         )

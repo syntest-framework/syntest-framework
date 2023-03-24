@@ -16,35 +16,35 @@
  * limitations under the License.
  */
 import { ControlFlowProgram } from "@syntest/cfg-core";
-import { SubTarget, RootContext } from "../..";
+
 import { ActionDescription } from "../../lib/analysis/static/ActionDescription";
+import { RootContext } from "../../lib/analysis/static/RootContext";
+import { SubTarget } from "../../lib/analysis/static/Target";
 
 export class DummyRootContext extends RootContext {
-  getSource(path: string): string {
+  getSource(): string {
     throw new Error("Method not implemented.");
   }
-  getSubTargets(path: string): SubTarget[] {
+  getSubTargets(): SubTarget[] {
     throw new Error("Method not implemented.");
   }
-  getActionDescriptionMap<A extends ActionDescription>(
-    path: string,
-    id: string
-  ): Map<string, A> {
+  getActionDescriptionMap<A extends ActionDescription>(): Map<string, A> {
     throw new Error("Method not implemented.");
   }
-  getActionDescriptionMaps<A extends ActionDescription>(
-    path: string
-  ): Map<string, Map<string, A>> {
+  getActionDescriptionMaps<A extends ActionDescription>(): Map<
+    string,
+    Map<string, A>
+  > {
     throw new Error("Method not implemented.");
   }
-  getControlFlowProgram<S>(path: string): ControlFlowProgram<S> {
+  getControlFlowProgram<S>(): ControlFlowProgram<S> {
     throw new Error("Method not implemented.");
   }
-  getAbstractSyntaxTree<S>(path: string): S {
+  getAbstractSyntaxTree<S>(): S {
     throw new Error("Method not implemented.");
   }
 
-  getDependencies(path: string): string[] {
+  getDependencies(): string[] {
     throw new Error("Method not implemented.");
   }
 }

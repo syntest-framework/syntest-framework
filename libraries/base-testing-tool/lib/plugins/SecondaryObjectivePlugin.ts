@@ -17,6 +17,7 @@
  */
 import { Encoding, SecondaryObjectiveComparator } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export abstract class SecondaryObjectivePlugin<

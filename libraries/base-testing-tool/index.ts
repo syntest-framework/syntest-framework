@@ -46,7 +46,5 @@ export * from "./lib/util/fileSystem";
 
 export * from "./lib/Configuration";
 export * from "./lib/Launcher";
-export * from "./lib/Configuration";
-export * from "./lib/Launcher";
 export * from "./lib/Metrics";
 export * from "./lib/TestingToolModule";

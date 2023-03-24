@@ -25,12 +25,12 @@ export class SFuzzPreset extends Preset {
     super("sFuzz", "sFuzz preset");
   }
 
-  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
-    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "sFuzz";
-    (<ArgumentsObject>(<unknown>args)).objectiveManager = "sFuzz";
-    (<ArgumentsObject>(<unknown>args)).procreation = "default";
-    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
+  modifyArgs(arguments_: ArgumentsCamelCase): ArgumentsCamelCase {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "sFuzz";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "sFuzz";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
 
-    return args;
+    return arguments_;
   }
 }

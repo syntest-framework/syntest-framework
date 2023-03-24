@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "fs";
-import * as path from "path";
+import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "node:fs";
+import * as path from "node:path";
 
 import { CONFIG } from "../Configuration";
 
@@ -32,14 +32,14 @@ export async function createDirectoryStructure() {
   });
 }
 
-export async function createTempDirectoryStructure() {
+export async function createTemporaryDirectoryStructure() {
   // temp
   await mkdirSync(CONFIG.tempTestDirectory, { recursive: true });
   await mkdirSync(CONFIG.tempLogDirectory, { recursive: true });
   await mkdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
 }
 
-export async function deleteTempDirectories() {
+export async function deleteTemporaryDirectories() {
   await rmdirSync(CONFIG.tempTestDirectory, { recursive: true });
   await rmdirSync(CONFIG.tempLogDirectory, { recursive: true });
   await rmdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });

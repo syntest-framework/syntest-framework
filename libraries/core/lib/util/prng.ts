@@ -26,8 +26,8 @@ import {
   singletonNotSet,
 } from "./diagnostics";
 
-let usedSeed: string | null = null;
-let random = null;
+let usedSeed: string;
+let random;
 
 export function getSeed(seed?: string): string {
   if (!usedSeed) {
@@ -107,7 +107,7 @@ export const prng = {
     return z0;
   },
   pickOne: <T>(options: T[]): T => {
-    if (!options.length) {
+    if (options.length === 0) {
       throw new Error(emptyArray("options"));
     }
 
@@ -123,7 +123,7 @@ export const prng = {
     const charactersLength = characters.length;
     let result = "";
 
-    for (let i = 0; i < length; i++) {
+    for (let index = 0; index < length; index++) {
       result += characters.charAt(Math.floor(generator() * charactersLength));
     }
     return result;

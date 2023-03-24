@@ -18,6 +18,7 @@
 import * as chai from "chai";
 
 import { MetricManager } from "../lib/MetricManager";
+
 const expect = chai.expect;
 
 /**

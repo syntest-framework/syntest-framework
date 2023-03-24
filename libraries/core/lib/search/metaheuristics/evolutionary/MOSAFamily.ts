@@ -16,14 +16,15 @@
  * limitations under the License.
  */
 
-import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
-import { DominanceComparator } from "../../comparators/DominanceComparator";
-import { shouldNeverHappen } from "../../../util/diagnostics";
-
 import { getLogger } from "@syntest/logging";
+
+import { shouldNeverHappen } from "../../../util/diagnostics";
+import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { Encoding } from "../../Encoding";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
+
+import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
 /**
  * Many-objective Sorting Algorithm (MOSA) family of search algorithms.
@@ -42,14 +43,14 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
   protected _environmentalSelection(size: number): void {
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size != 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size > 0
     )
-      throw Error(shouldNeverHappen("Objective Manager"));
+      throw new Error(shouldNeverHappen("Objective Manager"));
 
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size == 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size === 0
     )
       return; // the search should end
 
@@ -165,7 +166,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
     while (
       selectedSolutions < this._populationSize &&
-      remainingSolutions.length != 0
+      remainingSolutions.length > 0
     ) {
       const front: T[] = this.getNonDominatedFront(
         objectiveFunctions,
@@ -256,13 +257,11 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
           chosen = population[index];
         } else if (
           population[index].getDistance(objective) ==
-          chosen.getDistance(objective)
+            chosen.getDistance(objective) && // at the same level of fitness, we look at test case size
+          population[index].getLength() < chosen.getLength()
         ) {
-          // at the same level of fitness, we look at test case size
-          if (population[index].getLength() < chosen.getLength()) {
-            // Secondary criterion based on tests lengths
-            chosen = population[index];
-          }
+          // Secondary criterion based on tests lengths
+          chosen = population[index];
         }
       }
 

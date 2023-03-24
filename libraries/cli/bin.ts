@@ -17,22 +17,23 @@
  * limitations under the License.
  */
 
-import yargHelper = require("yargs/helpers");
-import { BaseOptions } from "@syntest/module";
-import {
-  ModuleManager,
-  PluginType,
-  ListenerPlugin,
-  Configuration as ModuleConfiguration,
-} from "@syntest/module";
+import * as path from "node:path";
+
+import { UserInterface } from "@syntest/cli-graphics";
 import {
   getLogger,
   Configuration as LogConfiguration,
   setupLogger,
 } from "@syntest/logging";
-import * as path from "path";
-import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager, MetricOptions } from "@syntest/metric";
+import {
+  BaseOptions,
+  ListenerPlugin,
+  Configuration as ModuleConfiguration,
+  ModuleManager,
+  PluginType,
+} from "@syntest/module";
+import yargHelper = require("yargs/helpers");
 
 async function main() {
   // Setup user interface
@@ -40,7 +41,7 @@ async function main() {
   userInterface.printTitle("SynTest");
 
   // Remove binary call from args
-  const args = yargHelper.hideBin(process.argv);
+  const arguments_ = yargHelper.hideBin(process.argv);
 
   /**
    * Configure base usage
@@ -58,7 +59,7 @@ async function main() {
   const baseArguments = yargs
     .wrap(yargs.terminalWidth())
     .env("SYNTEST")
-    .parseSync(args);
+    .parseSync(arguments_);
 
   // Setup logger
   setupLogger(
@@ -139,7 +140,8 @@ async function main() {
         (<MetricOptions>(<unknown>argv)).outputMetrics
       );
     })
-    .parse(args);
+    .parse(arguments_);
 }
 
+// eslint-disable-next-line unicorn/prefer-top-level-await
 main();

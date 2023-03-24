@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node } from "./Node";
-import { Edge } from "./Edge";
-import { NodeType } from "./NodeType";
 import cloneDeep = require("lodash.clonedeep");
+
+import { Edge } from "./Edge";
+import { Node } from "./Node";
+import { NodeType } from "./NodeType";
 
 /**
  * Represents a control flow graph.
@@ -188,8 +189,8 @@ export class ControlFlowGraph<S> {
   getParents(targetNodeId: string): Node<S>[] {
     const selectedIds = new Set<string>(
       this._edges
-        .filter((e: Edge) => e.target === targetNodeId)
-        .map((e: Edge) => e.source)
+        .filter((edge: Edge) => edge.target === targetNodeId)
+        .map((edge: Edge) => edge.source)
     );
     return [...this._nodes.values()].filter((node: Node<S>) =>
       selectedIds.has(node.id)
@@ -200,8 +201,8 @@ export class ControlFlowGraph<S> {
   getChildren(targetNodeId: string): Node<S>[] {
     const selectedIds = new Set<string>(
       this._edges
-        .filter((e: Edge) => e.source === targetNodeId)
-        .map((e: Edge) => e.target)
+        .filter((edge: Edge) => edge.source === targetNodeId)
+        .map((edge: Edge) => edge.target)
     );
     return [...this._nodes.values()].filter((node: Node<S>) =>
       selectedIds.has(node.id)

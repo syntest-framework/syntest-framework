@@ -17,18 +17,17 @@
  */
 import {
   BudgetManager,
+  BudgetType,
   Encoding,
   Events,
   SearchAlgorithm,
   SearchSubject,
-  TerminationManager,
 } from "@syntest/core";
-
+import { Metric, MetricManager, SeriesType } from "@syntest/metric";
 import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
-import { Metric, MetricManager, SeriesType } from "@syntest/metric";
-import { PropertyName, SeriesName, metrics } from "../../Metrics";
-import { BudgetType } from "@syntest/core";
+
+import { metrics, PropertyName, SeriesName } from "../../Metrics";
 
 export class SearchMetricListener extends ListenerPlugin {
   protected currentNamespace: string;
@@ -36,7 +35,6 @@ export class SearchMetricListener extends ListenerPlugin {
 
   /**
    * Constructor.
-   *
    */
   constructor() {
     super(
@@ -60,12 +58,10 @@ export class SearchMetricListener extends ListenerPlugin {
    * @param budgetManager The budget manager
    * @param terminationManager The termination manager
    */
-  recordSeries<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>,
-    subject: SearchSubject<T>,
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+  recordSeries<E extends Encoding>(
+    searchAlgorithm: SearchAlgorithm<E>,
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>
   ): void {
     const iterations = budgetManager
       .getBudgetObject(BudgetType.ITERATION)
@@ -195,13 +191,7 @@ export class SearchMetricListener extends ListenerPlugin {
   }
 
   recordInitialProperties<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    subject: SearchSubject<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+    searchAlgorithm: SearchAlgorithm<T>
   ): void {
     // record totals
     const coveredPaths = searchAlgorithm.getCovered("path");
@@ -249,13 +239,7 @@ export class SearchMetricListener extends ListenerPlugin {
   }
 
   recordFinalProperties<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    subject: SearchSubject<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+    searchAlgorithm: SearchAlgorithm<T>
   ): void {
     // record finals
     const coveredPaths = searchAlgorithm.getCovered("path");
@@ -297,30 +281,16 @@ export class SearchMetricListener extends ListenerPlugin {
 
     (<TypedEventEmitter<Events>>process).on(
       "searchStart",
-      (
-        searchAlgorithm: SearchAlgorithm<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        subject: SearchSubject<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        budgetManager: BudgetManager<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        terminationManager: TerminationManager
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        subject: SearchSubject<E>,
+        budgetManager: BudgetManager<E>
       ) => {
         // create a new metric manager for this search subject
         this.currentNamespace = subject.name;
 
-        this.recordInitialProperties(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
-        this.recordSeries(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
+        this.recordInitialProperties(searchAlgorithm);
+        this.recordSeries(searchAlgorithm, subject, budgetManager);
       }
     );
 
@@ -338,27 +308,13 @@ export class SearchMetricListener extends ListenerPlugin {
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchComplete",
-      (
-        searchAlgorithm: SearchAlgorithm<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        subject: SearchSubject<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        budgetManager: BudgetManager<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        terminationManager: TerminationManager
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        subject: SearchSubject<E>,
+        budgetManager: BudgetManager<E>
       ) => {
-        this.recordSeries(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
-        this.recordFinalProperties(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
+        this.recordSeries(searchAlgorithm, subject, budgetManager);
+        this.recordFinalProperties(searchAlgorithm);
       }
     );
   }

@@ -17,6 +17,7 @@
  */
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as d3 from "d3";
+import { ForceLink } from "d3";
 
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";
@@ -55,7 +56,7 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
     .force("x", forceX);
 
   simulation.nodes(graph.nodes);
-  (<any>simulation.force("link")).links(graph.links);
+  (<ForceLink<any, any>>simulation.force("link")).links(graph.links);
 
   const link = svg
     .append("g")
@@ -84,20 +85,18 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
     .enter()
     .append("g");
 
-  const circles1 = node
+  // circles 1
+  node
     .append("circle")
     .attr("r", (d: any) => {
-      if (d.final) {
-        return 8;
-      } else {
-        return 4;
-      }
+      return d.final ? 8 : 4;
     })
     .style("stroke", "#000")
     .style("stroke-width", "1.5px")
     .attr("fill", "#fff");
 
-  const circles2 = node
+  // circles 2
+  node
     .append("circle")
     .attr("r", 5)
     .attr("fill", function (d: any) {
@@ -109,10 +108,12 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
       if (d.root) {
         return "3, 3";
       }
+      // eslint-disable-next-line unicorn/no-null
       return null;
     });
 
-  const lables = node
+  // lables
+  node
     .append("text")
     .text(function (d: any) {
       return d.name;
@@ -207,7 +208,7 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
 
   simulation.on("tick", ticked);
 
-  for (let i = 0; i < 50; i++) {
+  for (let index = 0; index < 50; index++) {
     simulation.tick();
     ticked();
   }

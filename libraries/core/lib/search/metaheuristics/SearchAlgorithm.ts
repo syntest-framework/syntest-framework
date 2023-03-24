@@ -16,16 +16,17 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { Archive } from "../Archive";
-import { SearchSubject } from "../SearchSubject";
-import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
-import { BudgetManager } from "../budget/BudgetManager";
-import { TerminationManager } from "../termination/TerminationManager";
-import { ExecutionResult } from "../ExecutionResult";
-import { Events } from "../../util/Events";
-import TypedEmitter from "typed-emitter";
 import { getLogger } from "@syntest/logging";
+import TypedEmitter from "typed-emitter";
+
+import { Events } from "../../util/Events";
+import { Archive } from "../Archive";
+import { BudgetManager } from "../budget/BudgetManager";
+import { Encoding } from "../Encoding";
+import { ExecutionResult } from "../ExecutionResult";
+import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { SearchSubject } from "../SearchSubject";
+import { TerminationManager } from "../termination/TerminationManager";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -193,18 +194,17 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       const paths = key.getSubject().path.split("/");
       const fileName = paths[paths.length - 1];
 
-      result
+      for (const current of result
         .getTraces()
         .filter(
           (element) =>
             element.type.includes(objectiveType) || objectiveType === "mixed"
         )
-        .filter((element) => element.path.includes(fileName))
-        .forEach((current) => {
-          total.add(current.id);
+        .filter((element) => element.path.includes(fileName))) {
+        total.add(current.id);
 
-          if (current.hits > 0) covered.add(current.id);
-        });
+        if (current.hits > 0) covered.add(current.id);
+      }
     }
     return covered.size;
   }
@@ -221,18 +221,17 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       const paths = key.getSubject().path.split("/");
       const fileName = paths[paths.length - 1];
 
-      result
+      for (const current of result
         .getTraces()
         .filter(
           (element) =>
             element.type.includes(objectiveType) || objectiveType === "mixed"
         )
-        .filter((element) => element.path.includes(fileName))
-        .forEach((current) => {
-          total.add(current.id);
+        .filter((element) => element.path.includes(fileName))) {
+        total.add(current.id);
 
-          if (current.hits > 0) covered.add(current.id);
-        });
+        if (current.hits > 0) covered.add(current.id);
+      }
     }
     return total.size - covered.size;
   }

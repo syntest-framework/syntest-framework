@@ -16,7 +16,10 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { ControlFlowGraph, NodeType, Node } from "..";
+
+import { ControlFlowGraph } from "../lib/graph/ControlFlowGraph";
+import { Node } from "../lib/graph/Node";
+import { NodeType } from "../lib/graph/NodeType";
 
 const expect = chai.expect;
 
@@ -35,10 +38,7 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode].reduce((map, node) => {
-        map.set(node.id, node);
-        return map;
-      }, new Map<string, Node<unknown>>()),
+      new Map([entry, exit, branchNode].map((node) => [node.id, node])),
       []
     );
 
@@ -64,10 +64,7 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode].reduce((map, node) => {
-        map.set(node.id, node);
-        return map;
-      }, new Map<string, Node<unknown>>()),
+      new Map([entry, exit, branchNode].map((node) => [node.id, node])),
       []
     );
 
@@ -96,10 +93,7 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode].reduce((map, node) => {
-        map.set(node.id, node);
-        return map;
-      }, new Map<string, Node<unknown>>()),
+      new Map([entry, exit, branchNode].map((node) => [node.id, node])),
       []
     );
 
@@ -140,10 +134,7 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode].reduce((map, node) => {
-        map.set(node.id, node);
-        return map;
-      }, new Map<string, Node<unknown>>()),
+      new Map([entry, exit, branchNode].map((node) => [node.id, node])),
       []
     );
 
@@ -168,10 +159,7 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode].reduce((map, node) => {
-        map.set(node.id, node);
-        return map;
-      }, new Map<string, Node<unknown>>()),
+      new Map([entry, exit, branchNode].map((node) => [node.id, node])),
       []
     );
 
@@ -206,10 +194,7 @@ describe("CFG suite", function () {
       entry,
       exit,
       exit,
-      [entry, exit, branchNode].reduce((map, node) => {
-        map.set(node.id, node);
-        return map;
-      }, new Map<string, Node<unknown>>()),
+      new Map([entry, exit, branchNode].map((node) => [node.id, node])),
       []
     );
 

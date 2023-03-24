@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BranchDistance } from "../..";
+import { BranchDistance } from "../../lib/search/objective/heuristics/BranchDistance";
 
 export class DummyBranchDistance extends BranchDistance {
   public _calculate(): number {

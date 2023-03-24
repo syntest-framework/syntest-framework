@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { DefaultProcreation, Encoding, Procreation } from "@syntest/core";
+
 import { ProcreationOptions, ProcreationPlugin } from "../ProcreationPlugin";
 
 /**

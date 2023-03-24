@@ -72,10 +72,10 @@ export function fastNonDomSorting<T extends Encoding>(
     }
   }
 
-  let i = 0;
-  while (F[i].length !== 0) {
+  let index_ = 0;
+  while (F[index_].length > 0) {
     const H = [];
-    for (const p of F[i]) {
+    for (const p of F[index_]) {
       for (const q of S[indices[p.id]]) {
         n[indices[q.id]] -= 1;
         if (n[indices[q.id]] === 0) {
@@ -83,7 +83,7 @@ export function fastNonDomSorting<T extends Encoding>(
         }
       }
     }
-    i += 1;
+    index_ += 1;
     F.push(H);
   }
 

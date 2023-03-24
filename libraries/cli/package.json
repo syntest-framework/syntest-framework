@@ -16,14 +16,11 @@
     "Mitchell Olsthoorn",
     "Dimitri Stallenberg"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "files": [
-    "dist/lib",
-    "dist/index.d.ts",
-    "dist/index.d.ts.map",
-    "dist/index.js",
-    "dist/index.js.map",
+    "dist/bin.d.ts",
+    "dist/bin.d.ts.map",
+    "dist/bin.js",
+    "dist/bin.js.map",
     "NOTICE",
     "README.md"
   ],

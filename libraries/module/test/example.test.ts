@@ -18,6 +18,7 @@
 import * as chai from "chai";
 
 import { Configuration } from "../lib/util/Configuration";
+
 const expect = chai.expect;
 
 /**
@@ -25,7 +26,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", async () => {
-    new Configuration();
+    Configuration.configureUsage();
     expect(true);
   });
 });

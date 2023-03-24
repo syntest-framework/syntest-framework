@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Metric } from "@syntest/metric";
 import Yargs = require("yargs");
 
 import { cannotAddChoicesToOptionWithoutChoices } from "../util/diagnostics";
-import { Metric } from "@syntest/metric";
-import { Extension } from "./Extension";
 
 import { Command } from "./Command";
+import { Extension } from "./Extension";
 import { Plugin } from "./Plugin";
 
 export class Tool extends Extension implements Yargs.CommandModule {
@@ -31,7 +31,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
   commands: Command[];
   toolOptions: Map<string, Yargs.Options>;
 
-  handler: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>;
+  handler: (arguments_: Yargs.ArgumentsCamelCase) => void | Promise<void>;
   describe: string;
 
   constructor(
@@ -40,7 +40,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
     describe: string,
     commands: Command[],
     toolOptions: Map<string, Yargs.Options>,
-    handler?: (args: Yargs.ArgumentsCamelCase) => void | Promise<void>
+    handler?: (arguments_: Yargs.ArgumentsCamelCase) => void | Promise<void>
   ) {
     super(name);
     this.labels = labels;
@@ -163,6 +163,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
 }
 
 export interface Tool {
+
   /**
    * Should return a list of metrics that are stored by this tool
    */

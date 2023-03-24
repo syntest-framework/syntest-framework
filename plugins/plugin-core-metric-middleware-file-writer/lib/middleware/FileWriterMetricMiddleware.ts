@@ -15,30 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import * as fs from "node:fs";
+import * as path from "node:path";
+
+import * as csv from "@fast-csv/format";
 import {
-  MiddleWare,
-  MetricManager,
-  Metric,
-  PropertyMetric,
-  SeriesMetric,
   DistributionMetric,
+  Metric,
+  MetricManager,
+  MiddleWare,
+  PropertyMetric,
   SeriesDistributionMetric,
+  SeriesMetric,
 } from "@syntest/metric";
 
-import * as fs from "fs";
-import * as csv from "@fast-csv/format";
-import * as path from "path";
-
 export class FileWriterMetricMiddleware extends MiddleWare {
-  private rootOutputDir: string;
+  private rootOutputDirectory: string;
 
   constructor(
     metrics: Metric[],
     outputMetrics: Metric[],
-    rootOutputDir: string
+    rootOutputDirectory: string
   ) {
     super(metrics, outputMetrics);
-    this.rootOutputDir = rootOutputDir;
+    this.rootOutputDirectory = rootOutputDirectory;
   }
 
   run(metricManager: MetricManager): void {
@@ -73,15 +74,19 @@ export class FileWriterMetricMiddleware extends MiddleWare {
         )
       );
 
-      this.writePropertiesToCSV(this.rootOutputDir, namespace, properties);
+      this.writePropertiesToCSV(
+        this.rootOutputDirectory,
+        namespace,
+        properties
+      );
       this.writeDistributionsToCSV(
-        this.rootOutputDir,
+        this.rootOutputDirectory,
         namespace,
         distributions
       );
-      this.writeSeriesToCSV(this.rootOutputDir, namespace, series);
+      this.writeSeriesToCSV(this.rootOutputDirectory, namespace, series);
       this.writeSeriesDistributionToCSV(
-        this.rootOutputDir,
+        this.rootOutputDirectory,
         namespace,
         seriesDistributions
       );
@@ -105,6 +110,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     properties: Map<string, string>
   ): void {
     filePath = path.join(filePath, "properties.csv");
+
     // Create a write stream in append mode
     const ws = fs.createWriteStream(filePath, { flags: "a" });
 

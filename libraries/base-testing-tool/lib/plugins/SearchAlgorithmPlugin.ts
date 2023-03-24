@@ -19,12 +19,12 @@ import {
   Encoding,
   EncodingSampler,
   ObjectiveManager,
+  Procreation,
   SearchAlgorithm,
 } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 
 import { PluginType } from "./PluginType";
-import { Procreation } from "@syntest/core";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
   objectiveManager: ObjectiveManager<T>;

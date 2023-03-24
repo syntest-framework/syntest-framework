@@ -22,6 +22,7 @@ import {
   SecondaryObjectiveComparator,
 } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export type ObjectiveManagerOptions<T extends Encoding> = {

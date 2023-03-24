@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
+import { getLogger } from "@syntest/logging";
+
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 import { Budget } from "./Budget";
 
@@ -27,6 +28,8 @@ import { Budget } from "./Budget";
  * @author Mitchell Olsthoorn
  */
 export class EvaluationBudget<T extends Encoding> implements Budget<T> {
+  static LOGGER = getLogger("EvaluationBudget");
+
   /**
    * The current number of evaluations.
    * @protected
@@ -81,6 +84,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   reset(): void {
+    EvaluationBudget.LOGGER.silly("reset");
     this._currentEvaluations = 0;
     this._tracking = false;
   }
@@ -89,6 +93,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   initializationStarted(): void {
+    EvaluationBudget.LOGGER.silly("initializationStarted");
     this._tracking = true;
   }
 
@@ -96,6 +101,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   initializationStopped(): void {
+    EvaluationBudget.LOGGER.silly("initializationStopped");
     this._tracking = false;
   }
 
@@ -103,6 +109,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStarted(): void {
+    EvaluationBudget.LOGGER.silly("searchStarted");
     this._tracking = true;
   }
 
@@ -110,20 +117,22 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStopped(): void {
+    EvaluationBudget.LOGGER.silly("searchStopped");
     this._tracking = false;
   }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+  iteration(): void {
+    EvaluationBudget.LOGGER.silly("iteration");
+  }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  evaluation(encoding: T): void {
+  evaluation(): void {
+    EvaluationBudget.LOGGER.silly("evaluation");
     if (this._tracking && this._currentEvaluations < this._maxEvaluations) {
       this._currentEvaluations++;
     }

@@ -22,6 +22,7 @@ import {
   Procreation,
 } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export type ProcreationOptions<T extends Encoding> = {

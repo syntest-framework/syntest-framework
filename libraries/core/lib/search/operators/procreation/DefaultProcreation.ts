@@ -19,6 +19,7 @@
 import { prng } from "../../../util/prng";
 import { Encoding } from "../../Encoding";
 import { tournamentSelection } from "../selection/TournamentSelection";
+
 import { Procreation } from "./Procreation";
 
 export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
@@ -40,8 +41,10 @@ export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
           offspring.push(child.copy().mutate(this.sampler));
         }
       } else {
-        offspring.push(parentA.copy().mutate(this.sampler));
-        offspring.push(parentB.copy().mutate(this.sampler));
+        offspring.push(
+          parentA.copy().mutate(this.sampler),
+          parentB.copy().mutate(this.sampler)
+        );
       }
     }
     offspring.push(this.sampler.sample());

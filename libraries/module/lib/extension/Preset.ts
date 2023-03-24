@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import Yargs = require("yargs");
+
 import { Extension } from "./Extension";
 
 export abstract class Preset extends Extension {
@@ -26,5 +27,7 @@ export abstract class Preset extends Extension {
     this.describe = describe;
   }
 
-  abstract modifyArgs(args: Yargs.ArgumentsCamelCase): Yargs.ArgumentsCamelCase;
+  abstract modifyArgs(
+    arguments_: Yargs.ArgumentsCamelCase
+  ): Yargs.ArgumentsCamelCase;
 }

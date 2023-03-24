@@ -17,6 +17,7 @@
  */
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
+
 import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { ApproachLevel } from "./heuristics/ApproachLevel";
 import { BranchDistance } from "./heuristics/BranchDistance";

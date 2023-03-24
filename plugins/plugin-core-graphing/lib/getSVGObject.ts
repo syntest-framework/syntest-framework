@@ -19,7 +19,7 @@ import * as d3 from "d3";
 import { JSDOM } from "jsdom";
 
 export function getBodyObject() {
-  const dom = new JSDOM(`<!DOCTYPE html><body></body>`);
+  const dom: any = new JSDOM(`<!DOCTYPE html><body></body>`);
 
   return d3.select(dom.window.document.querySelector("body"));
 }

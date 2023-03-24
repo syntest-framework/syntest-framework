@@ -15,11 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node } from "../graph/Node";
-import { ControlFlowGraph } from "../graph/ControlFlowGraph";
-import { Edge } from "../graph/Edge";
-import { NodeType } from "../graph/NodeType";
-import { ContractedControlFlowGraph } from "../graph/ContractedControlFlowGraph";
 import {
   cannotMergeEntryAndExit,
   exactlyOneEdgeShouldBeRemoved,
@@ -28,6 +23,11 @@ import {
   tooManyIncoming,
   tooManyOutgoing,
 } from "../diagnostics";
+import { ContractedControlFlowGraph } from "../graph/ContractedControlFlowGraph";
+import { ControlFlowGraph } from "../graph/ControlFlowGraph";
+import { Edge } from "../graph/Edge";
+import { Node } from "../graph/Node";
+import { NodeType } from "../graph/NodeType";
 
 /**
  * Edge contraction algorithm.
@@ -62,7 +62,7 @@ export function edgeContraction<S>(
 
     queue.push(...controlFlowGraph.getOutgoingEdges(controlFlowGraph.entry.id));
 
-    while (queue.length !== 0) {
+    while (queue.length > 0) {
       const edge = queue.shift();
       if (visited.has(edge.id)) {
         continue;
@@ -129,8 +129,8 @@ function mergeNodes<S>(
     throw new Error(cannotMergeEntryAndExit());
   }
 
-  const node1Obj = controlFlowGraph.getNodeById(node1);
-  const node2Obj = controlFlowGraph.getNodeById(node2);
+  const node1Object = controlFlowGraph.getNodeById(node1);
+  const node2Object = controlFlowGraph.getNodeById(node2);
 
   const newNode: Node<S> = new Node<S>(
     node1, // We use the id of node1 because the first node always contains the result of a control node (e.g. if, while, etc.) this is also where the instrumentation places the branch coverage
@@ -141,24 +141,27 @@ function mergeNodes<S>(
       : isErrorExit
       ? NodeType.EXIT
       : NodeType.NORMAL,
-    node1Obj.label + "-" + node2Obj.label,
-    [...node1Obj.statements, ...node2Obj.statements],
+    node1Object.label + "-" + node2Object.label,
+    [...node1Object.statements, ...node2Object.statements],
     {
-      ...node1Obj.metadata,
-      ...node2Obj.metadata,
+      ...node1Object.metadata,
+      ...node2Object.metadata,
       lineNumbers: [
-        ...node1Obj.metadata.lineNumbers,
-        ...node2Obj.metadata.lineNumbers,
+        ...node1Object.metadata.lineNumbers,
+        ...node2Object.metadata.lineNumbers,
       ],
     }
   );
 
-  const newNodes = new Map<string, Node<S>>();
+  const filteredNodes = [...controlFlowGraph.nodes.values()].filter(
+    (node) => node.id !== node1 && node.id !== node2
+  );
 
-  [...controlFlowGraph.nodes.values()]
-    .filter((node) => node.id !== node1 && node.id !== node2)
-    .concat(newNode)
-    .forEach((node) => newNodes.set(node.id, node));
+  const newNodesArray = [newNode, ...filteredNodes];
+
+  const newNodes = new Map<string, Node<S>>(
+    newNodesArray.map((node) => [node.id, node])
+  );
 
   const removedEdges = controlFlowGraph.edges.filter(
     (edge) => edge.source === node1 && edge.target === node2

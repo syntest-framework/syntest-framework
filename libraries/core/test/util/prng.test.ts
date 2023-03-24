@@ -17,13 +17,13 @@
  */
 import * as chai from "chai";
 
-import { prng } from "../..";
+import { prng } from "../../lib/util/prng";
 
 const expect = chai.expect;
 
 describe("PRNG", () => {
   it("Gaussian random variables follow a gaussian distribution", () => {
-    const samples = 100000;
+    const samples = 100_000;
     const mu = 5;
     const sigma = 2;
 
@@ -31,7 +31,7 @@ describe("PRNG", () => {
     let mean = 0;
     let std = 0;
 
-    for (let i = 0; i < samples; i++) {
+    for (let index = 0; index < samples; index++) {
       const value = prng.nextGaussian(mu, sigma);
       mean += value;
       values.push(value);
@@ -39,8 +39,8 @@ describe("PRNG", () => {
 
     mean /= samples;
 
-    for (let i = 0; i < samples; i++) {
-      const value = values[i];
+    for (let index = 0; index < samples; index++) {
+      const value = values[index];
       std += Math.pow(value - mean, 2);
     }
 

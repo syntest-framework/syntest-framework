@@ -16,7 +16,10 @@
  * limitations under the License.
  */
 
-import { Encoding, ObjectiveFunction, SearchSubject } from "../..";
+import { Encoding } from "../../lib/search/Encoding";
+import { ObjectiveFunction } from "../../lib/search/objective/ObjectiveFunction";
+import { SearchSubject } from "../../lib/search/SearchSubject";
+
 import { DummyRootContext } from "./DummyRootContext.mock";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {

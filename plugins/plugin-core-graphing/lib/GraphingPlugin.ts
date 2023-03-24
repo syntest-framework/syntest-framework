@@ -16,13 +16,15 @@
  * limitations under the License.
  */
 
+import { writeFileSync } from "node:fs";
+
 import { CONFIG } from "@syntest/base-testing-tool";
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import { Events, RootContext } from "@syntest/core";
 import { ListenerPlugin } from "@syntest/module";
-import { writeFileSync } from "fs";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
+
 import { createSimulation } from "./D3Simulation";
 
 export type GraphOptions = {

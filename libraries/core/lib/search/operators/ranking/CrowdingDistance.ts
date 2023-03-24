@@ -39,17 +39,17 @@ export function crowdingDistance<T extends Encoding>(
   if (size == 0) return;
 
   if (size == 1) {
-    front[0].setCrowdingDistance(2.0);
+    front[0].setCrowdingDistance(2);
     return;
   }
   if (size == 2) {
-    front[0].setCrowdingDistance(2.0);
-    front[1].setCrowdingDistance(2.0);
+    front[0].setCrowdingDistance(2);
+    front[1].setCrowdingDistance(2);
     return;
   }
 
-  for (let index = 0; index < front.length; index++) {
-    front[index].setCrowdingDistance(0.0);
+  for (const element of front) {
+    element.setCrowdingDistance(0);
   }
 
   for (const objective of objectiveFunctions) {
@@ -74,15 +74,15 @@ export function crowdingDistance<T extends Encoding>(
     const denominator = Math.abs(objectiveMin - objectiveMax);
 
     // set crowding distance for all other points
-    for (let j = 1; j < size - 1; j++) {
+    for (let index = 1; index < size - 1; index++) {
       let distance =
-        orderedFront[j + 1].getDistance(objective) -
-        orderedFront[j - 1].getDistance(objective);
+        orderedFront[index + 1].getDistance(objective) -
+        orderedFront[index - 1].getDistance(objective);
 
       if (denominator != 0) {
         distance = distance / denominator;
-        distance += orderedFront[j].getCrowdingDistance();
-        orderedFront[j].setCrowdingDistance(distance);
+        distance += orderedFront[index].getCrowdingDistance();
+        orderedFront[index].setCrowdingDistance(distance);
       }
     }
   }

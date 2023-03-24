@@ -20,8 +20,8 @@ import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
 import { LoggingOptions } from "@syntest/logging";
 import {
   GeneralOptions,
-  StorageOptions as ModuleStorageOptions,
   OptionGroups as ModuleOptionGroups,
+  StorageOptions as ModuleStorageOptions,
 } from "@syntest/module";
 import Yargs = require("yargs");
 
@@ -363,7 +363,7 @@ export class Configuration {
         .options({
           "random-seed": {
             alias: ["s"],
-            default: null,
+            default: undefined,
             description:
               "Seed to be used by the pseudo random number generator.",
             group: "Sampling options:",

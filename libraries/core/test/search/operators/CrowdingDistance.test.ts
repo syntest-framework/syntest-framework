@@ -17,13 +17,11 @@
  */
 import * as chai from "chai";
 
+import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
+import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
+import { ObjectiveFunction } from "../../../lib/search/objective/ObjectiveFunction";
+import { crowdingDistance } from "../../../lib/search/operators/ranking/CrowdingDistance";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
-import {
-  crowdingDistance,
-  ObjectiveFunction,
-  BranchObjectiveFunction,
-  ApproachLevel,
-} from "../../..";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
@@ -41,7 +39,7 @@ describe("Crowding distance", function () {
     const objective = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
@@ -49,14 +47,14 @@ describe("Crowding distance", function () {
 
     const ind = new DummyEncodingMock();
     crowdingDistance([ind], objectives);
-    expect(ind.getCrowdingDistance()).to.equal(2.0);
+    expect(ind.getCrowdingDistance()).to.equal(2);
   });
 
   it("front with two solutions", () => {
     const objective = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
@@ -66,21 +64,21 @@ describe("Crowding distance", function () {
     const ind2 = new DummyEncodingMock();
 
     crowdingDistance([ind1, ind2], objectives);
-    expect(ind1.getCrowdingDistance()).to.equal(2.0);
-    expect(ind2.getCrowdingDistance()).to.equal(2.0);
+    expect(ind1.getCrowdingDistance()).to.equal(2);
+    expect(ind2.getCrowdingDistance()).to.equal(2);
   });
 
   it("Front with more than two solutions", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
@@ -97,8 +95,8 @@ describe("Crowding distance", function () {
     ind3.setDummyEvaluation([objective1, objective2], [1, 1]);
 
     crowdingDistance([ind1, ind2, ind3], objectives);
-    expect(ind1.getCrowdingDistance()).to.equal(4.0);
-    expect(ind2.getCrowdingDistance()).to.equal(4.0);
+    expect(ind1.getCrowdingDistance()).to.equal(4);
+    expect(ind2.getCrowdingDistance()).to.equal(4);
     expect(ind3.getCrowdingDistance()).to.equal(2);
   });
 
@@ -106,7 +104,7 @@ describe("Crowding distance", function () {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "1"
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();

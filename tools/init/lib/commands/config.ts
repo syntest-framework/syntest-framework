@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { writeFileSync } from "node:fs";
+import * as path from "node:path";
+
 import { Command, ModuleManager } from "@syntest/module";
-import { writeFileSync } from "fs";
-import * as path from "path";
 import Yargs = require("yargs");
 
 export function getConfigCommand(
@@ -31,41 +32,41 @@ export function getConfigCommand(
     "config",
     "Create a configuration file for the tool.",
     options,
-    async (args: Yargs.ArgumentsCamelCase) => {
+    async (arguments_: Yargs.ArgumentsCamelCase) => {
       const allOptions = {};
 
       // Set default values for each option provided by the modules
       for (const tool of moduleManager.tools.values()) {
         for (const [name, option] of tool.toolOptions.entries()) {
-          allOptions[name] = option.default || null;
+          allOptions[name] = option.default || undefined;
         }
 
         for (const command of tool.commands) {
           for (const [name, option] of command.options.entries()) {
-            allOptions[name] = option.default || null;
+            allOptions[name] = option.default || undefined;
           }
         }
       }
 
       // Set the values provided by the user
-      for (const arg of Object.keys(args)) {
+      for (const argument of Object.keys(arguments_)) {
         if (
-          arg.includes("_") ||
-          /[A-Z]/.test(arg) ||
-          arg === "_" ||
-          arg.length === 1 ||
-          arg === "help" ||
-          arg === "version" ||
-          arg === "$0"
+          argument.includes("_") ||
+          /[A-Z]/.test(argument) ||
+          argument === "_" ||
+          argument.length === 1 ||
+          argument === "help" ||
+          argument === "version" ||
+          argument === "$0"
         ) {
           continue;
         }
-        allOptions[arg] = args[arg];
+        allOptions[argument] = arguments_[argument];
       }
 
       writeFileSync(
         path.resolve(".syntest.json"),
-        JSON.stringify(allOptions, null, 2)
+        JSON.stringify(allOptions, undefined, 2)
       );
     }
   );

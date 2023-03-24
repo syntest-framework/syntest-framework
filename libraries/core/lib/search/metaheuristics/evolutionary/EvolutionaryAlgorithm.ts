@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-import { SearchAlgorithm } from "../SearchAlgorithm";
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { EncodingSampler } from "../../EncodingSampler";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { Procreation } from "../../operators/procreation/Procreation";
 import { TerminationManager } from "../../termination/TerminationManager";
+import { SearchAlgorithm } from "../SearchAlgorithm";
 
 /**
  * Base class for Evolutionary Algorithms (EA).
@@ -85,7 +85,7 @@ export abstract class EvolutionaryAlgorithm<
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
   ): Promise<void> {
-    for (let i = 0; i < this._populationSize; i++) {
+    for (let index = 0; index < this._populationSize; index++) {
       this._population.push(this._encodingSampler.sample());
     }
 

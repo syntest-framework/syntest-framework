@@ -17,8 +17,10 @@
  */
 import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
-import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
 import Yargs = require("yargs");
+
+import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
+
 export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
   private metricManager: MetricManager;
 

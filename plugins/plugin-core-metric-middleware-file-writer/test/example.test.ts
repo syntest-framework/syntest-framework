@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import MetricMiddlewareModule from "../lib/FileWriterMetricMiddlewareModule";
+
 const expect = chai.expect;
 
 /**

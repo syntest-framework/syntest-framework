@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 import { UserInterface } from "@syntest/cli-graphics";
-
-import { Plugin } from "./Plugin";
-import { Tool } from "./Tool";
 import { MetricManager } from "@syntest/metric";
+
 import { ModuleManager } from "../ModuleManager";
+
 import { Extension } from "./Extension";
+
 export abstract class Module extends Extension {
   version: Readonly<string>;
 
@@ -43,6 +43,7 @@ export abstract class Module extends Extension {
  * This is called 'merging' it allows an abstract class to have optional methods.
  */
 export interface Module {
+
   /**
    * Called after the initialization step
    */

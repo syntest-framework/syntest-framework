@@ -22,6 +22,7 @@ import {
 } from "@syntest/core";
 
 import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
+
 /**
  * Plugin for RandomSearch
  *

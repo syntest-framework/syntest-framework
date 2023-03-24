@@ -18,9 +18,10 @@
 
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
-import { ObjectiveFunction } from "./ObjectiveFunction";
+
 import { ApproachLevel } from "./heuristics/ApproachLevel";
 import { BranchDistance } from "./heuristics/BranchDistance";
+import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Function that models the objective.

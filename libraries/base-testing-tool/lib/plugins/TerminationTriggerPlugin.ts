@@ -15,20 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, TerminationTrigger } from "@syntest/core";
+import { TerminationTrigger } from "@syntest/core";
 import { Plugin } from "@syntest/module";
 
 import { PluginType } from "./PluginType";
 
-export type TerminationTriggerOptions<T extends Encoding> = unknown;
+export type TerminationTriggerOptions = unknown;
 
-export abstract class TerminationTriggerPlugin<
-  T extends Encoding
-> extends Plugin {
+export abstract class TerminationTriggerPlugin extends Plugin {
   constructor(name: string, describe: string) {
     super(PluginType.TerminationTrigger, name, describe);
   }
-  abstract createTerminationTrigger<O extends TerminationTriggerOptions<T>>(
+  abstract createTerminationTrigger<O extends TerminationTriggerOptions>(
     options: O
   ): TerminationTrigger;
 

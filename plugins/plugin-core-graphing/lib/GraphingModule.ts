@@ -16,12 +16,19 @@
  * limitations under the License.
  */
 
-import { mkdirSync } from "fs";
-import { Module, ModuleManager } from "@syntest/module";
-import { GraphOptions, GraphingPlugin } from "./GraphingPlugin";
+import { mkdirSync } from "node:fs";
+
 import { CONFIG } from "@syntest/base-testing-tool";
+import { Module, ModuleManager } from "@syntest/module";
+
+import { GraphingPlugin, GraphOptions } from "./GraphingPlugin";
 
 export default class GraphingModule extends Module {
+  constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module
+    super("graphing", require("../package.json").version);
+  }
+
   async register(moduleManager: ModuleManager): Promise<void> {
     moduleManager.registerPlugin(this.name, new GraphingPlugin());
   }
