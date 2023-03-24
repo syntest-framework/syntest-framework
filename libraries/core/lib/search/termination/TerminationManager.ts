@@ -61,7 +61,7 @@ export class TerminationManager implements TerminationTrigger {
    * @param trigger The trigger to remove
    */
   public removeTrigger(trigger: TerminationTrigger): TerminationManager {
-    this._terminationTriggers.slice(
+    this._terminationTriggers.splice(
       this._terminationTriggers.indexOf(trigger),
       1
     );
