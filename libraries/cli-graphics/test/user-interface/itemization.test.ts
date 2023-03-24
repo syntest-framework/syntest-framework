@@ -27,7 +27,7 @@ const expect = chai.expect;
  * This test is only added such that the github action does not fail.
  */
 describe("itemization test", () => {
-  it("nested subitems", async () => {
+  it("nested subitems", () => {
     const userinterface = new UserInterfaceExtends();
 
     const items: ItemizationItem[] = [

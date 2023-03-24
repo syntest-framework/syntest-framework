@@ -40,7 +40,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     );
   }
 
-  override async getToolOptions(): Promise<Map<string, Yargs.Options>> {
+  override getToolOptions(): Map<string, Yargs.Options> {
     // any tool can use this listener
     // any label can use this listener
 

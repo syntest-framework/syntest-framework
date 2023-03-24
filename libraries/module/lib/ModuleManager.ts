@@ -199,7 +199,7 @@ export class ModuleManager {
     }
   }
 
-  async getModulePath(module: string): Promise<string> {
+  getModulePath(module: string): string {
     let modulePath = "";
 
     if (module.startsWith("file:")) {
@@ -214,6 +214,7 @@ export class ModuleManager {
 
       if (!existsSync(modulePath)) {
         // it is not locally installed lets try global
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         modulePath = path.resolve(path.join(globalModules, module));
       }
 
@@ -228,8 +229,10 @@ export class ModuleManager {
   }
 
   async loadModule(moduleId: string, modulePath: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { module } = await import(modulePath);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const moduleInstance: Module = new module.default();
 
     // check requirements
@@ -256,7 +259,7 @@ export class ModuleManager {
     for (const module of modulesIds) {
       try {
         ModuleManager.LOGGER.info(`Loading module: ${module}`);
-        const modulePath = await this.getModulePath(module);
+        const modulePath = this.getModulePath(module);
         await this.loadModule(module, modulePath);
       } catch (error) {
         console.log(error);
@@ -266,7 +269,12 @@ export class ModuleManager {
 
     const modules = [...this.modules.values()];
     for (const module of this._modules.values()) {
-      module.register(this, this._metricManager, this._userInterface, modules);
+      await module.register(
+        this,
+        this._metricManager,
+        this._userInterface,
+        modules
+      );
     }
   }
 
@@ -309,7 +317,7 @@ export class ModuleManager {
   async configureModules(yargs: Yargs.Argv, preset: string) {
     ModuleManager.LOGGER.info("Configuring modules");
     for (const tool of this._tools.values()) {
-      const plugins = [];
+      const plugins: Plugin[] = [];
       for (const pluginsOfType of this._plugins.values()) {
         for (const plugin of pluginsOfType.values()) {
           plugins.push(plugin);
@@ -324,8 +332,10 @@ export class ModuleManager {
       throw new Error(presetNotFound(preset));
     }
 
+    const presetObject = this._presets.get(preset);
     yargs = yargs.middleware(
-      <Yargs.MiddlewareFunction>(<unknown>this._presets.get(preset).modifyArgs)
+      (arguments_) => presetObject.modifyArgs(arguments_),
+      true
     );
 
     return yargs;

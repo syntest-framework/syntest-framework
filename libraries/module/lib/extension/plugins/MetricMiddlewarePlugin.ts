@@ -28,11 +28,11 @@ export abstract class MetricMiddlewarePlugin extends Plugin {
 
   abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
 
-  override async getToolOptionChoices(
+  override getToolOptionChoices(
     tool: string,
     labels: string[],
     option: string
-  ): Promise<string[]> {
+  ): string[] {
     // for every tool/label
 
     if (option === "metric-middleware-pipeline") {

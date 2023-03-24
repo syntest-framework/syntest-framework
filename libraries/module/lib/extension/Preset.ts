@@ -27,7 +27,7 @@ export abstract class Preset extends Extension {
     this.describe = describe;
   }
 
-  abstract modifyArgs(
-    arguments_: Yargs.ArgumentsCamelCase
-  ): Yargs.ArgumentsCamelCase;
+  abstract modifyArgs<T>(
+    arguments_: Yargs.ArgumentsCamelCase<T>
+  ): void | Promise<void>;
 }

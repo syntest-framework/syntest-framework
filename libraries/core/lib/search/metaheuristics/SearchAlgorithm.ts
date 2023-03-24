@@ -86,7 +86,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * @param budgetManager The budget manager to track budget progress
    * @param terminationManager The termination trigger manager
    */
-  public async search(
+  public search(
     subject: SearchSubject<T>,
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
@@ -108,7 +108,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     );
 
     // Initialize search process
-    await this._initialize(budgetManager, terminationManager);
+    this._initialize(budgetManager, terminationManager);
 
     // Stop initialization budget tracking, inform the listeners, and start search budget tracking
     budgetManager.initializationStopped();
@@ -146,7 +146,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       );
 
       // Start next iteration of the search process
-      await this._iterate(budgetManager, terminationManager);
+      this._iterate(budgetManager, terminationManager);
 
       // Inform the budget manager and listeners that an iteration happened
       budgetManager.iteration(this);

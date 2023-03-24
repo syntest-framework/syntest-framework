@@ -296,14 +296,17 @@ export class SearchMetricListener extends ListenerPlugin {
 
     (<TypedEventEmitter<Events>>process).on(
       "searchInitializationStart",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchInitializationComplete",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchIterationComplete",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(

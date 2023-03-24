@@ -78,6 +78,7 @@ export class UserInterface {
     this.barObject = new cliProgress.MultiBar(
       {
         hideCursor: true,
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         format: this.barFormatter,
         barCompleteChar: "\u2588",
         barIncompleteChar: "\u2591",
@@ -179,6 +180,7 @@ export class UserInterface {
   protected title(text: string): string {
     return chalk.bold(
       chalk.greenBright(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         figlet.textSync(text, {
           horizontalLayout: "full",
           font: "Rectangles",

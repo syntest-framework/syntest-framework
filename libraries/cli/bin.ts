@@ -96,14 +96,22 @@ async function main() {
   metricManager.metrics = await moduleManager.getMetrics();
 
   // Setup cleanup on exit handler
-  process.on("exit", async (code) => {
+  process.on("exit", (code) => {
     if (code !== 0) {
-      LOGGER.error("Process exited with code: " + code);
-      userInterface.printError("Process exited with code: " + code);
+      LOGGER.error(`Process exited with code: ${code}`);
+      userInterface.printError(`Process exited with code: ${code}`);
     }
     LOGGER.info("Cleaning up...");
-    moduleManager.cleanup();
-    LOGGER.info("Cleanup done! Exiting...");
+    moduleManager
+      .cleanup()
+      .then(() => {
+        LOGGER.info("Cleanup done! Exiting...");
+        return;
+      })
+      .catch((error) => {
+        LOGGER.error("Cleanup failed!", error);
+        userInterface.printError("Cleanup failed!");
+      });
   });
 
   moduleManager.printModuleVersionTable();
@@ -114,11 +122,6 @@ async function main() {
     .values()) {
     (<ListenerPlugin>plugin).setupEventListener(metricManager);
   }
-
-  // Prepare modules
-  LOGGER.info("Preparing modules...");
-  await moduleManager.prepare();
-  LOGGER.info("Modules prepared!");
 
   const versions = [...moduleManager.modules.values()]
     .map((module) => `${module.name} (${module.version})`)
@@ -139,9 +142,14 @@ async function main() {
       metricManager.setOutputMetrics(
         (<MetricOptions>(<unknown>argv)).outputMetrics
       );
+
+      // Prepare modules
+      LOGGER.info("Preparing modules...");
+      await moduleManager.prepare();
+      LOGGER.info("Modules prepared!");
     })
     .parse(arguments_);
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
-main();
+void main();

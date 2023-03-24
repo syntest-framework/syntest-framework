@@ -30,7 +30,7 @@ import { createSimulation } from "../lib/D3Simulation";
 const expect = chai.expect;
 
 describe("simulationTest", () => {
-  it("SimpleTest", async () => {
+  it("SimpleTest", () => {
     const nodes = new Map<string, Node<unknown>>();
     const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
       lineNumbers: [],
@@ -69,7 +69,7 @@ describe("simulationTest", () => {
     let cfg = new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges);
     cfg = edgeContraction(cfg);
 
-    const svgHtml = await createSimulation(cfg);
+    const svgHtml = createSimulation(cfg);
 
     expect(svgHtml);
   });

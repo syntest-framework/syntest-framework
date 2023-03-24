@@ -29,12 +29,12 @@ export abstract class SecondaryObjectivePlugin<
 
   abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
 
-  override async getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,
     option: string
-  ): Promise<string[]> {
+  ): string[] {
     if (option === "secondary-objective") {
       return [this.name];
     }

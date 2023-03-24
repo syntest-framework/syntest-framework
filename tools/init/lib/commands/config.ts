@@ -32,7 +32,7 @@ export function getConfigCommand(
     "config",
     "Create a configuration file for the tool.",
     options,
-    async (arguments_: Yargs.ArgumentsCamelCase) => {
+    (arguments_: Yargs.ArgumentsCamelCase) => {
       const allOptions: { [key: string]: unknown } = {};
 
       // Set default values for each option provided by the modules

@@ -173,7 +173,7 @@ describe("Test MOSA", function () {
     expect(front[2]).to.contain(ind1);
   });
 
-  it("Environmental Selection", async () => {
+  it("Environmental Selection", () => {
     const ind1 = new DummyEncodingMock();
     ind1.setDummyEvaluation([...objectives], [2, 3]);
 
@@ -208,7 +208,7 @@ describe("Test MOSA", function () {
 
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
     mosa.updateObjectives(searchSubject);
-    await mosa.environmentalSelection(4);
+    mosa.environmentalSelection(4);
 
     expect(mosa.getPopulation().length).to.equal(4);
     expect(mosa.getPopulation()).contain(ind1);

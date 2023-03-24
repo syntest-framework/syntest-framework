@@ -25,7 +25,7 @@ const expect = chai.expect;
  * This test is only added such that the github action does not fail.
  */
 describe("example test", () => {
-  it("test", async () => {
+  it("test", () => {
     new Configuration();
     expect(true);
   });

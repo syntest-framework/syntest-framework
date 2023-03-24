@@ -56,8 +56,9 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
     // non-dominated sorting
     MOSAFamily.LOGGER.debug(
-      "Number of objectives = " +
+      `Number of objectives = ${
         this._objectiveManager.getCurrentObjectives().size
+      }`
     );
 
     const F = this.preferenceSortingAlgorithm(
@@ -70,7 +71,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    MOSAFamily.LOGGER.debug("First front size = " + F[0].length);
+    MOSAFamily.LOGGER.debug(`First front size = ${F[0].length}`);
 
     // Obtain the next front
     let currentFront: T[] = F[index];
@@ -150,9 +151,9 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       individual.setRank(0);
     }
 
-    MOSAFamily.LOGGER.debug("First front size :" + frontZero.length);
-    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
-    MOSAFamily.LOGGER.debug("Pop + Off size :" + population.length);
+    MOSAFamily.LOGGER.debug(`First front size: ${frontZero.length}`);
+    MOSAFamily.LOGGER.debug(`Pop size: ${this._populationSize}`);
+    MOSAFamily.LOGGER.debug(`Pop + Off size: ${population.length}`);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: T[] = population;
@@ -187,10 +188,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       frontIndex += 1;
     }
 
-    MOSAFamily.LOGGER.debug("Number of fronts :" + fronts.length);
-    MOSAFamily.LOGGER.debug("Front zero size :" + fronts[0].length);
-    MOSAFamily.LOGGER.debug("# selected solutions :" + selectedSolutions);
-    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
+    MOSAFamily.LOGGER.debug(`Number of fronts : ${fronts.length}`);
+    MOSAFamily.LOGGER.debug(`Front zero size: ${fronts[0].length}`);
+    MOSAFamily.LOGGER.debug(`# selected solutions: ${selectedSolutions}`);
+    MOSAFamily.LOGGER.debug(`Pop size: ${this._populationSize}`);
     return fronts;
   }
 

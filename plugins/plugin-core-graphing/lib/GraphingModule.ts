@@ -25,16 +25,16 @@ import { GraphingPlugin, GraphOptions } from "./GraphingPlugin";
 
 export default class GraphingModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     super("graphing", require("../package.json").version);
   }
 
-  async register(moduleManager: ModuleManager): Promise<void> {
+  register(moduleManager: ModuleManager): void {
     moduleManager.registerPlugin(this.name, new GraphingPlugin());
   }
 
-  override async prepare(): Promise<void> {
-    await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
+  override prepare(): void {
+    mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
       recursive: true,
     });
   }

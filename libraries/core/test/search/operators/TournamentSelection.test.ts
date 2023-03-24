@@ -26,8 +26,11 @@ import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const mockMath = Object.create(global.Math);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 mockMath.random = () => 0.5;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 global.Math = mockMath;
 
 /**

@@ -44,15 +44,16 @@ export class GraphingPlugin extends ListenerPlugin {
   setupEventListener(): void {
     (<TypedEventEmitter<Events>>process).on(
       "controlFlowGraphResolvingComplete",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.controlFlowGraphResolvingComplete
     );
   }
 
-  override async getCommandOptions(
+  override getCommandOptions(
     tool: string,
     labels: string[],
     command: string
-  ): Promise<Map<string, Yargs.Options>> {
+  ): Map<string, Yargs.Options> {
     const optionsMap = new Map<string, Yargs.Options>();
 
     if (!labels.includes("testing")) {

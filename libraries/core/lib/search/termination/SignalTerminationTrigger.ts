@@ -28,9 +28,9 @@ export class SignalTerminationTrigger implements TerminationTrigger {
 
   constructor() {
     this._triggered = false;
-    process.on("SIGINT", this.handle);
-    process.on("SIGTERM", this.handle);
-    process.on("SIGQUIT", this.handle);
+    process.on("SIGINT", (signal) => this.handle(signal));
+    process.on("SIGTERM", (signal) => this.handle(signal));
+    process.on("SIGQUIT", (signal) => this.handle(signal));
   }
 
   /**

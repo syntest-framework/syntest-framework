@@ -63,8 +63,9 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
 
     // non-dominated sorting
     SFuzz.LOGGER.debug(
-      "Number of objectives = " +
+      `Number of objectives = ${
         this._objectiveManager.getCurrentObjectives().size
+      }`
     );
 
     const F = this.preferenceSortingAlgorithm(
@@ -72,7 +73,7 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
       this._objectiveManager.getCurrentObjectives()
     );
 
-    SFuzz.LOGGER.debug("First front size = " + F[0].length);
+    SFuzz.LOGGER.debug(`First front size = ${F[0].length}`);
 
     // select new population
     this._population = F[0];

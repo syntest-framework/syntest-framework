@@ -115,7 +115,7 @@ export class MetricManager {
     manager.series = new Map();
 
     for (const [name, seriesData] of this.series.entries()) {
-      const seriesMap = new Map();
+      const seriesMap = new Map<string, Map<number, number>>();
       for (const [type, seriesTypeData] of seriesData.entries()) {
         seriesMap.set(type, new Map(seriesTypeData));
       }
@@ -123,7 +123,7 @@ export class MetricManager {
     }
 
     for (const [name, seriesData] of namespaced.series.entries()) {
-      const seriesMap = new Map();
+      const seriesMap = new Map<string, Map<number, number>>();
       for (const [type, seriesTypeData] of seriesData.entries()) {
         seriesMap.set(type, new Map(seriesTypeData));
       }
@@ -136,9 +136,12 @@ export class MetricManager {
       name,
       seriesDistributionData,
     ] of this.seriesDistributions.entries()) {
-      const seriesDistributionsMap = new Map();
+      const seriesDistributionsMap = new Map<
+        string,
+        Map<string, Map<number, number[]>>
+      >();
       for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
-        const seriesMap = new Map();
+        const seriesMap = new Map<string, Map<number, number[]>>();
         for (const [seriesType, seriesTypeData] of seriesData.entries()) {
           seriesMap.set(seriesType, new Map(seriesTypeData));
         }
@@ -151,9 +154,12 @@ export class MetricManager {
       name,
       seriesDistributionData,
     ] of namespaced.seriesDistributions.entries()) {
-      const seriesDistributionsMap = new Map();
+      const seriesDistributionsMap = new Map<
+        string,
+        Map<string, Map<number, number[]>>
+      >();
       for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
-        const seriesMap = new Map();
+        const seriesMap = new Map<string, Map<number, number[]>>();
         for (const [seriesType, seriesTypeData] of seriesData.entries()) {
           seriesMap.set(seriesType, new Map(seriesTypeData));
         }
@@ -228,14 +234,17 @@ export class MetricManager {
           break;
         }
         case "series": {
-          const seriesMap = new Map();
+          const seriesMap = new Map<string, Map<number, number>>();
           seriesMap.set(metric.seriesType, new Map());
           this.series.set(metric.seriesName, seriesMap);
           break;
         }
         case "series-distribution": {
-          const seriesDistributionMap = new Map();
-          const seriesMap = new Map();
+          const seriesDistributionMap = new Map<
+            string,
+            Map<string, Map<number, number[]>>
+          >();
+          const seriesMap = new Map<string, Map<number, number[]>>();
           seriesMap.set(metric.seriesType, new Map());
           seriesDistributionMap.set(metric.seriesName, seriesMap);
           this.seriesDistributions.set(

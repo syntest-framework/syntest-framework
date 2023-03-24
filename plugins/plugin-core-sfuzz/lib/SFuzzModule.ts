@@ -24,11 +24,11 @@ import { SFuzzPreset } from "./SFuzzPreset";
 
 export default class SFuzzModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     super("sFuzz", require("../package.json").version);
   }
 
-  async register(moduleManager: ModuleManager): Promise<void> {
+  register(moduleManager: ModuleManager): void {
     moduleManager.registerPlugin(this.name, new SFuzzObjectiveManagerPlugin());
     moduleManager.registerPlugin(this.name, new SFuzzPlugin());
     moduleManager.registerPreset(this.name, new SFuzzPreset());

@@ -21,35 +21,35 @@ import * as path from "node:path";
 
 import { CONFIG } from "../Configuration";
 
-export async function createDirectoryStructure() {
+export function createDirectoryStructure() {
   // outputs
-  await mkdirSync(CONFIG.statisticsDirectory, {
+  mkdirSync(CONFIG.statisticsDirectory, {
     recursive: true,
   });
-  await mkdirSync(CONFIG.logDirectory, { recursive: true });
-  await mkdirSync(CONFIG.testDirectory, {
+  mkdirSync(CONFIG.logDirectory, { recursive: true });
+  mkdirSync(CONFIG.testDirectory, {
     recursive: true,
   });
 }
 
-export async function createTemporaryDirectoryStructure() {
+export function createTemporaryDirectoryStructure() {
   // temp
-  await mkdirSync(CONFIG.tempTestDirectory, { recursive: true });
-  await mkdirSync(CONFIG.tempLogDirectory, { recursive: true });
-  await mkdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
+  mkdirSync(CONFIG.tempTestDirectory, { recursive: true });
+  mkdirSync(CONFIG.tempLogDirectory, { recursive: true });
+  mkdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
 }
 
-export async function deleteTemporaryDirectories() {
-  await rmdirSync(CONFIG.tempTestDirectory, { recursive: true });
-  await rmdirSync(CONFIG.tempLogDirectory, { recursive: true });
-  await rmdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
+export function deleteTemporaryDirectories() {
+  rmdirSync(CONFIG.tempTestDirectory, { recursive: true });
+  rmdirSync(CONFIG.tempLogDirectory, { recursive: true });
+  rmdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
 
-  await rmdirSync(CONFIG.tempSyntestDirectory, { recursive: true });
+  rmdirSync(CONFIG.tempSyntestDirectory, { recursive: true });
 }
 
-export async function clearDirectory(directory: string) {
-  const files = await readdirSync(directory);
+export function clearDirectory(directory: string) {
+  const files = readdirSync(directory);
   for (const file of files) {
-    await unlinkSync(path.join(directory, file));
+    unlinkSync(path.join(directory, file));
   }
 }

@@ -15,6 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as d3 from "d3";
 import { ForceLink } from "d3";
@@ -56,6 +62,7 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
     .force("x", forceX);
 
   simulation.nodes(graph.nodes);
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   (<ForceLink<any, any>>simulation.force("link")).links(graph.links);
 
   const link = svg
@@ -100,7 +107,7 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
     .append("circle")
     .attr("r", 5)
     .attr("fill", function (d: any) {
-      return color(d.id);
+      return color(<string>d.id);
     })
     .style("stroke", "#000")
     .style("stroke-width", "1.5px")
