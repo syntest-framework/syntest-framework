@@ -48,20 +48,20 @@ export class GraphingPlugin extends ListenerPlugin {
     );
   }
 
-  async getCommandOptions(
+  override async getCommandOptions(
     tool: string,
     labels: string[],
     command: string
   ): Promise<Map<string, Yargs.Options>> {
+    const optionsMap = new Map<string, Yargs.Options>();
+
     if (!labels.includes("testing")) {
-      return;
+      return optionsMap;
     }
 
     if (command !== "test") {
-      return;
+      return optionsMap;
     }
-
-    const optionsMap = new Map<string, Yargs.Options>();
 
     optionsMap.set("cfg-directory", {
       alias: [],

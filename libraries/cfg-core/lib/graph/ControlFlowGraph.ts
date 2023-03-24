@@ -146,14 +146,14 @@ export class ControlFlowGraph<S> {
   getNodesByPredicates(...predicates: ((n: Node<S>) => boolean)[]) {
     let filteredList: Node<S>[] = [...this._nodes.values()];
     for (const predicate of predicates) {
-      filteredList = filteredList.filter(predicate);
+      filteredList = filteredList.filter((element) => predicate(element));
     }
     return filteredList;
   }
 
   // Applies a find method on list of nodes with a given predicate
   getNodeByPredicate(predicate: (n: Node<S>) => boolean) {
-    return [...this._nodes.values()].find(predicate);
+    return [...this._nodes.values()].find((element) => predicate(element));
   }
 
   // Retrieves Node object based on its id

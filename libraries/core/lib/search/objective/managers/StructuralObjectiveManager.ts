@@ -76,7 +76,7 @@ export class StructuralObjectiveManager<
     const rootObjectiveIds = rootObjectiveNodes.map(
       (objective) => objective.id
     );
-    let rootObjectives = [];
+    let rootObjectives: ObjectiveFunction<T>[] = [];
     for (const id of rootObjectiveIds) {
       rootObjectives = [
         ...rootObjectives,

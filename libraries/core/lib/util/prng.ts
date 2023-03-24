@@ -27,7 +27,7 @@ import {
 } from "./diagnostics";
 
 let usedSeed: string;
-let random;
+let random: seedrandom.PRNG | undefined;
 
 export function getSeed(seed?: string): string {
   if (!usedSeed) {

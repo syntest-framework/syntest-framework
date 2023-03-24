@@ -33,6 +33,7 @@ import {
   seriesDistributionTypeNotRegistered,
   seriesNotRegistered,
   seriesTypeNotRegistered,
+  shouldNeverHappen,
 } from "./util/diagnostics";
 
 export class MetricManager {
@@ -40,19 +41,25 @@ export class MetricManager {
 
   private _namespacedManagers: Map<string, MetricManager>;
 
-  getNamespaced(namespace: string) {
+  getNamespaced(namespace: string): MetricManager {
     if (!this._namespacedManagers.has(namespace)) {
       const manager = new MetricManager(namespace);
       manager.metrics = this.metrics;
       this._namespacedManagers.set(namespace, manager);
     }
 
-    return this._namespacedManagers.get(namespace);
+    const namespacedManager = this._namespacedManagers.get(namespace);
+
+    if (namespacedManager === undefined) {
+      throw new Error(shouldNeverHappen("MetricManager"));
+    }
+
+    return namespacedManager;
   }
 
   private _namespace: string;
-  private _metrics: Metric[];
-  private _outputMetrics: Metric[];
+  private _metrics: Metric[] | undefined = undefined;
+  private _outputMetrics: Metric[] | undefined = undefined;
 
   private properties: Map<string, string>;
   private distributions: Map<string, number[]>;
@@ -108,17 +115,19 @@ export class MetricManager {
     manager.series = new Map();
 
     for (const [name, seriesData] of this.series.entries()) {
-      manager.series.set(name, new Map());
+      const seriesMap = new Map();
       for (const [type, seriesTypeData] of seriesData.entries()) {
-        manager.series.get(name).set(type, new Map(seriesTypeData));
+        seriesMap.set(type, new Map(seriesTypeData));
       }
+      manager.series.set(name, seriesMap);
     }
 
     for (const [name, seriesData] of namespaced.series.entries()) {
-      manager.series.set(name, new Map());
+      const seriesMap = new Map();
       for (const [type, seriesTypeData] of seriesData.entries()) {
-        manager.series.get(name).set(type, new Map(seriesTypeData));
+        seriesMap.set(type, new Map(seriesTypeData));
       }
+      manager.series.set(name, seriesMap);
     }
 
     manager.seriesDistributions = new Map();
@@ -127,32 +136,30 @@ export class MetricManager {
       name,
       seriesDistributionData,
     ] of this.seriesDistributions.entries()) {
-      manager.seriesDistributions.set(name, new Map());
+      const seriesDistributionsMap = new Map();
       for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
-        manager.seriesDistributions.get(name).set(seriesName, new Map());
+        const seriesMap = new Map();
         for (const [seriesType, seriesTypeData] of seriesData.entries()) {
-          manager.seriesDistributions
-            .get(name)
-            .get(seriesName)
-            .set(seriesType, new Map(seriesTypeData));
+          seriesMap.set(seriesType, new Map(seriesTypeData));
         }
+        seriesDistributionsMap.set(seriesName, seriesMap);
       }
+      manager.seriesDistributions.set(name, seriesDistributionsMap);
     }
 
     for (const [
       name,
       seriesDistributionData,
     ] of namespaced.seriesDistributions.entries()) {
-      manager.seriesDistributions.set(name, new Map());
+      const seriesDistributionsMap = new Map();
       for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
-        manager.seriesDistributions.get(name).set(seriesName, new Map());
+        const seriesMap = new Map();
         for (const [seriesType, seriesTypeData] of seriesData.entries()) {
-          manager.seriesDistributions
-            .get(name)
-            .get(seriesName)
-            .set(seriesType, new Map(seriesTypeData));
+          seriesMap.set(seriesType, new Map(seriesTypeData));
         }
+        seriesDistributionsMap.set(seriesName, seriesMap);
       }
+      manager.seriesDistributions.set(name, seriesDistributionsMap);
     }
 
     return manager;
@@ -201,6 +208,9 @@ export class MetricManager {
   }
 
   get metrics() {
+    if (!this._metrics) {
+      throw new Error("Metrics not set");
+    }
     return this._metrics;
   }
 
@@ -218,19 +228,21 @@ export class MetricManager {
           break;
         }
         case "series": {
-          this.series.set(metric.seriesName, new Map());
-          this.series.get(metric.seriesName).set(metric.seriesType, new Map());
+          const seriesMap = new Map();
+          seriesMap.set(metric.seriesType, new Map());
+          this.series.set(metric.seriesName, seriesMap);
           break;
         }
         case "series-distribution": {
-          this.seriesDistributions.set(metric.distributionName, new Map());
-          this.seriesDistributions
-            .get(metric.distributionName)
-            .set(metric.seriesName, new Map());
-          this.seriesDistributions
-            .get(metric.distributionName)
-            .get(metric.seriesName)
-            .set(metric.seriesType, new Map());
+          const seriesDistributionMap = new Map();
+          const seriesMap = new Map();
+          seriesMap.set(metric.seriesType, new Map());
+          seriesDistributionMap.set(metric.seriesName, seriesMap);
+          this.seriesDistributions.set(
+            metric.distributionName,
+            seriesDistributionMap
+          );
+
           break;
         }
       }

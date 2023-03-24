@@ -30,7 +30,7 @@ export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
     this.objectives = objectives;
   }
 
-  getObjectives(): ObjectiveFunction<T>[] {
+  override getObjectives(): ObjectiveFunction<T>[] {
     return this.objectives;
   }
 

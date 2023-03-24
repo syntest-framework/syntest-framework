@@ -29,7 +29,7 @@ export abstract class SecondaryObjectivePlugin<
 
   abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
 
-  async getCommandOptionChoices(
+  override async getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,

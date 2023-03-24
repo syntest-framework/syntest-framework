@@ -59,7 +59,8 @@
     "node": ">=10.24.0"
   },
   "devDependencies": {
-    "@types/d3": "^7.4.0"
+    "@types/d3": "^7.4.0",
+    "@types/jsdom": "^21.1.1"
   },
   "publishConfig": {
     "access": "public"

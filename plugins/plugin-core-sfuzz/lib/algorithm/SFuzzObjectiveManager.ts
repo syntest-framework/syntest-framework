@@ -41,7 +41,7 @@ export class SFuzzObjectiveManager<
   /**
    * @inheritdoc
    */
-  public async evaluateOne(
+  public override async evaluateOne(
     encoding: T,
     budgetManager: BudgetManager<T>
   ): Promise<void> {

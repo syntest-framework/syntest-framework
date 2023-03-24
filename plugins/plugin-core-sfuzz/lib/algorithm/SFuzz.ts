@@ -37,7 +37,7 @@ import { getLogger } from "@syntest/logging";
  * @author Annibale Panichella
  */
 export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
-  static LOGGER = getLogger("sFuzz");
+  static override LOGGER = getLogger("sFuzz");
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
@@ -48,7 +48,7 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
     super(objectiveManager, encodingSampler, procreation, populationSize);
   }
 
-  protected _environmentalSelection(): void {
+  protected override _environmentalSelection(): void {
     if (
       this._objectiveManager.getCurrentObjectives().size === 0 &&
       this._objectiveManager.getUncoveredObjectives().size > 0

@@ -39,7 +39,7 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
-  static LOGGER = getLogger("MOSAFamily");
+  static override LOGGER = getLogger("MOSAFamily");
 
   protected _environmentalSelection(size: number): void {
     if (

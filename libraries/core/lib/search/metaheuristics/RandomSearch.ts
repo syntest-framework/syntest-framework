@@ -32,7 +32,7 @@ import { SearchAlgorithm } from "./SearchAlgorithm";
  * @author Mitchell Olsthoorn
  */
 export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
-  static LOGGER = getLogger("RandomSearch");
+  static override LOGGER = getLogger("RandomSearch");
   protected _encodingSampler: EncodingSampler<T>;
 
   /**

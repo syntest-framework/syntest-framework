@@ -19,11 +19,7 @@ import { Encoding } from "../../lib/search/Encoding";
 import { BranchObjectiveFunction } from "../../lib/search/objective/BranchObjectiveFunction";
 
 export class DummyEncodingMock extends Encoding {
-  private static counter = 0;
-
   constructor() {
-    DummyEncodingMock.counter++;
-
     super();
   }
 
@@ -39,7 +35,7 @@ export class DummyEncodingMock extends Encoding {
     }
   }
 
-  copy(): DummyEncodingMock {
+  copy<E extends Encoding>(): E {
     return undefined;
   }
 
@@ -51,7 +47,7 @@ export class DummyEncodingMock extends Encoding {
     return 0;
   }
 
-  mutate(): DummyEncodingMock {
+  mutate<E extends Encoding>(): E {
     return undefined;
   }
 }

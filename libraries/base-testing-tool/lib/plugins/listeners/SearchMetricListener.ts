@@ -319,7 +319,7 @@ export class SearchMetricListener extends ListenerPlugin {
     );
   }
 
-  getMetrics(): Metric[] | Promise<Metric[]> {
+  override getMetrics(): Metric[] | Promise<Metric[]> {
     return metrics;
   }
 }

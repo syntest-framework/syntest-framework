@@ -64,6 +64,7 @@ export function edgeContraction<S>(
 
     while (queue.length > 0) {
       const edge = queue.shift();
+
       if (visited.has(edge.id)) {
         continue;
       }

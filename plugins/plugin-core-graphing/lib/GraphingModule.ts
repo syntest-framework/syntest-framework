@@ -33,7 +33,7 @@ export default class GraphingModule extends Module {
     moduleManager.registerPlugin(this.name, new GraphingPlugin());
   }
 
-  async prepare(): Promise<void> {
+  override async prepare(): Promise<void> {
     await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
       recursive: true,
     });

@@ -22,8 +22,8 @@ import figlet = require("figlet");
 import { table } from "table";
 
 export class UserInterface {
-  protected barObject: cliProgress.MultiBar;
-  protected bars: Map<string, cliProgress.Bar>;
+  protected barObject: cliProgress.MultiBar | undefined = undefined;
+  protected bars: Map<string, cliProgress.Bar> | undefined = undefined;
 
   protected print(text: string): void {
     // If we are using progress bars, we need to print to above the bars
@@ -91,10 +91,10 @@ export class UserInterface {
   }
 
   updateProgressBar(bar: BarObject): void {
-    if (!this.bars) {
+    if (this.bars === undefined) {
       throw new Error("Progress bars have not been started yet");
     }
-    if (!this.bars.has(bar.name)) {
+    if (this.bars.has(bar.name) === false) {
       throw new Error(`Progress bar with name ${bar.name} does not exist`);
     }
 
@@ -108,6 +108,9 @@ export class UserInterface {
   }
 
   stopProgressBars(): void {
+    if (this.barObject === undefined) {
+      throw new Error("Progress bars have not been started yet");
+    }
     this.barObject.stop();
     this.barObject = undefined;
     this.bars = undefined;
@@ -149,9 +152,9 @@ export class UserInterface {
   protected table(title: string, tableObject: TableObject): string {
     return table(
       [
-        tableObject.headers.map(this.bold),
+        tableObject.headers.map((element) => this.bold(element)),
         ...tableObject.rows,
-        tableObject.footers.map(this.bold),
+        tableObject.footers.map((element) => this.bold(element)),
       ],
       {
         header: {
@@ -178,7 +181,7 @@ export class UserInterface {
       chalk.greenBright(
         figlet.textSync(text, {
           horizontalLayout: "full",
-          font: "rectangles",
+          font: "Rectangles",
         })
       )
     );

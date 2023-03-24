@@ -76,6 +76,10 @@ export class ModuleManager {
     this._presetsOfModule = new Map();
   }
 
+  get args() {
+    return this._args;
+  }
+
   set args(arguments_: Yargs.ArgumentsCamelCase) {
     this._args = arguments_;
     for (const module of this.modules.values()) {

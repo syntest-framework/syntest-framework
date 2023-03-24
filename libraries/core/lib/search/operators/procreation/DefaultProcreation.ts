@@ -24,7 +24,7 @@ import { Procreation } from "./Procreation";
 
 export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
   generateOffspringPopulation(populationSize: number, population: E[]): E[] {
-    const offspring = [];
+    const offspring: E[] = [];
 
     const rounds = Math.max(2, Math.round(populationSize / 5));
 

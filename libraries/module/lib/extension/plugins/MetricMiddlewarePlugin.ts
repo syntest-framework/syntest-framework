@@ -28,7 +28,7 @@ export abstract class MetricMiddlewarePlugin extends Plugin {
 
   abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
 
-  async getToolOptionChoices(
+  override async getToolOptionChoices(
     tool: string,
     labels: string[],
     option: string

@@ -56,5 +56,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/global-modules": "^2.0.0",
+    "@types/seedrandom": "^3.0.5"
   }
 }

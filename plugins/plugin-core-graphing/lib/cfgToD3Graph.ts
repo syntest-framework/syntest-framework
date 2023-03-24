@@ -33,7 +33,7 @@ export function cfgToD3Graph<S>(
     name += `\n${n.label}`;
     name += `\n${n.statements.map((s) => `${s}`).join("\n")}`;
 
-    const node = {
+    const node: D3Node = {
       id: n.id,
       name: name,
       fixed: n.type === NodeType.ENTRY,
@@ -64,7 +64,7 @@ export function cfgToD3Graph<S>(
   };
 }
 
-export interface D3Node {
+export interface D3Node extends d3.SimulationNodeDatum {
   id: string;
   name: string;
   fixed: boolean;

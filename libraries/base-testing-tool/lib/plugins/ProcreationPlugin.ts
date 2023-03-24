@@ -39,7 +39,7 @@ export abstract class ProcreationPlugin<T extends Encoding> extends Plugin {
     options: O
   ): Procreation<T>;
 
-  getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,

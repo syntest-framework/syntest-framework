@@ -41,7 +41,7 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
 
   const linkForce = d3
     .forceLink()
-    .id((d: D3Node) => d.id)
+    .id(<(node: d3.SimulationNodeDatum) => string>((node: D3Node) => node.id))
     .distance(30);
 
   const forceY = d3.forceY(height).strength(0.01);

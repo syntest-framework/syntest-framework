@@ -30,7 +30,7 @@ export abstract class TerminationTriggerPlugin extends Plugin {
     options: O
   ): TerminationTrigger;
 
-  getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,

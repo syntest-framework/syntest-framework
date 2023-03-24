@@ -75,8 +75,10 @@ export class Tool extends Extension implements Yargs.CommandModule {
         );
 
         for (const option of commandOptions.keys()) {
-          command.options[`${plugin.name}-${option}`] =
-            commandOptions.get(option);
+          command.options.set(
+            `${plugin.name}-${option}`,
+            commandOptions.get(option)
+          );
         }
       }
     }
@@ -128,14 +130,14 @@ export class Tool extends Extension implements Yargs.CommandModule {
             continue;
           }
 
-          if (!command.options[option].choices) {
+          if (!command.options.get(option).choices) {
             throw new Error(
               cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
             );
           }
 
-          command.options[option].choices = [
-            ...command.options[option].choices,
+          command.options.get(option).choices = [
+            ...command.options.get(option).choices,
             ...addedChoices,
           ];
         }

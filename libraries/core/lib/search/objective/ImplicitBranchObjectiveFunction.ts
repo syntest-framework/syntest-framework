@@ -34,5 +34,5 @@ export abstract class ImplicitBranchObjectiveFunction<
     super(approachLevel, branchDistance, subject, id);
   }
 
-  abstract calculateDistance(encoding: T): number;
+  abstract override calculateDistance(encoding: T): number;
 }

@@ -41,7 +41,7 @@ export abstract class ObjectiveManagerPlugin<
     options: O
   ): ObjectiveManager<T>;
 
-  getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,
