@@ -15,20 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { ArgumentsObject } from "@syntest/base-testing-tool";
-import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
-
-export class SFuzzPreset extends Preset {
-  constructor() {
-    super("sFuzz", "sFuzz preset");
-  }
-
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "sFuzz";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "sFuzz";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
-  }
+export enum ObjectiveType {
+  PATH = "path",
+  EXCEPTION = "exception",
+  LINE = "line",
+  FUNCTION = "function",
+  BRANCH = "branch",
+  IMPLICIT_BRANCH = "implicit-branch",
 }

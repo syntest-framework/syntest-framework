@@ -32,17 +32,10 @@ export class TargetSelector {
     this._rootContext = rootContext;
   }
 
-  loadTargets(include: string[], exclude: string[]): Target[] {
-    (<TypedEventEmitter<Events>>process).emit(
-      "targetLoadStart",
-      this._rootContext
-    );
+  private _parseTargetStrings(targetStrings: string[]): Map<string, string[]> {
+    const targetMap = new Map<string, string[]>();
 
-    // Mapping filepath -> targets
-    const includedMap = new Map<string, string[]>();
-    const excludedMap = new Map<string, string[]>();
-
-    for (const included of include) {
+    for (const included of targetStrings) {
       let globbedPath;
       let targets;
       if (included.includes(":")) {
@@ -58,38 +51,26 @@ export class TargetSelector {
 
       for (let _path of actualPaths) {
         _path = path.resolve(_path);
-        if (!includedMap.has(_path)) {
-          includedMap.set(_path, []);
+        if (!targetMap.has(_path)) {
+          targetMap.set(_path, []);
         }
 
-        includedMap.get(_path).push(...targets);
+        targetMap.get(_path).push(...targets);
       }
     }
 
-    // only exclude files if all sub-targets are excluded
-    for (const excluded of exclude) {
-      let globbedPath;
-      let targets;
-      if (excluded.includes(":")) {
-        const split = excluded.split(":");
-        globbedPath = split[0];
-        targets = split[1].split(",");
-      } else {
-        globbedPath = excluded;
-        targets = ["*"];
-      }
+    return targetMap;
+  }
 
-      const actualPaths = globby.sync(globbedPath);
+  loadTargets(include: string[], exclude: string[]): Target[] {
+    (<TypedEventEmitter<Events>>process).emit(
+      "targetLoadStart",
+      this._rootContext
+    );
 
-      for (let _path of actualPaths) {
-        _path = path.resolve(_path);
-        if (!excludedMap.has(_path)) {
-          excludedMap.set(_path, []);
-        }
-
-        excludedMap.get(_path).push(...targets);
-      }
-    }
+    // Mapping filepath -> targets
+    const includedMap = this._parseTargetStrings(include);
+    const excludedMap = this._parseTargetStrings(exclude);
 
     const targetContexts: Target[] = [];
 

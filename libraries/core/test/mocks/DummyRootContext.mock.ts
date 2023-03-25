@@ -22,29 +22,31 @@ import { RootContext } from "../../lib/analysis/static/RootContext";
 import { SubTarget } from "../../lib/analysis/static/Target";
 
 export class DummyRootContext extends RootContext {
+  private static METHOD_NOT_IMPLEMENTED = "Method not implemented.";
+
   getSource(): string {
-    throw new Error("Method not implemented.");
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
   getSubTargets(): SubTarget[] {
-    throw new Error("Method not implemented.");
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
   getActionDescriptionMap<A extends ActionDescription>(): Map<string, A> {
-    throw new Error("Method not implemented.");
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
   getActionDescriptionMaps<A extends ActionDescription>(): Map<
     string,
     Map<string, A>
   > {
-    throw new Error("Method not implemented.");
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
   getControlFlowProgram<S>(): ControlFlowProgram<S> {
-    throw new Error("Method not implemented.");
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
   getAbstractSyntaxTree<S>(): S {
-    throw new Error("Method not implemented.");
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
 
   getDependencies(): string[] {
-    throw new Error("Method not implemented.");
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
 }

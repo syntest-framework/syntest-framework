@@ -20,6 +20,7 @@ import {
   BudgetType,
   Encoding,
   Events,
+  ObjectiveType,
   SearchAlgorithm,
   SearchSubject,
 } from "@syntest/core";
@@ -79,13 +80,16 @@ export class SearchMetricListener extends ListenerPlugin {
     searchTime = Math.round(searchTime * 1000) / 1000;
     totalTime = Math.round(totalTime * 1000) / 1000;
 
-    const coveredPaths = searchAlgorithm.getCovered("path");
-    const coveredBranches = searchAlgorithm.getCovered("branch");
-    const coveredExceptions = searchAlgorithm.getCovered("exception");
-    const coveredFunctions = searchAlgorithm.getCovered("function");
-    const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredImplicitBranches =
-      searchAlgorithm.getCovered("implicit-branch");
+    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
+    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
+    const coveredExceptions = searchAlgorithm.getCovered(
+      ObjectiveType.EXCEPTION
+    );
+    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
+    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
+    const coveredImplicitBranches = searchAlgorithm.getCovered(
+      ObjectiveType.IMPLICIT_BRANCH
+    );
     const coveredObjectives = searchAlgorithm.getCovered();
 
     // search times
@@ -194,22 +198,26 @@ export class SearchMetricListener extends ListenerPlugin {
     searchAlgorithm: SearchAlgorithm<T>
   ): void {
     // record totals
-    const coveredPaths = searchAlgorithm.getCovered("path");
-    const coveredBranches = searchAlgorithm.getCovered("branch");
-    const coveredFunctions = searchAlgorithm.getCovered("function");
-    const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredImplicitBranches =
-      searchAlgorithm.getCovered("implicit-branch");
+    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
+    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
+    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
+    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
+    const coveredImplicitBranches = searchAlgorithm.getCovered(
+      ObjectiveType.IMPLICIT_BRANCH
+    );
     const coveredObjectives = searchAlgorithm.getCovered();
 
-    const totalPaths = coveredPaths + searchAlgorithm.getUncovered("path");
+    const totalPaths =
+      coveredPaths + searchAlgorithm.getUncovered(ObjectiveType.PATH);
     const totalBranches =
-      coveredBranches + searchAlgorithm.getUncovered("branch");
+      coveredBranches + searchAlgorithm.getUncovered(ObjectiveType.BRANCH);
     const totalFunctions =
-      coveredFunctions + searchAlgorithm.getUncovered("function");
-    const totalLines = coveredLines + searchAlgorithm.getUncovered("lines");
+      coveredFunctions + searchAlgorithm.getUncovered(ObjectiveType.FUNCTION);
+    const totalLines =
+      coveredLines + searchAlgorithm.getUncovered(ObjectiveType.LINE);
     const totalImplicitBranches =
-      coveredImplicitBranches + searchAlgorithm.getUncovered("implicit-branch");
+      coveredImplicitBranches +
+      searchAlgorithm.getUncovered(ObjectiveType.IMPLICIT_BRANCH);
     const total = coveredObjectives + searchAlgorithm.getUncovered();
 
     this.metricManager.recordProperty(
@@ -242,12 +250,13 @@ export class SearchMetricListener extends ListenerPlugin {
     searchAlgorithm: SearchAlgorithm<T>
   ): void {
     // record finals
-    const coveredPaths = searchAlgorithm.getCovered("path");
-    const coveredBranches = searchAlgorithm.getCovered("branch");
-    const coveredFunctions = searchAlgorithm.getCovered("function");
-    const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredImplicitBranches =
-      searchAlgorithm.getCovered("implicit-branch");
+    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
+    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
+    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
+    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
+    const coveredImplicitBranches = searchAlgorithm.getCovered(
+      ObjectiveType.IMPLICIT_BRANCH
+    );
     const coveredObjectives = searchAlgorithm.getCovered();
 
     this.metricManager.recordProperty(

@@ -29,6 +29,7 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  * @author Annibale Panichella
  * @author Dimitri Stallenberg
  */
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function fastNonDomSorting<T extends Encoding>(
   population: T[],
   objectiveFunctions: Set<ObjectiveFunction<T>>

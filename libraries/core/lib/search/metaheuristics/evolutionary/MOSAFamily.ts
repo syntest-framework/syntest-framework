@@ -250,18 +250,19 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       let chosen = population[0];
 
       for (let index = 1; index < population.length; index++) {
-        if (
+        const lowerFitness =
           population[index].getDistance(objective) <
-          chosen.getDistance(objective)
-        ) {
-          // if lower fitness, than it is better
-          chosen = population[index];
-        } else if (
+          chosen.getDistance(objective);
+        const sameFitness =
           population[index].getDistance(objective) ==
-            chosen.getDistance(objective) && // at the same level of fitness, we look at test case size
-          population[index].getLength() < chosen.getLength()
-        ) {
-          // Secondary criterion based on tests lengths
+          chosen.getDistance(objective);
+        const smallerEncoding =
+          population[index].getLength() < chosen.getLength();
+
+        // If lower fitness, then it is better
+        // If same fitness, then we look at test case size
+        // Secondary criterion based on tests lengths
+        if (lowerFitness || (sameFitness && smallerEncoding)) {
           chosen = population[index];
         }
       }

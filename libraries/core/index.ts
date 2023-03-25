@@ -63,6 +63,7 @@ export * from "./lib/search/objective/ExceptionObjectiveFunction";
 export * from "./lib/search/objective/FunctionObjectiveFunction";
 export * from "./lib/search/objective/ImplicitBranchObjectiveFunction";
 export * from "./lib/search/objective/ObjectiveFunction";
+export * from "./lib/search/objective/ObjectiveType";
 
 export * from "./lib/search/objective/managers/ObjectiveManager";
 export * from "./lib/search/objective/managers/SimpleObjectiveManager";

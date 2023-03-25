@@ -90,7 +90,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     subject: SearchSubject<T>,
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
-  ): Promise<Archive<T>> {
+  ): Archive<T> {
     SearchAlgorithm.LOGGER.info("Starting search");
 
     // Load search subject into the objective manager

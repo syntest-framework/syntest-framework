@@ -20,6 +20,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable sonarjs/no-duplicate-string */
 
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as d3 from "d3";
@@ -27,6 +28,87 @@ import { ForceLink } from "d3";
 
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";
+
+function ticked(node: any, link: any) {
+  return function () {
+    // link
+    //     .attr("x1", function(d) { return d.source.x; })
+    //     .attr("y1", function(d) { return d.source.y; })
+    //     .attr("x2", function(d) { return d.target.x; })
+    //     .attr("y2", function(d) { return d.target.y; });
+
+    link.attr("d", function (d: any) {
+      const x1 = d.source.x;
+      const y1 = d.source.y;
+      let x2 = d.target.x;
+      let y2 = d.target.y;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const dr = Math.sqrt(dx * dx + dy * dy);
+
+      // Defaults for normal edge.
+      let drx = dr;
+      let dry = dr;
+      let xRotation = 0; // degrees
+      let largeArc = 0; // 1 or 0
+      let sweep = 1; // 1 or 0
+
+      if (d.type === true) {
+        sweep = 0;
+      } else if (d.type === undefined) {
+        drx = 0;
+        dry = 0;
+      }
+
+      // Self edge.
+      if (x1 === x2 && y1 === y2) {
+        // Fiddle with this angle to get loop oriented.
+        xRotation = -45;
+
+        // Needs to be 1.
+        largeArc = 1;
+
+        // Change sweep to change orientation of loop.
+        //sweep = 0;
+
+        // Make drx and dry different to get an ellipse
+        // instead of a circle.
+        drx = 15;
+        dry = 15;
+
+        // For whatever reason the arc collapses to a point if the beginning
+        // and ending points of the arc are the same, so kludge it.
+        x2 = x2 + 1;
+        y2 = y2 + 1;
+      }
+
+      return (
+        "M" +
+        x1 +
+        "," +
+        y1 +
+        "A" +
+        drx +
+        "," +
+        dry +
+        " " +
+        xRotation +
+        "," +
+        largeArc +
+        "," +
+        sweep +
+        " " +
+        x2 +
+        "," +
+        y2
+      );
+    });
+
+    node.attr("transform", function (d: any) {
+      return "translate(" + d.x + "," + d.y + ")";
+    });
+  };
+}
 
 export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
   const width = 2000;
@@ -134,90 +216,11 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
     return d.id;
   });
 
-  function ticked() {
-    // link
-    //     .attr("x1", function(d) { return d.source.x; })
-    //     .attr("y1", function(d) { return d.source.y; })
-    //     .attr("x2", function(d) { return d.target.x; })
-    //     .attr("y2", function(d) { return d.target.y; });
-
-    link.attr("d", function (d: any) {
-      const x1 = d.source.x;
-      const y1 = d.source.y;
-      let x2 = d.target.x;
-      let y2 = d.target.y;
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const dr = Math.sqrt(dx * dx + dy * dy);
-
-      // Defaults for normal edge.
-      let drx = dr;
-      let dry = dr;
-      let xRotation = 0; // degrees
-      let largeArc = 0; // 1 or 0
-      let sweep = 1; // 1 or 0
-
-      if (d.type === true) {
-        sweep = 0;
-      } else if (d.type === undefined) {
-        drx = 0;
-        dry = 0;
-      }
-
-      // Self edge.
-      if (x1 === x2 && y1 === y2) {
-        // Fiddle with this angle to get loop oriented.
-        xRotation = -45;
-
-        // Needs to be 1.
-        largeArc = 1;
-
-        // Change sweep to change orientation of loop.
-        //sweep = 0;
-
-        // Make drx and dry different to get an ellipse
-        // instead of a circle.
-        drx = 15;
-        dry = 15;
-
-        // For whatever reason the arc collapses to a point if the beginning
-        // and ending points of the arc are the same, so kludge it.
-        x2 = x2 + 1;
-        y2 = y2 + 1;
-      }
-
-      return (
-        "M" +
-        x1 +
-        "," +
-        y1 +
-        "A" +
-        drx +
-        "," +
-        dry +
-        " " +
-        xRotation +
-        "," +
-        largeArc +
-        "," +
-        sweep +
-        " " +
-        x2 +
-        "," +
-        y2
-      );
-    });
-
-    node.attr("transform", function (d: any) {
-      return "translate(" + d.x + "," + d.y + ")";
-    });
-  }
-
-  simulation.on("tick", ticked);
+  simulation.on("tick", ticked(node, link));
 
   for (let index = 0; index < 50; index++) {
     simulation.tick();
-    ticked();
+    ticked(node, link)();
   }
 
   return body.html();

@@ -86,6 +86,46 @@ export class MetricManager {
     return this._outputMetrics;
   }
 
+  merge(other: MetricManager): void {
+    // Merge properties
+    for (const [name, value] of other.properties.entries()) {
+      this.properties.set(name, value);
+    }
+
+    // Merge distributions
+    for (const [name, distribution] of other.distributions.entries()) {
+      this.distributions.set(name, [...distribution]);
+    }
+
+    // Merge series
+    for (const [name, seriesData] of other.series.entries()) {
+      const seriesMap = new Map<string, Map<number, number>>();
+      for (const [type, seriesTypeData] of seriesData.entries()) {
+        seriesMap.set(type, new Map(seriesTypeData));
+      }
+      this.series.set(name, seriesMap);
+    }
+
+    // Merge series distributions
+    for (const [
+      name,
+      seriesDistributionData,
+    ] of other.seriesDistributions.entries()) {
+      const seriesDistributionsMap = new Map<
+        string,
+        Map<string, Map<number, number[]>>
+      >();
+      for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
+        const seriesMap = new Map<string, Map<number, number[]>>();
+        for (const [seriesType, seriesTypeData] of seriesData.entries()) {
+          seriesMap.set(seriesType, new Map(seriesTypeData));
+        }
+        seriesDistributionsMap.set(seriesName, seriesMap);
+      }
+      this.seriesDistributions.set(name, seriesDistributionsMap);
+    }
+  }
+
   getMergedNamespacedManager(namespace: string) {
     if (!this._namespacedManagers.has(namespace)) {
       throw new Error(`Namespace ${namespace} not registered`);
@@ -98,75 +138,8 @@ export class MetricManager {
     manager._metrics = this._metrics;
     manager._outputMetrics = this._outputMetrics;
 
-    manager.properties = new Map([
-      ...this.properties,
-      ...namespaced.properties,
-    ]);
-    manager.distributions = new Map();
-
-    for (const [name, distribution] of this.distributions.entries()) {
-      manager.distributions.set(name, [...distribution]);
-    }
-
-    for (const [name, distribution] of namespaced.distributions.entries()) {
-      manager.distributions.set(name, [...distribution]);
-    }
-
-    manager.series = new Map();
-
-    for (const [name, seriesData] of this.series.entries()) {
-      const seriesMap = new Map<string, Map<number, number>>();
-      for (const [type, seriesTypeData] of seriesData.entries()) {
-        seriesMap.set(type, new Map(seriesTypeData));
-      }
-      manager.series.set(name, seriesMap);
-    }
-
-    for (const [name, seriesData] of namespaced.series.entries()) {
-      const seriesMap = new Map<string, Map<number, number>>();
-      for (const [type, seriesTypeData] of seriesData.entries()) {
-        seriesMap.set(type, new Map(seriesTypeData));
-      }
-      manager.series.set(name, seriesMap);
-    }
-
-    manager.seriesDistributions = new Map();
-
-    for (const [
-      name,
-      seriesDistributionData,
-    ] of this.seriesDistributions.entries()) {
-      const seriesDistributionsMap = new Map<
-        string,
-        Map<string, Map<number, number[]>>
-      >();
-      for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
-        const seriesMap = new Map<string, Map<number, number[]>>();
-        for (const [seriesType, seriesTypeData] of seriesData.entries()) {
-          seriesMap.set(seriesType, new Map(seriesTypeData));
-        }
-        seriesDistributionsMap.set(seriesName, seriesMap);
-      }
-      manager.seriesDistributions.set(name, seriesDistributionsMap);
-    }
-
-    for (const [
-      name,
-      seriesDistributionData,
-    ] of namespaced.seriesDistributions.entries()) {
-      const seriesDistributionsMap = new Map<
-        string,
-        Map<string, Map<number, number[]>>
-      >();
-      for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
-        const seriesMap = new Map<string, Map<number, number[]>>();
-        for (const [seriesType, seriesTypeData] of seriesData.entries()) {
-          seriesMap.set(seriesType, new Map(seriesTypeData));
-        }
-        seriesDistributionsMap.set(seriesName, seriesMap);
-      }
-      manager.seriesDistributions.set(name, seriesDistributionsMap);
-    }
+    manager.merge(this);
+    manager.merge(namespaced);
 
     return manager;
   }

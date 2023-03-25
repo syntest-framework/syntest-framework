@@ -106,7 +106,7 @@ async function main() {
       .cleanup()
       .then(() => {
         LOGGER.info("Cleanup done! Exiting...");
-        return;
+        return 0;
       })
       .catch((error) => {
         LOGGER.error("Cleanup failed!", error);

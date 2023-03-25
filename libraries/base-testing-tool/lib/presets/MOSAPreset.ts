@@ -35,13 +35,11 @@ export class MOSAPreset extends Preset {
     super("MOSA", "MOSA preset");
   }
 
-  modifyArgs(arguments_: ArgumentsCamelCase): ArgumentsCamelCase {
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
     (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSAFamily";
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
-
-    return arguments_;
   }
 }

@@ -93,14 +93,14 @@ export abstract class BranchDistance {
           : this.equalNumeric(left, right);
         break;
       }
-      case "GT": {
+      case "GT":
+      case "SGT": {
         branchDistance = target
           ? this.greater(left, right)
           : this.smallerEqual(left, right);
         break;
       }
       case "LT":
-      case "SGT":
       case "SLT": {
         branchDistance = target
           ? this.smaller(left, right)

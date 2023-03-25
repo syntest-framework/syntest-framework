@@ -67,26 +67,35 @@ export class Tool extends Extension implements Yargs.CommandModule {
       if (!plugin.getCommandOptions) {
         continue;
       }
-      for (const command of this.commands) {
-        const commandOptions = await plugin.getCommandOptions(
-          this.name,
-          this.labels,
-          command.command
-        );
 
-        for (const option of commandOptions.keys()) {
-          command.options.set(
-            `${plugin.name}-${option}`,
-            commandOptions.get(option)
-          );
-        }
-      }
+      await this.addCommandOptions(plugin);
     }
 
     /**
      * These two loops are separated because we need to be able to add choices to options that are added by plugins.
      * If the two loops are combined, the choices will be added to the original options, not the options added by plugins.
      */
+    await this.addPluginOptionChoices(plugins);
+  }
+
+  async addCommandOptions(plugin: Plugin): Promise<void> {
+    for (const command of this.commands) {
+      const commandOptions = await plugin.getCommandOptions(
+        this.name,
+        this.labels,
+        command.command
+      );
+
+      for (const option of commandOptions.keys()) {
+        command.options.set(
+          `${plugin.name}-${option}`,
+          commandOptions.get(option)
+        );
+      }
+    }
+  }
+
+  async addPluginOptionChoices(plugins: Plugin[]): Promise<void> {
     for (const plugin of plugins) {
       if (plugin.getToolOptionChoices) {
         for (const option of this.toolOptions.keys()) {
@@ -95,10 +104,6 @@ export class Tool extends Extension implements Yargs.CommandModule {
             this.labels,
             option
           );
-
-          if (addedChoices.length === 0) {
-            continue;
-          }
 
           if (!this.toolOptions.get(option).choices) {
             throw new Error(
@@ -117,30 +122,30 @@ export class Tool extends Extension implements Yargs.CommandModule {
         continue;
       }
 
-      for (const command of this.commands) {
-        for (const option of Object.keys(command.options)) {
-          const addedChoices = await plugin.getCommandOptionChoices(
-            this.name,
-            this.labels,
-            command.command,
-            option
+      await this.addCommandOptionChoices(plugin);
+    }
+  }
+
+  async addCommandOptionChoices(plugin: Plugin): Promise<void> {
+    for (const command of this.commands) {
+      for (const option of Object.keys(command.options)) {
+        const addedChoices = await plugin.getCommandOptionChoices(
+          this.name,
+          this.labels,
+          command.command,
+          option
+        );
+
+        if (!command.options.get(option).choices) {
+          throw new Error(
+            cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
           );
-
-          if (addedChoices.length === 0) {
-            continue;
-          }
-
-          if (!command.options.get(option).choices) {
-            throw new Error(
-              cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
-            );
-          }
-
-          command.options.get(option).choices = [
-            ...command.options.get(option).choices,
-            ...addedChoices,
-          ];
         }
+
+        command.options.get(option).choices = [
+          ...command.options.get(option).choices,
+          ...addedChoices,
+        ];
       }
     }
   }

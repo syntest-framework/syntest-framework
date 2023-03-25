@@ -36,12 +36,10 @@ export class NSGAIIPreset extends Preset {
     super("NSGAII", "NSGAII preset");
   }
 
-  modifyArgs(arguments_: ArgumentsCamelCase): ArgumentsCamelCase {
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
     (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "NSGAII";
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
-
-    return arguments_;
   }
 }
