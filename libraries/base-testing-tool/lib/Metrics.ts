@@ -100,6 +100,7 @@ export const metrics: Metric[] = [
     seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
+
   // total time
   {
     type: MetricType.SERIES,
@@ -136,6 +137,7 @@ export const metrics: Metric[] = [
     seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
+
   // iterations
   {
     type: MetricType.SERIES,
@@ -172,6 +174,7 @@ export const metrics: Metric[] = [
     seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.ITERATION,
   },
+
   // evaluations
   {
     type: MetricType.SERIES,
@@ -208,6 +211,7 @@ export const metrics: Metric[] = [
     seriesName: SeriesName.OBJECTIVES_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
+
   // totals
   {
     type: MetricType.PROPERTY,
@@ -233,6 +237,7 @@ export const metrics: Metric[] = [
     type: MetricType.PROPERTY,
     property: PropertyName.OBJECTIVES_TOTAL,
   },
+
   // final coverage
   {
     type: MetricType.PROPERTY,
@@ -270,6 +275,7 @@ export const metrics: Metric[] = [
     type: MetricType.PROPERTY,
     property: PropertyName.TARGET,
   },
+
   // search
   {
     type: MetricType.PROPERTY,
@@ -305,6 +311,7 @@ export const metrics: Metric[] = [
     type: MetricType.PROPERTY,
     property: PropertyName.INSTRUMENTATION_TIME,
   },
+
   // Archive
   {
     type: MetricType.SERIES,

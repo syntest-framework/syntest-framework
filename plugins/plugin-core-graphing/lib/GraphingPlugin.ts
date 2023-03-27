@@ -16,14 +16,16 @@
  * limitations under the License.
  */
 
-import { Events, RootContext } from "@syntest/core";
-import Yargs = require("yargs");
-import { ListenerPlugin } from "@syntest/module";
+import { writeFileSync } from "node:fs";
+
 import { CONFIG } from "@syntest/base-testing-tool";
-import { createSimulation } from "./D3Simulation";
-import { writeFileSync } from "fs";
 import { ControlFlowGraph } from "@syntest/cfg-core";
+import { Events, RootContext } from "@syntest/core";
+import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
+import Yargs = require("yargs");
+
+import { createSimulation } from "./D3Simulation";
 
 export type GraphOptions = {
   cfgDirectory: string;
@@ -34,7 +36,7 @@ export type GraphOptions = {
  *
  * @author Dimitri Stallenberg
  */
-export default class GraphingPlugin extends ListenerPlugin {
+export class GraphingPlugin extends ListenerPlugin {
   constructor() {
     super("Graphing", "Creates a graph of the CFG");
   }
@@ -42,24 +44,25 @@ export default class GraphingPlugin extends ListenerPlugin {
   setupEventListener(): void {
     (<TypedEventEmitter<Events>>process).on(
       "controlFlowGraphResolvingComplete",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.controlFlowGraphResolvingComplete
     );
   }
 
-  async getCommandOptions(
+  override getCommandOptions(
     tool: string,
     labels: string[],
     command: string
-  ): Promise<Map<string, Yargs.Options>> {
+  ): Map<string, Yargs.Options> {
+    const optionsMap = new Map<string, Yargs.Options>();
+
     if (!labels.includes("testing")) {
-      return;
+      return optionsMap;
     }
 
     if (command !== "test") {
-      return;
+      return optionsMap;
     }
-
-    const optionsMap = new Map<string, Yargs.Options>();
 
     optionsMap.set("cfg-directory", {
       alias: [],

@@ -17,13 +17,14 @@
  */
 
 import { Module, ModuleManager, Tool } from "@syntest/module";
-import { getConfigCommand } from "./commands/config";
 import yargs = require("yargs");
+
+import { getConfigCommand } from "./commands/config";
 import { getModuleCommand } from "./commands/module";
 
 export default class InitModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     super("init", require("../package.json").version);
   }
 

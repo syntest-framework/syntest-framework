@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { ControlFlowGraph, Node, Edge, NodeType } from "@syntest/cfg-core";
+import { ControlFlowGraph, Edge, Node, NodeType } from "@syntest/cfg-core";
 
 export function cfgToD3Graph<S>(
   cfg: ControlFlowGraph<S>,
@@ -24,53 +24,49 @@ export function cfgToD3Graph<S>(
 ): D3Graph {
   let count = 0;
 
-  const nodes = [
-    ...[...cfg.nodes.values()].map((n: Node<S>) => {
-      let name = `(${n.metadata.lineNumbers.join(", ")})`;
+  const nodes = [...cfg.nodes.values()].map((n: Node<S>) => {
+    let name = `(${n.metadata.lineNumbers.join(", ")})`;
 
-      if (n.description && n.description.length) {
-        name = `(${n.metadata.lineNumbers.join(", ")}: ${n.description})`;
-      }
-      name += `\n${n.label}`;
-      name += `\n${n.statements.map((s) => `${s}`).join("\n")}`;
+    if (n.description && n.description.length > 0) {
+      name = `(${n.metadata.lineNumbers.join(", ")}: ${n.description})`;
+    }
+    name += `\n${n.label}`;
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const statements = n.statements.map((s) => `${s}`).join("\n");
+    name += `\n${statements}`;
 
-      const node = {
-        id: n.id,
-        name: name,
-        fixed: n.type === NodeType.ENTRY,
-        root: n.type === NodeType.ENTRY,
-        fx: undefined,
-        fy: undefined,
-      };
+    const node: D3Node = {
+      id: n.id,
+      name: name,
+      fixed: n.type === NodeType.ENTRY,
+      root: n.type === NodeType.ENTRY,
+      fx: undefined,
+      fy: undefined,
+    };
 
-      if (node.root) {
-        node.fx = 50 + (count + 1) * offset;
-        node.fy = 20;
-        count += 1;
-      }
+    if (node.root) {
+      node.fx = 50 + (count + 1) * offset;
+      node.fy = 20;
+      count += 1;
+    }
 
-      return node;
-    }),
-  ];
-
-  const links = [
-    ...cfg.edges.map((e: Edge) => {
-      return {
-        id: e.source + "-" + e.target,
-        source: e.source,
-        target: e.target,
-        type: e.type,
-      };
-    }),
-  ];
-
+    return node;
+  });
+  const links = cfg.edges.map((edge: Edge) => {
+    return {
+      id: edge.source + "-" + edge.target,
+      source: edge.source,
+      target: edge.target,
+      type: edge.type,
+    };
+  });
   return {
     nodes: nodes,
     links: links,
   };
 }
 
-export interface D3Node {
+export interface D3Node extends d3.SimulationNodeDatum {
   id: string;
   name: string;
   fixed: boolean;

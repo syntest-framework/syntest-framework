@@ -16,8 +16,11 @@
  * limitations under the License.
  */
 
-import { Budget } from "./Budget";
+import { getLogger } from "@syntest/logging";
+
 import { Encoding } from "../Encoding";
+
+import { Budget } from "./Budget";
 import { SearchTimeBudget } from "./SearchTimeBudget";
 
 /**
@@ -29,17 +32,21 @@ export class TotalTimeBudget<T extends Encoding>
   extends SearchTimeBudget<T>
   implements Budget<T>
 {
+  static override LOGGER = getLogger("TotalTimeBudget");
+
   /**
    * @inheritDoc
    */
-  initializationStarted(): void {
+  override initializationStarted(): void {
+    TotalTimeBudget.LOGGER.silly("initializationStarted");
     this.searchStarted();
   }
 
   /**
    * @inheritDoc
    */
-  initializationStopped(): void {
+  override initializationStopped(): void {
+    TotalTimeBudget.LOGGER.silly("initializationStopped");
     this.searchStopped();
   }
 }

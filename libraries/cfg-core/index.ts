@@ -15,4 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./bin";
+export * from "./lib/algorithms/edgeContraction";
+
+export * from "./lib/graph/ContractedControlFlowGraph";
+export * from "./lib/graph/ControlFlowGraph";
+export * from "./lib/graph/Edge";
+export * from "./lib/graph/EdgeType";
+export * from "./lib/graph/Node";
+export * from "./lib/graph/NodeType";
+
+export * from "./lib/ControlFlowFunction";
+export * from "./lib/ControlFlowGraphFactory";
+export * from "./lib/ControlFlowProgram";

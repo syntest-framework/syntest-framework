@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 import { Encoding } from "../Encoding";
-import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
+
+import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 import { ApproachLevel } from "./heuristics/ApproachLevel";
 import { BranchDistance } from "./heuristics/BranchDistance";
 
@@ -33,5 +34,5 @@ export abstract class ImplicitBranchObjectiveFunction<
     super(approachLevel, branchDistance, subject, id);
   }
 
-  abstract calculateDistance(encoding: T): number;
+  abstract override calculateDistance(encoding: T): number;
 }

@@ -20,6 +20,7 @@ import {
   ObjectiveManager,
   SimpleObjectiveManager,
 } from "@syntest/core";
+
 import {
   ObjectiveManagerOptions,
   ObjectiveManagerPlugin,

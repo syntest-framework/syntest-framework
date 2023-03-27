@@ -16,9 +16,11 @@
  * limitations under the License.
  */
 
-import { Budget } from "./Budget";
+import { getLogger } from "@syntest/logging";
+
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+
+import { Budget } from "./Budget";
 
 /**
  * Budget for the search time of the search process.
@@ -26,6 +28,8 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
  * @author Mitchell Olsthoorn
  */
 export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
+  static LOGGER = getLogger("SearchTimeBudget");
+
   /**
    * The current number of seconds.
    * @protected
@@ -67,7 +71,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    */
   getRemainingBudget(): number {
     if (this.getUsedBudget() > this._maxSearchTime) {
-      console.debug(
+      SearchTimeBudget.LOGGER.info(
         `Consumed ${
           this.getUsedBudget() - this._maxSearchTime
         }s over the allocated search time`
@@ -100,6 +104,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   reset(): void {
+    SearchTimeBudget.LOGGER.silly("reset");
     this._currentSearchTime = 0;
     this._counterTime = 0;
     this._tracking = false;
@@ -108,19 +113,22 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  initializationStarted(): void {}
+  initializationStarted(): void {
+    SearchTimeBudget.LOGGER.silly("initializationStarted");
+  }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  initializationStopped(): void {}
+  initializationStopped(): void {
+    SearchTimeBudget.LOGGER.silly("initializationStopped");
+  }
 
   /**
    * @inheritDoc
    */
   searchStarted(): void {
+    SearchTimeBudget.LOGGER.silly("searchStarted");
     if (!this._tracking) {
       this._counterTime = Date.now() / 1000;
       this._tracking = true;
@@ -131,6 +139,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStopped(): void {
+    SearchTimeBudget.LOGGER.silly("searchStopped");
     if (this._tracking) {
       this._currentSearchTime = this.getUsedBudget();
       this._counterTime = 0;
@@ -141,12 +150,14 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  iteration(searchAlgorithm: SearchAlgorithm<T>): void {}
+  iteration(): void {
+    SearchTimeBudget.LOGGER.silly("iteration");
+  }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  evaluation(encoding: T): void {}
+  evaluation(): void {
+    SearchTimeBudget.LOGGER.silly("evaluation");
+  }
 }

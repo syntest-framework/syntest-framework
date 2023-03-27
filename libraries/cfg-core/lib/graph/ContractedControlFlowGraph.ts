@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
-import { ControlFlowGraph } from "./ControlFlowGraph";
-import { Node } from "./Node";
-import { Edge } from "./Edge";
 import { duplicateNodeInMappping, nodeNotFoundInMapping } from "../diagnostics";
+
+import { ControlFlowGraph } from "./ControlFlowGraph";
+import { Edge } from "./Edge";
+import { Node } from "./Node";
 
 /**
  * A contracted control flow graph.

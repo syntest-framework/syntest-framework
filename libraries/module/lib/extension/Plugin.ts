@@ -17,13 +17,12 @@
  */
 import { Metric } from "@syntest/metric";
 import Yargs = require("yargs");
+
 import { Extension } from "./Extension";
 
 export abstract class Plugin extends Extension {
   public type: Readonly<string>;
   public describe: Readonly<string>;
-
-  _args: Yargs.ArgumentsCamelCase;
 
   constructor(type: string, name: string, describe: string) {
     super(name);
@@ -51,6 +50,7 @@ export interface Plugin {
     tool: string,
     labels: string[]
   ): Promise<Map<string, Yargs.Options>> | Map<string, Yargs.Options>;
+
   /**
    *
    * @param tool the tool the plugin provides additional choices for

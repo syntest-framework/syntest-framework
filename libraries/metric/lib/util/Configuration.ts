@@ -26,8 +26,8 @@ export enum OptionGroups {
   Metric = "Metric Options:",
 }
 
-export class Configuration {
-  static configureOptions(yargs: Yargs.Argv) {
+export const Configuration = {
+  configureOptions(yargs: Yargs.Argv) {
     return yargs
       .option("metric-middleware-pipeline", {
         alias: [],
@@ -48,5 +48,5 @@ export class Configuration {
         hidden: false,
         type: "array",
       });
-  }
-}
+  },
+};

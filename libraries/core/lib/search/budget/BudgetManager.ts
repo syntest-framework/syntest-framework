@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-import { Budget } from "./Budget";
 import { Encoding } from "../Encoding";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+
+import { Budget } from "./Budget";
 import { BudgetListener } from "./BudgetListener";
 import { BudgetType } from "./BudgetType";
 
@@ -46,6 +47,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * Loops over all active budgets to find the one with the lowest budget.
    */
   getBudget(): number {
+    // eslint-disable-next-line unicorn/no-array-reduce
     const budget = [...this._budgets.values()].reduce((minBudget, budget) =>
       budget.getRemainingBudget() / budget.getTotalBudget() <
       minBudget.getRemainingBudget() / minBudget.getTotalBudget()
@@ -63,7 +65,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    */
   hasBudgetLeft(): boolean {
     return [...this._budgets.values()].every(
-      (budget) => budget.getRemainingBudget() > 0.0
+      (budget) => budget.getRemainingBudget() > 0
     );
   }
 
@@ -101,41 +103,42 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * @inheritDoc
    */
   initializationStarted(): void {
-    this._budgets.forEach((budget) => budget.initializationStarted());
+    for (const budget of this._budgets.values()) budget.initializationStarted();
   }
 
   /**
    * @inheritDoc
    */
   initializationStopped(): void {
-    this._budgets.forEach((budget) => budget.initializationStopped());
+    for (const budget of this._budgets.values()) budget.initializationStopped();
   }
 
   /**
    * @inheritDoc
    */
   searchStarted(): void {
-    this._budgets.forEach((budget) => budget.searchStarted());
+    for (const budget of this._budgets.values()) budget.searchStarted();
   }
 
   /**
    * @inheritDoc
    */
   searchStopped(): void {
-    this._budgets.forEach((budget) => budget.searchStopped());
+    for (const budget of this._budgets.values()) budget.searchStopped();
   }
 
   /**
    * @inheritDoc
    */
   iteration(searchAlgorithm: SearchAlgorithm<T>): void {
-    this._budgets.forEach((budget) => budget.iteration(searchAlgorithm));
+    for (const budget of this._budgets.values())
+      budget.iteration(searchAlgorithm);
   }
 
   /**
    * @inheritDoc
    */
   evaluation(encoding: T): void {
-    this._budgets.forEach((budget) => budget.evaluation(encoding));
+    for (const budget of this._budgets.values()) budget.evaluation(encoding);
   }
 }

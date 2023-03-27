@@ -17,12 +17,18 @@
  */
 
 import { Module, ModuleManager } from "@syntest/module";
-import { SFuzzPlugin } from "./plugins/SFuzzPlugin";
+
 import { SFuzzObjectiveManagerPlugin } from "./plugins/SFuzzObjectiveManagerPlugin";
+import { SFuzzPlugin } from "./plugins/SFuzzPlugin";
 import { SFuzzPreset } from "./SFuzzPreset";
 
 export default class SFuzzModule extends Module {
-  async register(moduleManager: ModuleManager): Promise<void> {
+  constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    super("sFuzz", require("../package.json").version);
+  }
+
+  register(moduleManager: ModuleManager): void {
     moduleManager.registerPlugin(this.name, new SFuzzObjectiveManagerPlugin());
     moduleManager.registerPlugin(this.name, new SFuzzPlugin());
     moduleManager.registerPreset(this.name, new SFuzzPreset());

@@ -17,13 +17,13 @@
  */
 
 import chalk = require("chalk");
+import * as cliProgress from "cli-progress";
 import figlet = require("figlet");
 import { table } from "table";
-import * as cliProgress from "cli-progress";
 
 export class UserInterface {
-  protected barObject: cliProgress.MultiBar;
-  protected bars: Map<string, cliProgress.Bar>;
+  protected barObject: cliProgress.MultiBar | undefined = undefined;
+  protected bars: Map<string, cliProgress.Bar> | undefined = undefined;
 
   protected print(text: string): void {
     // If we are using progress bars, we need to print to above the bars
@@ -78,6 +78,7 @@ export class UserInterface {
     this.barObject = new cliProgress.MultiBar(
       {
         hideCursor: true,
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         format: this.barFormatter,
         barCompleteChar: "\u2588",
         barIncompleteChar: "\u2591",
@@ -91,10 +92,10 @@ export class UserInterface {
   }
 
   updateProgressBar(bar: BarObject): void {
-    if (!this.bars) {
+    if (this.bars === undefined) {
       throw new Error("Progress bars have not been started yet");
     }
-    if (!this.bars.has(bar.name)) {
+    if (this.bars.has(bar.name) === false) {
       throw new Error(`Progress bar with name ${bar.name} does not exist`);
     }
 
@@ -108,6 +109,9 @@ export class UserInterface {
   }
 
   stopProgressBars(): void {
+    if (this.barObject === undefined) {
+      throw new Error("Progress bars have not been started yet");
+    }
     this.barObject.stop();
     this.barObject = undefined;
     this.bars = undefined;
@@ -115,40 +119,43 @@ export class UserInterface {
 
   protected barFormatter(
     options: cliProgress.Options,
-    params: cliProgress.Params,
+    parameters: cliProgress.Params,
     payload: Payload
   ): string {
     const bar =
       chalk.green(
-        options.barCompleteString.substring(
+        options.barCompleteString.slice(
           0,
-          Math.round(params.progress * options.barsize)
+          Math.max(0, Math.round(parameters.progress * options.barsize))
         )
       ) +
-      options.barIncompleteString.substring(
+      options.barIncompleteString.slice(
         0,
-        options.barsize - Math.round(params.progress * options.barsize)
+        Math.max(
+          0,
+          options.barsize - Math.round(parameters.progress * options.barsize)
+        )
       );
 
-    const percentage = Math.round(params.progress * 100);
-    const str = `${bar} ${percentage}% | ETA: ${params.eta}s | ${
-      params.value
-    }/${params.total} | ${payload.meta || ""}`;
+    const percentage = Math.round(parameters.progress * 100);
+    const string_ = `${bar} ${percentage}% | ETA: ${parameters.eta}s | ${
+      parameters.value
+    }/${parameters.total} | ${payload.meta || ""}`;
 
-    if (params.value >= params.total) {
-      return chalk.greenBright(str);
+    if (parameters.value >= parameters.total) {
+      return chalk.greenBright(string_);
     }
 
-    return str;
+    return string_;
   }
 
   // Private internal styling methods
   protected table(title: string, tableObject: TableObject): string {
     return table(
       [
-        tableObject.headers.map(this.bold),
+        tableObject.headers.map((element) => this.bold(element)),
         ...tableObject.rows,
-        tableObject.footers.map(this.bold),
+        tableObject.footers.map((element) => this.bold(element)),
       ],
       {
         header: {
@@ -173,9 +180,10 @@ export class UserInterface {
   protected title(text: string): string {
     return chalk.bold(
       chalk.greenBright(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         figlet.textSync(text, {
           horizontalLayout: "full",
-          font: "rectangles",
+          font: "Rectangles",
         })
       )
     );

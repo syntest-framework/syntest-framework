@@ -16,10 +16,12 @@
  * limitations under the License.
  */
 import { Encoding, RandomSearch, SearchAlgorithm } from "@syntest/core";
+
 import {
-  SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
 } from "../SearchAlgorithmPlugin";
+
 /**
  * Plugin for RandomSearch
  *

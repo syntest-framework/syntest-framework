@@ -18,12 +18,13 @@
 import {
   Encoding,
   EncodingSampler,
-  SearchAlgorithm,
   ObjectiveManager,
+  Procreation,
+  SearchAlgorithm,
 } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
-import { Procreation } from "@syntest/core";
 
 export type SearchAlgorithmOptions<T extends Encoding> = {
   objectiveManager: ObjectiveManager<T>;
@@ -41,7 +42,7 @@ export abstract class SearchAlgorithmPlugin<T extends Encoding> extends Plugin {
     options: O
   ): SearchAlgorithm<T>;
 
-  getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,

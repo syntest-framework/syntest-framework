@@ -18,12 +18,12 @@
 
 import {
   Encoding,
-  MOSAFamily,
   EncodingSampler,
+  MOSAFamily,
   ObjectiveManager,
   Procreation,
+  shouldNeverHappen,
 } from "@syntest/core";
-import { shouldNeverHappen } from "@syntest/core";
 import { getLogger } from "@syntest/logging";
 
 /**
@@ -37,7 +37,7 @@ import { getLogger } from "@syntest/logging";
  * @author Annibale Panichella
  */
 export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
-  static LOGGER = getLogger("sFuzz");
+  static override LOGGER = getLogger("sFuzz");
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
@@ -48,23 +48,24 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
     super(objectiveManager, encodingSampler, procreation, populationSize);
   }
 
-  protected _environmentalSelection(): void {
+  protected override _environmentalSelection(): void {
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size != 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size > 0
     )
-      throw Error(shouldNeverHappen("objective manager"));
+      throw new Error(shouldNeverHappen("objective manager"));
 
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size == 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size === 0
     )
       return; // the search should end
 
     // non-dominated sorting
     SFuzz.LOGGER.debug(
-      "Number of objectives = " +
+      `Number of objectives = ${
         this._objectiveManager.getCurrentObjectives().size
+      }`
     );
 
     const F = this.preferenceSortingAlgorithm(
@@ -72,7 +73,7 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
       this._objectiveManager.getCurrentObjectives()
     );
 
-    SFuzz.LOGGER.debug("First front size = " + F[0].length);
+    SFuzz.LOGGER.debug(`First front size = ${F[0].length}`);
 
     // select new population
     this._population = F[0];

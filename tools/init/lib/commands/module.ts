@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { writeFileSync } from "node:fs";
+import * as path from "node:path";
+
 import { Command } from "@syntest/module";
-import { writeFileSync } from "fs";
-import Yargs = require("yargs");
-import * as path from "path";
 import shell = require("shelljs");
+import Yargs = require("yargs");
 
 export type ModuleOptions = {
   moduleName: string;
@@ -39,7 +40,7 @@ export function getModuleCommand(tool: string): Command {
     "module",
     "Create a module for the syntest tool.",
     options,
-    (args: Yargs.ArgumentsCamelCase) => {
+    (arguments_: Yargs.ArgumentsCamelCase) => {
       if (!shell.which("git")) {
         shell.echo("Sorry, this script requires git");
         shell.exit(1);
@@ -56,19 +57,22 @@ export function getModuleCommand(tool: string): Command {
 
       shell.mv(
         "syntest-core-plugin-template",
-        (<ModuleOptions>(<unknown>args)).moduleName
+        (<ModuleOptions>(<unknown>arguments_)).moduleName
       );
-      shell.cd((<ModuleOptions>(<unknown>args)).moduleName);
+      shell.cd((<ModuleOptions>(<unknown>arguments_)).moduleName);
       shell.rm("-rf", ".git");
       shell.exec("npm install");
 
       writeFileSync(
         path.join("lib", "index.ts"),
-        getIndexFile(`./${(<ModuleOptions>(<unknown>args)).moduleName}`)
+        getIndexFile(`./${(<ModuleOptions>(<unknown>arguments_)).moduleName}`)
       );
       writeFileSync(
-        path.join("lib", `${(<ModuleOptions>(<unknown>args)).moduleName}.ts`),
-        getModuleFile((<ModuleOptions>(<unknown>args)).moduleName)
+        path.join(
+          "lib",
+          `${(<ModuleOptions>(<unknown>arguments_)).moduleName}.ts`
+        ),
+        getModuleFile((<ModuleOptions>(<unknown>arguments_)).moduleName)
       );
     }
   );

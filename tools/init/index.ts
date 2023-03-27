@@ -15,5 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export * as module from "./GraphingModule";
+export * as module from "./lib/InitModule";

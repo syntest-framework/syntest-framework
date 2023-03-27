@@ -25,8 +25,8 @@ export abstract class Extension {
     this.name = name;
   }
 
-  set args(args: Yargs.ArgumentsCamelCase) {
-    this._args = args;
+  set args(arguments_: Yargs.ArgumentsCamelCase) {
+    this._args = arguments_;
   }
 
   get args() {

@@ -17,9 +17,10 @@
  */
 
 import { ControlFlowGraph } from "@syntest/cfg-core";
+
 import { RootContext } from "../analysis/static/RootContext";
-import { Encoding } from "../search/Encoding";
 import { BudgetManager } from "../search/budget/BudgetManager";
+import { Encoding } from "../search/Encoding";
 import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
 import { SearchSubject } from "../search/SearchSubject";
 import { TerminationManager } from "../search/termination/TerminationManager";

@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crossover } from "../../lib";
+import { Crossover } from "../../lib/search/operators/crossover/Crossover";
 import { minimumValue } from "../../lib/util/diagnostics";
+
 import { DummyEncodingMock } from "./DummyEncoding.mock";
 
 export class DummyCrossover extends Crossover<DummyEncodingMock> {

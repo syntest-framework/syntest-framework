@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 
-export class DominanceComparator {
+export const DominanceComparator = {
   /**
    * Fast Dominance Comparator as discussed in
    * "Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic
    *  Selection of the Targets"
    */
-  static compare<T extends Encoding>(
+  compare<T extends Encoding>(
     individual1: T,
     individual2: T,
     objectives: Set<ObjectiveFunction<T>>
@@ -52,5 +52,5 @@ export class DominanceComparator {
     else if (dominatesX) return -1;
     else dominatesY;
     return +1;
-  }
-}
+  },
+};

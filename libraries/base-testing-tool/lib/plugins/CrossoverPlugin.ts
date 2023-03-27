@@ -17,6 +17,7 @@
  */
 import { Crossover, Encoding } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export type CrossoverOptions = {
@@ -33,7 +34,7 @@ export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
     options: O
   ): Crossover<T>;
 
-  getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,

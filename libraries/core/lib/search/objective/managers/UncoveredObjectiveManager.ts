@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
-import { ObjectiveManager } from "./ObjectiveManager";
 import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
+
+import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on uncovered objectives.
@@ -52,10 +53,10 @@ export class UncoveredObjectiveManager<
     // TODO: Reset the objective manager
     const objectives = subject.getObjectives();
 
-    objectives.forEach((objective) => {
+    for (const objective of objectives) {
       // Add all objectives to both the uncovered objectives and the current objectives
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
-    });
+    }
   }
 }

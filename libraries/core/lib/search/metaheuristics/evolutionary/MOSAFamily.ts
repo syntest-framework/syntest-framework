@@ -16,11 +16,15 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction, Encoding, crowdingDistance } from "../../..";
-import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
-import { DominanceComparator } from "../../comparators/DominanceComparator";
-import { shouldNeverHappen } from "../../../util/diagnostics";
 import { getLogger } from "@syntest/logging";
+
+import { shouldNeverHappen } from "../../../util/diagnostics";
+import { DominanceComparator } from "../../comparators/DominanceComparator";
+import { Encoding } from "../../Encoding";
+import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
+
+import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
 /**
  * Many-objective Sorting Algorithm (MOSA) family of search algorithms.
@@ -35,25 +39,26 @@ import { getLogger } from "@syntest/logging";
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
-  static LOGGER = getLogger("MOSAFamily");
+  static override LOGGER = getLogger("MOSAFamily");
 
   protected _environmentalSelection(size: number): void {
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size != 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size > 0
     )
-      throw Error(shouldNeverHappen("Objective Manager"));
+      throw new Error(shouldNeverHappen("Objective Manager"));
 
     if (
-      this._objectiveManager.getCurrentObjectives().size == 0 &&
-      this._objectiveManager.getUncoveredObjectives().size == 0
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size === 0
     )
       return; // the search should end
 
     // non-dominated sorting
     MOSAFamily.LOGGER.debug(
-      "Number of objectives = " +
+      `Number of objectives = ${
         this._objectiveManager.getCurrentObjectives().size
+      }`
     );
 
     const F = this.preferenceSortingAlgorithm(
@@ -66,7 +71,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    MOSAFamily.LOGGER.debug("First front size = " + F[0].length);
+    MOSAFamily.LOGGER.debug(`First front size = ${F[0].length}`);
 
     // Obtain the next front
     let currentFront: T[] = F[index];
@@ -146,9 +151,9 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       individual.setRank(0);
     }
 
-    MOSAFamily.LOGGER.debug("First front size :" + frontZero.length);
-    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
-    MOSAFamily.LOGGER.debug("Pop + Off size :" + population.length);
+    MOSAFamily.LOGGER.debug(`First front size: ${frontZero.length}`);
+    MOSAFamily.LOGGER.debug(`Pop size: ${this._populationSize}`);
+    MOSAFamily.LOGGER.debug(`Pop + Off size: ${population.length}`);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: T[] = population;
@@ -162,7 +167,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
     while (
       selectedSolutions < this._populationSize &&
-      remainingSolutions.length != 0
+      remainingSolutions.length > 0
     ) {
       const front: T[] = this.getNonDominatedFront(
         objectiveFunctions,
@@ -183,10 +188,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       frontIndex += 1;
     }
 
-    MOSAFamily.LOGGER.debug("Number of fronts :" + fronts.length);
-    MOSAFamily.LOGGER.debug("Front zero size :" + fronts[0].length);
-    MOSAFamily.LOGGER.debug("# selected solutions :" + selectedSolutions);
-    MOSAFamily.LOGGER.debug("Pop size :" + this._populationSize);
+    MOSAFamily.LOGGER.debug(`Number of fronts : ${fronts.length}`);
+    MOSAFamily.LOGGER.debug(`Front zero size: ${fronts[0].length}`);
+    MOSAFamily.LOGGER.debug(`# selected solutions: ${selectedSolutions}`);
+    MOSAFamily.LOGGER.debug(`Pop size: ${this._populationSize}`);
     return fronts;
   }
 
@@ -245,21 +250,20 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       let chosen = population[0];
 
       for (let index = 1; index < population.length; index++) {
-        if (
+        const lowerFitness =
           population[index].getDistance(objective) <
-          chosen.getDistance(objective)
-        )
-          // if lower fitness, than it is better
-          chosen = population[index];
-        else if (
+          chosen.getDistance(objective);
+        const sameFitness =
           population[index].getDistance(objective) ==
-          chosen.getDistance(objective)
-        ) {
-          // at the same level of fitness, we look at test case size
-          if (population[index].getLength() < chosen.getLength()) {
-            // Secondary criterion based on tests lengths
-            chosen = population[index];
-          }
+          chosen.getDistance(objective);
+        const smallerEncoding =
+          population[index].getLength() < chosen.getLength();
+
+        // If lower fitness, then it is better
+        // If same fitness, then we look at test case size
+        // Secondary criterion based on tests lengths
+        if (lowerFitness || (sameFitness && smallerEncoding)) {
+          chosen = population[index];
         }
       }
 

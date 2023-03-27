@@ -19,7 +19,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
     "NOTICE",
     "README.md"
   ],
@@ -52,10 +56,11 @@
     "jsdom": "^21.1.0"
   },
   "engines": {
-    "node": ">=10.24.0"
+    "node": ">=16"
   },
   "devDependencies": {
-    "@types/d3": "^7.4.0"
+    "@types/d3": "^7.4.0",
+    "@types/jsdom": "^21.1.1"
   },
   "publishConfig": {
     "access": "public"

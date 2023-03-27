@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 import { MetricManager } from "@syntest/metric";
+
 import { Plugin } from "../Plugin";
+
 import { PluginType } from "./PluginType";
 
 export abstract class ListenerPlugin extends Plugin {

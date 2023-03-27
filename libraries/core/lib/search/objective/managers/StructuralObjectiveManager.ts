@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import { ObjectiveManager } from "./ObjectiveManager";
 import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
-import { NodeType } from "@syntest/cfg-core";
+
+import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable objectives.
@@ -43,13 +43,15 @@ export class StructuralObjectiveManager<
     this._coveredObjectives.add(objectiveFunction);
 
     // Add the child objectives to the current objectives
-    this._subject.getChildObjectives(objectiveFunction).forEach((objective) => {
+    for (const objective of this._subject.getChildObjectives(
+      objectiveFunction
+    )) {
       if (
         !this._coveredObjectives.has(objective) &&
         !this._currentObjectives.has(objective)
       )
         this._currentObjectives.add(objective);
-    });
+    }
   }
 
   /**
@@ -63,7 +65,8 @@ export class StructuralObjectiveManager<
     const objectives = subject.getObjectives();
 
     // Add all objectives to the uncovered objectives
-    objectives.forEach((objective) => this._uncoveredObjectives.add(objective));
+    for (const objective of objectives)
+      this._uncoveredObjectives.add(objective);
 
     // Set the current objectives
     const rootObjectiveNodes = this._subject.cfg.functions.map(
@@ -73,17 +76,17 @@ export class StructuralObjectiveManager<
     const rootObjectiveIds = rootObjectiveNodes.map(
       (objective) => objective.id
     );
-    let rootObjectives = [];
+    let rootObjectives: ObjectiveFunction<T>[] = [];
     for (const id of rootObjectiveIds) {
-      rootObjectives = rootObjectives.concat(
-        this._subject
+      rootObjectives = [
+        ...rootObjectives,
+        ...this._subject
           .getObjectives()
-          .filter((objective) => objective.getIdentifier() === id)
-      );
+          .filter((objective) => objective.getIdentifier() === id),
+      ];
     }
 
-    rootObjectives.forEach((objective) =>
-      this._currentObjectives.add(objective)
-    );
+    for (const objective of rootObjectives)
+      this._currentObjectives.add(objective);
   }
 }

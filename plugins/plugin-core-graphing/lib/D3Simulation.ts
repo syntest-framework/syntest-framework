@@ -15,119 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable sonarjs/no-duplicate-string */
+
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import * as d3 from "d3";
-import fs = require("fs");
+import { ForceLink } from "d3";
 
 import { cfgToD3Graph, D3Node } from "./cfgToD3Graph";
 import { getBodyObject, getSVGObject } from "./getSVGObject";
 
-export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
-  const width = 2000;
-  const height = 2000;
-  const offset = 200;
-
-  const graph = cfgToD3Graph(cfg, offset);
-  const body = getBodyObject();
-  const svg = getSVGObject(body, width, height);
-
-  const color = d3.scaleOrdinal().range(d3.schemeCategory10);
-
-  const chargeForce = d3
-    .forceManyBody()
-    .strength(-100)
-    .distanceMin(10)
-    .distanceMax(100);
-
-  const linkForce = d3
-    .forceLink()
-    .id((d: D3Node) => d.id)
-    .distance(30);
-
-  const forceY = d3.forceY(height).strength(0.01);
-
-  const forceX = d3.forceY(width).strength(0.01);
-
-  const simulation = d3
-    .forceSimulation()
-    .force("charge", chargeForce)
-    .force("link", linkForce)
-    .force("y", forceY)
-    .force("x", forceX);
-
-  simulation.nodes(graph.nodes);
-  (<any>simulation.force("link")).links(graph.links);
-
-  const link = svg
-    .append("g")
-    .attr("class", "links")
-    .selectAll("path")
-    .data(graph.links)
-    .enter()
-    .append("path")
-    .attr("stroke-width", "1px")
-    .attr("stroke", (d: any) => {
-      if (d.type === true) {
-        return "#7CFC00";
-      } else if (d.type === false) {
-        return "#ff0000";
-      }
-      return "#555";
-    })
-    .attr("fill", "none")
-    .attr("marker-end", "url(#marker)");
-
-  const node = svg
-    .append("g")
-    .attr("class", "nodes")
-    .selectAll("g")
-    .data(graph.nodes)
-    .enter()
-    .append("g");
-
-  const circles1 = node
-    .append("circle")
-    .attr("r", (d: any) => {
-      if (d.final) {
-        return 8;
-      } else {
-        return 4;
-      }
-    })
-    .style("stroke", "#000")
-    .style("stroke-width", "1.5px")
-    .attr("fill", "#fff");
-
-  const circles2 = node
-    .append("circle")
-    .attr("r", 5)
-    .attr("fill", function (d: any) {
-      return color(d.id);
-    })
-    .style("stroke", "#000")
-    .style("stroke-width", "1.5px")
-    .style("stroke-dasharray", (d: any) => {
-      if (d.root) {
-        return "3, 3";
-      }
-      return null;
-    });
-
-  const lables = node
-    .append("text")
-    .text(function (d: any) {
-      return d.name;
-    })
-    .attr("x", 6)
-    .attr("y", 3)
-    .style("font-family", "sans-serif")
-    .style("font-size", "10px");
-
-  node.append("title").text(function (d: any) {
-    return d.id;
-  });
-
-  function ticked() {
+function ticked(node: any, link: any) {
+  return function () {
     // link
     //     .attr("x1", function(d) { return d.source.x; })
     //     .attr("y1", function(d) { return d.source.y; })
@@ -142,6 +45,7 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
       const dx = x2 - x1;
       const dy = y2 - y1;
       const dr = Math.sqrt(dx * dx + dy * dy);
+
       // Defaults for normal edge.
       let drx = dr;
       let dry = dr;
@@ -203,13 +107,120 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
     node.attr("transform", function (d: any) {
       return "translate(" + d.x + "," + d.y + ")";
     });
-  }
+  };
+}
 
-  simulation.on("tick", ticked);
+export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
+  const width = 2000;
+  const height = 2000;
+  const offset = 200;
 
-  for (let i = 0; i < 50; i++) {
+  const graph = cfgToD3Graph(cfg, offset);
+  const body = getBodyObject();
+  const svg = getSVGObject(body, width, height);
+
+  const color = d3.scaleOrdinal().range(d3.schemeCategory10);
+
+  const chargeForce = d3
+    .forceManyBody()
+    .strength(-100)
+    .distanceMin(10)
+    .distanceMax(100);
+
+  const linkForce = d3
+    .forceLink()
+    .id(<(node: d3.SimulationNodeDatum) => string>((node: D3Node) => node.id))
+    .distance(30);
+
+  const forceY = d3.forceY(height).strength(0.01);
+
+  const forceX = d3.forceY(width).strength(0.01);
+
+  const simulation = d3
+    .forceSimulation()
+    .force("charge", chargeForce)
+    .force("link", linkForce)
+    .force("y", forceY)
+    .force("x", forceX);
+
+  simulation.nodes(graph.nodes);
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+  (<ForceLink<any, any>>simulation.force("link")).links(graph.links);
+
+  const link = svg
+    .append("g")
+    .attr("class", "links")
+    .selectAll("path")
+    .data(graph.links)
+    .enter()
+    .append("path")
+    .attr("stroke-width", "1px")
+    .attr("stroke", (d: any) => {
+      if (d.type === true) {
+        return "#7CFC00";
+      } else if (d.type === false) {
+        return "#ff0000";
+      }
+      return "#555";
+    })
+    .attr("fill", "none")
+    .attr("marker-end", "url(#marker)");
+
+  const node = svg
+    .append("g")
+    .attr("class", "nodes")
+    .selectAll("g")
+    .data(graph.nodes)
+    .enter()
+    .append("g");
+
+  // circles 1
+  node
+    .append("circle")
+    .attr("r", (d: any) => {
+      return d.final ? 8 : 4;
+    })
+    .style("stroke", "#000")
+    .style("stroke-width", "1.5px")
+    .attr("fill", "#fff");
+
+  // circles 2
+  node
+    .append("circle")
+    .attr("r", 5)
+    .attr("fill", function (d: any) {
+      return color(<string>d.id);
+    })
+    .style("stroke", "#000")
+    .style("stroke-width", "1.5px")
+    .style("stroke-dasharray", (d: any) => {
+      if (d.root) {
+        return "3, 3";
+      }
+      // eslint-disable-next-line unicorn/no-null
+      return null;
+    });
+
+  // lables
+  node
+    .append("text")
+    .text(function (d: any) {
+      return d.name;
+    })
+    .attr("x", 6)
+    .attr("y", 3)
+    .style("font-family", "sans-serif")
+    .style("font-size", "10px");
+
+  node.append("title").text(function (d: any) {
+    return d.id;
+  });
+
+  simulation.on("tick", ticked(node, link));
+
+  for (let index = 0; index < 50; index++) {
     simulation.tick();
-    ticked();
+    ticked(node, link)();
   }
 
   return body.html();

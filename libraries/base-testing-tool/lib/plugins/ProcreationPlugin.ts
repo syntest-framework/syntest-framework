@@ -22,6 +22,7 @@ import {
   Procreation,
 } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export type ProcreationOptions<T extends Encoding> = {
@@ -38,7 +39,7 @@ export abstract class ProcreationPlugin<T extends Encoding> extends Plugin {
     options: O
   ): Procreation<T>;
 
-  getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,

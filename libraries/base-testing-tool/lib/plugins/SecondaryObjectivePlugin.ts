@@ -17,6 +17,7 @@
  */
 import { Encoding, SecondaryObjectiveComparator } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export abstract class SecondaryObjectivePlugin<
@@ -28,12 +29,12 @@ export abstract class SecondaryObjectivePlugin<
 
   abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
 
-  async getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,
     option: string
-  ): Promise<string[]> {
+  ): string[] {
     if (option === "secondary-objective") {
       return [this.name];
     }

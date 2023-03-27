@@ -16,15 +16,17 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import { setupLogger } from "../lib";
+
+import { setupLogger } from "../lib/logger";
+
 const expect = chai.expect;
 
 /**
  * This test is only added such that the github action does not fail.
  */
 describe("example test", () => {
-  it("test", async () => {
-    new setupLogger("fakePath", ["error"], "error");
+  it("test", () => {
+    setupLogger("fakePath", ["error"], "error");
     expect(true);
   });
 });

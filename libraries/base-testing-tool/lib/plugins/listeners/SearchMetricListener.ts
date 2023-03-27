@@ -17,18 +17,18 @@
  */
 import {
   BudgetManager,
+  BudgetType,
   Encoding,
   Events,
+  ObjectiveType,
   SearchAlgorithm,
   SearchSubject,
-  TerminationManager,
 } from "@syntest/core";
-
+import { Metric, MetricManager, SeriesType } from "@syntest/metric";
 import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
-import { Metric, MetricManager, SeriesType } from "@syntest/metric";
-import { PropertyName, SeriesName, metrics } from "../../Metrics";
-import { BudgetType } from "@syntest/core/dist/search/budget/BudgetType";
+
+import { metrics, PropertyName, SeriesName } from "../../Metrics";
 
 export class SearchMetricListener extends ListenerPlugin {
   protected currentNamespace: string;
@@ -36,7 +36,6 @@ export class SearchMetricListener extends ListenerPlugin {
 
   /**
    * Constructor.
-   *
    */
   constructor() {
     super(
@@ -60,12 +59,10 @@ export class SearchMetricListener extends ListenerPlugin {
    * @param budgetManager The budget manager
    * @param terminationManager The termination manager
    */
-  recordSeries<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>,
-    subject: SearchSubject<T>,
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+  recordSeries<E extends Encoding>(
+    searchAlgorithm: SearchAlgorithm<E>,
+    subject: SearchSubject<E>,
+    budgetManager: BudgetManager<E>
   ): void {
     const iterations = budgetManager
       .getBudgetObject(BudgetType.ITERATION)
@@ -83,13 +80,16 @@ export class SearchMetricListener extends ListenerPlugin {
     searchTime = Math.round(searchTime * 1000) / 1000;
     totalTime = Math.round(totalTime * 1000) / 1000;
 
-    const coveredPaths = searchAlgorithm.getCovered("path");
-    const coveredBranches = searchAlgorithm.getCovered("branch");
-    const coveredExceptions = searchAlgorithm.getCovered("exception");
-    const coveredFunctions = searchAlgorithm.getCovered("function");
-    const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredImplicitBranches =
-      searchAlgorithm.getCovered("implicit-branch");
+    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
+    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
+    const coveredExceptions = searchAlgorithm.getCovered(
+      ObjectiveType.EXCEPTION
+    );
+    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
+    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
+    const coveredImplicitBranches = searchAlgorithm.getCovered(
+      ObjectiveType.IMPLICIT_BRANCH
+    );
     const coveredObjectives = searchAlgorithm.getCovered();
 
     // search times
@@ -195,31 +195,29 @@ export class SearchMetricListener extends ListenerPlugin {
   }
 
   recordInitialProperties<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    subject: SearchSubject<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+    searchAlgorithm: SearchAlgorithm<T>
   ): void {
     // record totals
-    const coveredPaths = searchAlgorithm.getCovered("path");
-    const coveredBranches = searchAlgorithm.getCovered("branch");
-    const coveredFunctions = searchAlgorithm.getCovered("function");
-    const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredImplicitBranches =
-      searchAlgorithm.getCovered("implicit-branch");
+    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
+    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
+    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
+    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
+    const coveredImplicitBranches = searchAlgorithm.getCovered(
+      ObjectiveType.IMPLICIT_BRANCH
+    );
     const coveredObjectives = searchAlgorithm.getCovered();
 
-    const totalPaths = coveredPaths + searchAlgorithm.getUncovered("path");
+    const totalPaths =
+      coveredPaths + searchAlgorithm.getUncovered(ObjectiveType.PATH);
     const totalBranches =
-      coveredBranches + searchAlgorithm.getUncovered("branch");
+      coveredBranches + searchAlgorithm.getUncovered(ObjectiveType.BRANCH);
     const totalFunctions =
-      coveredFunctions + searchAlgorithm.getUncovered("function");
-    const totalLines = coveredLines + searchAlgorithm.getUncovered("lines");
+      coveredFunctions + searchAlgorithm.getUncovered(ObjectiveType.FUNCTION);
+    const totalLines =
+      coveredLines + searchAlgorithm.getUncovered(ObjectiveType.LINE);
     const totalImplicitBranches =
-      coveredImplicitBranches + searchAlgorithm.getUncovered("implicit-branch");
+      coveredImplicitBranches +
+      searchAlgorithm.getUncovered(ObjectiveType.IMPLICIT_BRANCH);
     const total = coveredObjectives + searchAlgorithm.getUncovered();
 
     this.metricManager.recordProperty(
@@ -249,21 +247,16 @@ export class SearchMetricListener extends ListenerPlugin {
   }
 
   recordFinalProperties<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    subject: SearchSubject<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+    searchAlgorithm: SearchAlgorithm<T>
   ): void {
     // record finals
-    const coveredPaths = searchAlgorithm.getCovered("path");
-    const coveredBranches = searchAlgorithm.getCovered("branch");
-    const coveredFunctions = searchAlgorithm.getCovered("function");
-    const coveredLines = searchAlgorithm.getCovered("lines");
-    const coveredImplicitBranches =
-      searchAlgorithm.getCovered("implicit-branch");
+    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
+    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
+    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
+    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
+    const coveredImplicitBranches = searchAlgorithm.getCovered(
+      ObjectiveType.IMPLICIT_BRANCH
+    );
     const coveredObjectives = searchAlgorithm.getCovered();
 
     this.metricManager.recordProperty(
@@ -297,73 +290,48 @@ export class SearchMetricListener extends ListenerPlugin {
 
     (<TypedEventEmitter<Events>>process).on(
       "searchStart",
-      (
-        searchAlgorithm: SearchAlgorithm<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        subject: SearchSubject<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        budgetManager: BudgetManager<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        terminationManager: TerminationManager
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        subject: SearchSubject<E>,
+        budgetManager: BudgetManager<E>
       ) => {
         // create a new metric manager for this search subject
         this.currentNamespace = subject.name;
 
-        this.recordInitialProperties(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
-        this.recordSeries(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
+        this.recordInitialProperties(searchAlgorithm);
+        this.recordSeries(searchAlgorithm, subject, budgetManager);
       }
     );
 
     (<TypedEventEmitter<Events>>process).on(
       "searchInitializationStart",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchInitializationComplete",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchIterationComplete",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.recordSeries
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchComplete",
-      (
-        searchAlgorithm: SearchAlgorithm<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        subject: SearchSubject<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        budgetManager: BudgetManager<any>,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        terminationManager: TerminationManager
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        subject: SearchSubject<E>,
+        budgetManager: BudgetManager<E>
       ) => {
-        this.recordSeries(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
-        this.recordFinalProperties(
-          searchAlgorithm,
-          subject,
-          budgetManager,
-          terminationManager
-        );
+        this.recordSeries(searchAlgorithm, subject, budgetManager);
+        this.recordFinalProperties(searchAlgorithm);
       }
     );
   }
 
-  getMetrics(): Metric[] | Promise<Metric[]> {
+  override getMetrics(): Metric[] | Promise<Metric[]> {
     return metrics;
   }
 }

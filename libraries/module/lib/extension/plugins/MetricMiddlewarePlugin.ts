@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "../Plugin";
 import { Metric, MiddleWare } from "@syntest/metric";
+
+import { Plugin } from "../Plugin";
+
 import { PluginType } from "./PluginType";
 
 export abstract class MetricMiddlewarePlugin extends Plugin {
@@ -26,11 +28,11 @@ export abstract class MetricMiddlewarePlugin extends Plugin {
 
   abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
 
-  async getToolOptionChoices(
+  override getToolOptionChoices(
     tool: string,
     labels: string[],
     option: string
-  ): Promise<string[]> {
+  ): string[] {
     // for every tool/label
 
     if (option === "metric-middleware-pipeline") {

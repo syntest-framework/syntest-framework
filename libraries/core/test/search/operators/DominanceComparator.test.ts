@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import { DominanceComparator } from "../../../lib/search/comparators/DominanceComparator";
-import { ApproachLevel, BranchObjectiveFunction } from "../../../lib";
-import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
-import { createStubInstance } from "sinon";
+import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
+import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
+import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 
@@ -34,13 +35,13 @@ describe("Dominance comparator", function () {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "1"
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
@@ -50,10 +51,10 @@ describe("Dominance comparator", function () {
 
   it("Fist individual dominates", () => {
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [0, 1]);
+    ind1.setDummyEvaluation([...objectives], [0, 1]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [1, 1]);
+    ind2.setDummyEvaluation([...objectives], [1, 1]);
 
     const value = DominanceComparator.compare(ind1, ind2, objectives);
 
@@ -62,10 +63,10 @@ describe("Dominance comparator", function () {
 
   it("Second individual dominates", () => {
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [1, 1]);
+    ind1.setDummyEvaluation([...objectives], [1, 1]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [1, 0]);
+    ind2.setDummyEvaluation([...objectives], [1, 0]);
 
     const value = DominanceComparator.compare(ind1, ind2, objectives);
 
@@ -74,10 +75,10 @@ describe("Dominance comparator", function () {
 
   it("None dominates with two objectives", () => {
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [1, 1]);
+    ind1.setDummyEvaluation([...objectives], [1, 1]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [1, 1]);
+    ind2.setDummyEvaluation([...objectives], [1, 1]);
 
     const value = DominanceComparator.compare(ind1, ind2, objectives);
 
@@ -88,16 +89,16 @@ describe("Dominance comparator", function () {
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       new DummyBranchDistance(),
-      null,
+      undefined,
       "2"
     );
     objectives.add(objective2);
 
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [1, 0, 1]);
+    ind1.setDummyEvaluation([...objectives], [1, 0, 1]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [0, 1, 1]);
+    ind2.setDummyEvaluation([...objectives], [0, 1, 1]);
 
     const value = DominanceComparator.compare(ind1, ind2, objectives);
     expect(value).to.equal(0);

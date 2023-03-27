@@ -16,16 +16,17 @@
  * limitations under the License.
  */
 import {
+  ContractedControlFlowGraph,
   ControlFlowGraph,
   Edge,
-  NodeType,
-  Node,
-  EdgeType,
   edgeContraction,
+  EdgeType,
+  Node,
+  NodeType,
 } from "@syntest/cfg-core";
-import { ApproachLevel } from "../../../lib";
 import * as chai from "chai";
-import { ContractedControlFlowGraph } from "@syntest/cfg-core/dist/graph/ContractedControlFlowGraph";
+
+import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
 
 const expect = chai.expect;
 
@@ -43,6 +44,7 @@ describe("CFG ancestors search", function () {
     approachLevel = new ApproachLevel();
     let nodes: Map<string, Node<unknown>> = new Map();
     let edges: Edge[];
+
     // Construct cfgMini
     const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
       lineNumbers: [],
@@ -77,13 +79,13 @@ describe("CFG ancestors search", function () {
     nodes.set(nodeRoot.id, nodeRoot);
     nodes.set(nodeExit.id, nodeExit);
 
-    for (let i = 65; i < 72; i++) {
+    for (let index = 65; index < 72; index++) {
       nodes.set(
-        String.fromCharCode(i),
+        String.fromCodePoint(index),
         new Node(
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           NodeType.NORMAL,
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           [],
           { lineNumbers: [] }
         )
@@ -111,18 +113,19 @@ describe("CFG ancestors search", function () {
     nodes.set(nodeRoot.id, nodeRoot);
     nodes.set(nodeExit.id, nodeExit);
 
-    for (let i = 65; i < "S".charCodeAt(0) + 1; i++) {
+    for (let index = 65; index < "S".codePointAt(0) + 1; index++) {
       nodes.set(
-        String.fromCharCode(i),
+        String.fromCodePoint(index),
         new Node(
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           NodeType.NORMAL,
-          String.fromCharCode(i),
+          String.fromCodePoint(index),
           [],
           { lineNumbers: [] }
         )
       );
     }
+
     // false branch on the picture is always on the left
     edges = [
       new Edge("1", EdgeType.CONDITIONAL_FALSE, "1", "A", "B"),

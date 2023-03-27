@@ -17,6 +17,7 @@
  */
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
+
 import { ArgumentsObject } from "../Configuration";
 
 /**
@@ -34,13 +35,11 @@ export class MOSAPreset extends Preset {
     super("MOSA", "MOSA preset");
   }
 
-  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
-    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "MOSAFamily";
-    (<ArgumentsObject>(<unknown>args)).objectiveManager = "uncovered";
-    (<ArgumentsObject>(<unknown>args)).procreation = "default";
-    (<ArgumentsObject>(<unknown>args)).secondaryObjectives = ["length"];
-    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
-
-    return args;
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSAFamily";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }
 }

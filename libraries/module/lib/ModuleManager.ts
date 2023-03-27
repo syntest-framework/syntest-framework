@@ -15,15 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as path from "path";
-import { existsSync } from "fs";
+import { existsSync } from "node:fs";
+import * as path from "node:path";
+
+import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
+import { getLogger } from "@syntest/logging";
+import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
-import { Plugin } from "./extension/Plugin";
-import { Tool } from "./extension/Tool";
-import { Module } from "./extension/Module";
-import { UserInterface } from "@syntest/cli-graphics";
 
+import { Module } from "./extension/Module";
+import { Plugin } from "./extension/Plugin";
+import { MetricMiddlewarePlugin } from "./extension/plugins/MetricMiddlewarePlugin";
+import { PluginType } from "./extension/plugins/PluginType";
+import { Preset } from "./extension/Preset";
+import { Tool } from "./extension/Tool";
 import {
   moduleAlreadyLoaded,
   moduleCannotBeLoaded,
@@ -36,12 +42,6 @@ import {
   presetNotFound,
   toolAlreadyLoaded,
 } from "./util/diagnostics";
-import { getLogger } from "@syntest/logging";
-import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
-import { Preset } from "./extension/Preset";
-import { PluginType } from "./extension/plugins/PluginType";
-import { MetricMiddlewarePlugin } from "./extension/plugins/MetricMiddlewarePlugin";
-import { ItemizationItem } from "@syntest/cli-graphics";
 
 export class ModuleManager {
   static LOGGER = getLogger("ModuleManager");
@@ -53,6 +53,7 @@ export class ModuleManager {
 
   private _modules: Map<string, Module>;
   private _tools: Map<string, Tool>;
+
   // type -> name -> plugin
   private _plugins: Map<string, Map<string, Plugin>>;
   private _presets: Map<string, Preset>;
@@ -75,24 +76,28 @@ export class ModuleManager {
     this._presetsOfModule = new Map();
   }
 
-  set args(args: Yargs.ArgumentsCamelCase) {
-    this._args = args;
+  get args() {
+    return this._args;
+  }
+
+  set args(arguments_: Yargs.ArgumentsCamelCase) {
+    this._args = arguments_;
     for (const module of this.modules.values()) {
-      module.args = args;
+      module.args = arguments_;
     }
 
     for (const tool of this.tools.values()) {
-      tool.args = args;
+      tool.args = arguments_;
     }
 
     for (const pluginsOfType of this.plugins.values()) {
       for (const plugin of pluginsOfType.values()) {
-        plugin.args = args;
+        plugin.args = arguments_;
       }
     }
 
     for (const preset of this.presets.values()) {
-      preset.args = args;
+      preset.args = arguments_;
     }
   }
 
@@ -174,7 +179,7 @@ export class ModuleManager {
   async cleanup() {
     ModuleManager.LOGGER.info("Running metric middleware pipeline");
     const metricPlugins = <MetricMiddlewarePlugin[]>[
-      ...(await this.getPluginsOfType(PluginType.METRIC_MIDDLEWARE)).values(),
+      ...this.getPluginsOfType(PluginType.METRIC_MIDDLEWARE).values(),
     ];
     const order = (<MetricOptions>(<unknown>this.args))
       .metricMiddlewarePipeline;
@@ -194,7 +199,7 @@ export class ModuleManager {
     }
   }
 
-  async getModulePath(module: string): Promise<string> {
+  getModulePath(module: string): string {
     let modulePath = "";
 
     if (module.startsWith("file:")) {
@@ -209,6 +214,7 @@ export class ModuleManager {
 
       if (!existsSync(modulePath)) {
         // it is not locally installed lets try global
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         modulePath = path.resolve(path.join(globalModules, module));
       }
 
@@ -223,8 +229,10 @@ export class ModuleManager {
   }
 
   async loadModule(moduleId: string, modulePath: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { module } = await import(modulePath);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const moduleInstance: Module = new module.default();
 
     // check requirements
@@ -251,17 +259,22 @@ export class ModuleManager {
     for (const module of modulesIds) {
       try {
         ModuleManager.LOGGER.info(`Loading module: ${module}`);
-        const modulePath = await this.getModulePath(module);
+        const modulePath = this.getModulePath(module);
         await this.loadModule(module, modulePath);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
         throw new Error(moduleCannotBeLoaded(module));
       }
     }
 
-    const modules = Array.from(this.modules.values());
+    const modules = [...this.modules.values()];
     for (const module of this._modules.values()) {
-      module.register(this, this._metricManager, this._userInterface, modules);
+      await module.register(
+        this,
+        this._metricManager,
+        this._userInterface,
+        modules
+      );
     }
   }
 
@@ -304,7 +317,7 @@ export class ModuleManager {
   async configureModules(yargs: Yargs.Argv, preset: string) {
     ModuleManager.LOGGER.info("Configuring modules");
     for (const tool of this._tools.values()) {
-      const plugins = [];
+      const plugins: Plugin[] = [];
       for (const pluginsOfType of this._plugins.values()) {
         for (const plugin of pluginsOfType.values()) {
           plugins.push(plugin);
@@ -319,8 +332,10 @@ export class ModuleManager {
       throw new Error(presetNotFound(preset));
     }
 
+    const presetObject = this._presets.get(preset);
     yargs = yargs.middleware(
-      <Yargs.MiddlewareFunction>(<unknown>this._presets.get(preset).modifyArgs)
+      (arguments_) => presetObject.modifyArgs(arguments_),
+      true
     );
 
     return yargs;
@@ -337,19 +352,19 @@ export class ModuleManager {
         text: `Module: ${module.name} (${module.version})`,
         subItems: [
           {
-            text: `Tools: ${tools.length ? "" : "[]"}`,
+            text: `Tools: ${tools.length > 0 ? "" : "[]"}`,
             subItems: tools.map((tool) => ({
               text: `${tool.name}: ${tool.describe}`,
             })),
           },
           {
-            text: `Plugins: ${plugins.length ? "" : "[]"}`,
+            text: `Plugins: ${plugins.length > 0 ? "" : "[]"}`,
             subItems: plugins.map((plugin) => ({
               text: `${plugin.name}: ${plugin.describe}`,
             })),
           },
           {
-            text: `Presets: ${presets.length ? "" : "[]"}`,
+            text: `Presets: ${presets.length > 0 ? "" : "[]"}`,
             subItems: presets.map((preset) => ({
               text: `${preset.name}: ${preset.describe}`,
             })),

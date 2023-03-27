@@ -16,18 +16,25 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager } from "@syntest/module";
-import GraphingPlugin, { GraphOptions } from "./GraphingPlugin";
-import { mkdirSync } from "fs";
+import { mkdirSync } from "node:fs";
+
 import { CONFIG } from "@syntest/base-testing-tool";
+import { Module, ModuleManager } from "@syntest/module";
+
+import { GraphingPlugin, GraphOptions } from "./GraphingPlugin";
 
 export default class GraphingModule extends Module {
-  async register(moduleManager: ModuleManager): Promise<void> {
+  constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    super("graphing", require("../package.json").version);
+  }
+
+  register(moduleManager: ModuleManager): void {
     moduleManager.registerPlugin(this.name, new GraphingPlugin());
   }
 
-  async prepare(): Promise<void> {
-    await mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
+  override prepare(): void {
+    mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
       recursive: true,
     });
   }

@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
 import { Encoding } from "../../Encoding";
+
+import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
 
 /**
  * Secondary objective that is based on the length of the encoding.

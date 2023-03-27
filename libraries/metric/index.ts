@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./Middleware";
+export * from "./lib/Middleware";
 
-export * from "./util/Configuration";
-export * from "./util/diagnostics";
+export * from "./lib/util/Configuration";
+export * from "./lib/util/diagnostics";
 
-export * from "./Metric";
-export * from "./MetricManager";
+export * from "./lib/Metric";
+export * from "./lib/MetricManager";

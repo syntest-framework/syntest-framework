@@ -63,9 +63,13 @@ jobs:
         package:
           - libraries/base-testing-tool
           - libraries/cfg-core
+          - libraries/cli-graphics
           - libraries/core
           - libraries/logging
+          - libraries/metric
+          - libraries/module
           - plugins/plugin-core-graphing
+          - plugins/plugin-core-metric-middleware-file-writer
           - plugins/plugin-core-sfuzz
           - tools/init
 

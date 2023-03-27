@@ -15,7 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, ObjectiveFunction, SearchSubject } from "../../lib";
+
+import { Encoding } from "../../lib/search/Encoding";
+import { ObjectiveFunction } from "../../lib/search/objective/ObjectiveFunction";
+import { SearchSubject } from "../../lib/search/SearchSubject";
+
 import { DummyRootContext } from "./DummyRootContext.mock";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
@@ -26,7 +30,7 @@ export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
     this.objectives = objectives;
   }
 
-  getObjectives(): ObjectiveFunction<T>[] {
+  override getObjectives(): ObjectiveFunction<T>[] {
     return this.objectives;
   }
 

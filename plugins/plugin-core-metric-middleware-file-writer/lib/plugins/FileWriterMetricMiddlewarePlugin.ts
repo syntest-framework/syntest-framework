@@ -17,8 +17,10 @@
  */
 import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
-import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
 import Yargs = require("yargs");
+
+import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
+
 export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
   private metricManager: MetricManager;
 
@@ -38,7 +40,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     );
   }
 
-  async getToolOptions(): Promise<Map<string, Yargs.Options>> {
+  override getToolOptions(): Map<string, Yargs.Options> {
     // any tool can use this listener
     // any label can use this listener
 

@@ -16,12 +16,15 @@
  * limitations under the License.
  */
 
-import { SearchAlgorithm } from "./SearchAlgorithm";
+import { getLogger } from "@syntest/logging";
+
+import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
 import { EncodingSampler } from "../EncodingSampler";
-import { BudgetManager } from "../budget/BudgetManager";
-import { TerminationManager } from "../termination/TerminationManager";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { TerminationManager } from "../termination/TerminationManager";
+
+import { SearchAlgorithm } from "./SearchAlgorithm";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
@@ -29,6 +32,7 @@ import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
  * @author Mitchell Olsthoorn
  */
 export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
+  static override LOGGER = getLogger("RandomSearch");
   protected _encodingSampler: EncodingSampler<T>;
 
   /**
@@ -48,13 +52,9 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
    * @inheritDoc
    * @protected
    */
-  protected _initialize(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-  ): void {}
+  protected _initialize(): void {
+    RandomSearch.LOGGER.debug("Initializing");
+  }
 
   /**
    * @inheritDoc

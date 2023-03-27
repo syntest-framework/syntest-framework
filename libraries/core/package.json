@@ -19,7 +19,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
     "NOTICE",
     "README.md"
   ],
@@ -48,9 +52,13 @@
     "seedrandom": "3.0.5"
   },
   "engines": {
-    "node": ">=10.24.0"
+    "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/global-modules": "^2.0.0",
+    "@types/seedrandom": "^3.0.5"
   }
 }

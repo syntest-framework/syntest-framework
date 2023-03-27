@@ -16,14 +16,16 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import { MetricManager } from "../lib/MetricManager";
+
 const expect = chai.expect;
 
 /**
  * This test is only added such that the github action does not fail.
  */
 describe("example test", () => {
-  it("test", async () => {
+  it("test", () => {
     new MetricManager("");
     expect(true);
   });

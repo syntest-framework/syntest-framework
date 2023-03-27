@@ -19,7 +19,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
     "NOTICE",
     "README.md"
   ],
@@ -50,9 +54,12 @@
     "table": "^6.8.1"
   },
   "engines": {
-    "node": ">=10.24.0"
+    "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.5"
   }
 }

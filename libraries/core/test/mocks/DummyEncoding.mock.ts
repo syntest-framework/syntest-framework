@@ -15,15 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BranchObjectiveFunction } from "../../lib";
-import { Encoding } from "../../lib";
+import { Encoding } from "../../lib/search/Encoding";
+import { BranchObjectiveFunction } from "../../lib/search/objective/BranchObjectiveFunction";
 
 export class DummyEncodingMock extends Encoding {
-  private static counter = 0;
-
   constructor() {
-    DummyEncodingMock.counter++;
-
     super();
   }
 
@@ -34,13 +30,13 @@ export class DummyEncodingMock extends Encoding {
     if (objective.length != values.length)
       throw new Error("Something bad happened");
 
-    for (let i = 0; i < objective.length; i++) {
-      this.setDistance(objective[i], values[i]);
+    for (const [index, element] of objective.entries()) {
+      this.setDistance(element, values[index]);
     }
   }
 
-  copy(): DummyEncodingMock {
-    return null;
+  copy<E extends Encoding>(): E {
+    return undefined;
   }
 
   getLength(): number {
@@ -51,7 +47,7 @@ export class DummyEncodingMock extends Encoding {
     return 0;
   }
 
-  mutate(): DummyEncodingMock {
+  mutate<E extends Encoding>(): E {
     return undefined;
   }
 }

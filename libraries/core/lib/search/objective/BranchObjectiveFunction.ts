@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
+import { shouldNeverHappen } from "../../util/diagnostics";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
-import { BranchDistance } from "./heuristics/BranchDistance";
-import { ApproachLevel } from "./heuristics/ApproachLevel";
-import { shouldNeverHappen } from "../../util/diagnostics";
+
 import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
+import { ApproachLevel } from "./heuristics/ApproachLevel";
+import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Objective function for the branch criterion.

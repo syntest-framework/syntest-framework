@@ -16,20 +16,18 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager } from "@syntest/module";
-import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
 import { MetricManager } from "@syntest/metric";
+import { Module, ModuleManager } from "@syntest/module";
+
+import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
 
 export default class MetricMiddlewareModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     super("file-writer-metric-middleware", require("../package.json").version);
   }
 
-  async register(
-    moduleManager: ModuleManager,
-    metricManager: MetricManager
-  ): Promise<void> {
+  register(moduleManager: ModuleManager, metricManager: MetricManager): void {
     moduleManager.registerPlugin(
       this.name,
       new FileWriterMetricMiddlewarePlugin(metricManager)

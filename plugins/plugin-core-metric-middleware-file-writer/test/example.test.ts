@@ -16,14 +16,16 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import MetricMiddlewareModule from "../lib/FileWriterMetricMiddlewareModule";
+
 const expect = chai.expect;
 
 /**
  * This test is only added such that the github action does not fail.
  */
 describe("example test", () => {
-  it("test", async () => {
+  it("test", () => {
     new MetricMiddlewareModule();
     expect(true);
   });

@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { Encoding } from "../Encoding";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
 
 /**
@@ -50,8 +50,7 @@ export class ExceptionObjectiveFunction<T extends Encoding>
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  calculateDistance(encoding: T): number {
+  calculateDistance(): number {
     // This method should never be called.
     // The exception objective function is only created when an exception is already covered.
     // So the distance is always zero.

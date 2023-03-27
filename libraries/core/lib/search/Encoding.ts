@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
+import { prng } from "../util/prng";
+
+import { Decoder } from "./Decoder";
+import { EncodingSampler } from "./EncodingSampler";
 import { ExecutionResult } from "./ExecutionResult";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
-import { prng } from "../util/prng";
-import { EncodingSampler } from "./EncodingSampler";
-import { Decoder } from "./Decoder";
 
 /**
  * Encoding of the search problem.
@@ -56,7 +57,7 @@ export abstract class Encoding {
     this._assertions = new Map();
   }
 
-  abstract mutate(sampler: EncodingSampler<Encoding>): Encoding;
+  abstract mutate<E extends Encoding>(sampler: EncodingSampler<E>): E;
 
   abstract hashCode(decoder: Decoder<Encoding, string>): number;
 
@@ -88,7 +89,7 @@ export abstract class Encoding {
     this._assertions = value;
   }
 
-  abstract copy(): Encoding;
+  abstract copy<E extends Encoding>(): E;
 
   /**
    * Return the execution result.

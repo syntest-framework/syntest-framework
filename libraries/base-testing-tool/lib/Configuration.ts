@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-import Yargs = require("yargs");
 import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
 import { LoggingOptions } from "@syntest/logging";
 import {
   GeneralOptions,
-  StorageOptions as ModuleStorageOptions,
   OptionGroups as ModuleOptionGroups,
+  StorageOptions as ModuleStorageOptions,
 } from "@syntest/module";
+import Yargs = require("yargs");
 
 export enum OptionGroups {
   Target = "Target Options:",
@@ -217,6 +217,7 @@ export class Configuration {
   configureAlgorithmOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // algorithm settings
         .options({
           "search-algorithm": {
@@ -297,6 +298,7 @@ export class Configuration {
   configureBudgetOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // time settings
         .options({
           "total-time": {
@@ -338,6 +340,7 @@ export class Configuration {
   configurePostProcessingOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // post processing
         .options({
           "test-minimization": {
@@ -355,17 +358,19 @@ export class Configuration {
   configureSamplingOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // random number generator settings
         .options({
           "random-seed": {
             alias: ["s"],
-            default: null,
+            default: undefined,
             description:
               "Seed to be used by the pseudo random number generator.",
             group: "Sampling options:",
             hidden: false,
             type: "string",
           },
+
           // sampling settings
           "max-depth": {
             alias: [],
@@ -392,6 +397,7 @@ export class Configuration {
             hidden: false,
             type: "boolean",
           },
+
           // mutation settings
           "explore-illegal-values": {
             alias: [],
@@ -402,6 +408,7 @@ export class Configuration {
             hidden: false,
             type: "boolean",
           },
+
           // probability settings
           "resample-gene-probability": {
             alias: [],
@@ -464,6 +471,7 @@ export class Configuration {
             hidden: false,
             type: "number",
           },
+
           // gene defaults
           "string-alphabet": {
             alias: [],
@@ -497,6 +505,7 @@ export class Configuration {
   configureResearchModeOptions(yargs: Yargs.Argv) {
     return (
       yargs
+
         // Research mode options
         // TODO should be moved to research mode plugin
         .options({

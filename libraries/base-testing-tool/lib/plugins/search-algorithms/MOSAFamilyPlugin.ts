@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, SearchAlgorithm, MOSAFamily } from "@syntest/core";
+import { Encoding, MOSAFamily, SearchAlgorithm } from "@syntest/core";
+
 import {
-  SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
 } from "../SearchAlgorithmPlugin";
 
 /**

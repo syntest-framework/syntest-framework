@@ -17,8 +17,8 @@
  */
 
 import BigNumber from "bignumber.js";
-
 import seedrandom = require("seedrandom");
+
 import { Charset } from "./Charset";
 import {
   emptyArray,
@@ -26,8 +26,8 @@ import {
   singletonNotSet,
 } from "./diagnostics";
 
-let usedSeed: string | null = null;
-let random = null;
+let usedSeed: string;
+let random: seedrandom.PRNG | undefined;
 
 export function getSeed(seed?: string): string {
   if (!usedSeed) {
@@ -90,6 +90,7 @@ export const prng = {
     const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min);
   },
+
   /**
    * Uses the Box-Muller transform to get a gaussian random variable.
    *
@@ -101,12 +102,11 @@ export const prng = {
     const u2 = generator();
 
     const mag = sigma * Math.sqrt(-2 * Math.log(u1));
-    const z0 = mag * Math.cos(2 * Math.PI * u2) + mu;
 
-    return z0;
+    return mag * Math.cos(2 * Math.PI * u2) + mu;
   },
   pickOne: <T>(options: T[]): T => {
-    if (!options.length) {
+    if (options.length === 0) {
       throw new Error(emptyArray("options"));
     }
 
@@ -122,7 +122,7 @@ export const prng = {
     const charactersLength = characters.length;
     let result = "";
 
-    for (let i = 0; i < length; i++) {
+    for (let index = 0; index < length; index++) {
       result += characters.charAt(Math.floor(generator() * charactersLength));
     }
     return result;

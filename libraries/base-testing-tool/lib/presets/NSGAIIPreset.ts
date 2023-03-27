@@ -17,6 +17,7 @@
  */
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
+
 import { ArgumentsObject } from "../Configuration";
 
 /**
@@ -35,12 +36,10 @@ export class NSGAIIPreset extends Preset {
     super("NSGAII", "NSGAII preset");
   }
 
-  modifyArgs(args: ArgumentsCamelCase): ArgumentsCamelCase {
-    (<ArgumentsObject>(<unknown>args)).searchAlgorithm = "NSGAII";
-    (<ArgumentsObject>(<unknown>args)).objectiveManager = "simple";
-    (<ArgumentsObject>(<unknown>args)).procreation = "default";
-    (<ArgumentsObject>(<unknown>args)).populationSize = 50;
-
-    return args;
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "NSGAII";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }
 }

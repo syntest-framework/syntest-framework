@@ -17,6 +17,7 @@
  */
 import { Encoding, EncodingSampler, SearchSubject } from "@syntest/core";
 import { Plugin } from "@syntest/module";
+
 import { PluginType } from "./PluginType";
 
 export type SamplerOptions<T extends Encoding> = {
@@ -32,7 +33,7 @@ export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
     options: O
   ): EncodingSampler<T>;
 
-  getCommandOptionChoices(
+  override getCommandOptionChoices(
     tool: string,
     labels: string[],
     command: string,

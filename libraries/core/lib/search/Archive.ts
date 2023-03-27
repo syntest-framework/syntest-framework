@@ -86,7 +86,7 @@ export class Archive<T extends Encoding> {
    * Return the objective functions associated with the stored encodings.
    */
   getObjectives(): ObjectiveFunction<T>[] {
-    return Array.from(this._map.keys());
+    return [...this._map.keys()];
   }
 
   /**

@@ -18,7 +18,7 @@
 import { ItemizationItem, UserInterface } from "../../lib/UserInterface";
 
 export class UserInterfaceExtends extends UserInterface {
-  itemization(items: ItemizationItem[], indentation?: number): string {
+  override itemization(items: ItemizationItem[], indentation?: number): string {
     return super.itemization(items, indentation);
   }
 }

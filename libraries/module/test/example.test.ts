@@ -16,15 +16,17 @@
  * limitations under the License.
  */
 import * as chai from "chai";
+
 import { Configuration } from "../lib/util/Configuration";
+
 const expect = chai.expect;
 
 /**
  * This test is only added such that the github action does not fail.
  */
 describe("example test", () => {
-  it("test", async () => {
-    new Configuration();
+  it("test", () => {
+    Configuration.configureUsage();
     expect(true);
   });
 });

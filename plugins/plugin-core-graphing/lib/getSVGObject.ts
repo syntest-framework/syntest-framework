@@ -15,6 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// D3 does not adhere to the unsafe rules so we have to disable them
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import * as d3 from "d3";
 import { JSDOM } from "jsdom";
 
@@ -24,7 +30,7 @@ export function getBodyObject() {
   return d3.select(dom.window.document.querySelector("body"));
 }
 
-export function getSVGObject(body: any, width: number, height: number) {
+export function getSVGObject(body: any, width: number, height: number): any {
   const svg = body
     .append("svg")
     .attr("xmlns", "http://www.w3.org/2000/svg")

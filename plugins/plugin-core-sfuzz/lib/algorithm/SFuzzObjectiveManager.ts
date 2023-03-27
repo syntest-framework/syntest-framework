@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
+import * as crypto from "node:crypto";
+
 import {
   BudgetManager,
   Encoding,
   ExceptionObjectiveFunction,
   StructuralObjectiveManager,
-  TerminationManager,
 } from "@syntest/core";
-import * as crypto from "crypto";
 
 /**
  * sFuzz objective manager
@@ -41,11 +41,9 @@ export class SFuzzObjectiveManager<
   /**
    * @inheritdoc
    */
-  public async evaluateOne(
+  public override async evaluateOne(
     encoding: T,
-    budgetManager: BudgetManager<T>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    terminationManager: TerminationManager
+    budgetManager: BudgetManager<T>
   ): Promise<void> {
     // Execute the encoding
     const result = await this._runner.execute(this._subject, encoding);
@@ -55,7 +53,7 @@ export class SFuzzObjectiveManager<
     encoding.setExecutionResult(result);
 
     // For all current objectives
-    this._currentObjectives.forEach((objectiveFunction) => {
+    for (const objectiveFunction of this._currentObjectives) {
       // Calculate and store the distance
       const distance = objectiveFunction.calculateDistance(encoding);
       if (distance > 1) {
@@ -66,14 +64,14 @@ export class SFuzzObjectiveManager<
       }
 
       // When the objective is covered, update the objectives and the archive
-      if (distance === 0.0) {
+      if (distance === 0) {
         // Update the objectives
         this._updateObjectives(objectiveFunction);
 
         // Update the archive
         this._updateArchive(objectiveFunction, encoding);
       }
-    });
+    }
 
     // Create separate exception objective when an exception occurred in the execution
     if (result.hasExceptions()) {
@@ -85,11 +83,11 @@ export class SFuzzObjectiveManager<
         .update(result.getExceptions())
         .digest("hex");
 
-      const numOfExceptions = this._archive
+      const numberOfExceptions = this._archive
         .getObjectives()
         .filter((objective) => objective instanceof ExceptionObjectiveFunction)
         .filter((objective) => objective.getIdentifier() === hash).length;
-      if (numOfExceptions === 0) {
+      if (numberOfExceptions === 0) {
         // TODO this makes the archive become too large crashing the tool
         this._archive.update(
           new ExceptionObjectiveFunction(

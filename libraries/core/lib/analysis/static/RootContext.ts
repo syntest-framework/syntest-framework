@@ -15,17 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SubTarget, Target } from "./Target";
+import * as path from "node:path";
+
 import { ControlFlowProgram } from "@syntest/cfg-core";
-import * as path from "path";
-import { ActionDescription } from "./ActionDescription";
+
 import { pathNotInRootPath } from "../../util/diagnostics";
+
+import { ActionDescription } from "./ActionDescription";
+import { SubTarget, Target } from "./Target";
 
 export abstract class RootContext {
   protected _rootPath: string;
 
   // Mapping: filepath -> source code
   protected _targetMap: Map<string, Target>;
+
   // Mapping: filepath -> source code
   protected _sources: Map<string, string>;
 

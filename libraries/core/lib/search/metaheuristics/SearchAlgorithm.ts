@@ -16,16 +16,17 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { Archive } from "../Archive";
-import { SearchSubject } from "../SearchSubject";
-import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
-import { BudgetManager } from "../budget/BudgetManager";
-import { TerminationManager } from "../termination/TerminationManager";
-import { ExecutionResult } from "../ExecutionResult";
-import { Events } from "../../util/Events";
-import TypedEmitter from "typed-emitter";
 import { getLogger } from "@syntest/logging";
+import TypedEmitter from "typed-emitter";
+
+import { Events } from "../../util/Events";
+import { Archive } from "../Archive";
+import { BudgetManager } from "../budget/BudgetManager";
+import { Encoding } from "../Encoding";
+import { ExecutionResult } from "../ExecutionResult";
+import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { SearchSubject } from "../SearchSubject";
+import { TerminationManager } from "../termination/TerminationManager";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.
@@ -36,6 +37,7 @@ import { getLogger } from "@syntest/logging";
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
   static LOGGER = getLogger("SearchAlgorithm");
+
   /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected
@@ -84,12 +86,13 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * @param budgetManager The budget manager to track budget progress
    * @param terminationManager The termination trigger manager
    */
-  public async search(
+  public search(
     subject: SearchSubject<T>,
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
-  ): Promise<Archive<T>> {
+  ): Archive<T> {
     SearchAlgorithm.LOGGER.info("Starting search");
+
     // Load search subject into the objective manager
     this._objectiveManager.load(subject);
 
@@ -105,7 +108,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     );
 
     // Initialize search process
-    await this._initialize(budgetManager, terminationManager);
+    this._initialize(budgetManager, terminationManager);
 
     // Stop initialization budget tracking, inform the listeners, and start search budget tracking
     budgetManager.initializationStopped();
@@ -143,7 +146,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       );
 
       // Start next iteration of the search process
-      await this._iterate(budgetManager, terminationManager);
+      this._iterate(budgetManager, terminationManager);
 
       // Inform the budget manager and listeners that an iteration happened
       budgetManager.iteration(this);
@@ -180,28 +183,25 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   }
 
   public getCovered(objectiveType = "mixed"): number {
-    const total = new Set();
     const covered = new Set();
 
     for (const key of this._objectiveManager.getArchive().getObjectives()) {
       const test = this._objectiveManager.getArchive().getEncoding(key);
       const result: ExecutionResult = test.getExecutionResult();
+
       // TODO this does not work when there are files with the same name in different directories!!
       const paths = key.getSubject().path.split("/");
       const fileName = paths[paths.length - 1];
 
-      result
+      for (const current of result
         .getTraces()
         .filter(
           (element) =>
             element.type.includes(objectiveType) || objectiveType === "mixed"
         )
-        .filter((element) => element.path.includes(fileName))
-        .forEach((current) => {
-          total.add(current.id);
-
-          if (current.hits > 0) covered.add(current.id);
-        });
+        .filter((element) => element.path.includes(fileName))) {
+        if (current.hits > 0) covered.add(current.id);
+      }
     }
     return covered.size;
   }
@@ -213,25 +213,26 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     for (const key of this._objectiveManager.getArchive().getObjectives()) {
       const test = this._objectiveManager.getArchive().getEncoding(key);
       const result: ExecutionResult = test.getExecutionResult();
+
       // TODO this does not work when there are files with the same name in different directories!!
       const paths = key.getSubject().path.split("/");
       const fileName = paths[paths.length - 1];
 
-      result
+      for (const current of result
         .getTraces()
         .filter(
           (element) =>
             element.type.includes(objectiveType) || objectiveType === "mixed"
         )
-        .filter((element) => element.path.includes(fileName))
-        .forEach((current) => {
-          total.add(current.id);
+        .filter((element) => element.path.includes(fileName))) {
+        total.add(current.id);
 
-          if (current.hits > 0) covered.add(current.id);
-        });
+        if (current.hits > 0) covered.add(current.id);
+      }
     }
     return total.size - covered.size;
   }
+
   /**
    * The progress of the search process.
    */

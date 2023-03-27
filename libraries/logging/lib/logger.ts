@@ -15,14 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as path from "node:path";
+
 import {
-  Logger,
-  LoggerOptions,
   createLogger,
   format,
+  Logger,
+  LoggerOptions,
   transports,
 } from "winston";
-import * as path from "path";
 
 let baseLoggerOptions: LoggerOptions;
 
@@ -32,7 +33,7 @@ export function setupLogger(
   consoleLogLevel: string
 ) {
   const fileTransportOptions: transports.FileTransportOptions = {
-    maxsize: 5242880, // 5MB
+    maxsize: 5_242_880, // 5MB
     maxFiles: 1,
   };
 
@@ -53,16 +54,14 @@ export function setupLogger(
       format.metadata(),
       format.errors({ stack: true })
     ),
-    transports: [
-      ...fileLogLevel.map(
-        (logLevel: string) =>
-          new transports.File({
-            ...fileTransportOptions,
-            level: logLevel,
-            filename: path.join(logDirectory, `${logLevel}.log`),
-          })
-      ),
-    ],
+    transports: fileLogLevel.map(
+      (logLevel: string) =>
+        new transports.File({
+          ...fileTransportOptions,
+          level: logLevel,
+          filename: path.join(logDirectory, `${logLevel}.log`),
+        })
+    ),
   };
 
   if (consoleLogLevel !== "silent") {

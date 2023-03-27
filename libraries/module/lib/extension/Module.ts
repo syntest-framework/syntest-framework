@@ -17,8 +17,11 @@
  */
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
+
 import { ModuleManager } from "../ModuleManager";
+
 import { Extension } from "./Extension";
+
 export abstract class Module extends Extension {
   version: Readonly<string>;
 
@@ -44,6 +47,7 @@ export interface Module {
    * Called after the initialization step
    */
   prepare?(): Promise<void> | void;
+
   /**
    * Called before the exit step
    */

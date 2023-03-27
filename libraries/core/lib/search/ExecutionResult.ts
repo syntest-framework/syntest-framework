@@ -39,7 +39,7 @@ export interface ExecutionResult {
   /**
    * Return all exceptions that occurred during the execution.
    */
-  getExceptions();
+  getExceptions(): string;
 
   /**
    * Return all the traces produced by the execution.

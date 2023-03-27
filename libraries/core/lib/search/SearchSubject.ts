@@ -17,11 +17,13 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ObjectiveFunction } from "./objective/ObjectiveFunction";
-import { Encoding } from "./Encoding";
 import { ControlFlowProgram } from "@syntest/cfg-core";
-import { Target } from "../analysis/static/Target";
+
 import { RootContext } from "../analysis/static/RootContext";
+import { Target } from "../analysis/static/Target";
+
+import { Encoding } from "./Encoding";
+import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 
 /**
  * Subject of the search process.
@@ -71,7 +73,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Retrieve objectives.
    */
   public getObjectives(): ObjectiveFunction<T>[] {
-    return Array.from(this._objectives.keys());
+    return [...this._objectives.keys()];
   }
 
   /**
@@ -82,7 +84,7 @@ export abstract class SearchSubject<T extends Encoding> {
   public getChildObjectives(
     objective: ObjectiveFunction<T>
   ): ObjectiveFunction<T>[] {
-    return Array.from(this._objectives.get(objective));
+    return [...this._objectives.get(objective)];
   }
 
   get name(): string {

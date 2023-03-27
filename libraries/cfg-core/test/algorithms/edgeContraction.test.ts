@@ -15,15 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  ControlFlowGraph,
-  Edge,
-  NodeType,
-  Node,
-  EdgeType,
-  edgeContraction,
-} from "../../lib";
 import * as chai from "chai";
+
+import { edgeContraction } from "../../lib/algorithms/edgeContraction";
+import { ControlFlowGraph } from "../../lib/graph/ControlFlowGraph";
+import { Edge } from "../../lib/graph/Edge";
+import { EdgeType } from "../../lib/graph/EdgeType";
+import { Node } from "../../lib/graph/Node";
+import { NodeType } from "../../lib/graph/NodeType";
 
 const expect = chai.expect;
 

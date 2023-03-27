@@ -81,48 +81,32 @@ export abstract class BranchDistance {
     // TODO move this to the solidity project and make an abstraction of this class
 
     switch (opcode) {
-      case "EQ":
-        if (target) {
-          branchDistance = this.equalNumeric(left, right);
-        } else {
-          branchDistance = this.notEqualNumeric(left, right);
-        }
+      case "EQ": {
+        branchDistance = target
+          ? this.equalNumeric(left, right)
+          : this.notEqualNumeric(left, right);
         break;
-      case "NEQ":
-        if (target) {
-          branchDistance = this.notEqualNumeric(left, right);
-        } else {
-          branchDistance = this.equalNumeric(left, right);
-        }
+      }
+      case "NEQ": {
+        branchDistance = target
+          ? this.notEqualNumeric(left, right)
+          : this.equalNumeric(left, right);
         break;
+      }
       case "GT":
-        if (target) {
-          branchDistance = this.greater(left, right);
-        } else {
-          branchDistance = this.smallerEqual(left, right);
-        }
+      case "SGT": {
+        branchDistance = target
+          ? this.greater(left, right)
+          : this.smallerEqual(left, right);
         break;
+      }
       case "LT":
-        if (target) {
-          branchDistance = this.smaller(left, right);
-        } else {
-          branchDistance = this.greaterEqual(left, right);
-        }
+      case "SLT": {
+        branchDistance = target
+          ? this.smaller(left, right)
+          : this.greaterEqual(left, right);
         break;
-      case "SGT":
-        if (target) {
-          branchDistance = this.greater(left, right);
-        } else {
-          branchDistance = this.smallerEqual(left, right);
-        }
-        break;
-      case "SLT":
-        if (target) {
-          branchDistance = this.smaller(left, right);
-        } else {
-          branchDistance = this.greaterEqual(left, right);
-        }
-        break;
+      }
     }
 
     return this.normalize(branchDistance);
@@ -134,8 +118,8 @@ export abstract class BranchDistance {
 
   private equalNumeric(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
-    for (let index = 0; index < left.length; index++) {
-      minimum = Math.min(minimum, Math.abs(left[index] - right[index]));
+    for (const [index, element] of left.entries()) {
+      minimum = Math.min(minimum, Math.abs(element - right[index]));
     }
     return minimum;
   }
@@ -143,12 +127,8 @@ export abstract class BranchDistance {
   private notEqualNumeric(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
-    for (let index = 0; index < left.length; index++) {
-      if (left[index] != right[index]) {
-        minimum = 0.0;
-      } else {
-        minimum = Math.min(minimum, 1.0);
-      }
+    for (const [index, element] of left.entries()) {
+      minimum = element == right[index] ? Math.min(minimum, 1) : 0;
     }
     return minimum;
   }
@@ -156,12 +136,11 @@ export abstract class BranchDistance {
   private greater(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
-    for (let index = 0; index < left.length; index++) {
-      if (left[index] > right[index]) {
-        minimum = 0.0;
-      } else {
-        minimum = Math.min(minimum, right[index] - left[index] + 1);
-      }
+    for (const [index, element] of left.entries()) {
+      minimum =
+        element > right[index]
+          ? 0
+          : Math.min(minimum, right[index] - element + 1);
     }
     return minimum;
   }
@@ -169,12 +148,9 @@ export abstract class BranchDistance {
   private smallerEqual(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
-    for (let index = 0; index < left.length; index++) {
-      if (left[index] <= right[index]) {
-        minimum = 0.0;
-      } else {
-        minimum = Math.min(minimum, left[index] - right[index]);
-      }
+    for (const [index, element] of left.entries()) {
+      minimum =
+        element <= right[index] ? 0 : Math.min(minimum, element - right[index]);
     }
     return minimum;
   }
@@ -182,12 +158,9 @@ export abstract class BranchDistance {
   private greaterEqual(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
-    for (let index = 0; index < left.length; index++) {
-      if (left[index] >= right[index]) {
-        minimum = 0.0;
-      } else {
-        minimum = Math.min(minimum, right[index] - left[index]);
-      }
+    for (const [index, element] of left.entries()) {
+      minimum =
+        element >= right[index] ? 0 : Math.min(minimum, right[index] - element);
     }
     return minimum;
   }
@@ -195,12 +168,11 @@ export abstract class BranchDistance {
   private smaller(left: number[], right: number[]): number {
     let minimum = Number.MAX_VALUE;
 
-    for (let index = 0; index < left.length; index++) {
-      if (left[index] < right[index]) {
-        minimum = 0.0;
-      } else {
-        minimum = Math.min(minimum, left[index] - right[index] + 1);
-      }
+    for (const [index, element] of left.entries()) {
+      minimum =
+        element < right[index]
+          ? 0
+          : Math.min(minimum, element - right[index] + 1);
     }
     return minimum;
   }

@@ -15,14 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MOSAFamily } from "../../lib/search/metaheuristics/evolutionary/MOSAFamily";
-import { DummySearchSubject } from "./DummySubject.mock";
 import { Encoding } from "../../lib/search/Encoding";
+import { MOSAFamily } from "../../lib/search/metaheuristics/evolutionary/MOSAFamily";
+
+import { DummySearchSubject } from "./DummySubject.mock";
 
 export class MockedMOSA<T extends Encoding> extends MOSAFamily<T> {
   setPopulation(population: T[], size: number) {
     this._populationSize = size;
-    population.forEach((test) => this._population.push(test));
+    for (const test of population) this._population.push(test);
   }
 
   getPopulation(): T[] {

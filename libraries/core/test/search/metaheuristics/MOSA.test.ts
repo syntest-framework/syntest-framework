@@ -16,20 +16,21 @@
  * limitations under the License.
  */
 import * as chai from "chai";
-import {
-  ApproachLevel,
-  EncodingRunner,
-  EncodingSampler,
-  UncoveredObjectiveManager,
-} from "../../../lib";
+
+import { EncodingRunner } from "../../../lib/search/EncodingRunner";
+import { EncodingSampler } from "../../../lib/search/EncodingSampler";
 import { MOSAFamily } from "../../../lib/search/metaheuristics/evolutionary/MOSAFamily";
-import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
-import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { BranchObjectiveFunction } from "../../../lib";
-import { MockedMOSA } from "../../mocks/MOSAAdapter";
-import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
-import { DummyProcreation } from "../../mocks/DummyProcreation.mock";
+import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
+import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
+import { UncoveredObjectiveManager } from "../../../lib/search/objective/managers/UncoveredObjectiveManager";
+import { SecondaryObjectiveComparator } from "../../../lib/search/objective/secondary/SecondaryObjectiveComparator";
+import { Crossover } from "../../../lib/search/operators/crossover/Crossover";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
+import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
+import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
+import { DummyProcreation } from "../../mocks/DummyProcreation.mock";
+import { DummySearchSubject } from "../../mocks/DummySubject.mock";
+import { MockedMOSA } from "../../mocks/MOSAAdapter";
 
 const expect = chai.expect;
 
@@ -45,13 +46,13 @@ describe("Test MOSA", function () {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       branchDistance,
-      null,
+      undefined,
       "1"
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       new ApproachLevel(),
       branchDistance,
-      null,
+      undefined,
       "1"
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
@@ -61,17 +62,17 @@ describe("Test MOSA", function () {
 
   it("Test Preference criterion", () => {
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
+    ind1.setDummyEvaluation([...objectives], [2, 3]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
+    ind2.setDummyEvaluation([...objectives], [0, 2]);
 
     const ind3 = new DummyEncodingMock();
-    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
+    ind3.setDummyEvaluation([...objectives], [2, 0]);
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
-    const mockedCrossover = new DummyCrossover(0.8, 0.8);
+    const mockedCrossover = <Crossover<DummyEncodingMock>>{};
     const mockedProcreation = new DummyProcreation(
       mockedCrossover,
       mockedSampler
@@ -83,10 +84,7 @@ describe("Test MOSA", function () {
       mockedProcreation,
       50
     );
-    const frontZero = mosa.preferenceCriterion(
-      [ind1 as DummyEncodingMock, ind2, ind3],
-      objectives
-    );
+    const frontZero = mosa.preferenceCriterion([ind1, ind2, ind3], objectives);
 
     expect(frontZero.length).to.equal(2);
     expect(frontZero).to.contain(ind2);
@@ -95,31 +93,28 @@ describe("Test MOSA", function () {
 
   it("Test Non Dominated front", () => {
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
+    ind1.setDummyEvaluation([...objectives], [2, 3]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
+    ind2.setDummyEvaluation([...objectives], [0, 2]);
 
     const ind3 = new DummyEncodingMock();
-    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
+    ind3.setDummyEvaluation([...objectives], [2, 0]);
 
     const ind4 = new DummyEncodingMock();
-    ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
+    ind4.setDummyEvaluation([...objectives], [1, 1]);
 
     const ind5 = new DummyEncodingMock();
-    ind5.setDummyEvaluation(Array.from(objectives), [5, 5]);
+    ind5.setDummyEvaluation([...objectives], [5, 5]);
 
-    const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
-    const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
-    const mockedCrossover = new DummyCrossover(0.8, 0.8);
-    const mockedProcreation = new DummyProcreation(
-      mockedCrossover,
-      mockedSampler
-    );
+    const mockedProcreation = new DummyProcreation(undefined, undefined);
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner, new Set()),
-      mockedSampler,
+      new UncoveredObjectiveManager(
+        undefined,
+        new Set<SecondaryObjectiveComparator<DummyEncodingMock>>()
+      ),
+      undefined,
       mockedProcreation,
       50
     );
@@ -139,16 +134,16 @@ describe("Test MOSA", function () {
 
   it("Test Preference Sorting", () => {
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
+    ind1.setDummyEvaluation([...objectives], [2, 3]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
+    ind2.setDummyEvaluation([...objectives], [0, 2]);
 
     const ind3 = new DummyEncodingMock();
-    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
+    ind3.setDummyEvaluation([...objectives], [2, 0]);
 
     const ind4 = new DummyEncodingMock();
-    ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
+    ind4.setDummyEvaluation([...objectives], [1, 1]);
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
@@ -178,23 +173,23 @@ describe("Test MOSA", function () {
     expect(front[2]).to.contain(ind1);
   });
 
-  it("Environmental Selection", async () => {
+  it("Environmental Selection", () => {
     const ind1 = new DummyEncodingMock();
-    ind1.setDummyEvaluation(Array.from(objectives), [2, 3]);
+    ind1.setDummyEvaluation([...objectives], [2, 3]);
 
     const ind2 = new DummyEncodingMock();
-    ind2.setDummyEvaluation(Array.from(objectives), [0, 2]);
+    ind2.setDummyEvaluation([...objectives], [0, 2]);
 
     const ind3 = new DummyEncodingMock();
-    ind3.setDummyEvaluation(Array.from(objectives), [2, 0]);
+    ind3.setDummyEvaluation([...objectives], [2, 0]);
 
     const ind4 = new DummyEncodingMock();
-    ind4.setDummyEvaluation(Array.from(objectives), [1, 1]);
+    ind4.setDummyEvaluation([...objectives], [1, 1]);
 
     const ind5 = new DummyEncodingMock();
-    ind5.setDummyEvaluation(Array.from(objectives), [3, 2]);
+    ind5.setDummyEvaluation([...objectives], [3, 2]);
 
-    const searchSubject = new DummySearchSubject(Array.from(objectives));
+    const searchSubject = new DummySearchSubject([...objectives]);
 
     const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
     const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
@@ -213,7 +208,7 @@ describe("Test MOSA", function () {
 
     mosa.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
     mosa.updateObjectives(searchSubject);
-    await mosa.environmentalSelection(4);
+    mosa.environmentalSelection(4);
 
     expect(mosa.getPopulation().length).to.equal(4);
     expect(mosa.getPopulation()).contain(ind1);

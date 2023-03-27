@@ -15,11 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node } from "../graph/Node";
-import { ControlFlowGraph } from "../graph/ControlFlowGraph";
-import { Edge } from "../graph/Edge";
-import { NodeType } from "../graph/NodeType";
-import { ContractedControlFlowGraph } from "../graph/ContractedControlFlowGraph";
 import {
   cannotMergeEntryAndExit,
   exactlyOneEdgeShouldBeRemoved,
@@ -28,6 +23,11 @@ import {
   tooManyIncoming,
   tooManyOutgoing,
 } from "../diagnostics";
+import { ContractedControlFlowGraph } from "../graph/ContractedControlFlowGraph";
+import { ControlFlowGraph } from "../graph/ControlFlowGraph";
+import { Edge } from "../graph/Edge";
+import { Node } from "../graph/Node";
+import { NodeType } from "../graph/NodeType";
 
 /**
  * Edge contraction algorithm.
@@ -54,26 +54,15 @@ export function edgeContraction<S>(
       break;
     }
 
-    /**
-     * Perform BFS to find a node with only one incoming and one outgoing edge.
-     */
-    const queue: Edge[] = [];
-    const visited: Set<string> = new Set();
-
-    queue.push(...controlFlowGraph.getOutgoingEdges(controlFlowGraph.entry.id));
-
-    while (queue.length !== 0) {
-      const edge = queue.shift();
-      if (visited.has(edge.id)) {
-        continue;
-      }
-
-      visited.add(edge.id);
-
-      if (
-        controlFlowGraph.getOutgoingEdges(edge.source).length === 1 &&
-        controlFlowGraph.getIncomingEdges(edge.target).length === 1
-      ) {
+    bfs(
+      controlFlowGraph,
+      (edge: Edge) => {
+        return (
+          controlFlowGraph.getOutgoingEdges(edge.source).length === 1 &&
+          controlFlowGraph.getIncomingEdges(edge.target).length === 1
+        );
+      },
+      (edge: Edge) => {
         controlFlowGraph = mergeNodes(
           controlFlowGraph,
           edge.source,
@@ -86,11 +75,8 @@ export function edgeContraction<S>(
         }
 
         changed = true;
-        break;
       }
-
-      queue.push(...controlFlowGraph.getOutgoingEdges(edge.target));
-    }
+    );
   } while (changed);
 
   return new ContractedControlFlowGraph<S>(
@@ -104,125 +90,75 @@ export function edgeContraction<S>(
   );
 }
 
-function mergeNodes<S>(
+function bfs<S>(
   controlFlowGraph: ControlFlowGraph<S>,
-  node1: string,
-  node2: string
-): ControlFlowGraph<S> {
-  if (controlFlowGraph.getOutgoingEdges(node1).length !== 1) {
-    throw new Error(tooManyOutgoing(node1));
+  condition: (edge: Edge) => boolean,
+  callback: (edge: Edge) => void
+) {
+  /**
+   * Perform BFS to find a node with only one incoming and one outgoing edge.
+   */
+  const queue: Edge[] = [];
+  const visited: Set<string> = new Set();
+
+  queue.push(...controlFlowGraph.getOutgoingEdges(controlFlowGraph.entry.id));
+
+  while (queue.length > 0) {
+    const edge = queue.shift();
+
+    if (visited.has(edge.id)) {
+      continue;
+    }
+
+    visited.add(edge.id);
+
+    if (condition(edge)) {
+      callback(edge);
+      break;
+    }
+
+    queue.push(...controlFlowGraph.getOutgoingEdges(edge.target));
+  }
+}
+
+function beforeGuards<S>(
+  controlFlowGraph: ControlFlowGraph<S>,
+  source: string,
+  target: string
+) {
+  if (controlFlowGraph.getOutgoingEdges(source).length !== 1) {
+    throw new Error(tooManyOutgoing(source));
   }
 
-  if (controlFlowGraph.getIncomingEdges(node2).length !== 1) {
-    throw new Error(tooManyIncoming(node2));
+  if (controlFlowGraph.getIncomingEdges(target).length !== 1) {
+    throw new Error(tooManyIncoming(target));
   }
 
-  if (controlFlowGraph.getOutgoingEdges(node1)[0].target !== node2) {
-    throw new Error(notDirectlyConnected(node1, node2));
+  if (controlFlowGraph.getOutgoingEdges(source)[0].target !== target) {
+    throw new Error(notDirectlyConnected(source, target));
   }
 
-  const isEntry = node1 === controlFlowGraph.entry.id;
-  const isSuccessExit = node2 === controlFlowGraph.successExit.id;
-  const isErrorExit = node2 === controlFlowGraph.errorExit.id;
+  const isEntry = source === controlFlowGraph.entry.id;
+  const isSuccessExit = target === controlFlowGraph.successExit.id;
+  const isErrorExit = target === controlFlowGraph.errorExit.id;
 
   if (isEntry && (isSuccessExit || isErrorExit)) {
     throw new Error(cannotMergeEntryAndExit());
   }
+}
 
-  const node1Obj = controlFlowGraph.getNodeById(node1);
-  const node2Obj = controlFlowGraph.getNodeById(node2);
-
-  const newNode: Node<S> = new Node<S>(
-    node1, // We use the id of node1 because the first node always contains the result of a control node (e.g. if, while, etc.) this is also where the instrumentation places the branch coverage
-    isEntry
-      ? NodeType.ENTRY
-      : isSuccessExit
-      ? NodeType.EXIT
-      : isErrorExit
-      ? NodeType.EXIT
-      : NodeType.NORMAL,
-    node1Obj.label + "-" + node2Obj.label,
-    [...node1Obj.statements, ...node2Obj.statements],
-    {
-      ...node1Obj.metadata,
-      ...node2Obj.metadata,
-      lineNumbers: [
-        ...node1Obj.metadata.lineNumbers,
-        ...node2Obj.metadata.lineNumbers,
-      ],
-    }
-  );
-
-  const newNodes = new Map<string, Node<S>>();
-
-  [...controlFlowGraph.nodes.values()]
-    .filter((node) => node.id !== node1 && node.id !== node2)
-    .concat(newNode)
-    .forEach((node) => newNodes.set(node.id, node));
-
-  const removedEdges = controlFlowGraph.edges.filter(
-    (edge) => edge.source === node1 && edge.target === node2
-  );
-
-  if (removedEdges.length !== 1) {
-    throw new Error(
-      exactlyOneEdgeShouldBeRemoved(node1, node2, removedEdges.length)
-    );
-  }
-
-  const newEdges = controlFlowGraph.edges
-    .filter((edge) => edge.id !== removedEdges[0].id)
-    .map((edge) => {
-      if (edge.source === node1) {
-        // this case should not exist
-        return new Edge(
-          edge.id,
-          edge.type,
-          edge.label,
-          newNode.id,
-          edge.target,
-          edge.description
-        );
-      }
-      if (edge.target === node1) {
-        return new Edge(
-          edge.id,
-          edge.type,
-          edge.label,
-          edge.source,
-          newNode.id,
-          edge.description
-        );
-      }
-      if (edge.source === node2) {
-        return new Edge(
-          edge.id,
-          edge.type,
-          edge.label,
-          newNode.id,
-          edge.target,
-          edge.description
-        );
-      }
-      if (edge.target === node2) {
-        // this case should not exist
-        return new Edge(
-          edge.id,
-          edge.type,
-          edge.label,
-          edge.source,
-          newNode.id,
-          edge.description
-        );
-      }
-      return edge;
-    });
-
+function afterGuards<S>(
+  newNodes: Map<string, Node<S>>,
+  newEdges: Edge[],
+  controlFlowGraph: ControlFlowGraph<S>,
+  source: string,
+  target: string
+) {
   if (newNodes.size !== controlFlowGraph.nodes.size - 1) {
     throw new Error(
       exactlyOneNodeShouldBeRemoved(
-        node1,
-        node2,
+        source,
+        target,
         newNodes.size - controlFlowGraph.nodes.size
       )
     );
@@ -231,17 +167,110 @@ function mergeNodes<S>(
   if (newEdges.length !== controlFlowGraph.edges.length - 1) {
     throw new Error(
       exactlyOneEdgeShouldBeRemoved(
-        node1,
-        node2,
+        source,
+        target,
         newNodes.size - controlFlowGraph.nodes.size
       )
     );
   }
+}
+
+function getNodeType(
+  isEntry: boolean,
+  isSuccessExit: boolean,
+  isErrorExit: boolean
+): NodeType {
+  return isEntry
+    ? NodeType.ENTRY
+    : isSuccessExit || isErrorExit
+    ? NodeType.EXIT
+    : NodeType.NORMAL;
+}
+
+function mergeNodes<S>(
+  controlFlowGraph: ControlFlowGraph<S>,
+  source: string,
+  target: string
+): ControlFlowGraph<S> {
+  beforeGuards(controlFlowGraph, source, target);
+
+  const isEntry = source === controlFlowGraph.entry.id;
+  const isSuccessExit = target === controlFlowGraph.successExit.id;
+  const isErrorExit = target === controlFlowGraph.errorExit.id;
+
+  const sourceNode = controlFlowGraph.getNodeById(source);
+  const targetNode = controlFlowGraph.getNodeById(target);
+
+  const mergedNode: Node<S> = new Node<S>(
+    source, // We use the id of node1 because the first node always contains the result of a control node (e.g. if, while, etc.) this is also where the instrumentation places the branch coverage
+    getNodeType(isEntry, isSuccessExit, isErrorExit),
+    sourceNode.label + "-" + targetNode.label,
+    [...sourceNode.statements, ...targetNode.statements],
+    {
+      ...sourceNode.metadata,
+      ...targetNode.metadata,
+      lineNumbers: [
+        ...sourceNode.metadata.lineNumbers,
+        ...targetNode.metadata.lineNumbers,
+      ],
+    }
+  );
+
+  const filteredNodes = [...controlFlowGraph.nodes.values()].filter(
+    (node) => node.id !== source && node.id !== target
+  );
+
+  const newNodesArray = [mergedNode, ...filteredNodes];
+
+  const newNodes = new Map<string, Node<S>>(
+    newNodesArray.map((node) => [node.id, node])
+  );
+
+  const removedEdges = controlFlowGraph.edges.filter(
+    (edge) => edge.source === source && edge.target === target
+  );
+
+  if (removedEdges.length !== 1) {
+    throw new Error(
+      exactlyOneEdgeShouldBeRemoved(source, target, removedEdges.length)
+    );
+  }
+
+  const newEdges = controlFlowGraph.edges
+    .filter((edge) => edge.id !== removedEdges[0].id)
+    .map((edge) => {
+      if (edge.source === target || edge.source === source) {
+        // second case should not exist as there is only one outgoing edge
+        return new Edge(
+          edge.id,
+          edge.type,
+          edge.label,
+          mergedNode.id,
+          edge.target,
+          edge.description
+        );
+      }
+
+      if (edge.target === source || edge.target === target) {
+        // second case should not exist as there is only one incoming edge
+        return new Edge(
+          edge.id,
+          edge.type,
+          edge.label,
+          edge.source,
+          mergedNode.id,
+          edge.description
+        );
+      }
+      return edge;
+    });
+
+  afterGuards(newNodes, newEdges, controlFlowGraph, source, target);
 
   return new ControlFlowGraph(
-    isEntry ? newNode : controlFlowGraph.entry,
-    isSuccessExit ? newNode : controlFlowGraph.successExit,
-    isErrorExit ? newNode : controlFlowGraph.errorExit,
+    isEntry ? mergedNode : controlFlowGraph.entry,
+    isSuccessExit ? mergedNode : controlFlowGraph.successExit,
+    isErrorExit ? mergedNode : controlFlowGraph.errorExit,
     newNodes,
     newEdges
   );

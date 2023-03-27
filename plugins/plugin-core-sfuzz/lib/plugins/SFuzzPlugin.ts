@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
-import { Encoding, SearchAlgorithm } from "@syntest/core";
-import { SFuzz } from "../algorithm/SFuzz";
 import {
-  SearchAlgorithmPlugin,
   SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
 } from "@syntest/base-testing-tool";
+import { Encoding, SearchAlgorithm } from "@syntest/core";
+
+import { SFuzz } from "../algorithm/SFuzz";
 
 /**
  * Plugin for the sFuzz search algorithm.

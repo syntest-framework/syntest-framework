@@ -16,9 +16,11 @@
  * limitations under the License.
  */
 
-import { Budget } from "./Budget";
+import { getLogger } from "@syntest/logging";
+
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+
+import { Budget } from "./Budget";
 
 /**
  * Budget for the number of iterations performed during the search process.
@@ -26,6 +28,8 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
  * @author Mitchell Olsthoorn
  */
 export class IterationBudget<T extends Encoding> implements Budget<T> {
+  static LOGGER = getLogger("IterationBudget");
+
   /**
    * The current number of iterations.
    * @protected
@@ -80,6 +84,7 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   reset(): void {
+    IterationBudget.LOGGER.silly("reset");
     this._currentIterations = 0;
     this._tracking = false;
   }
@@ -87,19 +92,22 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  initializationStarted(): void {}
+  initializationStarted(): void {
+    IterationBudget.LOGGER.silly("initializationStarted");
+  }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  initializationStopped(): void {}
+  initializationStopped(): void {
+    IterationBudget.LOGGER.silly("initializationStopped");
+  }
 
   /**
    * @inheritDoc
    */
   searchStarted(): void {
+    IterationBudget.LOGGER.silly("searchStarted");
     this._tracking = true;
   }
 
@@ -107,14 +115,15 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStopped(): void {
+    IterationBudget.LOGGER.silly("searchStopped");
     this._tracking = false;
   }
 
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  iteration(searchAlgorithm: SearchAlgorithm<T>): void {
+  iteration(): void {
+    IterationBudget.LOGGER.silly("iteration");
     if (this._tracking && this._currentIterations < this._maxIterations) {
       this._currentIterations++;
     }
@@ -123,6 +132,7 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
   /**
    * @inheritDoc
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  evaluation(encoding: T): void {}
+  evaluation(): void {
+    IterationBudget.LOGGER.silly("evaluation");
+  }
 }

@@ -16,35 +16,37 @@
  * limitations under the License.
  */
 import { ControlFlowProgram } from "@syntest/cfg-core";
-import { SubTarget, RootContext } from "../../lib";
+
 import { ActionDescription } from "../../lib/analysis/static/ActionDescription";
+import { RootContext } from "../../lib/analysis/static/RootContext";
+import { SubTarget } from "../../lib/analysis/static/Target";
 
 export class DummyRootContext extends RootContext {
-  getSource(path: string): string {
-    throw new Error("Method not implemented.");
+  private static METHOD_NOT_IMPLEMENTED = "Method not implemented.";
+
+  getSource(): string {
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
-  getSubTargets(path: string): SubTarget[] {
-    throw new Error("Method not implemented.");
+  getSubTargets(): SubTarget[] {
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
-  getActionDescriptionMap<A extends ActionDescription>(
-    path: string,
-    id: string
-  ): Map<string, A> {
-    throw new Error("Method not implemented.");
+  getActionDescriptionMap<A extends ActionDescription>(): Map<string, A> {
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
-  getActionDescriptionMaps<A extends ActionDescription>(
-    path: string
-  ): Map<string, Map<string, A>> {
-    throw new Error("Method not implemented.");
+  getActionDescriptionMaps<A extends ActionDescription>(): Map<
+    string,
+    Map<string, A>
+  > {
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
-  getControlFlowProgram<S>(path: string): ControlFlowProgram<S> {
-    throw new Error("Method not implemented.");
+  getControlFlowProgram<S>(): ControlFlowProgram<S> {
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
-  getAbstractSyntaxTree<S>(path: string): S {
-    throw new Error("Method not implemented.");
+  getAbstractSyntaxTree<S>(): S {
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
 
-  getDependencies(path: string): string[] {
-    throw new Error("Method not implemented.");
+  getDependencies(): string[] {
+    throw new Error(DummyRootContext.METHOD_NOT_IMPLEMENTED);
   }
 }
