@@ -1,6 +1,6 @@
 {
   "name": "@syntest/module",
-  "version": "0.1.0-beta.5",
+  "version": "0.1.0-beta.6",
   "description": "The module library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -46,9 +46,9 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.1.0-beta.1",
+    "@syntest/cli-graphics": "^0.1.0-beta.2",
     "@syntest/logging": "*",
-    "@syntest/metric": "^0.1.0-beta.0",
+    "@syntest/metric": "^0.1.0-beta.1",
     "global-modules": "2.0.0",
     "yargs": "^17.7.1"
   },
