@@ -52,8 +52,13 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     // Obtain the next front
     let currentFront: T[] = F[index];
 
-    // Add complete fronts to the population as long as they fit within the population size
     while (remain > 0 && remain >= currentFront.length) {
+      // Assign crowding distance to individuals
+      crowdingDistance(
+        currentFront,
+        this._objectiveManager.getCurrentObjectives()
+      );
+
       // Add the individuals of this front
       nextPopulation.push(...currentFront);
 
@@ -62,10 +67,11 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
       // Obtain the next front
       index++;
+
       currentFront = F[index];
     }
 
-    // If population is not full, fill it with best individuals of the last front (based on crowding distance)
+    // Remain is less than front(index).size, insert only the best one
     if (remain > 0 && currentFront.length > 0) {
       // front contains individuals to insert
       crowdingDistance(
@@ -73,12 +79,11 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         this._objectiveManager.getCurrentObjectives()
       );
 
-      // sort the individuals by crowding distance
+      // sort in descending order of crowding distance
       currentFront.sort(
         (a: T, b: T) => b.getCrowdingDistance() - a.getCrowdingDistance()
       );
 
-      // add the individuals to the population until the population is full
       for (const individual of currentFront) {
         if (remain === 0) break;
 
