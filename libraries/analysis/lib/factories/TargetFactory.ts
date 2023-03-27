@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Target } from "../Target";
 
-import { ControlFlowProgram } from "./ControlFlowProgram";
-
-export interface ControlFlowGraphFactory<S> {
-  convertAST(filePath: string, AST: S): ControlFlowProgram<S>;
+export interface TargetFactory<S> {
+  extract(filePath: string, AST: S): Target;
 }

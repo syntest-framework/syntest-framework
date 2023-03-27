@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/algorithms/edgeContraction";
-
-export * from "./lib/graph/ContractedControlFlowGraph";
-export * from "./lib/graph/ControlFlowGraph";
-export * from "./lib/graph/Edge";
-export * from "./lib/graph/EdgeType";
-export * from "./lib/graph/Node";
-export * from "./lib/graph/NodeType";
-
-export * from "./lib/ControlFlowFunction";
-export * from "./lib/ControlFlowProgram";
+export interface AbstractSyntaxTreeFactory<S> {
+  convert(filePath: string, source: string): S;
+}

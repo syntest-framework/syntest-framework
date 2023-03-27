@@ -1,10 +1,10 @@
 {
-  "name": "@syntest/plugin-core-graphing",
-  "version": "1.0.0-beta.6",
-  "description": "A listener plugin for the SynTest Core containing graphing functionalities",
+  "name": "@syntest/analysis",
+  "version": "0.0.0",
+  "description": "A analysis package",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "control-flow-graph"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
@@ -46,24 +46,16 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "*",
-    "@syntest/base-testing-tool": "*",
-    "@syntest/cfg-core": "*",
-    "@syntest/core": "*",
-    "@syntest/logging": "*",
-    "@syntest/metric": "^0.1.0-beta.0",
-    "@syntest/module": "*",
-    "d3": "6.7.0",
-    "jsdom": "^21.1.0"
+    "@syntest/logging": "^0.1.0-beta.4",
+    "lodash.clonedeep": "^4.5.0"
   },
   "engines": {
     "node": ">=16"
   },
-  "devDependencies": {
-    "@types/d3": "^7.4.0",
-    "@types/jsdom": "^21.1.1"
-  },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.7"
   }
 }

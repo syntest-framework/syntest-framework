@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-<%= YEAR %> Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,14 +15,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/algorithms/edgeContraction";
-
-export * from "./lib/graph/ContractedControlFlowGraph";
-export * from "./lib/graph/ControlFlowGraph";
-export * from "./lib/graph/Edge";
-export * from "./lib/graph/EdgeType";
-export * from "./lib/graph/Node";
-export * from "./lib/graph/NodeType";
-
-export * from "./lib/ControlFlowFunction";
-export * from "./lib/ControlFlowProgram";

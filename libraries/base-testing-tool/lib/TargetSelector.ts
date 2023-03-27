@@ -17,18 +17,15 @@
  */
 import * as path from "node:path";
 
+import { RootContext, SubTarget, Target } from "@syntest/analysis";
+import { Events } from "@syntest/core";
 import globby = require("globby");
 import TypedEventEmitter from "typed-emitter";
 
-import { Events } from "../../util/Events";
-
-import { RootContext } from "./RootContext";
-import { SubTarget, Target } from "./Target";
-
 export class TargetSelector {
-  private _rootContext: RootContext;
+  private _rootContext: RootContext<unknown>;
 
-  constructor(rootContext: RootContext) {
+  constructor(rootContext: RootContext<unknown>) {
     this._rootContext = rootContext;
   }
 

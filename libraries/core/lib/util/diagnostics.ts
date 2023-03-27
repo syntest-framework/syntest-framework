@@ -34,6 +34,3 @@ export const singletonAlreadySet = (name: string) =>
 
 export const emptyArray = (variableName: string) =>
   `'${variableName}' cannot be empty!`;
-
-export const pathNotInRootPath = (rootPath: string, path: string) =>
-  `The given path is not in the given root path!\nRootpath: ${rootPath}\nPath: ${path}`;

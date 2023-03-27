@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-export interface ActionDescription {
-  /**
-   * Name of the action
-   */
-  name: string;
+import { ControlFlowProgram } from "@syntest/cfg-core";
+
+export interface ControlFlowGraphFactory<S> {
+  convert(filePath: string, AST: S): ControlFlowProgram<S>;
 }

@@ -46,6 +46,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
+    "@syntest/analysis": "*",
     "@syntest/cfg-core": "*",
     "@syntest/logging": "*",
     "bignumber.js": "9.0.1",

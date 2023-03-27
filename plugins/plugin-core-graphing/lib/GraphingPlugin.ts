@@ -18,9 +18,10 @@
 
 import { writeFileSync } from "node:fs";
 
+import { RootContext } from "@syntest/analysis";
 import { CONFIG } from "@syntest/base-testing-tool";
 import { ControlFlowGraph } from "@syntest/cfg-core";
-import { Events, RootContext } from "@syntest/core";
+import { Events } from "@syntest/core";
 import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
@@ -78,7 +79,7 @@ export class GraphingPlugin extends ListenerPlugin {
   }
 
   controlFlowGraphResolvingComplete<S>(
-    rootContext: RootContext,
+    rootContext: RootContext<S>,
     cfg: ControlFlowGraph<S>
   ): void {
     const svgHtml = createSimulation(cfg);

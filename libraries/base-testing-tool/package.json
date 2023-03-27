@@ -46,6 +46,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
+    "@syntest/analysis": "*",
     "@syntest/core": "^0.4.0-beta.13",
     "@syntest/logging": "^0.1.0-beta.4",
     "@syntest/metric": "^0.1.0-beta.0",

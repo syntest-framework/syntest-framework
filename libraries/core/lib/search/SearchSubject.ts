@@ -17,10 +17,8 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram } from "@syntest/cfg-core";
-
-import { RootContext } from "../analysis/static/RootContext";
-import { Target } from "../analysis/static/Target";
 
 import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
@@ -41,7 +39,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * The root context.
    * @protected
    */
-  protected readonly _rootContext: RootContext;
+  protected readonly _rootContext: RootContext<unknown>;
 
   /**
    * Mapping of objectives to adjacent objectives
@@ -56,7 +54,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param rootContext RootContext of the subject
    * @protected
    */
-  protected constructor(target: Target, rootContext: RootContext) {
+  protected constructor(target: Target, rootContext: RootContext<unknown>) {
     this._target = target;
     this._rootContext = rootContext;
     this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();

@@ -16,12 +16,6 @@
  * limitations under the License.
  */
 
-// Static Analysis
-export * from "./lib/analysis/static/ActionDescription";
-export * from "./lib/analysis/static/RootContext";
-export * from "./lib/analysis/static/Target";
-export * from "./lib/analysis/static/TargetSelector";
-
 // Search
 export * from "./lib/search/Archive";
 export * from "./lib/search/Decoder";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2023-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,14 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/algorithms/edgeContraction";
 
-export * from "./lib/graph/ContractedControlFlowGraph";
-export * from "./lib/graph/ControlFlowGraph";
-export * from "./lib/graph/Edge";
-export * from "./lib/graph/EdgeType";
-export * from "./lib/graph/Node";
-export * from "./lib/graph/NodeType";
+/**
+ * This file is meant to provide consistent error messages throughout the tool.
+ */
+export const shouldNeverHappen = (bugLocation: string) =>
+  `This should never happen.\nThere is likely a bug in the ${bugLocation}.`;
 
-export * from "./lib/ControlFlowFunction";
-export * from "./lib/ControlFlowProgram";
+export const pathNotInRootPath = (rootPath: string, path: string) =>
+  `The given path is not in the given root path!\nRootpath: ${rootPath}\nPath: ${path}`;
