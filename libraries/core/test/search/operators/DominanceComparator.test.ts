@@ -17,9 +17,9 @@
  */
 import * as chai from "chai";
 
-import { DominanceComparator } from "../../../lib/search/comparators/DominanceComparator";
-import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
+import { DominanceComparator } from "../../../lib/comparators/DominanceComparator";
+import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
+import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 

@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import { prng } from "../../../util/prng";
 import { Encoding } from "../../Encoding";
+import { prng } from "../../util/prng";
 import { tournamentSelection } from "../selection/TournamentSelection";
 
 import { Procreation } from "./Procreation";

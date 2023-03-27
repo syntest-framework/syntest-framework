@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-import { shouldNeverHappen } from "../../util/diagnostics";
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
+import { shouldNeverHappen } from "../util/diagnostics";
 
 import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
 import { ApproachLevel } from "./heuristics/ApproachLevel";

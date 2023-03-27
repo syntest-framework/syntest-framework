@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Datapoint } from "../util/Datapoint";
+import { Datapoint } from "./util/Datapoint";
 
 /**
  * Results of an execution by the runner.

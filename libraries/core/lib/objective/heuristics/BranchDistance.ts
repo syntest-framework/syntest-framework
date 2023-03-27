@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { shouldNeverHappen } from "../../../util/diagnostics";
+import { shouldNeverHappen } from "../../util/diagnostics";
 
 export abstract class BranchDistance {
   /**

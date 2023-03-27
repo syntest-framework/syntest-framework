@@ -17,14 +17,14 @@
  */
 import * as chai from "chai";
 
-import { EncodingRunner } from "../../../lib/search/EncodingRunner";
-import { EncodingSampler } from "../../../lib/search/EncodingSampler";
-import { MOSAFamily } from "../../../lib/search/metaheuristics/evolutionary/MOSAFamily";
-import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
-import { UncoveredObjectiveManager } from "../../../lib/search/objective/managers/UncoveredObjectiveManager";
-import { SecondaryObjectiveComparator } from "../../../lib/search/objective/secondary/SecondaryObjectiveComparator";
-import { Crossover } from "../../../lib/search/operators/crossover/Crossover";
+import { EncodingRunner } from "../../../lib/EncodingRunner";
+import { EncodingSampler } from "../../../lib/EncodingSampler";
+import { MOSAFamily } from "../../../lib/metaheuristics/evolutionary/MOSAFamily";
+import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
+import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
+import { UncoveredObjectiveManager } from "../../../lib/objective/managers/UncoveredObjectiveManager";
+import { SecondaryObjectiveComparator } from "../../../lib/objective/secondary/SecondaryObjectiveComparator";
+import { Crossover } from "../../../lib/operators/crossover/Crossover";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";

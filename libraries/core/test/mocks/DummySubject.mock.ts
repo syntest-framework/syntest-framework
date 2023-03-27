@@ -18,9 +18,9 @@
 
 import { RootContext } from "@syntest/analysis";
 
-import { Encoding } from "../../lib/search/Encoding";
-import { ObjectiveFunction } from "../../lib/search/objective/ObjectiveFunction";
-import { SearchSubject } from "../../lib/search/SearchSubject";
+import { Encoding } from "../../lib/Encoding";
+import { ObjectiveFunction } from "../../lib/objective/ObjectiveFunction";
+import { SearchSubject } from "../../lib/SearchSubject";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
   protected objectives: ObjectiveFunction<T>[];

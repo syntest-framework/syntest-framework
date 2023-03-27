@@ -17,7 +17,7 @@
  */
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg-core";
 
-import { Datapoint } from "../../../util/Datapoint";
+import { Datapoint } from "../../util/Datapoint";
 
 export class ApproachLevel {
   public calculate<S>(

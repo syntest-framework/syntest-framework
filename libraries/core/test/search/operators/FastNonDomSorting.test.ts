@@ -17,9 +17,9 @@
  */
 import * as chai from "chai";
 
-import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
-import { fastNonDomSorting } from "../../../lib/search/operators/ranking/FastNonDomSorting";
+import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
+import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
+import { fastNonDomSorting } from "../../../lib/operators/ranking/FastNonDomSorting";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 

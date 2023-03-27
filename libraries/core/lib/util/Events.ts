@@ -19,11 +19,11 @@
 import { RootContext } from "@syntest/analysis";
 import { ControlFlowGraph } from "@syntest/cfg-core";
 
-import { BudgetManager } from "../search/budget/BudgetManager";
-import { Encoding } from "../search/Encoding";
-import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
-import { SearchSubject } from "../search/SearchSubject";
-import { TerminationManager } from "../search/termination/TerminationManager";
+import { BudgetManager } from "../budget/BudgetManager";
+import { Encoding } from "../Encoding";
+import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+import { SearchSubject } from "../SearchSubject";
+import { TerminationManager } from "../termination/TerminationManager";
 
 export type Events = {
   initializeStart: () => void;

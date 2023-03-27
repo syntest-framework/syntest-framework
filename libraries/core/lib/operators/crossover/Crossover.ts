@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../../search/Encoding";
+import { Encoding } from "../../Encoding";
 
 /**
  * Creates children swapping statements between the parents

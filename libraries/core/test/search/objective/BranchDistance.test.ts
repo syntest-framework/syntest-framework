@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import { BranchDistance } from "../../../lib/search/objective/heuristics/BranchDistance";
+import { BranchDistance } from "../../../lib/objective/heuristics/BranchDistance";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;

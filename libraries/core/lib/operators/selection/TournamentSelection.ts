@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-import { minimumValue } from "../../../util/diagnostics";
-import { prng } from "../../../util/prng";
 import { Encoding } from "../../Encoding";
+import { minimumValue } from "../../util/diagnostics";
+import { prng } from "../../util/prng";
 
 /**
  * This function selects the individual for reproduction using tournament selection

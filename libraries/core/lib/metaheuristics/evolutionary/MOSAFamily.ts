@@ -18,11 +18,11 @@
 
 import { getLogger } from "@syntest/logging";
 
-import { shouldNeverHappen } from "../../../util/diagnostics";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { Encoding } from "../../Encoding";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
+import { shouldNeverHappen } from "../../util/diagnostics";
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 

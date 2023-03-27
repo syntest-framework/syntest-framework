@@ -19,7 +19,6 @@
 import { getLogger } from "@syntest/logging";
 import TypedEmitter from "typed-emitter";
 
-import { Events } from "../../util/Events";
 import { Archive } from "../Archive";
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
@@ -27,6 +26,7 @@ import { ExecutionResult } from "../ExecutionResult";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { SearchSubject } from "../SearchSubject";
 import { TerminationManager } from "../termination/TerminationManager";
+import { Events } from "../util/Events";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.

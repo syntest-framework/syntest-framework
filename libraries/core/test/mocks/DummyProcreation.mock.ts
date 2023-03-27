@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../lib/search/Encoding";
-import { Procreation } from "../../lib/search/operators/procreation/Procreation";
+import { Encoding } from "../../lib/Encoding";
+import { Procreation } from "../../lib/operators/procreation/Procreation";
 
 export class DummyProcreation<E extends Encoding> extends Procreation<E> {
   generateOffspringPopulation(populationSize: number, population: E[]): E[] {
