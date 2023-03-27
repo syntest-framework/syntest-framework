@@ -25,7 +25,6 @@ import { SearchSubject } from "../SearchSubject";
  * @author Mitchell Olsthoorn
  */
 export interface ObjectiveFunction<T extends Encoding> {
-
   /**
    * Calculate distance from the objective to an encoding.
    *

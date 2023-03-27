@@ -17,7 +17,6 @@
  */
 
 export enum EdgeType {
-
   /**
    * A normal edge is an edge that is neither a back edge nor an abnormal edge. Normal edges are typical of control flow.
    */

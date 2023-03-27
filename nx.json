@@ -53,31 +53,31 @@
       "outputs": ["{projectRoot}/dist"]
     },
     "format": {
-      "inputs": ["build-system", "prettier"],
+      "inputs": ["build-system", "prettier", "typescript"],
       "outputs": ["{projectRoot}/lib"]
     },
     "format:check": {
-      "inputs": ["build-system", "prettier"]
+      "inputs": ["build-system", "prettier", "typescript"]
     },
     "lint": {
-      "inputs": ["build-system", "eslint"]
+      "inputs": ["build-system", "eslint", "typescript"]
     },
     "lint:fix": {
-      "inputs": ["build-system", "eslint"],
+      "inputs": ["build-system", "eslint", "typescript"],
       "outputs": ["{projectRoot}/lib"]
     },
     "test": {
       "dependsOn": ["^build"],
-      "inputs": ["build-system", "typescript", "mocha"]
+      "inputs": ["build-system", "mocha", "typescript"]
     },
     "test:coverage": {
       "dependsOn": ["build", "^build"],
-      "inputs": ["build-system", "typescript", "mocha"],
+      "inputs": ["build-system", "mocha", "typescript"],
       "outputs": ["{projectRoot}/coverage"]
     },
     "test:coverage:ci": {
       "dependsOn": ["build", "^build"],
-      "inputs": ["build-system", "typescript", "mocha"],
+      "inputs": ["build-system", "mocha", "typescript"],
       "outputs": ["{projectRoot}/coverage"]
     }
   }

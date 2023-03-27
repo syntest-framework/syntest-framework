@@ -26,7 +26,6 @@ import { BudgetListener } from "./BudgetListener";
  * @author Mitchell Olsthoorn
  */
 export interface Budget<T extends Encoding> extends BudgetListener<T> {
-
   /**
    * Return the remaining budget.
    */

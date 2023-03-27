@@ -43,7 +43,6 @@ export abstract class Module extends Extension {
  * This is called 'merging' it allows an abstract class to have optional methods.
  */
 export interface Module {
-
   /**
    * Called after the initialization step
    */

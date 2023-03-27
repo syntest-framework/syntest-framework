@@ -170,7 +170,6 @@ export class Tool extends Extension implements Yargs.CommandModule {
 }
 
 export interface Tool {
-
   /**
    * Should return a list of metrics that are stored by this tool
    */

@@ -36,7 +36,6 @@ export abstract class Plugin extends Extension {
  * This is called 'merging' it allows an abstract class to have optional methods.
  */
 export interface Plugin {
-
   /**
    * Should return a list of metrics that are stored by this plugin
    */

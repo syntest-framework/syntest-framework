@@ -24,7 +24,6 @@ import { Datapoint } from "../util/Datapoint";
  * @author Mitchell Olsthoorn
  */
 export interface ExecutionResult {
-
   /**
    * Determine if a specific id has been covered in the traces.
    *

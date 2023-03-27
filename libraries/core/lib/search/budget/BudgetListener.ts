@@ -27,7 +27,6 @@ import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
  * @author Mitchell Olsthoorn
  */
 export interface BudgetListener<T extends Encoding> {
-
   /**
    * Start initialization budget tracking.
    */

@@ -28,7 +28,6 @@ import { Encoding } from "./Encoding";
  * @param D the Object type to decode the encoding to
  */
 export interface Decoder<E extends Encoding, D> {
-
   /**
    * Creates a decoded version of an encoding
    *
