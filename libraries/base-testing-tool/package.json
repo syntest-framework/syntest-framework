@@ -1,6 +1,6 @@
 {
   "name": "@syntest/base-testing-tool",
-  "version": "0.2.0-beta.11",
+  "version": "0.2.0-beta.14",
   "description": "The base testing tool of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -47,10 +47,10 @@
   },
   "dependencies": {
     "@syntest/analysis": "*",
-    "@syntest/core": "^0.4.0-beta.13",
-    "@syntest/logging": "^0.1.0-beta.4",
-    "@syntest/metric": "^0.1.0-beta.0",
-    "@syntest/module": "^0.1.0-beta.5",
+    "@syntest/core": "^0.4.0-beta.16",
+    "@syntest/logging": "^0.1.0-beta.5",
+    "@syntest/metric": "^0.1.0-beta.1",
+    "@syntest/module": "^0.1.0-beta.6",
     "yargs": "^17.7.1"
   },
   "engines": {

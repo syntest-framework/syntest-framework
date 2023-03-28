@@ -53,6 +53,12 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let currentFront: T[] = F[index];
 
     while (remain > 0 && remain >= currentFront.length) {
+      // Assign crowding distance to individuals
+      crowdingDistance(
+        currentFront,
+        this._objectiveManager.getCurrentObjectives()
+      );
+
       // Add the individuals of this front
       nextPopulation.push(...currentFront);
 
@@ -73,10 +79,10 @@ export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         this._objectiveManager.getCurrentObjectives()
       );
 
-      currentFront.sort(function (a: T, b: T) {
-        // sort in descending order of crowding distance
-        return b.getCrowdingDistance() - a.getCrowdingDistance();
-      });
+      // sort in descending order of crowding distance
+      currentFront.sort(
+        (a: T, b: T) => b.getCrowdingDistance() - a.getCrowdingDistance()
+      );
 
       for (const individual of currentFront) {
         if (remain === 0) break;
