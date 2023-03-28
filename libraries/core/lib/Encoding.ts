@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-
 import { Decoder } from "./Decoder";
 import { EncodingSampler } from "./EncodingSampler";
 import { ExecutionResult } from "./ExecutionResult";
