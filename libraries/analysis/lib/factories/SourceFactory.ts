@@ -18,20 +18,26 @@
 import { existsSync, readFileSync } from "node:fs";
 import path = require("node:path");
 
+import {
+  fileDoesNotExist,
+  fileDoesNotHaveExtension,
+  fileIsNotAFile,
+} from "../diagnostics";
+
 export class SourceFactory {
   produce(filePath: string): string {
     const parsed = path.parse(filePath);
 
     if (!parsed.base) {
-      throw new Error(`File '${filePath}' is not a file`);
+      throw new Error(fileIsNotAFile(filePath));
     }
 
     if (!parsed.ext) {
-      throw new Error(`File '${filePath}' does not have an extension`);
+      throw new Error(fileDoesNotHaveExtension(filePath));
     }
 
     if (!existsSync(filePath)) {
-      throw new Error(`File ${filePath} does not exist`);
+      throw new Error(fileDoesNotExist(filePath));
     }
 
     return readFileSync(filePath, "utf8");

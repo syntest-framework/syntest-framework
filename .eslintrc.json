@@ -4,13 +4,6 @@
     "mocha": true,
     "node": true
   },
-  "overrides": [
-    {
-      "files": ["*.json"],
-      "parser": "eslint-plugin-package-json-dependencies",
-      "plugins": ["package-json-dependencies"]
-    }
-  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",

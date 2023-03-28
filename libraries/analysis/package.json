@@ -1,7 +1,7 @@
 {
   "name": "@syntest/analysis",
   "version": "0.0.0",
-  "description": "A analysis package",
+  "description": "An analysis package",
   "keywords": [
     "syntest",
     "control-flow-graph"

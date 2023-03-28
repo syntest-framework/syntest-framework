@@ -24,3 +24,12 @@ export const shouldNeverHappen = (bugLocation: string) =>
 
 export const pathNotInRootPath = (rootPath: string, path: string) =>
   `The given path is not in the given root path!\nRootpath: ${rootPath}\nPath: ${path}`;
+
+export const fileIsNotAFile = (filePath: string) =>
+  `The given path is not a file!\nPath: ${filePath}`;
+
+export const fileDoesNotExist = (filePath: string) =>
+  `The given file does not exist!\nPath: ${filePath}`;
+
+export const fileDoesNotHaveExtension = (filePath: string) =>
+  `The given file does not have an extension!\nPath: ${filePath}`;
