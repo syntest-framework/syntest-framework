@@ -1,10 +1,10 @@
 {
-  "name": "@syntest/base-testing-tool",
-  "version": "0.2.0-beta.14",
-  "description": "The base testing tool of the SynTest Framework",
+  "name": "@syntest/analysis",
+  "version": "0.0.0",
+  "description": "An analysis package",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "control-flow-graph"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
@@ -46,17 +46,16 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "*",
-    "@syntest/core": "^0.4.0-beta.16",
-    "@syntest/logging": "^0.1.0-beta.5",
-    "@syntest/metric": "^0.1.0-beta.1",
-    "@syntest/module": "^0.1.0-beta.6",
-    "yargs": "^17.7.1"
+    "@syntest/logging": "^0.1.0-beta.4",
+    "lodash.clonedeep": "^4.5.0"
   },
   "engines": {
     "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.7"
   }
 }

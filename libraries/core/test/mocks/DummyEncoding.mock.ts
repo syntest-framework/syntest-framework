@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../lib/search/Encoding";
-import { BranchObjectiveFunction } from "../../lib/search/objective/BranchObjectiveFunction";
+import { Encoding } from "../../lib/Encoding";
+import { BranchObjectiveFunction } from "../../lib/objective/BranchObjectiveFunction";
 
 export class DummyEncodingMock extends Encoding {
   constructor() {

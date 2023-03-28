@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
+import { RootContext } from "@syntest/analysis";
 import { ControlFlowGraph } from "@syntest/cfg-core";
 
-import { RootContext } from "../analysis/static/RootContext";
-import { BudgetManager } from "../search/budget/BudgetManager";
-import { Encoding } from "../search/Encoding";
-import { SearchAlgorithm } from "../search/metaheuristics/SearchAlgorithm";
-import { SearchSubject } from "../search/SearchSubject";
-import { TerminationManager } from "../search/termination/TerminationManager";
+import { BudgetManager } from "../budget/BudgetManager";
+import { Encoding } from "../Encoding";
+import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+import { SearchSubject } from "../SearchSubject";
+import { TerminationManager } from "../termination/TerminationManager";
 
 export type Events = {
   initializeStart: () => void;
@@ -80,21 +80,23 @@ export type Events = {
     terminationManager: TerminationManager
   ) => void;
 
-  targetLoadStart: (rootContext: RootContext) => void;
-  targetLoadComplete: (rootContext: RootContext) => void;
-  sourceResolvingStart: (rootContext: RootContext) => void;
-  sourceResolvingComplete: (rootContext: RootContext) => void;
-  targetResolvingStart: (rootContext: RootContext) => void;
-  targetResolvingComplete: (rootContext: RootContext) => void;
-  functionMapResolvingStart: (rootContext: RootContext) => void;
-  functionMapResolvingComplete: (rootContext: RootContext) => void;
-  dependencyResolvingStart: (rootContext: RootContext) => void;
-  dependencyResolvingComplete: (rootContext: RootContext) => void;
-  controlFlowGraphResolvingStart: (rootContext: RootContext) => void;
+  targetLoadStart: (rootContext: RootContext<unknown>) => void;
+  targetLoadComplete: (rootContext: RootContext<unknown>) => void;
+  sourceResolvingStart: (rootContext: RootContext<unknown>) => void;
+  sourceResolvingComplete: (rootContext: RootContext<unknown>) => void;
+  targetResolvingStart: (rootContext: RootContext<unknown>) => void;
+  targetResolvingComplete: (rootContext: RootContext<unknown>) => void;
+  functionMapResolvingStart: (rootContext: RootContext<unknown>) => void;
+  functionMapResolvingComplete: (rootContext: RootContext<unknown>) => void;
+  dependencyResolvingStart: (rootContext: RootContext<unknown>) => void;
+  dependencyResolvingComplete: (rootContext: RootContext<unknown>) => void;
+  controlFlowGraphResolvingStart: (rootContext: RootContext<unknown>) => void;
   controlFlowGraphResolvingComplete: <S>(
-    rootContext: RootContext,
+    rootContext: RootContext<unknown>,
     cfg: ControlFlowGraph<S>
   ) => void;
-  abstractSyntaxTreeResolvingStart: (rootContext: RootContext) => void;
-  abstractSyntaxTreeResolvingComplete: (rootContext: RootContext) => void;
+  abstractSyntaxTreeResolvingStart: (rootContext: RootContext<unknown>) => void;
+  abstractSyntaxTreeResolvingComplete: (
+    rootContext: RootContext<unknown>
+  ) => void;
 };

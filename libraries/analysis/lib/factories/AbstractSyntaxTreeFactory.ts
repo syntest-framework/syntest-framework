@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Javascript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../lib/Encoding";
-import { Procreation } from "../../lib/operators/procreation/Procreation";
-
-export class DummyProcreation<E extends Encoding> extends Procreation<E> {
-  generateOffspringPopulation(populationSize: number, population: E[]): E[] {
-    return population;
-  }
+export interface AbstractSyntaxTreeFactory<S> {
+  convert(filePath: string, source: string): S;
 }

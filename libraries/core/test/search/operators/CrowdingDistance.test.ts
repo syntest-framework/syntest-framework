@@ -17,10 +17,10 @@
  */
 import * as chai from "chai";
 
-import { BranchObjectiveFunction } from "../../../lib/search/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/search/objective/heuristics/ApproachLevel";
-import { ObjectiveFunction } from "../../../lib/search/objective/ObjectiveFunction";
-import { crowdingDistance } from "../../../lib/search/operators/ranking/CrowdingDistance";
+import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
+import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
+import { ObjectiveFunction } from "../../../lib/objective/ObjectiveFunction";
+import { crowdingDistance } from "../../../lib/operators/ranking/CrowdingDistance";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 

@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../lib/Encoding";
-import { Procreation } from "../../lib/operators/procreation/Procreation";
+export * from "./lib/factories/AbstractSyntaxTreeFactory";
+export * from "./lib/factories/ControlFlowGraphFactory";
+export * from "./lib/factories/DependencyFactory";
+export * from "./lib/factories/SourceFactory";
+export * from "./lib/factories/TargetFactory";
 
-export class DummyProcreation<E extends Encoding> extends Procreation<E> {
-  generateOffspringPopulation(populationSize: number, population: E[]): E[] {
-    return population;
-  }
-}
+export * from "./lib/RootContext";
+export * from "./lib/Target";

@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../lib/search/Encoding";
-import { MOSAFamily } from "../../lib/search/metaheuristics/evolutionary/MOSAFamily";
+import { Encoding } from "../../lib/Encoding";
+import { MOSAFamily } from "../../lib/metaheuristics/evolutionary/MOSAFamily";
 
 import { DummySearchSubject } from "./DummySubject.mock";
 

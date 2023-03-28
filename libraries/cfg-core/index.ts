@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export * from "./lib/algorithms/edgeContraction";
 
 export * from "./lib/graph/ContractedControlFlowGraph";
@@ -25,5 +26,4 @@ export * from "./lib/graph/Node";
 export * from "./lib/graph/NodeType";
 
 export * from "./lib/ControlFlowFunction";
-export * from "./lib/ControlFlowGraphFactory";
 export * from "./lib/ControlFlowProgram";

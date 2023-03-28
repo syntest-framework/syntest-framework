@@ -22,15 +22,14 @@
 export const shouldNeverHappen = (bugLocation: string) =>
   `This should never happen.\nThere is likely a bug in the ${bugLocation}.`;
 
-export const minimumValue = (name: string, minimum: number, actual: number) =>
-  `The '${name}' should be greater than or equal to ${minimum} but is ${actual}.`;
-export const maximumValue = (name: string, maximum: number, actual: number) =>
-  `The '${name}' should be smaller than or equal to ${maximum} but is ${actual}.`;
+export const pathNotInRootPath = (rootPath: string, path: string) =>
+  `The given path is not in the given root path!\nRootpath: ${rootPath}\nPath: ${path}`;
 
-export const singletonNotSet = (name: string) =>
-  `The ${name} singleton has not been set yet!`;
-export const singletonAlreadySet = (name: string) =>
-  `The ${name} singleton has already been set!`;
+export const fileIsNotAFile = (filePath: string) =>
+  `The given path is not a file!\nPath: ${filePath}`;
 
-export const emptyArray = (variableName: string) =>
-  `'${variableName}' cannot be empty!`;
+export const fileDoesNotExist = (filePath: string) =>
+  `The given file does not exist!\nPath: ${filePath}`;
+
+export const fileDoesNotHaveExtension = (filePath: string) =>
+  `The given file does not have an extension!\nPath: ${filePath}`;

@@ -61,6 +61,7 @@ jobs:
       matrix:
         # Collect coverage for all packages and plugins
         package:
+          - libraries/analysis
           - libraries/base-testing-tool
           - libraries/cfg-core
           - libraries/cli-graphics
