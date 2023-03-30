@@ -71,11 +71,7 @@ describe("CFG suite", function () {
     expect(
       cfg.getNodeByPredicate(<S>(n: Node<S>) => n.id === "2")
     ).to.deep.equal(branchNode);
-    expect(
-      cfg.getNodeByPredicate(<S>(n: Node<S>) =>
-        n.metadata.lineNumbers.includes(26)
-      )
-    ).to.deep.equal(exit);
+    expect(cfg.getNodesByLineNumbers(new Set([26]))[0]).to.deep.equal(exit);
   });
 
   it("filterNodesByPredicates test", () => {
@@ -100,23 +96,12 @@ describe("CFG suite", function () {
     expect(
       cfg.getNodesByPredicates(<S>(n: Node<S>) => n.id === "2")
     ).to.deep.equal([branchNode]);
-    expect(
-      cfg.getNodesByPredicates(<S>(n: Node<S>) =>
-        n.metadata.lineNumbers.includes(26)
-      )
-    ).to.deep.equal([entry, exit]);
-    expect(
-      cfg.getNodesByPredicates(
-        <S>(n: Node<S>) => n.metadata.lineNumbers.includes(26),
-        <S>(n: Node<S>) => n.type === NodeType.ENTRY
-      )
-    ).to.deep.equal([entry]);
-    expect(
-      cfg.getNodesByPredicates(
-        <S>(n: Node<S>) => n.metadata.lineNumbers.includes(26),
-        <S>(n: Node<S>) => n.id === "1"
-      )
-    ).to.deep.equal([exit]);
+    expect(cfg.getNodesByLineNumbers(new Set([26]))[0]).to.deep.equal([
+      entry,
+      exit,
+    ]);
+    expect(cfg.getNodeOfTypeByLine(26, NodeType.ENTRY)).to.deep.equal([entry]);
+    expect(cfg.getNodeById("1")).to.deep.equal([exit]);
   });
 
   it("getNodeById test", () => {

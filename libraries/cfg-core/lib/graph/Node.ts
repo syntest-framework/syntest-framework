@@ -17,24 +17,6 @@
  */
 import { NodeType } from "./NodeType";
 
-export interface Location {
-  start: {
-    line: number;
-    column: number;
-    index: number;
-  };
-  end: {
-    line: number;
-    column: number;
-    index: number;
-  };
-}
-export interface Statement<S> {
-  id: string;
-  location: Location;
-  statement: S;
-}
-
 /**
  * Represents a basic block in a control flow graph.
  */
@@ -69,5 +51,23 @@ export class Node<S> {
 
 export type MetaData = {
   readonly [key: string]: unknown;
-  readonly lineNumbers: number[];
 };
+
+export interface Location {
+  readonly start: {
+    readonly line: number;
+    readonly column: number;
+    readonly index: number;
+  };
+  readonly end: {
+    readonly line: number;
+    readonly column: number;
+    readonly index: number;
+  };
+}
+export interface Statement<S> {
+  readonly id: string;
+  readonly location: Location;
+  readonly statement: S;
+  readonly statementAsText: string;
+}

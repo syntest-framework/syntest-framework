@@ -174,14 +174,27 @@ export class ControlFlowGraph<S> {
   // returning only nodes that contain AT LEAST ONE OF the given line numbers
   getNodesByLineNumbers(lineNumbers: Set<number>): Node<S>[] {
     return [...this._nodes.values()].filter((node) =>
-      node.metadata.lineNumbers.some((nodeLine) => lineNumbers.has(nodeLine))
+      // maybe should check in between
+      node.statements.some(
+        (statement) =>
+          lineNumbers.has(statement.location.start.line) ||
+          lineNumbers.has(statement.location.end.line)
+      )
     );
   }
 
   // Returns Node that contains specified line number and is of a given type
   getNodeOfTypeByLine(lineNumber: number, type: NodeType): Node<S> {
     return [...this._nodes.values()].find((n: Node<S>) => {
-      return n.type === type && n.metadata.lineNumbers.includes(lineNumber);
+      // TODO maybe should check in between?
+      return (
+        n.type === type &&
+        n.statements.some(
+          (statement) =>
+            statement.location.start.line === lineNumber ||
+            statement.location.end.line === lineNumber
+        )
+      );
     });
   }
 
