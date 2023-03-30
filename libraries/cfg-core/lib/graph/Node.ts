@@ -17,6 +17,24 @@
  */
 import { NodeType } from "./NodeType";
 
+export interface Location {
+  start: {
+    line: number;
+    column: number;
+    index: number;
+  };
+  end: {
+    line: number;
+    column: number;
+    index: number;
+  };
+}
+export interface Statement<S> {
+  id: string;
+  location: Location;
+  statement: S;
+}
+
 /**
  * Represents a basic block in a control flow graph.
  */
@@ -29,14 +47,14 @@ export class Node<S> {
   /**
    * The ordered list of statements in this node.
    */
-  readonly statements: S[];
+  readonly statements: Statement<S>[];
   readonly metadata: MetaData;
 
   constructor(
     id: string,
     type: NodeType,
     label: string,
-    statements: S[],
+    statements: Statement<S>[],
     metadata: MetaData,
     description?: string
   ) {
