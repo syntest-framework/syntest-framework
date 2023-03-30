@@ -25,10 +25,12 @@ export function cfgToD3Graph<S>(
   let count = 0;
 
   const nodes = [...cfg.nodes.values()].map((n: Node<S>) => {
-    let name = `(${n.metadata.lineNumbers.join(", ")})`;
+    let name = `(${n.statements.map((s) => s.location.start.line).join(", ")})`;
 
     if (n.description && n.description.length > 0) {
-      name = `(${n.metadata.lineNumbers.join(", ")}: ${n.description})`;
+      name = `(${n.statements.map((s) => s.location.start.line).join(", ")}: ${
+        n.description
+      })`;
     }
     name += `\n${n.label}`;
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

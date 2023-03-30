@@ -18,7 +18,7 @@
 import * as chai from "chai";
 
 import { ControlFlowGraph } from "../lib/graph/ControlFlowGraph";
-import { Node } from "../lib/graph/Node";
+import { Node, Statement } from "../lib/graph/Node";
 import { NodeType } from "../lib/graph/NodeType";
 
 const expect = chai.expect;
@@ -36,8 +36,21 @@ describe("CFG Immutability check", function () {
           String.fromCodePoint(index),
           NodeType.NORMAL,
           String.fromCodePoint(index),
-          [],
-          { lineNumbers: [26] }
+          [<Statement<unknown>>(<unknown>{
+              location: {
+                start: {
+                  line: 26,
+                  column: 0,
+                  index: 0,
+                },
+                end: {
+                  line: 26,
+                  column: 0,
+                  index: 0,
+                },
+              },
+            })],
+          {}
         )
       );
     }
@@ -49,16 +62,16 @@ describe("CFG Immutability check", function () {
       []
     );
     const rootNode = cfg.entry;
-    expect(rootNode.metadata.lineNumbers).to.empty;
+    expect(rootNode.statements).to.empty;
 
     // nodes.at(0)!.lines = [23]; // <- this will not compile because of readonly
-    expect(rootNode.metadata.lineNumbers).to.empty;
+    expect(rootNode.statements).to.empty;
 
     // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
     nodes.push(
       new Node("dummy", NodeType.NORMAL, "dummy", [], { lineNumbers: [] })
     );
-    expect(cfg.getNodeById("A")?.metadata.lineNumbers).to.eql([26]);
+    expect(cfg.getNodeById("A")?.statements[0].location.start.line).to.eql(26);
     expect(cfg.nodes.size).to.not.equal(nodes.length);
 
     // expect(cfg.get_nodes().at(0)?.lines = [23]).to.throw(); <- this will not compile
