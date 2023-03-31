@@ -29,14 +29,14 @@ export class Node<S> {
   /**
    * The ordered list of statements in this node.
    */
-  readonly statements: S[];
+  readonly statements: Statement<S>[];
   readonly metadata: MetaData;
 
   constructor(
     id: string,
     type: NodeType,
     label: string,
-    statements: S[],
+    statements: Statement<S>[],
     metadata: MetaData,
     description?: string
   ) {
@@ -51,5 +51,23 @@ export class Node<S> {
 
 export type MetaData = {
   readonly [key: string]: unknown;
-  readonly lineNumbers: number[];
 };
+
+export interface Location {
+  readonly start: {
+    readonly line: number;
+    readonly column: number;
+    readonly index: number;
+  };
+  readonly end: {
+    readonly line: number;
+    readonly column: number;
+    readonly index: number;
+  };
+}
+export interface Statement<S> {
+  readonly id: string;
+  readonly location: Location;
+  readonly statement: S;
+  readonly statementAsText: string;
+}

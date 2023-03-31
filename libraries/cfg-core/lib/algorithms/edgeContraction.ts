@@ -209,10 +209,6 @@ function mergeNodes<S>(
     {
       ...sourceNode.metadata,
       ...targetNode.metadata,
-      lineNumbers: [
-        ...sourceNode.metadata.lineNumbers,
-        ...targetNode.metadata.lineNumbers,
-      ],
     }
   );
 
