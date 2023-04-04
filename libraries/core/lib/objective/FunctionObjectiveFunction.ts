@@ -35,7 +35,6 @@ export class FunctionObjectiveFunction<
 > extends ControlFlowBasedObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
-  protected _line: number;
 
   /**
    * Constructor.
@@ -48,13 +47,11 @@ export class FunctionObjectiveFunction<
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
     subject: SearchSubject<T>,
-    id: string,
-    line: number
+    id: string
   ) {
     super(approachLevel, branchDistance);
     this._subject = subject;
     this._id = id;
-    this._line = line;
   }
 
   /**
