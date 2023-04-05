@@ -75,6 +75,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = <Crossover<DummyEncodingMock>>{};
     const mockedProcreation = new DummyProcreation(
       mockedCrossover,
+      (sampler, encoding) => encoding.mutate(),
       mockedSampler
     );
 
@@ -107,7 +108,13 @@ describe("Test MOSA", function () {
     const ind5 = new DummyEncodingMock();
     ind5.setDummyEvaluation([...objectives], [5, 5]);
 
-    const mockedProcreation = new DummyProcreation(undefined, undefined);
+    const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = <Crossover<DummyEncodingMock>>{};
+    const mockedProcreation = new DummyProcreation(
+      mockedCrossover,
+      (sampler, encoding) => encoding.mutate(),
+      mockedSampler
+    );
 
     const mosa = new MOSAFamily(
       new UncoveredObjectiveManager(
@@ -150,6 +157,7 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover(0.8, 0.8);
     const mockedProcreation = new DummyProcreation(
       mockedCrossover,
+      (sampler, encoding) => encoding.mutate(),
       mockedSampler
     );
 
@@ -196,9 +204,9 @@ describe("Test MOSA", function () {
     const mockedCrossover = new DummyCrossover(0.8, 0.8);
     const mockedProcreation = new DummyProcreation(
       mockedCrossover,
+      (sampler, encoding) => encoding.mutate(),
       mockedSampler
     );
-
     const mosa = new MockedMOSA(
       new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,

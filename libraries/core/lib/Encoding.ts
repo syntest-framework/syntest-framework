@@ -56,7 +56,7 @@ export abstract class Encoding {
     this._assertions = new Map();
   }
 
-  abstract mutate<E extends Encoding>(sampler: EncodingSampler<E>): E;
+  abstract mutate(sampler: EncodingSampler<Encoding>): Encoding;
 
   abstract hashCode(decoder: Decoder<Encoding, string>): number;
 
@@ -88,7 +88,7 @@ export abstract class Encoding {
     this._assertions = value;
   }
 
-  abstract copy<E extends Encoding>(): E;
+  abstract copy(): Encoding;
 
   /**
    * Return the execution result.
