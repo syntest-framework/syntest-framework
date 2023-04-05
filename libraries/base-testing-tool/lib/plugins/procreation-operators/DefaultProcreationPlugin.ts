@@ -32,6 +32,10 @@ export class DefaultProcreationPlugin<
   }
 
   createProcreationOperator(options: ProcreationOptions<T>): Procreation<T> {
-    return new DefaultProcreation(options.crossover, options.sampler);
+    return new DefaultProcreation(
+      options.crossover,
+      options.mutateFunction,
+      options.sampler
+    );
   }
 }

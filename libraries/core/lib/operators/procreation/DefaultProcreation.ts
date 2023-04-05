@@ -38,12 +38,12 @@ export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
         const children = this.crossover.crossOver([parentA, parentB]);
 
         for (const child of children) {
-          offspring.push(child.copy().mutate(this.sampler));
+          offspring.push(this.mutateFunction(this.sampler, child));
         }
       } else {
         offspring.push(
-          parentA.copy().mutate(this.sampler),
-          parentB.copy().mutate(this.sampler)
+          this.mutateFunction(this.sampler, parentA),
+          this.mutateFunction(this.sampler, parentB)
         );
       }
     }

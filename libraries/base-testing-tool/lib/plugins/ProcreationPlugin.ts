@@ -27,6 +27,7 @@ import { PluginType } from "./PluginType";
 
 export type ProcreationOptions<T extends Encoding> = {
   crossover: Crossover<T>;
+  mutateFunction: (sampler: EncodingSampler<T>, encoding: T) => T;
   sampler: EncodingSampler<T>;
 };
 
