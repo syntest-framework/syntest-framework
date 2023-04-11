@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { UserInterface } from "@syntest/cli-graphics";
+import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
 
 import { SearchMetricListener } from "./plugins/listeners/SearchMetricListener";
@@ -32,7 +34,12 @@ import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 
 export abstract class TestingToolModule extends Module {
-  register(moduleManager: ModuleManager): void {
+  override register(
+    moduleManager: ModuleManager,
+    _metricManager: MetricManager,
+    _userInterface: UserInterface,
+    _modules: Module[]
+  ): void {
     moduleManager.registerPlugin(this.name, new SearchMetricListener());
 
     moduleManager.registerPlugin(this.name, new SimpleObjectiveManagerPlugin());
