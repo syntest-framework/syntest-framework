@@ -195,8 +195,4 @@ export class RootContext<S> {
 
     return this._dependenciesMap.get(absolutePath);
   }
-
-  get targets(): Map<string, Target> {
-    return this._targetMap;
-  }
 }
