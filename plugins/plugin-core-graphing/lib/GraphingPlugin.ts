@@ -19,7 +19,6 @@
 import { writeFileSync } from "node:fs";
 
 import { RootContext } from "@syntest/analysis";
-import { CONFIG } from "@syntest/base-testing-tool";
 import { ControlFlowGraph } from "@syntest/cfg-core";
 import { Events } from "@syntest/core";
 import { ListenerPlugin } from "@syntest/module";
@@ -84,7 +83,7 @@ export class GraphingPlugin extends ListenerPlugin {
   ): void {
     const svgHtml = createSimulation(cfg);
 
-    const base = (<GraphOptions>(<unknown>CONFIG)).cfgDirectory;
+    const base = (<GraphOptions>(<unknown>this.args)).cfgDirectory;
     const path = `${base}/test.svg`;
     writeFileSync(path, svgHtml);
   }

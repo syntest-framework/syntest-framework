@@ -18,7 +18,6 @@
 
 import { mkdirSync } from "node:fs";
 
-import { CONFIG } from "@syntest/base-testing-tool";
 import { Module, ModuleManager } from "@syntest/module";
 
 import { GraphingPlugin, GraphOptions } from "./GraphingPlugin";
@@ -34,7 +33,7 @@ export default class GraphingModule extends Module {
   }
 
   override prepare(): void {
-    mkdirSync((<GraphOptions>(<unknown>CONFIG)).cfgDirectory, {
+    mkdirSync((<GraphOptions>(<unknown>this.args)).cfgDirectory, {
       recursive: true,
     });
   }

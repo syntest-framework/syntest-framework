@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { singletonAlreadySet } from "@syntest/core";
 import { LoggingOptions } from "@syntest/logging";
 import {
   GeneralOptions,
@@ -103,16 +102,7 @@ export type ArgumentsObject = GeneralOptions &
   SamplingOptions &
   ResearchModeOptions;
 
-export let CONFIG: Readonly<ArgumentsObject>;
 export class Configuration {
-  initialize<A extends ArgumentsObject>(argumentValues: Readonly<A>) {
-    if (CONFIG) {
-      throw new Error(singletonAlreadySet("config"));
-    }
-
-    CONFIG = argumentValues;
-  }
-
   configureBaseOptions(yargs: Yargs.Argv) {
     yargs = this.configureTargetOptions(yargs);
     yargs = this.configureStorageOptions(yargs);
