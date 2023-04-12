@@ -325,10 +325,7 @@ export class ModuleManager {
     // add presets options to yargs by overriding it
     yargs.option("preset", {
       alias: [],
-      choices: [
-        "none",
-        ...[...this._presets.values()].map((preset) => preset.name),
-      ],
+      choices: [...this._presets.values()].map((preset) => preset.name),
       default: "none",
       description: "The preset you want to use",
       group: OptionGroups.General,
