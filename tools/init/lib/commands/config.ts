@@ -38,12 +38,12 @@ export function getConfigCommand(
       // Set default values for each option provided by the modules
       for (const tool of moduleManager.tools.values()) {
         for (const [name, option] of tool.toolOptions.entries()) {
-          allOptions[name] = option.default || undefined;
+          allOptions[name] = option.default || "TODO fill this in yourself";
         }
 
         for (const command of tool.commands) {
           for (const [name, option] of command.options.entries()) {
-            allOptions[name] = option.default || undefined;
+            allOptions[name] = option.default || "TODO fill this in yourself";
           }
         }
       }
