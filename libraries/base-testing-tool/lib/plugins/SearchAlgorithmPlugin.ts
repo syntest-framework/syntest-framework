@@ -42,12 +42,7 @@ export abstract class SearchAlgorithmPlugin<T extends Encoding> extends Plugin {
     options: O
   ): SearchAlgorithm<T>;
 
-  override getCommandOptionChoices(
-    tool: string,
-    labels: string[],
-    command: string,
-    option: string
-  ): string[] {
+  override getOptionChoices(option: string): string[] {
     if (option === "search-algorithm") {
       return [this.name];
     }

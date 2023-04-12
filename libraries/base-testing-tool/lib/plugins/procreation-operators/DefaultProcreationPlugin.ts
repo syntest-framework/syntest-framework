@@ -38,4 +38,8 @@ export class DefaultProcreationPlugin<
       options.sampler
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

@@ -23,7 +23,7 @@ import Yargs = require("yargs");
 
 const manualRequired = "TODO fill this in yourself";
 
-async function addCommandOptions(
+function addCommandOptions(
   options: { [key: string]: unknown },
   tool: Tool,
   command: Command,
@@ -35,33 +35,30 @@ async function addCommandOptions(
 
   for (const pluginsOfType of moduleManager.plugins.values()) {
     for (const plugin of pluginsOfType.values()) {
-      await addPluginOptions(options, tool, command, plugin);
+      addPluginOptions(options, tool, command, plugin);
     }
   }
 }
 
-async function addPluginOptions(
+function addPluginOptions(
   options: { [key: string]: unknown },
   tool: Tool,
   command: Command,
   plugin: Plugin
 ) {
-  if (plugin.getToolOptions) {
-    const toolOptions = await plugin.getToolOptions(tool.name, tool.labels);
-    for (const [name, option] of toolOptions.entries()) {
-      options[name] = option.default || manualRequired;
-    }
+  const toolOptions = plugin.getOptions(tool.name, tool.labels);
+
+  for (const [name, option] of toolOptions.entries()) {
+    options[name] = option.default || manualRequired;
   }
 
-  if (plugin.getCommandOptions) {
-    const commandOptions = await plugin.getCommandOptions(
-      tool.name,
-      tool.labels,
-      command.command
-    );
-    for (const [name, option] of commandOptions.entries()) {
-      options[name] = option.default || manualRequired;
-    }
+  const commandOptions = plugin.getOptions(
+    tool.name,
+    tool.labels,
+    command.command
+  );
+  for (const [name, option] of commandOptions.entries()) {
+    options[name] = option.default || manualRequired;
   }
 }
 
@@ -76,7 +73,7 @@ export function getConfigCommand(
     "config",
     "Create a configuration file for the tool.",
     options,
-    async (arguments_: Yargs.ArgumentsCamelCase) => {
+    (arguments_: Yargs.ArgumentsCamelCase) => {
       const allOptions: { [key: string]: unknown } = {};
 
       // Set default values for each option provided by the modules
@@ -86,7 +83,7 @@ export function getConfigCommand(
         }
 
         for (const command of tool.commands) {
-          await addCommandOptions(allOptions, tool, command, moduleManager);
+          addCommandOptions(allOptions, tool, command, moduleManager);
         }
       }
 

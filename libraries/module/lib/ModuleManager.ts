@@ -30,6 +30,7 @@ import { MetricMiddlewarePlugin } from "./extension/plugins/MetricMiddlewarePlug
 import { PluginType } from "./extension/plugins/PluginType";
 import { Preset } from "./extension/Preset";
 import { Tool } from "./extension/Tool";
+import { OptionGroups } from "./util/Configuration";
 import {
   moduleAlreadyLoaded,
   moduleCannotBeLoaded,
@@ -318,29 +319,43 @@ export class ModuleManager {
     this._pluginsOfModule.get(module).push(plugin);
   }
 
-  async configureModules(yargs: Yargs.Argv, preset: string) {
+  configureModules(yargs: Yargs.Argv, presetChoice: string) {
     ModuleManager.LOGGER.info("Configuring modules");
-    for (const tool of this._tools.values()) {
-      const plugins: Plugin[] = [];
-      for (const pluginsOfType of this._plugins.values()) {
-        for (const plugin of pluginsOfType.values()) {
-          plugins.push(plugin);
-        }
+
+    // add presets options to yargs by overriding it
+    yargs.option("preset", {
+      alias: [],
+      choices: [...this._presets.values()].map((preset) => preset.name),
+      default: "none",
+      description: "The preset you want to use",
+      group: OptionGroups.General,
+      hidden: false,
+      type: "string",
+    });
+
+    const plugins: Plugin[] = [];
+    for (const pluginsOfType of this._plugins.values()) {
+      for (const plugin of pluginsOfType.values()) {
+        plugins.push(plugin);
       }
-      await tool.addPluginOptions(plugins);
+    }
+
+    for (const tool of this._tools.values()) {
+      tool.addPluginOptions(plugins);
+      tool.addPluginOptionChoices(plugins);
       yargs = yargs.command(tool);
     }
 
     ModuleManager.LOGGER.info("Setting preset");
-    if (preset === "none") {
+    if (presetChoice === "none") {
       ModuleManager.LOGGER.info("No preset set");
       return yargs;
     }
-    if (!this._presets.has(preset)) {
-      throw new Error(presetNotFound(preset));
+    if (!this._presets.has(presetChoice)) {
+      throw new Error(presetNotFound(presetChoice));
     }
 
-    const presetObject = this._presets.get(preset);
+    const presetObject = this._presets.get(presetChoice);
     yargs = yargs.middleware(
       (arguments_) => presetObject.modifyArgs(arguments_),
       true

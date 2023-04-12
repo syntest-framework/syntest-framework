@@ -34,12 +34,7 @@ export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
     options: O
   ): Crossover<T>;
 
-  override getCommandOptionChoices(
-    tool: string,
-    labels: string[],
-    command: string,
-    option: string
-  ): string[] {
+  override getOptionChoices(option: string): string[] {
     if (option === "crossover") {
       return [this.name];
     }

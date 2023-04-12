@@ -92,7 +92,7 @@ async function main() {
   await moduleManager.loadModule("@syntest/init", "@syntest/init");
   LOGGER.info("Loading modules...", modules);
   await moduleManager.loadModules(modules);
-  yargs = await moduleManager.configureModules(
+  yargs = moduleManager.configureModules(
     yargs,
     (<BaseOptions>(<unknown>baseArguments)).preset
   );

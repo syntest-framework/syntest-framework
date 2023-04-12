@@ -51,90 +51,85 @@ export class Tool extends Extension implements Yargs.CommandModule {
     this.handler = handler;
   }
 
-  async addPluginOptions(plugins: Plugin[]): Promise<void> {
+  /**
+   * These two functions are separated because we need to be able to add choices to options that are added by plugins.
+   * If the two functions are combined, the choices will be added to the original options, not the options added by plugins.
+   */
+  addPluginOptions(plugins: Plugin[]): void {
     for (const plugin of plugins) {
-      if (plugin.getToolOptions) {
-        const toolOptions = await plugin.getToolOptions(this.name, this.labels);
+      const toolOptions = plugin.getOptions(this.name, this.labels);
 
-        for (const option of toolOptions.keys()) {
-          this.toolOptions.set(
-            `${plugin.name}-${option}`,
-            toolOptions.get(option)
-          );
-        }
-      }
-
-      if (!plugin.getCommandOptions) {
-        continue;
-      }
-
-      await this.addCommandOptions(plugin);
-    }
-
-    /**
-     * These two loops are separated because we need to be able to add choices to options that are added by plugins.
-     * If the two loops are combined, the choices will be added to the original options, not the options added by plugins.
-     */
-    await this.addPluginOptionChoices(plugins);
-  }
-
-  async addCommandOptions(plugin: Plugin): Promise<void> {
-    for (const command of this.commands) {
-      const commandOptions = await plugin.getCommandOptions(
-        this.name,
-        this.labels,
-        command.command
-      );
-
-      for (const option of commandOptions.keys()) {
-        command.options.set(
+      for (const option of toolOptions.keys()) {
+        this.toolOptions.set(
           `${plugin.name}-${option}`,
-          commandOptions.get(option)
+          toolOptions.get(option)
         );
       }
-    }
-  }
 
-  async addPluginOptionChoices(plugins: Plugin[]): Promise<void> {
-    for (const plugin of plugins) {
-      if (plugin.getToolOptionChoices) {
-        for (const option of this.toolOptions.keys()) {
-          const addedChoices = await plugin.getToolOptionChoices(
-            this.name,
-            this.labels,
-            option
-          );
-
-          if (!this.toolOptions.get(option).choices) {
-            throw new Error(
-              cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
-            );
-          }
-
-          this.toolOptions.get(option).choices = [
-            ...this.toolOptions.get(option).choices,
-            ...addedChoices,
-          ];
-        }
-      }
-
-      if (!plugin.getCommandOptionChoices) {
-        continue;
-      }
-
-      await this.addCommandOptionChoices(plugin);
-    }
-  }
-
-  async addCommandOptionChoices(plugin: Plugin): Promise<void> {
-    for (const command of this.commands) {
-      for (const option of Object.keys(command.options)) {
-        const addedChoices = await plugin.getCommandOptionChoices(
+      for (const command of this.commands) {
+        const commandOptions = plugin.getOptions(
           this.name,
           this.labels,
-          command.command,
-          option
+          command.command
         );
+
+        for (const option of commandOptions.keys()) {
+          command.options.set(
+            `${plugin.name}-${option}`,
+            commandOptions.get(option)
+          );
+        }
+      }
+    }
+  }
+
+  addPluginOptionChoices(plugins: Plugin[]): void {
+    for (const plugin of plugins) {
+      for (const option of this.toolOptions.keys()) {
+        const addedChoices = plugin.getOptionChoices(
+          option,
+          this.name,
+          this.labels
+        );
+
+        if (addedChoices.length === 0) {
+          continue;
+        }
+
+        if (!this.toolOptions.get(option).choices) {
+          throw new Error(
+            cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
+          );
+        }
+        const newOption = {
+          ...this.toolOptions.get(option),
+        };
+
+        newOption.choices = [
+          ...this.toolOptions.get(option).choices,
+          ...addedChoices,
+        ];
+
+        this.toolOptions.set(option, newOption);
+      }
+
+      this._addCommandOptionChoices(plugin);
+    }
+  }
+
+  protected _addCommandOptionChoices(plugin: Plugin): void {
+    for (const command of this.commands) {
+      for (const option of Object.keys(command.options)) {
+        const addedChoices = plugin.getOptionChoices(
+          option,
+          this.name,
+          this.labels,
+          command.command
+        );
+
+        if (addedChoices.length === 0) {
+          continue;
+        }
 
         if (!command.options.get(option).choices) {
           throw new Error(
@@ -146,6 +141,17 @@ export class Tool extends Extension implements Yargs.CommandModule {
           ...command.options.get(option).choices,
           ...addedChoices,
         ];
+
+        const newOption = {
+          ...command.options.get(option),
+        };
+
+        newOption.choices = [
+          ...command.options.get(option).choices,
+          ...addedChoices,
+        ];
+
+        command.options.set(option, newOption);
       }
     }
   }

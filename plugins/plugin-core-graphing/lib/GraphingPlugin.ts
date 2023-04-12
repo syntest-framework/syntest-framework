@@ -49,7 +49,7 @@ export class GraphingPlugin extends ListenerPlugin {
     );
   }
 
-  override getCommandOptions(
+  override getOptions(
     tool: string,
     labels: string[],
     command: string
@@ -75,6 +75,10 @@ export class GraphingPlugin extends ListenerPlugin {
     });
 
     return optionsMap;
+  }
+
+  override getOptionChoices(): string[] {
+    return [];
   }
 
   controlFlowGraphResolvingComplete<S>(

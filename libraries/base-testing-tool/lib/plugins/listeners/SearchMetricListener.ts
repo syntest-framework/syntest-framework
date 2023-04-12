@@ -334,4 +334,12 @@ export class SearchMetricListener extends ListenerPlugin {
   override getMetrics(): Metric[] | Promise<Metric[]> {
     return metrics;
   }
+
+  override getOptions() {
+    return new Map();
+  }
+
+  override getOptionChoices(): string[] {
+    return [];
+  }
 }

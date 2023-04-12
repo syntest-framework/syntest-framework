@@ -38,4 +38,8 @@ export class LengthObjectiveComparatorPlugin<
   createSecondaryObjective(): SecondaryObjectiveComparator<T> {
     return new LengthObjectiveComparator();
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

@@ -46,4 +46,8 @@ export class StructuralObjectiveManagerPlugin<
       options.secondaryObjectives
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }
