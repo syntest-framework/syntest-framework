@@ -160,7 +160,9 @@ export class ModuleManager {
 
     for (const pluginsOfType of this.plugins.values()) {
       for (const plugin of pluginsOfType.values()) {
-        metrics.push(...(await plugin.getMetrics()));
+        if (plugin.getMetrics) {
+          metrics.push(...(await plugin.getMetrics()));
+        }
       }
     }
 
