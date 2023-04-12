@@ -1,6 +1,6 @@
 {
   "name": "@syntest/base-testing-tool",
-  "version": "0.2.0-beta.20",
+  "version": "0.2.0-beta.21",
   "description": "The base testing tool of the SynTest Framework",
   "keywords": [
     "syntest",
