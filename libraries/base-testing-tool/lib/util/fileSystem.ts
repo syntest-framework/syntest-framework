@@ -19,32 +19,20 @@
 import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "node:fs";
 import * as path from "node:path";
 
-import { CONFIG } from "../Configuration";
-
-export function createDirectoryStructure() {
-  // outputs
-  mkdirSync(CONFIG.statisticsDirectory, {
-    recursive: true,
-  });
-  mkdirSync(CONFIG.logDirectory, { recursive: true });
-  mkdirSync(CONFIG.testDirectory, {
-    recursive: true,
-  });
+export function createDirectoryStructure(directories: string[]) {
+  for (const directory of directories) {
+    mkdirSync(directory, {
+      recursive: true,
+    });
+  }
 }
 
-export function createTemporaryDirectoryStructure() {
-  // temp
-  mkdirSync(CONFIG.tempTestDirectory, { recursive: true });
-  mkdirSync(CONFIG.tempLogDirectory, { recursive: true });
-  mkdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
-}
-
-export function deleteTemporaryDirectories() {
-  rmdirSync(CONFIG.tempTestDirectory, { recursive: true });
-  rmdirSync(CONFIG.tempLogDirectory, { recursive: true });
-  rmdirSync(CONFIG.tempInstrumentedDirectory, { recursive: true });
-
-  rmdirSync(CONFIG.tempSyntestDirectory, { recursive: true });
+export function deleteDirectories(directories: string[]) {
+  for (const directory of directories) {
+    rmdirSync(directory, {
+      recursive: true,
+    });
+  }
 }
 
 export function clearDirectory(directory: string) {
