@@ -103,20 +103,20 @@ export type ArgumentsObject = GeneralOptions &
   ResearchModeOptions;
 
 export class Configuration {
-  configureBaseOptions(yargs: Yargs.Argv) {
-    yargs = this.configureTargetOptions(yargs);
-    yargs = this.configureStorageOptions(yargs);
-    yargs = this.configureAlgorithmOptions(yargs);
-    yargs = this.configureBudgetOptions(yargs);
-    yargs = this.configurePostProcessingOptions(yargs);
-    yargs = this.configureSamplingOptions(yargs);
-    yargs = this.configureResearchModeOptions(yargs);
-
-    return yargs;
+  getOptions(): { [key: string]: Yargs.Options } {
+    return {
+      ...this.getTargetOptions(),
+      ...this.getStorageOptions(),
+      ...this.getAlgorithmOptions(),
+      ...this.getBudgetOptions(),
+      ...this.getPostProcessingOptions(),
+      ...this.getSamplingOptions(),
+      ...this.getResearchModeOptions(),
+    };
   }
 
-  configureTargetOptions(yargs: Yargs.Argv) {
-    return yargs.options({
+  getTargetOptions(): { [key: string]: Yargs.Options } {
+    return {
       // Files
       "target-root-directory": {
         alias: ["r"],
@@ -145,11 +145,11 @@ export class Configuration {
         normalize: true,
         type: "array",
       },
-    });
+    };
   }
 
-  configureStorageOptions(yargs: Yargs.Argv) {
-    return yargs.options({
+  getStorageOptions(): { [key: string]: Yargs.Options } {
+    return {
       // directories
       "statistics-directory": {
         alias: [],
@@ -201,327 +201,284 @@ export class Configuration {
         normalize: true,
         type: "string",
       },
-    });
+    };
   }
 
-  configureAlgorithmOptions(yargs: Yargs.Argv) {
-    return (
-      yargs
-
-        // algorithm settings
-        .options({
-          "search-algorithm": {
-            alias: ["a"],
-            default: "",
-            choices: [],
-            description: "Search algorithm to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "string",
-          },
-          "population-size": {
-            alias: [],
-            default: 50,
-            description: "Size of the population.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "number",
-          },
-          "objective-manager": {
-            alias: [],
-            default: "",
-            choices: [],
-            description: "Objective manager to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "string",
-          },
-          "secondary-objective": {
-            alias: [],
-            default: [],
-            choices: [],
-            description: "Secondary objectives to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "string",
-          },
-          crossover: {
-            alias: [],
-            default: "",
-            choices: [],
-            description: "Crossover operator to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "string",
-          },
-          procreation: {
-            alias: [],
-            default: "",
-            choices: [],
-            description: "Procreation operator to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "string",
-          },
-          sampler: {
-            alias: [],
-            default: "",
-            choices: [],
-            description: "Sampler to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "string",
-          },
-          "termination-triggers": {
-            alias: [],
-            default: ["signal"],
-            choices: [],
-            description: "Termination trigger to be used by the tool.",
-            group: OptionGroups.SearchAlgorithm,
-            hidden: false,
-            type: "array",
-          },
-        })
-    );
+  getAlgorithmOptions(): { [key: string]: Yargs.Options } {
+    return {
+      "search-algorithm": {
+        alias: ["a"],
+        default: "",
+        choices: [],
+        description: "Search algorithm to be used by the tool.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "string",
+      },
+      "population-size": {
+        alias: [],
+        default: 50,
+        description: "Size of the population.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "number",
+      },
+      "objective-manager": {
+        alias: [],
+        default: "",
+        choices: [],
+        description: "Objective manager to be used by the tool.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "string",
+      },
+      "secondary-objective": {
+        alias: [],
+        default: [],
+        choices: [],
+        description: "Secondary objectives to be used by the tool.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "string",
+      },
+      crossover: {
+        alias: [],
+        default: "",
+        choices: [],
+        description: "Crossover operator to be used by the tool.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "string",
+      },
+      procreation: {
+        alias: [],
+        default: "",
+        choices: [],
+        description: "Procreation operator to be used by the tool.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "string",
+      },
+      sampler: {
+        alias: [],
+        default: "",
+        choices: [],
+        description: "Sampler to be used by the tool.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "string",
+      },
+      "termination-triggers": {
+        alias: [],
+        default: ["signal"],
+        choices: [],
+        description: "Termination trigger to be used by the tool.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "array",
+      },
+    };
   }
 
-  configureBudgetOptions(yargs: Yargs.Argv) {
-    return (
-      yargs
-
-        // time settings
-        .options({
-          "total-time": {
-            alias: ["t"],
-            default: Number.MAX_SAFE_INTEGER,
-            description: "Total time budget in seconds",
-            group: OptionGroups.Budget,
-            hidden: false,
-            type: "number",
-          },
-          "search-time": {
-            alias: [],
-            default: Number.MAX_SAFE_INTEGER,
-            description: "Search time budget in seconds",
-            group: OptionGroups.Budget,
-            hidden: false,
-            type: "number",
-          },
-          iterations: {
-            alias: [],
-            default: Number.MAX_SAFE_INTEGER,
-            description: "Iteration budget",
-            group: OptionGroups.Budget,
-            hidden: false,
-            type: "number",
-          },
-          evaluations: {
-            alias: [],
-            default: Number.MAX_SAFE_INTEGER,
-            description: "Evaluation budget",
-            group: OptionGroups.Budget,
-            hidden: false,
-            type: "number",
-          },
-        })
-    );
+  getBudgetOptions(): { [key: string]: Yargs.Options } {
+    return {
+      "total-time": {
+        alias: ["t"],
+        default: Number.MAX_SAFE_INTEGER,
+        description: "Total time budget in seconds",
+        group: OptionGroups.Budget,
+        hidden: false,
+        type: "number",
+      },
+      "search-time": {
+        alias: [],
+        default: Number.MAX_SAFE_INTEGER,
+        description: "Search time budget in seconds",
+        group: OptionGroups.Budget,
+        hidden: false,
+        type: "number",
+      },
+      iterations: {
+        alias: [],
+        default: Number.MAX_SAFE_INTEGER,
+        description: "Iteration budget",
+        group: OptionGroups.Budget,
+        hidden: false,
+        type: "number",
+      },
+      evaluations: {
+        alias: [],
+        default: Number.MAX_SAFE_INTEGER,
+        description: "Evaluation budget",
+        group: OptionGroups.Budget,
+        hidden: false,
+        type: "number",
+      },
+    };
   }
 
-  configurePostProcessingOptions(yargs: Yargs.Argv) {
-    return (
-      yargs
-
-        // post processing
-        .options({
-          "test-minimization": {
-            alias: [],
-            default: false,
-            description: "Minimize test cases at the end of the search",
-            group: OptionGroups.PostProccessing,
-            hidden: false,
-            type: "boolean",
-          },
-        })
-    );
+  getPostProcessingOptions(): { [key: string]: Yargs.Options } {
+    return {
+      "test-minimization": {
+        alias: [],
+        default: false,
+        description: "Minimize test cases at the end of the search",
+        group: OptionGroups.PostProccessing,
+        hidden: false,
+        type: "boolean",
+      },
+    };
   }
 
-  configureSamplingOptions(yargs: Yargs.Argv) {
-    return (
-      yargs
+  getSamplingOptions(): { [key: string]: Yargs.Options } {
+    return {
+      "random-seed": {
+        alias: ["s"],
+        default: undefined,
+        description: "Seed to be used by the pseudo random number generator.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "string",
+      },
 
-        // random number generator settings
-        .options({
-          "random-seed": {
-            alias: ["s"],
-            default: undefined,
-            description:
-              "Seed to be used by the pseudo random number generator.",
-            group: "Sampling options:",
-            hidden: false,
-            type: "string",
-          },
+      // sampling settings
+      "max-depth": {
+        alias: [],
+        default: 5,
+        description: "Max depth of an individual's gene tree.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "max-action-statements": {
+        alias: [],
+        default: 5,
+        description:
+          "Max number of top level action statements in an individual's gene tree.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "constant-pool": {
+        alias: [],
+        default: false,
+        description: "Enable constant pool.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "boolean",
+      },
 
-          // sampling settings
-          "max-depth": {
-            alias: [],
-            default: 5,
-            description: "Max depth of an individual's gene tree.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "max-action-statements": {
-            alias: [],
-            default: 5,
-            description:
-              "Max number of top level action statements in an individual's gene tree.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "constant-pool": {
-            alias: [],
-            default: false,
-            description: "Enable constant pool.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "boolean",
-          },
+      // mutation settings
+      "explore-illegal-values": {
+        alias: [],
+        default: false,
+        description:
+          "Allow primitives to become values outside of the specified bounds.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "boolean",
+      },
 
-          // mutation settings
-          "explore-illegal-values": {
-            alias: [],
-            default: false,
-            description:
-              "Allow primitives to become values outside of the specified bounds.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "boolean",
-          },
+      // probability settings
+      "resample-gene-probability": {
+        alias: [],
+        default: 0.01,
+        description: "Probability a gene gets resampled from scratch.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "delta-mutation-probability": {
+        alias: [],
+        default: 0.8,
+        description: "Probability a delta mutation is performed.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "sample-existing-value-probability": {
+        alias: [],
+        default: 0.5,
+        description:
+          "Probability the return value of a function is used as argument for another function.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "crossover-probability": {
+        alias: [],
+        default: 0.7,
+        description: "Probability crossover happens for a certain encoding.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "multi-point-crossover-probability": {
+        alias: [],
+        default: 0.5,
+        description: "Probability crossover happens at a certain branch point.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "constant-pool-probability": {
+        alias: [],
+        default: 0.5,
+        description:
+          "Probability to sample from the constant pool instead creating random values",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "sample-function-output-as-argument": {
+        alias: [],
+        default: 0.5,
+        description:
+          "Probability to sample the output of a function as an argument.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
 
-          // probability settings
-          "resample-gene-probability": {
-            alias: [],
-            default: 0.01,
-            description: "Probability a gene gets resampled from scratch.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "delta-mutation-probability": {
-            alias: [],
-            default: 0.8,
-            description: "Probability a delta mutation is performed.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "sample-existing-value-probability": {
-            alias: [],
-            default: 0.5,
-            description:
-              "Probability the return value of a function is used as argument for another function.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "crossover-probability": {
-            alias: [],
-            default: 0.7,
-            description:
-              "Probability crossover happens for a certain encoding.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "multi-point-crossover-probability": {
-            alias: [],
-            default: 0.5,
-            description:
-              "Probability crossover happens at a certain branch point.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "constant-pool-probability": {
-            alias: [],
-            default: 0.5,
-            description:
-              "Probability to sample from the constant pool instead creating random values",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "sample-function-output-as-argument": {
-            alias: [],
-            default: 0.5,
-            description:
-              "Probability to sample the output of a function as an argument.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-
-          // gene defaults
-          "string-alphabet": {
-            alias: [],
-            default:
-              "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            description: "The alphabet to be used by the string gene.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "string",
-          },
-          "string-max-length": {
-            alias: [],
-            default: 100,
-            description: "Maximal length of the string gene.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-          "numeric-max-value": {
-            alias: [],
-            default: Number.MAX_SAFE_INTEGER,
-            description: "Max value used by the numeric gene.",
-            group: OptionGroups.Sampling,
-            hidden: false,
-            type: "number",
-          },
-        })
-    );
+      // gene defaults
+      "string-alphabet": {
+        alias: [],
+        default:
+          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        description: "The alphabet to be used by the string gene.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "string",
+      },
+      "string-max-length": {
+        alias: [],
+        default: 100,
+        description: "Maximal length of the string gene.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+      "numeric-max-value": {
+        alias: [],
+        default: Number.MAX_SAFE_INTEGER,
+        description: "Max value used by the numeric gene.",
+        group: OptionGroups.Sampling,
+        hidden: false,
+        type: "number",
+      },
+    };
   }
 
-  configureResearchModeOptions(yargs: Yargs.Argv) {
-    return (
-      yargs
-
-        // Research mode options
-        // TODO should be moved to research mode plugin
-        .options({
-          configuration: {
-            alias: [],
-            default: "",
-            description: "The name of the configuration.",
-            group: OptionGroups.ResearchMode,
-            hidden: false,
-            type: "string",
-          },
-          "output-properties": {
-            alias: [],
-            default: [
-              "timestamp",
-              "targetName",
-              "coveredBranches",
-              "totalBranches",
-              "fitnessEvaluations",
-            ],
-            description: "The values that should be written to csv",
-            group: OptionGroups.ResearchMode,
-            hidden: false,
-            type: "array",
-          },
-        })
-    );
+  getResearchModeOptions(): { [key: string]: Yargs.Options } {
+    return {
+      configuration: {
+        alias: [],
+        default: "",
+        description: "The name of the configuration.",
+        group: OptionGroups.ResearchMode,
+        hidden: false,
+        type: "string",
+      },
+    };
   }
 }

@@ -18,8 +18,52 @@
 import { writeFileSync } from "node:fs";
 import * as path from "node:path";
 
-import { Command, ModuleManager } from "@syntest/module";
+import { Command, ModuleManager, Plugin, Tool } from "@syntest/module";
 import Yargs = require("yargs");
+
+const manualRequired = "TODO fill this in yourself";
+
+async function addCommandOptions(
+  options: { [key: string]: unknown },
+  tool: Tool,
+  command: Command,
+  moduleManager: ModuleManager
+) {
+  for (const [name, option] of command.options.entries()) {
+    options[name] = option.default || manualRequired;
+  }
+
+  for (const pluginsOfType of moduleManager.plugins.values()) {
+    for (const plugin of pluginsOfType.values()) {
+      await addPluginOptions(options, tool, command, plugin);
+    }
+  }
+}
+
+async function addPluginOptions(
+  options: { [key: string]: unknown },
+  tool: Tool,
+  command: Command,
+  plugin: Plugin
+) {
+  if (plugin.getToolOptions) {
+    const toolOptions = await plugin.getToolOptions(tool.name, tool.labels);
+    for (const [name, option] of toolOptions.entries()) {
+      options[name] = option.default || manualRequired;
+    }
+  }
+
+  if (plugin.getCommandOptions) {
+    const commandOptions = await plugin.getCommandOptions(
+      tool.name,
+      tool.labels,
+      command.command
+    );
+    for (const [name, option] of commandOptions.entries()) {
+      options[name] = option.default || manualRequired;
+    }
+  }
+}
 
 export function getConfigCommand(
   tool: string,
@@ -32,19 +76,17 @@ export function getConfigCommand(
     "config",
     "Create a configuration file for the tool.",
     options,
-    (arguments_: Yargs.ArgumentsCamelCase) => {
+    async (arguments_: Yargs.ArgumentsCamelCase) => {
       const allOptions: { [key: string]: unknown } = {};
 
       // Set default values for each option provided by the modules
       for (const tool of moduleManager.tools.values()) {
         for (const [name, option] of tool.toolOptions.entries()) {
-          allOptions[name] = option.default || "TODO fill this in yourself";
+          allOptions[name] = option.default || manualRequired;
         }
 
         for (const command of tool.commands) {
-          for (const [name, option] of command.options.entries()) {
-            allOptions[name] = option.default || "TODO fill this in yourself";
-          }
+          await addCommandOptions(allOptions, tool, command, moduleManager);
         }
       }
 
