@@ -18,6 +18,7 @@
 
 import { getLogger } from "@syntest/logging";
 import TypedEmitter from "typed-emitter";
+import { Logger } from "winston";
 
 import { Archive } from "../Archive";
 import { BudgetManager } from "../budget/BudgetManager";
@@ -36,7 +37,7 @@ import { Events } from "../util/Events";
  * @author Mitchell Olsthoorn
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
-  static LOGGER = getLogger("SearchAlgorithm");
+  protected static LOGGER: Logger;
 
   /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
@@ -52,6 +53,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * @protected
    */
   protected constructor(objectiveManager: ObjectiveManager<T>) {
+    SearchAlgorithm.LOGGER = getLogger(SearchAlgorithm.name);
     this._objectiveManager = objectiveManager;
   }
 

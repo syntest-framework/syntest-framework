@@ -304,19 +304,12 @@ export class SearchMetricListener extends ListenerPlugin {
     );
 
     (<TypedEventEmitter<Events>>process).on(
-      "searchInitializationStart",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      this.recordSeries
-    );
-    (<TypedEventEmitter<Events>>process).on(
-      "searchInitializationComplete",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      this.recordSeries
-    );
-    (<TypedEventEmitter<Events>>process).on(
       "searchIterationComplete",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      this.recordSeries
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        subject: SearchSubject<E>,
+        budgetManager: BudgetManager<E>
+      ) => this.recordSeries(searchAlgorithm, subject, budgetManager)
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchComplete",

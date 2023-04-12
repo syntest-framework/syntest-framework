@@ -17,6 +17,7 @@
  */
 
 import { getLogger } from "@syntest/logging";
+import { Logger } from "winston";
 
 import { Encoding } from "../Encoding";
 
@@ -28,7 +29,7 @@ import { Budget } from "./Budget";
  * @author Mitchell Olsthoorn
  */
 export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
-  static LOGGER = getLogger("SearchTimeBudget");
+  protected static LOGGER: Logger;
 
   /**
    * The current number of seconds.
@@ -60,6 +61,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @param maxSearchTime The maximum allowed time in seconds this budget should use
    */
   constructor(maxSearchTime = Number.MAX_SAFE_INTEGER) {
+    SearchTimeBudget.LOGGER = getLogger("SearchTimeBudget");
     this._currentSearchTime = 0;
     this._maxSearchTime = maxSearchTime;
     this._counterTime = 0;

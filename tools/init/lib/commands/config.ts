@@ -30,7 +30,8 @@ function addCommandOptions(
   moduleManager: ModuleManager
 ) {
   for (const [name, option] of command.options.entries()) {
-    options[name] = option.default || manualRequired;
+    options[name] =
+      option.default === undefined ? manualRequired : option.default;
   }
 
   for (const pluginsOfType of moduleManager.plugins.values()) {
@@ -49,7 +50,8 @@ function addPluginOptions(
   const toolOptions = plugin.getOptions(tool.name, tool.labels);
 
   for (const [name, option] of toolOptions.entries()) {
-    options[name] = option.default || manualRequired;
+    options[name] =
+      option.default === undefined ? manualRequired : option.default;
   }
 
   const commandOptions = plugin.getOptions(
@@ -58,7 +60,8 @@ function addPluginOptions(
     command.command
   );
   for (const [name, option] of commandOptions.entries()) {
-    options[name] = option.default || manualRequired;
+    options[name] =
+      option.default === undefined ? manualRequired : option.default;
   }
 }
 
@@ -79,7 +82,8 @@ export function getConfigCommand(
       // Set default values for each option provided by the modules
       for (const tool of moduleManager.tools.values()) {
         for (const [name, option] of tool.toolOptions.entries()) {
-          allOptions[name] = option.default || manualRequired;
+          allOptions[name] =
+            option.default === undefined ? manualRequired : option.default;
         }
 
         for (const command of tool.commands) {

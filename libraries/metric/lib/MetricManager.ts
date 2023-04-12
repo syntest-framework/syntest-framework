@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { getLogger } from "@syntest/logging";
+import { Logger } from "winston";
 
 import {
   DistributionMetric,
@@ -37,7 +38,7 @@ import {
 } from "./util/diagnostics";
 
 export class MetricManager {
-  static LOGGER = getLogger("MetricManager");
+  protected static LOGGER: Logger;
 
   private _namespacedManagers: Map<string, MetricManager>;
 
@@ -70,6 +71,7 @@ export class MetricManager {
   >;
 
   constructor(namespace: string) {
+    MetricManager.LOGGER = getLogger("MetricManager");
     this._namespace = namespace;
     this._namespacedManagers = new Map();
 

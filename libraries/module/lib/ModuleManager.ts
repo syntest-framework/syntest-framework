@@ -22,6 +22,7 @@ import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
 import { getLogger } from "@syntest/logging";
 import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import globalModules = require("global-modules");
+import { Logger } from "winston";
 import Yargs = require("yargs");
 
 import { Module } from "./extension/Module";
@@ -45,7 +46,7 @@ import {
 } from "./util/diagnostics";
 
 export class ModuleManager {
-  static LOGGER = getLogger("ModuleManager");
+  protected static LOGGER: Logger;
 
   private _metricManager: MetricManager;
   private _userInterface: UserInterface;
@@ -64,6 +65,7 @@ export class ModuleManager {
   private _presetsOfModule: Map<string, Preset[]>;
 
   constructor(metricManager: MetricManager, userInterface: UserInterface) {
+    ModuleManager.LOGGER = getLogger("ModuleManager");
     this._metricManager = metricManager;
     this._userInterface = userInterface;
 
@@ -322,10 +324,13 @@ export class ModuleManager {
   configureModules(yargs: Yargs.Argv, presetChoice: string) {
     ModuleManager.LOGGER.info("Configuring modules");
 
+    const presetOptions = [...this._presets.values()].map(
+      (preset) => preset.name
+    );
     // add presets options to yargs by overriding it
     yargs.option("preset", {
       alias: [],
-      choices: [...this._presets.values()].map((preset) => preset.name),
+      choices: ["none", ...presetOptions],
       default: "none",
       description: "The preset you want to use",
       group: OptionGroups.General,
@@ -351,7 +356,10 @@ export class ModuleManager {
       ModuleManager.LOGGER.info("No preset set");
       return yargs;
     }
+
+    ModuleManager.LOGGER.info(`Preset set: ${presetChoice}`);
     if (!this._presets.has(presetChoice)) {
+      ModuleManager.LOGGER.error(`Preset not found: ${presetChoice}`);
       throw new Error(presetNotFound(presetChoice));
     }
 
