@@ -44,4 +44,8 @@ export class MOSAFamilyPlugin<
       options.populationSize
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

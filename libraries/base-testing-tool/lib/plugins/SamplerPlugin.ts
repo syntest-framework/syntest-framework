@@ -33,12 +33,7 @@ export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
     options: O
   ): EncodingSampler<T>;
 
-  override getCommandOptionChoices(
-    tool: string,
-    labels: string[],
-    command: string,
-    option: string
-  ): string[] {
+  override getOptionChoices(option: string): string[] {
     if (option === "sampler") {
       return [this.name];
     }

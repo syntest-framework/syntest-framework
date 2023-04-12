@@ -42,4 +42,8 @@ export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
       options.populationSize
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

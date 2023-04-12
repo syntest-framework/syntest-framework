@@ -46,4 +46,8 @@ export class UncoveredObjectiveManagerPlugin<
       options.secondaryObjectives
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

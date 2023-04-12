@@ -46,4 +46,8 @@ export class SimpleObjectiveManagerPlugin<
       options.secondaryObjectives
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

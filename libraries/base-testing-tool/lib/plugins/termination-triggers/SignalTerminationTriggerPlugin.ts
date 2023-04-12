@@ -32,4 +32,8 @@ export class SignalTerminationTriggerPlugin extends TerminationTriggerPlugin {
   createTerminationTrigger(): SignalTerminationTrigger {
     return new SignalTerminationTrigger();
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

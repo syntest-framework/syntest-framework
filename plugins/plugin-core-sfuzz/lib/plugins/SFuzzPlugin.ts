@@ -44,4 +44,8 @@ export class SFuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
       options.populationSize
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

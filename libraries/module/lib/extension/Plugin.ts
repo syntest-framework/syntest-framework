@@ -29,6 +29,30 @@ export abstract class Plugin extends Extension {
     this.type = type;
     this.describe = describe;
   }
+
+  /**
+   *
+   * @param tool the tool the plugin provides options for
+   * @param command the command the tool provides options for
+   * Should return a map of command -> yargsConfig
+   */
+  abstract getOptions(
+    tool: string,
+    labels: string[],
+    command?: string | undefined
+  ): Map<string, Yargs.Options>;
+
+  /**
+   *
+   * @param tool the tool the plugin provides additional choices for
+   * @param option the option the plugin provides additional choices for
+   */
+  abstract getOptionChoices(
+    option: string,
+    tool: string,
+    labels: string[],
+    command?: string | undefined
+  ): string[];
 }
 
 /**
@@ -40,49 +64,4 @@ export interface Plugin {
    * Should return a list of metrics that are stored by this plugin
    */
   getMetrics?(): Promise<Metric[]> | Metric[];
-
-  /**
-   *
-   * @param tool the tool the plugin provides options for
-   * Should return a map of command -> yargsConfig
-   */
-  getToolOptions?(
-    tool: string,
-    labels: string[]
-  ): Promise<Map<string, Yargs.Options>> | Map<string, Yargs.Options>;
-
-  /**
-   *
-   * @param tool the tool the plugin provides additional choices for
-   * @param option the option the plugin provides additional choices for
-   */
-  getToolOptionChoices?(
-    tool: string,
-    labels: string[],
-    option: string
-  ): Promise<string[]> | string[];
-
-  /**
-   * @param tool the tool the plugin provides options for
-   * @param command the command the tool provides options for
-   * Should return a map of command -> yargsConfig
-   */
-  getCommandOptions?(
-    tool: string,
-    labels: string[],
-    command: string
-  ): Promise<Map<string, Yargs.Options>> | Map<string, Yargs.Options>;
-
-  /**
-   *
-   * @param tool the tool the plugin provides additional choices for
-   * @param command the command the plugin provides additional choices for
-   * @param option the option the plugin provides additional choices for
-   */
-  getCommandOptionChoices?(
-    tool: string,
-    labels: string[],
-    command: string,
-    option: string
-  ): Promise<string[]> | string[];
 }

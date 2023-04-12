@@ -41,12 +41,7 @@ export abstract class ObjectiveManagerPlugin<
     options: O
   ): ObjectiveManager<T>;
 
-  override getCommandOptionChoices(
-    tool: string,
-    labels: string[],
-    command: string,
-    option: string
-  ): string[] {
+  override getOptionChoices(option: string): string[] {
     if (option === "objective-manager") {
       return [this.name];
     }

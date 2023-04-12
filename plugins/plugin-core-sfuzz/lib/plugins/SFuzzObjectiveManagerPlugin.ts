@@ -44,4 +44,8 @@ export class SFuzzObjectiveManagerPlugin<
       options.secondaryObjectives
     );
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

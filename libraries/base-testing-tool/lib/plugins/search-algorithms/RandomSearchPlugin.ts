@@ -39,4 +39,8 @@ export class RandomSearchPlugin<
   ): SearchAlgorithm<T> {
     return new RandomSearch(options.objectiveManager, options.encodingSampler);
   }
+
+  override getOptions() {
+    return new Map();
+  }
 }

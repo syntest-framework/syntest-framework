@@ -30,12 +30,7 @@ export abstract class TerminationTriggerPlugin extends Plugin {
     options: O
   ): TerminationTrigger;
 
-  override getCommandOptionChoices(
-    tool: string,
-    labels: string[],
-    command: string,
-    option: string
-  ): string[] {
+  override getOptionChoices(option: string): string[] {
     if (option === "termination-triggers") {
       return [this.name];
     }

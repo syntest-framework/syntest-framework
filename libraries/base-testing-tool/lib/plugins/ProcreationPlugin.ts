@@ -40,12 +40,7 @@ export abstract class ProcreationPlugin<T extends Encoding> extends Plugin {
     options: O
   ): Procreation<T>;
 
-  override getCommandOptionChoices(
-    tool: string,
-    labels: string[],
-    command: string,
-    option: string
-  ): string[] {
+  override getOptionChoices(option: string): string[] {
     if (option === "procreation") {
       return [this.name];
     }
