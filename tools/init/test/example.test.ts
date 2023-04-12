@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import InitModule from "../lib/InitModule";
+import { getModuleCommand } from "../lib/commands/module";
 
 const expect = chai.expect;
 
@@ -26,7 +26,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new InitModule();
+    getModuleCommand("test");
     expect(true);
   });
 });

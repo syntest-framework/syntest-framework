@@ -25,7 +25,11 @@ import {
   Configuration as LogConfiguration,
   setupLogger,
 } from "@syntest/logging";
-import { MetricManager, MetricOptions } from "@syntest/metric";
+import {
+  Configuration as MetricConfiguration,
+  MetricManager,
+  MetricOptions,
+} from "@syntest/metric";
 import {
   BaseOptions,
   ListenerPlugin,
@@ -54,6 +58,7 @@ async function main() {
   // Configure general options
   yargs = ModuleConfiguration.configureOptions(yargs);
   yargs = LogConfiguration.configureOptions(yargs);
+  yargs = MetricConfiguration.configureOptions(yargs);
 
   // Parse the arguments and config using only the base options
   const baseArguments = yargs

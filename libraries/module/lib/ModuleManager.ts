@@ -153,7 +153,9 @@ export class ModuleManager {
     const metrics: Metric[] = [];
 
     for (const tool of this.tools.values()) {
-      metrics.push(...(await tool.getMetrics()));
+      if (tool.getMetrics) {
+        metrics.push(...(await tool.getMetrics()));
+      }
     }
 
     for (const pluginsOfType of this.plugins.values()) {
@@ -328,6 +330,10 @@ export class ModuleManager {
     }
 
     ModuleManager.LOGGER.info("Setting preset");
+    if (preset === "none") {
+      ModuleManager.LOGGER.info("No preset set");
+      return yargs;
+    }
     if (!this._presets.has(preset)) {
       throw new Error(presetNotFound(preset));
     }

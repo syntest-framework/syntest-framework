@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { singletonAlreadySet } from "@syntest/core/lib/util/diagnostics";
+import { singletonAlreadySet } from "@syntest/core";
 import { LoggingOptions } from "@syntest/logging";
 import {
   GeneralOptions,
