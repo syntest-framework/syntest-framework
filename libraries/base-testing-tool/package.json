@@ -1,6 +1,6 @@
 {
   "name": "@syntest/base-testing-tool",
-  "version": "0.2.0-beta.18",
+  "version": "0.2.0-beta.19",
   "description": "The base testing tool of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -50,7 +50,7 @@
     "@syntest/core": "^0.4.0-beta.19",
     "@syntest/logging": "^0.1.0-beta.5",
     "@syntest/metric": "^0.1.0-beta.1",
-    "@syntest/module": "^0.1.0-beta.7",
+    "@syntest/module": "^0.1.0-beta.8",
     "yargs": "^17.7.1"
   },
   "engines": {

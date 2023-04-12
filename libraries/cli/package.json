@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli",
-  "version": "0.2.0-beta.10",
+  "version": "0.2.0-beta.11",
   "description": "The cli of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -50,7 +50,7 @@
     "@syntest/init": "^0.2.0-beta.9",
     "@syntest/logging": "^0.1.0-beta.5",
     "@syntest/metric": "^0.1.0-beta.1",
-    "@syntest/module": "^0.1.0-beta.7",
+    "@syntest/module": "^0.1.0-beta.8",
     "yargs": "^17.7.1"
   },
   "engines": {
