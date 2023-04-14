@@ -208,7 +208,6 @@ export class Configuration {
     return {
       "search-algorithm": {
         alias: ["a"],
-        default: "",
         choices: [],
         description: "Search algorithm to be used by the tool.",
         group: OptionGroups.SearchAlgorithm,
@@ -225,7 +224,6 @@ export class Configuration {
       },
       "objective-manager": {
         alias: [],
-        default: "",
         choices: [],
         description: "Objective manager to be used by the tool.",
         group: OptionGroups.SearchAlgorithm,
@@ -243,7 +241,6 @@ export class Configuration {
       },
       crossover: {
         alias: [],
-        default: "",
         choices: [],
         description: "Crossover operator to be used by the tool.",
         group: OptionGroups.SearchAlgorithm,
@@ -252,7 +249,6 @@ export class Configuration {
       },
       procreation: {
         alias: [],
-        default: "",
         choices: [],
         description: "Procreation operator to be used by the tool.",
         group: OptionGroups.SearchAlgorithm,
@@ -261,7 +257,6 @@ export class Configuration {
       },
       sampler: {
         alias: [],
-        default: "",
         choices: [],
         description: "Sampler to be used by the tool.",
         group: OptionGroups.SearchAlgorithm,

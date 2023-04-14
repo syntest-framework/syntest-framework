@@ -18,7 +18,7 @@
 export enum PluginType {
   Crossover = "Crossover",
   ObjectiveManager = "ObjectiveManager",
-  Offspring = "Offspring",
+  Procreation = "Procreation",
   Sampler = "Sampler",
   SearchAlgorithm = "SearchAlgorithm",
   SecondaryObjective = "SecondaryObjective",

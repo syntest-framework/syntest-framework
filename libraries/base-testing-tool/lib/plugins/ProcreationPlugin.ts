@@ -33,7 +33,7 @@ export type ProcreationOptions<T extends Encoding> = {
 
 export abstract class ProcreationPlugin<T extends Encoding> extends Plugin {
   constructor(name: string, describe: string) {
-    super(PluginType.Offspring, name, describe);
+    super(PluginType.Procreation, name, describe);
   }
 
   abstract createProcreationOperator<O extends ProcreationOptions<T>>(

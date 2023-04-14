@@ -16,7 +16,13 @@
  * limitations under the License.
  */
 
-import { mkdirSync, readdirSync, rmdirSync, unlinkSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  rmdirSync,
+  unlinkSync,
+} from "node:fs";
 import * as path from "node:path";
 
 export function createDirectoryStructure(directories: string[]) {
@@ -29,6 +35,9 @@ export function createDirectoryStructure(directories: string[]) {
 
 export function deleteDirectories(directories: string[]) {
   for (const directory of directories) {
+    if (!existsSync(directory)) {
+      continue;
+    }
     rmdirSync(directory, {
       recursive: true,
     });
@@ -36,6 +45,9 @@ export function deleteDirectories(directories: string[]) {
 }
 
 export function clearDirectory(directory: string) {
+  if (!existsSync(directory)) {
+    return;
+  }
   const files = readdirSync(directory);
   for (const file of files) {
     unlinkSync(path.join(directory, file));

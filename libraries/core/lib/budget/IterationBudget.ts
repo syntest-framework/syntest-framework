@@ -17,6 +17,7 @@
  */
 
 import { getLogger } from "@syntest/logging";
+import { Logger } from "winston";
 
 import { Encoding } from "../Encoding";
 
@@ -28,7 +29,7 @@ import { Budget } from "./Budget";
  * @author Mitchell Olsthoorn
  */
 export class IterationBudget<T extends Encoding> implements Budget<T> {
-  static LOGGER = getLogger("IterationBudget");
+  protected static LOGGER: Logger;
 
   /**
    * The current number of iterations.
@@ -54,6 +55,7 @@ export class IterationBudget<T extends Encoding> implements Budget<T> {
    * @param maxIterations The maximum number of iterations of this budget
    */
   constructor(maxIterations = Number.MAX_SAFE_INTEGER) {
+    IterationBudget.LOGGER = getLogger("IterationBudget");
     this._currentIterations = 0;
     this._maxIterations = maxIterations;
     this._tracking = false;

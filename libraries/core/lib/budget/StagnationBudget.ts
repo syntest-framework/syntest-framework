@@ -17,6 +17,7 @@
  */
 
 import { getLogger } from "@syntest/logging";
+import { Logger } from "winston";
 
 import { Encoding } from "../Encoding";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
@@ -29,7 +30,7 @@ import { Budget } from "./Budget";
  * @author Mitchell Olsthoorn
  */
 export class StagnationBudget<T extends Encoding> implements Budget<T> {
-  static LOGGER = getLogger("StagnationBudget");
+  protected static LOGGER: Logger;
 
   /**
    * The current number of iterations without progress.
@@ -61,6 +62,7 @@ export class StagnationBudget<T extends Encoding> implements Budget<T> {
    * @param maxIterations The maximum number of iterations without progress of this budget
    */
   constructor(maxIterations = Number.MAX_SAFE_INTEGER) {
+    StagnationBudget.LOGGER = getLogger("StagnationBudget");
     this._currentIterations = 0;
     this._maxIterations = maxIterations;
     this._bestProgress = 0;

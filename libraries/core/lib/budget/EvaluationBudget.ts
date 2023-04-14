@@ -17,6 +17,7 @@
  */
 
 import { getLogger } from "@syntest/logging";
+import { Logger } from "winston";
 
 import { Encoding } from "../Encoding";
 
@@ -28,7 +29,7 @@ import { Budget } from "./Budget";
  * @author Mitchell Olsthoorn
  */
 export class EvaluationBudget<T extends Encoding> implements Budget<T> {
-  static LOGGER = getLogger("EvaluationBudget");
+  protected static LOGGER: Logger;
 
   /**
    * The current number of evaluations.
@@ -54,6 +55,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @param maxEvaluations The maximum number of evaluations of this budget
    */
   constructor(maxEvaluations = Number.MAX_SAFE_INTEGER) {
+    EvaluationBudget.LOGGER = getLogger("EvaluationBudget");
     this._currentEvaluations = 0;
     this._maxEvaluations = maxEvaluations;
     this._tracking = false;

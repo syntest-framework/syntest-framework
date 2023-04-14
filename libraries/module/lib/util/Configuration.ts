@@ -67,7 +67,6 @@ export const Configuration = {
         })
         .option("preset", {
           alias: [],
-          choices: ["none"],
           default: "none",
           description: "The preset you want to use",
           group: OptionGroups.General,
