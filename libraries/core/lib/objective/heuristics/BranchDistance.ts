@@ -16,41 +16,13 @@
  * limitations under the License.
  */
 
-import { shouldNeverHappen } from "../../util/diagnostics";
-
 export abstract class BranchDistance {
   /**
    *  Calculate the branch distance between: covering the branch needed to get a closer approach distance
    *  and the currently covered branch always between 0 and 1
    * @param node
    */
-  public calculate(
-    conditionAST: string,
-    condition: string,
-    variables: unknown
-  ): number {
-    const trueBranch = this._calculate(
-      conditionAST,
-      condition,
-      variables,
-      true
-    );
-
-    const falseBranch = this._calculate(
-      conditionAST,
-      condition,
-      variables,
-      false
-    );
-
-    if (trueBranch === falseBranch) {
-      throw new Error(shouldNeverHappen("BranchDistance"));
-    }
-
-    return Math.max(trueBranch, falseBranch);
-  }
-
-  public abstract _calculate(
+  public abstract calculate(
     conditionAST: string,
     condition: string,
     variables: unknown,

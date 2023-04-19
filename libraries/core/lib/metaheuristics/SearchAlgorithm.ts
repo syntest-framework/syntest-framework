@@ -79,7 +79,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   protected abstract _iterate(
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
-  ): void;
+  ): Promise<void>;
 
   /**
    * Search the search space for an optimal solution until one of the termination conditions are met.
@@ -88,11 +88,11 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    * @param budgetManager The budget manager to track budget progress
    * @param terminationManager The termination trigger manager
    */
-  public search(
+  public async search(
     subject: SearchSubject<T>,
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
-  ): Archive<T> {
+  ): Promise<Archive<T>> {
     SearchAlgorithm.LOGGER.info("Starting search");
 
     // Load search subject into the objective manager
@@ -148,7 +148,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       );
 
       // Start next iteration of the search process
-      this._iterate(budgetManager, terminationManager);
+      await this._iterate(budgetManager, terminationManager);
 
       // Inform the budget manager and listeners that an iteration happened
       budgetManager.iteration(this);

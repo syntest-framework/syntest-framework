@@ -20,7 +20,7 @@ import {
   existsSync,
   mkdirSync,
   readdirSync,
-  rmdirSync,
+  rmSync,
   unlinkSync,
 } from "node:fs";
 import * as path from "node:path";
@@ -38,8 +38,9 @@ export function deleteDirectories(directories: string[]) {
     if (!existsSync(directory)) {
       continue;
     }
-    rmdirSync(directory, {
+    rmSync(directory, {
       recursive: true,
+      force: true,
     });
   }
 }

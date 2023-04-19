@@ -157,14 +157,28 @@ export class ModuleManager {
 
     for (const tool of this.tools.values()) {
       if (tool.getMetrics) {
-        metrics.push(...(await tool.getMetrics()));
+        const toolMetrics = await tool.getMetrics();
+        ModuleManager.LOGGER.info(
+          `Tool ${tool.name} has ${toolMetrics.length} metrics: [${toolMetrics
+            .map((metric) => Object.values(metric).join("."))
+            .join(", ")}]`
+        );
+        metrics.push(...toolMetrics);
       }
     }
 
     for (const pluginsOfType of this.plugins.values()) {
       for (const plugin of pluginsOfType.values()) {
         if (plugin.getMetrics) {
-          metrics.push(...(await plugin.getMetrics()));
+          const pluginMetrics = await plugin.getMetrics();
+          ModuleManager.LOGGER.info(
+            `Plugin ${plugin.name} has ${
+              pluginMetrics.length
+            } metrics: [${pluginMetrics
+              .map((metric) => Object.values(metric).join("."))
+              .join(", ")}]`
+          );
+          metrics.push(...pluginMetrics);
         }
       }
     }

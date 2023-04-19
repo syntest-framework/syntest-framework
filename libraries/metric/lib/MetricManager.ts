@@ -209,23 +209,30 @@ export class MetricManager {
           break;
         }
         case "series": {
-          const seriesMap = new Map<string, Map<number, number>>();
-          seriesMap.set(metric.seriesType, new Map());
-          this.series.set(metric.seriesName, seriesMap);
+          if (!this.series.has(metric.seriesName)) {
+            this.series.set(metric.seriesName, new Map());
+          }
+          this.series.get(metric.seriesName).set(metric.seriesType, new Map());
           break;
         }
         case "series-distribution": {
-          const seriesDistributionMap = new Map<
-            string,
-            Map<string, Map<number, number[]>>
-          >();
-          const seriesMap = new Map<string, Map<number, number[]>>();
-          seriesMap.set(metric.seriesType, new Map());
-          seriesDistributionMap.set(metric.seriesName, seriesMap);
-          this.seriesDistributions.set(
-            metric.distributionName,
-            seriesDistributionMap
-          );
+          if (!this.seriesDistributions.has(metric.distributionName)) {
+            this.seriesDistributions.set(metric.distributionName, new Map());
+          }
+
+          if (
+            !this.seriesDistributions
+              .get(metric.distributionName)
+              .has(metric.seriesName)
+          ) {
+            this.seriesDistributions
+              .get(metric.distributionName)
+              .set(metric.seriesName, new Map());
+          }
+          this.seriesDistributions
+            .get(metric.distributionName)
+            .get(metric.seriesName)
+            .set(metric.seriesType, new Map());
 
           break;
         }

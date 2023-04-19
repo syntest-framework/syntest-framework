@@ -70,7 +70,7 @@ export class StructuralObjectiveManager<
 
     // Set the current objectives
     const rootObjectiveNodes = this._subject.cfg.functions.map(
-      (g) => g.graph.entry
+      (g) => g.graph.getChildren(g.graph.entry.id)[0] // should always be one child of the entry node
     );
 
     const rootObjectiveIds = rootObjectiveNodes.map(

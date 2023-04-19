@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ControlFlowProgram } from "../ControlFlowProgram";
 import {
   cannotMergeEntryAndExit,
   exactlyOneEdgeShouldBeRemoved,
@@ -59,7 +60,13 @@ export function edgeContraction<S>(
       (edge: Edge) => {
         return (
           controlFlowGraph.getOutgoingEdges(edge.source).length === 1 &&
-          controlFlowGraph.getIncomingEdges(edge.target).length === 1
+          controlFlowGraph.getIncomingEdges(edge.target).length === 1 &&
+          edge.source !== controlFlowGraph.entry.id &&
+          edge.source !== controlFlowGraph.successExit.id &&
+          edge.source !== controlFlowGraph.errorExit.id &&
+          edge.target !== controlFlowGraph.entry.id &&
+          edge.target !== controlFlowGraph.successExit.id &&
+          edge.target !== controlFlowGraph.errorExit.id
         );
       },
       (edge: Edge) => {
@@ -88,6 +95,16 @@ export function edgeContraction<S>(
     original,
     nodeMapping
   );
+}
+
+// side effects
+export function contractControlFlowProgram<S>(program: ControlFlowProgram<S>) {
+  program.graph = edgeContraction(program.graph);
+  for (const f of program.functions) {
+    f.graph = edgeContraction(f.graph);
+  }
+
+  return program;
 }
 
 function bfs<S>(
@@ -175,18 +192,6 @@ function afterGuards<S>(
   }
 }
 
-function getNodeType(
-  isEntry: boolean,
-  isSuccessExit: boolean,
-  isErrorExit: boolean
-): NodeType {
-  return isEntry
-    ? NodeType.ENTRY
-    : isSuccessExit || isErrorExit
-    ? NodeType.EXIT
-    : NodeType.NORMAL;
-}
-
 function mergeNodes<S>(
   controlFlowGraph: ControlFlowGraph<S>,
   source: string,
@@ -194,16 +199,12 @@ function mergeNodes<S>(
 ): ControlFlowGraph<S> {
   beforeGuards(controlFlowGraph, source, target);
 
-  const isEntry = source === controlFlowGraph.entry.id;
-  const isSuccessExit = target === controlFlowGraph.successExit.id;
-  const isErrorExit = target === controlFlowGraph.errorExit.id;
-
   const sourceNode = controlFlowGraph.getNodeById(source);
   const targetNode = controlFlowGraph.getNodeById(target);
 
   const mergedNode: Node<S> = new Node<S>(
     source, // We use the id of node1 because the first node always contains the result of a control node (e.g. if, while, etc.) this is also where the instrumentation places the branch coverage
-    getNodeType(isEntry, isSuccessExit, isErrorExit),
+    NodeType.NORMAL,
     sourceNode.label + "-" + targetNode.label,
     [...sourceNode.statements, ...targetNode.statements],
     {
@@ -264,9 +265,9 @@ function mergeNodes<S>(
   afterGuards(newNodes, newEdges, controlFlowGraph, source, target);
 
   return new ControlFlowGraph(
-    isEntry ? mergedNode : controlFlowGraph.entry,
-    isSuccessExit ? mergedNode : controlFlowGraph.successExit,
-    isErrorExit ? mergedNode : controlFlowGraph.errorExit,
+    controlFlowGraph.entry,
+    controlFlowGraph.successExit,
+    controlFlowGraph.errorExit,
     newNodes,
     newEdges
   );

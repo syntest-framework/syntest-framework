@@ -31,8 +31,8 @@ export class ControlFlowGraph<S> {
   private readonly _nodes: Map<string, Node<S>>;
   private readonly _edges: Edge[];
 
-  private readonly _incomingEdges: Map<string, Edge[]>;
-  private readonly _outgoingEdges: Map<string, Edge[]>;
+  private readonly _incomingEdges: Map<string, ReadonlyArray<Edge>>;
+  private readonly _outgoingEdges: Map<string, ReadonlyArray<Edge>>;
 
   constructor(
     entry: Node<S>,
@@ -71,18 +71,30 @@ export class ControlFlowGraph<S> {
     return this._edges;
   }
 
-  getIncomingEdges(nodeId: string): Edge[] {
+  // Returns list of nodes that have an outgoing edge to the target node
+  getParents(targetNodeId: string): Node<S>[] {
+    const parentEdges = this.getIncomingEdges(targetNodeId);
+    return parentEdges.map((edge) => this.getNodeById(edge.source));
+  }
+
+  // Returns list of nodes that have an outgoing edge from the target node
+  getChildren(targetNodeId: string): Node<S>[] {
+    const childEdges = this.getOutgoingEdges(targetNodeId);
+    return childEdges.map((edge) => this.getNodeById(edge.target));
+  }
+
+  getIncomingEdges(nodeId: string): ReadonlyArray<Edge> {
     if (!this._incomingEdges.has(nodeId)) {
       return [];
     }
-    return this._incomingEdges.get(nodeId);
+    return [...this._incomingEdges.get(nodeId)];
   }
 
-  getOutgoingEdges(nodeId: string): Edge[] {
+  getOutgoingEdges(nodeId: string): ReadonlyArray<Edge> {
     if (!this._outgoingEdges.has(nodeId)) {
       return [];
     }
-    return this._outgoingEdges.get(nodeId);
+    return [...this._outgoingEdges.get(nodeId)];
   }
 
   /**
@@ -91,7 +103,7 @@ export class ControlFlowGraph<S> {
    */
   private getIncomingEdgesMap(): Map<string, Edge[]> {
     const map = new Map<string, Edge[]>();
-    for (const edge of this._edges) {
+    for (const edge of this.edges) {
       if (!map.has(edge.target)) {
         map.set(edge.target, []);
       }
@@ -107,39 +119,13 @@ export class ControlFlowGraph<S> {
    */
   private getOutgoingEdgesMap(): Map<string, Edge[]> {
     const map = new Map<string, Edge[]>();
-    for (const edge of this._edges) {
+    for (const edge of this.edges) {
       if (!map.has(edge.source)) {
         map.set(edge.source, []);
       }
       map.get(edge.source).push(edge);
     }
     return map;
-  }
-
-  /**
-   * Reverses the edges of the graph
-   * @returns
-   */
-  reverse(): ControlFlowGraph<S> {
-    const reversedEdges = this._edges.map(
-      (edge) =>
-        new Edge(
-          edge.id,
-          edge.type,
-          edge.label,
-          edge.target,
-          edge.source,
-          `Reversed edge of ${edge.id}`
-        )
-    );
-
-    return new ControlFlowGraph(
-      this._successExit,
-      this._entry,
-      this._errorExit,
-      this._nodes,
-      reversedEdges
-    );
   }
 
   // Successively applies a filter method on initial list of nodes with specified predicates
@@ -196,29 +182,5 @@ export class ControlFlowGraph<S> {
         )
       );
     });
-  }
-
-  // Returns list of nodes that have an outgoing edge to the target node
-  getParents(targetNodeId: string): Node<S>[] {
-    const selectedIds = new Set<string>(
-      this._edges
-        .filter((edge: Edge) => edge.target === targetNodeId)
-        .map((edge: Edge) => edge.source)
-    );
-    return [...this._nodes.values()].filter((node: Node<S>) =>
-      selectedIds.has(node.id)
-    );
-  }
-
-  // Returns list of nodes that have an outgoing edge from the target node
-  getChildren(targetNodeId: string): Node<S>[] {
-    const selectedIds = new Set<string>(
-      this._edges
-        .filter((edge: Edge) => edge.source === targetNodeId)
-        .map((edge: Edge) => edge.target)
-    );
-    return [...this._nodes.values()].filter((node: Node<S>) =>
-      selectedIds.has(node.id)
-    );
   }
 }

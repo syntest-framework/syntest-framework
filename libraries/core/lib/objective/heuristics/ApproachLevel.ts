@@ -24,7 +24,11 @@ export class ApproachLevel {
     cfg: ControlFlowGraph<S>,
     node: Node<S>,
     traces: Datapoint[]
-  ): { approachLevel: number; closestCoveredBranchTrace: Datapoint } {
+  ): {
+    approachLevel: number;
+    closestCoveredNode: Node<S>;
+    closestCoveredBranchTrace: Datapoint;
+  } {
     // Construct map with key as id covered and value as datapoint that covers that id
     const idsTraceMap: Map<string, Datapoint> = new Map(
       traces.map((trace) => [trace.id, trace])
@@ -38,19 +42,21 @@ export class ApproachLevel {
 
     // if closest node is not found, we return the distance to the root branch
     if (!closestCoveredBranch) {
-      return { approachLevel: undefined, closestCoveredBranchTrace: undefined };
+      return {
+        approachLevel: undefined,
+        closestCoveredNode: undefined,
+        closestCoveredBranchTrace: undefined,
+      };
     }
 
     // Retrieve trace based on ids covered by found closestCoveredBranch
-    let closestCoveredBranchTrace: Datapoint;
-    for (const id of closestCoveredBranch.id) {
-      if (idsTraceMap.has(id)) {
-        closestCoveredBranchTrace = idsTraceMap.get(id);
-        break;
-      }
-    }
+    const closestCoveredBranchTrace = idsTraceMap.get(closestCoveredBranch.id);
 
-    return { approachLevel, closestCoveredBranchTrace };
+    return {
+      approachLevel,
+      closestCoveredNode: closestCoveredBranch,
+      closestCoveredBranchTrace,
+    };
   }
 
   _findClosestCoveredBranch<S>(

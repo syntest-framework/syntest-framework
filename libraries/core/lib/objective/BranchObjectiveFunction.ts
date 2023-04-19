@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { EdgeType } from "@syntest/cfg-core";
+
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
 import { shouldNeverHappen } from "../util/diagnostics";
@@ -67,19 +69,44 @@ export class BranchObjectiveFunction<
     }
 
     // find the corresponding node inside the cfg
-    const targetNode = this._subject.cfg.graph.getNodeById(this._id);
+    const function_ = this._subject.cfg.functions.find(
+      (function_) => function_.graph.getNodeById(this._id) !== undefined
+    );
+    const targetNode = function_.graph.getNodeById(this._id);
 
     if (!targetNode) {
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
     // Find approach level and ancestor based on node and covered nodes
-    const { approachLevel, closestCoveredBranchTrace } =
+    const { approachLevel, closestCoveredNode, closestCoveredBranchTrace } =
       this.approachLevel.calculate(
-        this._subject.cfg.graph,
+        function_.graph,
         targetNode,
         executionResult.getTraces()
       );
+
+    const outgoingEdges = function_.graph.getOutgoingEdges(
+      closestCoveredNode.id
+    );
+
+    if (outgoingEdges.length !== 2) {
+      // weird
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+    }
+    const trueEdge = outgoingEdges.find(
+      (edge) => edge.type === EdgeType.CONDITIONAL_TRUE
+    );
+    const falseEdge = outgoingEdges.find(
+      (edge) => edge.type === EdgeType.CONDITIONAL_FALSE
+    );
+
+    if (!trueEdge || !falseEdge) {
+      // weird
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+    }
+
+    const trueOrFalse = trueEdge.target === targetNode.id;
 
     // if closest covered node is not found, we return the distance to the root branch
     if (!closestCoveredBranchTrace) {
@@ -89,7 +116,8 @@ export class BranchObjectiveFunction<
     const branchDistance = this.branchDistance.calculate(
       closestCoveredBranchTrace.condition_ast,
       closestCoveredBranchTrace.condition,
-      closestCoveredBranchTrace.variables
+      closestCoveredBranchTrace.variables,
+      trueOrFalse
     );
 
     // add the distances
