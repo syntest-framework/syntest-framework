@@ -62,7 +62,7 @@ describe("CFG edge contraction", function () {
     cfg = new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges);
   });
 
-  it("one edge should be contracted", () => {
+  it("One edge should be contracted", () => {
     const contractedCFG = edgeContraction(cfg);
 
     expect(contractedCFG.nodes.size).to.equal(cfg.nodes.size - 1);

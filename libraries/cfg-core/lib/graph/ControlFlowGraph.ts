@@ -103,7 +103,7 @@ export class ControlFlowGraph<S> {
    */
   private getIncomingEdgesMap(): Map<string, Edge[]> {
     const map = new Map<string, Edge[]>();
-    for (const edge of this.edges) {
+    for (const edge of this._edges) {
       if (!map.has(edge.target)) {
         map.set(edge.target, []);
       }
@@ -119,7 +119,7 @@ export class ControlFlowGraph<S> {
    */
   private getOutgoingEdgesMap(): Map<string, Edge[]> {
     const map = new Map<string, Edge[]>();
-    for (const edge of this.edges) {
+    for (const edge of this._edges) {
       if (!map.has(edge.source)) {
         map.set(edge.source, []);
       }

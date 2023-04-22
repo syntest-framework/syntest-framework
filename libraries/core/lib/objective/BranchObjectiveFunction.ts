@@ -102,6 +102,7 @@ export class BranchObjectiveFunction<
     );
 
     if (!trueEdge || !falseEdge) {
+      console.log(function_.graph);
       // weird
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
