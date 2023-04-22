@@ -15,7 +15,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import {
+  Encoding,
+  ObjectiveManager,
+  SimpleObjectiveManager,
+} from "@syntest/search";
+
+import {
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+} from "../ObjectiveManagerPlugin";
+
+/**
+ * Plugin for SignalTerminationTrigger
+ *
+ * @author Dimitri Stallenberg
+ */
+export class SimpleObjectiveManagerPlugin<
+  T extends Encoding
+> extends ObjectiveManagerPlugin<T> {
+  constructor() {
+    super("simple", "A simple objective manager");
+  }
+
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    return new SimpleObjectiveManager(
+      options.runner,
+      options.secondaryObjectives
+    );
+  }
+
+  override getOptions() {
+    return new Map();
+  }
 }

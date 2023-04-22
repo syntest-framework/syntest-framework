@@ -15,7 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { Plugin } from "@syntest/module";
+import { Encoding, EncodingSampler, SearchSubject } from "@syntest/search";
+
+import { PluginType } from "./PluginType";
+
+export type SamplerOptions<T extends Encoding> = {
+  subject: SearchSubject<T>;
+};
+
+export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.Sampler, name, describe);
+  }
+
+  abstract createSamplerOperator<O extends SamplerOptions<T>>(
+    options: O
+  ): EncodingSampler<T>;
+
+  override getOptionChoices(option: string): string[] {
+    if (option === "sampler") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

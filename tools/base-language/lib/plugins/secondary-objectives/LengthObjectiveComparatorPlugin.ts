@@ -15,7 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import {
+  Encoding,
+  LengthObjectiveComparator,
+  SecondaryObjectiveComparator,
+} from "@syntest/search";
+
+import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
+
+/**
+ * Plugin for RandomSearch
+ *
+ * @author Dimitri Stallenberg
+ */
+export class LengthObjectiveComparatorPlugin<
+  T extends Encoding
+> extends SecondaryObjectivePlugin<T> {
+  constructor() {
+    super("length", "Secondary objective based on the length of the test case");
+  }
+
+  createSecondaryObjective(): SecondaryObjectiveComparator<T> {
+    return new LengthObjectiveComparator();
+  }
+
+  override getOptions() {
+    return new Map();
+  }
 }

@@ -15,7 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { MetricManager } from "@syntest/metric";
+
+import { Plugin } from "../Plugin";
+
+import { PluginType } from "./PluginType";
+
+export abstract class EventListenerPlugin extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.EVENT_LISTENER, name, describe);
+  }
+
+  abstract setupEventListener(metricManager: MetricManager): void;
 }

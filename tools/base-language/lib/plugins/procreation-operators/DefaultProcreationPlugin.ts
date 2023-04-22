@@ -15,7 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { DefaultProcreation, Encoding, Procreation } from "@syntest/search";
+
+import { ProcreationOptions, ProcreationPlugin } from "../ProcreationPlugin";
+
+/**
+ * Plugin for SignalTerminationTrigger
+ *
+ * @author Dimitri Stallenberg
+ */
+export class DefaultProcreationPlugin<
+  T extends Encoding
+> extends ProcreationPlugin<T> {
+  constructor() {
+    super("default", "A default procreation operator");
+  }
+
+  createProcreationOperator(options: ProcreationOptions<T>): Procreation<T> {
+    return new DefaultProcreation(
+      options.crossover,
+      options.mutateFunction,
+      options.sampler
+    );
+  }
+
+  override getOptions() {
+    return new Map();
+  }
 }

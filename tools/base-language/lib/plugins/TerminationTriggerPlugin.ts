@@ -15,7 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { Plugin } from "@syntest/module";
+import { TerminationTrigger } from "@syntest/search";
+
+import { PluginType } from "./PluginType";
+
+export type TerminationTriggerOptions = unknown;
+
+export abstract class TerminationTriggerPlugin extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.TerminationTrigger, name, describe);
+  }
+  abstract createTerminationTrigger<O extends TerminationTriggerOptions>(
+    options: O
+  ): TerminationTrigger;
+
+  override getOptionChoices(option: string): string[] {
+    if (option === "termination-triggers") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

@@ -32,7 +32,7 @@ import {
 } from "@syntest/metric";
 import {
   BaseOptions,
-  ListenerPlugin,
+  EventListenerPlugin,
   Configuration as ModuleConfiguration,
   ModuleManager,
   PluginType,
@@ -124,9 +124,9 @@ async function main() {
   // process.setMaxListeners()
   // Register all listener plugins
   for (const plugin of moduleManager
-    .getPluginsOfType(PluginType.LISTENER)
+    .getPluginsOfType(PluginType.EVENT_LISTENER)
     .values()) {
-    (<ListenerPlugin>plugin).setupEventListener(metricManager);
+    (<EventListenerPlugin>plugin).setupEventListener(metricManager);
   }
 
   const versions = [...moduleManager.modules.values()]

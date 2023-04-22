@@ -15,7 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { Encoding, RandomSearch, SearchAlgorithm } from "@syntest/search";
+
+import {
+  SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
+} from "../SearchAlgorithmPlugin";
+
+/**
+ * Plugin for RandomSearch
+ *
+ * @author Dimitri Stallenberg
+ */
+export class RandomSearchPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("Random", "Random search algorithm");
+  }
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    return new RandomSearch(options.objectiveManager, options.encodingSampler);
+  }
+
+  override getOptions() {
+    return new Map();
+  }
 }

@@ -15,7 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { Encoding, NSGAII, SearchAlgorithm } from "@syntest/search";
+
+import {
+  SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
+} from "../SearchAlgorithmPlugin";
+
+/**
+ * Plugin for NSGAII
+ *
+ * @author Dimitri Stallenberg
+ */
+export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("NSGAII", "NSGAII search algorithm");
+  }
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    return new NSGAII<T>(
+      options.objectiveManager,
+      options.encodingSampler,
+      options.procreation,
+      options.populationSize
+    );
+  }
+
+  override getOptions() {
+    return new Map();
+  }
 }

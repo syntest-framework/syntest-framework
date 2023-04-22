@@ -15,7 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { SignalTerminationTrigger } from "@syntest/search";
+
+import { TerminationTriggerPlugin } from "../TerminationTriggerPlugin";
+
+/**
+ * Plugin for SignalTerminationTrigger
+ *
+ * @author Dimitri Stallenberg
+ */
+export class SignalTerminationTriggerPlugin extends TerminationTriggerPlugin {
+  constructor() {
+    super("signal", "Terminates the search when a signal is received");
+  }
+
+  createTerminationTrigger(): SignalTerminationTrigger {
+    return new SignalTerminationTrigger();
+  }
+
+  override getOptions() {
+    return new Map();
+  }
 }
