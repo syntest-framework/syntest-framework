@@ -64,9 +64,9 @@ jobs:
           - libraries/metric
           - libraries/module
           - libraries/search
-          - plugins/plugin-core-graphing
+          - plugins/plugin-core-event-listener-graphing
           - plugins/plugin-core-metric-middleware-file-writer
-          - plugins/plugin-core-sfuzz
+          - plugins/plugin-core-search-algorithm-sfuzz
           - tools/base-language
           - tools/init
 
