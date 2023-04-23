@@ -34,7 +34,7 @@ export type Events = {
   processComplete: () => void;
   postprocessStart: () => void;
   postprocessComplete: () => void;
-  exit: () => void;
+  exitting: () => void;
 
   instrumentationStart: () => void;
   instrumentationComplete: () => void;

@@ -34,7 +34,7 @@ export abstract class Launcher {
       (<TypedEventEmitter<Events>>process).emit("postprocessStart");
       await this.postprocess();
       (<TypedEventEmitter<Events>>process).emit("postprocessComplete");
-      (<TypedEventEmitter<Events>>process).emit("exit");
+      (<TypedEventEmitter<Events>>process).emit("exitting");
       await this.exit();
     } catch (error) {
       console.log(error);

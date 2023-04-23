@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { ControlFlowFunction } from "./ControlFlowFunction";
+import { ContractedControlFlowGraph } from "./graph/ContractedControlFlowGraph";
 import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
 /**
@@ -24,6 +25,6 @@ import { ControlFlowGraph } from "./graph/ControlFlowGraph";
  * https://en.wikipedia.org/wiki/Control-flow_graph
  */
 export interface ControlFlowProgram<S> {
-  graph: ControlFlowGraph<S>;
+  graph: ControlFlowGraph<S> | ContractedControlFlowGraph<S>;
   functions: ControlFlowFunction<S>[];
 }

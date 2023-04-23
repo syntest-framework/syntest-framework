@@ -18,6 +18,9 @@
 
 import * as crypto from "node:crypto";
 
+import { getLogger } from "@syntest/logging";
+import { Logger } from "winston";
+
 import { Archive } from "../../Archive";
 import { BudgetManager } from "../../budget/BudgetManager";
 import { Encoding } from "../../Encoding";
@@ -34,6 +37,7 @@ import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveCom
  * @author Mitchell Olsthoorn
  */
 export abstract class ObjectiveManager<T extends Encoding> {
+  protected static LOGGER: Logger;
   /**
    * Archive of covered objectives with the fittest encoding for that objective.
    * @protected
@@ -86,6 +90,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     runner: EncodingRunner<T>,
     secondaryObjectives: Set<SecondaryObjectiveComparator<T>>
   ) {
+    ObjectiveManager.LOGGER = getLogger("ObjectiveManager");
     this._archive = new Archive<T>();
     this._currentObjectives = new Set<ObjectiveFunction<T>>();
     this._coveredObjectives = new Set<ObjectiveFunction<T>>();
@@ -173,6 +178,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     budgetManager: BudgetManager<T>,
     _terminationManager: TerminationManager
   ): Promise<void> {
+    ObjectiveManager.LOGGER.debug(`Evaluating encoding ${encoding.id}`);
     // Execute the encoding
     const result = await this._runner.execute(this._subject, encoding);
     budgetManager.evaluation(encoding);
@@ -188,6 +194,11 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
       // When the objective is covered, update the objectives and the archive
       if (distance === 0) {
+        ObjectiveManager.LOGGER.debug(
+          `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
+            encoding.id
+          }`
+        );
         // Update the objectives
         this._updateObjectives(objectiveFunction);
 

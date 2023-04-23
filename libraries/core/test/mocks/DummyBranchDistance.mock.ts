@@ -18,7 +18,7 @@
 import { BranchDistance } from "../../lib/objective/heuristics/BranchDistance";
 
 export class DummyBranchDistance extends BranchDistance {
-  public _calculate(): number {
+  public calculate(): number {
     return 1;
   }
 }

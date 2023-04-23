@@ -112,6 +112,7 @@ export abstract class EvolutionaryAlgorithm<
       this._populationSize,
       this._population
     );
+
     await this._objectiveManager.evaluateMany(
       offspring,
       budgetManager,

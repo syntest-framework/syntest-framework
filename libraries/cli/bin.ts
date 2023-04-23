@@ -121,6 +121,7 @@ async function main() {
 
   moduleManager.printModuleVersionTable();
 
+  // process.setMaxListeners()
   // Register all listener plugins
   for (const plugin of moduleManager
     .getPluginsOfType(PluginType.LISTENER)

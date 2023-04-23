@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ContractedControlFlowGraph } from "./graph/ContractedControlFlowGraph";
 import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
 /**
@@ -23,5 +24,5 @@ import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 export interface ControlFlowFunction<S> {
   id: string;
   name: string;
-  graph: ControlFlowGraph<S>;
+  graph: ControlFlowGraph<S> | ContractedControlFlowGraph<S>;
 }

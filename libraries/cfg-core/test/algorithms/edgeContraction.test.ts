@@ -62,19 +62,19 @@ describe("CFG edge contraction", function () {
     cfg = new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges);
   });
 
-  it("Two edges should be contracted", () => {
+  it("One edge should be contracted", () => {
     const contractedCFG = edgeContraction(cfg);
 
-    expect(contractedCFG.nodes.size).to.equal(cfg.nodes.size - 2);
+    expect(contractedCFG.nodes.size).to.equal(cfg.nodes.size - 1);
 
-    expect(contractedCFG.edges.length).to.equal(cfg.edges.length - 2);
+    expect(contractedCFG.edges.length).to.equal(cfg.edges.length - 1);
   });
 
-  it("Two edges should be contracted", () => {
+  it("One edge should be contracted", () => {
     const contractedCFG = edgeContraction(cfg);
 
-    expect(contractedCFG.getParentNode("1")).to.equal("ROOT");
+    expect(contractedCFG.getParentNode("4")).to.equal("3");
 
-    expect(contractedCFG.getChildNodes("ROOT")).to.deep.equal(["ROOT", "1"]);
+    expect(contractedCFG.getChildNodes("3")).to.deep.equal(["3", "4"]);
   });
 });
