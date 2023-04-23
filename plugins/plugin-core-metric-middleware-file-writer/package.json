@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-metric-middleware-file-writer",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "description": "A metric middleware plugin for writing to file the SynTest Core containing graphing functionalities",
   "keywords": [
     "syntest",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@syntest/logging": "^0.1.0-beta.5",
-    "@syntest/metric": "^0.1.0-beta.2",
+    "@syntest/metric": "^0.1.0-beta.3",
     "@syntest/module": "*",
     "d3": "6.7.0",
     "fast-csv": "^4.3.6",
