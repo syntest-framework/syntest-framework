@@ -29,7 +29,9 @@ import { SFuzz } from "../algorithm/SFuzz";
  *
  * @author Dimitri Stallenberg
  */
-export class SFuzzPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+export class SFuzzSearchAlgorithmPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("sFuzz", "sFuzz search algorithm");
   }

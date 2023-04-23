@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import { SFuzzPlugin } from "../lib/plugins/SFuzzPlugin";
+import { SFuzzSearchAlgorithmPlugin } from "../lib/plugins/SFuzzSearchAlgorithmPlugin";
 
 const expect = chai.expect;
 
@@ -26,7 +26,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new SFuzzPlugin();
+    new SFuzzSearchAlgorithmPlugin();
     expect(true);
   });
 });
