@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { ControlFlowProgram } from "@syntest/cfg-core";
+import { ControlFlowProgram } from "@syntest/cfg";
 
 export interface ControlFlowGraphFactory<S> {
   convert(filePath: string, AST: S): ControlFlowProgram<S>;

@@ -17,7 +17,7 @@
  */
 import * as path from "node:path";
 
-import { ControlFlowProgram } from "@syntest/cfg-core";
+import { ControlFlowProgram } from "@syntest/cfg";
 
 import { pathNotInRootPath } from "./diagnostics";
 import { AbstractSyntaxTreeFactory } from "./factories/AbstractSyntaxTreeFactory";

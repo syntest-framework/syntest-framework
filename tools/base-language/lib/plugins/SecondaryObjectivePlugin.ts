@@ -15,7 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { Plugin } from "@syntest/module";
+import { Encoding, SecondaryObjectiveComparator } from "@syntest/search";
+
+import { PluginType } from "./PluginType";
+
+export abstract class SecondaryObjectivePlugin<
+  T extends Encoding
+> extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.SecondaryObjective, name, describe);
+  }
+
+  abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
+
+  override getOptionChoices(option: string): string[] {
+    if (option === "secondary-objective") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }

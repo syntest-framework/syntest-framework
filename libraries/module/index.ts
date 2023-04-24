@@ -17,7 +17,7 @@
  */
 export * from "./lib/extension/plugins/PluginType";
 export * from "./lib/extension/plugins/MetricMiddlewarePlugin";
-export * from "./lib/extension/plugins/ListenerPlugin";
+export * from "./lib/extension/plugins/EventListenerPlugin";
 
 export * from "./lib/extension/Command";
 export * from "./lib/extension/Extension";

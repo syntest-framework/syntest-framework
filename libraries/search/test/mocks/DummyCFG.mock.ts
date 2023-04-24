@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
-}
+import { ControlFlowGraph } from "@syntest/cfg";
+
+export class DummyCFG extends ControlFlowGraph<unknown> {}

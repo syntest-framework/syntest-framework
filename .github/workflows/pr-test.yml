@@ -97,16 +97,16 @@ jobs:
         # Collect coverage for all packages and plugins
         package:
           - libraries/analysis
-          - libraries/base-testing-tool
-          - libraries/cfg-core
+          - libraries/cfg
           - libraries/cli-graphics
-          - libraries/core
           - libraries/logging
           - libraries/metric
           - libraries/module
-          - plugins/plugin-core-graphing
+          - libraries/search
+          - plugins/plugin-core-event-listener-graphing
           - plugins/plugin-core-metric-middleware-file-writer
-          - plugins/plugin-core-sfuzz
+          - plugins/plugin-core-search-algorithm-sfuzz
+          - tools/base-language
           - tools/init
 
     steps:

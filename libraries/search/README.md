@@ -2,24 +2,14 @@
 
 > The aim of the common core of the SynTest Framework is to extract the common parts (e.g., core infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
-[![main-build](https://github.com/syntest-framework/syntest-core/actions/workflows/main-build.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-build.yml)
-[![main-quality](https://github.com/syntest-framework/syntest-core/actions/workflows/main-quality.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-quality.yml)
-[![main-test](https://github.com/syntest-framework/syntest-core/actions/workflows/main-test.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-test.yml)
+[![build](https://github.com/syntest-framework/syntest-core/actions/workflows/build.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/build.yml)
+[![verify](https://github.com/syntest-framework/syntest-core/actions/workflows/verify.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/verify.yml)
 [![publish pre-release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml)
 [![publish release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml)
 
 core:
 ![latest NPM version](https://img.shields.io/npm/v/@syntest/search/latest?style=flat)
 ![beta NPM version](https://img.shields.io/npm/v/@syntest/search/beta?style=flat) <br />
-CFG-core:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/cfg/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/cfg/beta?style=flat) <br />
-plugin-core-graphing:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-event-listener-graphing/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-event-listener-graphing/beta?style=flat) <br />
-plugin-core-sFuzz:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-search-algorithm-sfuzz/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-search-algorithm-sfuzz/beta?style=flat) <br />
 
 The common core of the [SynTest Framework](https://www.syntest.org).
 

@@ -15,7 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum PluginType {
-  EVENT_LISTENER = "event-listener",
-  METRIC_MIDDLEWARE = "metric-middleware",
+import { Plugin } from "@syntest/module";
+import { Crossover, Encoding } from "@syntest/search";
+
+import { PluginType } from "./PluginType";
+
+export type CrossoverOptions = {
+  crossoverEncodingProbability: number;
+  crossoverStatementProbability: number;
+};
+
+export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
+  constructor(name: string, describe: string) {
+    super(PluginType.Crossover, name, describe);
+  }
+
+  abstract createCrossoverOperator<O extends CrossoverOptions>(
+    options: O
+  ): Crossover<T>;
+
+  override getOptionChoices(option: string): string[] {
+    if (option === "crossover") {
+      return [this.name];
+    }
+
+    return [];
+  }
 }
