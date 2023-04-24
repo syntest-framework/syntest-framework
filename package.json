@@ -50,6 +50,7 @@
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
     "@commitlint/config-conventional": "17.4.2",
+    "@types/amqplib": "^0.10.1",
     "@types/chai": "4.3.4",
     "@types/cli-progress": "3.11.0",
     "@types/figlet": "^1.5.5",
@@ -91,5 +92,9 @@
       "prettier --config .prettierrc.json --ignore-path .prettierignore --write .",
       "eslint --config .eslintrc.json --ignore-path .eslintignore . --fix"
     ]
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "chai-as-promised": "^7.1.1"
   }
 }
