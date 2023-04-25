@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getLogger } from "@syntest/logging";
-import { Logger } from "winston";
+import { getLogger, Logger } from "@syntest/logging";
 
 import {
   DistributionMetric,

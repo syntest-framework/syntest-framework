@@ -90,7 +90,7 @@ async function main() {
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
   LOGGER.info("Loading standard modules...");
   await moduleManager.loadModule("@syntest/init", "@syntest/init");
-  LOGGER.info("Loading modules...", modules);
+  LOGGER.info(`Loading modules... [${modules.join(", ")}]`);
   await moduleManager.loadModules(modules);
   yargs = moduleManager.configureModules(
     yargs,
@@ -114,7 +114,8 @@ async function main() {
         return 0;
       })
       .catch((error) => {
-        LOGGER.error("Cleanup failed!", error);
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        LOGGER.error(`Cleanup failed! ${error}`);
         userInterface.printError("Cleanup failed!");
       });
   });

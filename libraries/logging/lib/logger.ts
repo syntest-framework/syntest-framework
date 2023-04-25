@@ -20,12 +20,11 @@ import * as path from "node:path";
 import {
   createLogger,
   format,
-  Logger,
-  LoggerOptions,
   transports,
+  Logger as WinstonLogger,
 } from "winston";
 
-let baseLoggerOptions: LoggerOptions;
+let singleTonLogger: WinstonLogger;
 
 export function setupLogger(
   logDirectory: string,
@@ -37,7 +36,7 @@ export function setupLogger(
     maxFiles: 1,
   };
 
-  baseLoggerOptions = {
+  const baseLoggerOptions = {
     levels: {
       error: 0,
       warn: 1,
@@ -74,13 +73,70 @@ export function setupLogger(
       })
     );
   }
+  singleTonLogger = createLogger(baseLoggerOptions);
 }
 
 export function getLogger(context: string): Logger {
-  return createLogger({
-    ...baseLoggerOptions,
-    defaultMeta: {
-      context: context,
-    },
-  });
+  if (singleTonLogger === undefined) {
+    throw new Error(
+      "Should call setupLogger function before using getLogger function!"
+    );
+  }
+  return new SubLogger(context);
+}
+
+/**
+ * We don't want to expose the structure of the sublogger so we only export the type of the class.
+ */
+export type Logger = InstanceType<typeof SubLogger>;
+
+/**
+ * We use the winston logger singleton in each sublogger.
+ * We do this to prevent memory leaks since each instance of a winston logger registers a bunch of event listeners.
+ */
+class SubLogger {
+  private _context: string;
+  constructor(context: string) {
+    this._context = context;
+  }
+
+  error(message: string) {
+    singleTonLogger.log({
+      level: "error",
+      message: message,
+      meta: { context: this._context },
+    });
+  }
+
+  warn(message: string) {
+    singleTonLogger.log({
+      level: "warn",
+      message: message,
+      meta: { context: this._context },
+    });
+  }
+
+  info(message: string) {
+    singleTonLogger.log({
+      level: "info",
+      message: message,
+      meta: { context: this._context },
+    });
+  }
+
+  debug(message: string) {
+    singleTonLogger.log({
+      level: "debug",
+      message: message,
+      meta: { context: this._context },
+    });
+  }
+
+  silly(message: string) {
+    singleTonLogger.log({
+      level: "silly",
+      message: message,
+      meta: { context: this._context },
+    });
+  }
 }
