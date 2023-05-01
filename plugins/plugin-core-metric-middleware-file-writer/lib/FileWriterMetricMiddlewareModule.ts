@@ -21,7 +21,7 @@ import { Module, ModuleManager } from "@syntest/module";
 
 import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
 
-export default class MetricMiddlewareModule extends Module {
+export default class FileWriterMetricMiddlewareModule extends Module {
   constructor() {
     super(
       "file-writer-metric-middleware",
