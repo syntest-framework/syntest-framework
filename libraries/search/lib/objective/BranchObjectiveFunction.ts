@@ -102,7 +102,6 @@ export class BranchObjectiveFunction<
     );
 
     if (!trueEdge || !falseEdge) {
-      console.log(outgoingEdges);
       // weird
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
