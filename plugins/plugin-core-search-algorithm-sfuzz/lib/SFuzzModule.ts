@@ -25,7 +25,7 @@ import { SFuzzPreset } from "./SFuzzPreset";
 export default class SFuzzModule extends Module {
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("sFuzz", require("../package.json").version);
+    super("sFuzz", require("../../package.json").version);
   }
 
   register(moduleManager: ModuleManager): void {

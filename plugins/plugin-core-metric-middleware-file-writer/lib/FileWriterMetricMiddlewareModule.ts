@@ -23,8 +23,11 @@ import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMidd
 
 export default class MetricMiddlewareModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("file-writer-metric-middleware", require("../package.json").version);
+    super(
+      "file-writer-metric-middleware",
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").version
+    );
   }
 
   register(moduleManager: ModuleManager, metricManager: MetricManager): void {

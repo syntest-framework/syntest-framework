@@ -22,7 +22,7 @@ import {
   fileDoesNotExist,
   fileDoesNotHaveExtension,
   fileIsNotAFile,
-} from "../diagnostics";
+} from "../util/diagnostics";
 
 export class SourceFactory {
   produce(filePath: string): string {

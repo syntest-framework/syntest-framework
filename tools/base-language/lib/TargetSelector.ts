@@ -18,9 +18,10 @@
 import * as path from "node:path";
 
 import { RootContext, SubTarget, Target } from "@syntest/analysis";
-import { Events } from "@syntest/search";
 import globby = require("globby");
 import TypedEventEmitter from "typed-emitter";
+
+import { Events } from "./util/Events";
 
 export class TargetSelector {
   private _rootContext: RootContext<unknown>;

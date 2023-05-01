@@ -15,13 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/factories/AbstractSyntaxTreeFactory";
-export * from "./lib/factories/ControlFlowGraphFactory";
-export * from "./lib/factories/DependencyFactory";
-export * from "./lib/factories/SourceFactory";
-export * from "./lib/factories/TargetFactory";
 
-export * from "./lib/util/Events";
+import { RootContext } from "@syntest/analysis";
 
-export * from "./lib/RootContext";
-export * from "./lib/Target";
+export type Events = {
+  initializeStart: () => void;
+  initializeComplete: () => void;
+  preprocessStart: () => void;
+  preprocessComplete: () => void;
+  processStart: () => void;
+  processComplete: () => void;
+  postprocessStart: () => void;
+  postprocessComplete: () => void;
+  exitting: () => void;
+
+  instrumentationStart: () => void;
+  instrumentationComplete: () => void;
+  targetRunStart: () => void;
+  targetRunComplete: () => void;
+  reportStart: () => void;
+  reportComplete: () => void;
+
+  targetLoadStart: (rootContext: RootContext<unknown>) => void;
+  targetLoadComplete: (rootContext: RootContext<unknown>) => void;
+};
