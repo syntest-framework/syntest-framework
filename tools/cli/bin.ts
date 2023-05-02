@@ -117,6 +117,7 @@ async function main() {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         LOGGER.error(`Cleanup failed! ${error}`);
         userInterface.printError("Cleanup failed!");
+        console.log(error);
       });
   });
 

@@ -124,6 +124,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       headers: !fs.existsSync(filePath),
       includeEndRowDelimiter: true,
     });
+
+    ws.close();
   }
 
   /**
@@ -167,6 +169,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       headers: !fs.existsSync(filePath),
       includeEndRowDelimiter: true,
     });
+
+    ws.close();
   }
 
   /**
@@ -211,6 +215,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       headers: !fs.existsSync(filePath),
       includeEndRowDelimiter: true,
     });
+
+    ws.close();
   }
 
   /**
@@ -266,5 +272,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       headers: !fs.existsSync(filePath),
       includeEndRowDelimiter: true,
     });
+
+    ws.close();
   }
 }

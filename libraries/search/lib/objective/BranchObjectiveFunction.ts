@@ -86,11 +86,21 @@ export class BranchObjectiveFunction<
         executionResult.getTraces()
       );
 
+    if (closestCoveredNode === undefined) {
+      // weird
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+    }
+
     const outgoingEdges = function_.graph.getOutgoingEdges(
       closestCoveredNode.id
     );
 
-    if (outgoingEdges.length !== 2) {
+    if (outgoingEdges.length < 2) {
+      // weird
+      console.log("\nid:\n", closestCoveredNode.id, "\n");
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+    }
+    if (outgoingEdges.length > 2) {
       // weird
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }

@@ -145,45 +145,53 @@ export class MetricManager {
     return manager;
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   setOutputMetrics(metrics: string[]) {
-    const outputMetrics = metrics.map((metric) => {
-      const split = metric.split(".");
-      const found = this.metrics.find((m) => {
-        if (m.type !== split[0]) {
-          return false;
-        }
+    if (metrics.includes("*")) {
+      this._outputMetrics = [...this.metrics];
+    } else {
+      const outputMetrics = metrics.map((metric) => {
+        const split = metric.split(".");
+        const found = this.metrics.find((m) => {
+          if (m.type !== split[0]) {
+            return false;
+          }
 
-        switch (m.type) {
-          case "property": {
-            return m.property === split[1];
+          switch (m.type) {
+            case "property": {
+              return split[1] === "*" || m.property === split[1];
+            }
+            case "distribution": {
+              return split[1] === "*" || m.distributionName === split[1];
+            }
+            case "series": {
+              return (
+                (split[1] === "*" || m.seriesName === split[1]) &&
+                (split[2] === "*" || m.seriesType === split[2])
+              );
+            }
+            case "series-distribution": {
+              return (
+                (split[1] === "*" || m.distributionName === split[1]) &&
+                (split[2] === "*" || m.seriesName === split[2]) &&
+                (split[3] === "*" || m.seriesType === split[3])
+              );
+            }
           }
-          case "distribution": {
-            return m.distributionName === split[1];
-          }
-          case "series": {
-            return m.seriesName === split[1] && m.seriesType === split[2];
-          }
-          case "series-distribution": {
-            return (
-              m.distributionName === split[1] &&
-              m.seriesName === split[2] &&
-              m.seriesType === split[3]
-            );
-          }
+          return false;
+        });
+
+        if (!found) {
+          throw new Error(`Output metric ${metric} not found`);
         }
-        return false;
+        return found;
       });
 
-      if (!found) {
-        throw new Error(`Output metric ${metric} not found`);
-      }
-      return found;
-    });
-
-    this._outputMetrics = outputMetrics;
+      this._outputMetrics = outputMetrics;
+    }
 
     for (const manager of this.namespacedManagers.values()) {
-      manager._outputMetrics = outputMetrics;
+      manager._outputMetrics = this.outputMetrics;
     }
   }
 
@@ -458,7 +466,10 @@ export class MetricManager {
     const series = new Map<string, Map<string, Map<number, number>>>();
 
     for (const seriesMetric of wanted) {
-      const value = this.getSeries(seriesMetric.seriesName, seriesMetric.type);
+      const value = this.getSeries(
+        seriesMetric.seriesName,
+        seriesMetric.seriesType
+      );
 
       if (!series.has(seriesMetric.seriesName)) {
         series.set(seriesMetric.seriesName, new Map());
@@ -482,7 +493,7 @@ export class MetricManager {
       const value = this.getSeriesDistribution(
         seriesDistribution.distributionName,
         seriesDistribution.seriesName,
-        seriesDistribution.type
+        seriesDistribution.seriesType
       );
 
       if (!seriesDistributions.has(seriesDistribution.distributionName)) {
