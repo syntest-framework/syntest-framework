@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-import { getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 import TypedEmitter from "typed-emitter";
-import { Logger } from "winston";
 
 import { Archive } from "../Archive";
 import { BudgetManager } from "../budget/BudgetManager";

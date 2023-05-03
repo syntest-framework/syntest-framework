@@ -18,8 +18,7 @@
 
 import * as crypto from "node:crypto";
 
-import { getLogger } from "@syntest/logging";
-import { Logger } from "winston";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { Archive } from "../../Archive";
 import { BudgetManager } from "../../budget/BudgetManager";

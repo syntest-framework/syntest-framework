@@ -19,10 +19,9 @@ import { existsSync } from "node:fs";
 import * as path from "node:path";
 
 import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
-import { getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import globalModules = require("global-modules");
-import { Logger } from "winston";
 import Yargs = require("yargs");
 
 import { Module } from "./extension/Module";
