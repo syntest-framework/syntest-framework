@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-metric-middleware-file-writer",
-  "version": "0.1.0-beta.5",
+  "version": "0.1.0-beta.6",
   "description": "A metric middleware plugin for writing to file the SynTest Core containing graphing functionalities",
   "keywords": [
     "syntest",
