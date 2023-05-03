@@ -18,14 +18,16 @@
 import * as path from "node:path";
 
 import { ControlFlowProgram } from "@syntest/cfg";
+import TypedEmitter from "typed-emitter";
 
-import { pathNotInRootPath } from "./diagnostics";
 import { AbstractSyntaxTreeFactory } from "./factories/AbstractSyntaxTreeFactory";
 import { ControlFlowGraphFactory } from "./factories/ControlFlowGraphFactory";
 import { DependencyFactory } from "./factories/DependencyFactory";
 import { SourceFactory } from "./factories/SourceFactory";
 import { TargetFactory } from "./factories/TargetFactory";
 import { SubTarget, Target } from "./Target";
+import { pathNotInRootPath } from "./util/diagnostics";
+import { Events } from "./util/Events";
 
 export class RootContext<S> {
   protected _rootPath: string;
@@ -93,17 +95,25 @@ export class RootContext<S> {
    * @param filePath
    */
   getSource(filePath: string): string {
-    const absoluteTargetPath = this.resolvePath(filePath);
+    const absolutePath = this.resolvePath(filePath);
 
     // this takes up too much memory we should do some kind of garbage collection if we want to save it all
-    if (!this._sources.has(absoluteTargetPath)) {
-      this._sources.set(
-        absoluteTargetPath,
-        this.sourceFactory.produce(absoluteTargetPath)
+    if (!this._sources.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "sourceResolvingStart",
+        this,
+        absolutePath
+      );
+      this._sources.set(absolutePath, this.sourceFactory.produce(absolutePath));
+      (<TypedEmitter<Events>>process).emit(
+        "sourceResolvingComplete",
+        this,
+        absolutePath,
+        this._sources.get(absolutePath)
       );
     }
 
-    return this._sources.get(absoluteTargetPath);
+    return this._sources.get(absolutePath);
   }
 
   /**
@@ -111,20 +121,31 @@ export class RootContext<S> {
    * @param filePath
    */
   getAbstractSyntaxTree(filePath: string): S {
-    const absoluteTargetPath = this.resolvePath(filePath);
+    const absolutePath = this.resolvePath(filePath);
 
     // this takes up too much memory we should do some kind of garbage collection if we want to save it all
-    if (!this._abstractSyntaxTrees.has(absoluteTargetPath)) {
+    if (!this._abstractSyntaxTrees.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "abstractSyntaxTreeResolvingStart",
+        this,
+        absolutePath
+      );
       this._abstractSyntaxTrees.set(
-        absoluteTargetPath,
+        absolutePath,
         this.abstractSyntaxTreeFactory.convert(
-          absoluteTargetPath,
-          this.getSource(absoluteTargetPath)
+          absolutePath,
+          this.getSource(absolutePath)
         )
+      );
+      (<TypedEmitter<Events>>process).emit(
+        "abstractSyntaxTreeResolvingComplete",
+        this,
+        absolutePath,
+        this._abstractSyntaxTrees.get(absolutePath)
       );
     }
 
-    return this._abstractSyntaxTrees.get(absoluteTargetPath);
+    return this._abstractSyntaxTrees.get(absolutePath);
   }
 
   /**
@@ -132,19 +153,30 @@ export class RootContext<S> {
    * @param filePath
    */
   getControlFlowProgram(filePath: string): ControlFlowProgram<S> {
-    const absoluteTargetPath = path.resolve(filePath);
+    const absolutePath = path.resolve(filePath);
 
-    if (!this._controlFlowProgramMap.has(absoluteTargetPath)) {
+    if (!this._controlFlowProgramMap.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "controlFlowGraphResolvingStart",
+        this,
+        absolutePath
+      );
       this._controlFlowProgramMap.set(
-        absoluteTargetPath,
+        absolutePath,
         this.controlFlowGraphFactory.convert(
-          absoluteTargetPath,
-          this.getAbstractSyntaxTree(absoluteTargetPath)
+          absolutePath,
+          this.getAbstractSyntaxTree(absolutePath)
         )
+      );
+      (<TypedEmitter<Events>>process).emit(
+        "controlFlowGraphResolvingComplete",
+        this,
+        absolutePath,
+        this._controlFlowProgramMap.get(absolutePath)
       );
     }
 
-    return this._controlFlowProgramMap.get(absoluteTargetPath);
+    return this._controlFlowProgramMap.get(absolutePath);
   }
 
   /**
@@ -156,12 +188,23 @@ export class RootContext<S> {
     const absolutePath = this.resolvePath(filePath);
 
     if (!this._targetMap.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "targetExtractionStart",
+        this,
+        absolutePath
+      );
       this._targetMap.set(
         absolutePath,
         this.targetFactory.extract(
           absolutePath,
           this.getAbstractSyntaxTree(absolutePath)
         )
+      );
+      (<TypedEmitter<Events>>process).emit(
+        "targetExtractionComplete",
+        this,
+        absolutePath,
+        this._targetMap.get(absolutePath)
       );
     }
 
@@ -184,12 +227,23 @@ export class RootContext<S> {
     const absolutePath = this.resolvePath(filePath);
 
     if (!this._dependenciesMap.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "dependencyResolvingStart",
+        this,
+        absolutePath
+      );
       this._dependenciesMap.set(
         absolutePath,
         this.dependencyFactory.extract(
           absolutePath,
           this.getAbstractSyntaxTree(absolutePath)
         )
+      );
+      (<TypedEmitter<Events>>process).emit(
+        "dependencyResolvingComplete",
+        this,
+        absolutePath,
+        this._dependenciesMap.get(absolutePath)
       );
     }
 

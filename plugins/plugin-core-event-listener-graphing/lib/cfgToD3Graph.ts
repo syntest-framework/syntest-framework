@@ -32,10 +32,9 @@ export function cfgToD3Graph<S>(
         n.description
       })`;
     }
-    name += `\n${n.label}`;
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    const statements = n.statements.map((s) => `${s}`).join("\n");
-    name += `\n${statements}`;
+    name += `(${n.statements.map((s) => s.statementAsText).join("\n")})`;
+
+    name = n.id;
 
     const node: D3Node = {
       id: n.id,

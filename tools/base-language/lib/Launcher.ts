@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-import { Events } from "@syntest/search";
 import TypedEventEmitter from "typed-emitter";
+
+import { Events } from "./util/Events";
 
 export abstract class Launcher {
   public async run(): Promise<void> {

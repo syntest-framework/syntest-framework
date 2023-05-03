@@ -124,15 +124,15 @@ export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
   const chargeForce = d3
     .forceManyBody()
     .strength(-100)
-    .distanceMin(10)
-    .distanceMax(100);
+    .distanceMin(20)
+    .distanceMax(50);
 
   const linkForce = d3
     .forceLink()
     .id(<(node: d3.SimulationNodeDatum) => string>((node: D3Node) => node.id))
     .distance(30);
 
-  const forceY = d3.forceY(height).strength(0.01);
+  const forceY = d3.forceY(height).strength(0.001);
 
   const forceX = d3.forceY(width).strength(0.01);
 

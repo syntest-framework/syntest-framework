@@ -203,6 +203,12 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
         // Update the archive
         this._updateArchive(objectiveFunction, encoding);
+      } else {
+        ObjectiveManager.LOGGER.debug(
+          `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
+            encoding.id
+          }`
+        );
       }
     }
 

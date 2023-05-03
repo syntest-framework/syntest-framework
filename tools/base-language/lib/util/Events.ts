@@ -15,19 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MetricManager } from "@syntest/metric";
-import * as chai from "chai";
 
-import { FileWriterMetricMiddlewarePlugin } from "../lib/plugins/FileWriterMetricMiddlewarePlugin";
+import { RootContext } from "@syntest/analysis";
 
-const expect = chai.expect;
+export type Events = {
+  initializeStart: () => void;
+  initializeComplete: () => void;
+  preprocessStart: () => void;
+  preprocessComplete: () => void;
+  processStart: () => void;
+  processComplete: () => void;
+  postprocessStart: () => void;
+  postprocessComplete: () => void;
+  exitting: () => void;
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", () => {
-    new FileWriterMetricMiddlewarePlugin(<MetricManager>{});
-    expect(true);
-  });
-});
+  instrumentationStart: () => void;
+  instrumentationComplete: () => void;
+  targetRunStart: () => void;
+  targetRunComplete: () => void;
+  reportStart: () => void;
+  reportComplete: () => void;
+
+  targetLoadStart: (rootContext: RootContext<unknown>) => void;
+  targetLoadComplete: (rootContext: RootContext<unknown>) => void;
+};

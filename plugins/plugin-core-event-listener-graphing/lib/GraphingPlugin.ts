@@ -16,19 +16,19 @@
  * limitations under the License.
  */
 
-import { writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import * as path from "node:path";
 
-import { RootContext } from "@syntest/analysis";
-import { ControlFlowGraph } from "@syntest/cfg";
+import { Events, RootContext } from "@syntest/analysis";
+import { ControlFlowProgram } from "@syntest/cfg";
 import { EventListenerPlugin } from "@syntest/module";
-import { Events } from "@syntest/search";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
 
 import { createSimulation } from "./D3Simulation";
 
 export type GraphOptions = {
-  cfgDirectory: string;
+  graphingCfgDirectory: string;
 };
 
 /**
@@ -38,14 +38,18 @@ export type GraphOptions = {
  */
 export class GraphingPlugin extends EventListenerPlugin {
   constructor() {
-    super("Graphing", "Creates a graph of the CFG");
+    super("graphing", "Creates a graph of the CFG");
   }
 
   setupEventListener(): void {
     (<TypedEventEmitter<Events>>process).on(
       "controlFlowGraphResolvingComplete",
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      this.controlFlowGraphResolvingComplete
+      <S>(
+        rootContext: RootContext<S>,
+        filePath: string,
+        cfp: ControlFlowProgram<S>
+      ) => this.controlFlowGraphResolvingComplete(rootContext, filePath, cfp)
     );
   }
 
@@ -66,7 +70,7 @@ export class GraphingPlugin extends EventListenerPlugin {
 
     optionsMap.set("cfg-directory", {
       alias: [],
-      default: "cfg",
+      default: "syntest/cfg",
       description: "The path where the csv should be saved",
       group: OptionGroups.Graphing,
       hidden: false,
@@ -83,13 +87,29 @@ export class GraphingPlugin extends EventListenerPlugin {
 
   controlFlowGraphResolvingComplete<S>(
     rootContext: RootContext<S>,
-    cfg: ControlFlowGraph<S>
+    filePath: string,
+    cfp: ControlFlowProgram<S>
   ): void {
-    const svgHtml = createSimulation(cfg);
+    const name = path.basename(filePath, path.extname(filePath));
+    const svgHtml = createSimulation(cfp.graph);
 
-    const base = (<GraphOptions>(<unknown>this.args)).cfgDirectory;
-    const path = `${base}/test.svg`;
-    writeFileSync(path, svgHtml);
+    const base = (<GraphOptions>(<unknown>this.args)).graphingCfgDirectory;
+    const directory = `${base}/${name}`;
+    if (existsSync(directory)) {
+      rmSync(directory, { recursive: true });
+    }
+    mkdirSync(directory);
+
+    const savePath = `${base}/${name}/_full.svg`;
+    writeFileSync(savePath, svgHtml);
+
+    for (const function_ of cfp.functions) {
+      const svgHtml = createSimulation(function_.graph);
+
+      const base = (<GraphOptions>(<unknown>this.args)).graphingCfgDirectory;
+      const savePath = `${base}/${name}/${function_.name}.svg`;
+      writeFileSync(savePath, svgHtml);
+    }
   }
 }
 

@@ -25,7 +25,7 @@ import { GraphingPlugin, GraphOptions } from "./GraphingPlugin";
 export default class GraphingModule extends Module {
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("graphing", require("../package.json").version);
+    super("graphing", require("../../package.json").version);
   }
 
   register(moduleManager: ModuleManager): void {
@@ -33,7 +33,7 @@ export default class GraphingModule extends Module {
   }
 
   override prepare(): void {
-    mkdirSync((<GraphOptions>(<unknown>this.args)).cfgDirectory, {
+    mkdirSync((<GraphOptions>(<unknown>this.args)).graphingCfgDirectory, {
       recursive: true,
     });
   }

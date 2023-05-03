@@ -99,7 +99,9 @@ export class UserInterface {
       throw new Error(`Progress bar with name ${bar.name} does not exist`);
     }
 
-    this.bars.get(bar.name).update(bar.value, { meta: bar.meta });
+    this.bars
+      .get(bar.name)
+      .update(bar.value, { meta: bar.meta, name: bar.name });
   }
 
   updateProgressBars(bars: BarObject[]): void {
@@ -140,7 +142,10 @@ export class UserInterface {
     const percentage = Math.round(parameters.progress * 100);
     const string_ = `${bar} ${percentage}% | ETA: ${parameters.eta}s | ${
       parameters.value
-    }/${parameters.total} | ${payload.meta || ""}`;
+      // eslint-disable-next-line sonarjs/no-nested-template-literals, @typescript-eslint/restrict-template-expressions
+    }/${parameters.total} ${payload.meta ? `| ${payload.meta}` : ""} | ${
+      payload.name
+    }`;
 
     if (parameters.value >= parameters.total) {
       return chalk.greenBright(string_);
@@ -229,5 +234,6 @@ export type BarObject = {
 };
 
 type Payload = {
+  name: string;
   meta: string;
 };
