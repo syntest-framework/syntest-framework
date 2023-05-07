@@ -26,8 +26,8 @@ const expect = chai.expect;
 // chai.use(chaiAsPromised);
 
 /**
- * This test can simulates behavior of the plugin, through emission of the events.
- * Will only work if actual RabbitMQ is hosted at specified ip and ports.
+ * This test can simulate behavior of the plugin, through emission of the events.
+ * Will only work if actual RabbitMQ is hosted at specified ip and port.
  */
 describe("simulationTest", () => {
   it("SimpleTest", () => {

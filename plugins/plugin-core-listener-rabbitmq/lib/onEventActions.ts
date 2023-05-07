@@ -22,7 +22,8 @@ import {
   Encoding,
   SearchAlgorithm,
   SearchSubject,
- TerminationManager } from "@syntest/core";
+  TerminationManager,
+} from "@syntest/core";
 
 import { RabbitProducer } from "./RabbitProducer";
 
