@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-<%= YEAR %> Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,5 +15,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export * as module from "./lib/PublisherRabbitModule";

@@ -16,4 +16,4 @@
  * limitations under the License.
  */
 
-export * as module from "./lib/PublisherRabbitModule";
+export * as module from "./lib/PublisherWSModule";

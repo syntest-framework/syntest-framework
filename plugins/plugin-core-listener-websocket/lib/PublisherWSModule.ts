@@ -16,32 +16,22 @@
  * limitations under the License.
  */
 
-import { mkdirSync } from "node:fs";
-
-import { CONFIG } from "@syntest/base-testing-tool";
 import { Module, ModuleManager } from "@syntest/module";
 
-import { PublisherOptions, PublisherPlugin } from "./PublisherPlugin";
-import { RabbitProducer } from "./RabbitProducer";
+import { PublisherWSPlugin } from "./PublisherWSPlugin";
 
 export default class PublisherModule extends Module {
-  private rp: RabbitProducer;
+  private socket: WebSocket;
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("publisher", require("../package.json").version);
+    super("publisherWS", require("../package.json").version);
   }
 
   register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this.name, new PublisherPlugin(this.rp));
-  }
-
-  override prepare(): void {
-    mkdirSync((<PublisherOptions>(<unknown>CONFIG)).publisher, {
-      recursive: true,
-    });
+    moduleManager.registerPlugin(this.name, new PublisherWSPlugin(this.socket));
   }
 
   override cleanup(): void {
-    void this.rp.close();
+    this.socket.close();
   }
 }

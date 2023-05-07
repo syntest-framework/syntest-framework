@@ -1,1 +1,1 @@
-# Publisher interface plugin for the SynTest Core.
+# RabbitMQ (amqp) publisher interface plugin for the SynTest Core.

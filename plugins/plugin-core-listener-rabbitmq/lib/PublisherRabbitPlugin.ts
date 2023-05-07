@@ -24,7 +24,8 @@ import {
   Events,
   SearchAlgorithm,
   SearchSubject,
- TerminationManager } from "@syntest/core";
+  TerminationManager,
+} from "@syntest/core";
 import { ListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
@@ -32,8 +33,9 @@ import Yargs = require("yargs");
 import { onEventActions } from "./onEventActions";
 import { RabbitProducer } from "./RabbitProducer";
 
-export type PublisherOptions = {
-  publisher: string;
+export type PublisherRabbitOptions = {
+  ip: string;
+  port: string;
 };
 
 /**
@@ -41,12 +43,18 @@ export type PublisherOptions = {
  *
  * @author Dimitri Stallenberg
  */
-export class PublisherPlugin extends ListenerPlugin {
+export class PublisherRabbitPlugin extends ListenerPlugin {
   private rp: RabbitProducer;
   constructor(rp: RabbitProducer) {
     super(
       "RabbitMQ Publisher",
       "Publishes events that occurred during the execution into RabbitMQ"
+    );
+    rp = new RabbitProducer(
+      "RabbitProducer",
+      (<PublisherRabbitOptions>(<unknown>this.args)).ip +
+        ":" +
+        (<PublisherRabbitOptions>(<unknown>this.args)).port
     );
     this.rp = rp;
     void this.rp.sendData({ eventType: "publisherPluginStarted" });
@@ -450,9 +458,9 @@ export class PublisherPlugin extends ListenerPlugin {
 
     optionsMap.set("ip", {
       alias: [],
-      default: "localhost",
+      default: "0.0.0.0",
       description: "The IP of the listening RabbitMQ",
-      group: OptionGroups.PublisherOptions,
+      group: OptionGroups.PublisherRabbitOptions,
       hidden: false,
       normalize: true,
       type: "string",
@@ -462,7 +470,7 @@ export class PublisherPlugin extends ListenerPlugin {
       alias: [],
       default: "5672",
       description: "The port of the listening RabbitMQ",
-      group: OptionGroups.PublisherOptions,
+      group: OptionGroups.PublisherRabbitOptions,
       hidden: false,
       normalize: true,
       type: "string",
@@ -473,5 +481,5 @@ export class PublisherPlugin extends ListenerPlugin {
 }
 
 export enum OptionGroups {
-  PublisherOptions = "Publishing Options:",
+  PublisherRabbitOptions = "Publishing Rabbit Options:",
 }

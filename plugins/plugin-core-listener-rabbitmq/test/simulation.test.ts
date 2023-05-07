@@ -25,11 +25,15 @@ import * as chai from "chai";
 const expect = chai.expect;
 // chai.use(chaiAsPromised);
 
+/**
+ * This test can simulates behavior of the plugin, through emission of the events.
+ * Will only work if actual RabbitMQ is hosted at specified ip and ports.
+ */
 describe("simulationTest", () => {
   it("SimpleTest", () => {
     expect(2).to.eql(2);
     /*
-    const rp: RabbitProducer = new RabbitProducer("last q", "0.0.0.0:5672")
+    const rp: RabbitProducer = new RabbitProducer("queue", "0.0.0.0:5672")
     
     await rp.connect()
     const pb: PublisherPlugin = new PublisherPlugin(rp)
