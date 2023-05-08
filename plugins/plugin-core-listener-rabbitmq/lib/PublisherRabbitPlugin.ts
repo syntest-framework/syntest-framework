@@ -17,7 +17,7 @@
  */
 
 import { RootContext } from "@syntest/analysis";
-import { ControlFlowGraph } from "@syntest/cfg-core";
+import { ControlFlowGraph } from "@syntest/cfg";
 import {
   BudgetManager,
   Encoding,
@@ -26,7 +26,7 @@ import {
   SearchSubject,
   TerminationManager,
 } from "@syntest/core";
-import { ListenerPlugin } from "@syntest/module";
+import { EventListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
 
@@ -39,11 +39,11 @@ export type PublisherRabbitOptions = {
 };
 
 /**
- * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
+ * This plugin publishes all of the SynTest's events to the specified url with amqp protocol.
  *
- * @author Dimitri Stallenberg
+ * @author Yehor Kozyr
  */
-export class PublisherRabbitPlugin extends ListenerPlugin {
+export class PublisherRabbitPlugin extends EventListenerPlugin {
   private rp: RabbitProducer;
   constructor(rp: RabbitProducer) {
     super(
@@ -441,7 +441,7 @@ export class PublisherRabbitPlugin extends ListenerPlugin {
     );
   }
 
-  override getCommandOptions(
+  override getOptions(
     tool: string,
     labels: string[],
     command: string
@@ -477,6 +477,10 @@ export class PublisherRabbitPlugin extends ListenerPlugin {
     });
 
     return optionsMap;
+  }
+
+  override getOptionChoices(): string[] {
+    return [];
   }
 }
 

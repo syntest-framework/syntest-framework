@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { RootContext } from "@syntest/analysis";
-import { ControlFlowGraph } from "@syntest/cfg-core";
+import { ControlFlowGraph } from "@syntest/cfg";
 import {
   BudgetManager,
   Encoding,
