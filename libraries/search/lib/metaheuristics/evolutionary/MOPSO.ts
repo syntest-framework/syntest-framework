@@ -31,6 +31,8 @@ type Particle = {
 export class MOPSO {
   private functionsDimension: number;
   private fs: { (...arguments_: any[]): number }[];
+  private minSearchSpace: number;
+  private maxSearchSpace: number;
   private N = 100;
   private W = 0.5;
   private c1 = 0.25;
@@ -44,6 +46,8 @@ export class MOPSO {
    *
    * @param functionsDimension  Specifies the dimension of the functions
    * @param fs                  Array of functions
+   * @param minSearchSpace      Minimum bound of the search space
+   * @param maxSearchSpace      Maximum bound fo the search space
    * @param N                   # Particles
    * @param W                   Inertia
    * @param c1                  Cognitive coefficient
@@ -55,6 +59,8 @@ export class MOPSO {
   constructor(
     functionsDimension: number,
     fs: { (...arguments_: any[]): number }[],
+    minSearchSpace: number,
+    maxSearchSpace: number,
     N?: number,
     W?: number,
     c1?: number,
@@ -65,6 +71,8 @@ export class MOPSO {
   ) {
     this.fs = fs;
     this.functionsDimension = functionsDimension;
+    this.minSearchSpace = minSearchSpace;
+    this.maxSearchSpace = maxSearchSpace;
 
     this.N = N ?? this.N;
     this.W = W ?? this.W;
@@ -88,14 +96,16 @@ export class MOPSO {
    * @param searchSpaceLimit Specifies the dimension of each particle.
    * @returns An array of particles.
    */
-  protected _initialiseParticles = (searchSpaceLimit: number): Particle[] => {
+  protected _initialiseParticles = (): Particle[] => {
     let index = 0;
     const X: Particle[] = [];
 
     while (index < this.N) {
       const p: number[] = Array.from(
         { length: this.functionsDimension },
-        () => Math.random() * searchSpaceLimit
+        () =>
+          Math.random() * (this.maxSearchSpace - this.minSearchSpace) +
+          this.minSearchSpace
       );
       X.push({ value: p, pBest: p });
       index++;
@@ -242,7 +252,7 @@ export class MOPSO {
   public run = () => {
     let epoch = 0;
 
-    let X: Particle[] = this._initialiseParticles(this.N); // Initializes all particles randomly
+    let X: Particle[] = this._initialiseParticles(); // Initializes all particles randomly
     let V: number[][] = Array.from(
       // Initializes all velocities to 0.
       { length: this.N },
