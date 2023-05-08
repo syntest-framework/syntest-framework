@@ -97,7 +97,6 @@ export class BranchObjectiveFunction<
 
     if (outgoingEdges.length < 2) {
       // weird
-      console.log("\nid:\n", closestCoveredNode.id, "\n");
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
     if (outgoingEdges.length > 2) {

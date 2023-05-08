@@ -255,16 +255,17 @@ export class MetricManager {
     return this._namespace;
   }
 
-  runPipeline(middleware: MiddleWare[]) {
+  async runPipeline(middleware: MiddleWare[]): Promise<void> {
     for (const _middleware of middleware) {
       MetricManager.LOGGER.debug(
         `Running middleware ${_middleware.constructor.name}`
       );
-      _middleware.run(this);
+      await _middleware.run(this);
     }
 
     for (const manager of this._namespacedManagers.values()) {
-      manager.runPipeline(middleware);
+      console.log(this.namespace, manager.namespace);
+      await manager.runPipeline(middleware);
     }
   }
 

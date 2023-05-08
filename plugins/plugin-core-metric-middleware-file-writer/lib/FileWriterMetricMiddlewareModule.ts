@@ -17,6 +17,7 @@
  */
 
 import { mkdirSync } from "node:fs";
+import * as path from "node:path";
 
 import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
@@ -43,12 +44,12 @@ export default class FileWriterMetricMiddlewareModule extends Module {
   }
 
   override prepare(): void {
-    mkdirSync(
-      (<StorageOptions>(<unknown>this.args))
-        .metricMiddlewareFileWriterMetricsDirectory,
-      {
-        recursive: true,
-      }
-    );
+    const baseDirectory = (<{ syntestDirectory: string }>(<unknown>this.args))
+      .syntestDirectory;
+    const metricsDirectory = (<StorageOptions>(<unknown>this.args))
+      .metricMiddlewareFileWriterMetricsDirectory;
+    mkdirSync(path.join(baseDirectory, metricsDirectory), {
+      recursive: true,
+    });
   }
 }

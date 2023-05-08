@@ -54,7 +54,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
 
     map.set("metrics-directory", {
       alias: [],
-      default: "syntest/metrics",
+      default: "metrics",
       description:
         "The path where the csv's should be saved (within the syntest-directory)",
       group: OptionTypes.Storage,
