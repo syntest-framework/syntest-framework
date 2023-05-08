@@ -108,12 +108,12 @@ export class PublisherRabbitPlugin extends EventListenerPlugin {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       () => onEventActions.onVoidEvent("postprocessComplete", this.rp)
     );
-
+    /* It used to work before the merge of the main branch
     (<TypedEventEmitter<Events>>process).on(
       "exit",
       // eslint-disable-next-line @typescript-eslint/unbound-method
       () => onEventActions.onVoidEvent("exit", this.rp)
-    );
+    );*/
 
     (<TypedEventEmitter<Events>>process).on(
       "instrumentationStart",
