@@ -17,7 +17,10 @@
  */
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { Procreation } from "../../operators/procreation/Procreation";
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
@@ -25,6 +28,18 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
  * Strength Pareto Evolutionary Algorithm II (SPEAII)
  */
 export class SPEAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+  protected _archive: T[];
+
+  constructor(
+    objectiveManager: ObjectiveManager<T>,
+    encodingSampler: EncodingSampler<T>,
+    procreation: Procreation<T>,
+    populationSize: number
+  ) {
+    super(objectiveManager, encodingSampler, procreation, populationSize);
+    this._archive = [];
+  }
+
   /**
    * Performs environmental selection on the current population.
    * @param size - the size of the next population
@@ -38,7 +53,7 @@ export class SPEAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     const k = Math.floor(Math.sqrt(this._population.length + size));
 
     const fitness: Map<T, number> = this.calculateFitness(
-      this._population,
+      [...this._population, ...this._archive],
       k,
       this._objectiveManager.getCurrentObjectives()
     );
@@ -66,6 +81,8 @@ export class SPEAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     else if (nextFront.length > size) {
       this.truncation(nextFront, k, size);
     }
+    this._archive = nextFront;
+
     this._population = nextFront;
   }
 
