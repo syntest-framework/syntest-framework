@@ -264,7 +264,6 @@ export class MetricManager {
     }
 
     for (const manager of this._namespacedManagers.values()) {
-      console.log(this.namespace, manager.namespace);
       await manager.runPipeline(middleware);
     }
   }
