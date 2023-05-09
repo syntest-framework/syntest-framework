@@ -25,7 +25,7 @@ const expect = chai.expect;
 
 describe("CFG Immutability check", function () {
   it("get nodes works properly with immutability", () => {
-    const nodes: Node<unknown>[] = [
+    const nodes: Node[] = [
       new Node("ROOT", NodeType.ENTRY, "ROOT", [], { lineNumbers: [] }),
       new Node("EXIT", NodeType.EXIT, "EXIT", [], { lineNumbers: [] }),
     ];
@@ -36,7 +36,7 @@ describe("CFG Immutability check", function () {
           String.fromCodePoint(index),
           NodeType.NORMAL,
           String.fromCodePoint(index),
-          [<Statement<unknown>>(<unknown>{
+          [<Statement>(<unknown>{
               location: {
                 start: {
                   line: 26,

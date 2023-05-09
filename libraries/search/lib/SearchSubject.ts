@@ -89,7 +89,7 @@ export abstract class SearchSubject<T extends Encoding> {
     return this._target.name;
   }
 
-  get cfg(): ControlFlowProgram<unknown> {
+  get cfg(): ControlFlowProgram {
     return this._rootContext.getControlFlowProgram(this.path);
   }
 

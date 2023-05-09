@@ -49,7 +49,7 @@ export type Events = {
   controlFlowGraphResolvingComplete: <S>(
     rootContext: RootContext<S>,
     filePath: string,
-    cfp: ControlFlowProgram<S>
+    cfp: ControlFlowProgram
   ) => void;
 
   targetExtractionStart: <S>(

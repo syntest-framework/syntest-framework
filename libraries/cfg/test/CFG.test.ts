@@ -25,13 +25,13 @@ const expect = chai.expect;
 
 describe("CFG suite", function () {
   it("filterNodesOfType test", () => {
-    const entry: Node<unknown> = new Node("0", NodeType.ENTRY, "root", [], {
+    const entry: Node = new Node("0", NodeType.ENTRY, "root", [], {
       lineNumbers: [],
     });
-    const exit: Node<unknown> = new Node("1", NodeType.EXIT, "exit", [], {
+    const exit: Node = new Node("1", NodeType.EXIT, "exit", [], {
       lineNumbers: [],
     });
-    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+    const branchNode: Node = new Node("2", NodeType.NORMAL, "2", [], {
       lineNumbers: [],
     });
     const cfg = new ControlFlowGraph(
@@ -50,11 +50,12 @@ describe("CFG suite", function () {
   });
 
   it("findNodeByPredicate test", () => {
-    const entry: Node<unknown> = new Node(
+    const entry: Node = new Node(
       "0",
       NodeType.ENTRY,
       "root",
-      [<Statement<unknown>>(<unknown>{
+      [
+        <Statement>{
           location: {
             start: {
               line: 32,
@@ -63,14 +64,16 @@ describe("CFG suite", function () {
               line: 32,
             },
           },
-        })],
+        },
+      ],
       {}
     );
-    const exit: Node<unknown> = new Node(
+    const exit: Node = new Node(
       "1",
       NodeType.EXIT,
       "exit",
-      [<Statement<unknown>>(<unknown>{
+      [
+        <Statement>{
           location: {
             start: {
               line: 26,
@@ -83,10 +86,11 @@ describe("CFG suite", function () {
               index: 0,
             },
           },
-        })],
+        },
+      ],
       {}
     );
-    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+    const branchNode: Node = new Node("2", NodeType.NORMAL, "2", [], {
       lineNumbers: [],
     });
 
@@ -98,18 +102,18 @@ describe("CFG suite", function () {
       []
     );
 
-    expect(
-      cfg.getNodeByPredicate(<S>(n: Node<S>) => n.id === "2")
-    ).to.deep.equal(branchNode);
+    expect(cfg.getNodeByPredicate((n: Node) => n.id === "2")).to.deep.equal(
+      branchNode
+    );
     expect(cfg.getNodesByLineNumbers(new Set([26]))[0]).to.deep.equal(exit);
   });
 
   it("filterNodesByPredicates test", () => {
-    const entry: Node<unknown> = new Node(
+    const entry: Node = new Node(
       "0",
       NodeType.ENTRY,
       "root",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -125,11 +129,11 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const exit: Node<unknown> = new Node(
+    const exit: Node = new Node(
       "1",
       NodeType.EXIT,
       "exit",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -145,7 +149,7 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+    const branchNode: Node = new Node("2", NodeType.NORMAL, "2", [], {
       lineNumbers: [],
     });
 
@@ -157,9 +161,9 @@ describe("CFG suite", function () {
       []
     );
 
-    expect(
-      cfg.getNodesByPredicates(<S>(n: Node<S>) => n.id === "2")
-    ).to.deep.equal([branchNode]);
+    expect(cfg.getNodesByPredicates((n: Node) => n.id === "2")).to.deep.equal([
+      branchNode,
+    ]);
     expect(cfg.getNodesByLineNumbers(new Set([26]))).to.deep.equal([
       entry,
       exit,
@@ -169,11 +173,11 @@ describe("CFG suite", function () {
   });
 
   it("getNodeById test", () => {
-    const entry: Node<unknown> = new Node(
+    const entry: Node = new Node(
       "0",
       NodeType.ENTRY,
       "root",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -189,11 +193,11 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const exit: Node<unknown> = new Node(
+    const exit: Node = new Node(
       "1",
       NodeType.EXIT,
       "exit",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -209,7 +213,7 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const branchNode: Node<unknown> = new Node("2", NodeType.NORMAL, "2", [], {
+    const branchNode: Node = new Node("2", NodeType.NORMAL, "2", [], {
       lineNumbers: [],
     });
 
@@ -228,11 +232,11 @@ describe("CFG suite", function () {
   });
 
   it("filterNodesByLineNumbers test", () => {
-    const entry: Node<unknown> = new Node(
+    const entry: Node = new Node(
       "0",
       NodeType.ENTRY,
       "root",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -248,11 +252,11 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const exit: Node<unknown> = new Node(
+    const exit: Node = new Node(
       "1",
       NodeType.EXIT,
       "exit",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -268,11 +272,11 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const branchNode: Node<unknown> = new Node(
+    const branchNode: Node = new Node(
       "2",
       NodeType.NORMAL,
       "2",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -285,7 +289,7 @@ describe("CFG suite", function () {
               index: 0,
             },
           },
-        }), <Statement<unknown>>(<unknown>{
+        }), <Statement>(<unknown>{
           location: {
             start: {
               line: 32,
@@ -327,11 +331,11 @@ describe("CFG suite", function () {
   });
 
   it("findNodeOfTypeByLine test", () => {
-    const entry: Node<unknown> = new Node(
+    const entry: Node = new Node(
       "0",
       NodeType.ENTRY,
       "root",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -347,11 +351,11 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const exit: Node<unknown> = new Node(
+    const exit: Node = new Node(
       "1",
       NodeType.EXIT,
       "exit",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -367,11 +371,11 @@ describe("CFG suite", function () {
         })],
       {}
     );
-    const branchNode: Node<unknown> = new Node(
+    const branchNode: Node = new Node(
       "2",
       NodeType.NORMAL,
       "2",
-      [<Statement<unknown>>(<unknown>{
+      [<Statement>(<unknown>{
           location: {
             start: {
               line: 26,
@@ -384,7 +388,7 @@ describe("CFG suite", function () {
               index: 0,
             },
           },
-        }), <Statement<unknown>>(<unknown>{
+        }), <Statement>(<unknown>{
           location: {
             start: {
               line: 32,
