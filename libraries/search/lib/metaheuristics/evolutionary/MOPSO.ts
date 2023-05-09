@@ -40,7 +40,6 @@ export class MOPSO {
   private maxEpochs = 2000;
   private maximize = false;
   private gbestSelection = PROB;
-  private history: number[][][] = [];
 
   /** //TODO add description
    *
@@ -93,7 +92,6 @@ export class MOPSO {
 
   /** Randomly generate the N initial particles.
    *
-   * @param searchSpaceLimit Specifies the dimension of each particle.
    * @returns An array of particles.
    */
   protected _initialiseParticles = (): Particle[] => {
@@ -260,14 +258,8 @@ export class MOPSO {
     );
     let A: Particle[] = []; // Initializes the archive to be empty.
 
-    this.history.push(X.map((p) => p.value));
-
     while (epoch < this.maxEpochs) {
       A = this._generateArchive(X); // Generates archive for current iteration
-
-      //TODO remove
-      if (epoch % 20 === 0)
-        console.log(`Size of A: ${A.length} - Epoch: ${epoch}`);
 
       X = X.map((particle, particleIndex) => {
         const r1 = Math.random();
@@ -295,10 +287,9 @@ export class MOPSO {
         return { value: pNew, pBest } as Particle;
       });
 
-      this.history.push(X.map((p) => p.value));
       epoch++;
     }
 
-    return this.history;
+    return A;
   };
 }
