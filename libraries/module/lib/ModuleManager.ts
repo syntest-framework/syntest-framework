@@ -207,7 +207,7 @@ export class ModuleManager {
     const metricMiddleWare = metricPlugins.map((plugin) =>
       plugin.createMetricMiddleware(this._metricManager.metrics)
     );
-    this._metricManager.runPipeline(metricMiddleWare);
+    await this._metricManager.runPipeline(metricMiddleWare);
 
     ModuleManager.LOGGER.info("Cleaning up modules");
     for (const module of this.modules.values()) {

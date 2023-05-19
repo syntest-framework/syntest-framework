@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as path from "node:path";
+
 import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
 import Yargs = require("yargs");
@@ -26,7 +28,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
 
   constructor(metricManager: MetricManager) {
     super(
-      "FileWriterMetricMiddlewarePlugin",
+      "metric-middleware-file-writer",
       "A middleware that writes the metrics to a file."
     );
     this.metricManager = metricManager;
@@ -36,7 +38,11 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     return new FileWriterMetricMiddleware(
       metrics,
       this.metricManager.outputMetrics,
-      (<StorageOptions>(<unknown>this.args)).metricsDirectory
+      path.join(
+        (<{ syntestDirectory: string }>(<unknown>this.args)).syntestDirectory,
+        (<StorageOptions>(<unknown>this.args))
+          .metricMiddlewareFileWriterMetricsDirectory
+      )
     );
   }
 
@@ -66,5 +72,5 @@ export enum OptionTypes {
 }
 
 export type StorageOptions = {
-  metricsDirectory: string;
+  metricMiddlewareFileWriterMetricsDirectory: string;
 };

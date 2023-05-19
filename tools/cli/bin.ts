@@ -101,23 +101,19 @@ async function main() {
   metricManager.metrics = await moduleManager.getMetrics();
 
   // Setup cleanup on exit handler
-  process.on("exit", (code) => {
+  let cleaned = false;
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  process.once("beforeExit", (code) => {
     if (code !== 0) {
       LOGGER.error(`Process exited with code: ${code}`);
       userInterface.printError(`Process exited with code: ${code}`);
     }
+    if (cleaned) {
+      return;
+    }
     LOGGER.info("Cleaning up...");
-    moduleManager
-      .cleanup()
-      .then(() => {
-        LOGGER.info("Cleanup done! Exiting...");
-        return 0;
-      })
-      .catch((error) => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        LOGGER.error(`Cleanup failed! ${error}`);
-        userInterface.printError("Cleanup failed!");
-      });
+    cleaned = true;
+    void moduleManager.cleanup();
   });
 
   moduleManager.printModuleVersionTable();
