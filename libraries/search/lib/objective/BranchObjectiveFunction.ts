@@ -20,7 +20,11 @@ import { EdgeType } from "@syntest/cfg";
 
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
-import { shouldNeverHappen } from "../util/diagnostics";
+import {
+  lessThanTwoOutgoingEdges,
+  moreThanTwoOutgoingEdges,
+  shouldNeverHappen,
+} from "../util/diagnostics";
 
 import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
 import { ApproachLevel } from "./heuristics/ApproachLevel";
@@ -69,9 +73,16 @@ export class BranchObjectiveFunction<
     }
 
     // find the corresponding node inside the cfg
-    const function_ = this._subject.cfg.functions.find(
+    const functions_ = this._subject.cfg.functions.filter(
       (function_) => function_.graph.getNodeById(this._id) !== undefined
     );
+
+    if (functions_.length !== 1) {
+      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+    }
+
+    const function_ = functions_[0];
+
     const targetNode = function_.graph.getNodeById(this._id);
 
     if (!targetNode) {
@@ -97,12 +108,18 @@ export class BranchObjectiveFunction<
 
     if (outgoingEdges.length < 2) {
       // weird
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      throw new Error(
+        lessThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
+      );
     }
+
     if (outgoingEdges.length > 2) {
       // weird
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      throw new Error(
+        moreThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
+      );
     }
+
     const trueEdge = outgoingEdges.find(
       (edge) => edge.type === EdgeType.CONDITIONAL_TRUE
     );
