@@ -86,14 +86,6 @@ export class ApproachLevel {
           continue;
         }
 
-        // // return if one of targets nodes was found
-        // // we need to check all of the compressed sub-nodes because the instrumentation and cfg do not match 100%
-        // const mappedNodes =
-        //   cfg instanceof ContractedControlFlowGraph
-        //     ? cfg.getChildNodes(edge.source)
-        //     : [];
-        // mappedNodes.push(edge.source);
-        // if (mappedNodes.some((id) => targets.has(id))) {
         if (targets.has(edge.source)) {
           return {
             approachLevel: currentDistance,
