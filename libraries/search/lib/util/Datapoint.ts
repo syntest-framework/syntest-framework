@@ -24,11 +24,24 @@ export interface Datapoint {
   type: string;
 
   path: string;
-  line: number;
+  location: Location;
 
   hits: number;
 
   condition_ast?: string;
   condition?: string;
   variables?: unknown;
+}
+
+export interface Location {
+  start: {
+    line: number;
+    column: number;
+    index: number;
+  };
+  end: {
+    line: number;
+    column: number;
+    index: number;
+  };
 }

@@ -15,12 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  ContractedControlFlowGraph,
-  ControlFlowGraph,
-  EdgeType,
-  Node,
-} from "@syntest/cfg";
+import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg";
 
 import { Datapoint } from "../../util/Datapoint";
 
@@ -55,21 +50,7 @@ export class ApproachLevel {
     }
 
     // Retrieve trace based on ids covered by found closestCoveredBranch
-    let closestCoveredBranchTrace = idsTraceMap.get(closestCoveredBranch.id);
-
-    if (!closestCoveredBranchTrace) {
-      // not found so might be one of the compressed nodes (instrumentation and cfg dont match exactly)
-      const subNodes =
-        cfg instanceof ContractedControlFlowGraph
-          ? cfg.getChildNodes(closestCoveredBranch.id)
-          : [];
-
-      for (const id of subNodes) {
-        if (idsTraceMap.has(id)) {
-          closestCoveredBranchTrace = idsTraceMap.get(id);
-        }
-      }
-    }
+    const closestCoveredBranchTrace = idsTraceMap.get(closestCoveredBranch.id);
 
     if (!closestCoveredBranchTrace) {
       throw new Error("Cannot find the branch trace that is covered");
@@ -105,14 +86,15 @@ export class ApproachLevel {
           continue;
         }
 
-        // return if one of targets nodes was found
-        // we need to check all of the compressed sub-nodes because the instrumentation and cfg do not match 100%
-        const mappedNodes =
-          cfg instanceof ContractedControlFlowGraph
-            ? cfg.getChildNodes(edge.source)
-            : [];
-        mappedNodes.push(edge.source);
-        if (mappedNodes.some((id) => targets.has(id))) {
+        // // return if one of targets nodes was found
+        // // we need to check all of the compressed sub-nodes because the instrumentation and cfg do not match 100%
+        // const mappedNodes =
+        //   cfg instanceof ContractedControlFlowGraph
+        //     ? cfg.getChildNodes(edge.source)
+        //     : [];
+        // mappedNodes.push(edge.source);
+        // if (mappedNodes.some((id) => targets.has(id))) {
+        if (targets.has(edge.source)) {
           return {
             approachLevel: currentDistance,
             closestCoveredBranch: cfg.getNodeById(edge.source),
