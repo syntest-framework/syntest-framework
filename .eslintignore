@@ -11,9 +11,13 @@ syntest/
 LICENSE*
 Dockerfile
 NOTICE
+commitlint.config.js
+link.sh
+
 
 # The instrumentation files are copied from istanbul (and modified).
 # In the future in a big refactor the instrumentation should be redone such that these files dont have to be ignored anymore.
 **/instrumentation/Instrumenter.ts
 **/instrumentation/VisitState.ts
 **/instrumentation/Visitor.ts
+**/instrumentation/source-coverage.ts

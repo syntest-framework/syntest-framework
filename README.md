@@ -16,67 +16,62 @@ The common core contains the common interfaces for the code control-flow represe
 
 #### NPM
 
-The simplest way to use syntest-javascript is by installing the [npm package](https://www.npmjs.com/package/syntest/javascript).
+The simplest way to use syntest javascript is by installing the following two npm packages: [@syntest/cli](https://www.npmjs.com/package/syntest/cli), [@syntest/javascript](https://www.npmjs.com/package/syntest/javascript).
 
 ```bash
+$ npm install @syntest/cli
 $ npm install @syntest/javascript
 ```
 
 You can install it in your project as shown in the snippit above or you can install the package globally by using the npm options `-g`.
 
-#### From source
-
-The tool can be used by cloning the project, installing its dependencies, and compiling the TypeScript:
-
-- Clone the projects
-
-```bash
-$ git clone git@github.com:syntest-framework/syntest-javascript.git
-```
-
-- Install dependencies
-
-```bash
-$ cd syntest-javascript; npm install
-```
-
-- Build Syntest-javascript
-
-```bash
-$ cd syntest-javascript; npm run build
-```
-
-You can create a `.syntest.js` file to change the way the tool behaves.
-
-Finally run the tool
-
-```bash
-cd <PATH_TO_SYNTEST_JAVASCRIPT>; npm run standalone
-```
-
-The results can be found in the `syntest` folder
-
 ## Usage
 
 To start you need to be in the root of the project folder containing the code you want to create test-cases for. Next, you need to install two dev-dependencies in your project, namely [chai](https://www.npmjs.com/package/chai) and [chai-as-promised](https://www.npmjs.com/package/chai-as-promised). Both are needed to run the tests.
 
-After installing these dependencies together with the tool, you can run the following example command.
+Next, you want to run the following command:
 
 ```bash
-$ syntest-javascript --target-root-directory="<PATH_TO_YOUR_SOURCE_FOLDER>/src" --total-time=10
+$ npx syntest init config --modules @syntest/javascript
 ```
 
-This will test all javascript code that is contained in the source folder. It will run for 10 seconds.
+This will create the `.syntest.json` configuration file for you with some pre filled in parameters.
+The file should look somewhat like this:
 
-SynTest-JavaScript is highly configurable and supports a bunch of options and arguments, all of them can be found by providing the `--help` option or `-h` for short. Another way of configuring the tool is by putting a .syntest.js file in the root of your project. The file should have the following structure:
-
-```js
-module.exports = {
-    "population-size": 10,
-    "max-depth": 5,
-    ...
+```
+{
+  ...,
+  "target-root-directory": "./express",
+  "include": [
+    "./express/lib/**/*.js"
+  ],
+  "exclude": [],
+  "modules": [
+    "@syntest/javascript"
+  ],
+  "preset": "DynaMOSA"
+  ...
 }
 ```
+
+In the above example the most important configuration options are shown.
+
+- The preset value which decides the algorithms the tool will use.
+- The loaded module "@syntest/javascript".
+- The target root directory which is the source directory of all the files you want to target.
+- The include array where you can specify which files to target.
+- The exclude array where you can specify which files to exclude specifically
+
+Once these properties are set you can run:
+
+```bash
+$ npx syntest javascript test
+```
+
+If everything is correct the tool will now start.
+The results can be found in the `syntest` folder
+
+SynTest-JavaScript is highly configurable and supports a bunch of options and arguments, all of them can be found by providing the `--help` option or `-h` for short. Another way of configuring the tool is through the .syntest.json file in the root of your project.
 
 ## Documentation
 

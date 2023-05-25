@@ -18,9 +18,7 @@
 
 import { createHash } from "crypto";
 
-const {
-  SourceCoverage,
-} = require("istanbul-lib-instrument/src/source-coverage");
+import { SourceCoverage } from "./source-coverage";
 
 const SHA = "sha1";
 
@@ -315,8 +313,8 @@ export class VisitState {
       };
     }
 
-    const name = path.node.id ? path.node.id.name : path.node.name;
-    const index = this.cov.newFunction(name, dloc, path.node.body.loc);
+    const name = n.id ? n.id.name : n.name;
+    const index = this.cov.newFunction(name, dloc, n.body.loc);
     const increment = this.increase("f", index, null);
     const body = path.get("body");
     /* istanbul ignore else: not expected */
@@ -330,8 +328,8 @@ export class VisitState {
     }
   }
 
-  getBranchIncrement(branchName, loc) {
-    const index = this.cov.addBranchPath(branchName, loc);
+  getBranchIncrement(ifPath, branchName, loc) {
+    const index = this.cov.addBranchPath(ifPath, branchName, loc);
     return this.increase("b", branchName, index);
   }
 
@@ -392,8 +390,12 @@ export class VisitState {
     ];
   }
 
-  insertBranchCounter(path, branchName, loc) {
-    const increment = this.getBranchIncrement(branchName, loc || path.node.loc);
+  insertBranchCounter(ifPath, path, branchName, loc) {
+    const increment = this.getBranchIncrement(
+      ifPath,
+      branchName,
+      loc || path.node.loc
+    );
 
     this.insertCounter(path, increment);
   }

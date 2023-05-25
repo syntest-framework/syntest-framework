@@ -19,9 +19,10 @@
 import { defaults } from "@istanbuljs/schema";
 import { VisitState } from "./VisitState";
 import { createHash } from "crypto";
-import { template } from "@babel/core";
+import { NodePath, template } from "@babel/core";
+import * as t from "@babel/types";
 
-const { name } = require("../../package.json");
+const name = "syntest";
 
 // increment this version if there are schema changes
 // that are not backwards compatible:
@@ -70,7 +71,7 @@ export class Visitor {
 
   exit(path) {
     if (alreadyInstrumented(path, this.visitState)) {
-      return;
+      return undefined;
     }
     this.visitState.cov.freeze();
     const coverageData = this.visitState.cov.toJSON();
@@ -179,7 +180,7 @@ function coverStatement(path) {
 function coverAssignmentPattern(path) {
   const n = path.node;
   const b = this.cov.newBranch("default-arg", n.loc);
-  this.insertBranchCounter(path.get("right"), b);
+  this.insertBranchCounter(path, path.get("right"), b);
 }
 
 function coverFunction(path) {
@@ -253,12 +254,12 @@ function coverIfBranches(path) {
   if (ignoreIf) {
     this.setAttr(n.consequent, "skip-all", true);
   } else {
-    this.insertBranchCounter(path.get("consequent"), branch, n.loc);
+    this.insertBranchCounter(path, path.get("consequent"), branch, n.loc);
   }
   if (ignoreElse) {
     this.setAttr(n.alternate, "skip-all", true);
   } else {
-    this.insertBranchCounter(path.get("alternate"), branch);
+    this.insertBranchCounter(path, path.get("alternate"), branch);
   }
 
   const T = this.types;
@@ -302,11 +303,14 @@ function coverLoopBranch(path) {
   const n = path.node;
   const branch = this.cov.newBranch("loop", n.loc);
 
-  this.insertBranchCounter(path.get("body"), branch, n.loc);
+  this.insertBranchCounter(path, path.get("body"), branch, n.loc);
 
   const T = this.types;
 
-  const increment = this.getBranchIncrement(branch, path.node.loc);
+  const increment = this.getBranchIncrement(path, branch, {
+    start: path.node.loc.end,
+    end: path.node.loc.end,
+  });
   path.insertAfter(T.expressionStatement(increment));
 
   // TODO we should actually print what the just defined variable is set to
@@ -370,7 +374,7 @@ function coverSwitchCase(path) {
   if (b === null) {
     throw new Error("Unable to get switch branch name");
   }
-  const increment = this.getBranchIncrement(b, path.node.loc);
+  const increment = this.getBranchIncrement(path, b, path.node.loc);
   path.node.consequent.unshift(T.expressionStatement(increment));
 }
 
@@ -381,10 +385,10 @@ function coverTernary(path) {
   const aHint = this.hintFor(n.alternate);
 
   if (cHint !== "next") {
-    this.insertBranchCounter(path.get("consequent"), branch);
+    this.insertBranchCounter(path, path.get("consequent"), branch);
   }
   if (aHint !== "next") {
-    this.insertBranchCounter(path.get("alternate"), branch);
+    this.insertBranchCounter(path, path.get("alternate"), branch);
   }
 
   const T = this.types;
@@ -576,7 +580,7 @@ const metaTemplate = template(
 // https://github.com/istanbuljs/babel-plugin-istanbul/issues/94
 // we should only instrument code for coverage the first time
 // it's run through istanbul-lib-instrument.
-function alreadyInstrumented(path, visitState) {
+function alreadyInstrumented(path: NodePath<t.Node>, visitState) {
   return path.scope.hasBinding(visitState.varName);
 }
 function shouldIgnoreFile(programNode) {

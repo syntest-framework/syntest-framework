@@ -5,3 +5,4 @@ node_modules/
 *.jpg
 NOTICE
 Dockerfile
+link.sh

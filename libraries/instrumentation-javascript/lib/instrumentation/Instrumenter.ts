@@ -16,9 +16,15 @@
  * limitations under the License.
  */
 
-import { TransformOptions, transformSync } from "@babel/core";
+import { transformSync } from "@babel/core";
 import { Visitor } from "./Visitor";
-import { defaultBabelOptions } from "@syntest/ast-javascript";
+import {
+  RootContext,
+  Target,
+  defaultBabelOptions,
+} from "@syntest/analysis-javascript";
+import * as path from "node:path";
+import { copySync, outputFileSync } from "fs-extra";
 
 export interface OutputObject {
   fileCoverage?: any;
@@ -26,6 +32,38 @@ export interface OutputObject {
 }
 
 export class Instrumenter {
+  // TODO maybe the instrumenter should not be responsible for copying the files
+  async instrumentAll(
+    rootContext: RootContext,
+    targets: Target[],
+    temporaryInstrumentedDirectory: string
+  ): Promise<void> {
+    const absoluteRootPath = path.resolve(rootContext.rootPath);
+
+    const destinationPath = path.resolve(
+      temporaryInstrumentedDirectory,
+      path.basename(absoluteRootPath)
+    );
+
+    // copy everything
+    await copySync(absoluteRootPath, destinationPath);
+
+    // overwrite the stuff that needs instrumentation
+
+    const targetPaths = [...targets.values()].map((target) => target.path);
+
+    for (const targetPath of targetPaths) {
+      const source = rootContext.getSource(targetPath);
+      const instrumentedSource = await this.instrument(source, targetPath);
+
+      const _path = path
+        .normalize(targetPath)
+        .replace(absoluteRootPath, destinationPath);
+
+      await outputFileSync(_path, instrumentedSource);
+    }
+  }
+
   async instrument(code: string, filename: string) {
     const options = JSON.parse(JSON.stringify(defaultBabelOptions));
 

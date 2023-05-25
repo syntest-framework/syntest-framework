@@ -1,6 +1,13 @@
 {
   "extends": "../../tsconfig-base.json",
-  "files": [],
-  "include": [],
-  "references": [{ "path": "lib/" }]
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "composite": true,
+    // disable some because this is a library
+    "strict": false /* Enable all strict type-checking options. */,
+    "noImplicitAny": false /* Raise error on expressions and declarations with an implied 'any' type. */,
+    "noImplicitThis": false /* Raise error on 'this' expressions with an implied 'any' type. */
+  },
+  "include": ["**/*.ts"]
 }
