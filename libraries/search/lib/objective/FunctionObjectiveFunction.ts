@@ -52,7 +52,6 @@ export class FunctionObjectiveFunction<
     super(approachLevel, branchDistance);
     this._subject = subject;
     this._id = id;
-    console.log("function objective " + id);
   }
 
   /**
