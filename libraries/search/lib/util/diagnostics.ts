@@ -46,3 +46,6 @@ export const moreThanTwoOutgoingEdges = (
   branchObjectiveFunctionId: string
 ) =>
   `This should never happen.\nNode has more than two outgoing edges! \nNode id: ${nodeId}\nBranch objective function id: ${branchObjectiveFunctionId}`;
+
+export const cannotFindTraceThatIsCovered = () =>
+  `Cannot find the branch trace that is covered`;

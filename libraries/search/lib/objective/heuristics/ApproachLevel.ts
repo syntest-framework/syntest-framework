@@ -18,6 +18,7 @@
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg";
 
 import { Datapoint } from "../../util/Datapoint";
+import { cannotFindTraceThatIsCovered } from "../../util/diagnostics";
 
 export class ApproachLevel {
   public calculate<S>(
@@ -53,7 +54,7 @@ export class ApproachLevel {
     const closestCoveredBranchTrace = idsTraceMap.get(closestCoveredBranch.id);
 
     if (!closestCoveredBranchTrace) {
-      throw new Error("Cannot find the branch trace that is covered");
+      throw new Error(cannotFindTraceThatIsCovered());
     }
 
     return {
@@ -63,7 +64,6 @@ export class ApproachLevel {
     };
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   _findClosestCoveredBranch<S>(
     cfg: ControlFlowGraph<S>,
     from: string,
@@ -86,6 +86,7 @@ export class ApproachLevel {
           continue;
         }
 
+        // return if one of targets nodes was found
         if (targets.has(edge.source)) {
           return {
             approachLevel: currentDistance,
