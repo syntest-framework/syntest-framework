@@ -164,7 +164,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           id: function_.loc.id,
           type: "function",
           path: key,
-          line: function_.line,
+          location: function_.loc,
 
           hits: hits,
         });
@@ -180,7 +180,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           id: statement.id,
           type: "statement",
           path: key,
-          line: statement.start.line,
+          location: statement,
 
           hits: hits,
         });
@@ -196,7 +196,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           id: branch.locations[0].id,
           path: key,
           type: "branch",
-          line: branch.line,
+          location: branch.locations[0],
 
           hits: hits[0],
 
@@ -208,11 +208,14 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         if (branch.locations.length > 2) {
           // switch case
           for (const [index, location] of branch.locations.entries()) {
+            if (index === 0) {
+              continue;
+            }
             traces.push({
               id: location.id,
               path: key,
               type: branch.type,
-              line: branch.line,
+              location: branch.locations[index],
 
               hits: hits[index],
 
@@ -228,7 +231,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
             id: branch.locations[1].id,
             path: key,
             type: branch.type,
-            line: branch.line,
+            location: branch.locations[1],
 
             hits: hits[1],
 
@@ -245,7 +248,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
             id: branch.locations[0].id,
             path: key,
             type: "branch",
-            line: branch.line,
+            location: branch.locations[0],
 
             hits: hits[0] ? 0 : 1,
 

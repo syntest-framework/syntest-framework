@@ -54,6 +54,11 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
         const outGoingEdges = graph.getOutgoingEdges(controlNodeId);
 
         for (const edge of outGoingEdges) {
+          if (["ENTRY", "SUCCESS_EXIT", "ERROR_EXIT"].includes(edge.target)) {
+            throw new Error(
+              `Function ${function_.name} in ${function_.id} ends in entry/exit node`
+            );
+          }
           // Add objective function
           this._objectives.set(
             new BranchObjectiveFunction(

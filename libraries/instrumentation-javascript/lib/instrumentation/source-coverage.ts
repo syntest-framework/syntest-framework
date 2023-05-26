@@ -145,7 +145,7 @@ export class SourceCoverage extends classes.FileCoverage {
         end: ifPath.node.loc.end,
       });
       const id = this._getNodeId(ifPath.node.loc);
-      clone.id = `placeholder-${id}`;
+      clone.id = `placeholder:::${id}`;
       bMeta.locations.push(clone);
     }
     counts.push(0);

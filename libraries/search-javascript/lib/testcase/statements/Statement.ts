@@ -72,7 +72,10 @@ export abstract class Statement {
     this._name = name;
     this._type = type;
     this._uniqueId = uniqueId;
-    this._varName = name + "_" + type + "_" + prng.uniqueId(4);
+
+    this._varName = type.includes("<>")
+      ? name + "_" + type.split("<>")[1] + "_" + prng.uniqueId(4)
+      : name + "_" + type + "_" + prng.uniqueId(4);
     this._varName = "_" + this.varName;
   }
 

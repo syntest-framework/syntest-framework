@@ -168,7 +168,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       // e.g. bar.foo
       return (
         this._getBindingId(path.parentPath.get("object")) +
-        " " +
+        " <-> " +
         this._getNodeId(path)
       );
     }

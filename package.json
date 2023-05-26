@@ -51,7 +51,7 @@
     "@commitlint/cli": "17.4.2",
     "@commitlint/config-conventional": "17.4.2",
     "@types/babel__core": "7.20.0",
-    "@types/babel__traverse": "^7.18.3",
+    "@types/babel__traverse": "7.18.5",
     "@types/chai": "4.3.4",
     "@types/figlet": "1.5.4",
     "@types/lodash.clonedeep": "^4.5.7",

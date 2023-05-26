@@ -119,7 +119,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
   public ClassProperty: (path: NodePath<t.ClassProperty>) => void = (path) => {
     const classParent = path.findParent((p) => p.isClass());
-    const involved = [classParent, path.get("key")];
+    const involved = [classParent, path];
 
     if (path.has("value")) {
       involved.push(path.get("value"));
@@ -150,7 +150,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
         this._createRelation(
           path,
           RelationType.ClassConstructor,
-          [classParent, path.get("key"), ...path.get("params")],
+          [classParent, path, ...path.get("params")],
           path.node.computed
         );
         break;
@@ -159,7 +159,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
         this._createRelation(
           path,
           RelationType.ClassGetter,
-          [classParent, path.get("key")],
+          [classParent, path],
           path.node.computed
         );
         break;
@@ -168,7 +168,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
         this._createRelation(
           path,
           RelationType.ClassSetter,
-          [classParent, path.get("key"), ...path.get("params")],
+          [classParent, path, ...path.get("params")],
           path.node.computed
         );
         break;
@@ -178,28 +178,28 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
           this._createRelation(
             path,
             RelationType.StaticAsyncClassMethod,
-            [classParent, path.get("key"), ...path.get("params")],
+            [classParent, path, ...path.get("params")],
             path.node.computed
           );
         } else if (path.node.static) {
           this._createRelation(
             path,
             RelationType.StaticClassMethod,
-            [classParent, path.get("key"), ...path.get("params")],
+            [classParent, path, ...path.get("params")],
             path.node.computed
           );
         } else if (path.node.async) {
           this._createRelation(
             path,
             RelationType.AsyncClassMethod,
-            [classParent, path.get("key"), ...path.get("params")],
+            [classParent, path, ...path.get("params")],
             path.node.computed
           );
         } else {
           this._createRelation(
             path,
             RelationType.ClassMethod,
-            [classParent, path.get("key"), ...path.get("params")],
+            [classParent, path, ...path.get("params")],
             path.node.computed
           );
         }

@@ -115,15 +115,22 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   abstract sampleObject(
     depth: number,
     id: string,
-    name: string
+    name: string,
+    type: string
   ): ObjectStatement;
 
-  abstract sampleArray(depth: number, id: string, name: string): ArrayStatement;
+  abstract sampleArray(
+    depth: number,
+    id: string,
+    name: string,
+    type: string
+  ): ArrayStatement;
 
   abstract sampleArrowFunction(
     depth: number,
     id: string,
-    name: string
+    name: string,
+    type: string
   ): ArrowFunctionStatement;
 
   abstract sampleString(

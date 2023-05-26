@@ -309,7 +309,7 @@ export class VisitState {
     if (!dloc) {
       dloc = {
         start: n.loc.start,
-        end: { line: n.loc.start.line, column: n.loc.start.column + 1 },
+        end: n.loc.end, // idk why it was this way since this seems to work too { line: n.loc.start.line, column: n.loc.start.column + 1 },
       };
     }
 
