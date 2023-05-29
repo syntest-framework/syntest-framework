@@ -38,17 +38,30 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   private W = 0.5;
   private c1 = 0.25;
   private c2 = 0.25;
-  private maxEpochs = 2000;
+  private pBestMap: Map<string, T>;
+  private velocityMap: Map<string, number[]>;
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
-    populationSize: number,
-    maxEpochs: number
+    populationSize: number
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
-    this.maxEpochs = maxEpochs;
+
+    this.pBestMap = new Map<string, T>(
+      this._population.map((particle) => [particle.id, particle])
+    );
+
+    this.velocityMap = new Map<string, number[]>(
+      this._population.map((particle) => [
+        particle.id,
+        Array.from<number>({
+          length: this._objectiveManager.getCurrentObjectives().size,
+        }).fill(0),
+      ])
+    );
+
     PSO.LOGGER = getLogger("PSO");
   }
 
@@ -72,63 +85,59 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       }`
     );
 
-    let epoch = 0;
-    let archive = [];
-    const pBestArray = this._population; // Array containing pBest solutions
-
-    // Velocity matrix
-    const V: number[][] = Array.from(
-      // Initialize all velocities to 0.
-      { length: this._population.length },
-      () =>
-        Array.from<number>({
-          length: this._objectiveManager.getCurrentObjectives().size,
-        }).fill(0)
+    const nextPopulation: T[] = [];
+    const archive = this.getNonDominatedFront(
+      this._objectiveManager.getUncoveredObjectives(),
+      this._population
     );
 
-    while (epoch < this.maxEpochs) {
-      archive = this.getNonDominatedFront(
-        this._objectiveManager.getUncoveredObjectives(),
-        this._population
-      );
+    for (const particle of this._population) {
+      const gBest = this._selectGbest(particle, archive);
+      const pBest = this._selectPbest(particle);
 
-      for (const [index, particle] of this._population.entries()) {
-        const gBest = this._selectGbest(particle, archive);
-        const pBest = this._selectPbest(particle, pBestArray, index);
+      this._updateVelocity(particle, pBest, gBest);
 
-        V[index] = this._updateVelocity(particle, V[index], pBest, gBest);
-
-        //TODO: Apply crossover and mutation based on velocity
-      }
-
-      epoch++;
+      nextPopulation.push(this._updatePosition(particle));
     }
+
+    this._population = nextPopulation;
   }
 
-  protected _updateVelocity(
-    particle: T,
-    velocity: number[],
-    pBest: T,
-    gBest: T
-  ): number[] {
+  protected _updatePosition(particle: T): T {
+    const r = Math.random();
+    const velocity = this.velocityMap.get(particle.id);
+    const averageVelocity =
+      velocity.reduce((accumulator, n) => accumulator + n) / velocity.length;
+
+    if (1 / (1 + Math.exp(-averageVelocity)) > r)
+      particle.mutate(this._encodingSampler);
+
+    return particle;
+  }
+
+  protected _updateVelocity(particle: T, pBest: T, gBest: T): void {
     const r1 = Math.random();
     const r2 = Math.random();
 
     const objectivesList = [...this._objectiveManager.getCurrentObjectives()];
 
     // Update velocity according to PSO formula
-    return velocity.map(
-      (v, dimensionIndex) =>
-        this.W * v +
-        this.c1 *
-          r1 *
-          (pBest.getDistance(objectivesList[dimensionIndex]) -
-            particle.getDistance(objectivesList[dimensionIndex])) +
-        this.c2 *
-          r2 *
-          (gBest.getDistance(objectivesList[dimensionIndex]) -
-            particle.getDistance(objectivesList[dimensionIndex]))
-    );
+    const newVelocity = this.velocityMap
+      .get(particle.id)
+      .map(
+        (velocity, dimensionIndex) =>
+          this.W * velocity +
+          this.c1 *
+            r1 *
+            (pBest.getDistance(objectivesList[dimensionIndex]) -
+              particle.getDistance(objectivesList[dimensionIndex])) +
+          this.c2 *
+            r2 *
+            (gBest.getDistance(objectivesList[dimensionIndex]) -
+              particle.getDistance(objectivesList[dimensionIndex]))
+      );
+
+    this.velocityMap.set(particle.id, newVelocity);
   }
 
   protected _selectGbest(particle: T, archive: T[]): T {
@@ -140,7 +149,7 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         DominanceComparator.compare(
           archiveParticle,
           particle,
-          this._objectiveManager.getCoveredObjectives()
+          this._objectiveManager.getCurrentObjectives()
         ) === 1
     );
 
@@ -150,19 +159,19 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     return this._weightedProbabilitySelection(dominatingParticle);
   }
 
-  protected _selectPbest(particle: T, pBestArray: T[], index: number): T {
+  protected _selectPbest(particle: T): T {
     const flag = DominanceComparator.compare(
       particle,
-      pBestArray[index],
+      this.pBestMap.get(particle.id),
       this._objectiveManager.getCurrentObjectives()
     );
 
     if (flag === 1) {
-      pBestArray[index] = particle;
+      this.pBestMap.set(particle.id, particle);
       return particle;
     }
 
-    return pBestArray[index];
+    return this.pBestMap.get(particle.id);
   }
 
   protected _weightedProbabilitySelection(archive: T[]): T {
@@ -174,7 +183,7 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
           DominanceComparator.compare(
             archiveParticle,
             particle,
-            this._objectiveManager.getCoveredObjectives()
+            this._objectiveManager.getCurrentObjectives()
           ) === 1
       ).length,
     }));
