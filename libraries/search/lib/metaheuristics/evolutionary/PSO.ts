@@ -87,7 +87,7 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
     const nextPopulation: T[] = [];
     const archive = this.getNonDominatedFront(
-      this._objectiveManager.getUncoveredObjectives(),
+      this._objectiveManager.getCurrentObjectives(),
       this._population
     );
 
