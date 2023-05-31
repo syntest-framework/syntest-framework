@@ -45,23 +45,43 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
           this.isDominated(solution, archivedSolution)
         )
       ) {
-        this.archive = this.archive.filter(
-          (archivedSolution) => !this.isDominated(archivedSolution, solution)
-        );
-        this.addSolutionToArchive(solution);
+        for (const archivedSolution of this.archive) {
+          const isDominated = this.isDominated(archivedSolution, solution);
+          if (isDominated) {
+            this.removeSolution(archivedSolution);
+          }
+        }
+        this.addSolution(solution);
       }
     }
 
-    const parents = [];
+    // Calculate the total density of all boxes
+    const totalDensity = [...this.grid.values()].reduce(
+      (sum, solutions) => sum + solutions.length,
+      0
+    );
+
+    // Calculate the selection probabilities for each box
+    const boxDensities = [...this.grid.entries()].map(([key, solutions]) => ({
+      key,
+      density: solutions.length / totalDensity,
+    }));
+
+    // Sort the boxes by their probabilities
+    boxDensities.sort((a, b) => a.density - b.density);
+
+    const newPopulation = [];
     for (let index = 0; index < size; index++) {
-      const parent = this.selectParent();
-      parents.push(parent);
+      const boxKey = boxDensities[index].key;
+      const selectedBox = this.grid.get(boxKey);
+      const selectedSolution =
+        selectedBox[Math.floor(Math.random() * selectedBox.length)];
+      newPopulation.push(selectedSolution);
     }
 
-    this._population = parents;
+    this._population = newPopulation;
   }
   private archive: T[];
-  private archiveSize: number;
   private gridSize: number;
   private grid: Map<string, T[]>;
 
@@ -70,18 +90,16 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
     populationSize: number,
-    archiveSize: number,
     gridSizeInput: number
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     this.archive = [];
     this.gridSize = gridSizeInput;
     this.grid = new Map();
-    this.archiveSize = archiveSize;
   }
 
   private getGridLocation(solution: T): number[] {
-    return [...this._objectiveManager.getUncoveredObjectives()].map(
+    return [...this._objectiveManager.getCurrentObjectives()].map(
       (objective) => {
         const minValue = Math.min(
           ...this.archive.map((x) => objective.calculateDistance(x))
@@ -105,60 +123,30 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     this.grid.get(gridLocation)?.push(solution);
   }
 
-  private selectParent(): T {
-    // Calculate the total density of all boxes
-    const totalDensity = [...this.grid.values()].reduce(
-      (sum, solutions) => sum + solutions.length,
-      0
-    );
-
-    // Calculate the selection probabilities for each box
-    const boxProbabilities = [...this.grid.entries()].map(
-      ([key, solutions]) => ({
-        key,
-        probability: solutions.length / totalDensity,
-      })
-    );
-
-    // Sort the boxes by their probabilities
-    boxProbabilities.sort((a, b) => a.probability - b.probability);
-
-    // Roulette wheel selection
-    const randomValue = Math.random();
-    let cumulativeProbability = 0;
-    let selectedBoxKey: string;
-
-    for (const box of boxProbabilities) {
-      cumulativeProbability += box.probability;
-      if (randomValue <= cumulativeProbability) {
-        selectedBoxKey = box.key;
-        break;
-      }
-    }
-
-    // Select a random solution from the selected box
-    const selectedBox = this.grid.get(selectedBoxKey);
-    return selectedBox[Math.floor(Math.random() * selectedBox.length)];
-  }
-
-  private addSolutionToArchive(solution: T): void {
+  private addSolution(solution: T): void {
     this.archive.push(solution);
     this.addToGrid(solution);
+  }
 
-    if (this.archive.length > this.archiveSize) {
-      const maxDensity = Math.max(
-        ...[...this.grid.values()].map((solutions) => solutions.length)
-      );
-      const candidates = [...this.grid.entries()].filter(
-        ([, solutions]) => solutions.length === maxDensity
-      );
-      const selectedEntry =
-        candidates[Math.floor(Math.random() * candidates.length)];
-      const removedSolution = selectedEntry[1].shift()!;
-      const index = this.archive.indexOf(removedSolution);
+  private removeSolution(solution: T): void {
+    // Remove from archive
+    const index = this.archive.indexOf(solution);
+    if (index > -1) {
       this.archive.splice(index, 1);
-      if (selectedEntry[1].length === 0) {
-        this.grid.delete(selectedEntry[0]);
+    }
+
+    // Remove from grid
+    const gridLocation = this.getGridLocation(solution).toString();
+    const gridEntry = this.grid.get(gridLocation);
+    if (gridEntry) {
+      const gridIndex = gridEntry.indexOf(solution);
+      if (gridIndex > -1) {
+        gridEntry.splice(gridIndex, 1);
+      }
+      if (gridEntry.length === 0) {
+        this.grid.delete(gridLocation);
+      } else {
+        this.grid.set(gridLocation, gridEntry);
       }
     }
   }
@@ -169,7 +157,7 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       DominanceComparator.compare(
         a,
         b,
-        this._objectiveManager.getUncoveredObjectives()
+        this._objectiveManager.getCurrentObjectives()
       ) === -1
     )
       returnValue = true;
