@@ -38,8 +38,8 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   private W = 0.5;
   private c1 = 0.25;
   private c2 = 0.25;
-  private pBestMap: Map<string, T>;
-  private velocityMap: Map<string, number[]>;
+  private pBestMap: Map<string, T>; // Map containing best current solution for each particle
+  private velocityMap: Map<string, number[]>; // Map containing velocity vectors for each particle
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
@@ -49,11 +49,11 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
 
-    this.pBestMap = new Map<string, T>(
+    this.pBestMap = new Map<string, T>( // Initiate pBest to current value of each particle
       this._population.map((particle) => [particle.id, particle])
     );
 
-    this.velocityMap = new Map<string, number[]>(
+    this.velocityMap = new Map<string, number[]>( // Initiate velocity matrix with zero values
       this._population.map((particle) => [
         particle.id,
         Array.from<number>({
@@ -91,6 +91,7 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       this._population
     );
 
+    // Iterate over population
     for (const particle of this._population) {
       const gBest = this._selectGbest(particle, archive);
       const pBest = this._selectPbest(particle);
@@ -103,6 +104,13 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     this._population = nextPopulation;
   }
 
+  /** Method used to update the position of a particle.
+   *  If the particle has high velocity values,
+   *  mutation is more likely to be applied multiple times.
+   *
+   * @param particle Particle to be mutated
+   * @returns The possibly mutated particle
+   */
   protected _updatePosition(particle: T): T {
     const r = Math.random();
     const velocity = this.velocityMap.get(particle.id);
@@ -115,6 +123,12 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     return particle;
   }
 
+  /** Updates velocity of a particle using PSO formula
+   *
+   * @param particle Particle for which the velocity should be calculated
+   * @param pBest Global best solution so far
+   * @param gBest Local best solution so far
+   */
   protected _updateVelocity(particle: T, pBest: T, gBest: T): void {
     const r1 = Math.random();
     const r2 = Math.random();
@@ -140,6 +154,14 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     this.velocityMap.set(particle.id, newVelocity);
   }
 
+  /** Select global best
+   *  The method uses the PROB approach explained in the MOPSO paper
+   *  by Coello Coello et al.
+   *
+   * @param particle The particle for which the global best should be selected
+   * @param archive  Current archive of non-dominated solutions
+   * @returns Global best solution
+   */
   protected _selectGbest(particle: T, archive: T[]): T {
     if (archive.includes(particle))
       return this._weightedProbabilitySelection(archive);
@@ -159,6 +181,12 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     return this._weightedProbabilitySelection(dominatingParticle);
   }
 
+  /** Updates current particle local best if the new value
+   *  dominates the old one
+   *
+   * @param particle Particle to be compared with local best
+   * @returns Either particle passed as parameter or old local best
+   */
   protected _selectPbest(particle: T): T {
     const flag = DominanceComparator.compare(
       particle,
@@ -174,8 +202,20 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     return this.pBestMap.get(particle.id);
   }
 
+  /** Method of selecting global best from passed archive,
+   *  the method calculates the amount of particles dominated by
+   *  each solution in the archive and randomly selects one with
+   *  probability inversely proportional to the amount of dominated
+   *  particles
+   *
+   * @param archive Archive of non-dominated solutions
+   * @returns A randmoly selected particle from the archive
+   */
   protected _weightedProbabilitySelection(archive: T[]): T {
-    //Creates an array of objects containing the current particle from the archive and the number of particles dominated by it.
+    /*
+      Creates an array of objects containing the current particle 
+      from the archive and the number of particles dominated by it.
+    */
     const customArchive = archive.map((archiveParticle) => ({
       particle: archiveParticle,
       dominatedParticles: this._population.filter(
@@ -194,6 +234,7 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       0
     );
 
+    // Random number between 0 and weightsSum
     let rand = Math.random() * weightsSum;
 
     // Inversely proportional weighted probability selection
