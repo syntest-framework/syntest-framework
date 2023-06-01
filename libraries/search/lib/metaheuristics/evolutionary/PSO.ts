@@ -40,6 +40,8 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   private c2 = 0.25;
   private pBestMap: Map<string, T>; // Map containing best current solution for each particle
   private velocityMap: Map<string, number[]>; // Map containing velocity vectors for each particle
+  private maximumVelocity: number;
+  private minimumVelocity: number;
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
@@ -61,6 +63,9 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         }).fill(0),
       ])
     );
+
+    this.maximumVelocity = Number.NEGATIVE_INFINITY;
+    this.minimumVelocity = Number.POSITIVE_INFINITY;
 
     PSO.LOGGER = getLogger("PSO");
   }
@@ -115,9 +120,10 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     const velocity = this.velocityMap.get(particle.id);
 
     // Normalize vector through min-max normalization
-    const minValue = Math.min(...velocity);
     const normalizedVelocity = velocity.map(
-      (v) => (v - minValue) / (Math.max(...velocity) - minValue)
+      (v) =>
+        (v - this.minimumVelocity) /
+        (this.maximumVelocity - this.minimumVelocity)
     );
 
     for (const velocityValue of normalizedVelocity) {
@@ -154,6 +160,10 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
             (gBest.getDistance(objectivesList[dimensionIndex]) -
               particle.getDistance(objectivesList[dimensionIndex]))
       );
+
+    // Update max and min velocity if necessary
+    this.maximumVelocity = Math.max(...newVelocity, this.maximumVelocity);
+    this.minimumVelocity = Math.min(...newVelocity, this.minimumVelocity);
 
     this.velocityMap.set(particle.id, newVelocity);
   }
