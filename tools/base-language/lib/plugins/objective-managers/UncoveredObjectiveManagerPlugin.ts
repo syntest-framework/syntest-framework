@@ -27,7 +27,7 @@ import {
 } from "../ObjectiveManagerPlugin";
 
 /**
- * Plugin for SignalTerminationTrigger
+ * Plugin for the uncovered objective manager
  *
  * @author Dimitri Stallenberg
  */
