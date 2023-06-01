@@ -62,6 +62,7 @@ export * from "./lib/objective/ObjectiveType";
 export * from "./lib/objective/managers/ObjectiveManager";
 export * from "./lib/objective/managers/SimpleObjectiveManager";
 export * from "./lib/objective/managers/StructuralObjectiveManager";
+export * from "./lib/objective/managers/StructuralUncoveredObjectiveManager";
 export * from "./lib/objective/managers/UncoveredObjectiveManager";
 
 export * from "./lib/objective/secondary/LengthObjectiveComparator";
