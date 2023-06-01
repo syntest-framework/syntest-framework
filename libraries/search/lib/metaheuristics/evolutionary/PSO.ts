@@ -104,6 +104,13 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     this._population = nextPopulation;
   }
 
+  /** Method used to update the position of a particle.
+   *  If the particle has high velocity values, mutation
+   *  is more likely to be applied multiple times.
+   *
+   * @param particle Particle to be mutated
+   * @returns The possibly mutated particle
+   */
   protected _updatePosition(particle: T): T {
     const velocity = this.velocityMap.get(particle.id);
 
