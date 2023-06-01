@@ -25,20 +25,24 @@ import {
   TerminationManager,
 } from "@syntest/core";
 
+import { PublisherWSPlugin } from "./PublisherWSPlugin";
+
 export const onEventActions = {
-  onVoidEvent(eventTypeName: string, ws: WebSocket): void {
-    ws.send(Buffer.from(JSON.stringify({ eventType: eventTypeName })));
+  onVoidEvent(eventTypeName: string, plugin: PublisherWSPlugin): void {
+    plugin.socket.send(
+      Buffer.from(JSON.stringify({ eventType: eventTypeName }))
+    );
   },
 
   onAlgorithmEvent(
     eventTypeName: string,
-    ws: WebSocket,
+    plugin: PublisherWSPlugin,
     _searchAlgorithm: SearchAlgorithm<Encoding>,
     _subject: SearchSubject<Encoding>,
     _budgetManager: BudgetManager<Encoding>,
     _terminationManager: TerminationManager
   ): void {
-    ws.send(
+    plugin.socket.send(
       Buffer.from(
         JSON.stringify({
           eventType: eventTypeName,
@@ -55,10 +59,10 @@ export const onEventActions = {
 
   onRootContextEvent(
     eventTypeName: string,
-    ws: WebSocket,
+    plugin: PublisherWSPlugin,
     _rootContext: RootContext<unknown>
   ): void {
-    ws.send(
+    plugin.socket.send(
       Buffer.from(
         JSON.stringify({
           eventType: eventTypeName,
@@ -72,11 +76,11 @@ export const onEventActions = {
 
   onControlFlowGraphResolvingComplete(
     eventTypeName: string,
-    ws: WebSocket,
+    plugin: PublisherWSPlugin,
     _rootContext: RootContext<unknown>,
     _cfg: ControlFlowGraph<unknown>
   ): void {
-    ws.send(
+    plugin.socket.send(
       Buffer.from(
         JSON.stringify({
           eventType: eventTypeName,

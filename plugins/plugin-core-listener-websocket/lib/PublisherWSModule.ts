@@ -21,17 +21,22 @@ import { Module, ModuleManager } from "@syntest/module";
 import { PublisherWSPlugin } from "./PublisherWSPlugin";
 
 export default class PublisherModule extends Module {
-  private socket: WebSocket;
+  plugin: PublisherWSPlugin;
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("publisherWS", require("../package.json").version);
+    super("publisherWS", "6");
   }
 
   register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this.name, new PublisherWSPlugin(this.socket));
+    this.plugin = new PublisherWSPlugin();
+    moduleManager.registerPlugin(this.name, this.plugin);
+  }
+
+  override prepare(): void {
+    this.plugin.connect();
   }
 
   override cleanup(): void {
-    this.socket.close();
+    this.plugin.disconnect();
   }
 }
