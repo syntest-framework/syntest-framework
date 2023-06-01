@@ -23,11 +23,11 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
 import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
- * Objective manager that only evaluates an encoding on currently reachable and covered objectives.
+ * Objective manager that only evaluates an encoding on currently reachable objectives.
  *
  * @author Mitchell Olsthoorn
  */
-export class StructuralObjectiveManager<
+export class StructuralUncoveredObjectiveManager<
   T extends Encoding
 > extends ObjectiveManager<T> {
   /**
@@ -35,8 +35,9 @@ export class StructuralObjectiveManager<
    * @protected
    */
   protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
-    // Remove objective from the uncovered objectives
+    // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
+    this._currentObjectives.delete(objectiveFunction);
 
     // Add objective to the covered objectives
     this._coveredObjectives.add(objectiveFunction);
