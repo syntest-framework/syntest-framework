@@ -104,21 +104,18 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     this._population = nextPopulation;
   }
 
-  /** Method used to update the position of a particle.
-   *  If the particle has high velocity values,
-   *  mutation is more likely to be applied multiple times.
-   *
-   * @param particle Particle to be mutated
-   * @returns The possibly mutated particle
-   */
   protected _updatePosition(particle: T): T {
-    const r = Math.random();
     const velocity = this.velocityMap.get(particle.id);
-    const averageVelocity =
-      velocity.reduce((accumulator, n) => accumulator + n) / velocity.length;
 
-    if (1 / (1 + Math.exp(-averageVelocity)) > r)
-      particle.mutate(this._encodingSampler);
+    // Normalize vector through min-max normalization
+    const minValue = Math.min(...velocity);
+    const normalizedVelocity = velocity.map(
+      (v) => (v - minValue) / (Math.max(...velocity) - minValue)
+    );
+
+    for (const velocityValue of normalizedVelocity) {
+      if (Math.random() > velocityValue) particle.mutate(this._encodingSampler);
+    }
 
     return particle;
   }
