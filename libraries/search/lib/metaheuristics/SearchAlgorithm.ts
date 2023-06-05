@@ -183,7 +183,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     return this._objectiveManager;
   }
 
-  public getCovered(objectiveType = "mixed"): number {
+  private getCovered(objectiveType = "mixed"): number {
     const covered = new Set();
 
     for (const key of this._objectiveManager.getArchive().getObjectives()) {
@@ -207,7 +207,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     return covered.size;
   }
 
-  public getUncovered(objectiveType = "mixed"): number {
+  private getUncovered(objectiveType = "mixed"): number {
     const total = new Set();
     const covered = new Set();
 

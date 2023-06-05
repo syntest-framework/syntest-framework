@@ -316,6 +316,10 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.PROPERTY,
+    property: PropertyName.EXCEPTION_OBJECTIVES_TOTAL,
+  },
+  {
+    type: MetricType.PROPERTY,
     property: PropertyName.LINE_OBJECTIVES_TOTAL,
   },
   {
@@ -352,6 +356,10 @@ export const metrics: Metric[] = [
   {
     type: MetricType.PROPERTY,
     property: PropertyName.FUNCTION_OBJECTIVES_COVERED,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.EXCEPTION_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
