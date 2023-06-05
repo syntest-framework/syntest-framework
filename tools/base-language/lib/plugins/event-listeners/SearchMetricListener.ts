@@ -18,11 +18,14 @@
 import { Metric, MetricManager, SeriesType } from "@syntest/metric";
 import { EventListenerPlugin } from "@syntest/module";
 import {
+  BranchObjectiveFunction,
   BudgetManager,
   BudgetType,
   Encoding,
   Events,
-  ObjectiveType,
+  ExceptionObjectiveFunction,
+  FunctionObjectiveFunction,
+  ImplicitBranchObjectiveFunction,
   SearchAlgorithm,
   SearchSubject,
 } from "@syntest/search";
@@ -80,17 +83,29 @@ export class SearchMetricListener extends EventListenerPlugin {
     searchTime = Math.round(searchTime * 1000) / 1000;
     totalTime = Math.round(totalTime * 1000) / 1000;
 
-    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
-    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
-    const coveredExceptions = searchAlgorithm.getCovered(
-      ObjectiveType.EXCEPTION
-    );
-    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
-    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
-    const coveredImplicitBranches = searchAlgorithm.getCovered(
-      ObjectiveType.IMPLICIT_BRANCH
-    );
-    const coveredObjectives = searchAlgorithm.getCovered();
+    const covered = [
+      ...searchAlgorithm.getObjectiveManager().getCoveredObjectives(),
+    ];
+
+    const coveredPaths = 0;
+    const coveredBranches = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof BranchObjectiveFunction
+    ).length;
+    const coveredFunctions = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof FunctionObjectiveFunction
+    ).length;
+    const coveredExceptions = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof ExceptionObjectiveFunction
+    ).length;
+    const coveredLines = 0;
+    const coveredImplicitBranches = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof ImplicitBranchObjectiveFunction
+    ).length;
+    const coveredObjectives = covered.length;
 
     // search times
     this.recordCoveredSeries(
@@ -151,37 +166,37 @@ export class SearchMetricListener extends EventListenerPlugin {
     coveredExceptions: number
   ) {
     this.metricManager.recordSeries(
-      SeriesName.PATHS_COVERED,
+      SeriesName.PATH_OBJECTIVES_COVERED,
       type,
       index,
       coveredPaths
     );
     this.metricManager.recordSeries(
-      SeriesName.BRANCHES_COVERED,
+      SeriesName.BRANCH_OBJECTIVES_COVERED,
       type,
       index,
       coveredBranches
     );
     this.metricManager.recordSeries(
-      SeriesName.EXCEPTIONS_COVERED,
+      SeriesName.EXCEPTION_OBJECTIVES_COVERED,
       type,
       index,
       coveredExceptions
     );
     this.metricManager.recordSeries(
-      SeriesName.FUNCTIONS_COVERED,
+      SeriesName.FUNCTION_OBJECTIVES_COVERED,
       type,
       index,
       coveredFunctions
     );
     this.metricManager.recordSeries(
-      SeriesName.LINES_COVERED,
+      SeriesName.LINE_OBJECTIVES_COVERED,
       type,
       index,
       coveredLines
     );
     this.metricManager.recordSeries(
-      SeriesName.IMPLICIT_BRANCHES_COVERED,
+      SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
       type,
       index,
       coveredImplicitBranches
@@ -194,94 +209,122 @@ export class SearchMetricListener extends EventListenerPlugin {
     );
   }
 
-  recordInitialProperties<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>
-  ): void {
-    // record totals
-    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
-    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
-    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
-    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
-    const coveredImplicitBranches = searchAlgorithm.getCovered(
-      ObjectiveType.IMPLICIT_BRANCH
-    );
-    const coveredObjectives = searchAlgorithm.getCovered();
-
-    const totalPaths =
-      coveredPaths + searchAlgorithm.getUncovered(ObjectiveType.PATH);
-    const totalBranches =
-      coveredBranches + searchAlgorithm.getUncovered(ObjectiveType.BRANCH);
-    const totalFunctions =
-      coveredFunctions + searchAlgorithm.getUncovered(ObjectiveType.FUNCTION);
-    const totalLines =
-      coveredLines + searchAlgorithm.getUncovered(ObjectiveType.LINE);
-    const totalImplicitBranches =
-      coveredImplicitBranches +
-      searchAlgorithm.getUncovered(ObjectiveType.IMPLICIT_BRANCH);
-    const total = coveredObjectives + searchAlgorithm.getUncovered();
-
-    this.metricManager.recordProperty(
-      PropertyName.PATHS_TOTAL,
-      totalPaths.toString()
-    );
-    this.metricManager.recordProperty(
-      PropertyName.BRANCHES_TOTAL,
-      totalBranches.toString()
-    );
-    this.metricManager.recordProperty(
-      PropertyName.FUNCTIONS_TOTAL,
-      totalFunctions.toString()
-    );
-    this.metricManager.recordProperty(
-      PropertyName.LINES_TOTAL,
-      totalLines.toString()
-    );
-    this.metricManager.recordProperty(
-      PropertyName.IMPLICIT_BRANCHES_TOTAL,
-      totalImplicitBranches.toString()
-    );
-    this.metricManager.recordProperty(
-      PropertyName.OBJECTIVES_TOTAL,
-      total.toString()
-    );
-  }
-
   recordFinalProperties<T extends Encoding>(
     searchAlgorithm: SearchAlgorithm<T>
   ): void {
+    const covered = [
+      ...searchAlgorithm.getObjectiveManager().getCoveredObjectives(),
+    ];
+    const uncovered = [
+      ...searchAlgorithm.getObjectiveManager().getUncoveredObjectives(),
+    ];
+
     // record finals
-    const coveredPaths = searchAlgorithm.getCovered(ObjectiveType.PATH);
-    const coveredBranches = searchAlgorithm.getCovered(ObjectiveType.BRANCH);
-    const coveredFunctions = searchAlgorithm.getCovered(ObjectiveType.FUNCTION);
-    const coveredLines = searchAlgorithm.getCovered(ObjectiveType.LINE);
-    const coveredImplicitBranches = searchAlgorithm.getCovered(
-      ObjectiveType.IMPLICIT_BRANCH
-    );
-    const coveredObjectives = searchAlgorithm.getCovered();
+    const coveredPaths = 0;
+    const coveredBranches = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof BranchObjectiveFunction
+    ).length;
+    const coveredFunctions = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof FunctionObjectiveFunction
+    ).length;
+    const coveredExceptions = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof ExceptionObjectiveFunction
+    ).length;
+    const coveredLines = 0;
+    const coveredImplicitBranches = covered.filter(
+      (objectiveFunction) =>
+        objectiveFunction instanceof ImplicitBranchObjectiveFunction
+    ).length;
+    const coveredObjectives = covered.length;
 
     this.metricManager.recordProperty(
-      PropertyName.PATHS_COVERED,
+      PropertyName.PATH_OBJECTIVES_COVERED,
       coveredPaths.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.BRANCHES_COVERED,
+      PropertyName.BRANCH_OBJECTIVES_COVERED,
       coveredBranches.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.FUNCTIONS_COVERED,
+      PropertyName.FUNCTION_OBJECTIVES_COVERED,
       coveredFunctions.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.LINES_COVERED,
+      PropertyName.EXCEPTION_OBJECTIVES_COVERED,
+      coveredExceptions.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.LINE_OBJECTIVES_COVERED,
       coveredLines.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.IMPLICIT_BRANCHES_COVERED,
+      PropertyName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
       coveredImplicitBranches.toString()
     );
     this.metricManager.recordProperty(
       PropertyName.OBJECTIVES_COVERED,
       coveredObjectives.toString()
+    );
+
+    // record totals
+    const totalPaths = 0;
+    const totalBranches =
+      coveredBranches +
+      uncovered.filter(
+        (objectiveFunction) =>
+          objectiveFunction instanceof BranchObjectiveFunction
+      ).length;
+    const totalFunctions =
+      coveredFunctions +
+      uncovered.filter(
+        (objectiveFunction) =>
+          objectiveFunction instanceof FunctionObjectiveFunction
+      ).length;
+    const totalExceptions =
+      coveredExceptions +
+      uncovered.filter(
+        (objectiveFunction) =>
+          objectiveFunction instanceof ExceptionObjectiveFunction
+      ).length;
+    const totalLines = 0;
+    const totalImplicitBranches =
+      coveredImplicitBranches +
+      uncovered.filter(
+        (objectiveFunction) =>
+          objectiveFunction instanceof ImplicitBranchObjectiveFunction
+      ).length;
+    const total = coveredObjectives + uncovered.length;
+
+    this.metricManager.recordProperty(
+      PropertyName.PATH_OBJECTIVES_TOTAL,
+      totalPaths.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.BRANCH_OBJECTIVES_TOTAL,
+      totalBranches.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.FUNCTION_OBJECTIVES_TOTAL,
+      totalFunctions.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.EXCEPTION_OBJECTIVES_TOTAL,
+      totalExceptions.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.LINE_OBJECTIVES_TOTAL,
+      totalLines.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.IMPLICIT_BRANCH_OBJECTIVES_TOTAL,
+      totalImplicitBranches.toString()
+    );
+    this.metricManager.recordProperty(
+      PropertyName.OBJECTIVES_TOTAL,
+      total.toString()
     );
   }
 
@@ -298,7 +341,6 @@ export class SearchMetricListener extends EventListenerPlugin {
         // create a new metric manager for this search subject
         this.currentNamespace = subject.name;
 
-        this.recordInitialProperties(searchAlgorithm);
         this.recordSeries(searchAlgorithm, subject, budgetManager);
       }
     );
