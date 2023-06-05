@@ -18,32 +18,44 @@
 import { Metric, MetricType, SeriesType } from "@syntest/metric";
 
 export enum SeriesName {
-  PATHS_COVERED = "paths-covered",
   BRANCHES_COVERED = "branches-covered",
-  EXCEPTIONS_COVERED = "exceptions-covered",
+  STATEMENTS_COVERED = "statements-covered",
   FUNCTIONS_COVERED = "functions-covered",
-  LINES_COVERED = "lines-covered",
-  IMPLICIT_BRANCHES_COVERED = "implicit-branches-covered",
+
+  PATH_OBJECTIVES_COVERED = "path-objectives-covered",
+  BRANCH_OBJECTIVES_COVERED = "branch-objectives-covered",
+  EXCEPTION_OBJECTIVES_COVERED = "exception-objectives-covered",
+  FUNCTION_OBJECTIVES_COVERED = "function-objectives-covered",
+  LINE_OBJECTIVES_COVERED = "line-objectives-covered",
+  IMPLICIT_BRANCH_OBJECTIVES_COVERED = "implicit-branch-objectives-covered",
   OBJECTIVES_COVERED = "objectives-covered",
 
   ARCHIVE_SIZE = "archive-size",
 }
 
 export enum PropertyName {
-  PATHS_COVERED = "paths-covered",
   BRANCHES_COVERED = "branches-covered",
-  EXCEPTIONS_COVERED = "exceptions-covered",
+  STATEMENTS_COVERED = "statements-covered",
   FUNCTIONS_COVERED = "functions-covered",
-  LINES_COVERED = "lines-covered",
-  IMPLICIT_BRANCHES_COVERED = "implicit-branches-covered",
+
+  BRANCHES_TOTAL = "branches-total",
+  STATEMENTS_TOTAL = "statements-total",
+  FUNCTIONS_TOTAL = "functions-total",
+
+  PATH_OBJECTIVES_COVERED = "path-objectives-covered",
+  BRANCH_OBJECTIVES_COVERED = "branch-objectives-covered",
+  EXCEPTION_OBJECTIVES_COVERED = "exception-objectives-covered",
+  FUNCTION_OBJECTIVES_COVERED = "function-objectives-covered",
+  LINE_OBJECTIVES_COVERED = "line-objectives-covered",
+  IMPLICIT_BRANCH_OBJECTIVES_COVERED = "implicit-branch-objectives-covered",
   OBJECTIVES_COVERED = "objectives-covered",
 
-  PATHS_TOTAL = "paths-total",
-  BRANCHES_TOTAL = "branches-total",
-  EXCEPTIONS_TOTAL = "exceptions-total",
-  FUNCTIONS_TOTAL = "functions-total",
-  LINES_TOTAL = "lines-total",
-  IMPLICIT_BRANCHES_TOTAL = "implicit-branches-total",
+  PATH_OBJECTIVES_TOTAL = "path-objectives-total",
+  BRANCH_OBJECTIVES_TOTAL = "branch-objectives-total",
+  EXCEPTION_OBJECTIVES_TOTAL = "exception-objectives-total",
+  FUNCTION_OBJECTIVES_TOTAL = "function-objectives-total",
+  LINE_OBJECTIVES_TOTAL = "line-objectives-total",
+  IMPLICIT_BRANCH_OBJECTIVES_TOTAL = "implicit-branch-objectives-total",
   OBJECTIVES_TOTAL = "objectives-total",
 
   RANDOM_SEED = "random-seed",
@@ -67,7 +79,7 @@ export const metrics: Metric[] = [
   // search time
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATHS_COVERED,
+    seriesName: SeriesName.STATEMENTS_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
@@ -77,22 +89,38 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTIONS_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
-  },
-  {
-    type: MetricType.SERIES,
     seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
+
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINES_COVERED,
+    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
+    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesType: SeriesType.SEARCH_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.SEARCH_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.SEARCH_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesType: SeriesType.SEARCH_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
     seriesType: SeriesType.SEARCH_TIME,
   },
   {
@@ -104,7 +132,7 @@ export const metrics: Metric[] = [
   // total time
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATHS_COVERED,
+    seriesName: SeriesName.STATEMENTS_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
@@ -114,22 +142,38 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTIONS_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
-  },
-  {
-    type: MetricType.SERIES,
     seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
+
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINES_COVERED,
+    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
+    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesType: SeriesType.TOTAL_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.TOTAL_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.TOTAL_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesType: SeriesType.TOTAL_TIME,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
     seriesType: SeriesType.TOTAL_TIME,
   },
   {
@@ -141,7 +185,7 @@ export const metrics: Metric[] = [
   // iterations
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATHS_COVERED,
+    seriesName: SeriesName.STATEMENTS_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
@@ -151,22 +195,38 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTIONS_COVERED,
-    seriesType: SeriesType.ITERATION,
-  },
-  {
-    type: MetricType.SERIES,
     seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.ITERATION,
   },
+
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINES_COVERED,
+    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
+    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesType: SeriesType.ITERATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.ITERATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.ITERATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesType: SeriesType.ITERATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
     seriesType: SeriesType.ITERATION,
   },
   {
@@ -178,7 +238,7 @@ export const metrics: Metric[] = [
   // evaluations
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATHS_COVERED,
+    seriesName: SeriesName.STATEMENTS_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
@@ -188,22 +248,38 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTIONS_COVERED,
-    seriesType: SeriesType.EVALUATION,
-  },
-  {
-    type: MetricType.SERIES,
     seriesName: SeriesName.FUNCTIONS_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
+
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINES_COVERED,
+    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCHES_COVERED,
+    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesType: SeriesType.EVALUATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.EVALUATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesType: SeriesType.EVALUATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesType: SeriesType.EVALUATION,
+  },
+  {
+    type: MetricType.SERIES,
+    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
     seriesType: SeriesType.EVALUATION,
   },
   {
@@ -215,7 +291,7 @@ export const metrics: Metric[] = [
   // totals
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PATHS_TOTAL,
+    property: PropertyName.STATEMENTS_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
@@ -225,13 +301,26 @@ export const metrics: Metric[] = [
     type: MetricType.PROPERTY,
     property: PropertyName.FUNCTIONS_TOTAL,
   },
+
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.LINES_TOTAL,
+    property: PropertyName.PATH_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.IMPLICIT_BRANCHES_TOTAL,
+    property: PropertyName.BRANCH_OBJECTIVES_TOTAL,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.FUNCTION_OBJECTIVES_TOTAL,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.LINE_OBJECTIVES_TOTAL,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.IMPLICIT_BRANCH_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
@@ -241,7 +330,7 @@ export const metrics: Metric[] = [
   // final coverage
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PATHS_COVERED,
+    property: PropertyName.STATEMENTS_COVERED,
   },
   {
     type: MetricType.PROPERTY,
@@ -251,13 +340,26 @@ export const metrics: Metric[] = [
     type: MetricType.PROPERTY,
     property: PropertyName.FUNCTIONS_COVERED,
   },
+
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.LINES_COVERED,
+    property: PropertyName.PATH_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.IMPLICIT_BRANCHES_COVERED,
+    property: PropertyName.BRANCH_OBJECTIVES_COVERED,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.FUNCTION_OBJECTIVES_COVERED,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.LINE_OBJECTIVES_COVERED,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,

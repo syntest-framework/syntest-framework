@@ -90,6 +90,10 @@ export class MetricManager {
   merge(other: MetricManager): void {
     // Merge properties
     for (const [name, value] of other.properties.entries()) {
+      if (value.length === 0) {
+        // don't overwrite with empty values
+        continue;
+      }
       this.properties.set(name, value);
     }
 

@@ -151,37 +151,37 @@ export class SearchMetricListener extends EventListenerPlugin {
     coveredExceptions: number
   ) {
     this.metricManager.recordSeries(
-      SeriesName.PATHS_COVERED,
+      SeriesName.PATH_OBJECTIVES_COVERED,
       type,
       index,
       coveredPaths
     );
     this.metricManager.recordSeries(
-      SeriesName.BRANCHES_COVERED,
+      SeriesName.BRANCH_OBJECTIVES_COVERED,
       type,
       index,
       coveredBranches
     );
     this.metricManager.recordSeries(
-      SeriesName.EXCEPTIONS_COVERED,
+      SeriesName.EXCEPTION_OBJECTIVES_COVERED,
       type,
       index,
       coveredExceptions
     );
     this.metricManager.recordSeries(
-      SeriesName.FUNCTIONS_COVERED,
+      SeriesName.FUNCTION_OBJECTIVES_COVERED,
       type,
       index,
       coveredFunctions
     );
     this.metricManager.recordSeries(
-      SeriesName.LINES_COVERED,
+      SeriesName.LINE_OBJECTIVES_COVERED,
       type,
       index,
       coveredLines
     );
     this.metricManager.recordSeries(
-      SeriesName.IMPLICIT_BRANCHES_COVERED,
+      SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
       type,
       index,
       coveredImplicitBranches
@@ -221,23 +221,23 @@ export class SearchMetricListener extends EventListenerPlugin {
     const total = coveredObjectives + searchAlgorithm.getUncovered();
 
     this.metricManager.recordProperty(
-      PropertyName.PATHS_TOTAL,
+      PropertyName.PATH_OBJECTIVES_TOTAL,
       totalPaths.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.BRANCHES_TOTAL,
+      PropertyName.BRANCH_OBJECTIVES_TOTAL,
       totalBranches.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.FUNCTIONS_TOTAL,
+      PropertyName.FUNCTION_OBJECTIVES_TOTAL,
       totalFunctions.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.LINES_TOTAL,
+      PropertyName.LINE_OBJECTIVES_TOTAL,
       totalLines.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.IMPLICIT_BRANCHES_TOTAL,
+      PropertyName.IMPLICIT_BRANCH_OBJECTIVES_TOTAL,
       totalImplicitBranches.toString()
     );
     this.metricManager.recordProperty(
@@ -260,23 +260,23 @@ export class SearchMetricListener extends EventListenerPlugin {
     const coveredObjectives = searchAlgorithm.getCovered();
 
     this.metricManager.recordProperty(
-      PropertyName.PATHS_COVERED,
+      PropertyName.PATH_OBJECTIVES_COVERED,
       coveredPaths.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.BRANCHES_COVERED,
+      PropertyName.BRANCH_OBJECTIVES_COVERED,
       coveredBranches.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.FUNCTIONS_COVERED,
+      PropertyName.FUNCTION_OBJECTIVES_COVERED,
       coveredFunctions.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.LINES_COVERED,
+      PropertyName.LINE_OBJECTIVES_COVERED,
       coveredLines.toString()
     );
     this.metricManager.recordProperty(
-      PropertyName.IMPLICIT_BRANCHES_COVERED,
+      PropertyName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
       coveredImplicitBranches.toString()
     );
     this.metricManager.recordProperty(
