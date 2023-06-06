@@ -16,11 +16,32 @@
  * limitations under the License.
  */
 import { Encoding } from "../../lib/Encoding";
+import { DynaSPEAII } from "../../lib/metaheuristics/evolutionary/DynaSPEAII";
 import { SPEAII } from "../../lib/metaheuristics/evolutionary/SPEAII";
 
 import { DummySearchSubject } from "./DummySubject.mock";
 
 export class MockedSPEAII<T extends Encoding> extends SPEAII<T> {
+  setPopulation(population: T[], size: number) {
+    this._populationSize = size;
+    for (const test of population) this._population.push(test);
+  }
+
+  getPopulation(): T[] {
+    return this._population;
+  }
+
+  public environmentalSelection(size: number): void {
+    super._environmentalSelection(size);
+  }
+
+  public updateObjectives(subject: DummySearchSubject<T>) {
+    this._objectiveManager.load(subject);
+  }
+}
+
+//TODO Fix code duplication by making generic class
+export class MockedDynaSPEAII<T extends Encoding> extends DynaSPEAII<T> {
   setPopulation(population: T[], size: number) {
     this._populationSize = size;
     for (const test of population) this._population.push(test);

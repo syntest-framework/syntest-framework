@@ -21,13 +21,14 @@ import { EncodingRunner } from "../../../lib/EncodingRunner";
 import { EncodingSampler } from "../../../lib/EncodingSampler";
 import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
 import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
+import { SimpleObjectiveManager } from "../../../lib/objective/managers/SimpleObjectiveManager";
 import { UncoveredObjectiveManager } from "../../../lib/objective/managers/UncoveredObjectiveManager";
 import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { DummyProcreation } from "../../mocks/DummyProcreation.mock";
 import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { MockedSPEAII } from "../../mocks/SPEAIIAdapter";
+import { MockedDynaSPEAII, MockedSPEAII } from "../../mocks/SPEAIIAdapter";
 
 const expect = chai.expect;
 
@@ -42,6 +43,7 @@ describe("Test SPEA-II", function () {
   let mockedCrossover: DummyCrossover;
   let mockedProcreation: DummyProcreation<DummyEncodingMock>;
   let spea: MockedSPEAII<DummyEncodingMock>;
+  let dynaSpea: MockedDynaSPEAII<DummyEncodingMock>;
 
   let ind1: DummyEncodingMock;
   let ind2: DummyEncodingMock;
@@ -78,10 +80,19 @@ describe("Test SPEA-II", function () {
       mockedSampler
     );
     spea = new MockedSPEAII(
+      new SimpleObjectiveManager(mockedRunner, new Set()),
+      mockedSampler,
+      mockedProcreation,
+      50,
+      3
+    );
+
+    dynaSpea = new MockedDynaSPEAII(
       new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedProcreation,
-      50
+      50,
+      3
     );
 
     ind1 = new DummyEncodingMock();
@@ -102,7 +113,7 @@ describe("Test SPEA-II", function () {
 
     ind5.setDummyEvaluation([...objectives], [3, 2]);
 
-    spea.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
+    spea.setPopulation([ind1, ind2, ind3, ind4, ind5], 5);
     spea.updateObjectives(searchSubject);
     spea.environmentalSelection(3);
 
@@ -112,7 +123,7 @@ describe("Test SPEA-II", function () {
     expect(spea.getPopulation()).contain(ind4);
   });
 
-  it("Environmental Selection, non-dominated < size", () => {
+  it("Environmental Selection dynaSpea, non-dominated = size", () => {
     ind1.setDummyEvaluation([...objectives], [2, 2]);
 
     ind2.setDummyEvaluation([...objectives], [0, 2]);
@@ -121,17 +132,44 @@ describe("Test SPEA-II", function () {
 
     ind4.setDummyEvaluation([...objectives], [1, 1]);
 
+    ind5.setDummyEvaluation([...objectives], [3, 2]);
+
+    dynaSpea.setPopulation([ind1, ind2, ind3, ind4, ind5], 5);
+    dynaSpea.updateObjectives(searchSubject);
+    dynaSpea.environmentalSelection(3);
+
+    const frontZero = dynaSpea.preferenceCriterion(
+      [ind1, ind2, ind3, ind4, ind5],
+      objectives
+    );
+    expect(frontZero.length).to.equal(2);
+    expect(frontZero).to.contain(ind2);
+    expect(frontZero).to.contain(ind3);
+
+    expect(dynaSpea.getPopulation().length).to.equal(3);
+    expect(dynaSpea.getPopulation()).contain(ind2);
+    expect(dynaSpea.getPopulation()).contain(ind3);
+    expect(dynaSpea.getPopulation()).contain(ind4);
+  });
+  it("Environmental Selection, non-dominated < size", () => {
+    ind1.setDummyEvaluation([...objectives], [2, 2]);
+
+    ind2.setDummyEvaluation([...objectives], [0, 2]);
+
+    ind3.setDummyEvaluation([...objectives], [2, 0]);
+
+    ind4.setDummyEvaluation([...objectives], [1, 2]);
+
     ind5.setDummyEvaluation([...objectives], [0, 0]);
 
     spea.setPopulation([ind1, ind2, ind3, ind4, ind5], 4);
     spea.updateObjectives(searchSubject);
     spea.environmentalSelection(4);
 
-    expect(spea.getPopulation().length).to.equal(4);
+    expect(spea.getPopulation().length).to.equal(3);
     expect(spea.getPopulation()).contain(ind5);
     expect(spea.getPopulation()).contain(ind2);
     expect(spea.getPopulation()).contain(ind3);
-    expect(spea.getPopulation()).contain(ind4);
   });
 
   it("Environmental Selection, non-dominated > size", () => {
@@ -158,7 +196,7 @@ describe("Test SPEA-II", function () {
     expect(spea.getPopulation()).contain(ind1);
     expect(spea.getPopulation()).contain(ind2);
 
-    // Distance from 4 to 1 and 2 is > distnce from 3 to 1 and 2. Therefore, 4 gets chosen over 3
+    // Distance from 4 to 1 and 2 is > distance from 3 to 1 and 2. Therefore, 4 gets chosen over 3
     expect(spea.getPopulation()).contain(ind4);
   });
 
