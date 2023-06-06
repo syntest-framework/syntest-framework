@@ -155,9 +155,16 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         }
       }
 
+      const metaCommentBlock = [];
+
+      for (const metaComment of testCase.metaComments) {
+        metaCommentBlock.push(`\t\t// ${metaComment}`);
+      }
+
       // TODO instead of using the targetName use the function call or a better description of the test
       tests.push(
         `\tit('test for ${targetName}', async () => {\n` +
+          `${metaCommentBlock.join("\n")}\n` +
           `${body.join("\n\n")}` +
           `\n\t});`
       );

@@ -161,10 +161,10 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         const hits = instrumentationData[key].f[functionKey];
 
         traces.push({
-          id: function_.loc.id,
+          id: function_.decl.id,
           type: "function",
           path: key,
-          location: function_.loc,
+          location: function_.decl,
 
           hits: hits,
         });

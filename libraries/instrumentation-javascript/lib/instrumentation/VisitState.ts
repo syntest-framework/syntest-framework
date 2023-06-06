@@ -297,15 +297,15 @@ export class VisitState {
 
     let dloc = null;
     // get location for declaration
-    switch (n.type) {
-      case "FunctionDeclaration":
-      case "FunctionExpression":
-        /* istanbul ignore else: paranoid check */
-        if (n.id) {
-          dloc = n.id.loc;
-        }
-        break;
-    }
+    // switch (n.type) {
+    //   case "FunctionDeclaration":
+    //   case "FunctionExpression":
+    //     /* istanbul ignore else: paranoid check */
+    //     if (n.id) {
+    //       dloc = n.id.loc;
+    //     }
+    //     break;
+    // }
     if (!dloc) {
       dloc = {
         start: n.loc.start,

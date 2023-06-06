@@ -212,7 +212,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // default constructor no args
     } else {
       const action = constructor_[0];
-      console.log(action);
 
       const type_ = this.rootContext
         .getTypeModel()

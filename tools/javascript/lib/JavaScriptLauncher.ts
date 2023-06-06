@@ -49,6 +49,7 @@ import {
   ProcreationPlugin,
   TerminationTriggerPlugin,
   deleteDirectories,
+  PropertyName,
 } from "@syntest/base-language";
 import {
   UserInterface,
@@ -82,6 +83,7 @@ import {
 import { Instrumenter } from "@syntest/instrumentation-javascript";
 import { getLogger, Logger } from "@syntest/logging";
 import { TargetType } from "@syntest/analysis";
+import { MetricManager } from "@syntest/metric";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
 export class JavaScriptLauncher extends Launcher {
@@ -89,6 +91,7 @@ export class JavaScriptLauncher extends Launcher {
 
   private arguments_: JavaScriptArguments;
   private moduleManager: ModuleManager;
+  private metricManager: MetricManager;
   private userInterface: UserInterface;
 
   private targets: Target[];
@@ -104,12 +107,14 @@ export class JavaScriptLauncher extends Launcher {
   constructor(
     arguments_: JavaScriptArguments,
     moduleManager: ModuleManager,
+    metricManager: MetricManager,
     userInterface: UserInterface
   ) {
     super();
     JavaScriptLauncher.LOGGER = getLogger("JavaScriptLauncher");
     this.arguments_ = arguments_;
     this.moduleManager = moduleManager;
+    this.metricManager = metricManager;
     this.userInterface = userInterface;
   }
 
@@ -195,6 +200,41 @@ export class JavaScriptLauncher extends Launcher {
     //     (<unknown>[["Target Root Directory", this.arguments_.targetRootDirectory]])
     //   ),
     // ]);
+    this.metricManager.recordProperty(
+      PropertyName.RANDOM_SEED,
+      `${this.arguments_.randomSeed}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.TARGET,
+      `${this.arguments_.targetRootDirectory}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.SEARCH_ALGORITHM,
+      `${this.arguments_.searchAlgorithm}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.SEARCH_EVALUATIONS,
+      `${this.arguments_.evaluations}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.SEARCH_ITERATIONS,
+      `${this.arguments_.iterations}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.CONSTANT_POOL_ENABLED,
+      `${this.arguments_.constantPool}`
+    );
+
+    this.metricManager.recordProperty(
+      PropertyName.SEARCH_TIME,
+      `${this.arguments_.searchTime}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.TOTAL_TIME,
+      `${this.arguments_.totalTime}`
+    );
+    // this.metricManager.recordProperty(PropertyName.INITIALIZATION_TIME, `${this.arguments_.}`)
+
     JavaScriptLauncher.LOGGER.info("Initialization done");
   }
 
@@ -337,6 +377,8 @@ export class JavaScriptLauncher extends Launcher {
         this.arguments_.tempInstrumentedDirectory
       )
     );
+
+    // this.metricManager.recordProperty(PropertyName.INSTRUMENTATION_TIME, `${this.arguments_.ins}`)
 
     JavaScriptLauncher.LOGGER.info("Extracting types");
     this.rootContext.extractTypes();
@@ -500,6 +542,40 @@ export class JavaScriptLauncher extends Launcher {
         target.path,
       ]);
     }
+
+    this.metricManager.recordProperty(
+      PropertyName.BRANCHES_COVERED,
+      `${overall["branch"]}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.STATEMENTS_COVERED,
+      `${overall["statement"]}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.FUNCTIONS_COVERED,
+      `${overall["function"]}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.BRANCHES_TOTAL,
+      `${totalBranches}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.STATEMENTS_TOTAL,
+      `${totalStatements}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.FUNCTIONS_TOTAL,
+      `${totalFunctions}`
+    );
+
+    this.metricManager.recordProperty(
+      PropertyName.ARCHIVE_SIZE,
+      `${this.archive.size}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.MINIMIZED_ARCHIVE_SIZE,
+      `${this.archive.size}`
+    );
 
     overall["statement"] /= totalStatements;
     if (totalStatements === 0) overall["statement"] = 1;

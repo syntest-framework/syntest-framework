@@ -48,13 +48,13 @@
   "dependencies": {
     "@syntest/analysis": "^0.1.0-beta.4",
     "@syntest/analysis-javascript": "^0.1.0-beta.6",
-    "@syntest/base-language": "^0.2.0-beta.28",
+    "@syntest/base-language": "^0.2.0-beta.32",
     "@syntest/cli-graphics": "^0.1.0-beta.3",
     "@syntest/instrumentation-javascript": "^0.1.0-beta.4",
     "@syntest/logging": "^0.1.0-beta.6",
     "@syntest/metric": "^0.1.0-beta.5",
     "@syntest/module": "^0.1.0-beta.15",
-    "@syntest/search": "^0.4.0-beta.25",
+    "@syntest/search": "^0.4.0-beta.28",
     "@syntest/search-javascript": "^0.1.0-beta.1",
     "yargs": "^17.7.2"
   },

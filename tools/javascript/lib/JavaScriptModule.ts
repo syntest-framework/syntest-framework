@@ -40,7 +40,9 @@ export default class JavaScriptModule extends TestingToolModule {
     modules: Module[]
   ): void {
     const labels = ["javascript", "testing"];
-    const commands = [getTestCommand(this.name, moduleManager, userInterface)];
+    const commands = [
+      getTestCommand(this.name, moduleManager, metricManager, userInterface),
+    ];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
 

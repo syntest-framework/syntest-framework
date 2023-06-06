@@ -20,10 +20,12 @@ import { Command, ModuleManager } from "@syntest/module";
 import Yargs = require("yargs");
 
 import { JavaScriptArguments, JavaScriptLauncher } from "../JavaScriptLauncher";
+import { MetricManager } from "@syntest/metric";
 
 export function getTestCommand(
   tool: string,
   moduleManager: ModuleManager,
+  metricManager: MetricManager,
   userInterface: UserInterface
 ): Command {
   const options = new Map<string, Yargs.Options>();
@@ -67,6 +69,7 @@ export function getTestCommand(
       const launcher = new JavaScriptLauncher(
         <JavaScriptArguments>(<unknown>arguments_),
         moduleManager,
+        metricManager,
         userInterface
       );
       launcher.run();
