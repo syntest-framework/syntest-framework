@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
@@ -23,6 +24,7 @@ import {
 } from "@syntest/analysis";
 import { Events as BaseLanguageEvents } from "@syntest/base-language";
 import { ControlFlowProgram } from "@syntest/cfg";
+import { getLogger, Logger } from "@syntest/logging";
 import { EventListenerPlugin } from "@syntest/module";
 import {
   BudgetManager,
@@ -53,28 +55,45 @@ export type PublisherWSOptions = {
  *
  * @author Yehor Kozyr
  */
-export class PublisherWSPlugin extends EventListenerPlugin {
+export class WebsocketEventListenerPlugin extends EventListenerPlugin {
+  private static LOGGER: Logger;
   private client: WebSocket;
 
   constructor() {
     super(
-      "WebSocket Publisher",
-      "Publishes events that occurred during the execution into WebSocket"
+      "websocket",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module
+      require("../../package.json").description
+    );
+    WebsocketEventListenerPlugin.LOGGER = getLogger(
+      "WebsocketEventListenerPlugin"
     );
   }
 
   async connect() {
     const url = (<PublisherWSOptions>(<unknown>this.args)).wsUrl;
+
+    if (url === undefined) {
+      WebsocketEventListenerPlugin.LOGGER.warn(
+        `There was no websocket url provided to the websocket plugin. Skipping connection.`
+      );
+      return;
+    }
+
     this.client = new WebSocket(url);
     const client = this.client;
 
     await new Promise<void>((resolve, reject) => {
       client.on("error", (error) => {
-        console.error(error);
+        WebsocketEventListenerPlugin.LOGGER.error(
+          `Error connecting to server with url: ${url}\n error: ${error.name}, ${error.message}`
+        );
         reject();
       });
       client.on("open", function open() {
-        console.log("connected");
+        WebsocketEventListenerPlugin.LOGGER.info(
+          `Connected to server with url: ${url}`
+        );
         client.send(
           Buffer.from(JSON.stringify({ eventType: "publisherPluginStarted" }))
         );
@@ -84,89 +103,100 @@ export class PublisherWSPlugin extends EventListenerPlugin {
         client.send("pong");
       });
       client.on("close", () => {
-        console.log("disconnected");
+        WebsocketEventListenerPlugin.LOGGER.info(
+          `Disconnected from server with url: ${url}`
+        );
         client.terminate();
       });
     });
   }
 
   disconnect() {
+    if (this.client === undefined) {
+      return;
+    }
+    WebsocketEventListenerPlugin.LOGGER.info(`Terminating client`);
     this.client.terminate();
   }
 
-  setupEventListener(): void {
+  async setupEventListener(): Promise<void> {
+    await this.connect();
+    if (this.client === undefined) {
+      return;
+    }
+
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("initializeStart", () =>
-      this.client.emit("initializeStart", {})
+      handler(this.client, "initializeStart", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "initializeComplete",
-      () => this.client.emit("initializeComplete", {})
+      () => handler(this.client, "initializeComplete", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("preprocessStart", () =>
-      this.client.emit("preprocessStart", {})
+      handler(this.client, "preprocessStart", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "preprocessComplete",
-      () => this.client.emit("preprocessComplete", {})
+      () => handler(this.client, "preprocessComplete", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("processStart", () =>
-      this.client.emit("processStart", {})
+      handler(this.client, "processStart", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("processComplete", () =>
-      this.client.emit("processComplete", {})
+      handler(this.client, "processComplete", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "postprocessStart",
-      () => this.client.emit("postprocessStart", {})
+      () => handler(this.client, "postprocessStart", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "postprocessComplete",
-      () => this.client.emit("postprocessComplete", {})
+      () => handler(this.client, "postprocessComplete", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "instrumentationStart",
-      () => this.client.emit("instrumentationStart", {})
+      () => handler(this.client, "instrumentationStart", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "instrumentationComplete",
-      () => this.client.emit("instrumentationComplete", {})
+      () => handler(this.client, "instrumentationComplete", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("targetRunStart", () =>
-      this.client.emit("targetRunStart", {})
+      handler(this.client, "targetRunStart", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "targetRunComplete",
-      () => this.client.emit("targetRunComplete", {})
+      () => handler(this.client, "targetRunComplete", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportStart", () =>
-      this.client.emit("reportStart", {})
+      handler(this.client, "reportStart", {})
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportComplete", () =>
-      this.client.emit("reportComplete", {})
+      handler(this.client, "reportComplete", {})
     );
 
     // search events
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchInitializationStart",
-      () => this.client.emit("searchInitializationStart", {})
+      () => handler(this.client, "searchInitializationStart", {})
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchInitializationComplete",
-      () => this.client.emit("searchInitializationComplete", {})
+      () => handler(this.client, "searchInitializationComplete", {})
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
@@ -243,12 +273,13 @@ export class PublisherWSPlugin extends EventListenerPlugin {
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "sourceResolvingComplete",
-      <S>(rootContext: RootContext<S>, filePath: string, source: string) =>
+      <S>(rootContext: RootContext<S>, filePath: string, source: string) => {
         handler(
           this.client,
           "sourceResolvingComplete",
           sourceModelFormatter(rootContext, filePath, source)
-        )
+        );
+      }
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -365,7 +396,7 @@ export class PublisherWSPlugin extends EventListenerPlugin {
 
     optionsMap.set("ws-url", {
       alias: [],
-      default: "ws://localhost:8080",
+      default: undefined,
       description: "The url of the listening WebSocket",
       group: OptionGroups.PublisherWSOptions,
       hidden: false,

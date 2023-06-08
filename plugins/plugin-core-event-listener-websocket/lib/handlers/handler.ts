@@ -22,10 +22,10 @@ export function handler(
   event: string,
   data: { [key: string]: unknown }
 ) {
-  client.emit(
-    event,
+  client.send(
     Buffer.from(
       JSON.stringify({
+        event,
         data,
       })
     )

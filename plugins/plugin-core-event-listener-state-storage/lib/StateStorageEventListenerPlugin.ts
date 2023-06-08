@@ -34,9 +34,13 @@ export type StateStorageOptions = {
  *
  * @author Dimitri Stallenberg
  */
-export class StateStoragePlugin extends EventListenerPlugin {
+export class StateStorageEventListenerPlugin extends EventListenerPlugin {
   constructor() {
-    super("state-storage", "Stores the state of the program");
+    super(
+      "state-storage",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").description
+    );
   }
 
   setupEventListener(): void {

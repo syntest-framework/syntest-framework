@@ -18,23 +18,23 @@
 
 import { Module, ModuleManager } from "@syntest/module";
 
-import { PublisherWSPlugin } from "./PublisherWSPlugin";
+import { WebsocketEventListenerPlugin } from "./WebsocketEventListenerPlugin";
 
-export default class PublisherModule extends Module {
-  private publisher: PublisherWSPlugin;
+export default class WebsocketModule extends Module {
+  private publisher: WebsocketEventListenerPlugin;
 
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("publisherWS", "6");
+    super(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").name,
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").version
+    );
   }
 
   register(moduleManager: ModuleManager): void {
-    this.publisher = new PublisherWSPlugin();
-    moduleManager.registerPlugin(this.name, this.publisher);
-  }
-
-  override async prepare(): Promise<void> {
-    await this.publisher.connect();
+    this.publisher = new WebsocketEventListenerPlugin();
+    moduleManager.registerPlugin(this, this.publisher);
   }
 
   override cleanup(): void {
