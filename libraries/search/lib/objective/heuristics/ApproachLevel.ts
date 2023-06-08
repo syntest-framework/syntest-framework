@@ -18,15 +18,16 @@
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg";
 
 import { Datapoint } from "../../util/Datapoint";
+import { cannotFindTraceThatIsCovered } from "../../util/diagnostics";
 
 export class ApproachLevel {
-  public calculate<S>(
-    cfg: ControlFlowGraph<S>,
-    node: Node<S>,
+  public calculate(
+    cfg: ControlFlowGraph,
+    node: Node,
     traces: Datapoint[]
   ): {
     approachLevel: number;
-    closestCoveredNode: Node<S>;
+    closestCoveredNode: Node;
     closestCoveredBranchTrace: Datapoint;
   } {
     // Construct map with key as id covered and value as datapoint that covers that id
@@ -52,6 +53,10 @@ export class ApproachLevel {
     // Retrieve trace based on ids covered by found closestCoveredBranch
     const closestCoveredBranchTrace = idsTraceMap.get(closestCoveredBranch.id);
 
+    if (!closestCoveredBranchTrace) {
+      throw new Error(cannotFindTraceThatIsCovered());
+    }
+
     return {
       approachLevel,
       closestCoveredNode: closestCoveredBranch,
@@ -59,11 +64,11 @@ export class ApproachLevel {
     };
   }
 
-  _findClosestCoveredBranch<S>(
-    cfg: ControlFlowGraph<S>,
+  _findClosestCoveredBranch(
+    cfg: ControlFlowGraph,
     from: string,
     targets: Set<string>
-  ): { approachLevel: number; closestCoveredBranch: Node<S> } {
+  ): { approachLevel: number; closestCoveredBranch: Node } {
     const visitedNodeIdSet = new Set<string>([from]);
     const searchQueue: [string, number][] = [[from, 0]];
 

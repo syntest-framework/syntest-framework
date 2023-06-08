@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { Location } from "@syntest/cfg";
+
 /**
  * @author Dimitri Stallenberg
  */
@@ -24,7 +26,7 @@ export interface Datapoint {
   type: string;
 
   path: string;
-  line: number;
+  location: Location;
 
   hits: number;
 

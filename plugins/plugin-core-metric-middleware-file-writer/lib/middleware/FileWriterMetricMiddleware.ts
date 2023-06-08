@@ -42,9 +42,13 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     this.rootOutputDirectory = rootOutputDirectory;
   }
 
-  run(metricManager: MetricManager): void {
+  async run(metricManager: MetricManager): Promise<void> {
+    if (metricManager.namespace !== "global") {
+      return;
+    }
+    const namespaces = [...metricManager.namespacedManagers.keys()];
     // process all namespaces
-    for (const namespace of metricManager.namespacedManagers.keys()) {
+    for (const namespace of namespaces) {
       // get the merged manager (global + local)
       const mergedManager = metricManager.getMergedNamespacedManager(namespace);
 
@@ -74,22 +78,34 @@ export class FileWriterMetricMiddleware extends MiddleWare {
         )
       );
 
-      this.writePropertiesToCSV(
-        this.rootOutputDirectory,
-        namespace,
-        properties
-      );
-      this.writeDistributionsToCSV(
-        this.rootOutputDirectory,
-        namespace,
-        distributions
-      );
-      this.writeSeriesToCSV(this.rootOutputDirectory, namespace, series);
-      this.writeSeriesDistributionToCSV(
-        this.rootOutputDirectory,
-        namespace,
-        seriesDistributions
-      );
+      if (properties.size > 0) {
+        await this.writePropertiesToCSV(
+          this.rootOutputDirectory,
+          namespace,
+          properties
+        );
+      }
+      if (distributions.size > 0) {
+        await this.writeDistributionsToCSV(
+          this.rootOutputDirectory,
+          namespace,
+          distributions
+        );
+      }
+      if (series.size > 0) {
+        await this.writeSeriesToCSV(
+          this.rootOutputDirectory,
+          namespace,
+          series
+        );
+      }
+      if (seriesDistributions.size > 0) {
+        await this.writeSeriesDistributionToCSV(
+          this.rootOutputDirectory,
+          namespace,
+          seriesDistributions
+        );
+      }
     }
   }
 
@@ -104,26 +120,29 @@ export class FileWriterMetricMiddleware extends MiddleWare {
    * @param namespace
    * @param properties
    */
-  writePropertiesToCSV(
+  async writePropertiesToCSV(
     filePath: string,
     namespace: string,
     properties: Map<string, string>
-  ): void {
-    filePath = path.join(filePath, "properties.csv");
-
-    // Create a write stream in append mode
-    const ws = fs.createWriteStream(filePath, { flags: "a" });
+  ): Promise<void> {
+    filePath = path.resolve(path.join(filePath, "properties.csv"));
+    const exists = fs.existsSync(filePath);
 
     const data = {
       namespace: namespace,
       ...Object.fromEntries(properties),
     };
 
-    // Write the data to the stream and add headers when the file does not exist
-    csv.writeToStream(ws, [data], {
-      headers: !fs.existsSync(filePath),
+    const dataAsString = await csv.writeToString([data], {
+      headers: !exists,
       includeEndRowDelimiter: true,
     });
+
+    if (exists) {
+      fs.appendFileSync(filePath, dataAsString);
+    } else {
+      fs.writeFileSync(filePath, dataAsString);
+    }
   }
 
   /**
@@ -137,12 +156,13 @@ export class FileWriterMetricMiddleware extends MiddleWare {
    * @param namespace
    * @param distributions
    */
-  writeDistributionsToCSV(
+  async writeDistributionsToCSV(
     filePath: string,
     namespace: string,
     distributions: Map<string, number[]>
-  ): void {
-    filePath = path.join(filePath, "distributions.csv");
+  ): Promise<void> {
+    filePath = path.resolve(path.join(filePath, "distributions.csv"));
+    const exists = fs.existsSync(filePath);
 
     const fullData = [];
 
@@ -159,14 +179,16 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       }
     }
 
-    // Create a write stream in append mode
-    const ws = fs.createWriteStream(filePath, { flags: "a" });
-
-    // Write the data to the stream and add headers when the file does not exist
-    csv.writeToStream(ws, fullData, {
-      headers: !fs.existsSync(filePath),
+    const dataAsString = await csv.writeToString(fullData, {
+      headers: !exists,
       includeEndRowDelimiter: true,
     });
+
+    if (exists) {
+      fs.appendFileSync(filePath, dataAsString);
+    } else {
+      fs.writeFileSync(filePath, dataAsString);
+    }
   }
 
   /**
@@ -180,12 +202,13 @@ export class FileWriterMetricMiddleware extends MiddleWare {
    * @param namespace
    * @param series
    */
-  writeSeriesToCSV(
+  async writeSeriesToCSV(
     filePath: string,
     namespace: string,
     series: Map<string, Map<string, Map<number, number>>>
-  ): void {
-    filePath = path.join(filePath, "series.csv");
+  ): Promise<void> {
+    filePath = path.resolve(path.join(filePath, "series.csv"));
+    const exists = fs.existsSync(filePath);
 
     const fullData = [];
 
@@ -203,14 +226,16 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       }
     }
 
-    // Create a write stream in append mode
-    const ws = fs.createWriteStream(filePath, { flags: "a" });
-
-    // Write the data to the stream and add headers when the file does not exist
-    csv.writeToStream(ws, fullData, {
-      headers: !fs.existsSync(filePath),
+    const dataAsString = await csv.writeToString(fullData, {
+      headers: !exists,
       includeEndRowDelimiter: true,
     });
+
+    if (exists) {
+      fs.appendFileSync(filePath, dataAsString);
+    } else {
+      fs.writeFileSync(filePath, dataAsString);
+    }
   }
 
   /**
@@ -224,15 +249,17 @@ export class FileWriterMetricMiddleware extends MiddleWare {
    * @param namespace
    * @param seriesDistributions
    */
-  writeSeriesDistributionToCSV(
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  async writeSeriesDistributionToCSV(
     filePath: string,
     namespace: string,
     seriesDistributions: Map<
       string,
       Map<string, Map<string, Map<number, number[]>>>
     >
-  ): void {
-    filePath = path.join(filePath, "series-distributions.csv");
+  ): Promise<void> {
+    filePath = path.resolve(path.join(filePath, "series-distributions.csv"));
+    const exists = fs.existsSync(filePath);
 
     const fullData = [];
 
@@ -258,13 +285,15 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       }
     }
 
-    // Create a write stream in append mode
-    const ws = fs.createWriteStream(filePath, { flags: "a" });
-
-    // Write the data to the stream and add headers when the file does not exist
-    csv.writeToStream(ws, fullData, {
-      headers: !fs.existsSync(filePath),
+    const dataAsString = await csv.writeToString(fullData, {
+      headers: !exists,
       includeEndRowDelimiter: true,
     });
+
+    if (exists) {
+      fs.appendFileSync(filePath, dataAsString);
+    } else {
+      fs.writeFileSync(filePath, dataAsString);
+    }
   }
 }

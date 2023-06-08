@@ -17,4 +17,4 @@
  */
 import { ControlFlowGraph } from "@syntest/cfg";
 
-export class DummyCFG extends ControlFlowGraph<unknown> {}
+export class DummyCFG extends ControlFlowGraph {}

@@ -66,7 +66,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   protected abstract _initialize(
     budgetManager: BudgetManager<T>,
     terminationManager: TerminationManager
-  ): void;
+  ): Promise<void> | void;
 
   /**
    * Iteration phase of the search process.
@@ -109,7 +109,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     );
 
     // Initialize search process
-    this._initialize(budgetManager, terminationManager);
+    await this._initialize(budgetManager, terminationManager);
 
     // Stop initialization budget tracking, inform the listeners, and start search budget tracking
     budgetManager.initializationStopped();
@@ -183,7 +183,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     return this._objectiveManager;
   }
 
-  public getCovered(objectiveType = "mixed"): number {
+  private getCovered(objectiveType = "mixed"): number {
     const covered = new Set();
 
     for (const key of this._objectiveManager.getArchive().getObjectives()) {
@@ -207,7 +207,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     return covered.size;
   }
 
-  public getUncovered(objectiveType = "mixed"): number {
+  private getUncovered(objectiveType = "mixed"): number {
     const total = new Set();
     const covered = new Set();
 
