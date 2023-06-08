@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-event-listener-state-storage",
-  "version": "0.0.1",
+  "version": "0.1.0-beta.0",
   "description": "A listener plugin for the SynTest Core containing state storage functionalities",
   "keywords": [
     "syntest",
@@ -49,10 +49,10 @@
     "@syntest/analysis": "*",
     "@syntest/base-language": "*",
     "@syntest/cfg": "*",
-    "@syntest/search": "*",
     "@syntest/logging": "*",
     "@syntest/metric": "*",
-    "@syntest/module": "*"
+    "@syntest/module": "*",
+    "@syntest/search": "*"
   },
   "engines": {
     "node": ">=16"
