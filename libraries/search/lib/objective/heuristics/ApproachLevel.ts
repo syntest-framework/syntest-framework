@@ -18,6 +18,7 @@
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg";
 
 import { Datapoint } from "../../util/Datapoint";
+import { cannotFindTraceThatIsCovered } from "../../util/diagnostics";
 
 export class ApproachLevel {
   public calculate(
@@ -51,6 +52,10 @@ export class ApproachLevel {
 
     // Retrieve trace based on ids covered by found closestCoveredBranch
     const closestCoveredBranchTrace = idsTraceMap.get(closestCoveredBranch.id);
+
+    if (!closestCoveredBranchTrace) {
+      throw new Error(cannotFindTraceThatIsCovered());
+    }
 
     return {
       approachLevel,

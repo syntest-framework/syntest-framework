@@ -1,6 +1,6 @@
 {
   "name": "@syntest/module",
-  "version": "0.1.0-beta.14",
+  "version": "0.1.0-beta.16",
   "description": "The module library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@syntest/cli-graphics": "^0.1.0-beta.3",
     "@syntest/logging": "*",
-    "@syntest/metric": "^0.1.0-beta.4",
+    "@syntest/metric": "^0.1.0-beta.6",
     "global-modules": "2.0.0",
     "yargs": "^17.7.1"
   },
