@@ -17,6 +17,8 @@
  */
 import * as chai from "chai";
 
+import { getModuleCommand } from "../lib/commands/module";
+
 const expect = chai.expect;
 
 /**
@@ -24,7 +26,8 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    // getModuleCommand("test", <ModuleManager><unknown>{});
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    getModuleCommand("test", undefined);
     expect(true);
   });
 });

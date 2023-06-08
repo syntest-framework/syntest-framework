@@ -18,6 +18,8 @@
 
 import * as chai from "chai";
 
+import { SourceModel } from "../lib/models/SourceModel";
+
 const expect = chai.expect;
 
 /**
@@ -25,6 +27,9 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    expect(true);
+    const a: SourceModel = {
+      filePath: "",
+    };
+    expect(a);
   });
 });
