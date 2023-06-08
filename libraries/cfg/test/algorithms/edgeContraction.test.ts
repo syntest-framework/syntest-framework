@@ -27,11 +27,11 @@ import { NodeType } from "../../lib/graph/NodeType";
 const expect = chai.expect;
 
 describe("CFG edge contraction", function () {
-  let cfg: ControlFlowGraph<unknown>;
+  let cfg: ControlFlowGraph;
 
   beforeEach(function () {
     // Construct cfg
-    const nodes = new Map<string, Node<unknown>>();
+    const nodes = new Map<string, Node>();
 
     const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
       lineNumbers: [],

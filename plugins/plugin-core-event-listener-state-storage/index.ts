@@ -15,16 +15,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ControlFlowFunction } from "./ControlFlowFunction";
-import { ContractedControlFlowGraph } from "./graph/ContractedControlFlowGraph";
-import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 
-/**
- * Control Flow Program
- * While Control Flow Functions represent the control flow of a single procedure, Inter-procedural Control Flow Graphs (Control Flow Program) represent the control flow of whole programs.
- * https://en.wikipedia.org/wiki/Control-flow_graph
- */
-export interface ControlFlowProgram {
-  graph: ControlFlowGraph | ContractedControlFlowGraph;
-  functions: ControlFlowFunction[];
-}
+export * as module from "./lib/StateStorageModule";

@@ -15,16 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ControlFlowFunction } from "./ControlFlowFunction";
-import { ContractedControlFlowGraph } from "./graph/ContractedControlFlowGraph";
-import { ControlFlowGraph } from "./graph/ControlFlowGraph";
+import * as chai from "chai";
 
-/**
- * Control Flow Program
- * While Control Flow Functions represent the control flow of a single procedure, Inter-procedural Control Flow Graphs (Control Flow Program) represent the control flow of whole programs.
- * https://en.wikipedia.org/wiki/Control-flow_graph
- */
-export interface ControlFlowProgram {
-  graph: ControlFlowGraph | ContractedControlFlowGraph;
-  functions: ControlFlowFunction[];
-}
+import { StateStoragePlugin } from "../lib/StateStoragePlugin";
+
+const expect = chai.expect;
+
+describe("simulationTest", () => {
+  it("SimpleTest", () => {
+    new StateStoragePlugin();
+
+    expect(true);
+  });
+});

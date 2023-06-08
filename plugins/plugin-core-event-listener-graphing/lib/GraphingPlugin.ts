@@ -48,7 +48,7 @@ export class GraphingPlugin extends EventListenerPlugin {
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
-        cfp: ControlFlowProgram<S>
+        cfp: ControlFlowProgram
       ) => this.controlFlowGraphResolvingComplete(rootContext, filePath, cfp)
     );
   }
@@ -88,7 +88,7 @@ export class GraphingPlugin extends EventListenerPlugin {
   controlFlowGraphResolvingComplete<S>(
     rootContext: RootContext<S>,
     filePath: string,
-    cfp: ControlFlowProgram<S>
+    cfp: ControlFlowProgram
   ): void {
     const name = path.basename(filePath, path.extname(filePath));
     const svgHtml = createSimulation(cfp.graph);
