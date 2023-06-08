@@ -15,5 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { RootContext } from "@syntest/analysis";
 
-export * as module from "./lib/FileWriterModule";
+import { Model } from "./Model";
+
+export interface AbstractSyntaxTreeModel<S> extends Model {
+  filePath: string;
+  abstractSyntaxTree?: S;
+}
+
+export function abstractSyntaxTreeModelFormatter<S>(
+  rootContext: RootContext<S>,
+  filePath: string,
+  abstractSyntaxTree?: S
+): AbstractSyntaxTreeModel<S> {
+  return {
+    filePath,
+    abstractSyntaxTree,
+  };
+}

@@ -15,29 +15,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ControlFlowFunction } from "../ControlFlowFunction";
 import { ControlFlowProgram } from "../ControlFlowProgram";
 
-export function format(cfp: ControlFlowProgram): string {
-  const data = {
+import {
+  SerializableControlFlowFunction,
+  SerializableControlFlowProgram,
+} from "./SerializableControlFlowProgram";
+
+function makeFunctionSerializeable(
+  cff: ControlFlowFunction
+): SerializableControlFlowFunction {
+  return {
+    id: cff.id,
+    name: cff.name,
+    entry: cff.graph.entry.id,
+    successExit: cff.graph.successExit.id,
+    errorExit: cff.graph.errorExit.id,
+    nodes: [...cff.graph.nodes.values()],
+    edges: [...cff.graph.edges],
+  };
+}
+
+export function makeSerializeable(
+  cfp: ControlFlowProgram
+): SerializableControlFlowProgram {
+  const data: SerializableControlFlowProgram = {
     entry: cfp.graph.entry.id,
     successExit: cfp.graph.successExit.id,
     errorExit: cfp.graph.errorExit.id,
     nodes: [...cfp.graph.nodes.values()],
     edges: [...cfp.graph.edges],
-    functions: cfp.functions.map((function_) => {
-      return {
-        id: function_.id,
-        name: function_.name,
-        entry: function_.graph.entry.id,
-        successExit: function_.graph.successExit.id,
-        errorExit: function_.graph.errorExit.id,
-        nodes: [...function_.graph.nodes.entries()],
-        edges: [...function_.graph.edges],
-      };
-    }),
+    functions: cfp.functions.map((function_) =>
+      makeFunctionSerializeable(function_)
+    ),
   };
 
-  // sadly all contraction data is lost
-
-  return JSON.stringify(data, undefined, 2);
+  return data;
 }

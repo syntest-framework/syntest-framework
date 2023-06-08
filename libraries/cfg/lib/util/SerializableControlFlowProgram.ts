@@ -15,5 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Edge } from "../graph/Edge";
+import { Node } from "../graph/Node";
 
-export * as module from "./lib/FileWriterModule";
+export type SerializableControlFlowFunction = {
+  id: string;
+  name: string;
+  entry: string;
+  successExit: string;
+  errorExit: string;
+  nodes: Node[];
+  edges: Edge[];
+};
+
+export type SerializableControlFlowProgram = {
+  entry: string;
+  successExit: string;
+  errorExit: string;
+  nodes: Node[];
+  edges: Edge[];
+  functions: SerializableControlFlowFunction[];
+};

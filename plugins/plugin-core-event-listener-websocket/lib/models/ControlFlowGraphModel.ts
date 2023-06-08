@@ -15,5 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { RootContext } from "@syntest/analysis";
+import {
+  ControlFlowProgram,
+  makeSerializeable,
+  SerializableControlFlowProgram,
+} from "@syntest/cfg";
 
-export * as module from "./lib/FileWriterModule";
+import { Model } from "./Model";
+
+export interface ControlFlowGraphModel extends Model {
+  filePath: string;
+  cfp?: SerializableControlFlowProgram;
+}
+
+export function controlFlowGraphModelFormatter<S>(
+  rootContext: RootContext<S>,
+  filePath: string,
+  cfp?: ControlFlowProgram
+): ControlFlowGraphModel {
+  return {
+    filePath,
+    cfp: cfp ? makeSerializeable(cfp) : undefined,
+  };
+}

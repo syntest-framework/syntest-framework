@@ -15,7 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { getLogger } from "@syntest/logging";
 import Yargs = require("yargs");
+
+import { ModuleManager } from "../ModuleManager";
 
 export class Command implements Yargs.CommandModule {
   tool: Readonly<string>;
@@ -26,6 +29,7 @@ export class Command implements Yargs.CommandModule {
   describe: string;
 
   constructor(
+    moduleManager: ModuleManager,
     tool: string,
     name: string,
     description: string,
@@ -36,7 +40,14 @@ export class Command implements Yargs.CommandModule {
     this.command = name;
     this.describe = description;
     this.options = options;
-    this.handler = handler;
+
+    this.handler = async (arguments_: Yargs.ArgumentsCamelCase) => {
+      await handler(arguments_);
+      const LOGGER = getLogger("Command");
+
+      LOGGER.info("Cleaning up...");
+      await moduleManager.cleanup();
+    };
   }
 
   builder = (yargs: Yargs.Argv) => {

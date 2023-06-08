@@ -15,5 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { RootContext } from "@syntest/analysis";
 
-export * as module from "./lib/FileWriterModule";
+import { Model } from "./Model";
+
+export interface DependencyModel extends Model {
+  filePath: string;
+  dependencies?: string[];
+}
+
+export function dependencyModelFormatter(
+  rootContext: RootContext<unknown>,
+  filePath: string,
+  dependencies?: string[]
+): DependencyModel {
+  return {
+    filePath,
+    dependencies,
+  };
+}

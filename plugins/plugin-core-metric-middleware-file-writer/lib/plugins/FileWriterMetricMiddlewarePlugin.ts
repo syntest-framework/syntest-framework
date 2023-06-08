@@ -28,8 +28,9 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
 
   constructor(metricManager: MetricManager) {
     super(
-      "metric-middleware-file-writer",
-      "A middleware that writes the metrics to a file."
+      "file-writer",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
+      require("../../../package.json").description
     );
     this.metricManager = metricManager;
   }
@@ -40,8 +41,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
       this.metricManager.outputMetrics,
       path.join(
         (<{ syntestDirectory: string }>(<unknown>this.args)).syntestDirectory,
-        (<StorageOptions>(<unknown>this.args))
-          .metricMiddlewareFileWriterMetricsDirectory
+        (<StorageOptions>(<unknown>this.args)).fileWriterMetricsDirectory
       )
     );
   }
@@ -72,5 +72,5 @@ export enum OptionTypes {
 }
 
 export type StorageOptions = {
-  metricMiddlewareFileWriterMetricsDirectory: string;
+  fileWriterMetricsDirectory: string;
 };

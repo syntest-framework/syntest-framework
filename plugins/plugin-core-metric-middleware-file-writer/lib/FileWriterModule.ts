@@ -16,13 +16,18 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager, Tool } from "@syntest/module";
-import yargs = require("yargs");
+import { mkdirSync } from "node:fs";
+import * as path from "node:path";
 
-import { getConfigCommand } from "./commands/config";
-import { getModuleCommand } from "./commands/module";
+import { MetricManager } from "@syntest/metric";
+import { Module, ModuleManager } from "@syntest/module";
 
-export default class InitModule extends Module {
+import {
+  FileWriterMetricMiddlewarePlugin,
+  StorageOptions,
+} from "./plugins/FileWriterMetricMiddlewarePlugin";
+
+export default class FileWriterModule extends Module {
   constructor() {
     super(
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
@@ -32,25 +37,20 @@ export default class InitModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager): void | Promise<void> {
-    const name = "init";
-
-    const labels = ["init"];
-    const commands = [
-      getConfigCommand(name, moduleManager),
-      getModuleCommand(name, moduleManager),
-    ];
-
-    const additionalOptions: Map<string, yargs.Options> = new Map();
-
-    const initTool = new Tool(
-      name,
-      labels,
-      "A tool for initializing SynTest projects.",
-      commands,
-      additionalOptions
+  register(moduleManager: ModuleManager, metricManager: MetricManager): void {
+    moduleManager.registerPlugin(
+      this,
+      new FileWriterMetricMiddlewarePlugin(metricManager)
     );
+  }
 
-    moduleManager.registerTool(this, initTool);
+  override prepare(): void {
+    const baseDirectory = (<{ syntestDirectory: string }>(<unknown>this.args))
+      .syntestDirectory;
+    const metricsDirectory = (<StorageOptions>(<unknown>this.args))
+      .fileWriterMetricsDirectory;
+    mkdirSync(path.join(baseDirectory, metricsDirectory), {
+      recursive: true,
+    });
   }
 }

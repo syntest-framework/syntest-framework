@@ -16,14 +16,15 @@
  * limitations under the License.
  */
 
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import * as path from "node:path";
 
 import { Events, RootContext, Target } from "@syntest/analysis";
-import { ControlFlowProgram, format } from "@syntest/cfg";
+import { ControlFlowProgram } from "@syntest/cfg";
 import { EventListenerPlugin } from "@syntest/module";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
+
+import { StateStorage } from "./StateStorage";
 
 export type StateStorageOptions = {
   stateStorageDirectory: string;
@@ -34,32 +35,52 @@ export type StateStorageOptions = {
  *
  * @author Dimitri Stallenberg
  */
-export class StateStoragePlugin extends EventListenerPlugin {
+export class StateStorageEventListenerPlugin extends EventListenerPlugin {
   constructor() {
-    super("state-storage", "Stores the state of the program");
+    super(
+      "state-storage",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").description
+    );
   }
 
   setupEventListener(): void {
+    const syntestPath = (<{ syntestDirectory: string }>(<unknown>this.args))
+      .syntestDirectory;
+    const stateStore = (<StateStorageOptions>(<unknown>this.args))
+      .stateStorageDirectory;
+
+    const base = path.join(syntestPath, stateStore);
+
+    const stateStorage = new StateStorage(base);
     (<TypedEventEmitter<Events>>process).on(
       "controlFlowGraphResolvingComplete",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
         cfp: ControlFlowProgram
-      ) => this.controlFlowGraphResolvingComplete(rootContext, filePath, cfp)
+      ) =>
+        stateStorage.controlFlowGraphResolvingComplete(
+          rootContext,
+          filePath,
+          cfp
+        )
     );
     (<TypedEventEmitter<Events>>process).on(
       "abstractSyntaxTreeResolvingComplete",
       // eslint-disable-next-line @typescript-eslint/unbound-method
       <S>(rootContext: RootContext<S>, filePath: string, ast: S) =>
-        this.abstractSyntaxTreeResolvingComplete(rootContext, filePath, ast)
+        stateStorage.abstractSyntaxTreeResolvingComplete(
+          rootContext,
+          filePath,
+          ast
+        )
     );
     (<TypedEventEmitter<Events>>process).on(
       "targetExtractionComplete",
       // eslint-disable-next-line @typescript-eslint/unbound-method
       <S>(rootContext: RootContext<S>, filePath: string, target: Target) =>
-        this.targetExtractionComplete(rootContext, filePath, target)
+        stateStorage.targetExtractionComplete(rootContext, filePath, target)
     );
     (<TypedEventEmitter<Events>>process).on(
       "dependencyResolvingComplete",
@@ -68,7 +89,12 @@ export class StateStoragePlugin extends EventListenerPlugin {
         rootContext: RootContext<S>,
         filePath: string,
         dependencies: string[]
-      ) => this.dependencyResolvingComplete(rootContext, filePath, dependencies)
+      ) =>
+        stateStorage.dependencyResolvingComplete(
+          rootContext,
+          filePath,
+          dependencies
+        )
     );
   }
 
@@ -102,73 +128,6 @@ export class StateStoragePlugin extends EventListenerPlugin {
 
   override getOptionChoices(): string[] {
     return [];
-  }
-
-  controlFlowGraphResolvingComplete<S>(
-    rootContext: RootContext<S>,
-    filePath: string,
-    cfp: ControlFlowProgram
-  ): void {
-    this.save(format(cfp), filePath, "cfg.json");
-  }
-
-  abstractSyntaxTreeResolvingComplete<S>(
-    rootContext: RootContext<S>,
-    filePath: string,
-    ast: S
-  ): void {
-    if (!filePath.includes("truncate")) {
-      return;
-    }
-    this.save(JSON.stringify(ast), filePath, "ast.json");
-  }
-
-  targetExtractionComplete<S>(
-    rootContext: RootContext<S>,
-    filePath: string,
-    target: Target
-  ): void {
-    if (!filePath.includes("truncate")) {
-      return;
-    }
-    this.save(JSON.stringify(target), filePath, "target.json");
-  }
-
-  dependencyResolvingComplete<S>(
-    rootContext: RootContext<S>,
-    filePath: string,
-    dependencies: string[]
-  ): void {
-    if (!filePath.includes("truncate")) {
-      return;
-    }
-    this.save(
-      JSON.stringify({ depedencies: dependencies }),
-      filePath,
-      "dependencies.json"
-    );
-  }
-
-  save(
-    data: string,
-    filePath: string,
-    type: "cfg.json" | "ast.json" | "target.json" | "dependencies.json"
-  ) {
-    const name = path.basename(filePath, path.extname(filePath));
-
-    const syntestPath = (<{ syntestDirectory: string }>(<unknown>this.args))
-      .syntestDirectory;
-    const stateStore = (<StateStorageOptions>(<unknown>this.args))
-      .stateStorageDirectory;
-
-    const base = path.join(syntestPath, stateStore);
-    const directory = path.join(base, name);
-    if (!existsSync(directory)) {
-      mkdirSync(directory, { recursive: true });
-    }
-
-    const savePath = path.join(directory, type);
-    writeFileSync(savePath, data);
   }
 }
 

@@ -15,5 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as WebSocket from "ws";
 
-export * as module from "./lib/FileWriterModule";
+export function handler(
+  client: WebSocket,
+  event: string,
+  data: { [key: string]: unknown }
+) {
+  client.send(
+    Buffer.from(
+      JSON.stringify({
+        event,
+        data,
+      })
+    )
+  );
+}

@@ -100,31 +100,7 @@ async function main() {
   // Set the metrics on the metric manager
   metricManager.metrics = await moduleManager.getMetrics();
 
-  // Setup cleanup on exit handler
-  let cleaned = false;
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.once("beforeExit", (code) => {
-    if (code !== 0) {
-      LOGGER.error(`Process exited with code: ${code}`);
-      userInterface.printError(`Process exited with code: ${code}`);
-    }
-    if (cleaned) {
-      return;
-    }
-    LOGGER.info("Cleaning up...");
-    cleaned = true;
-    void moduleManager.cleanup();
-  });
-
   moduleManager.printModuleVersionTable();
-
-  // process.setMaxListeners()
-  // Register all listener plugins
-  for (const plugin of moduleManager
-    .getPluginsOfType(PluginType.EVENT_LISTENER)
-    .values()) {
-    (<EventListenerPlugin>plugin).setupEventListener(metricManager);
-  }
 
   const versions = [...moduleManager.modules.values()]
     .map((module) => `${module.name} (${module.version})`)
@@ -145,6 +121,14 @@ async function main() {
       metricManager.setOutputMetrics(
         (<MetricOptions>(<unknown>argv)).outputMetrics
       );
+
+      // process.setMaxListeners()
+      // Register all listener plugins
+      for (const plugin of moduleManager
+        .getPluginsOfType(PluginType.EVENT_LISTENER)
+        .values()) {
+        await (<EventListenerPlugin>plugin).setupEventListener(metricManager);
+      }
 
       // Prepare modules
       LOGGER.info("Preparing modules...");

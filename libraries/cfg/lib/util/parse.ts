@@ -17,66 +17,32 @@
  */
 import { ControlFlowProgram } from "../ControlFlowProgram";
 import { ControlFlowGraph } from "../graph/ControlFlowGraph";
-import { EdgeType } from "../graph/EdgeType";
-import { MetaData, Statement } from "../graph/Node";
-import { NodeType } from "../graph/NodeType";
 
-type Node = {
-  id: string;
-  type: NodeType;
-  label: string;
-  statements: Statement[];
-  metadata: MetaData;
-  description?: string;
-};
+import { SerializableControlFlowProgram } from "./SerializableControlFlowProgram";
 
-type Edge = {
-  id: string;
-  type: EdgeType;
-  label: string;
-  source: string;
-  target: string;
-  description?: string;
-};
-
-export type ExpectedData = {
-  entry: string;
-  successExit: string;
-  errorExit: string;
-  nodes: Node[];
-  edges: Edge[];
-  functions: {
-    id: string;
-    name: string;
-    entry: string;
-    successExit: string;
-    errorExit: string;
-    nodes: Node[];
-    edges: Edge[];
-  }[];
-};
-
-export function parse(data: string): ControlFlowProgram {
-  const dataObject = <ExpectedData>JSON.parse(data);
-
-  // sadly all contraction data is lost
-
+export function makeNonSerializable(
+  serializableCfp: SerializableControlFlowProgram
+): ControlFlowProgram {
   return {
     graph: new ControlFlowGraph(
-      dataObject.nodes.find((value) => value.id === dataObject.entry),
-      dataObject.nodes.find((value) => value.id === dataObject.successExit),
-      dataObject.nodes.find((value) => value.id === dataObject.errorExit),
-      new Map(dataObject.nodes.map((node) => [node.id, node])),
-      dataObject.edges
+      serializableCfp.nodes.find((value) => value.id === serializableCfp.entry),
+      serializableCfp.nodes.find(
+        (value) => value.id === serializableCfp.successExit
+      ),
+      serializableCfp.nodes.find(
+        (value) => value.id === serializableCfp.errorExit
+      ),
+      new Map(serializableCfp.nodes.map((node) => [node.id, node])),
+      serializableCfp.edges
     ),
-    functions: dataObject.functions.map((function_) => {
+    functions: serializableCfp.functions.map((function_) => {
       return {
         id: function_.id,
         name: function_.name,
         graph: new ControlFlowGraph(
-          dataObject.nodes.find((value) => value.id === function_.entry),
-          dataObject.nodes.find((value) => value.id === function_.successExit),
-          dataObject.nodes.find((value) => value.id === function_.errorExit),
+          function_.nodes.find((value) => value.id === function_.entry),
+          function_.nodes.find((value) => value.id === function_.successExit),
+          function_.nodes.find((value) => value.id === function_.errorExit),
           new Map(function_.nodes.map((node) => [node.id, node])),
           function_.edges
         ),

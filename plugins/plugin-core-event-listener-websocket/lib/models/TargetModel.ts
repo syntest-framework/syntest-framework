@@ -15,5 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { RootContext, Target } from "@syntest/analysis";
 
-export * as module from "./lib/FileWriterModule";
+import { Model } from "./Model";
+
+export interface TargetModel extends Model {
+  filePath: string;
+  target?: Target;
+}
+
+export function targetModelFormatter(
+  rootContext: RootContext<unknown>,
+  filePath: string,
+  target?: Target
+): TargetModel {
+  return {
+    filePath,
+    target,
+  };
+}

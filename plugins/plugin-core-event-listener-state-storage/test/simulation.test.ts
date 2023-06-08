@@ -17,13 +17,13 @@
  */
 import * as chai from "chai";
 
-import { StateStoragePlugin } from "../lib/StateStoragePlugin";
+import { StateStorage } from "../lib/StateStorage";
 
 const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", () => {
-    new StateStoragePlugin();
+    new StateStorage("");
 
     expect(true);
   });
