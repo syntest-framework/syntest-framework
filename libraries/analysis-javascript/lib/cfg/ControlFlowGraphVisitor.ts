@@ -34,8 +34,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected static override LOGGER: any;
 
-  private _nodesList: Node<t.Node>[];
-  private _nodes: Map<string, Node<t.Node>>;
+  private _nodesList: Node[];
+  private _nodes: Map<string, Node>;
   private _edges: Edge[];
 
   private _breakNodesStack: Set<string>[];
@@ -43,12 +43,12 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   private _returnNodes: Set<string>;
   private _throwNodes: Set<string>;
 
-  private _functions: ControlFlowFunction<t.Node>[];
+  private _functions: ControlFlowFunction[];
 
   private _currentParents: string[];
   private _edgeType: EdgeType;
 
-  get cfg(): ControlFlowProgram<t.Node> {
+  get cfg(): ControlFlowProgram {
     if (!this._nodes.has("ENTRY")) {
       throw new Error("No entry node found");
     }
@@ -132,7 +132,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     ControlFlowGraphVisitor.LOGGER = getLogger("ControlFlowGraphVisitor");
 
     this._nodesList = [];
-    this._nodes = new Map<string, Node<t.Node>>();
+    this._nodes = new Map<string, Node>();
     this._edges = [];
 
     this._breakNodesStack = [];
@@ -146,21 +146,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     this._edgeType = EdgeType.NORMAL;
 
-    const entry = new Node<t.Node>("ENTRY", NodeType.ENTRY, "ENTRY", [], {});
-    const successExit = new Node<t.Node>(
-      "SUCCESS_EXIT",
-      NodeType.EXIT,
-      "EXIT",
-      [],
-      {}
-    );
-    const errorExit = new Node<t.Node>(
-      "ERROR_EXIT",
-      NodeType.EXIT,
-      "EXIT",
-      [],
-      {}
-    );
+    const entry = new Node("ENTRY", NodeType.ENTRY, "ENTRY", [], {});
+    const successExit = new Node("SUCCESS_EXIT", NodeType.EXIT, "EXIT", [], {});
+    const errorExit = new Node("ERROR_EXIT", NodeType.EXIT, "EXIT", [], {});
 
     this._nodes.set(entry.id, entry);
     this._nodes.set(successExit.id, successExit);
@@ -184,7 +172,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     return this._continueNodesStack[this._continueNodesStack.length - 1];
   }
 
-  private _getLocation(path: NodePath<t.Node>): Location {
+  private _getLocation(path: NodePath): Location {
     return {
       start: {
         line: path.node.loc.start.line,
@@ -199,9 +187,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     };
   }
 
-  private _createNode(path: NodePath<t.Node>): Node<t.Node> {
+  private _createNode(path: NodePath): Node {
     const id = `${this._getNodeId(path)}`;
-    const node = new Node<t.Node>(
+    const node = new Node(
       id,
       NodeType.NORMAL,
       path.node.type,
@@ -209,7 +197,6 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         {
           id: id,
           location: this._getLocation(path),
-          statement: path.node,
           statementAsText: path.toString(),
         },
       ],
@@ -232,10 +219,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
    * @param path
    * @returns
    */
-  private _createPlaceholderNode(path: NodePath<t.Node>): Node<t.Node> {
+  private _createPlaceholderNode(path: NodePath): Node {
     const id = `placeholder:::${this._getNodeId(path)}`;
     const location = this._getLocation(path);
-    const node = new Node<t.Node>(
+    const node = new Node(
       id,
       NodeType.NORMAL,
       path.node.type,
@@ -254,7 +241,6 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
               index: location.end.index,
             },
           },
-          statement: path.node,
           statementAsText: path.toString(),
         },
       ],
@@ -271,7 +257,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     return node;
   }
 
-  // private _isSpecial(path: NodePath<t.Node>): boolean {
+  // private _isSpecial(path: NodePath): boolean {
   //   return (
   //     path.isFunction() ||
   //     path.isClass() ||
@@ -295,8 +281,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   // }
 
   private _createEdge(
-    source: Node<t.Node>,
-    target: Node<t.Node>,
+    source: Node,
+    target: Node,
     edgeType: EdgeType,
     label = ""
   ): Edge {
@@ -316,7 +302,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
    *
    * @param node
    */
-  private _connectToParents(node: Node<t.Node>) {
+  private _connectToParents(node: Node) {
     // it is actually possible that there are no parents
     for (const parent of this._currentParents) {
       this._edges.push(

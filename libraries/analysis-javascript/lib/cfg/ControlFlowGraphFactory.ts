@@ -25,7 +25,7 @@ import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
 export class ControlFlowGraphFactory
   implements CoreControlFlowGraphFactory<t.Node>
 {
-  convert(filePath: string, AST: t.Node): ControlFlowProgram<t.Node> {
+  convert(filePath: string, AST: t.Node): ControlFlowProgram {
     const visitor = new ControlFlowGraphVisitor(filePath);
     traverse(AST, visitor);
 

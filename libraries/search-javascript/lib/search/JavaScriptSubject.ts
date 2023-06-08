@@ -130,7 +130,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
   }
 
   findChildren(
-    graph: ControlFlowGraph<unknown>,
+    graph: ControlFlowGraph,
     object: ObjectiveFunction<JavaScriptTestCase>
   ): ObjectiveFunction<JavaScriptTestCase>[] {
     let childObjectives: ObjectiveFunction<JavaScriptTestCase>[] = [];

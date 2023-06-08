@@ -15,13 +15,13 @@ cd node_modules/@syntest
 
 ln -s ../../../syntest-core/libraries/analysis analysis
 ln -s ../../../syntest-core/libraries/cfg cfg
-ln -s ../../../syntest-core/libraries/cli cli
 ln -s ../../../syntest-core/libraries/cli-graphics cli-graphics
 ln -s ../../../syntest-core/libraries/logging logging
 ln -s ../../../syntest-core/libraries/metric metric
 ln -s ../../../syntest-core/libraries/module module
 ln -s ../../../syntest-core/libraries/search search
 
+ln -s ../../../syntest-core/tools/cli cli
 ln -s ../../../syntest-core/tools/base-language base-language
 
 

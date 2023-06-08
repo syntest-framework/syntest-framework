@@ -29,8 +29,12 @@ import { SearchProgressBarListener } from "./plugins/listeners/SearchProgressBar
 
 export default class JavaScriptModule extends TestingToolModule {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module
-    super("javascript", require("../../package.json").version);
+    super(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module
+      require("../../package.json").name,
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module
+      require("../../package.json").version
+    );
   }
 
   override register(
@@ -39,9 +43,10 @@ export default class JavaScriptModule extends TestingToolModule {
     userInterface: UserInterface,
     modules: Module[]
   ): void {
+    const name = "javascript";
     const labels = ["javascript", "testing"];
     const commands = [
-      getTestCommand(this.name, moduleManager, metricManager, userInterface),
+      getTestCommand(name, moduleManager, metricManager, userInterface),
     ];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
@@ -53,19 +58,19 @@ export default class JavaScriptModule extends TestingToolModule {
     }
 
     const javascriptTool = new Tool(
-      this.name,
+      name,
       labels,
       "A tool for testing javascript projects.",
       commands,
       additionalOptions
     );
 
-    moduleManager.registerTool(this.name, javascriptTool);
+    moduleManager.registerTool(this, javascriptTool);
 
-    moduleManager.registerPlugin(this.name, new TreeCrossoverPlugin());
-    moduleManager.registerPlugin(this.name, new RandomSamplerPlugin());
+    moduleManager.registerPlugin(this, new TreeCrossoverPlugin());
+    moduleManager.registerPlugin(this, new RandomSamplerPlugin());
     moduleManager.registerPlugin(
-      this.name,
+      this,
       new SearchProgressBarListener(userInterface)
     );
 

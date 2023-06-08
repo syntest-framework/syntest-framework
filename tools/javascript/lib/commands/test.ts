@@ -61,6 +61,7 @@ export function getTestCommand(
   });
 
   return new Command(
+    moduleManager,
     tool,
     "test",
     "Run the test case generation tool on a certain JavaScript project.",
