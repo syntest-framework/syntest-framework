@@ -21,22 +21,23 @@ import { Module, ModuleManager } from "@syntest/module";
 import { PublisherWSPlugin } from "./PublisherWSPlugin";
 
 export default class PublisherModule extends Module {
-  plugin: PublisherWSPlugin;
+  private publisher: PublisherWSPlugin;
+
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     super("publisherWS", "6");
   }
 
   register(moduleManager: ModuleManager): void {
-    this.plugin = new PublisherWSPlugin();
-    moduleManager.registerPlugin(this.name, this.plugin);
+    this.publisher = new PublisherWSPlugin();
+    moduleManager.registerPlugin(this.name, this.publisher);
   }
 
-  override prepare(): void {
-    this.plugin.connect();
+  override async prepare(): Promise<void> {
+    await this.publisher.connect();
   }
 
   override cleanup(): void {
-    this.plugin.disconnect();
+    this.publisher.disconnect();
   }
 }

@@ -32,6 +32,7 @@ export abstract class Encoding {
   protected _rank: number;
   protected _id: string;
   protected _assertions: Map<string, string>;
+  protected _metaComments: string[];
 
   /**
    * Mapping from objective to their distance values for this test case.
@@ -54,6 +55,7 @@ export abstract class Encoding {
     this._id = prng.uniqueId(20);
     this._objectives = new Map<ObjectiveFunction<Encoding>, number>();
     this._assertions = new Map();
+    this._metaComments = [];
   }
 
   abstract mutate(sampler: EncodingSampler<Encoding>): Encoding;
@@ -86,6 +88,14 @@ export abstract class Encoding {
 
   set assertions(value: Map<string, string>) {
     this._assertions = value;
+  }
+
+  get metaComments(): string[] {
+    return [...this._metaComments];
+  }
+
+  addMetaComment(comment: string) {
+    this._metaComments.push(comment);
   }
 
   abstract copy(): Encoding;

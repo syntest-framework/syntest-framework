@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-listener-rabbitmq",
-  "version": "1.0.0-beta.6",
-  "description": "A listener plugin for the SynTest Core containing publishing functionalities for RabbitMQ",
+  "name": "@syntest/plugin-core-event-listener-state-storage",
+  "version": "0.1.0-beta.0",
+  "description": "A listener plugin for the SynTest Core containing state storage functionalities",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -46,21 +46,16 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-testing-tool": "*",
-    "@syntest/cfg-core": "*",
-    "@syntest/core": "*",
+    "@syntest/analysis": "*",
+    "@syntest/base-language": "*",
+    "@syntest/cfg": "*",
     "@syntest/logging": "*",
-    "@syntest/metric": "^0.1.0-beta.0",
+    "@syntest/metric": "*",
     "@syntest/module": "*",
-    "d3": "6.7.0",
-    "jsdom": "^21.1.0"
+    "@syntest/search": "*"
   },
   "engines": {
     "node": ">=16"
-  },
-  "devDependencies": {
-    "@types/d3": "^7.4.0",
-    "@types/jsdom": "^21.1.1"
   },
   "publishConfig": {
     "access": "public"

@@ -18,13 +18,10 @@
 
 import { ControlFlowGraph, Edge, Node, NodeType } from "@syntest/cfg";
 
-export function cfgToD3Graph<S>(
-  cfg: ControlFlowGraph<S>,
-  offset: number
-): D3Graph {
+export function cfgToD3Graph(cfg: ControlFlowGraph, offset: number): D3Graph {
   let count = 0;
 
-  const nodes = [...cfg.nodes.values()].map((n: Node<S>) => {
+  const nodes = [...cfg.nodes.values()].map((n: Node) => {
     let name = `(${n.statements.map((s) => s.location.start.line).join(", ")})`;
 
     if (n.description && n.description.length > 0) {

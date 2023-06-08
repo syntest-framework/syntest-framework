@@ -16,23 +16,33 @@
  * limitations under the License.
  */
 
+import { mkdirSync } from "node:fs";
+import * as path from "node:path";
+
 import { Module, ModuleManager } from "@syntest/module";
 
-import { PublisherRabbitPlugin } from "./PublisherRabbitPlugin";
-import { RabbitProducer } from "./RabbitProducer";
+import { StateStorageOptions, StateStoragePlugin } from "./StateStoragePlugin";
 
-export default class PublisherModule extends Module {
-  private rp: RabbitProducer;
+export default class StateStorageModule extends Module {
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("publisherRabbit", require("../package.json").version);
+    super("state-storage", require("../../package.json").version);
   }
 
   register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this.name, new PublisherRabbitPlugin(this.rp));
+    moduleManager.registerPlugin(this.name, new StateStoragePlugin());
   }
 
-  override cleanup(): void {
-    void this.rp.close();
+  override prepare(): void {
+    const baseDirectory = (<{ syntestDirectory: string }>(<unknown>this.args))
+      .syntestDirectory;
+    const stateStorageDirectory = (<StateStorageOptions>(<unknown>this.args))
+      .stateStorageDirectory;
+
+    console.log(this.args);
+    console.log(baseDirectory, stateStorageDirectory);
+    mkdirSync(path.join(baseDirectory, stateStorageDirectory), {
+      recursive: true,
+    });
   }
 }

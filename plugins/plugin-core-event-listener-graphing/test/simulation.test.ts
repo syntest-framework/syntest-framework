@@ -31,7 +31,7 @@ const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", () => {
-    const nodes = new Map<string, Node<unknown>>();
+    const nodes = new Map<string, Node>();
     const nodeRoot = new Node("ROOT", NodeType.ENTRY, "ROOT", [], {
       lineNumbers: [],
     });

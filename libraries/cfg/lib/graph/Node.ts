@@ -20,7 +20,7 @@ import { NodeType } from "./NodeType";
 /**
  * Represents a basic block in a control flow graph.
  */
-export class Node<S> {
+export class Node {
   readonly id: string;
   readonly type: NodeType;
   readonly label: string;
@@ -29,14 +29,14 @@ export class Node<S> {
   /**
    * The ordered list of statements in this node.
    */
-  readonly statements: Statement<S>[];
+  readonly statements: Statement[];
   readonly metadata: MetaData;
 
   constructor(
     id: string,
     type: NodeType,
     label: string,
-    statements: Statement<S>[],
+    statements: Statement[],
     metadata: MetaData,
     description?: string
   ) {
@@ -65,9 +65,8 @@ export interface Location {
     readonly index: number;
   };
 }
-export interface Statement<S> {
+export interface Statement {
   readonly id: string;
   readonly location: Location;
-  readonly statement: S;
   readonly statementAsText: string;
 }

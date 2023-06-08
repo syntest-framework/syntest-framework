@@ -16,26 +16,35 @@
  * limitations under the License.
  */
 
-import { RootContext } from "@syntest/analysis";
-import { ControlFlowGraph } from "@syntest/cfg";
+import {
+  Events as AnalysisEvents,
+  RootContext,
+  Target,
+} from "@syntest/analysis";
+import { Events as BaseLanguageEvents } from "@syntest/base-language";
+import { ControlFlowProgram } from "@syntest/cfg";
+import { EventListenerPlugin } from "@syntest/module";
 import {
   BudgetManager,
   Encoding,
-  Events,
   SearchAlgorithm,
+  Events as SearchEvents,
   SearchSubject,
   TerminationManager,
-} from "@syntest/core";
-import { EventListenerPlugin } from "@syntest/module";
+} from "@syntest/search";
 import TypedEventEmitter from "typed-emitter";
-import * as ws from "ws";
+import * as WebSocket from "ws";
 import Yargs = require("yargs");
 
-import { onEventActions } from "./onEventActions";
+import { handler } from "./handlers/handler";
+import { abstractSyntaxTreeModelFormatter } from "./models/AbstractSyntaxTreeModel";
+import { controlFlowGraphModelFormatter } from "./models/ControlFlowGraphModel";
+import { dependencyModelFormatter } from "./models/DependencyModel";
+import { searchProgressModelFormatter as searchProgressFormatter } from "./models/SearchProgressModel";
+import { sourceModelFormatter } from "./models/SourceModel";
+import { targetModelFormatter } from "./models/TargetModel";
 
 export type PublisherWSOptions = {
-  ip: string;
-  port: string;
   wsUrl: string;
 };
 
@@ -45,7 +54,8 @@ export type PublisherWSOptions = {
  * @author Yehor Kozyr
  */
 export class PublisherWSPlugin extends EventListenerPlugin {
-  socket: ws;
+  private client: WebSocket;
+
   constructor() {
     super(
       "WebSocket Publisher",
@@ -53,406 +63,289 @@ export class PublisherWSPlugin extends EventListenerPlugin {
     );
   }
 
-  disconnect(): void {
-    this.socket.close();
-  }
+  async connect() {
+    const url = (<PublisherWSOptions>(<unknown>this.args)).wsUrl;
+    this.client = new WebSocket(url);
+    const client = this.client;
 
-  connect(): void {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias, unicorn/no-this-assignment
-    const plugin = this;
-    this.socket = new ws((<PublisherWSOptions>(<unknown>this.args)).wsUrl);
-    const wsc = this.socket;
-    wsc.on("open", function open() {
-      console.log("connected");
-      wsc.send(
-        Buffer.from(JSON.stringify({ eventType: "publisherPluginStarted" }))
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "initializeStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("initializeStart", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "initializeComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("initializeComplete", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "preprocessStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("preprocessStart", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "preprocessComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("preprocessComplete", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "processStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("processStart", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "processComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("processComplete", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "postprocessStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("postprocessStart", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "postprocessComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("postprocessComplete", plugin)
-      );
-      /* It used to work before the merge of the main branch
-      (<TypedEventEmitter<Events>>process).on(
-        "exit",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("exit", this)
-      );
-      */
-
-      (<TypedEventEmitter<Events>>process).on(
-        "instrumentationStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("instrumentationStart", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "instrumentationComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("instrumentationComplete", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "targetRunStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("targetRunStart", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "targetRunComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("targetRunComplete", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "reportStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("reportStart", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "reportComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        () => onEventActions.onVoidEvent("reportComplete", plugin)
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "searchInitializationStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (
-          searchAlgorithm: SearchAlgorithm<Encoding>,
-          subject: SearchSubject<Encoding>,
-          budgetManager: BudgetManager<Encoding>,
-          terminationManager: TerminationManager
-        ) => {
-          onEventActions.onAlgorithmEvent(
-            "searchInitializationStart",
-            plugin,
-            searchAlgorithm,
-            subject,
-            budgetManager,
-            terminationManager
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "searchInitializationComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (
-          searchAlgorithm: SearchAlgorithm<Encoding>,
-          subject: SearchSubject<Encoding>,
-          budgetManager: BudgetManager<Encoding>,
-          terminationManager: TerminationManager
-        ) => {
-          onEventActions.onAlgorithmEvent(
-            "searchInitializationComplete",
-            plugin,
-            searchAlgorithm,
-            subject,
-            budgetManager,
-            terminationManager
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "searchStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (
-          searchAlgorithm: SearchAlgorithm<Encoding>,
-          subject: SearchSubject<Encoding>,
-          budgetManager: BudgetManager<Encoding>,
-          terminationManager: TerminationManager
-        ) => {
-          onEventActions.onAlgorithmEvent(
-            "searchStart",
-            plugin,
-            searchAlgorithm,
-            subject,
-            budgetManager,
-            terminationManager
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "searchComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (
-          searchAlgorithm: SearchAlgorithm<Encoding>,
-          subject: SearchSubject<Encoding>,
-          budgetManager: BudgetManager<Encoding>,
-          terminationManager: TerminationManager
-        ) => {
-          onEventActions.onAlgorithmEvent(
-            "searchComplete",
-            plugin,
-            searchAlgorithm,
-            subject,
-            budgetManager,
-            terminationManager
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "searchIterationStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (
-          searchAlgorithm: SearchAlgorithm<Encoding>,
-          subject: SearchSubject<Encoding>,
-          budgetManager: BudgetManager<Encoding>,
-          terminationManager: TerminationManager
-        ) => {
-          onEventActions.onAlgorithmEvent(
-            "searchIterationStart",
-            plugin,
-            searchAlgorithm,
-            subject,
-            budgetManager,
-            terminationManager
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "searchIterationComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (
-          searchAlgorithm: SearchAlgorithm<Encoding>,
-          subject: SearchSubject<Encoding>,
-          budgetManager: BudgetManager<Encoding>,
-          terminationManager: TerminationManager
-        ) => {
-          onEventActions.onAlgorithmEvent(
-            "searchIterationComplete",
-            plugin,
-            searchAlgorithm,
-            subject,
-            budgetManager,
-            terminationManager
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "targetLoadStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "targetLoadStart",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "targetLoadComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "targetLoadComplete",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "sourceResolvingStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "sourceResolvingStart",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "sourceResolvingComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "sourceResolvingComplete",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "targetResolvingStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "targetResolvingStart",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "targetResolvingComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "targetResolvingComplete",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "functionMapResolvingStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "functionMapResolvingStart",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "functionMapResolvingComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "functionMapResolvingComplete",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "dependencyResolvingStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "dependencyResolvingStart",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "dependencyResolvingComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "dependencyResolvingComplete",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "controlFlowGraphResolvingStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "controlFlowGraphResolvingStart",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "abstractSyntaxTreeResolvingStart",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "abstractSyntaxTreeResolvingStart",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "abstractSyntaxTreeResolvingComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>) => {
-          onEventActions.onRootContextEvent(
-            "abstractSyntaxTreeResolvingComplete",
-            plugin,
-            rootContext
-          );
-        }
-      );
-
-      (<TypedEventEmitter<Events>>process).on(
-        "controlFlowGraphResolvingComplete",
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        (rootContext: RootContext<unknown>, cfg: ControlFlowGraph<unknown>) => {
-          onEventActions.onControlFlowGraphResolvingComplete(
-            "controlFlowGraphResolvingComplete",
-            plugin,
-            rootContext,
-            cfg
-          );
-        }
-      );
+    await new Promise<void>((resolve, reject) => {
+      client.on("error", (error) => {
+        console.error(error);
+        reject();
+      });
+      client.on("open", function open() {
+        console.log("connected");
+        client.send(
+          Buffer.from(JSON.stringify({ eventType: "publisherPluginStarted" }))
+        );
+        resolve();
+      });
+      client.on("ping", () => {
+        client.send("pong");
+      });
+      client.on("close", () => {
+        console.log("disconnected");
+        client.terminate();
+      });
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  disconnect() {
+    this.client.terminate();
+  }
+
   setupEventListener(): void {
-    // empty
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on("initializeStart", () =>
+      this.client.emit("initializeStart", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "initializeComplete",
+      () => this.client.emit("initializeComplete", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on("preprocessStart", () =>
+      this.client.emit("preprocessStart", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "preprocessComplete",
+      () => this.client.emit("preprocessComplete", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on("processStart", () =>
+      this.client.emit("processStart", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on("processComplete", () =>
+      this.client.emit("processComplete", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "postprocessStart",
+      () => this.client.emit("postprocessStart", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "postprocessComplete",
+      () => this.client.emit("postprocessComplete", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "instrumentationStart",
+      () => this.client.emit("instrumentationStart", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "instrumentationComplete",
+      () => this.client.emit("instrumentationComplete", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on("targetRunStart", () =>
+      this.client.emit("targetRunStart", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "targetRunComplete",
+      () => this.client.emit("targetRunComplete", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportStart", () =>
+      this.client.emit("reportStart", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportComplete", () =>
+      this.client.emit("reportComplete", {})
+    );
+
+    // search events
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "searchInitializationStart",
+      () => this.client.emit("searchInitializationStart", {})
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "searchInitializationComplete",
+      () => this.client.emit("searchInitializationComplete", {})
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "searchStart",
+      (
+        searchAlgorithm: SearchAlgorithm<Encoding>,
+        subject: SearchSubject<Encoding>,
+        budgetManager: BudgetManager<Encoding>,
+        _terminationManager: TerminationManager
+      ) =>
+        handler(
+          this.client,
+          "searchStart",
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
+        )
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "searchComplete",
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      (
+        searchAlgorithm: SearchAlgorithm<Encoding>,
+        subject: SearchSubject<Encoding>,
+        budgetManager: BudgetManager<Encoding>,
+        _terminationManager: TerminationManager
+      ) =>
+        handler(
+          this.client,
+          "searchComplete",
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
+        )
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "searchIterationStart",
+      (
+        searchAlgorithm: SearchAlgorithm<Encoding>,
+        subject: SearchSubject<Encoding>,
+        budgetManager: BudgetManager<Encoding>,
+        _terminationManager: TerminationManager
+      ) =>
+        handler(
+          this.client,
+          "searchIterationStart",
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
+        )
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "searchIterationComplete",
+      (
+        searchAlgorithm: SearchAlgorithm<Encoding>,
+        subject: SearchSubject<Encoding>,
+        budgetManager: BudgetManager<Encoding>,
+        _terminationManager: TerminationManager
+      ) =>
+        handler(
+          this.client,
+          "searchIterationComplete",
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
+        )
+    );
+
+    // analysis events
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "sourceResolvingStart",
+      <S>(rootContext: RootContext<S>, filePath: string) =>
+        handler(
+          this.client,
+          "sourceResolvingStart",
+          sourceModelFormatter(rootContext, filePath)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "sourceResolvingComplete",
+      <S>(rootContext: RootContext<S>, filePath: string, source: string) =>
+        handler(
+          this.client,
+          "sourceResolvingComplete",
+          sourceModelFormatter(rootContext, filePath, source)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "abstractSyntaxTreeResolvingStart",
+      <S>(rootContext: RootContext<S>, filePath: string) =>
+        handler(
+          this.client,
+          "abstractSyntaxTreeResolvingStart",
+          abstractSyntaxTreeModelFormatter(rootContext, filePath)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "abstractSyntaxTreeResolvingComplete",
+      <S>(
+        rootContext: RootContext<S>,
+        filePath: string,
+        abstractSyntaxTree: S
+      ) =>
+        handler(
+          this.client,
+          "abstractSyntaxTreeResolvingComplete",
+          abstractSyntaxTreeModelFormatter(
+            rootContext,
+            filePath,
+            abstractSyntaxTree
+          )
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "controlFlowGraphResolvingStart",
+      <S>(rootContext: RootContext<S>, filePath: string) =>
+        handler(
+          this.client,
+          "controlFlowGraphResolvingStart",
+          controlFlowGraphModelFormatter(rootContext, filePath)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "controlFlowGraphResolvingComplete",
+      <S>(
+        rootContext: RootContext<S>,
+        filePath: string,
+        cfp: ControlFlowProgram
+      ) =>
+        handler(
+          this.client,
+          "controlFlowGraphResolvingComplete",
+          controlFlowGraphModelFormatter(rootContext, filePath, cfp)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "targetExtractionStart",
+      <S>(rootContext: RootContext<S>, filePath: string) =>
+        handler(
+          this.client,
+          "targetExtractionStart",
+          targetModelFormatter(rootContext, filePath)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "targetExtractionComplete",
+      <S>(rootContext: RootContext<S>, filePath: string, target: Target) =>
+        handler(
+          this.client,
+          "targetExtractionComplete",
+          targetModelFormatter(rootContext, filePath, target)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "dependencyResolvingStart",
+      <S>(rootContext: RootContext<S>, filePath: string) =>
+        handler(
+          this.client,
+          "dependencyResolvingStart",
+          dependencyModelFormatter(rootContext, filePath)
+        )
+    );
+
+    (<TypedEventEmitter<AnalysisEvents>>process).on(
+      "dependencyResolvingComplete",
+      <S>(
+        rootContext: RootContext<S>,
+        filePath: string,
+        dependencies: string[]
+      ) =>
+        handler(
+          this.client,
+          "dependencyResolvingComplete",
+          dependencyModelFormatter(rootContext, filePath, dependencies)
+        )
+    );
   }
 
   override getOptions(
@@ -473,27 +366,7 @@ export class PublisherWSPlugin extends EventListenerPlugin {
     optionsMap.set("ws-url", {
       alias: [],
       default: "ws://localhost:8080",
-      description: "The IP of the listening WebSocket",
-      group: OptionGroups.PublisherWSOptions,
-      hidden: false,
-      normalize: true,
-      type: "string",
-    });
-
-    optionsMap.set("ip", {
-      alias: [],
-      default: "localhost",
-      description: "The IP of the listening WebSocket",
-      group: OptionGroups.PublisherWSOptions,
-      hidden: false,
-      normalize: true,
-      type: "string",
-    });
-
-    optionsMap.set("port", {
-      alias: [],
-      default: "80",
-      description: "The port of the listening WebSocket",
+      description: "The url of the listening WebSocket",
       group: OptionGroups.PublisherWSOptions,
       hidden: false,
       normalize: true,

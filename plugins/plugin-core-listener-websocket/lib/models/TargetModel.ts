@@ -15,16 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ControlFlowFunction } from "./ControlFlowFunction";
-import { ContractedControlFlowGraph } from "./graph/ContractedControlFlowGraph";
-import { ControlFlowGraph } from "./graph/ControlFlowGraph";
+import { RootContext, Target } from "@syntest/analysis";
 
-/**
- * Control Flow Program
- * While Control Flow Functions represent the control flow of a single procedure, Inter-procedural Control Flow Graphs (Control Flow Program) represent the control flow of whole programs.
- * https://en.wikipedia.org/wiki/Control-flow_graph
- */
-export interface ControlFlowProgram {
-  graph: ControlFlowGraph | ContractedControlFlowGraph;
-  functions: ControlFlowFunction[];
+import { Model } from "./Model";
+
+export interface TargetModel extends Model {
+  filePath: string;
+  target?: Target;
+}
+
+export function targetModelFormatter(
+  rootContext: RootContext<unknown>,
+  filePath: string,
+  target?: Target
+): TargetModel {
+  return {
+    filePath,
+    target,
+  };
 }

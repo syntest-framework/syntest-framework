@@ -39,9 +39,9 @@ import { NodeType } from "../graph/NodeType";
  * @param controlFlowGraph the control flow graph to contract
  * @returns the contracted control flow graph
  */
-export function edgeContraction<S>(
-  controlFlowGraph: ControlFlowGraph<S>
-): ContractedControlFlowGraph<S> {
+export function edgeContraction(
+  controlFlowGraph: ControlFlowGraph
+): ContractedControlFlowGraph {
   const original = controlFlowGraph;
   const nodeMapping = new Map<string, string[]>();
   let changed = false;
@@ -86,7 +86,7 @@ export function edgeContraction<S>(
     );
   } while (changed);
 
-  return new ContractedControlFlowGraph<S>(
+  return new ContractedControlFlowGraph(
     controlFlowGraph.entry,
     controlFlowGraph.successExit,
     controlFlowGraph.errorExit,
@@ -98,7 +98,7 @@ export function edgeContraction<S>(
 }
 
 // side effects
-export function contractControlFlowProgram<S>(program: ControlFlowProgram<S>) {
+export function contractControlFlowProgram(program: ControlFlowProgram) {
   program.graph = edgeContraction(program.graph);
   for (const f of program.functions) {
     f.graph = edgeContraction(f.graph);
@@ -107,8 +107,8 @@ export function contractControlFlowProgram<S>(program: ControlFlowProgram<S>) {
   return program;
 }
 
-function bfs<S>(
-  controlFlowGraph: ControlFlowGraph<S>,
+function bfs(
+  controlFlowGraph: ControlFlowGraph,
   condition: (edge: Edge) => boolean,
   callback: (edge: Edge) => void
 ) {
@@ -138,8 +138,8 @@ function bfs<S>(
   }
 }
 
-function beforeGuards<S>(
-  controlFlowGraph: ControlFlowGraph<S>,
+function beforeGuards(
+  controlFlowGraph: ControlFlowGraph,
   source: string,
   target: string
 ) {
@@ -164,10 +164,10 @@ function beforeGuards<S>(
   }
 }
 
-function afterGuards<S>(
-  newNodes: Map<string, Node<S>>,
+function afterGuards(
+  newNodes: Map<string, Node>,
   newEdges: Edge[],
-  controlFlowGraph: ControlFlowGraph<S>,
+  controlFlowGraph: ControlFlowGraph,
   source: string,
   target: string
 ) {
@@ -192,17 +192,17 @@ function afterGuards<S>(
   }
 }
 
-function mergeNodes<S>(
-  controlFlowGraph: ControlFlowGraph<S>,
+function mergeNodes(
+  controlFlowGraph: ControlFlowGraph,
   source: string,
   target: string
-): ControlFlowGraph<S> {
+): ControlFlowGraph {
   beforeGuards(controlFlowGraph, source, target);
 
   const sourceNode = controlFlowGraph.getNodeById(source);
   const targetNode = controlFlowGraph.getNodeById(target);
 
-  const mergedNode: Node<S> = new Node<S>(
+  const mergedNode: Node = new Node(
     source, // We use the id of node1 because the first node always contains the result of a control node (e.g. if, while, etc.) this is also where the instrumentation places the branch coverage
     NodeType.NORMAL,
     sourceNode.label + "-" + targetNode.label,
@@ -219,7 +219,7 @@ function mergeNodes<S>(
 
   const newNodesArray = [mergedNode, ...filteredNodes];
 
-  const newNodes = new Map<string, Node<S>>(
+  const newNodes = new Map<string, Node>(
     newNodesArray.map((node) => [node.id, node])
   );
 
