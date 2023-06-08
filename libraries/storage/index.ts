@@ -15,19 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { StorageManager } from "@syntest/storage";
-import * as chai from "chai";
 
-import { FileWriterMetricMiddleware } from "../lib/middleware/FileWriterMetricMiddleware";
+export * from "./lib/util/Configuration";
 
-const expect = chai.expect;
-
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", () => {
-    new FileWriterMetricMiddleware(new StorageManager(), [], [], "");
-    expect(true);
-  });
-});
+export * from "./lib/StorageManager";

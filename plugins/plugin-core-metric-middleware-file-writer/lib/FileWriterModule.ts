@@ -16,16 +16,11 @@
  * limitations under the License.
  */
 
-import { mkdirSync } from "node:fs";
-import * as path from "node:path";
-
 import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 
-import {
-  FileWriterMetricMiddlewarePlugin,
-  StorageOptions,
-} from "./plugins/FileWriterMetricMiddlewarePlugin";
+import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
 
 export default class FileWriterModule extends Module {
   constructor() {
@@ -37,20 +32,14 @@ export default class FileWriterModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager, metricManager: MetricManager): void {
+  register(
+    moduleManager: ModuleManager,
+    metricManager: MetricManager,
+    storageManager: StorageManager
+  ): void {
     moduleManager.registerPlugin(
       this,
-      new FileWriterMetricMiddlewarePlugin(metricManager)
+      new FileWriterMetricMiddlewarePlugin(metricManager, storageManager)
     );
-  }
-
-  override prepare(): void {
-    const baseDirectory = (<{ syntestDirectory: string }>(<unknown>this.args))
-      .syntestDirectory;
-    const metricsDirectory = (<StorageOptions>(<unknown>this.args))
-      .fileWriterMetricsDirectory;
-    mkdirSync(path.join(baseDirectory, metricsDirectory), {
-      recursive: true,
-    });
   }
 }

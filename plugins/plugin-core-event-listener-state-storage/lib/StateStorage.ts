@@ -15,16 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import * as path from "node:path";
 
 import { RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram, makeSerializeable } from "@syntest/cfg";
+import { StorageManager } from "@syntest/storage";
 
 export class StateStorage {
+  private storageManager: StorageManager;
   private storagePath: string;
 
-  constructor(storagePath: string) {
+  constructor(storageManager: StorageManager, storagePath: string) {
+    this.storageManager = storageManager;
     this.storagePath = storagePath;
   }
 
@@ -46,9 +48,6 @@ export class StateStorage {
     filePath: string,
     ast: S
   ): void {
-    if (!filePath.includes("truncate")) {
-      return;
-    }
     this.save(JSON.stringify(ast), filePath, "ast.json");
   }
 
@@ -57,9 +56,6 @@ export class StateStorage {
     filePath: string,
     target: Target
   ): void {
-    if (!filePath.includes("truncate")) {
-      return;
-    }
     this.save(JSON.stringify(target), filePath, "target.json");
   }
 
@@ -68,9 +64,6 @@ export class StateStorage {
     filePath: string,
     dependencies: string[]
   ): void {
-    if (!filePath.includes("truncate")) {
-      return;
-    }
     this.save(
       JSON.stringify({ depedencies: dependencies }),
       filePath,
@@ -85,12 +78,6 @@ export class StateStorage {
   ) {
     const name = path.basename(filePath, path.extname(filePath));
 
-    const directory = path.join(this.storagePath, name);
-    if (!existsSync(directory)) {
-      mkdirSync(directory, { recursive: true });
-    }
-
-    const savePath = path.join(directory, type);
-    writeFileSync(savePath, data);
+    this.storageManager.store(`${this.storagePath}/${name}`, type, data);
   }
 }

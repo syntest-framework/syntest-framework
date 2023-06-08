@@ -52,7 +52,9 @@
     "@syntest/module": "^0.1.0-beta.16",
     "@syntest/search": "^0.4.0-beta.29",
     "globby": "11.0.4",
-    "yargs": "^17.7.1"
+    "yargs": "^17.7.1",
+    "@syntest/cli-graphics": "^0.1.0-beta.3",
+    "@syntest/storage": "^0.0.1"
   },
   "engines": {
     "node": ">=16"

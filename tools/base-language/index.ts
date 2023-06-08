@@ -43,7 +43,6 @@ export * from "./lib/presets/MOSAPreset";
 export * from "./lib/presets/NSGAIIPreset";
 
 export * from "./lib/util/Events";
-export * from "./lib/util/fileSystem";
 
 export * from "./lib/Configuration";
 export * from "./lib/Launcher";

@@ -16,8 +16,7 @@
  * limitations under the License.
  */
 
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { existsSync } from "node:fs";
 
 import * as csv from "@fast-csv/format";
 import {
@@ -29,17 +28,21 @@ import {
   SeriesDistributionMetric,
   SeriesMetric,
 } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 
 export class FileWriterMetricMiddleware extends MiddleWare {
-  private rootOutputDirectory: string;
+  private storageManager: StorageManager;
+  private outputDirectory: string;
 
   constructor(
+    storageManager: StorageManager,
     metrics: Metric[],
     outputMetrics: Metric[],
-    rootOutputDirectory: string
+    outputDirectory: string
   ) {
     super(metrics, outputMetrics);
-    this.rootOutputDirectory = rootOutputDirectory;
+    this.storageManager = storageManager;
+    this.outputDirectory = outputDirectory;
   }
 
   async run(metricManager: MetricManager): Promise<void> {
@@ -80,28 +83,24 @@ export class FileWriterMetricMiddleware extends MiddleWare {
 
       if (properties.size > 0) {
         await this.writePropertiesToCSV(
-          this.rootOutputDirectory,
+          this.outputDirectory,
           namespace,
           properties
         );
       }
       if (distributions.size > 0) {
         await this.writeDistributionsToCSV(
-          this.rootOutputDirectory,
+          this.outputDirectory,
           namespace,
           distributions
         );
       }
       if (series.size > 0) {
-        await this.writeSeriesToCSV(
-          this.rootOutputDirectory,
-          namespace,
-          series
-        );
+        await this.writeSeriesToCSV(this.outputDirectory, namespace, series);
       }
       if (seriesDistributions.size > 0) {
         await this.writeSeriesDistributionToCSV(
-          this.rootOutputDirectory,
+          this.outputDirectory,
           namespace,
           seriesDistributions
         );
@@ -125,8 +124,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     namespace: string,
     properties: Map<string, string>
   ): Promise<void> {
-    filePath = path.resolve(path.join(filePath, "properties.csv"));
-    const exists = fs.existsSync(filePath);
+    const exists = existsSync(filePath);
 
     const data = {
       namespace: namespace,
@@ -138,11 +136,13 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    if (exists) {
-      fs.appendFileSync(filePath, dataAsString);
-    } else {
-      fs.writeFileSync(filePath, dataAsString);
-    }
+    this.storageManager.store(
+      filePath,
+      "properties.csv",
+      dataAsString,
+      false,
+      true
+    );
   }
 
   /**
@@ -161,8 +161,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     namespace: string,
     distributions: Map<string, number[]>
   ): Promise<void> {
-    filePath = path.resolve(path.join(filePath, "distributions.csv"));
-    const exists = fs.existsSync(filePath);
+    const exists = existsSync(filePath);
 
     const fullData = [];
 
@@ -184,11 +183,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    if (exists) {
-      fs.appendFileSync(filePath, dataAsString);
-    } else {
-      fs.writeFileSync(filePath, dataAsString);
-    }
+    this.storageManager.store(filePath, "distributions.csv", dataAsString);
   }
 
   /**
@@ -207,8 +202,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     namespace: string,
     series: Map<string, Map<string, Map<number, number>>>
   ): Promise<void> {
-    filePath = path.resolve(path.join(filePath, "series.csv"));
-    const exists = fs.existsSync(filePath);
+    const exists = existsSync(filePath);
 
     const fullData = [];
 
@@ -231,11 +225,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    if (exists) {
-      fs.appendFileSync(filePath, dataAsString);
-    } else {
-      fs.writeFileSync(filePath, dataAsString);
-    }
+    this.storageManager.store(filePath, "series.csv", dataAsString);
   }
 
   /**
@@ -258,8 +248,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       Map<string, Map<string, Map<number, number[]>>>
     >
   ): Promise<void> {
-    filePath = path.resolve(path.join(filePath, "series-distributions.csv"));
-    const exists = fs.existsSync(filePath);
+    const exists = existsSync(filePath);
 
     const fullData = [];
 
@@ -290,10 +279,10 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    if (exists) {
-      fs.appendFileSync(filePath, dataAsString);
-    } else {
-      fs.writeFileSync(filePath, dataAsString);
-    }
+    this.storageManager.store(
+      filePath,
+      "series-distributions.csv",
+      dataAsString
+    );
   }
 }
