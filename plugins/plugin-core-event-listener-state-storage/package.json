@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-event-listener-state-storage",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "description": "A listener plugin for the SynTest Core containing state storage functionalities",
   "keywords": [
     "syntest",
