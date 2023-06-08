@@ -114,6 +114,12 @@ export class DynaSPEAII<T extends Encoding> extends SPEAIIFamily<T> {
       chosen.setRank(0);
       if (!frontZero.includes(chosen)) frontZero.push(chosen);
     }
+    // Set rank of every solution not in frontZero to 1, for tournament selection
+    for (const p of population) {
+      if (!frontZero.includes(p)) {
+        p.setRank(1);
+      }
+    }
     return frontZero;
   }
 }

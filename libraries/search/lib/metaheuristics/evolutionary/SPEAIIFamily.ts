@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { BudgetManager } from "../../budget/BudgetManager";
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { Encoding } from "../../Encoding";
 import { EncodingSampler } from "../../EncodingSampler";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 import { Procreation } from "../../operators/procreation/Procreation";
+import { TerminationManager } from "../../termination/TerminationManager";
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
@@ -164,6 +166,10 @@ export abstract class SPEAIIFamily<
       const strength = rawFitness.get(solution);
       const score = strength + density;
       fitness.set(solution, score);
+
+      // TODO make own tournament selection
+      // Temporary solution to make it work with their version of tournament selection
+      solution.setCrowdingDistance(1 / score);
     }
     return fitness;
   }
@@ -204,5 +210,30 @@ export abstract class SPEAIIFamily<
       nextFront.splice(indexToRemove, 1);
       distances.splice(indexToRemove, 1);
     }
+  }
+
+  protected override async _iterate(
+    budgetManager: BudgetManager<T>,
+    terminationManager: TerminationManager
+  ): Promise<void> {
+    const offspring = this._procreation.generateOffspringPopulation(
+      this._populationSize,
+      this._population
+    );
+
+    await this._objectiveManager.evaluateMany(
+      offspring,
+      budgetManager,
+      terminationManager
+    );
+
+    // If all objectives are covered, we don't need to rank the population anymore
+    // The final test cases are in the archive, rather than the population
+    if (!this._objectiveManager.hasObjectives()) {
+      return;
+    }
+
+    this._population = offspring;
+    this._environmentalSelection(this._populationSize);
   }
 }
