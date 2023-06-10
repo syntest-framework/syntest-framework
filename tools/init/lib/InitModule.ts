@@ -24,27 +24,33 @@ import { getModuleCommand } from "./commands/module";
 
 export default class InitModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("init", require("../../package.json").version);
+    super(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").name,
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").version
+    );
   }
 
   register(moduleManager: ModuleManager): void | Promise<void> {
+    const name = "init";
+
     const labels = ["init"];
     const commands = [
-      getConfigCommand(this.name, moduleManager),
-      getModuleCommand(this.name),
+      getConfigCommand(name, moduleManager),
+      getModuleCommand(name, moduleManager),
     ];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
 
     const initTool = new Tool(
-      this.name,
+      name,
       labels,
       "A tool for initializing SynTest projects.",
       commands,
       additionalOptions
     );
 
-    moduleManager.registerTool(this.name, initTool);
+    moduleManager.registerTool(this, initTool);
   }
 }

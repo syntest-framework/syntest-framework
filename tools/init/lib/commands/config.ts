@@ -72,6 +72,7 @@ export function getConfigCommand(
   const options = new Map<string, Yargs.Options>();
 
   return new Command(
+    moduleManager,
     tool,
     "config",
     "Create a configuration file for the tool.",

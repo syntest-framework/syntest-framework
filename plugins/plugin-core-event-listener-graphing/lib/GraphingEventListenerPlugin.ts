@@ -36,9 +36,13 @@ export type GraphOptions = {
  *
  * @author Dimitri Stallenberg
  */
-export class GraphingPlugin extends EventListenerPlugin {
+export class GraphingEventListenerPlugin extends EventListenerPlugin {
   constructor() {
-    super("graphing", "Creates a graph of the CFG");
+    super(
+      "graphing",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").description
+    );
   }
 
   setupEventListener(): void {
@@ -48,7 +52,7 @@ export class GraphingPlugin extends EventListenerPlugin {
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
-        cfp: ControlFlowProgram<S>
+        cfp: ControlFlowProgram
       ) => this.controlFlowGraphResolvingComplete(rootContext, filePath, cfp)
     );
   }
@@ -88,7 +92,7 @@ export class GraphingPlugin extends EventListenerPlugin {
   controlFlowGraphResolvingComplete<S>(
     rootContext: RootContext<S>,
     filePath: string,
-    cfp: ControlFlowProgram<S>
+    cfp: ControlFlowProgram
   ): void {
     const name = path.basename(filePath, path.extname(filePath));
     const svgHtml = createSimulation(cfp.graph);

@@ -32,7 +32,6 @@ export const Configuration = {
       .option("metric-middleware-pipeline", {
         alias: [],
         array: true,
-        choices: [],
         default: [],
         description: "Order of the output middleware",
         group: OptionGroups.Metric,
@@ -41,7 +40,6 @@ export const Configuration = {
       })
       .option("output-metrics", {
         alias: [],
-        choices: [],
         default: [],
         description: "The values that should be written to csv",
         group: OptionGroups.Metric,
