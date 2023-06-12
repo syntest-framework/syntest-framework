@@ -78,6 +78,6 @@ export class StateStorage {
   ) {
     const name = path.basename(filePath, path.extname(filePath));
 
-    this.storageManager.store(`${this.storagePath}/${name}`, type, data);
+    this.storageManager.store([this.storagePath, name], type, data);
   }
 }

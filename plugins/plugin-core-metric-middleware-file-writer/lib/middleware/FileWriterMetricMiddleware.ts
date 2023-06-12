@@ -17,6 +17,7 @@
  */
 
 import { existsSync } from "node:fs";
+import * as path from "node:path";
 
 import * as csv from "@fast-csv/format";
 import {
@@ -124,7 +125,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     namespace: string,
     properties: Map<string, string>
   ): Promise<void> {
-    const exists = existsSync(filePath);
+    const fileName = "properties.csv";
+    const exists = existsSync(path.join(filePath, fileName));
 
     const data = {
       namespace: namespace,
@@ -136,13 +138,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    this.storageManager.store(
-      filePath,
-      "properties.csv",
-      dataAsString,
-      false,
-      true
-    );
+    this.storageManager.store([filePath], fileName, dataAsString, false, true);
   }
 
   /**
@@ -161,7 +157,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     namespace: string,
     distributions: Map<string, number[]>
   ): Promise<void> {
-    const exists = existsSync(filePath);
+    const fileName = "distributions.csv";
+    const exists = existsSync(path.join(filePath, fileName));
 
     const fullData = [];
 
@@ -183,7 +180,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    this.storageManager.store(filePath, "distributions.csv", dataAsString);
+    this.storageManager.store([filePath], fileName, dataAsString);
   }
 
   /**
@@ -202,7 +199,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     namespace: string,
     series: Map<string, Map<string, Map<number, number>>>
   ): Promise<void> {
-    const exists = existsSync(filePath);
+    const fileName = "series.csv";
+    const exists = existsSync(path.join(filePath, fileName));
 
     const fullData = [];
 
@@ -225,7 +223,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    this.storageManager.store(filePath, "series.csv", dataAsString);
+    this.storageManager.store([filePath], fileName, dataAsString);
   }
 
   /**
@@ -248,7 +246,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       Map<string, Map<string, Map<number, number[]>>>
     >
   ): Promise<void> {
-    const exists = existsSync(filePath);
+    const fileName = "series-distributions.csv";
+    const exists = existsSync(path.join(filePath, fileName));
 
     const fullData = [];
 
@@ -279,10 +278,6 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       includeEndRowDelimiter: true,
     });
 
-    this.storageManager.store(
-      filePath,
-      "series-distributions.csv",
-      dataAsString
-    );
+    this.storageManager.store([filePath], fileName, dataAsString);
   }
 }

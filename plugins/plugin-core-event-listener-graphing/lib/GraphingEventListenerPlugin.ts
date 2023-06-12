@@ -100,14 +100,13 @@ export class GraphingEventListenerPlugin extends EventListenerPlugin {
     const svgHtml = createSimulation(cfp.graph);
 
     const base = (<GraphOptions>(<unknown>this.args)).graphingCfgDirectory;
-    const directory = `${base}/${name}`;
 
-    this.storageManager.store(directory, "_full.svg", svgHtml);
+    this.storageManager.store([base, name], "_full.svg", svgHtml);
 
     for (const function_ of cfp.functions) {
       const svgHtml = createSimulation(function_.graph);
 
-      this.storageManager.store(directory, `${function_.name}.svg`, svgHtml);
+      this.storageManager.store([base, name], `${function_.name}.svg`, svgHtml);
     }
   }
 }

@@ -45,13 +45,21 @@ export class StorageManager {
     StorageManager.LOGGER = getLogger("StorageManager");
   }
 
-  private getFullPath(directoryName: string, temporary = false): string {
+  private getFullPath(directoryPath: string[], temporary = false): string {
+    for (const pathPart of directoryPath) {
+      if (pathPart.includes("/") || pathPart.includes("\\")) {
+        throw new Error(
+          "Storage path cannot contain any of the following characters /\\"
+        );
+      }
+    }
+
     if (temporary) {
       return path.resolve(
         path.join(
           (<StorageOptions>(<unknown>this.args)).tempSyntestDirectory,
           (<StorageOptions>(<unknown>this.args)).fid,
-          directoryName
+          ...directoryPath
         )
       );
     }
@@ -59,53 +67,53 @@ export class StorageManager {
       path.join(
         (<StorageOptions>(<unknown>this.args)).syntestDirectory,
         (<StorageOptions>(<unknown>this.args)).fid,
-        directoryName
+        ...directoryPath
       )
     );
   }
 
-  createDirectory(directory: string, temporary = false) {
-    directory = this.getFullPath(directory, temporary);
+  createDirectory(directoryPath: string[], temporary = false) {
+    const fullPath = this.getFullPath(directoryPath, temporary);
 
-    if (existsSync(directory)) {
+    if (existsSync(fullPath)) {
       return;
     }
-    mkdirSync(directory, { recursive: true });
+    mkdirSync(fullPath, { recursive: true });
   }
 
-  deleteTemporaryDirectory(directory: string) {
-    directory = this.getFullPath(directory, true);
+  deleteTemporaryDirectory(directoryPath: string[]) {
+    const fullPath = this.getFullPath(directoryPath, true);
 
-    if (!existsSync(directory)) {
+    if (!existsSync(fullPath)) {
       return;
     }
-    rmSync(directory, {
+    rmSync(fullPath, {
       recursive: true,
       force: true,
     });
   }
 
-  clearTemporaryDirectory(directory: string) {
-    directory = this.getFullPath(directory, true);
+  clearTemporaryDirectory(directoryPath: string[]) {
+    const fullPath = this.getFullPath(directoryPath, true);
 
-    if (!existsSync(directory)) {
+    if (!existsSync(fullPath)) {
       return;
     }
-    const files = readdirSync(directory);
+    const files = readdirSync(fullPath);
     for (const file of files) {
-      unlinkSync(path.join(directory, file));
+      unlinkSync(path.join(fullPath, file));
     }
   }
 
-  createDirectories(directories: string[], temporary = false) {
-    for (const directory of directories) {
-      this.createDirectory(directory, temporary);
+  createDirectories(directoriesPaths: string[][], temporary = false) {
+    for (const directoryPath of directoriesPaths) {
+      this.createDirectory(directoryPath, temporary);
     }
   }
 
-  deleteTemporaryDirectories(directories: string[]) {
-    for (const directory of directories) {
-      this.deleteTemporaryDirectory(directory);
+  deleteTemporaryDirectories(directoriesPaths: string[][]) {
+    for (const directoryPath of directoriesPaths) {
+      this.deleteTemporaryDirectory(directoryPath);
     }
   }
 
@@ -121,15 +129,15 @@ export class StorageManager {
     });
   }
 
-  clearTemporaryDirectories(directories: string[]) {
-    for (const directory of directories) {
-      this.clearTemporaryDirectory(directory);
+  clearTemporaryDirectories(directoriesPaths: string[][]) {
+    for (const directoryPath of directoriesPaths) {
+      this.clearTemporaryDirectory(directoryPath);
     }
   }
 
   /**
    *
-   * @param directoryName
+   * @param storagePath
    * @param fileName
    * @param data
    * @param temporary
@@ -138,7 +146,7 @@ export class StorageManager {
    * @returns the path we saved to
    */
   store(
-    directoryName: string,
+    storagePath: string[],
     fileName: string,
     data: string,
     temporary = false,
@@ -150,9 +158,17 @@ export class StorageManager {
       );
     }
 
-    this.createDirectory(directoryName, temporary);
+    for (const pathPart of storagePath) {
+      if (pathPart.includes("/") || pathPart.includes("\\")) {
+        throw new Error(
+          "Storage path cannot contain any of the following characters /\\"
+        );
+      }
+    }
+
+    this.createDirectory(storagePath, temporary);
     const fullPath = path.join(
-      this.getFullPath(directoryName, temporary),
+      this.getFullPath(storagePath, temporary),
       fileName
     );
 
@@ -165,9 +181,9 @@ export class StorageManager {
     return fullPath;
   }
 
-  deleteTemporary(directoryName: string, fileName: string) {
+  deleteTemporary(directoryPath: string[], fileName: string) {
     // check if temporary
-    const fullPath = path.join(this.getFullPath(directoryName, true), fileName);
+    const fullPath = path.join(this.getFullPath(directoryPath, true), fileName);
 
     if (!existsSync(fullPath)) {
       return;
@@ -181,8 +197,12 @@ export class StorageManager {
     }
   }
 
-  copyToTemporaryDirectory(originalPath: string, destinationDirectory: string) {
-    const destinationPath = this.getFullPath(destinationDirectory, true);
+  copyToTemporaryDirectory(
+    originalDirectoryPath: string[],
+    destinationDirectoryPath: string[]
+  ) {
+    const originalPath = path.join(...originalDirectoryPath);
+    const destinationPath = this.getFullPath(destinationDirectoryPath, true);
     copySync(originalPath, destinationPath);
   }
 }

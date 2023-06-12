@@ -38,7 +38,6 @@ export const Configuration = {
           description: "The syntest flow identifier",
           group: OptionGroups.General,
           hidden: true,
-          config: true,
           type: "string",
         })
         // storage
