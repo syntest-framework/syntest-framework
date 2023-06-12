@@ -56,7 +56,7 @@ export class DynaSPEAII<T extends Encoding> extends SPEAIIFamily<T> {
     // const k = Math.floor(Math.sqrt(size + this._archive_size));
     const k = Math.floor(Math.sqrt(size + remainingSize));
     const fitness: Map<T, number> = this.calculateFitness(
-      [...remainingPopulation, ...this._archive],
+      [...remainingPopulation],
       k,
       this._objectiveManager.getCurrentObjectives()
     );
