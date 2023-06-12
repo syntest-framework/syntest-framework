@@ -25,7 +25,7 @@
     "build": "nx run-many --target=build",
     "build:affected": "nx affected --target=build",
     "build:watch": "nx watch --all -- nx affected --target=build",
-    "clean": "nx run-many --target=clean && clean:root && clean:nx",
+    "clean": "nx run-many --target=clean && npm run clean:nx && npm run clean:root",
     "clean:dist": "nx run-many --target=clean:dist",
     "clean:nx": "nx reset",
     "clean:root": "rm -rf .nyc_output dist node_modules coverage",
