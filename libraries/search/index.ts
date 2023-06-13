@@ -47,6 +47,7 @@ export * from "./lib/metaheuristics/SearchAlgorithm";
 export * from "./lib/metaheuristics/evolutionary/EvolutionaryAlgorithm";
 export * from "./lib/metaheuristics/evolutionary/NSGAII";
 export * from "./lib/metaheuristics/evolutionary/MOSAFamily";
+export * from "./lib/metaheuristics/evolutionary/PSO";
 
 // - Objective
 export * from "./lib/objective/heuristics/ApproachLevel";
