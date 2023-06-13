@@ -40,13 +40,16 @@ export function tournamentSelection<T extends Encoding>(
   for (let tournament = 0; tournament < tournamentSize - 1; tournament++) {
     const solution = prng.pickOne(population);
 
-    // the winner is the solution with the best (smaller) non-dominance rank
-    if (solution.getRank() < winner.getRank()) winner = solution;
-
+    // The winner is the solution with the best (smaller) non-dominance rank.
     // At the same level or ranking, the winner is the solution with the best (largest)
-    // crowding distance
-    if (solution.getCrowdingDistance() > winner.getCrowdingDistance())
+    // crowding distance.
+    if (
+      solution.getRank() < winner.getRank() ||
+      (solution.getRank() === winner.getRank() &&
+        solution.getCrowdingDistance() > winner.getCrowdingDistance())
+    ) {
       winner = solution;
+    }
   }
 
   return winner;
