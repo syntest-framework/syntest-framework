@@ -26,5 +26,7 @@ export abstract class EventListenerPlugin extends Plugin {
     super(PluginType.EVENT_LISTENER, name, describe);
   }
 
-  abstract setupEventListener(metricManager: MetricManager): void;
+  abstract setupEventListener(
+    metricManager: MetricManager
+  ): Promise<void> | void;
 }

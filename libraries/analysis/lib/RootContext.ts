@@ -45,7 +45,7 @@ export class RootContext<S> {
   protected _abstractSyntaxTrees: Map<string, S>;
 
   // Mapping: filepath -> ControlFlowProgram
-  protected _controlFlowProgramMap: Map<string, ControlFlowProgram<S>>;
+  protected _controlFlowProgramMap: Map<string, ControlFlowProgram>;
 
   // Mapping: filepath -> target
   protected _targetMap: Map<string, Target>;
@@ -152,7 +152,7 @@ export class RootContext<S> {
    * Loads the control flow program from the given filePath
    * @param filePath
    */
-  getControlFlowProgram(filePath: string): ControlFlowProgram<S> {
+  getControlFlowProgram(filePath: string): ControlFlowProgram {
     const absolutePath = path.resolve(filePath);
 
     if (!this._controlFlowProgramMap.has(absolutePath)) {

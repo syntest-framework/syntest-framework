@@ -24,7 +24,7 @@ import { ControlFlowGraph } from "./graph/ControlFlowGraph";
  * While Control Flow Functions represent the control flow of a single procedure, Inter-procedural Control Flow Graphs (Control Flow Program) represent the control flow of whole programs.
  * https://en.wikipedia.org/wiki/Control-flow_graph
  */
-export interface ControlFlowProgram<S> {
-  graph: ControlFlowGraph<S> | ContractedControlFlowGraph<S>;
-  functions: ControlFlowFunction<S>[];
+export interface ControlFlowProgram {
+  graph: ControlFlowGraph | ContractedControlFlowGraph;
+  functions: ControlFlowFunction[];
 }

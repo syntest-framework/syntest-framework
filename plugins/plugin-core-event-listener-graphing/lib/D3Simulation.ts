@@ -110,7 +110,7 @@ function ticked(node: any, link: any) {
   };
 }
 
-export function createSimulation<S>(cfg: ControlFlowGraph<S>) {
+export function createSimulation(cfg: ControlFlowGraph) {
   const width = 2000;
   const height = 2000;
   const offset = 200;

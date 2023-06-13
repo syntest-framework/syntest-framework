@@ -21,13 +21,13 @@ import { Datapoint } from "../../util/Datapoint";
 import { cannotFindTraceThatIsCovered } from "../../util/diagnostics";
 
 export class ApproachLevel {
-  public calculate<S>(
-    cfg: ControlFlowGraph<S>,
-    node: Node<S>,
+  public calculate(
+    cfg: ControlFlowGraph,
+    node: Node,
     traces: Datapoint[]
   ): {
     approachLevel: number;
-    closestCoveredNode: Node<S>;
+    closestCoveredNode: Node;
     closestCoveredBranchTrace: Datapoint;
   } {
     // Construct map with key as id covered and value as datapoint that covers that id
@@ -64,11 +64,11 @@ export class ApproachLevel {
     };
   }
 
-  _findClosestCoveredBranch<S>(
-    cfg: ControlFlowGraph<S>,
+  _findClosestCoveredBranch(
+    cfg: ControlFlowGraph,
     from: string,
     targets: Set<string>
-  ): { approachLevel: number; closestCoveredBranch: Node<S> } {
+  ): { approachLevel: number; closestCoveredBranch: Node } {
     const visitedNodeIdSet = new Set<string>([from]);
     const searchQueue: [string, number][] = [[from, 0]];
 
