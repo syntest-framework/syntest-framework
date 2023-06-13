@@ -17,6 +17,7 @@
  */
 
 import { RootContext } from "@syntest/analysis";
+import { Encoding } from "@syntest/search";
 
 export type Events = {
   initializeStart: () => void;
@@ -38,4 +39,10 @@ export type Events = {
 
   targetLoadStart: (rootContext: RootContext<unknown>) => void;
   targetLoadComplete: (rootContext: RootContext<unknown>) => void;
+
+  testCaseFinal: <E extends Encoding>(
+    encoding: E,
+    filePath: string,
+    decoded: string
+  ) => void;
 };

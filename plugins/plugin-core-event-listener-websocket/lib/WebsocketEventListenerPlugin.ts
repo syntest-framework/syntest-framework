@@ -140,6 +140,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       return;
     }
 
+    // base language
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("initializeStart", () =>
       handler(this.client, this._fid, "initializeStart", {})
     );
@@ -201,6 +202,16 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportComplete", () =>
       handler(this.client, this._fid, "reportComplete", {})
+    );
+
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "testCaseFinal",
+      (encoding: Encoding, filePath: string, decoded: string) =>
+        handler(this.client, this._fid, "testCaseFinal", {
+          encodingId: encoding.id,
+          filePath: filePath,
+          decoded: decoded,
+        })
     );
 
     // search events
