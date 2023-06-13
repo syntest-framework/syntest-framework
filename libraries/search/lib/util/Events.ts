@@ -19,6 +19,8 @@
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
 import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
+import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
 import { TerminationManager } from "../termination/TerminationManager";
 
@@ -58,5 +60,21 @@ export type Events = {
     subject: SearchSubject<E>,
     budgetManager: BudgetManager<E>,
     terminationManager: TerminationManager
+  ) => void;
+
+  // objectives
+  objectiveRegistered: <E extends Encoding>(
+    objectiveManager: ObjectiveManager<E>,
+    subject: SearchSubject<E>,
+    objectiveFunction: ObjectiveFunction<E>
+  ) => void;
+
+  objectiveScoreRecorded: <E extends Encoding>(
+    objectiveManager: ObjectiveManager<E>,
+    encoding: E,
+    budgetManager: BudgetManager<E>,
+    terminationManager: TerminationManager,
+    objectiveFunction: ObjectiveFunction<E>,
+    distance: number
   ) => void;
 };

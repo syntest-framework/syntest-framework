@@ -29,6 +29,8 @@ import { EventListenerPlugin } from "@syntest/module";
 import {
   BudgetManager,
   Encoding,
+  ObjectiveFunction,
+  ObjectiveManager,
   SearchAlgorithm,
   Events as SearchEvents,
   SearchSubject,
@@ -39,12 +41,14 @@ import * as WebSocket from "ws";
 import Yargs = require("yargs");
 
 import { handler } from "./handlers/handler";
-import { abstractSyntaxTreeModelFormatter } from "./models/AbstractSyntaxTreeModel";
-import { controlFlowGraphModelFormatter } from "./models/ControlFlowGraphModel";
-import { dependencyModelFormatter } from "./models/DependencyModel";
-import { searchProgressModelFormatter as searchProgressFormatter } from "./models/SearchProgressModel";
-import { sourceModelFormatter } from "./models/SourceModel";
-import { targetModelFormatter } from "./models/TargetModel";
+import { abstractSyntaxTreeModelFormatter } from "./models/send/AbstractSyntaxTreeModel";
+import { controlFlowGraphModelFormatter } from "./models/send/ControlFlowGraphModel";
+import { dependencyModelFormatter } from "./models/send/DependencyModel";
+import { objectiveRegisteredModelFormatter } from "./models/send/ObjectiveRegisteredModel";
+import { objectiveScoreModelFormatter } from "./models/send/ObjectiveScoreModel";
+import { searchProgressModelFormatter as searchProgressFormatter } from "./models/send/SearchProgressModel";
+import { sourceModelFormatter } from "./models/send/SourceModel";
+import { targetModelFormatter } from "./models/send/TargetModel";
 
 export type PublisherWSOptions = {
   wsUrl: string;
@@ -136,6 +140,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       return;
     }
 
+    // base language
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("initializeStart", () =>
       handler(this.client, this._fid, "initializeStart", {})
     );
@@ -199,6 +204,16 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       handler(this.client, this._fid, "reportComplete", {})
     );
 
+    (<TypedEventEmitter<BaseLanguageEvents>>process).on(
+      "testCaseFinal",
+      (encoding: Encoding, filePath: string, decoded: string) =>
+        handler(this.client, this._fid, "testCaseFinal", {
+          encodingId: encoding.id,
+          filePath: filePath,
+          decoded: decoded,
+        })
+    );
+
     // search events
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchInitializationStart",
@@ -228,7 +243,6 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
 
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchComplete",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       (
         searchAlgorithm: SearchAlgorithm<Encoding>,
         subject: SearchSubject<Encoding>,
@@ -272,6 +286,50 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this._fid,
           "searchIterationComplete",
           searchProgressFormatter(searchAlgorithm, subject, budgetManager)
+        )
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "objectiveRegistered",
+      (
+        objectiveManager: ObjectiveManager<Encoding>,
+        subject: SearchSubject<Encoding>,
+        objectiveFunction: ObjectiveFunction<Encoding>
+      ) =>
+        handler(
+          this.client,
+          this._fid,
+          "objectiveRegistered",
+          objectiveRegisteredModelFormatter(
+            objectiveManager,
+            subject,
+            objectiveFunction
+          )
+        )
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "objectiveScoreRecorded",
+      (
+        objectiveManager: ObjectiveManager<Encoding>,
+        encoding: Encoding,
+        budgetManager: BudgetManager<Encoding>,
+        terminationManager: TerminationManager,
+        objectiveFunction: ObjectiveFunction<Encoding>,
+        distance: number
+      ) =>
+        handler(
+          this.client,
+          this._fid,
+          "objectiveScoreRecorded",
+          objectiveScoreModelFormatter(
+            objectiveManager,
+            encoding,
+            budgetManager,
+            terminationManager,
+            objectiveFunction,
+            distance
+          )
         )
     );
 

@@ -16,8 +16,11 @@
  * limitations under the License.
  */
 
+import TypedEmitter from "typed-emitter";
+
 import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
+import { Events } from "../../util/Events";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
@@ -74,8 +77,15 @@ export class StructuralObjectiveManager<
     const objectives = subject.getObjectives();
 
     // Add all objectives to the uncovered objectives
-    for (const objective of objectives)
+    for (const objective of objectives) {
       this._uncoveredObjectives.add(objective);
+      (<TypedEmitter<Events>>process).emit(
+        "objectiveRegistered",
+        this,
+        subject,
+        objective
+      );
+    }
 
     // Set the current objectives
     const rootObjectiveIds = this._subject.cfg.functions.map(

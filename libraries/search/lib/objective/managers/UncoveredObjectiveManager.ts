@@ -16,8 +16,11 @@
  * limitations under the License.
  */
 
+import TypedEmitter from "typed-emitter";
+
 import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
+import { Events } from "../../util/Events";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
@@ -57,6 +60,13 @@ export class UncoveredObjectiveManager<
       // Add all objectives to both the uncovered objectives and the current objectives
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
+
+      (<TypedEmitter<Events>>process).emit(
+        "objectiveRegistered",
+        this,
+        subject,
+        objective
+      );
     }
   }
 }

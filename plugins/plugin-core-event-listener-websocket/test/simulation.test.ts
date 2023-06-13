@@ -18,7 +18,7 @@
 
 import * as chai from "chai";
 
-import { SourceModel } from "../lib/models/SourceModel";
+import { SourceModel } from "../lib/models/send/SourceModel";
 
 const expect = chai.expect;
 
