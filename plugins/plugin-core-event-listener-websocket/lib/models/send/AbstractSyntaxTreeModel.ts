@@ -17,7 +17,7 @@
  */
 import { RootContext } from "@syntest/analysis";
 
-import { Model } from "./Model";
+import { Model } from "../send/Model";
 
 export interface AbstractSyntaxTreeModel<S> extends Model {
   filePath: string;

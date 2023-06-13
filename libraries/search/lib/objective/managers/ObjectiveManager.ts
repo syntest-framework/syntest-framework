@@ -19,6 +19,7 @@
 import * as crypto from "node:crypto";
 
 import { getLogger, Logger } from "@syntest/logging";
+import TypedEmitter from "typed-emitter";
 
 import { Archive } from "../../Archive";
 import { BudgetManager } from "../../budget/BudgetManager";
@@ -26,6 +27,7 @@ import { Encoding } from "../../Encoding";
 import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { TerminationManager } from "../../termination/TerminationManager";
+import { Events } from "../../util/Events";
 import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
@@ -198,6 +200,16 @@ export abstract class ObjectiveManager<T extends Encoding> {
       // Calculate and store the distance
       const distance = objectiveFunction.calculateDistance(encoding);
       encoding.setDistance(objectiveFunction, distance);
+
+      (<TypedEmitter<Events>>process).emit(
+        "objectiveScoreRecorded",
+        this,
+        encoding,
+        budgetManager,
+        _terminationManager,
+        objectiveFunction,
+        distance
+      );
 
       // When the objective is covered, update the objectives and the archive
       if (distance === 0) {
