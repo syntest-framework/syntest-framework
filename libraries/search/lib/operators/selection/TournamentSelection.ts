@@ -45,7 +45,7 @@ export function tournamentSelection<T extends Encoding>(
 
     // At the same level or ranking, the winner is the solution with the best (largest)
     // crowding distance
-    if (solution.getCrowdingDistance() > winner.getCrowdingDistance())
+    if (solution.getCrowdingDistance() < winner.getCrowdingDistance())
       winner = solution;
   }
 

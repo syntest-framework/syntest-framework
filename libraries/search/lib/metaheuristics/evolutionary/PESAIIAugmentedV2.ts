@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { Encoding } from "../../Encoding";
 import { EncodingSampler } from "../../EncodingSampler";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
@@ -23,10 +22,12 @@ import { Procreation } from "../../operators/procreation/Procreation";
 import { shouldNeverHappen } from "../../util/diagnostics";
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
+import { MOSAFamily } from "./MOSAFamily";
 
 export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
-  // eslint-disable-next-line unused-imports/no-unused-vars
   protected override _environmentalSelection(size: number): void {
+    this.archive = [];
+    this.grid = new Map();
     if (
       this._objectiveManager.getCurrentObjectives().size === 0 &&
       this._objectiveManager.getUncoveredObjectives().size > 0
@@ -39,21 +40,29 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     )
       return; // the search should end
 
-    for (let index = 0; index < this._populationSize; index++) {
-      const solution = this._population[index];
-      if (
-        !this.archive.some((archivedSolution) =>
-          this.isDominated(solution, archivedSolution)
-        )
-      ) {
-        for (const archivedSolution of this.archive) {
-          const isDominated = this.isDominated(archivedSolution, solution);
-          if (isDominated) {
-            this.removeSolution(archivedSolution);
-          }
-        }
-        this.addSolution(solution);
-      }
+    const mosa = new MOSAFamily(
+      this._objectiveManager,
+      this._encodingSampler,
+      this._procreation,
+      this._populationSize
+    );
+
+    const F = mosa.preferenceSortingAlgorithm(
+      this._population,
+      this._objectiveManager.getCurrentObjectives()
+    );
+
+    const nextPopulation = [];
+    let remain = Math.max(size, F[0].length);
+
+    MOSAFamily.LOGGER.debug(`First front size = ${F[0].length}`);
+
+    // Obtain the front
+    const frontZero: T[] = F[0];
+
+    // front contains individuals to insert
+    for (const solution of frontZero) {
+      this.addSolution(solution);
     }
 
     // Calculate the total density of all boxes
@@ -68,21 +77,53 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       density: solutions.length / totalDensity,
     }));
 
-    // Sort the boxes by their desnsities (ascending order)
-    boxDensities.sort((a, b) => a.density - b.density);
-
-    const newPopulation = [];
-    for (const boxDensity of boxDensities) {
-      const boxKey = boxDensity.key;
-      const selectedBox = this.grid.get(boxKey);
-      const selectedSolution =
-        selectedBox[Math.floor(Math.random() * selectedBox.length)];
-      selectedSolution.setCrowdingDistance(boxDensity.density);
-      selectedSolution.setRank(0);
-      newPopulation.push(selectedSolution);
+    for (const solution of frontZero) {
+      solution.setCrowdingDistance(
+        boxDensities.find(
+          (box) => box.key === this.getGridLocation(solution).toString()
+        ).density
+      );
     }
 
-    this._population = newPopulation;
+    remain = remain - frontZero.length;
+
+    const frontOne = F[1];
+
+    if (remain > 0 && frontOne.length > 0) {
+      // front contains individuals to insert
+      for (const solution of frontOne) {
+        this.addSolution(solution);
+      }
+
+      // Calculate the total density of all boxes
+      const totalDensity = [...this.grid.values()].reduce(
+        (sum, solutions) => sum + solutions.length,
+        0
+      );
+
+      // Calculate the densities for each box
+      const boxDensities = [...this.grid.entries()].map(([key, solutions]) => ({
+        key,
+        density: solutions.length / totalDensity,
+      }));
+
+      // Sort the boxes by their densities (ascending order)
+      boxDensities.sort((a, b) => a.density - b.density);
+
+      for (const box of boxDensities) {
+        if (remain == 0) break;
+
+        const selectedBox = this.grid.get(box.key);
+        const selectedSolution =
+          selectedBox[Math.floor(Math.random() * selectedBox.length)];
+
+        selectedSolution.setCrowdingDistance(box.density);
+        nextPopulation.push(selectedSolution);
+        remain--;
+      }
+    }
+
+    this._population = nextPopulation;
   }
   private archive: T[];
   private gridSize: number;
@@ -92,12 +133,11 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
-    populationSize: number,
-    gridSizeInput: number
+    populationSize: number
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     this.archive = [];
-    this.gridSize = gridSizeInput;
+    this.gridSize = 2 * objectiveManager.getUncoveredObjectives().size;
     this.grid = new Map();
   }
 
@@ -129,42 +169,5 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   private addSolution(solution: T): void {
     this.archive.push(solution);
     this.addToGrid(solution);
-  }
-
-  private removeSolution(solution: T): void {
-    // Remove from archive
-    const index = this.archive.indexOf(solution);
-    if (index > -1) {
-      this.archive.splice(index, 1);
-    }
-
-    // Remove from grid
-    const gridLocation = this.getGridLocation(solution).toString();
-    const gridEntry = this.grid.get(gridLocation);
-    if (gridEntry) {
-      const gridIndex = gridEntry.indexOf(solution);
-      if (gridIndex > -1) {
-        gridEntry.splice(gridIndex, 1);
-      }
-      if (gridEntry.length === 0) {
-        this.grid.delete(gridLocation);
-      } else {
-        this.grid.set(gridLocation, gridEntry);
-      }
-    }
-  }
-
-  private isDominated(a: T, b: T): boolean {
-    let returnValue = false;
-    if (
-      DominanceComparator.compare(
-        a,
-        b,
-        this._objectiveManager.getCurrentObjectives()
-      ) === -1
-    )
-      returnValue = true;
-
-    return returnValue;
   }
 }
