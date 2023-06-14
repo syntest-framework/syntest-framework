@@ -24,6 +24,7 @@ import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/Simpl
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
+import { DynaPSOPlugin } from "./plugins/search-algorithms/DynaPSOPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { PSOPlugin } from "./plugins/search-algorithms/PSOPlugin";
@@ -31,6 +32,7 @@ import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlug
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { DynaPSOPreset } from "./presets/DynaPSOPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 import { PSOPreset } from "./presets/PSOPreset";
@@ -54,6 +56,7 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
     moduleManager.registerPlugin(this, new PSOPlugin());
+    moduleManager.registerPlugin(this, new DynaPSOPlugin());
 
     moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
@@ -63,5 +66,6 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
     moduleManager.registerPreset(this, new PSOPreset());
+    moduleManager.registerPreset(this, new DynaPSOPreset());
   }
 }

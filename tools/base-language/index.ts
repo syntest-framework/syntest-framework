@@ -23,6 +23,7 @@ export * from "./lib/plugins/procreation-operators/DefaultProcreationPlugin";
 
 export * from "./lib/plugins/search-algorithms/MOSAFamilyPlugin";
 export * from "./lib/plugins/search-algorithms/PSOPlugin";
+export * from "./lib/plugins/search-algorithms/DynaPSOPlugin";
 export * from "./lib/plugins/search-algorithms/NSGAIIPlugin";
 export * from "./lib/plugins/search-algorithms/RandomSearchPlugin";
 
@@ -41,6 +42,7 @@ export * from "./lib/plugins/TerminationTriggerPlugin";
 
 export * from "./lib/presets/DynaMOSAPreset";
 export * from "./lib/presets/PSOPreset";
+export * from "./lib/presets/DynaPSOPreset";
 export * from "./lib/presets/MOSAPreset";
 export * from "./lib/presets/NSGAIIPreset";
 
