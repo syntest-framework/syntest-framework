@@ -380,7 +380,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     if (this._nodes.has(this._getNodeId(path))) {
       throw new Error(`Id already used id: ${this._getNodeId(path)}`);
-    } else if (!path.isVariableDeclaration()) {
+    } else {
       const node = this._createNode(path);
 
       this._connectToParents(node);
@@ -395,7 +395,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     if (this._nodes.has(this._getNodeId(path))) {
       // just ignore
-    } else {
+    } else if (!path.isLiteral() && !path.isIdentifier()) {
       const node = this._createNode(path);
 
       this._connectToParents(node);
@@ -403,7 +403,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     }
   };
 
-  public IfStatement: (path: NodePath<t.IfStatement>) => void = (path) => {
+  public Conditional: (path: NodePath<t.Conditional>) => void = (path) => {
     ControlFlowGraphVisitor.LOGGER.debug(
       `Entering IfStatement at ${this._getNodeId(path)}`
     );
@@ -416,23 +416,37 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     // consequent
     this._currentParents = [branchNode.id];
     this._edgeType = EdgeType.CONDITIONAL_TRUE;
+    let sizeBefore = this._nodesList.length;
     path.get("consequent").visit();
+
+    // there either is no consequent or it is empty
+    if (sizeBefore === this._nodesList.length) {
+      const consequent = this._createNode(path.get("consequent"));
+      this._connectToParents(consequent);
+      this._currentParents = [consequent.id];
+    }
     const consequentNodes = this._currentParents;
 
     // alternate
     this._currentParents = [branchNode.id];
     this._edgeType = EdgeType.CONDITIONAL_FALSE;
 
-    const sizeBefore = this._nodesList.length;
+    sizeBefore = this._nodesList.length;
     if (path.has("alternate")) {
       path.get("alternate").visit();
     }
 
     // there either is no alternate or it is empty
     if (sizeBefore === this._nodesList.length) {
-      const alternate = this._createPlaceholderNode(path);
-      this._connectToParents(alternate);
-      this._currentParents = [alternate.id];
+      if (path.has("alternate")) {
+        const alternate = this._createNode(path.get("alternate"));
+        this._connectToParents(alternate);
+        this._currentParents = [alternate.id];
+      } else {
+        const alternate = this._createPlaceholderNode(path);
+        this._connectToParents(alternate);
+        this._currentParents = [alternate.id];
+      }
     }
 
     const alternateNodes = this._currentParents;
@@ -573,7 +587,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     // init
     if (path.has("init")) {
-      path.get("init").visit();
+      // stupit hack because the variable declaration of an init is not registered correctly?
+      if (path.get("init").isVariableDeclaration()) {
+        const node = this._createNode(path.get("init"));
+
+        this._connectToParents(node);
+        this._currentParents = [node.id];
+      } else {
+        path.get("init").visit();
+      }
     }
 
     // test

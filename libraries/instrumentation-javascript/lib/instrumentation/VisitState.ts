@@ -280,8 +280,32 @@ export class VisitState {
   insertStatementCounter(path) {
     /* istanbul ignore if: paranoid check */
     if (!(path.node && path.node.loc)) {
+      if (
+        path.parentPath &&
+        path.parentPath.parentPath &&
+        path.parentPath.parentPath.isVariableDeclaration()
+      ) {
+        // stupid hack to make sure the traces match with the cfg
+        // this one is for when init is empty in the variable declarator
+        const index = this.cov.newStatement(
+          path.parentPath.parentPath.node.loc
+        );
+        const increment = this.increase("s", index, null);
+        this.insertCounter(path.parentPath.parentPath, increment);
+      }
       return;
     }
+    if (
+      path.parentPath &&
+      path.parentPath.parentPath &&
+      path.parentPath.parentPath.isVariableDeclaration()
+    ) {
+      // stupid hack to make sure the traces match with the cfg
+      const index = this.cov.newStatement(path.parentPath.parentPath.node.loc);
+      const increment = this.increase("s", index, null);
+      this.insertCounter(path.parentPath.parentPath, increment);
+    }
+
     const index = this.cov.newStatement(path.node.loc);
     const increment = this.increase("s", index, null);
     this.insertCounter(path, increment);

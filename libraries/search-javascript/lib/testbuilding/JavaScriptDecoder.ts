@@ -107,7 +107,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
             this.tempLogDirectory,
             testCase.id,
             "error"
-          )}', '' + count)`,
+          )}', '' + count)`, // TODO we could add the error here and assert that that is the error message we expect
           "}"
         );
       }
@@ -138,11 +138,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
       if (testString.length > 0) {
         let errorStatement: string;
-        if (
-          assertions.length > 0 &&
-          testCase.assertions.size > 0 &&
-          testCase.assertions.has("error")
-        ) {
+        if (testCase.assertions.size > 0 && testCase.assertions.has("error")) {
           errorStatement = testString.pop();
         }
 

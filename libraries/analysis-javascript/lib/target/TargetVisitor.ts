@@ -596,7 +596,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           const objectTarget: ObjectTarget = {
             type: TargetType.OBJECT,
             name: object.node.name,
-            id: `${this._getNodeId(path)}`,
+            id: `${this._getBindingId(object)}`,
             exported: !!export_,
             default: export_ ? export_.default : false,
             module: export_ ? export_.module : false,
