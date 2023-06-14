@@ -381,7 +381,7 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    *  although in that step the population and objectives are not
    *  yet generated, thus we need this method.
    */
-  protected _initializeValues = () => {
+  protected _initializeValues() {
     this.allObjectives = [
       ...this._objectiveManager.getUncoveredObjectives(),
       ...this._objectiveManager.getCoveredObjectives(),
@@ -401,7 +401,7 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         }))
       );
     }
-  };
+  }
 
   /**
    * It retrieves the front of non-dominated solutions from a list
