@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, RVEA, SearchAlgorithm } from "@syntest/search";
+import { Encoding, RVEAMOSA, SearchAlgorithm } from "@syntest/search";
 
 import {
   SearchAlgorithmOptions,
@@ -23,22 +23,29 @@ import {
 } from "../SearchAlgorithmPlugin";
 
 /**
- * Plugin for RVEA Algorithm
+ *
+ * Reference Vector Guided Evolutionary Algorithm MOSA.
  *
  * Based on:
  * A Reference Vector Guided Evolutionary Algorithm for Many-Objective Optimization
  * R. Cheng; Y. Jin; M. Olhofer; B. Sendhoff
  *
+ * and on:
+ * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
+ * A. Panichella; F. K. Kifetew; P. Tonella
+ *
  */
-export class RVEAPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+export class RVEAMOSAPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("RVEA", "Reference Vector Guided Evolutionary Algorithm");
+    super("RVEAMOSA", "Reference Vector Guided Evolutionary Algorithm MOSA");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    return new RVEA<T>(
+    return new RVEAMOSA<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,

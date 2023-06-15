@@ -28,11 +28,15 @@ import { DefaultProcreationPlugin } from "./plugins/procreation-operators/Defaul
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
+import { RVEAMOSAPlugin } from "./plugins/search-algorithms/RVEAMOSAPlugin";
+import { RVEAPlugin } from "./plugins/search-algorithms/RVEAPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { RVEAMOSAPreset } from "./presets/RVEAMOSAPreset";
+import { RVEAPreset } from "./presets/RVEAPreset";
 
 export abstract class TestingToolModule extends Module {
   override register(
@@ -53,6 +57,8 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
+    moduleManager.registerPlugin(this, new RVEAPlugin());
+    moduleManager.registerPlugin(this, new RVEAMOSAPlugin());
 
     moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
@@ -61,5 +67,7 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
+    moduleManager.registerPreset(this, new RVEAPreset());
+    moduleManager.registerPreset(this, new RVEAMOSAPreset());
   }
 }
