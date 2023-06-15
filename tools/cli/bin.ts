@@ -37,12 +37,22 @@ import {
   ModuleManager,
   PluginType,
 } from "@syntest/module";
+import {
+  Configuration as StorageConfiguration,
+  StorageManager,
+  StorageOptions,
+} from "@syntest/storage";
+import uuid = require("short-uuid");
 import yargHelper = require("yargs/helpers");
 
 async function main() {
+  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
+
   // Setup user interface
   const userInterface = new UserInterface();
   userInterface.printTitle("SynTest");
+  userInterface.printSuccess("");
+  userInterface.printSuccess(flowId);
 
   // Remove binary call from args
   const arguments_ = yargHelper.hideBin(process.argv);
@@ -57,6 +67,7 @@ async function main() {
 
   // Configure general options
   yargs = ModuleConfiguration.configureOptions(yargs);
+  yargs = StorageConfiguration.configureOptions(yargs);
   yargs = LogConfiguration.configureOptions(yargs);
   yargs = MetricConfiguration.configureOptions(yargs);
 
@@ -69,19 +80,28 @@ async function main() {
   // Setup logger
   setupLogger(
     path.join(
-      (<BaseOptions>(<unknown>baseArguments)).syntestDirectory,
+      (<StorageOptions>(<unknown>baseArguments)).syntestDirectory,
+      flowId,
       (<BaseOptions>(<unknown>baseArguments)).logDirectory
     ),
     (<BaseOptions>(<unknown>baseArguments)).fileLogLevel,
     (<BaseOptions>(<unknown>baseArguments)).consoleLogLevel
   );
   const LOGGER = getLogger("cli");
+  LOGGER.info(`Starting Flow with id: ${flowId}`);
+
+  // Setup storage manager
+  const storageManager = new StorageManager();
 
   // Setup metric manager
   const metricManager = new MetricManager("global");
 
   // Setup module manager
-  const moduleManager = new ModuleManager(metricManager, userInterface);
+  const moduleManager = new ModuleManager(
+    metricManager,
+    storageManager,
+    userInterface
+  );
 
   // Enable help on fail
   yargs = yargs.showHelpOnFail(true);
@@ -116,6 +136,9 @@ async function main() {
     .demandCommand()
     .env("SYNTEST")
     .middleware(async (argv) => {
+      (<StorageOptions>(<unknown>argv)).fid = flowId;
+      // Set the arguments in the module manager
+      storageManager.args = argv;
       // Set the arguments in the module manager
       moduleManager.args = argv;
       metricManager.setOutputMetrics(
