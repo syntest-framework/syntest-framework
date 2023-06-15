@@ -114,7 +114,9 @@ export abstract class SPEAIIFamily<
     for (const objective of objectives) {
       const diff =
         solution1.getDistance(objective) - solution2.getDistance(objective);
-      sumSquaredDifferences += diff * diff;
+      if (!Number.isNaN(diff)) {
+        sumSquaredDifferences += diff * diff;
+      }
     }
     return Math.sqrt(sumSquaredDifferences);
   }
@@ -142,6 +144,7 @@ export abstract class SPEAIIFamily<
     }
     return distanceMatrix;
   }
+
   /**
    * Calculates the fitness value for each solution in the population.
    * @param solutions - The solutions in the population.
@@ -173,6 +176,7 @@ export abstract class SPEAIIFamily<
     }
     return fitness;
   }
+
   public addBestRemaining(
     fitness: Map<T, number>,
     nextFront: T[],

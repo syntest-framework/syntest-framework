@@ -22,7 +22,7 @@ import { ArgumentsObject } from "../Configuration";
 
 export class DynaSPEAIIPreset extends Preset {
   constructor() {
-    super("DynaMOSA", "DynaMOSA preset");
+    super("DynaSPEAII", "DynaSPEAII preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
