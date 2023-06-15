@@ -24,14 +24,18 @@ import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/Simpl
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
+import { DynaPESAIIPlugin } from "./plugins/search-algorithms/DynaPESAIIPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
+import { PESAIIPlugin } from "./plugins/search-algorithms/PESAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { DynaPESAIIPreset } from "./presets/DynaPESAIIPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { PESAIIPreset } from "./presets/PESAIIPreset";
 
 export abstract class TestingToolModule extends Module {
   override register(
@@ -51,6 +55,8 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
+    moduleManager.registerPlugin(this, new PESAIIPlugin());
+    moduleManager.registerPlugin(this, new DynaPESAIIPlugin());
 
     moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
@@ -59,5 +65,7 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
+    moduleManager.registerPreset(this, new PESAIIPreset());
+    moduleManager.registerPreset(this, new DynaPESAIIPreset());
   }
 }
