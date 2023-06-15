@@ -206,7 +206,7 @@ export class Configuration {
         hidden: false,
         type: "string",
       },
-      "secondary-objective": {
+      "secondary-objectives": {
         alias: [],
         default: [],
         choices: [],
