@@ -208,6 +208,12 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
       RVEA.LOGGER.debug(`Reference Vector Adaptation was performed`);
     }
 
+    // Assign crowding distance and rank as 0.
+    for (const individual of nextPopulation) {
+      individual.setRank(0);
+      individual.setCrowdingDistance(0);
+    }
+
     this._population = nextPopulation;
   }
 
