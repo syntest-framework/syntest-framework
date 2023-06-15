@@ -27,7 +27,7 @@ import { prng } from "../../util/prng";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { MOSAFamily } from "./MOSAFamily";
 
-export class DynaPESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+export class DynaPESAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   // eslint-disable-next-line unused-imports/no-unused-vars
   protected override _environmentalSelection(size: number): void {
     this.archive = [];
@@ -126,7 +126,7 @@ export class DynaPESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     this.archive = [];
-    this.gridSize = 2 * objectiveManager.getUncoveredObjectives().size;
+    this.gridSize = 3 * objectiveManager.getCurrentObjectives().size;
     this.grid = new Map();
   }
 

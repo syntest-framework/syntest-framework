@@ -24,6 +24,8 @@ export * from "./lib/plugins/procreation-operators/DefaultProcreationPlugin";
 export * from "./lib/plugins/search-algorithms/MOSAFamilyPlugin";
 export * from "./lib/plugins/search-algorithms/NSGAIIPlugin";
 export * from "./lib/plugins/search-algorithms/RandomSearchPlugin";
+export * from "./lib/plugins/search-algorithms/DynaPESAIIPlugin";
+export * from "./lib/plugins/search-algorithms/PESAIIPlugin";
 
 export * from "./lib/plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 
@@ -41,6 +43,8 @@ export * from "./lib/plugins/TerminationTriggerPlugin";
 export * from "./lib/presets/DynaMOSAPreset";
 export * from "./lib/presets/MOSAPreset";
 export * from "./lib/presets/NSGAIIPreset";
+export * from "./lib/presets/PESAIIPreset";
+export * from "./lib/presets/DynaPESAIIPreset";
 
 export * from "./lib/util/fileSystem";
 
