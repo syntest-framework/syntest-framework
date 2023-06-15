@@ -56,8 +56,6 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    MOSAFamily.LOGGER.debug(`First front size = ${F[0].length}`);
-
     // Obtain the next front
     let currentFront: T[] = F[index];
 

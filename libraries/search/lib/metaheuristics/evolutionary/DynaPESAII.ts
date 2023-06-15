@@ -25,7 +25,6 @@ import { shouldNeverHappen } from "../../util/diagnostics";
 import { prng } from "../../util/prng";
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
-import { MOSAFamily } from "./MOSAFamily";
 
 export class DynaPESAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -50,8 +49,6 @@ export class DynaPESAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     );
 
     const nextPopulation = [];
-
-    MOSAFamily.LOGGER.debug(`First front size = ${F[0].length}`);
 
     // Obtain the front
     const frontZero: T[] = F[0];
@@ -173,14 +170,10 @@ export class DynaPESAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     const fronts: T[][] = [[]];
 
     if (objectiveFunctions === null) {
-      MOSAFamily.LOGGER.debug(
-        "It looks like a bug in MOSA: the set of objectives cannot be null"
-      );
       return fronts;
     }
 
     if (objectiveFunctions.size === 0) {
-      MOSAFamily.LOGGER.debug("Trivial case: no objectives for the sorting");
       return fronts;
     }
 
@@ -191,10 +184,6 @@ export class DynaPESAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       fronts[0].push(individual);
       individual.setRank(0);
     }
-
-    MOSAFamily.LOGGER.debug(`First front size: ${frontZero.length}`);
-    MOSAFamily.LOGGER.debug(`Pop size: ${this._populationSize}`);
-    MOSAFamily.LOGGER.debug(`Pop + Off size: ${population.length}`);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: T[] = population;
@@ -228,11 +217,6 @@ export class DynaPESAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
       frontIndex += 1;
     }
-
-    MOSAFamily.LOGGER.debug(`Number of fronts : ${fronts.length}`);
-    MOSAFamily.LOGGER.debug(`Front zero size: ${fronts[0].length}`);
-    MOSAFamily.LOGGER.debug(`# selected solutions: ${selectedSolutions}`);
-    MOSAFamily.LOGGER.debug(`Pop size: ${this._populationSize}`);
     return fronts;
   }
 

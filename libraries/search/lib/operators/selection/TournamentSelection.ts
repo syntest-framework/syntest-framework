@@ -46,7 +46,7 @@ export function tournamentSelection<T extends Encoding>(
     if (
       solution.getRank() < winner.getRank() ||
       (solution.getRank() === winner.getRank() &&
-        solution.getCrowdingDistance() > winner.getCrowdingDistance())
+        solution.getCrowdingDistance() < winner.getCrowdingDistance())
     ) {
       winner = solution;
     }
