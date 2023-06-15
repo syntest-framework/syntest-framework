@@ -24,8 +24,7 @@ import {
   defaultBabelOptions,
 } from "@syntest/analysis-javascript";
 import * as path from "node:path";
-import { copySync, outputFileSync } from "fs-extra";
-
+import { StorageManager } from "@syntest/storage";
 export interface OutputObject {
   fileCoverage?: any;
   sourceMappingURL?: any;
@@ -34,19 +33,21 @@ export interface OutputObject {
 export class Instrumenter {
   // TODO maybe the instrumenter should not be responsible for copying the files
   async instrumentAll(
+    storageManager: StorageManager,
     rootContext: RootContext,
     targets: Target[],
-    temporaryInstrumentedDirectory: string
+    instrumentedDirectory: string
   ): Promise<void> {
     const absoluteRootPath = path.resolve(rootContext.rootPath);
-
-    const destinationPath = path.resolve(
-      temporaryInstrumentedDirectory,
+    const destinationPath = path.join(
+      instrumentedDirectory,
       path.basename(absoluteRootPath)
     );
-
     // copy everything
-    await copySync(absoluteRootPath, destinationPath);
+    storageManager.copyToTemporaryDirectory(
+      [absoluteRootPath],
+      [...destinationPath.split(path.sep)]
+    );
 
     // overwrite the stuff that needs instrumentation
 
@@ -60,7 +61,15 @@ export class Instrumenter {
         .normalize(targetPath)
         .replace(absoluteRootPath, destinationPath);
 
-      await outputFileSync(_path, instrumentedSource);
+      const directory = path.dirname(_path);
+      const file = path.basename(_path);
+
+      storageManager.store(
+        [...directory.split(path.sep)],
+        file,
+        instrumentedSource,
+        true
+      );
     }
   }
 

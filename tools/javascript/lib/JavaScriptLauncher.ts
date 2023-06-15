@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { existsSync } from "node:fs";
 import * as path from "node:path";
 
 import { TestCommandOptions } from "./commands/test";
@@ -38,8 +37,6 @@ import {
 import {
   ArgumentsObject,
   Launcher,
-  createDirectoryStructure,
-  clearDirectory,
   ObjectiveManagerPlugin,
   CrossoverPlugin,
   SearchAlgorithmPlugin,
@@ -48,7 +45,6 @@ import {
   SecondaryObjectivePlugin,
   ProcreationPlugin,
   TerminationTriggerPlugin,
-  deleteDirectories,
   PropertyName,
 } from "@syntest/base-language";
 import {
@@ -84,6 +80,7 @@ import { Instrumenter } from "@syntest/instrumentation-javascript";
 import { getLogger, Logger } from "@syntest/logging";
 import { TargetType } from "@syntest/analysis";
 import { MetricManager } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
 export class JavaScriptLauncher extends Launcher {
@@ -92,6 +89,7 @@ export class JavaScriptLauncher extends Launcher {
   private arguments_: JavaScriptArguments;
   private moduleManager: ModuleManager;
   private metricManager: MetricManager;
+  private storageManager: StorageManager;
   private userInterface: UserInterface;
 
   private targets: Target[];
@@ -108,6 +106,7 @@ export class JavaScriptLauncher extends Launcher {
     arguments_: JavaScriptArguments,
     moduleManager: ModuleManager,
     metricManager: MetricManager,
+    storageManager: StorageManager,
     userInterface: UserInterface
   ) {
     super();
@@ -115,58 +114,36 @@ export class JavaScriptLauncher extends Launcher {
     this.arguments_ = arguments_;
     this.moduleManager = moduleManager;
     this.metricManager = metricManager;
+    this.storageManager = storageManager;
     this.userInterface = userInterface;
   }
 
   async initialize(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Initialization started");
     initializePseudoRandomNumberGenerator(this.arguments_.randomSeed);
-    if (existsSync(this.arguments_.tempSyntestDirectory)) {
-      JavaScriptLauncher.LOGGER.info("Cleaning up old directories");
-      deleteDirectories([
-        path.join(
-          this.arguments_.tempSyntestDirectory,
-          this.arguments_.tempTestDirectory
-        ),
-        path.join(
-          this.arguments_.tempSyntestDirectory,
-          this.arguments_.tempLogDirectory
-        ),
-        path.join(
-          this.arguments_.tempSyntestDirectory,
-          this.arguments_.tempInstrumentedDirectory
-        ),
-        this.arguments_.tempSyntestDirectory,
-      ]);
-    }
+
+    this.storageManager.deleteTemporaryDirectories([
+      [this.arguments_.testDirectory],
+      [this.arguments_.logDirectory],
+      [this.arguments_.instrumentedDirectory],
+    ]);
 
     JavaScriptLauncher.LOGGER.info("Creating directories");
-    createDirectoryStructure([
-      path.join(
-        this.arguments_.syntestDirectory,
-        this.arguments_.statisticsDirectory
-      ),
-      path.join(this.arguments_.syntestDirectory, this.arguments_.logDirectory),
-      path.join(
-        this.arguments_.syntestDirectory,
-        this.arguments_.testDirectory
-      ),
+    this.storageManager.createDirectories([
+      [this.arguments_.testDirectory],
+      [this.arguments_.statisticsDirectory],
+      [this.arguments_.logDirectory],
     ]);
+
     JavaScriptLauncher.LOGGER.info("Creating temp directories");
-    createDirectoryStructure([
-      path.join(
-        this.arguments_.tempSyntestDirectory,
-        this.arguments_.tempTestDirectory
-      ),
-      path.join(
-        this.arguments_.tempSyntestDirectory,
-        this.arguments_.tempLogDirectory
-      ),
-      path.join(
-        this.arguments_.tempSyntestDirectory,
-        this.arguments_.tempInstrumentedDirectory
-      ),
-    ]);
+    this.storageManager.createDirectories(
+      [
+        [this.arguments_.testDirectory],
+        [this.arguments_.logDirectory],
+        [this.arguments_.instrumentedDirectory],
+      ],
+      true
+    );
 
     const abstractSyntaxTreeFactory = new AbstractSyntaxTreeFactory();
     const targetFactory = new TargetFactory();
@@ -370,12 +347,10 @@ export class JavaScriptLauncher extends Launcher {
     JavaScriptLauncher.LOGGER.info("Instrumenting targets");
     const instrumenter = new Instrumenter();
     await instrumenter.instrumentAll(
+      this.storageManager,
       this.rootContext,
       this.targets,
-      path.join(
-        this.arguments_.tempSyntestDirectory,
-        this.arguments_.tempInstrumentedDirectory
-      )
+      this.arguments_.instrumentedDirectory
     );
 
     // this.metricManager.recordProperty(PropertyName.INSTRUMENTATION_TIME, `${this.arguments_.ins}`)
@@ -417,19 +392,14 @@ export class JavaScriptLauncher extends Launcher {
 
   async postprocess(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Postprocessing started");
-    const temporaryTestDirectory = path.join(
-      this.arguments_.tempSyntestDirectory,
-      this.arguments_.tempTestDirectory
-    );
-    const temporaryLogDirectory = path.join(
-      this.arguments_.tempSyntestDirectory,
-      this.arguments_.tempLogDirectory
-    );
-
     const decoder = new JavaScriptDecoder(
       this.exports,
       this.arguments_.targetRootDirectory,
-      temporaryLogDirectory
+      path.join(
+        this.arguments_.tempSyntestDirectory,
+        this.arguments_.fid,
+        this.arguments_.logDirectory
+      )
     );
 
     const executionInformationIntegrator = new ExecutionInformationIntegrator(
@@ -437,15 +407,17 @@ export class JavaScriptLauncher extends Launcher {
     );
 
     const runner = new JavaScriptRunner(
+      this.storageManager,
       decoder,
       executionInformationIntegrator,
-      temporaryTestDirectory
+      this.arguments_.testDirectory
     );
 
     const suiteBuilder = new JavaScriptSuiteBuilder(
+      this.storageManager,
       decoder,
       runner,
-      temporaryLogDirectory
+      this.arguments_.logDirectory
     );
 
     const reducedArchive = suiteBuilder.reduceArchive(this.archive);
@@ -454,14 +426,16 @@ export class JavaScriptLauncher extends Launcher {
     let paths = suiteBuilder.createSuite(
       reducedArchive,
       "../instrumented",
-      temporaryTestDirectory,
+      this.arguments_.testDirectory,
       true,
       false
     );
     await suiteBuilder.runSuite(paths);
 
     // reset states
-    suiteBuilder.clearDirectory(temporaryTestDirectory);
+    this.storageManager.clearTemporaryDirectory([
+      this.arguments_.testDirectory,
+    ]);
 
     // run with assertions and report results
     for (const key of reducedArchive.keys()) {
@@ -471,7 +445,7 @@ export class JavaScriptLauncher extends Launcher {
     paths = suiteBuilder.createSuite(
       reducedArchive,
       "../instrumented",
-      temporaryTestDirectory,
+      this.arguments_.testDirectory,
       false,
       true
     );
@@ -606,11 +580,9 @@ export class JavaScriptLauncher extends Launcher {
     suiteBuilder.createSuite(
       reducedArchive,
       originalSourceDirectory,
-      path.join(
-        this.arguments_.syntestDirectory,
-        this.arguments_.testDirectory
-      ),
+      this.arguments_.testDirectory,
       false,
+      true,
       true
     );
     JavaScriptLauncher.LOGGER.info("Postprocessing done");
@@ -648,33 +620,23 @@ export class JavaScriptLauncher extends Launcher {
     dependencyMap.set(target.name, dependencies);
     const exports = rootContext.getExports(target.path);
 
-    const temporaryTestDirectory = path.join(
-      this.arguments_.tempSyntestDirectory,
-      this.arguments_.tempTestDirectory
-    );
-    const temporaryLogDirectory = path.join(
-      this.arguments_.tempSyntestDirectory,
-      this.arguments_.tempLogDirectory
-    );
-
     const decoder = new JavaScriptDecoder(
       exports,
       this.arguments_.targetRootDirectory,
-      temporaryLogDirectory
+      path.join(
+        this.arguments_.tempSyntestDirectory,
+        this.arguments_.fid,
+        this.arguments_.logDirectory
+      )
     );
     const executionInformationIntegrator = new ExecutionInformationIntegrator(
       this.rootContext.getTypeModel()
     );
     const runner = new JavaScriptRunner(
+      this.storageManager,
       decoder,
       executionInformationIntegrator,
-      temporaryTestDirectory
-    );
-
-    const suiteBuilder = new JavaScriptSuiteBuilder(
-      decoder,
-      runner,
-      temporaryLogDirectory
+      this.arguments_.testDirectory
     );
 
     // TODO constant pool
@@ -754,7 +716,9 @@ export class JavaScriptLauncher extends Launcher {
       populationSize: this.arguments_.populationSize,
     });
 
-    suiteBuilder.clearDirectory(temporaryTestDirectory);
+    this.storageManager.clearTemporaryDirectory([
+      this.arguments_.testDirectory,
+    ]);
 
     // allocate budget manager
     const iterationBudget = new IterationBudget(this.arguments_.iterations);
@@ -798,8 +762,10 @@ export class JavaScriptLauncher extends Launcher {
       this.coveredInPath.set(target.path, archive);
     }
 
-    clearDirectory(temporaryLogDirectory);
-    clearDirectory(temporaryTestDirectory);
+    this.storageManager.clearTemporaryDirectory([this.arguments_.logDirectory]);
+    this.storageManager.clearTemporaryDirectory([
+      this.arguments_.testDirectory,
+    ]);
 
     JavaScriptLauncher.LOGGER.info(
       `Finished testing target ${target.name} in ${target.path}`
@@ -812,20 +778,12 @@ export class JavaScriptLauncher extends Launcher {
     // TODO should be cleanup step in tool
     // Finish
     JavaScriptLauncher.LOGGER.info("Deleting temporary directories");
-    deleteDirectories([
-      path.join(
-        this.arguments_.tempSyntestDirectory,
-        this.arguments_.tempTestDirectory
-      ),
-      path.join(
-        this.arguments_.tempSyntestDirectory,
-        this.arguments_.tempLogDirectory
-      ),
-      path.join(
-        this.arguments_.tempSyntestDirectory,
-        this.arguments_.tempInstrumentedDirectory
-      ),
-      this.arguments_.tempSyntestDirectory,
+    this.storageManager.deleteTemporaryDirectories([
+      [this.arguments_.testDirectory],
+      [this.arguments_.logDirectory],
+      [this.arguments_.instrumentedDirectory],
     ]);
+
+    this.storageManager.deleteMainTemporary();
   }
 }

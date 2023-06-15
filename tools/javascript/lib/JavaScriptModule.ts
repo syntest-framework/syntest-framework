@@ -23,6 +23,7 @@ import { getTestCommand } from "./commands/test";
 import { Configuration, TestingToolModule } from "@syntest/base-language";
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 import { RandomSamplerPlugin } from "./plugins/sampler/RandomSamplerPlugin";
 import { TreeCrossoverPlugin } from "./plugins/crossover/TreeCrossoverPlugin";
 import { SearchProgressBarListener } from "./plugins/listeners/SearchProgressBarListener";
@@ -40,13 +41,20 @@ export default class JavaScriptModule extends TestingToolModule {
   override register(
     moduleManager: ModuleManager,
     metricManager: MetricManager,
+    storageManager: StorageManager,
     userInterface: UserInterface,
     modules: Module[]
   ): void {
     const name = "javascript";
     const labels = ["javascript", "testing"];
     const commands = [
-      getTestCommand(name, moduleManager, metricManager, userInterface),
+      getTestCommand(
+        name,
+        moduleManager,
+        metricManager,
+        storageManager,
+        userInterface
+      ),
     ];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
@@ -74,6 +82,12 @@ export default class JavaScriptModule extends TestingToolModule {
       new SearchProgressBarListener(userInterface)
     );
 
-    super.register(moduleManager, metricManager, userInterface, modules);
+    super.register(
+      moduleManager,
+      metricManager,
+      storageManager,
+      userInterface,
+      modules
+    );
   }
 }

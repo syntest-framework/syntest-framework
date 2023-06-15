@@ -10,6 +10,7 @@ rm -rf node_modules/@syntest/search
 rm -rf node_modules/@syntest/logging
 rm -rf node_modules/@syntest/metric
 rm -rf node_modules/@syntest/module
+rm -rf node_modules/@syntest/storage
 
 cd node_modules/@syntest
 
@@ -20,6 +21,7 @@ ln -s ../../../syntest-core/libraries/logging logging
 ln -s ../../../syntest-core/libraries/metric metric
 ln -s ../../../syntest-core/libraries/module module
 ln -s ../../../syntest-core/libraries/search search
+ln -s ../../../syntest-core/libraries/storage storage
 
 ln -s ../../../syntest-core/tools/cli cli
 ln -s ../../../syntest-core/tools/base-language base-language

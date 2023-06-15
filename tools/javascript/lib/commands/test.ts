@@ -21,11 +21,13 @@ import Yargs = require("yargs");
 
 import { JavaScriptArguments, JavaScriptLauncher } from "../JavaScriptLauncher";
 import { MetricManager } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 
 export function getTestCommand(
   tool: string,
   moduleManager: ModuleManager,
   metricManager: MetricManager,
+  storageManager: StorageManager,
   userInterface: UserInterface
 ): Command {
   const options = new Map<string, Yargs.Options>();
@@ -66,14 +68,15 @@ export function getTestCommand(
     "test",
     "Run the test case generation tool on a certain JavaScript project.",
     options,
-    (arguments_: Yargs.ArgumentsCamelCase) => {
+    async (arguments_: Yargs.ArgumentsCamelCase) => {
       const launcher = new JavaScriptLauncher(
         <JavaScriptArguments>(<unknown>arguments_),
         moduleManager,
         metricManager,
+        storageManager,
         userInterface
       );
-      launcher.run();
+      await launcher.run();
     }
   );
 }

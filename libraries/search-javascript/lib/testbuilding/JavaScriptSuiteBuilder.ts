@@ -16,13 +16,6 @@
  * limitations under the License.
  */
 
-import {
-  readdirSync,
-  readFileSync,
-  rmdirSync,
-  unlinkSync,
-  writeFileSync,
-} from "node:fs";
 import * as path from "node:path";
 
 import { Archive } from "@syntest/search";
@@ -34,35 +27,25 @@ import { JavaScriptRunner } from "../testcase/execution/JavaScriptRunner";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
+import { StorageManager } from "@syntest/storage";
+import { readdirSync, readFileSync } from "node:fs";
 
 export class JavaScriptSuiteBuilder {
+  private storageManager: StorageManager;
   private decoder: JavaScriptDecoder;
   private runner: JavaScriptRunner;
   private tempLogDirectory: string;
 
   constructor(
+    storageManager: StorageManager,
     decoder: JavaScriptDecoder,
     runner: JavaScriptRunner,
     temporaryLogDirectory: string
   ) {
+    this.storageManager = storageManager;
     this.decoder = decoder;
     this.runner = runner;
     this.tempLogDirectory = temporaryLogDirectory;
-  }
-
-  /**
-   * Removes all files that match the given regex within a certain directory
-   * @param directoryPath   the directory to clear
-   * @param match     the regex to which the files must match
-   */
-  clearDirectory(directoryPath: string, match = /.*\.(js)/g): void {
-    const directoryContent = readdirSync(directoryPath);
-
-    for (const file of directoryContent.filter((element: string) =>
-      element.match(match)
-    )) {
-      unlinkSync(path.resolve(directoryPath, file));
-    }
   }
 
   createSuite(
@@ -70,37 +53,45 @@ export class JavaScriptSuiteBuilder {
     sourceDirectory: string,
     testDirectory: string,
     addLogs: boolean,
-    compact: boolean
+    compact: boolean,
+    final = false
   ): string[] {
     const paths: string[] = [];
 
     // write the test cases with logs to know what to assert
     if (compact) {
       for (const key of archive.keys()) {
-        const testPath = path.join(testDirectory, `test-${key}.spec.js`);
-        paths.push(testPath);
-        writeFileSync(
-          testPath,
-          this.decoder.decode(
-            archive.get(key),
-            `${key}`,
-            addLogs,
-            sourceDirectory
-          )
+        const decodedTest = this.decoder.decode(
+          archive.get(key),
+          `${key}`,
+          addLogs,
+          sourceDirectory
         );
+        const testPath = this.storageManager.store(
+          [testDirectory],
+          `test-${key}.spec.js`,
+          decodedTest,
+          !final
+        );
+        paths.push(testPath);
       }
     } else {
       for (const key of archive.keys()) {
         for (const testCase of archive.get(key)) {
-          const testPath = path.join(
-            testDirectory,
-            `test${key}${testCase.id}.spec.js`
+          const decodedTest = this.decoder.decode(
+            testCase,
+            "",
+            addLogs,
+            sourceDirectory
           );
+          const testPath = this.storageManager.store(
+            [testDirectory],
+            `test${key}${testCase.id}.spec.js`,
+            decodedTest,
+            !final
+          );
+
           paths.push(testPath);
-          writeFileSync(
-            testPath,
-            this.decoder.decode(testCase, "", addLogs, sourceDirectory)
-          );
         }
       }
     }
@@ -144,8 +135,14 @@ export class JavaScriptSuiteBuilder {
         continue;
       }
 
-      this.clearDirectory(path.join(this.tempLogDirectory, testCase.id), /.*/g);
-      rmdirSync(path.join(this.tempLogDirectory, testCase.id));
+      this.storageManager.clearTemporaryDirectory([
+        this.tempLogDirectory,
+        testCase.id,
+      ]);
+      this.storageManager.deleteTemporaryDirectory([
+        this.tempLogDirectory,
+        testCase.id,
+      ]);
 
       testCase.assertions = assertions;
     }
