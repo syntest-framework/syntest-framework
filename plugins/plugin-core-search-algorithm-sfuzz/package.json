@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-search-algorithm-sfuzz",
-  "version": "1.0.0-beta.24",
+  "version": "1.0.0-beta.34",
   "description": "A plugin for the SynTest Core containing the sFuzz modules",
   "keywords": [
     "syntest",
@@ -46,11 +46,11 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-language": "^0.2.0-beta.27",
+    "@syntest/base-language": "^0.2.0-beta.37",
     "@syntest/logging": "^0.1.0-beta.6",
-    "@syntest/metric": "^0.1.0-beta.4",
+    "@syntest/metric": "^0.1.0-beta.6",
     "@syntest/module": "*",
-    "@syntest/search": "^0.4.0-beta.24"
+    "@syntest/search": "^0.4.0-beta.32"
   },
   "engines": {
     "node": ">=16"

@@ -16,25 +16,30 @@
  * limitations under the License.
  */
 
-import { mkdirSync } from "node:fs";
-
+import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 
-import { GraphingPlugin, GraphOptions } from "./GraphingPlugin";
+import { GraphingEventListenerPlugin } from "./GraphingEventListenerPlugin";
 
 export default class GraphingModule extends Module {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    super("graphing", require("../../package.json").version);
+    super(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").name,
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").version
+    );
   }
 
-  register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this.name, new GraphingPlugin());
-  }
-
-  override prepare(): void {
-    mkdirSync((<GraphOptions>(<unknown>this.args)).graphingCfgDirectory, {
-      recursive: true,
-    });
+  register(
+    moduleManager: ModuleManager,
+    _metricManager: MetricManager,
+    storageManager: StorageManager
+  ): void {
+    moduleManager.registerPlugin(
+      this,
+      new GraphingEventListenerPlugin(storageManager)
+    );
   }
 }

@@ -21,6 +21,7 @@ import * as path from "node:path";
 import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
 import { getLogger, Logger } from "@syntest/logging";
 import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
 
@@ -48,6 +49,7 @@ export class ModuleManager {
   protected static LOGGER: Logger;
 
   private _metricManager: MetricManager;
+  private _storageManager: StorageManager;
   private _userInterface: UserInterface;
 
   private _args: Yargs.ArgumentsCamelCase;
@@ -63,9 +65,14 @@ export class ModuleManager {
   private _pluginsOfModule: Map<string, Plugin[]>;
   private _presetsOfModule: Map<string, Preset[]>;
 
-  constructor(metricManager: MetricManager, userInterface: UserInterface) {
+  constructor(
+    metricManager: MetricManager,
+    storageManager: StorageManager,
+    userInterface: UserInterface
+  ) {
     ModuleManager.LOGGER = getLogger("ModuleManager");
     this._metricManager = metricManager;
+    this._storageManager = storageManager;
     this._userInterface = userInterface;
 
     this._modules = new Map();
@@ -207,7 +214,7 @@ export class ModuleManager {
     const metricMiddleWare = metricPlugins.map((plugin) =>
       plugin.createMetricMiddleware(this._metricManager.metrics)
     );
-    this._metricManager.runPipeline(metricMiddleWare);
+    await this._metricManager.runPipeline(metricMiddleWare);
 
     ModuleManager.LOGGER.info("Cleaning up modules");
     for (const module of this.modules.values()) {
@@ -292,33 +299,34 @@ export class ModuleManager {
       await module.register(
         this,
         this._metricManager,
+        this._storageManager,
         this._userInterface,
         modules
       );
     }
   }
 
-  registerPreset(module: string, preset: Preset) {
+  registerPreset(module: Module, preset: Preset) {
     if (this._presets.has(preset.name)) {
       throw new Error(presetAlreadyLoaded(preset.name));
     }
 
     ModuleManager.LOGGER.info(`Preset loaded: ${preset.name}`);
     this._presets.set(preset.name, preset);
-    this._presetsOfModule.get(module).push(preset);
+    this._presetsOfModule.get(module.name).push(preset);
   }
 
-  registerTool(module: string, tool: Tool) {
+  registerTool(module: Module, tool: Tool) {
     if (this._tools.has(tool.name)) {
       throw new Error(toolAlreadyLoaded(tool.name));
     }
 
     ModuleManager.LOGGER.info(`Tool loaded: ${tool.name}`);
     this._tools.set(tool.name, tool);
-    this._toolsOfModule.get(module).push(tool);
+    this._toolsOfModule.get(module.name).push(tool);
   }
 
-  registerPlugin(module: string, plugin: Plugin) {
+  registerPlugin(module: Module, plugin: Plugin) {
     if (!this._plugins.has(plugin.type)) {
       this._plugins.set(plugin.type, new Map());
     }
@@ -331,7 +339,7 @@ export class ModuleManager {
       `- Plugin loaded: ${plugin.type} - ${plugin.name}`
     );
     this._plugins.get(plugin.type).set(plugin.name, plugin);
-    this._pluginsOfModule.get(module).push(plugin);
+    this._pluginsOfModule.get(module.name).push(plugin);
   }
 
   configureModules(yargs: Yargs.Argv, presetChoice: string) {

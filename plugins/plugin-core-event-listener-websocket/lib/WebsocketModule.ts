@@ -16,24 +16,33 @@
  * limitations under the License.
  */
 
-import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageOptions } from "@syntest/storage";
 
-import { FileWriterMetricMiddlewarePlugin } from "./plugins/FileWriterMetricMiddlewarePlugin";
+import { WebsocketEventListenerPlugin } from "./WebsocketEventListenerPlugin";
 
-export default class FileWriterMetricMiddlewareModule extends Module {
+export default class WebsocketModule extends Module {
+  private publisher: WebsocketEventListenerPlugin;
+
   constructor() {
     super(
-      "file-writer-metric-middleware",
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      require("../../package.json").name,
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").version
     );
   }
 
-  register(moduleManager: ModuleManager, metricManager: MetricManager): void {
-    moduleManager.registerPlugin(
-      this.name,
-      new FileWriterMetricMiddlewarePlugin(metricManager)
-    );
+  register(moduleManager: ModuleManager): void {
+    this.publisher = new WebsocketEventListenerPlugin();
+    moduleManager.registerPlugin(this, this.publisher);
+  }
+
+  override prepare(): void {
+    this.publisher.fid = (<StorageOptions>(<unknown>this.args)).fid;
+  }
+
+  override cleanup(): void {
+    this.publisher.disconnect();
   }
 }

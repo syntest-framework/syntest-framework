@@ -15,28 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 import Yargs = require("yargs");
 
 import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
 
 export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
   private metricManager: MetricManager;
+  private storageManager: StorageManager;
 
-  constructor(metricManager: MetricManager) {
+  constructor(metricManager: MetricManager, storageManager: StorageManager) {
     super(
-      "FileWriterMetricMiddlewarePlugin",
-      "A middleware that writes the metrics to a file."
+      "file-writer",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
+      require("../../../package.json").description
     );
     this.metricManager = metricManager;
+    this.storageManager = storageManager;
   }
 
   createMetricMiddleware(metrics: Metric[]): MiddleWare {
     return new FileWriterMetricMiddleware(
+      this.storageManager,
       metrics,
       this.metricManager.outputMetrics,
-      (<StorageOptions>(<unknown>this.args)).metricsDirectory
+      (<StorageOptions>(<unknown>this.args)).fileWriterMetricsDirectory
     );
   }
 
@@ -66,5 +72,5 @@ export enum OptionTypes {
 }
 
 export type StorageOptions = {
-  metricsDirectory: string;
+  fileWriterMetricsDirectory: string;
 };

@@ -17,6 +17,7 @@
  */
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 
 import { ModuleManager } from "../ModuleManager";
 
@@ -33,6 +34,7 @@ export abstract class Module extends Extension {
   abstract register(
     moduleManager: ModuleManager,
     metricManager: MetricManager,
+    storageManager: StorageManager,
     userInterface: UserInterface,
     modules: Module[]
   ): Promise<void> | void;

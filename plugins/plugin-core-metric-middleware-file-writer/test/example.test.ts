@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MetricManager } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 import * as chai from "chai";
 
-import { FileWriterMetricMiddlewarePlugin } from "../lib/plugins/FileWriterMetricMiddlewarePlugin";
+import { FileWriterMetricMiddleware } from "../lib/middleware/FileWriterMetricMiddleware";
 
 const expect = chai.expect;
 
@@ -27,7 +27,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new FileWriterMetricMiddlewarePlugin(<MetricManager>{});
+    new FileWriterMetricMiddleware(new StorageManager(), [], [], "");
     expect(true);
   });
 });

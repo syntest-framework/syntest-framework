@@ -18,7 +18,7 @@
 import { writeFileSync } from "node:fs";
 import * as path from "node:path";
 
-import { Command } from "@syntest/module";
+import { Command, ModuleManager } from "@syntest/module";
 import shell = require("shelljs");
 import Yargs = require("yargs");
 
@@ -26,7 +26,10 @@ export type ModuleOptions = {
   moduleName: string;
 };
 
-export function getModuleCommand(tool: string): Command {
+export function getModuleCommand(
+  tool: string,
+  moduleManager: ModuleManager
+): Command {
   const options = new Map<string, Yargs.Options>();
 
   options.set("module-name", {
@@ -36,6 +39,7 @@ export function getModuleCommand(tool: string): Command {
   });
 
   return new Command(
+    moduleManager,
     tool,
     "module",
     "Create a module for the syntest tool.",
