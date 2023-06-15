@@ -27,7 +27,7 @@ import { prng } from "../../util/prng";
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 import { MOSAFamily } from "./MOSAFamily";
 
-export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+export class DynaPESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   // eslint-disable-next-line unused-imports/no-unused-vars
   protected override _environmentalSelection(size: number): void {
     this.archive = [];
@@ -49,13 +49,15 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       this._objectiveManager.getCurrentObjectives()
     );
 
-    let nonDominatedFront = F[0];
+    const nextPopulation = [];
 
-    if (F.length > 1) {
-      nonDominatedFront = [...F[0], ...F[1]];
-    }
+    MOSAFamily.LOGGER.debug(`First front size = ${F[0].length}`);
 
-    for (const solution of nonDominatedFront) {
+    // Obtain the front
+    const frontZero: T[] = F[0];
+
+    // front contains individuals to insert
+    for (const solution of frontZero) {
       this.addSolution(solution);
     }
 
@@ -71,20 +73,46 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       density: solutions.length / totalDensity,
     }));
 
-    // Sort the boxes by their desnsities (ascending order)
-    boxDensities.sort((a, b) => a.density - b.density);
-
-    const newPopulation = [];
-    for (const boxDensity of boxDensities) {
-      const boxKey = boxDensity.key;
-      const selectedBox = this.grid.get(boxKey);
-      const selectedSolution = prng.pickOne(selectedBox);
-      selectedSolution.setCrowdingDistance(boxDensity.density);
-      selectedSolution.setRank(0);
-      newPopulation.push(selectedSolution);
+    for (const solution of frontZero) {
+      solution.setCrowdingDistance(
+        boxDensities.find(
+          (box) => box.key === this.getGridLocation(solution).toString()
+        ).density
+      );
     }
 
-    this._population = newPopulation;
+    if (F.length > 1) {
+      // Reinitialize archive?
+      const frontOne = F[1];
+
+      // front contains individuals to insert
+      for (const solution of frontOne) {
+        this.addSolution(solution);
+      }
+
+      // Calculate the total density of all boxes
+      const totalDensity = [...this.grid.values()].reduce(
+        (sum, solutions) => sum + solutions.length,
+        0
+      );
+
+      // Calculate the densities for each box
+      const boxDensities = [...this.grid.entries()].map(([key, solutions]) => ({
+        key,
+        density: solutions.length / totalDensity,
+      }));
+
+      // Sort the boxes by their densities (ascending order)
+      boxDensities.sort((a, b) => a.density - b.density);
+
+      for (const box of boxDensities) {
+        const selectedBox = this.grid.get(box.key);
+        const selectedSolution = prng.pickOne(selectedBox);
+        selectedSolution.setCrowdingDistance(box.density);
+        nextPopulation.push(selectedSolution);
+      }
+    }
+    this._population = nextPopulation;
   }
   private archive: T[];
   private gridSize: number;
@@ -94,12 +122,11 @@ export class PESA2<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
-    populationSize: number,
-    gridSizeInput: number
+    populationSize: number
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     this.archive = [];
-    this.gridSize = gridSizeInput;
+    this.gridSize = 2 * objectiveManager.getUncoveredObjectives().size;
     this.grid = new Map();
   }
 
