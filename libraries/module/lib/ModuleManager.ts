@@ -19,10 +19,9 @@ import { existsSync } from "node:fs";
 import * as path from "node:path";
 
 import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
-import { getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import globalModules = require("global-modules");
-import { Logger } from "winston";
 import Yargs = require("yargs");
 
 import { Module } from "./extension/Module";
@@ -208,7 +207,7 @@ export class ModuleManager {
     const metricMiddleWare = metricPlugins.map((plugin) =>
       plugin.createMetricMiddleware(this._metricManager.metrics)
     );
-    this._metricManager.runPipeline(metricMiddleWare);
+    await this._metricManager.runPipeline(metricMiddleWare);
 
     ModuleManager.LOGGER.info("Cleaning up modules");
     for (const module of this.modules.values()) {
@@ -299,27 +298,27 @@ export class ModuleManager {
     }
   }
 
-  registerPreset(module: string, preset: Preset) {
+  registerPreset(module: Module, preset: Preset) {
     if (this._presets.has(preset.name)) {
       throw new Error(presetAlreadyLoaded(preset.name));
     }
 
     ModuleManager.LOGGER.info(`Preset loaded: ${preset.name}`);
     this._presets.set(preset.name, preset);
-    this._presetsOfModule.get(module).push(preset);
+    this._presetsOfModule.get(module.name).push(preset);
   }
 
-  registerTool(module: string, tool: Tool) {
+  registerTool(module: Module, tool: Tool) {
     if (this._tools.has(tool.name)) {
       throw new Error(toolAlreadyLoaded(tool.name));
     }
 
     ModuleManager.LOGGER.info(`Tool loaded: ${tool.name}`);
     this._tools.set(tool.name, tool);
-    this._toolsOfModule.get(module).push(tool);
+    this._toolsOfModule.get(module.name).push(tool);
   }
 
-  registerPlugin(module: string, plugin: Plugin) {
+  registerPlugin(module: Module, plugin: Plugin) {
     if (!this._plugins.has(plugin.type)) {
       this._plugins.set(plugin.type, new Map());
     }
@@ -332,7 +331,7 @@ export class ModuleManager {
       `- Plugin loaded: ${plugin.type} - ${plugin.name}`
     );
     this._plugins.get(plugin.type).set(plugin.name, plugin);
-    this._pluginsOfModule.get(module).push(plugin);
+    this._pluginsOfModule.get(module.name).push(plugin);
   }
 
   configureModules(yargs: Yargs.Argv, presetChoice: string) {

@@ -34,3 +34,18 @@ export const singletonAlreadySet = (name: string) =>
 
 export const emptyArray = (variableName: string) =>
   `'${variableName}' cannot be empty!`;
+
+export const lessThanTwoOutgoingEdges = (
+  nodeId: string,
+  branchObjectiveFunctionId: string
+) =>
+  `This should never happen.\nNode has less than two outgoing edges! \nNode id: ${nodeId}\nBranch objective function id: ${branchObjectiveFunctionId}`;
+
+export const moreThanTwoOutgoingEdges = (
+  nodeId: string,
+  branchObjectiveFunctionId: string
+) =>
+  `This should never happen.\nNode has more than two outgoing edges! \nNode id: ${nodeId}\nBranch objective function id: ${branchObjectiveFunctionId}`;
+
+export const cannotFindTraceThatIsCovered = () =>
+  `Cannot find the branch trace that is covered`;

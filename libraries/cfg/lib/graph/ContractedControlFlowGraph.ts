@@ -26,18 +26,18 @@ import { Node } from "./Node";
  * A contracted control flow graph.
  * This class contains the (original) full graph and a mapping between the nodes in the contracted graph and the nodes in the full graph.
  */
-export class ContractedControlFlowGraph<S> extends ControlFlowGraph<S> {
-  private readonly _fullGraph: ControlFlowGraph<S>;
+export class ContractedControlFlowGraph extends ControlFlowGraph {
+  private readonly _fullGraph: ControlFlowGraph;
   private readonly _nodeMapping: Map<string, string[]>;
   private readonly _reverseNodeMapping: Map<string, string>;
 
   constructor(
-    entry: Node<S>,
-    successExit: Node<S>,
-    errorExit: Node<S>,
-    nodes: Map<string, Node<S>>,
+    entry: Node,
+    successExit: Node,
+    errorExit: Node,
+    nodes: Map<string, Node>,
     edges: Edge[],
-    fullGraph: ControlFlowGraph<S>,
+    fullGraph: ControlFlowGraph,
     nodeMapping: Map<string, string[]>
   ) {
     super(entry, successExit, errorExit, nodes, edges);
@@ -62,7 +62,7 @@ export class ContractedControlFlowGraph<S> extends ControlFlowGraph<S> {
     }
   }
 
-  get fullGraph(): ControlFlowGraph<S> {
+  get fullGraph(): ControlFlowGraph {
     return this._fullGraph;
   }
 

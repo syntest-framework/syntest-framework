@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
@@ -32,7 +32,7 @@ import { SearchAlgorithm } from "./SearchAlgorithm";
  * @author Mitchell Olsthoorn
  */
 export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
-  static override LOGGER = getLogger("RandomSearch");
+  protected static override LOGGER: Logger;
   protected _encodingSampler: EncodingSampler<T>;
 
   /**
@@ -45,6 +45,7 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
     encodingSampler: EncodingSampler<T>
   ) {
     super(objectiveManager);
+    RandomSearch.LOGGER = getLogger("RandomSearch");
     this._encodingSampler = encodingSampler;
   }
 

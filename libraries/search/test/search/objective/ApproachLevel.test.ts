@@ -34,15 +34,15 @@ const expect = chai.expect;
  * NOTE: these test cases assume contracted CFGs
  */
 describe("CFG ancestors search", function () {
-  let cfgMini: ContractedControlFlowGraph<unknown>;
-  let CFG1: ContractedControlFlowGraph<unknown>;
-  let CFG2: ContractedControlFlowGraph<unknown>;
-  let CFG3: ContractedControlFlowGraph<unknown>;
+  let cfgMini: ContractedControlFlowGraph;
+  let CFG1: ContractedControlFlowGraph;
+  let CFG2: ContractedControlFlowGraph;
+  let CFG3: ContractedControlFlowGraph;
   let approachLevel: ApproachLevel;
 
   beforeEach(function () {
     approachLevel = new ApproachLevel();
-    let nodes: Map<string, Node<unknown>> = new Map();
+    let nodes: Map<string, Node> = new Map();
     let edges: Edge[];
 
     // Construct cfgMini

@@ -18,8 +18,7 @@
 
 import * as crypto from "node:crypto";
 
-import { getLogger } from "@syntest/logging";
-import { Logger } from "winston";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { Archive } from "../../Archive";
 import { BudgetManager } from "../../budget/BudgetManager";
@@ -122,7 +121,11 @@ export abstract class ObjectiveManager<T extends Encoding> {
     objectiveFunction: ObjectiveFunction<T>,
     encoding: T
   ) {
+    ObjectiveManager.LOGGER.debug("updating archive");
     if (!this._archive.has(objectiveFunction)) {
+      ObjectiveManager.LOGGER.debug(
+        `new objective covered: ${objectiveFunction.getIdentifier()}`
+      );
       this._archive.update(objectiveFunction, encoding);
       return;
     }
@@ -138,6 +141,10 @@ export abstract class ObjectiveManager<T extends Encoding> {
       if (comparison != 0) {
         // Override the encoding if the current one is better
         if (comparison > 0) {
+          ObjectiveManager.LOGGER.debug(
+            "overwriting archive with better encoding"
+          );
+
           this._archive.update(objectiveFunction, encoding);
         }
         break;
@@ -199,11 +206,21 @@ export abstract class ObjectiveManager<T extends Encoding> {
             encoding.id
           }`
         );
+        encoding.addMetaComment(
+          `Covers objective: ${objectiveFunction.getIdentifier()}`
+        );
+
         // Update the objectives
         this._updateObjectives(objectiveFunction);
 
         // Update the archive
         this._updateArchive(objectiveFunction, encoding);
+      } else {
+        ObjectiveManager.LOGGER.debug(
+          `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
+            encoding.id
+          }`
+        );
       }
     }
 

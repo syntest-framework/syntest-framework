@@ -25,5 +25,9 @@ export * from "./lib/graph/EdgeType";
 export * from "./lib/graph/Node";
 export * from "./lib/graph/NodeType";
 
+export * from "./lib/util/format";
+export * from "./lib/util/parse";
+export * from "./lib/util/SerializableControlFlowProgram";
+
 export * from "./lib/ControlFlowFunction";
 export * from "./lib/ControlFlowProgram";

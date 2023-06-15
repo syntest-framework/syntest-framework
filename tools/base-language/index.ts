@@ -46,6 +46,7 @@ export * from "./lib/presets/NSGAIIPreset";
 export * from "./lib/presets/PESAIIPreset";
 export * from "./lib/presets/DynaPESAIIPreset";
 
+export * from "./lib/util/Events";
 export * from "./lib/util/fileSystem";
 
 export * from "./lib/Configuration";

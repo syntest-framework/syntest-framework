@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../Encoding";
 
@@ -32,7 +32,12 @@ export class TotalTimeBudget<T extends Encoding>
   extends SearchTimeBudget<T>
   implements Budget<T>
 {
-  static override LOGGER = getLogger("TotalTimeBudget");
+  protected static override LOGGER: Logger;
+
+  constructor(maxTotalTime = Number.MAX_SAFE_INTEGER) {
+    super(maxTotalTime);
+    TotalTimeBudget.LOGGER = getLogger("TotalTimeBudget");
+  }
 
   /**
    * @inheritDoc

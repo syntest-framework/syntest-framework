@@ -27,5 +27,5 @@ export abstract class MiddleWare {
     this.outputMetrics = outputMetrics;
   }
 
-  abstract run(metricManager: MetricManager): void;
+  abstract run(metricManager: MetricManager): Promise<void> | void;
 }

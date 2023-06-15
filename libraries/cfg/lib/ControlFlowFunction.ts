@@ -21,8 +21,8 @@ import { ControlFlowGraph } from "./graph/ControlFlowGraph";
 /**
  * Control Flow Function
  */
-export interface ControlFlowFunction<S> {
+export interface ControlFlowFunction {
   id: string;
   name: string;
-  graph: ControlFlowGraph<S> | ContractedControlFlowGraph<S>;
+  graph: ControlFlowGraph | ContractedControlFlowGraph;
 }

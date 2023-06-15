@@ -24,21 +24,21 @@ import { NodeType } from "./NodeType";
 /**
  * Represents a control flow graph.
  */
-export class ControlFlowGraph<S> {
-  private readonly _entry: Node<S>;
-  private readonly _successExit: Node<S>;
-  private readonly _errorExit: Node<S>;
-  private readonly _nodes: Map<string, Node<S>>;
+export class ControlFlowGraph {
+  private readonly _entry: Node;
+  private readonly _successExit: Node;
+  private readonly _errorExit: Node;
+  private readonly _nodes: Map<string, Node>;
   private readonly _edges: Edge[];
 
   private readonly _incomingEdges: Map<string, ReadonlyArray<Edge>>;
   private readonly _outgoingEdges: Map<string, ReadonlyArray<Edge>>;
 
   constructor(
-    entry: Node<S>,
-    successExit: Node<S>,
-    errorExit: Node<S>,
-    nodes: Map<string, Node<S>>,
+    entry: Node,
+    successExit: Node,
+    errorExit: Node,
+    nodes: Map<string, Node>,
     edges: Edge[]
   ) {
     this._entry = entry;
@@ -51,19 +51,19 @@ export class ControlFlowGraph<S> {
     this._outgoingEdges = this.getOutgoingEdgesMap();
   }
 
-  get entry(): Node<S> {
+  get entry(): Node {
     return this._entry;
   }
 
-  get successExit(): Node<S> {
+  get successExit(): Node {
     return this._successExit;
   }
 
-  get errorExit(): Node<S> {
+  get errorExit(): Node {
     return this._errorExit;
   }
 
-  get nodes(): Map<string, Node<S>> {
+  get nodes(): Map<string, Node> {
     return this._nodes;
   }
 
@@ -72,13 +72,13 @@ export class ControlFlowGraph<S> {
   }
 
   // Returns list of nodes that have an outgoing edge to the target node
-  getParents(targetNodeId: string): Node<S>[] {
+  getParents(targetNodeId: string): Node[] {
     const parentEdges = this.getIncomingEdges(targetNodeId);
     return parentEdges.map((edge) => this.getNodeById(edge.source));
   }
 
   // Returns list of nodes that have an outgoing edge from the target node
-  getChildren(targetNodeId: string): Node<S>[] {
+  getChildren(targetNodeId: string): Node[] {
     const childEdges = this.getOutgoingEdges(targetNodeId);
     return childEdges.map((edge) => this.getNodeById(edge.target));
   }
@@ -129,8 +129,8 @@ export class ControlFlowGraph<S> {
   }
 
   // Successively applies a filter method on initial list of nodes with specified predicates
-  getNodesByPredicates(...predicates: ((n: Node<S>) => boolean)[]) {
-    let filteredList: Node<S>[] = [...this._nodes.values()];
+  getNodesByPredicates(...predicates: ((n: Node) => boolean)[]) {
+    let filteredList: Node[] = [...this._nodes.values()];
     for (const predicate of predicates) {
       filteredList = filteredList.filter((element) => predicate(element));
     }
@@ -138,27 +138,27 @@ export class ControlFlowGraph<S> {
   }
 
   // Applies a find method on list of nodes with a given predicate
-  getNodeByPredicate(predicate: (n: Node<S>) => boolean) {
+  getNodeByPredicate(predicate: (n: Node) => boolean) {
     return [...this._nodes.values()].find((element) => predicate(element));
   }
 
   // Retrieves Node object based on its id
-  getNodeById(nodeId: string): Node<S> {
+  getNodeById(nodeId: string): Node {
     return this._nodes.get(nodeId);
   }
 
-  getNodesByIds(nodeIds: string[]): Node<S>[] {
+  getNodesByIds(nodeIds: string[]): Node[] {
     return nodeIds.map((id) => this.getNodeById(id));
   }
 
   // Filters list of nodes, returning only nodes of a given type
-  getNodesByType(type: NodeType): Node<S>[] {
-    return [...this._nodes.values()].filter((n: Node<S>) => n.type === type);
+  getNodesByType(type: NodeType): Node[] {
+    return [...this._nodes.values()].filter((n: Node) => n.type === type);
   }
 
   // Filters list of nodes by specified line numbers,
   // returning only nodes that contain AT LEAST ONE OF the given line numbers
-  getNodesByLineNumbers(lineNumbers: Set<number>): Node<S>[] {
+  getNodesByLineNumbers(lineNumbers: Set<number>): Node[] {
     return [...this._nodes.values()].filter((node) =>
       // maybe should check in between
       node.statements.some(
@@ -170,8 +170,8 @@ export class ControlFlowGraph<S> {
   }
 
   // Returns Node that contains specified line number and is of a given type
-  getNodeOfTypeByLine(lineNumber: number, type: NodeType): Node<S> {
-    return [...this._nodes.values()].find((n: Node<S>) => {
+  getNodeOfTypeByLine(lineNumber: number, type: NodeType): Node {
+    return [...this._nodes.values()].find((n: Node) => {
       // TODO maybe should check in between?
       return (
         n.type === type &&

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 import {
   Encoding,
   EncodingSampler,
@@ -37,7 +37,7 @@ import {
  * @author Annibale Panichella
  */
 export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
-  static override LOGGER = getLogger("sFuzz");
+  protected static override LOGGER: Logger;
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
@@ -46,6 +46,7 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
     populationSize: number
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
+    SFuzz.LOGGER = getLogger("sFuzz");
   }
 
   protected override _environmentalSelection(): void {

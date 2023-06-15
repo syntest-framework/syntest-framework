@@ -17,7 +17,7 @@
  */
 import * as chai from "chai";
 
-import MetricMiddlewareModule from "../lib/FileWriterMetricMiddlewareModule";
+import { FileWriterMetricMiddleware } from "../lib/middleware/FileWriterMetricMiddleware";
 
 const expect = chai.expect;
 
@@ -26,7 +26,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new MetricMiddlewareModule();
+    new FileWriterMetricMiddleware([], [], "");
     expect(true);
   });
 });

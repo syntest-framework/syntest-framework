@@ -44,40 +44,28 @@ export abstract class TestingToolModule extends Module {
     _userInterface: UserInterface,
     _modules: Module[]
   ): void {
-    moduleManager.registerPlugin(this.name, new SearchMetricListener());
+    moduleManager.registerPlugin(this, new SearchMetricListener());
 
-    moduleManager.registerPlugin(this.name, new SimpleObjectiveManagerPlugin());
-    moduleManager.registerPlugin(
-      this.name,
-      new StructuralObjectiveManagerPlugin()
-    );
-    moduleManager.registerPlugin(
-      this.name,
-      new UncoveredObjectiveManagerPlugin()
-    );
+    moduleManager.registerPlugin(this, new SimpleObjectiveManagerPlugin());
+    moduleManager.registerPlugin(this, new StructuralObjectiveManagerPlugin());
+    moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
-    moduleManager.registerPlugin(this.name, new DefaultProcreationPlugin());
+    moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
 
-    moduleManager.registerPlugin(this.name, new MOSAFamilyPlugin());
-    moduleManager.registerPlugin(this.name, new NSGAIIPlugin());
-    moduleManager.registerPlugin(this.name, new RandomSearchPlugin());
-    moduleManager.registerPlugin(this.name, new PESAIIPlugin());
-    moduleManager.registerPlugin(this.name, new DynaPESAIIPlugin());
+    moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
+    moduleManager.registerPlugin(this, new NSGAIIPlugin());
+    moduleManager.registerPlugin(this, new RandomSearchPlugin());
+    moduleManager.registerPlugin(this, new PESAIIPlugin());
+    moduleManager.registerPlugin(this, new DynaPESAIIPlugin());
 
-    moduleManager.registerPlugin(
-      this.name,
-      new LengthObjectiveComparatorPlugin()
-    );
+    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
-    moduleManager.registerPlugin(
-      this.name,
-      new SignalTerminationTriggerPlugin()
-    );
+    moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
-    moduleManager.registerPreset(this.name, new NSGAIIPreset());
-    moduleManager.registerPreset(this.name, new MOSAPreset());
-    moduleManager.registerPreset(this.name, new DynaMOSAPreset());
-    moduleManager.registerPreset(this.name, new PESAIIPreset());
-    moduleManager.registerPreset(this.name, new DynaPESAIIPreset());
+    moduleManager.registerPreset(this, new NSGAIIPreset());
+    moduleManager.registerPreset(this, new MOSAPreset());
+    moduleManager.registerPreset(this, new DynaMOSAPreset());
+    moduleManager.registerPreset(this, new PESAIIPreset());
+    moduleManager.registerPreset(this, new DynaPESAIIPreset());
   }
 }

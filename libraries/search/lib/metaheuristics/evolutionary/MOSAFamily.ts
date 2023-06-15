@@ -16,11 +16,14 @@
  * limitations under the License.
  */
 
-import { getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { Encoding } from "../../Encoding";
+import { EncodingSampler } from "../../EncodingSampler";
+import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { Procreation } from "../../operators/procreation/Procreation";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 import { shouldNeverHappen } from "../../util/diagnostics";
 
@@ -39,7 +42,17 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
  * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
-  static override LOGGER = getLogger("MOSAFamily");
+  protected static override LOGGER: Logger;
+
+  constructor(
+    objectiveManager: ObjectiveManager<T>,
+    encodingSampler: EncodingSampler<T>,
+    procreation: Procreation<T>,
+    populationSize: number
+  ) {
+    super(objectiveManager, encodingSampler, procreation, populationSize);
+    MOSAFamily.LOGGER = getLogger("MOSAFamily");
+  }
 
   protected _environmentalSelection(size: number): void {
     if (

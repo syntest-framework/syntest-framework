@@ -25,7 +25,7 @@
     "build": "nx run-many --target=build",
     "build:affected": "nx affected --target=build",
     "build:watch": "nx watch --all -- nx affected --target=build",
-    "clean": "nx run-many --target=clean && clean:root && clean:nx",
+    "clean": "nx run-many --target=clean && npm run clean:nx && npm run clean:root",
     "clean:dist": "nx run-many --target=clean:dist",
     "clean:nx": "nx reset",
     "clean:root": "rm -rf .nyc_output dist node_modules coverage",
@@ -57,6 +57,7 @@
     "@types/node": "18.11.18",
     "@types/seedrandom": "^3.0.5",
     "@types/sinon": "10.0.13",
+    "@types/ws": "^8.5.4",
     "@types/yargs": "17.0.20",
     "@typescript-eslint/eslint-plugin": "5.45.1",
     "@typescript-eslint/parser": "5.45.1",
@@ -81,8 +82,7 @@
     "sinon": "15.0.1",
     "ts-node": "10.9.1",
     "typed-emitter": "^2.1.0",
-    "typescript": "4.9.4",
-    "winston": "3.8.2"
+    "typescript": "4.9.4"
   },
   "engines": {
     "node": ">=16"

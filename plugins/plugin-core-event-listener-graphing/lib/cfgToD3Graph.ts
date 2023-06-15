@@ -18,13 +18,10 @@
 
 import { ControlFlowGraph, Edge, Node, NodeType } from "@syntest/cfg";
 
-export function cfgToD3Graph<S>(
-  cfg: ControlFlowGraph<S>,
-  offset: number
-): D3Graph {
+export function cfgToD3Graph(cfg: ControlFlowGraph, offset: number): D3Graph {
   let count = 0;
 
-  const nodes = [...cfg.nodes.values()].map((n: Node<S>) => {
+  const nodes = [...cfg.nodes.values()].map((n: Node) => {
     let name = `(${n.statements.map((s) => s.location.start.line).join(", ")})`;
 
     if (n.description && n.description.length > 0) {
@@ -32,10 +29,9 @@ export function cfgToD3Graph<S>(
         n.description
       })`;
     }
-    name += `\n${n.label}`;
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    const statements = n.statements.map((s) => `${s}`).join("\n");
-    name += `\n${statements}`;
+    name += `(${n.statements.map((s) => s.statementAsText).join("\n")})`;
+
+    name = n.id;
 
     const node: D3Node = {
       id: n.id,

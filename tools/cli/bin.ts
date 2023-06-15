@@ -90,7 +90,7 @@ async function main() {
   const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
   LOGGER.info("Loading standard modules...");
   await moduleManager.loadModule("@syntest/init", "@syntest/init");
-  LOGGER.info("Loading modules...", modules);
+  LOGGER.info(`Loading modules... [${modules.join(", ")}]`);
   await moduleManager.loadModules(modules);
   yargs = moduleManager.configureModules(
     yargs,
@@ -100,34 +100,7 @@ async function main() {
   // Set the metrics on the metric manager
   metricManager.metrics = await moduleManager.getMetrics();
 
-  // Setup cleanup on exit handler
-  process.on("exit", (code) => {
-    if (code !== 0) {
-      LOGGER.error(`Process exited with code: ${code}`);
-      userInterface.printError(`Process exited with code: ${code}`);
-    }
-    LOGGER.info("Cleaning up...");
-    moduleManager
-      .cleanup()
-      .then(() => {
-        LOGGER.info("Cleanup done! Exiting...");
-        return 0;
-      })
-      .catch((error) => {
-        LOGGER.error("Cleanup failed!", error);
-        userInterface.printError("Cleanup failed!");
-      });
-  });
-
   moduleManager.printModuleVersionTable();
-
-  // process.setMaxListeners()
-  // Register all listener plugins
-  for (const plugin of moduleManager
-    .getPluginsOfType(PluginType.EVENT_LISTENER)
-    .values()) {
-    (<EventListenerPlugin>plugin).setupEventListener(metricManager);
-  }
 
   const versions = [...moduleManager.modules.values()]
     .map((module) => `${module.name} (${module.version})`)
@@ -148,6 +121,14 @@ async function main() {
       metricManager.setOutputMetrics(
         (<MetricOptions>(<unknown>argv)).outputMetrics
       );
+
+      // process.setMaxListeners()
+      // Register all listener plugins
+      for (const plugin of moduleManager
+        .getPluginsOfType(PluginType.EVENT_LISTENER)
+        .values()) {
+        await (<EventListenerPlugin>plugin).setupEventListener(metricManager);
+      }
 
       // Prepare modules
       LOGGER.info("Preparing modules...");
