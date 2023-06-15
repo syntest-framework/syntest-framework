@@ -153,7 +153,7 @@ export class RootContext<S> {
    * @param filePath
    */
   getControlFlowProgram(filePath: string): ControlFlowProgram {
-    const absolutePath = path.resolve(filePath);
+    const absolutePath = this.resolvePath(filePath);
 
     if (!this._controlFlowProgramMap.has(absolutePath)) {
       (<TypedEmitter<Events>>process).emit(

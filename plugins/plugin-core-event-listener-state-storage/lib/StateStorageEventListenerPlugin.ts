@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 
-import * as path from "node:path";
-
 import { Events, RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram } from "@syntest/cfg";
 import { EventListenerPlugin } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
 
@@ -36,23 +35,22 @@ export type StateStorageOptions = {
  * @author Dimitri Stallenberg
  */
 export class StateStorageEventListenerPlugin extends EventListenerPlugin {
-  constructor() {
+  private storageManager: StorageManager;
+
+  constructor(storageManager: StorageManager) {
     super(
       "state-storage",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").description
     );
+    this.storageManager = storageManager;
   }
 
   setupEventListener(): void {
-    const syntestPath = (<{ syntestDirectory: string }>(<unknown>this.args))
-      .syntestDirectory;
     const stateStore = (<StateStorageOptions>(<unknown>this.args))
       .stateStorageDirectory;
 
-    const base = path.join(syntestPath, stateStore);
-
-    const stateStorage = new StateStorage(base);
+    const stateStorage = new StateStorage(this.storageManager, stateStore);
     (<TypedEventEmitter<Events>>process).on(
       "controlFlowGraphResolvingComplete",
       <S>(
@@ -68,7 +66,6 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
     );
     (<TypedEventEmitter<Events>>process).on(
       "abstractSyntaxTreeResolvingComplete",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       <S>(rootContext: RootContext<S>, filePath: string, ast: S) =>
         stateStorage.abstractSyntaxTreeResolvingComplete(
           rootContext,
@@ -78,13 +75,11 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
     );
     (<TypedEventEmitter<Events>>process).on(
       "targetExtractionComplete",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       <S>(rootContext: RootContext<S>, filePath: string, target: Target) =>
         stateStorage.targetExtractionComplete(rootContext, filePath, target)
     );
     (<TypedEventEmitter<Events>>process).on(
       "dependencyResolvingComplete",
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       <S>(
         rootContext: RootContext<S>,
         filePath: string,

@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as path from "node:path";
 
 import { Events, RootContext } from "@syntest/analysis";
 import { ControlFlowProgram } from "@syntest/cfg";
 import { EventListenerPlugin } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
 
@@ -37,12 +37,14 @@ export type GraphOptions = {
  * @author Dimitri Stallenberg
  */
 export class GraphingEventListenerPlugin extends EventListenerPlugin {
-  constructor() {
+  private storageManager: StorageManager;
+  constructor(storageManager: StorageManager) {
     super(
       "graphing",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").description
     );
+    this.storageManager = storageManager;
   }
 
   setupEventListener(): void {
@@ -74,7 +76,7 @@ export class GraphingEventListenerPlugin extends EventListenerPlugin {
 
     optionsMap.set("cfg-directory", {
       alias: [],
-      default: "syntest/cfg",
+      default: "cfg",
       description: "The path where the csv should be saved",
       group: OptionGroups.Graphing,
       hidden: false,
@@ -98,21 +100,13 @@ export class GraphingEventListenerPlugin extends EventListenerPlugin {
     const svgHtml = createSimulation(cfp.graph);
 
     const base = (<GraphOptions>(<unknown>this.args)).graphingCfgDirectory;
-    const directory = `${base}/${name}`;
-    if (existsSync(directory)) {
-      rmSync(directory, { recursive: true });
-    }
-    mkdirSync(directory);
 
-    const savePath = `${base}/${name}/_full.svg`;
-    writeFileSync(savePath, svgHtml);
+    this.storageManager.store([base, name], "_full.svg", svgHtml);
 
     for (const function_ of cfp.functions) {
       const svgHtml = createSimulation(function_.graph);
 
-      const base = (<GraphOptions>(<unknown>this.args)).graphingCfgDirectory;
-      const savePath = `${base}/${name}/${function_.name}.svg`;
-      writeFileSync(savePath, svgHtml);
+      this.storageManager.store([base, name], `${function_.name}.svg`, svgHtml);
     }
   }
 }
