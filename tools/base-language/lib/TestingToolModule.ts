@@ -25,14 +25,18 @@ import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/Simpl
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
+import { DynaPCSEAPlugin } from "./plugins/search-algorithms/DynaPCSEAPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
+import { PCSEAPlugin } from "./plugins/search-algorithms/PCSEAPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { DynaPCSEAPreset } from "./presets/DynaPCSEAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { PCSEAPreset } from "./presets/PCSEAPreset";
 
 export abstract class TestingToolModule extends Module {
   override register(
@@ -53,6 +57,8 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
+    moduleManager.registerPlugin(this, new PCSEAPlugin());
+    moduleManager.registerPlugin(this, new DynaPCSEAPlugin());
 
     moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
@@ -61,5 +67,7 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
+    moduleManager.registerPreset(this, new PCSEAPreset());
+    moduleManager.registerPreset(this, new DynaPCSEAPreset());
   }
 }
