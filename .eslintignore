@@ -14,6 +14,9 @@ NOTICE
 commitlint.config.js
 link.sh
 
+**/coverage
+**/nyc_output
+
 # The instrumentation files are copied from istanbul (and modified).
 # In the future in a big refactor the instrumentation should be redone such that these files dont have to be ignored anymore.
 **/instrumentation/Instrumenter.ts

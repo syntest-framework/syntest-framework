@@ -370,7 +370,7 @@ export class VisitState {
       T.objectExpression([
         T.objectProperty(
           T.stringLiteral("condition_ast"),
-          T.stringLiteral(JSON.stringify(testAsAst))
+          T.stringLiteral("TODO we should remove the condition asts entirely")
         ),
         T.objectProperty(
           T.stringLiteral("condition"),

@@ -426,7 +426,11 @@ function coverTernary(path) {
   );
   // path.parentPath.insertBefore(metaTracker)
   // path.replaceWith(T.sequenceExpression([metaTracker, path.node]))
-  test.replaceWith(T.sequenceExpression([metaTracker, test.node]));
+  const index = this.cov.newStatement(path.node.loc);
+  const increment = this.increase("s", index, null);
+  // this.insertCounter(path, increment);
+
+  test.replaceWith(T.sequenceExpression([increment, metaTracker, test.node]));
 }
 
 // TODO not sure how to handle the metatracker for this

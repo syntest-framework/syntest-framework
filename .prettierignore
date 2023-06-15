@@ -6,3 +6,5 @@ node_modules/
 NOTICE
 Dockerfile
 link.sh
+**/coverage
+**/nyc_output
