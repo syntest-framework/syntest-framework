@@ -41,5 +41,3 @@ export class PCSEA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     );
   }
 }
-
-// Adapted version preference sorting and add front zero to the next population
