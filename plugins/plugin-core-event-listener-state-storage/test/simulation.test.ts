@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { StorageManager } from "@syntest/storage";
 import * as chai from "chai";
 
 import { StateStorage } from "../lib/StateStorage";
@@ -23,7 +24,7 @@ const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", () => {
-    new StateStorage("");
+    new StateStorage(new StorageManager(), "");
 
     expect(true);
   });

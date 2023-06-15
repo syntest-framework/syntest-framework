@@ -17,14 +17,12 @@
  */
 
 import { LoggingOptions } from "@syntest/logging";
-import {
-  GeneralOptions,
-  OptionGroups as ModuleOptionGroups,
-  StorageOptions as ModuleStorageOptions,
-} from "@syntest/module";
+import { GeneralOptions } from "@syntest/module";
+import { StorageOptions as ModuleStorageOptions } from "@syntest/storage";
 import Yargs = require("yargs");
 
 export enum OptionGroups {
+  Storage = "Storage Options:",
   Target = "Target Options:",
   SearchAlgorithm = "Search Algorithm Options:",
   Budget = "Budget Options:",
@@ -41,9 +39,7 @@ export type TargetOptions = {
 export type StorageOptions = {
   statisticsDirectory: string;
   testDirectory: string;
-  tempLogDirectory: string;
-  tempTestDirectory: string;
-  tempInstrumentedDirectory: string;
+  instrumentedDirectory: string;
 };
 
 export type AlgorithmOptions = {
@@ -156,7 +152,7 @@ export class Configuration {
         default: "statistics",
         description:
           "The path where the csv should be saved (within the syntest-directory)",
-        group: ModuleOptionGroups.Storage,
+        group: OptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
@@ -166,37 +162,17 @@ export class Configuration {
         default: "tests",
         description:
           "The path where the final test suite should be saved (within the syntest-directory)",
-        group: ModuleOptionGroups.Storage,
+        group: OptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",
       },
-      "temp-test-directory": {
-        alias: [],
-        default: "tests",
-        description:
-          "Path to the temporary test directory (within the temp-syntest-directory)",
-        group: ModuleOptionGroups.Storage,
-        hidden: false,
-        normalize: true,
-        type: "string",
-      },
-      "temp-log-directory": {
-        alias: [],
-        default: "logs",
-        description:
-          "Path to the temporary log directory (within the temp-syntest-directory)",
-        group: ModuleOptionGroups.Storage,
-        hidden: false,
-        normalize: true,
-        type: "string",
-      },
-      "temp-instrumented-directory": {
+      "instrumented-directory": {
         alias: [],
         default: "instrumented",
         description:
           "Path to the temporary instrumented directory (within the temp-syntest-directory)",
-        group: ModuleOptionGroups.Storage,
+        group: OptionGroups.Storage,
         hidden: false,
         normalize: true,
         type: "string",

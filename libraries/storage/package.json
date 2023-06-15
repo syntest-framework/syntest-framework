@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/base-language",
-  "version": "0.2.0-beta.35",
-  "description": "The base testing tool of the SynTest Framework",
+  "name": "@syntest/storage",
+  "version": "0.0.1",
+  "description": "The storage library of the SynTest Framework",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -19,12 +19,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/lib",
-    "dist/index.d.ts",
-    "dist/index.d.ts.map",
-    "dist/index.js",
-    "dist/index.js.map",
-    "NOTICE",
+    "/dist",
+    "/NOTICE",
     "README.md"
   ],
   "repository": {
@@ -46,20 +42,17 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.1.0-beta.6",
-    "@syntest/logging": "^0.1.0-beta.6",
-    "@syntest/metric": "^0.1.0-beta.6",
-    "@syntest/module": "^0.1.0-beta.17",
-    "@syntest/search": "^0.4.0-beta.31",
-    "globby": "11.0.4",
-    "yargs": "^17.7.1",
-    "@syntest/cli-graphics": "^0.1.0-beta.3",
-    "@syntest/storage": "^0.0.1"
+    "@syntest/logging": "*",
+    "fs-extra": "^11.1.1",
+    "yargs": "^17.7.1"
   },
   "engines": {
     "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.1"
   }
 }
