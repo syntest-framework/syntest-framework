@@ -59,6 +59,8 @@ export enum PropertyName {
   OBJECTIVES_TOTAL = "objectives-total",
 
   // config settings
+  PRESET = "preset",
+
   TARGET_ROOT_DIRECTORY = "target-root-directory",
   INCLUDE = "include",
   EXCLUDE = "exclude",
@@ -418,6 +420,11 @@ export const metrics: Metric[] = [
   },
 
   // general properties
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.PRESET,
+  },
+
   {
     type: MetricType.PROPERTY,
     property: PropertyName.TARGET_ROOT_DIRECTORY,

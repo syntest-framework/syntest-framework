@@ -74,6 +74,11 @@ export abstract class Launcher {
 
   protected registerProperties() {
     this.metricManager.recordProperty(
+      PropertyName.PRESET,
+      `${this.arguments_.preset}`
+    );
+
+    this.metricManager.recordProperty(
       PropertyName.TARGET_ROOT_DIRECTORY,
       `${this.arguments_.targetRootDirectory}`
     );
