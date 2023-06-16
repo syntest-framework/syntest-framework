@@ -58,18 +58,63 @@ export enum PropertyName {
   IMPLICIT_BRANCH_OBJECTIVES_TOTAL = "implicit-branch-objectives-total",
   OBJECTIVES_TOTAL = "objectives-total",
 
-  RANDOM_SEED = "random-seed",
-  TARGET = "target",
+  // config settings
+  PRESET = "preset",
+
+  TARGET_ROOT_DIRECTORY = "target-root-directory",
+  INCLUDE = "include",
+  EXCLUDE = "exclude",
+
   SEARCH_ALGORITHM = "search-algorithm",
-  SEARCH_EVALUATIONS = "search-evaluations",
-  SEARCH_ITERATIONS = "search-iterations",
+  POPULATION_SIZE = "population-size",
+  OBJECTIVE_MANAGER = "objective-manager",
+  SECONDARY_OBJECTIVES = "secondary-objectives",
+  PROCREATION = "procreation",
+  CROSSOVER = "crossover",
+  SAMPLER = "sampler",
+  TERMINATION_TRIGGERS = "termination-triggers",
+
+  MAX_TOTAL_TIME = "max-total-time",
+  MAX_SEARCH_TIME = "max-search-time",
+  MAX_EVALUATIONS = "max-evaluations",
+  MAX_ITERATIONS = "max-iterations",
+
+  TEST_MINIMIZATION = "test-minimization",
+
+  RANDOM_SEED = "random-seed",
+  MAX_DEPTH = "max-depth",
+  MAX_ACTION_STATEMENTS = "max-action-statements",
   CONSTANT_POOL_ENABLED = "constant-pool-enabled",
+  EXPLORE_ILLEGAL_VALUES = "explore-illegal-values",
+  RESAMPLE_GENE_PROBABILITY = "resample-gene-probability",
+  DELTA_MUTATION_PROBABILITY = "delta-mutation-probability",
+  SAMPLE_EXISTING_VALUE_PROBABILITY = "sample-existing-value-probability",
+  MULTI_POINT_CROSSOVER_PROBABILITY = "multi-point-crossover-probability",
+  CROSSOVER_PROBABILITY = "crossover-probability",
+  CONSTANT_POOL_PROBABILITY = "constant-pool-probability",
+  SAMPLE_FUNCTION_OUTPUT_AS_ARGUMENT = "sample-function-output-as-argument",
+  STRING_ALPHABET = "string-alphabet",
+  STRING_MAX_LENGTH = "string-max-length",
+  NUMERIC_MAX_VALUE = "numeric-max-value",
+
+  CONFIGURATION = "configuration",
+
+  // timing and iterations/evaluations
+  TOTAL_TIME = "total-time",
+  SEARCH_TIME = "search-time",
+  EVALUATIONS = "evaluations",
+  ITERATIONS = "iterations",
 
   INITIALIZATION_TIME = "initialization-time",
-  SEARCH_TIME = "search-time",
-  TOTAL_TIME = "total-time",
-  INSTRUMENTATION_TIME = "instrumentation-time",
+  PREPROCESS_TIME = "pre-process-time",
+  PROCESS_TIME = "process-time",
+  POSTPROCESS_TIME = "post-process-time",
 
+  TARGET_LOAD_TIME = "target-load-time",
+  INSTRUMENTATION_TIME = "instrumentation-time",
+  TYPE_RESOLVE_TIME = "type-resolve-time",
+
+  // other results
   ARCHIVE_SIZE = "archive-size",
   MINIMIZED_ARCHIVE_SIZE = "minimized-archive-size",
 }
@@ -374,16 +419,23 @@ export const metrics: Metric[] = [
     property: PropertyName.OBJECTIVES_COVERED,
   },
 
-  // TODO
-
   // general properties
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.RANDOM_SEED,
+    property: PropertyName.PRESET,
+  },
+
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.TARGET_ROOT_DIRECTORY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TARGET,
+    property: PropertyName.INCLUDE,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.EXCLUDE,
   },
 
   // search
@@ -393,21 +445,126 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SEARCH_EVALUATIONS,
+    property: PropertyName.POPULATION_SIZE,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SEARCH_ITERATIONS,
+    property: PropertyName.OBJECTIVE_MANAGER,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.SECONDARY_OBJECTIVES,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.PROCREATION,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.CROSSOVER,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.SAMPLER,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.TERMINATION_TRIGGERS,
+  },
+
+  // timing
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.MAX_TOTAL_TIME,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.MAX_SEARCH_TIME,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.MAX_EVALUATIONS,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.MAX_ITERATIONS,
+  },
+  // postprocess
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.TEST_MINIMIZATION,
+  },
+  // sampling
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.RANDOM_SEED,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.MAX_DEPTH,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.MAX_ACTION_STATEMENTS,
   },
   {
     type: MetricType.PROPERTY,
     property: PropertyName.CONSTANT_POOL_ENABLED,
   },
-
-  // Time
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.INITIALIZATION_TIME,
+    property: PropertyName.EXPLORE_ILLEGAL_VALUES,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.RESAMPLE_GENE_PROBABILITY,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.DELTA_MUTATION_PROBABILITY,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.SAMPLE_EXISTING_VALUE_PROBABILITY,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.MULTI_POINT_CROSSOVER_PROBABILITY,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.CROSSOVER_PROBABILITY,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.CONSTANT_POOL_PROBABILITY,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.SAMPLE_FUNCTION_OUTPUT_AS_ARGUMENT,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.STRING_ALPHABET,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.STRING_MAX_LENGTH,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.NUMERIC_MAX_VALUE,
+  },
+
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.CONFIGURATION,
+  },
+
+  // Timing
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,
@@ -415,11 +572,40 @@ export const metrics: Metric[] = [
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TOTAL_TIME,
+    property: PropertyName.EVALUATIONS,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.ITERATIONS,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.INITIALIZATION_TIME,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.PREPROCESS_TIME,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.PROCESS_TIME,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.POSTPROCESS_TIME,
+  },
+
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.TARGET_LOAD_TIME,
   },
   {
     type: MetricType.PROPERTY,
     property: PropertyName.INSTRUMENTATION_TIME,
+  },
+  {
+    type: MetricType.PROPERTY,
+    property: PropertyName.TYPE_RESOLVE_TIME,
   },
 
   // Archive
