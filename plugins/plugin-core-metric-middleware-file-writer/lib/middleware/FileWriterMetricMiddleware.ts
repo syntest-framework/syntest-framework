@@ -32,16 +32,19 @@ import {
 import { StorageManager } from "@syntest/storage";
 
 export class FileWriterMetricMiddleware extends MiddleWare {
+  private fid: string;
   private storageManager: StorageManager;
   private outputDirectory: string;
 
   constructor(
+    fid: string,
     storageManager: StorageManager,
     metrics: Metric[],
     outputMetrics: Metric[],
     outputDirectory: string
   ) {
     super(metrics, outputMetrics);
+    this.fid = fid;
     this.storageManager = storageManager;
     this.outputDirectory = outputDirectory;
   }
@@ -129,6 +132,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     const exists = existsSync(path.join(filePath, fileName));
 
     const data = {
+      fid: this.fid,
       namespace: namespace,
       ...Object.fromEntries(properties),
     };
@@ -168,6 +172,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     ] of distributions.entries()) {
       for (const value of distributionData) {
         fullData.push({
+          fid: this.fid,
           namespace: namespace,
           distributionName: distributionName,
           value: value,
@@ -208,6 +213,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
       for (const [seriesTypeName, seriesTypeData] of seriesType.entries()) {
         for (const [index, value] of seriesTypeData.entries()) {
           fullData.push({
+            fid: this.fid,
             namespace: namespace,
             seriesName: seriesName,
             seriesTypeName: seriesTypeName,
@@ -260,6 +266,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
           for (const [index, value] of seriesTypeData.entries()) {
             for (const distributionValue of value) {
               fullData.push({
+                fid: this.fid,
                 namespace: namespace,
                 distributionName: distributionName,
                 seriesName: seriesName,

@@ -23,11 +23,11 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
 import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
- * Objective manager that only evaluates an encoding on currently reachable and covered objectives.
+ * Objective manager that only evaluates an encoding on currently reachable objectives.
  *
  * @author Mitchell Olsthoorn
  */
-export class StructuralObjectiveManager<
+export class StructuralUncoveredObjectiveManager<
   T extends Encoding
 > extends ObjectiveManager<T> {
   /**
@@ -35,13 +35,9 @@ export class StructuralObjectiveManager<
    * @protected
    */
   protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
-    ObjectiveManager.LOGGER.debug("updating objectives");
-    ObjectiveManager.LOGGER.debug(
-      `covered: ${objectiveFunction.getIdentifier()}`
-    );
-
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
+    this._currentObjectives.delete(objectiveFunction);
 
     // Add objective to the covered objectives
     this._coveredObjectives.add(objectiveFunction);
@@ -53,12 +49,8 @@ export class StructuralObjectiveManager<
       if (
         !this._coveredObjectives.has(objective) &&
         !this._currentObjectives.has(objective)
-      ) {
-        ObjectiveManager.LOGGER.debug(
-          `adding new objective: ${objective.getIdentifier()}`
-        );
+      )
         this._currentObjectives.add(objective);
-      }
     }
   }
 
@@ -77,10 +69,13 @@ export class StructuralObjectiveManager<
       this._uncoveredObjectives.add(objective);
 
     // Set the current objectives
-    const rootObjectiveIds = this._subject.cfg.functions.map(
-      (g) => g.id // should always be one child of the entry node
+    const rootObjectiveNodes = this._subject.cfg.functions.map(
+      (g) => g.graph.getChildren(g.graph.entry.id)[0] // should always be one child of the entry node
     );
 
+    const rootObjectiveIds = rootObjectiveNodes.map(
+      (objective) => objective.id
+    );
     let rootObjectives: ObjectiveFunction<T>[] = [];
     for (const id of rootObjectiveIds) {
       rootObjectives = [
@@ -91,11 +86,7 @@ export class StructuralObjectiveManager<
       ];
     }
 
-    for (const objective of rootObjectives) {
-      ObjectiveManager.LOGGER.debug(
-        `adding root objective: ${objective.getIdentifier()}`
-      );
+    for (const objective of rootObjectives)
       this._currentObjectives.add(objective);
-    }
   }
 }
