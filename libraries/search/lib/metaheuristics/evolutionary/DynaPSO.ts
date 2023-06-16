@@ -339,19 +339,30 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       Creates an array of objects containing the current particle 
       from the archive and the number of particles dominated by it.
     */
-    const customArchive = archive.map((archiveParticle) => ({
-      particle: archiveParticle,
-      dominatedParticles: this._population.filter(
-        (particle) =>
-          DominanceComparator.compare(
-            archiveParticle,
-            particle,
-            this._objectiveManager.getCurrentObjectives()
-          ) === -1
-      ).length,
-    }));
+    const customArchive = archive.map((archiveParticle) => {
+      const dominatedParticles = this._population.filter((particle) => {
+        const flag = DominanceComparator.compare(
+          archiveParticle,
+          particle,
+          this._objectiveManager.getCurrentObjectives()
+        );
 
-    const weightsSum = customArchive.reduce(
+        return flag === -1;
+      });
+
+      return {
+        particle: archiveParticle,
+        dominatedParticles: dominatedParticles.length,
+      };
+    });
+
+    const cleanCustomArchive = customArchive.filter(
+      (particle) => particle.dominatedParticles !== 0
+    );
+
+    if (cleanCustomArchive.length === 0) throw new Error("Archive is empty");
+
+    const weightsSum = cleanCustomArchive.reduce(
       (accumulator, { dominatedParticles }) =>
         accumulator + 1 / dominatedParticles,
       0
@@ -367,11 +378,7 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     }
 
     // Throws error in case weighted selection didn't work.
-    throw new Error(
-      shouldNeverHappen(
-        "This line shouldn't have been reached. Take a look at the weightedProbabilitySelection method"
-      )
-    );
+    throw new Error(shouldNeverHappen("weighted probability selection"));
   }
 
   /** Initializes velocity map, pBest map and allObjectives list.
