@@ -26,6 +26,7 @@ import { Encoding } from "../../Encoding";
 import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { TerminationManager } from "../../termination/TerminationManager";
+import { shouldNeverHappen } from "../../util/diagnostics";
 import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
@@ -197,6 +198,9 @@ export abstract class ObjectiveManager<T extends Encoding> {
     for (const objectiveFunction of this._currentObjectives) {
       // Calculate and store the distance
       const distance = objectiveFunction.calculateDistance(encoding);
+      if (Number.isNaN(distance)) {
+        throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      }
       encoding.setDistance(objectiveFunction, distance);
 
       // When the objective is covered, update the objectives and the archive
