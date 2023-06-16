@@ -38,8 +38,9 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   private W = 0.5;
   private c1 = 0.25;
   private c2 = 0.25;
-  private pBestMap: Map<string, T>; // Map containing best current solution for each particle
-  private velocityMap: Map<string, number[]>; // Map containing velocity vectors for each particle
+  private pBestMap: Map<string, T> = undefined; // Map containing best current solution for each particle
+  private velocityMap: Map<string, { id: string; value: number }[]> = undefined; // Map containing velocity vectors for each particle
+  private allObjectives: ObjectiveFunction<T>[] = [];
   private maximumVelocity: number;
   private minimumVelocity: number;
 
@@ -50,19 +51,6 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     populationSize: number
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
-
-    this.pBestMap = new Map<string, T>( // Initiate pBest to current value of each particle
-      this._population.map((particle) => [particle.id, particle])
-    );
-
-    this.velocityMap = new Map<string, number[]>( // Initiate velocity matrix with zero values
-      this._population.map((particle) => [
-        particle.id,
-        Array.from<number>({
-          length: this._objectiveManager.getCurrentObjectives().size,
-        }).fill(0),
-      ])
-    );
 
     this.maximumVelocity = Number.NEGATIVE_INFINITY;
     this.minimumVelocity = Number.POSITIVE_INFINITY;
@@ -90,23 +78,43 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       }`
     );
 
-    const nextPopulation: T[] = [];
+    if (
+      this.pBestMap === undefined ||
+      this.velocityMap === undefined ||
+      this.allObjectives.length === 0
+    )
+      this._initializeObjectivesAndMaps(); // Necessary step since the population is not available in the constructor
+
+    const mutatedPopulation: T[] = this._mutatePopulation(); // Population mutated based on PSO approach
+
+    this._population = mutatedPopulation;
+  }
+
+  protected _mutatePopulation(): T[] {
     const archive = this.getNonDominatedFront(
       this._objectiveManager.getCurrentObjectives(),
       this._population
     );
 
-    // Iterate over population
+    const currentObjectivesMap = new Map(
+      [...this._objectiveManager.getCurrentObjectives()].map((objective) => [
+        objective.getIdentifier(),
+        objective,
+      ])
+    );
+
+    const mutatedPopulation: T[] = [];
+
     for (const particle of this._population) {
       const gBest = this._selectGbest(particle, archive);
       const pBest = this._selectPbest(particle);
 
-      this._updateVelocity(particle, pBest, gBest);
+      this._updateVelocity(particle, pBest, gBest, currentObjectivesMap);
 
-      nextPopulation.push(this._updatePosition(particle));
+      mutatedPopulation.push(this._updatePosition(particle));
     }
 
-    this._population = nextPopulation;
+    return mutatedPopulation;
   }
 
   /** Method used to update the position of a particle.
@@ -121,8 +129,8 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
 
     // Normalize vector through min-max normalization
     const normalizedVelocity = velocity.map(
-      (v) =>
-        (v - this.minimumVelocity) /
+      ({ value }) =>
+        (value - this.minimumVelocity) /
         (this.maximumVelocity - this.minimumVelocity)
     );
 
@@ -139,31 +147,56 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    * @param pBest Global best solution so far
    * @param gBest Local best solution so far
    */
-  protected _updateVelocity(particle: T, pBest: T, gBest: T): void {
+  protected _updateVelocity(
+    particle: T,
+    pBest: T,
+    gBest: T,
+    currentObjectivesMap: Map<string, ObjectiveFunction<T>>
+  ): void {
     const r1 = Math.random();
     const r2 = Math.random();
 
-    const objectivesList = [...this._objectiveManager.getCurrentObjectives()];
+    if (!this.velocityMap.has(particle.id))
+      // If current particle doesn't have a velocity, initialize it
+      this.velocityMap.set(
+        particle.id, // Initiate velocity matrix with zero values
+        this.allObjectives.map((objectiveFunction) => ({
+          id: objectiveFunction.getIdentifier(),
+          value: 0,
+        }))
+      );
 
     // Update velocity according to PSO formula
     const newVelocity = this.velocityMap
       .get(particle.id)
-      .map(
-        (velocity, dimensionIndex) =>
-          this.W * velocity +
-          this.c1 *
-            r1 *
-            (pBest.getDistance(objectivesList[dimensionIndex]) -
-              particle.getDistance(objectivesList[dimensionIndex])) +
-          this.c2 *
-            r2 *
-            (gBest.getDistance(objectivesList[dimensionIndex]) -
-              particle.getDistance(objectivesList[dimensionIndex]))
-      );
+      .map(({ id, value }) => {
+        // The objective relative to this dimension is in the current objectives
+        if (currentObjectivesMap.has(id)) {
+          const currentObjective = currentObjectivesMap.get(id);
+          const particleDistance = particle.getDistance(currentObjective);
+          const pBestDistance = pBest.getDistance(currentObjective);
+          const gBestDistance = gBest.getDistance(currentObjective);
+
+          return {
+            id: id,
+            value:
+              this.W * value +
+              this.c1 * r1 * (pBestDistance - particleDistance) +
+              this.c2 * r2 * (gBestDistance - particleDistance),
+          };
+        } // Objective is not currently considered
+        else return { id, value };
+      });
 
     // Update max and min velocity if necessary
-    this.maximumVelocity = Math.max(...newVelocity, this.maximumVelocity);
-    this.minimumVelocity = Math.min(...newVelocity, this.minimumVelocity);
+    this.maximumVelocity = Math.max(
+      ...newVelocity.map((object) => object.value),
+      this.maximumVelocity
+    );
+    this.minimumVelocity = Math.min(
+      ...newVelocity.map((object) => object.value),
+      this.minimumVelocity
+    );
 
     this.velocityMap.set(particle.id, newVelocity);
   }
@@ -180,19 +213,19 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     if (archive.includes(particle))
       return this._weightedProbabilitySelection(archive);
 
-    const dominatingParticle = archive.filter(
+    const dominatingParticles = archive.filter(
       (archiveParticle) =>
         DominanceComparator.compare(
           archiveParticle,
           particle,
           this._objectiveManager.getCurrentObjectives()
-        ) === 1
+        ) === -1
     );
 
-    if (dominatingParticle.length === 0)
+    if (dominatingParticles.length === 0)
       throw new Error("The dominating particles list shouldn't be empty");
 
-    return this._weightedProbabilitySelection(dominatingParticle);
+    return this._weightedProbabilitySelection(dominatingParticles);
   }
 
   /** Updates current particle local best if the new value
@@ -202,13 +235,21 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    * @returns Either particle passed as parameter or old local best
    */
   protected _selectPbest(particle: T): T {
+    const pbest = this.pBestMap.get(particle.id);
+
+    if (pbest === undefined) {
+      // PBest is not in the map, so return passed particle
+      this.pBestMap.set(particle.id, particle);
+      return particle;
+    }
+
     const flag = DominanceComparator.compare(
       particle,
       this.pBestMap.get(particle.id),
       this._objectiveManager.getCurrentObjectives()
     );
 
-    if (flag === 1) {
+    if (flag === -1) {
       this.pBestMap.set(particle.id, particle);
       return particle;
     }
@@ -226,6 +267,10 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    * @returns A randmoly selected particle from the archive
    */
   protected _weightedProbabilitySelection(archive: T[]): T {
+    // Population consists of only non-dominated solutions
+    if (archive.length === this._population.length)
+      return archive[Math.floor(Math.random() * archive.length)];
+
     /*
       Creates an array of objects containing the current particle 
       from the archive and the number of particles dominated by it.
@@ -238,7 +283,7 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
             archiveParticle,
             particle,
             this._objectiveManager.getCurrentObjectives()
-          ) === 1
+          ) === -1
       ).length,
     }));
 
@@ -263,6 +308,33 @@ export class PSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         "This line shouldn't have been reached. Take a look at the weightedProbabilitySelection method"
       )
     );
+  }
+
+  /** Initializes velocity map, pBest map and allObjectives list.
+   *  The values should ideally be intialized in the constructor,
+   *  although in that step the population and objectives are not
+   *  yet generated, thus we need this method.
+   */
+  protected _initializeObjectivesAndMaps() {
+    this.allObjectives = [
+      ...this._objectiveManager.getUncoveredObjectives(),
+      ...this._objectiveManager.getCoveredObjectives(),
+    ];
+
+    this.pBestMap = new Map<string, T>();
+    this.velocityMap = new Map<string, { id: string; value: number }[]>();
+
+    for (const particle of this._population) {
+      this.pBestMap.set(particle.id, particle); // Initiate pBest to current value of each particle
+
+      this.velocityMap.set(
+        particle.id, // Initiate velocity matrix with zero values
+        this.allObjectives.map((objectiveFunction) => ({
+          id: objectiveFunction.getIdentifier(),
+          value: 0,
+        }))
+      );
+    }
   }
 
   /**
