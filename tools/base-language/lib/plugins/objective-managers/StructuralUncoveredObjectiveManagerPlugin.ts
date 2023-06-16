@@ -31,7 +31,7 @@ import {
  *
  * @author Mitchell Olsthoorn
  */
-export class StructuralObjectiveManagerPlugin<
+export class StructuralUncoveredObjectiveManagerPlugin<
   T extends Encoding
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
