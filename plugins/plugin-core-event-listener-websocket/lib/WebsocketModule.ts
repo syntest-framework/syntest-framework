@@ -17,6 +17,7 @@
  */
 
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageOptions } from "@syntest/storage";
 
 import { WebsocketEventListenerPlugin } from "./WebsocketEventListenerPlugin";
 
@@ -35,6 +36,10 @@ export default class WebsocketModule extends Module {
   register(moduleManager: ModuleManager): void {
     this.publisher = new WebsocketEventListenerPlugin();
     moduleManager.registerPlugin(this, this.publisher);
+  }
+
+  override prepare(): void {
+    this.publisher.fid = (<StorageOptions>(<unknown>this.args)).fid;
   }
 
   override cleanup(): void {

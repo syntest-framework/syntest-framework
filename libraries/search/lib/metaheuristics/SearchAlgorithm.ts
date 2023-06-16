@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import * as path from "node:path";
+
 import { getLogger, Logger } from "@syntest/logging";
 import TypedEmitter from "typed-emitter";
 
@@ -191,8 +193,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       const result: ExecutionResult = test.getExecutionResult();
 
       // TODO this does not work when there are files with the same name in different directories!!
-      const paths = key.getSubject().path.split("/");
-      const fileName = paths[paths.length - 1];
+      const fileName = path.basename(key.getSubject().path);
 
       for (const current of result
         .getTraces()
@@ -216,8 +217,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       const result: ExecutionResult = test.getExecutionResult();
 
       // TODO this does not work when there are files with the same name in different directories!!
-      const paths = key.getSubject().path.split("/");
-      const fileName = paths[paths.length - 1];
+      const fileName = path.basename(key.getSubject().path);
 
       for (const current of result
         .getTraces()

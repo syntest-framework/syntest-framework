@@ -23,23 +23,14 @@ export type GeneralOptions = {
   preset: string;
 };
 
-export type StorageOptions = {
-  syntestDirectory: string;
-  tempSyntestDirectory: string;
-};
-
 export type ModuleOptions = {
   modules: string[];
 };
 
-export type BaseOptions = GeneralOptions &
-  StorageOptions &
-  LoggingOptions &
-  ModuleOptions;
+export type BaseOptions = GeneralOptions & LoggingOptions & ModuleOptions;
 
 export enum OptionGroups {
   General = "General Options:",
-  Storage = "Storage Options:",
   Module = "Module Options:",
 }
 
@@ -54,54 +45,32 @@ export const Configuration = {
   },
 
   configureOptions(yargs: Yargs.Argv) {
-    return (
-      yargs
-        .option("config", {
-          alias: ["c"],
-          default: ".syntest.json",
-          description: "The syntest configuration file",
-          group: OptionGroups.General,
-          hidden: false,
-          config: true,
-          type: "string",
-        })
-        .option("preset", {
-          alias: [],
-          default: "none",
-          description: "The preset you want to use",
-          group: OptionGroups.General,
-          hidden: false,
-          type: "string",
-        })
-        .option("modules", {
-          alias: ["m"],
-          array: true,
-          default: [],
-          description: "List of dependencies or paths to modules to load",
-          group: OptionGroups.Module,
-          hidden: false,
-          type: "string",
-        })
-
-        // storage
-        .options("syntest-directory", {
-          alias: [],
-          default: "syntest",
-          description: "The path where everything should be saved",
-          group: OptionGroups.Storage,
-          hidden: false,
-          normalize: true,
-          type: "string",
-        })
-        .options("temp-syntest-directory", {
-          alias: [],
-          default: ".syntest",
-          description: "The path where all temporary files should be saved",
-          group: OptionGroups.Storage,
-          hidden: false,
-          normalize: true,
-          type: "string",
-        })
-    );
+    return yargs
+      .option("config", {
+        alias: ["c"],
+        default: ".syntest.json",
+        description: "The syntest configuration file",
+        group: OptionGroups.General,
+        hidden: false,
+        config: true,
+        type: "string",
+      })
+      .option("preset", {
+        alias: [],
+        default: "none",
+        description: "The preset you want to use",
+        group: OptionGroups.General,
+        hidden: false,
+        type: "string",
+      })
+      .option("modules", {
+        alias: ["m"],
+        array: true,
+        default: [],
+        description: "List of dependencies or paths to modules to load",
+        group: OptionGroups.Module,
+        hidden: false,
+        type: "string",
+      });
   },
 };

@@ -21,6 +21,7 @@ import * as path from "node:path";
 import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
 import { getLogger, Logger } from "@syntest/logging";
 import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
 
@@ -48,6 +49,7 @@ export class ModuleManager {
   protected static LOGGER: Logger;
 
   private _metricManager: MetricManager;
+  private _storageManager: StorageManager;
   private _userInterface: UserInterface;
 
   private _args: Yargs.ArgumentsCamelCase;
@@ -63,9 +65,14 @@ export class ModuleManager {
   private _pluginsOfModule: Map<string, Plugin[]>;
   private _presetsOfModule: Map<string, Preset[]>;
 
-  constructor(metricManager: MetricManager, userInterface: UserInterface) {
+  constructor(
+    metricManager: MetricManager,
+    storageManager: StorageManager,
+    userInterface: UserInterface
+  ) {
     ModuleManager.LOGGER = getLogger("ModuleManager");
     this._metricManager = metricManager;
+    this._storageManager = storageManager;
     this._userInterface = userInterface;
 
     this._modules = new Map();
@@ -292,6 +299,7 @@ export class ModuleManager {
       await module.register(
         this,
         this._metricManager,
+        this._storageManager,
         this._userInterface,
         modules
       );

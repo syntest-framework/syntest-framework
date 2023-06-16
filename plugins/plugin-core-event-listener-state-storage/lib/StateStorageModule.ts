@@ -16,15 +16,11 @@
  * limitations under the License.
  */
 
-import { mkdirSync } from "node:fs";
-import * as path from "node:path";
-
+import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 
-import {
-  StateStorageEventListenerPlugin,
-  StateStorageOptions,
-} from "./StateStorageEventListenerPlugin";
+import { StateStorageEventListenerPlugin } from "./StateStorageEventListenerPlugin";
 
 export default class StateStorageModule extends Module {
   constructor() {
@@ -36,18 +32,14 @@ export default class StateStorageModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this, new StateStorageEventListenerPlugin());
-  }
-
-  override prepare(): void {
-    const baseDirectory = (<{ syntestDirectory: string }>(<unknown>this.args))
-      .syntestDirectory;
-    const stateStorageDirectory = (<StateStorageOptions>(<unknown>this.args))
-      .stateStorageDirectory;
-
-    mkdirSync(path.join(baseDirectory, stateStorageDirectory), {
-      recursive: true,
-    });
+  register(
+    moduleManager: ModuleManager,
+    _metricManager: MetricManager,
+    storageManager: StorageManager
+  ): void {
+    moduleManager.registerPlugin(
+      this,
+      new StateStorageEventListenerPlugin(storageManager)
+    );
   }
 }
