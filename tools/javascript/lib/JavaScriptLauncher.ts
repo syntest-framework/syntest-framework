@@ -86,12 +86,6 @@ export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
 export class JavaScriptLauncher extends Launcher {
   private static LOGGER: Logger;
 
-  private arguments_: JavaScriptArguments;
-  private moduleManager: ModuleManager;
-  private metricManager: MetricManager;
-  private storageManager: StorageManager;
-  private userInterface: UserInterface;
-
   private targets: Target[];
 
   private rootContext: RootContext;
@@ -109,17 +103,19 @@ export class JavaScriptLauncher extends Launcher {
     storageManager: StorageManager,
     userInterface: UserInterface
   ) {
-    super();
+    super(
+      arguments_,
+      moduleManager,
+      metricManager,
+      storageManager,
+      userInterface
+    );
     JavaScriptLauncher.LOGGER = getLogger("JavaScriptLauncher");
-    this.arguments_ = arguments_;
-    this.moduleManager = moduleManager;
-    this.metricManager = metricManager;
-    this.storageManager = storageManager;
-    this.userInterface = userInterface;
   }
 
   async initialize(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Initialization started");
+    const start = Date.now();
     initializePseudoRandomNumberGenerator(this.arguments_.randomSeed);
 
     this.storageManager.deleteTemporaryDirectories([
@@ -152,7 +148,7 @@ export class JavaScriptLauncher extends Launcher {
     const exportFactory = new ExportFactory();
     const typeExtractor = new TypeExtractor();
     const typeResolver: TypeModelFactory =
-      this.arguments_.typeInferenceMode === "none"
+      (<JavaScriptArguments>this.arguments_).typeInferenceMode === "none"
         ? new RandomTypeModelFactory()
         : new InferenceTypeModelFactory();
 
@@ -177,50 +173,28 @@ export class JavaScriptLauncher extends Launcher {
     //     (<unknown>[["Target Root Directory", this.arguments_.targetRootDirectory]])
     //   ),
     // ]);
-    this.metricManager.recordProperty(
-      PropertyName.RANDOM_SEED,
-      `${this.arguments_.randomSeed}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.TARGET,
-      `${this.arguments_.targetRootDirectory}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.SEARCH_ALGORITHM,
-      `${this.arguments_.searchAlgorithm}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.SEARCH_EVALUATIONS,
-      `${this.arguments_.evaluations}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.SEARCH_ITERATIONS,
-      `${this.arguments_.iterations}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.CONSTANT_POOL_ENABLED,
-      `${this.arguments_.constantPool}`
-    );
 
+    const timeInMs = (Date.now() - start) / 1000;
     this.metricManager.recordProperty(
-      PropertyName.SEARCH_TIME,
-      `${this.arguments_.searchTime}`
+      PropertyName.INITIALIZATION_TIME,
+      `${timeInMs}`
     );
-    this.metricManager.recordProperty(
-      PropertyName.TOTAL_TIME,
-      `${this.arguments_.totalTime}`
-    );
-    // this.metricManager.recordProperty(PropertyName.INITIALIZATION_TIME, `${this.arguments_.}`)
 
     JavaScriptLauncher.LOGGER.info("Initialization done");
   }
 
   async preprocess(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Preprocessing started");
+    const start = Date.now();
     const targetSelector = new TargetSelector(this.rootContext);
     this.targets = targetSelector.loadTargets(
       this.arguments_.include,
       this.arguments_.exclude
+    );
+    let timeInMs = (Date.now() - start) / 1000;
+    this.metricManager.recordProperty(
+      PropertyName.TARGET_LOAD_TIME,
+      `${timeInMs}`
     );
 
     if (this.targets.length === 0) {
@@ -229,6 +203,8 @@ export class JavaScriptLauncher extends Launcher {
         `No targets where selected! Try changing the 'include' parameter`
       );
       await this.exit();
+      // eslint-disable-next-line unicorn/no-process-exit
+      process.exit();
     }
 
     const itemization: ItemizationItem[] = [];
@@ -321,12 +297,21 @@ export class JavaScriptLauncher extends Launcher {
     const typeSettings: TableObject = {
       headers: ["Setting", "Value"],
       rows: [
-        ["Type Inference Mode", `${this.arguments_.typeInferenceMode}`],
+        [
+          "Type Inference Mode",
+          `${(<JavaScriptArguments>this.arguments_).typeInferenceMode}`,
+        ],
         [
           "Incorporate Execution Information",
-          `${this.arguments_.incorporateExecutionInformation}`,
+          `${
+            (<JavaScriptArguments>this.arguments_)
+              .incorporateExecutionInformation
+          }`,
         ],
-        ["Random Type Probability", `${this.arguments_.randomTypeProbability}`],
+        [
+          "Random Type Probability",
+          `${(<JavaScriptArguments>this.arguments_).randomTypeProbability}`,
+        ],
       ],
       footers: ["", ""],
     };
@@ -345,6 +330,7 @@ export class JavaScriptLauncher extends Launcher {
     this.userInterface.printTable("DIRECTORY SETTINGS", directorySettings);
 
     JavaScriptLauncher.LOGGER.info("Instrumenting targets");
+    const startInstrumentation = Date.now();
     const instrumenter = new Instrumenter();
     await instrumenter.instrumentAll(
       this.storageManager,
@@ -352,14 +338,24 @@ export class JavaScriptLauncher extends Launcher {
       this.targets,
       this.arguments_.instrumentedDirectory
     );
+    timeInMs = (Date.now() - startInstrumentation) / 1000;
+    this.metricManager.recordProperty(
+      PropertyName.INSTRUMENTATION_TIME,
+      `${timeInMs}`
+    );
 
-    // this.metricManager.recordProperty(PropertyName.INSTRUMENTATION_TIME, `${this.arguments_.ins}`)
-
+    const startTypeResolving = Date.now();
     JavaScriptLauncher.LOGGER.info("Extracting types");
     this.rootContext.extractTypes();
     JavaScriptLauncher.LOGGER.info("Resolving types");
     this.rootContext.resolveTypes();
     JavaScriptLauncher.LOGGER.info("Preprocessing done");
+
+    timeInMs = (Date.now() - startTypeResolving) / 1000;
+    this.metricManager.recordProperty(
+      PropertyName.TYPE_RESOLVE_TIME,
+      `${timeInMs}`
+    );
 
     // const maps = this.rootContext.getTypeModel().calculateProbabilitiesForFile(false, '/Users/dimitrist/Documents/git/syntest/syntest-javascript-benchmark/lodash/truncate.js')
 
@@ -369,10 +365,17 @@ export class JavaScriptLauncher extends Launcher {
     // }
     // eslint-disable-next-line unicorn/no-process-exit
     // process.exit(0)
+
+    timeInMs = (Date.now() - start) / 1000;
+    this.metricManager.recordProperty(
+      PropertyName.PREPROCESS_TIME,
+      `${timeInMs}`
+    );
   }
 
   async process(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Processing started");
+    const start = Date.now();
     this.archive = new Archive<JavaScriptTestCase>();
     this.exports = [];
     this.dependencyMap = new Map();
@@ -388,10 +391,13 @@ export class JavaScriptLauncher extends Launcher {
       this.exports.push(...this.rootContext.getExports(target.path));
     }
     JavaScriptLauncher.LOGGER.info("Processing done");
+    const timeInMs = (Date.now() - start) / 1000;
+    this.metricManager.recordProperty(PropertyName.PROCESS_TIME, `${timeInMs}`);
   }
 
   async postprocess(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Postprocessing started");
+    const start = Date.now();
     const decoder = new JavaScriptDecoder(
       this.exports,
       this.arguments_.targetRootDirectory,
@@ -542,6 +548,7 @@ export class JavaScriptLauncher extends Launcher {
       `${totalFunctions}`
     );
 
+    // other results
     this.metricManager.recordProperty(
       PropertyName.ARCHIVE_SIZE,
       `${this.archive.size}`
@@ -586,6 +593,11 @@ export class JavaScriptLauncher extends Launcher {
       true
     );
     JavaScriptLauncher.LOGGER.info("Postprocessing done");
+    const timeInMs = (Date.now() - start) / 1000;
+    this.metricManager.recordProperty(
+      PropertyName.POSTPROCESS_TIME,
+      `${timeInMs}`
+    );
   }
 
   private async testTarget(
@@ -643,9 +655,9 @@ export class JavaScriptLauncher extends Launcher {
 
     const sampler = new JavaScriptRandomSampler(
       currentSubject,
-      this.arguments_.typeInferenceMode,
-      this.arguments_.randomTypeProbability,
-      this.arguments_.incorporateExecutionInformation,
+      (<JavaScriptArguments>this.arguments_).typeInferenceMode,
+      (<JavaScriptArguments>this.arguments_).randomTypeProbability,
+      (<JavaScriptArguments>this.arguments_).incorporateExecutionInformation,
       this.arguments_.maxActionStatements,
       this.arguments_.stringAlphabet,
       this.arguments_.stringMaxLength,
@@ -766,6 +778,24 @@ export class JavaScriptLauncher extends Launcher {
     this.storageManager.clearTemporaryDirectory([
       this.arguments_.testDirectory,
     ]);
+
+    // timing and iterations/evaluations
+    this.metricManager.recordProperty(
+      PropertyName.TOTAL_TIME,
+      `${budgetManager.getBudgetObject(BudgetType.TOTAL_TIME).getUsedBudget()}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.SEARCH_TIME,
+      `${budgetManager.getBudgetObject(BudgetType.SEARCH_TIME).getUsedBudget()}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.EVALUATIONS,
+      `${budgetManager.getBudgetObject(BudgetType.EVALUATION).getUsedBudget()}`
+    );
+    this.metricManager.recordProperty(
+      PropertyName.ITERATIONS,
+      `${budgetManager.getBudgetObject(BudgetType.ITERATION).getUsedBudget()}`
+    );
 
     JavaScriptLauncher.LOGGER.info(
       `Finished testing target ${target.name} in ${target.path}`
