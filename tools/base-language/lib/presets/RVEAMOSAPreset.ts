@@ -39,7 +39,8 @@ export class RVEAMOSAPreset extends Preset {
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
     (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "RVEAMOSA";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "structural";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
+      "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
