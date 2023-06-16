@@ -105,12 +105,19 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
       `_initialize method has found ${M} objectives in the objectiveManager.`
     );
     //TODO: Throw that M can not be 0 exception.
-    const number_of_reference_vectors = Math.max(M * 2, this._populationSize);
+    const numberOfReferenceVectors = Math.max(M * 2, this._populationSize);
     RVEA.LOGGER.debug(
-      `_initialize method decided to create ${number_of_reference_vectors} reference vectors.`
+      `_initialize method decided to create minimum ${numberOfReferenceVectors} reference vectors.`
     );
-    this.weights_ = this.referenceVectors(
-      this.referencePoints(M, number_of_reference_vectors)
+    let H = 1;
+    let numberOfPoints = this.combination(H + M - 1, M - 1);
+    while (numberOfPoints < numberOfReferenceVectors) {
+      H += 1;
+      numberOfPoints = this.combination(H + M - 1, M - 1);
+    }
+    this.weights_ = this.referenceVectors(this.referencePoints(M, H));
+    RVEA.LOGGER.debug(
+      `_initialize method created ${this.weights_.length} reference vectors.`
     );
     RVEA.LOGGER.debug(`_initialize stopped`);
 
@@ -173,11 +180,8 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
     const M = this._objectiveManager.getCurrentObjectives().size;
     const population = this._population;
     const objectiveFunctions = this._objectiveManager.getCurrentObjectives();
-
-    const numberOfReferenceVectors = Math.max(M * 2, size);
-    this.weights = this.referenceVectors(
-      this.referencePoints(M, numberOfReferenceVectors)
-    );
+    this.setReferenceVectors(M, size);
+    RVEA.LOGGER.debug(`Generated ${this.weights.length} reference vectors.`);
     this.neighbours = this.nearestNeighbors(this.weights);
 
     const nextPopulation = this.referenceVectorGuidedSelection(
@@ -215,6 +219,17 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
     }
 
     this._population = nextPopulation;
+  }
+
+  protected setReferenceVectors(M: number, size: number) {
+    const numberOfReferenceVectors = Math.max(M * 2, size);
+    let H = 1;
+    let numberOfPoints = this.combination(H + M - 1, M - 1);
+    while (numberOfPoints < numberOfReferenceVectors) {
+      H += 1;
+      numberOfPoints = this.combination(H + M - 1, M - 1);
+    }
+    this.weights = this.referenceVectors(this.referencePoints(M, H));
   }
 
   protected referenceVectorGuidedSelection(
@@ -637,6 +652,30 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
       }
     }
     return points;
+  }
+
+  public combination(n: number, r: number): number {
+    const nFactorial: number[] = [];
+    const rFactorial: number[] = [];
+    const nrFactorial: number[] = [];
+
+    for (let index = 1; index <= n; index++) {
+      if (index <= n) {
+        nFactorial.push(index);
+      }
+      if (index <= r) {
+        rFactorial.push(index);
+      }
+      if (index <= n - r) {
+        nrFactorial.push(index);
+      }
+    }
+
+    return (
+      nFactorial.reduce((x, y) => x * y, 1) /
+      (rFactorial.reduce((x, y) => x * y, 1) *
+        nrFactorial.reduce((x, y) => x * y, 1))
+    );
   }
 
   /**

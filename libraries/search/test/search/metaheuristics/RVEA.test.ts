@@ -281,7 +281,7 @@ describe("Test RVEA", function () {
 
     const expected_individual_norm = [13, 5.3852, 11.4018, 5, 10];
     for (const [index, value] of expected_individual_norm.entries()) {
-      expect(value.toFixed(4)).to.equal(normsOfIndividuals[index].toFixed(4));
+      expect(normsOfIndividuals[index].toFixed(4)).to.equal(value.toFixed(4));
     }
   });
 
@@ -325,16 +325,14 @@ describe("Test RVEA", function () {
     const fr = 0.2;
     rvea.environmentalSelection(5, alpha, progress, fr);
 
-    expect(rvea.getPopulation().length).to.equal(4);
+    expect(rvea.getPopulation().length).to.equal(3);
     expect(rvea.getPopulation()).contain(ind2);
     expect(rvea.getPopulation()).contain(ind3);
     expect(rvea.getPopulation()).contain(ind4);
-    expect(rvea.getPopulation()).contain(ind5);
 
     const expected = [
       [0, 2],
       [1, 1],
-      [3, 2],
       [2, 0],
     ];
     for (const [index, individual] of rvea.getPopulation().entries()) {
@@ -409,21 +407,19 @@ describe("Test RVEA", function () {
 
     //TODO: Should I limit the size of the population because RVEA does not usually.
 
-    expect(rvea.getPopulation().length).to.equal(6);
+    expect(rvea.getPopulation().length).to.equal(5);
     expect(rvea.getPopulation()).contain(ind1);
     expect(rvea.getPopulation()).contain(ind2);
     expect(rvea.getPopulation()).contain(ind4);
-    expect(rvea.getPopulation()).contain(ind10);
     expect(rvea.getPopulation()).contain(ind7);
-    expect(rvea.getPopulation()).contain(ind11);
+    expect(rvea.getPopulation()).contain(ind8);
 
     const expected = [
       [5, 20],
       [7, 12],
       [10, 7],
-      [27, 16],
       [18, 4],
-      [31, 1],
+      [21, 3],
     ];
     for (const [index, individual] of rvea.getPopulation().entries()) {
       let count = 0;
@@ -432,5 +428,27 @@ describe("Test RVEA", function () {
         count = count + 1;
       }
     }
+  });
+
+  it("Test combination function", () => {
+    const mockedRunner = <EncodingRunner<DummyEncodingMock>>{};
+    const mockedSampler = <EncodingSampler<DummyEncodingMock>>{};
+    const mockedCrossover = <Crossover<DummyEncodingMock>>{};
+    const mockedProcreation = new DummyProcreation(
+      mockedCrossover,
+      (sampler, encoding) => encoding.mutate(),
+      mockedSampler
+    );
+
+    const rvea = new RVEA(
+      new UncoveredObjectiveManager(mockedRunner, new Set()),
+      mockedSampler,
+      mockedProcreation,
+      5
+    );
+
+    const M = 2;
+    const H = 4;
+    expect(rvea.combination(H + M - 1, M - 1)).to.equal(5);
   });
 });

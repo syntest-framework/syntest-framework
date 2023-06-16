@@ -182,17 +182,17 @@ describe("Test RVEAMOSA", function () {
     expect(rveaMosa.getPopulation()).contain(ind1);
     expect(rveaMosa.getPopulation()).contain(ind2);
     expect(rveaMosa.getPopulation()).contain(ind4);
-    expect(rveaMosa.getPopulation()).contain(ind5);
-    expect(rveaMosa.getPopulation()).contain(ind9);
+    expect(rveaMosa.getPopulation()).contain(ind6);
+    expect(rveaMosa.getPopulation()).contain(ind10);
     expect(rveaMosa.getPopulation()).contain(ind11);
 
     const expected = [
       [5, 20],
       [31, 1],
       [7, 12],
-      [13, 13],
+      [15, 26],
       [10, 7],
-      [24, 9],
+      [27, 16],
     ];
     for (const [index, individual] of rveaMosa.getPopulation().entries()) {
       let count = 0;

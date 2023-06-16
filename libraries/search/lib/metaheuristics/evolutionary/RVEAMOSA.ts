@@ -221,9 +221,9 @@ export class RVEAMOSA<T extends Encoding> extends RVEA<T> {
     let remainingSolutionsLength = remainingSolutions.length;
     //TODO: Should I adapt population size since some solutions are removed because of F0?
     const M = objectiveFunctions.size;
-    const numberOfReferenceVectors = Math.max(M * 2, size);
-    this.weights = this.referenceVectors(
-      this.referencePoints(M, numberOfReferenceVectors)
+    this.setReferenceVectors(M, size);
+    RVEA.LOGGER.debug(
+      `This many reference vectors were created ${this.weights.length}.`
     );
     this.neighbours = this.nearestNeighbors(this.weights);
     const apd_fronts = this.referenceVectorGuidedSelection(
