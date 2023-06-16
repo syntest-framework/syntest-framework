@@ -27,7 +27,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new FileWriterMetricMiddleware(new StorageManager(), [], [], "");
+    new FileWriterMetricMiddleware("", new StorageManager(), [], [], "");
     expect(true);
   });
 });
