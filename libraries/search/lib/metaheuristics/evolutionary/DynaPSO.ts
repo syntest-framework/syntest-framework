@@ -41,7 +41,6 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   private c2 = 0.25;
   private pBestMap: Map<string, T> = undefined; // Map containing best current solution for each particle
   private velocityMap: Map<string, { id: string; value: number }[]> = undefined; // Map containing velocity vectors for each particle
-  private objectiveMap: Map<string, ObjectiveFunction<T>> = undefined; // Map objectives
   private allObjectives: ObjectiveFunction<T>[] = [];
   private maximumVelocity: number;
   private minimumVelocity: number;
@@ -85,10 +84,9 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     if (
       this.pBestMap === undefined ||
       this.velocityMap === undefined ||
-      this.objectiveMap === undefined ||
       this.allObjectives.length === 0
     )
-      this._initializeValues(); // Necessary step since the population is not available in the constructor
+      this._initializeObjectivesAndMaps(); // Necessary step since the population is not available in the constructor
 
     const mutatedPopulation: T[] = this._mutatePopulation(); // Population mutated based on PSO approach
 
@@ -381,7 +379,7 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    *  although in that step the population and objectives are not
    *  yet generated, thus we need this method.
    */
-  protected _initializeValues() {
+  protected _initializeObjectivesAndMaps() {
     this.allObjectives = [
       ...this._objectiveManager.getUncoveredObjectives(),
       ...this._objectiveManager.getCoveredObjectives(),
