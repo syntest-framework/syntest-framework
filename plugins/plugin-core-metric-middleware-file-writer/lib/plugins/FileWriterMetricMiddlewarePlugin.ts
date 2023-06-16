@@ -18,7 +18,10 @@
 
 import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
-import { StorageManager } from "@syntest/storage";
+import {
+  StorageOptions as CoreStorageOptions,
+  StorageManager,
+} from "@syntest/storage";
 import Yargs = require("yargs");
 
 import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
@@ -39,6 +42,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
 
   createMetricMiddleware(metrics: Metric[]): MiddleWare {
     return new FileWriterMetricMiddleware(
+      (<CoreStorageOptions>(<unknown>this.args)).fid,
       this.storageManager,
       metrics,
       this.metricManager.outputMetrics,

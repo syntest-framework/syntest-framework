@@ -23,6 +23,7 @@ import { StorageManager } from "@syntest/storage";
 import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricListener";
 import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
+import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralUncoveredObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
@@ -50,6 +51,11 @@ export abstract class TestingToolModule extends Module {
 
     moduleManager.registerPlugin(this, new SimpleObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new StructuralObjectiveManagerPlugin());
+    moduleManager.registerPlugin(
+      this,
+      new StructuralUncoveredObjectiveManagerPlugin()
+    );
+
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());

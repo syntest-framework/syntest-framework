@@ -18,7 +18,7 @@
 import {
   Encoding,
   ObjectiveManager,
-  UncoveredObjectiveManager,
+  StructuralUncoveredObjectiveManager,
 } from "@syntest/search";
 
 import {
@@ -27,21 +27,21 @@ import {
 } from "../ObjectiveManagerPlugin";
 
 /**
- * Plugin for the uncovered objective manager
+ * Plugin for the structural uncovered objective manager
  *
- * @author Dimitri Stallenberg
+ * @author Mitchell Olsthoorn
  */
-export class UncoveredObjectiveManagerPlugin<
+export class StructuralUncoveredObjectiveManagerPlugin<
   T extends Encoding
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
-    super("uncovered", "An uncovered objective manager");
+    super("structural-uncovered", "A structural uncovered objective manager");
   }
 
   createObjectiveManager(
     options: ObjectiveManagerOptions<T>
   ): ObjectiveManager<T> {
-    return new UncoveredObjectiveManager(
+    return new StructuralUncoveredObjectiveManager(
       options.runner,
       options.secondaryObjectives
     );
