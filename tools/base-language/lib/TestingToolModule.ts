@@ -34,8 +34,9 @@ import { SPEAIIPlugin } from "./plugins/search-algorithms/SPEAIIPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
-import { DynaSPEAIIPreset } from "./presets/DynaSPEAIIPreset";
+import { DynaMOSASPEAIIPreset } from "./presets/DynaMOSASPEAIIPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
+import { MOSASPEAIIPreset } from "./presets/MOSASPEAIIPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 import { SPEAIIPreset } from "./presets/SPEAIIPreset";
 
@@ -72,7 +73,9 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
+
     moduleManager.registerPreset(this, new SPEAIIPreset());
-    moduleManager.registerPreset(this, new DynaSPEAIIPreset());
+    moduleManager.registerPreset(this, new MOSASPEAIIPreset());
+    moduleManager.registerPreset(this, new DynaMOSASPEAIIPreset());
   }
 }

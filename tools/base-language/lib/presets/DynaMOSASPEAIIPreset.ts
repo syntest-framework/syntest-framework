@@ -20,14 +20,15 @@ import { ArgumentsCamelCase } from "yargs";
 
 import { ArgumentsObject } from "../Configuration";
 
-export class DynaSPEAIIPreset extends Preset {
+export class DynaMOSASPEAIIPreset extends Preset {
   constructor() {
-    super("DynaSPEAII", "DynaSPEAII preset");
+    super("DynaMOSASPEAII", "DynaMOSASPEAII preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
     (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEAII";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "structural-uncovered";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
+      "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
