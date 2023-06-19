@@ -29,15 +29,17 @@ import { ArgumentsObject } from "../Configuration";
  *
  * @author Diego Viero
  */
-export class PSOPreset extends Preset {
+export class DynaMOSAPSOPreset extends Preset {
   constructor() {
-    super("PSO", "PSO preset");
+    super("DynaMOSAPSO", "Dynamic PSO preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "PSO";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaPSO";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
+      "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }
 }
