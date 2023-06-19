@@ -34,6 +34,10 @@ export class PCSEA<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    * @protected
    */
   protected _environmentalSelection(size: number): void {
+    if (this._objectiveManager.getCurrentObjectives().size === 0) {
+      return;
+    }
+
     this._population = cornerSort(
       this._population,
       this._objectiveManager.getCurrentObjectives(),
