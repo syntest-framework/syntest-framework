@@ -100,6 +100,16 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
       terminationManager
     );
 
+    if (
+      this._objectiveManager.getCurrentObjectives().size === 0 &&
+      this._objectiveManager.getUncoveredObjectives().size === 0
+    ) {
+      RVEA.LOGGER.debug(
+        "All objectives were covered with first randomly generated individuals."
+      );
+      return;
+    }
+
     const M = this._objectiveManager.getCurrentObjectives().size;
     RVEA.LOGGER.debug(
       `_initialize method has found ${M} objectives in the objectiveManager.`
