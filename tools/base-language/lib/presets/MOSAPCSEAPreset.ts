@@ -22,25 +22,20 @@ import { ArgumentsCamelCase } from "yargs";
 import { ArgumentsObject } from "../Configuration";
 
 /**
- * Pareto Corner Search Evolutionary Algorithm (PCSEA), augmented with DynaMOSA's preference sorting.
+ * Pareto Corner Search Evolutionary Algorithm (PCSEA), adapted for test case generation.
  *
- * PCSEA Implementation is based on:
+ * Implementation is based on:
  * "A Pareto Corner Search Evolutionary Algorithm and Dimensionality Reduction in Many-Objective
  * Optimization Problems" by H. K. Singh; A. Isaacs; T. Ray
- *
- * DynaMOSA preference sorting is based on:
- * Reformulating Branch Coverage as a Many-Objective Optimization Problem
- * A. Panichella; F. K. Kifetew; P. Tonella
  */
-export class DynaMOSAPCSEAPreset extends Preset {
+export class MOSAPCSEAPreset extends Preset {
   constructor() {
-    super("DynaMOSAPCSEA", "DynaMOSAPCSEA preset");
+    super("MOSAPCSEA", "MOSAPCSEA preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
     (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaPCSEA";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
-      "structural-uncovered";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
