@@ -32,13 +32,13 @@ import { ArgumentsObject } from "../Configuration";
  * A. Panichella; F. K. Kifetew; P. Tonella
  *
  */
-export class RVEAMOSAPreset extends Preset {
+export class DynaMOSARVEAPreset extends Preset {
   constructor() {
-    super("RVEAMOSA", "RVEAMOSA preset");
+    super("DynaMOSARVEA", "DynaMOSARVEA preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "RVEAMOSA";
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSARVEA";
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
       "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";

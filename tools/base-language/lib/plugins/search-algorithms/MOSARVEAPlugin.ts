@@ -15,28 +15,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
+import { Encoding, RVEAMOSA, SearchAlgorithm } from "@syntest/search";
 
-import { ArgumentsObject } from "../Configuration";
+import {
+  SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
+} from "../SearchAlgorithmPlugin";
 
 /**
- * Reference Vector Guided Evolutionary Algorithm.
+ *
+ * Reference Vector Guided Evolutionary Algorithm MOSA.
  *
  * Based on:
  * A Reference Vector Guided Evolutionary Algorithm for Many-Objective Optimization
  * R. Cheng; Y. Jin; M. Olhofer; B. Sendhoff
  *
+ * and on:
+ * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
+ * A. Panichella; F. K. Kifetew; P. Tonella
+ *
  */
-export class RVEAPreset extends Preset {
+export class MOSARVEAPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("RVEA", "RVEA preset");
+    super("MOSARVEA", "Reference Vector Guided Evolutionary Algorithm MOSA");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "RVEA";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    return new RVEAMOSA<T>(
+      options.objectiveManager,
+      options.encodingSampler,
+      options.procreation,
+      options.populationSize
+    );
+  }
+
+  override getOptions() {
+    return new Map();
   }
 }

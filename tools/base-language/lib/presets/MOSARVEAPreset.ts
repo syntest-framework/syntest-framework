@@ -15,15 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, RVEAMOSA, SearchAlgorithm } from "@syntest/search";
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
 
-import {
-  SearchAlgorithmOptions,
-  SearchAlgorithmPlugin,
-} from "../SearchAlgorithmPlugin";
+import { ArgumentsObject } from "../Configuration";
 
 /**
- *
  * Reference Vector Guided Evolutionary Algorithm MOSA.
  *
  * Based on:
@@ -35,25 +32,16 @@ import {
  * A. Panichella; F. K. Kifetew; P. Tonella
  *
  */
-export class RVEAMOSAPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class MOSARVEAPreset extends Preset {
   constructor() {
-    super("RVEAMOSA", "Reference Vector Guided Evolutionary Algorithm MOSA");
+    super("MOSARVEA", "MOSARVEA preset");
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new RVEAMOSA<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.procreation,
-      options.populationSize
-    );
-  }
-
-  override getOptions() {
-    return new Map();
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSARVEA";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }
 }
