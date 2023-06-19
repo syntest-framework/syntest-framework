@@ -27,7 +27,7 @@ import { ObjectiveManager } from "./ObjectiveManager";
  *
  * @author Mitchell Olsthoorn
  */
-export class StructuralObjectiveManager<
+export class StructuralUncoveredObjectiveManager<
   T extends Encoding
 > extends ObjectiveManager<T> {
   /**
@@ -42,6 +42,7 @@ export class StructuralObjectiveManager<
 
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
+    this._currentObjectives.delete(objectiveFunction);
 
     // Add objective to the covered objectives
     this._coveredObjectives.add(objectiveFunction);

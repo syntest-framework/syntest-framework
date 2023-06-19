@@ -18,10 +18,12 @@
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 
 import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricListener";
 import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
+import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralUncoveredObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
 import { DynaPESAIIPlugin } from "./plugins/search-algorithms/DynaPESAIIPlugin";
@@ -41,6 +43,7 @@ export abstract class TestingToolModule extends Module {
   override register(
     moduleManager: ModuleManager,
     _metricManager: MetricManager,
+    _storageManager: StorageManager,
     _userInterface: UserInterface,
     _modules: Module[]
   ): void {
@@ -48,6 +51,11 @@ export abstract class TestingToolModule extends Module {
 
     moduleManager.registerPlugin(this, new SimpleObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new StructuralObjectiveManagerPlugin());
+    moduleManager.registerPlugin(
+      this,
+      new StructuralUncoveredObjectiveManagerPlugin()
+    );
+
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());

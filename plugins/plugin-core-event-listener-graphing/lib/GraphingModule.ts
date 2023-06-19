@@ -16,14 +16,11 @@
  * limitations under the License.
  */
 
-import { mkdirSync } from "node:fs";
-
+import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 
-import {
-  GraphingEventListenerPlugin,
-  GraphOptions,
-} from "./GraphingEventListenerPlugin";
+import { GraphingEventListenerPlugin } from "./GraphingEventListenerPlugin";
 
 export default class GraphingModule extends Module {
   constructor() {
@@ -35,13 +32,14 @@ export default class GraphingModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this, new GraphingEventListenerPlugin());
-  }
-
-  override prepare(): void {
-    mkdirSync((<GraphOptions>(<unknown>this.args)).graphingCfgDirectory, {
-      recursive: true,
-    });
+  register(
+    moduleManager: ModuleManager,
+    _metricManager: MetricManager,
+    storageManager: StorageManager
+  ): void {
+    moduleManager.registerPlugin(
+      this,
+      new GraphingEventListenerPlugin(storageManager)
+    );
   }
 }
