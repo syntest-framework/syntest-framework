@@ -34,7 +34,8 @@ import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlug
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
-import { DynaPESAIIPreset } from "./presets/DynaPESAIIPreset";
+import { DynaMOSAPESAIIPreset } from "./presets/DynaPESAIIPreset";
+import { MOSAPESAIIPreset } from "./presets/MOSAPESAIIPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 import { PESAIIPreset } from "./presets/PESAIIPreset";
@@ -74,6 +75,7 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
     moduleManager.registerPreset(this, new PESAIIPreset());
-    moduleManager.registerPreset(this, new DynaPESAIIPreset());
+    moduleManager.registerPreset(this, new MOSAPESAIIPreset());
+    moduleManager.registerPreset(this, new DynaMOSAPESAIIPreset());
   }
 }
