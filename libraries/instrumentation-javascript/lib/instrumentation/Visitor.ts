@@ -254,12 +254,36 @@ function coverIfBranches(path) {
   if (ignoreIf) {
     this.setAttr(n.consequent, "skip-all", true);
   } else {
-    this.insertBranchCounter(path, path.get("consequent"), branch, n.loc);
+    if (path.get("consequent").isBlockStatement()) {
+      if (path.get("consequent").has("body")) {
+        this.insertBranchCounter(
+          path,
+          path.get("consequent").get("body")[0],
+          branch
+        );
+      } else {
+        this.insertBranchCounter(path, path.get("consequent"), branch, true);
+      }
+    } else {
+      this.insertBranchCounter(path, path.get("consequent"), branch);
+    }
   }
   if (ignoreElse) {
     this.setAttr(n.alternate, "skip-all", true);
   } else {
-    this.insertBranchCounter(path, path.get("alternate"), branch);
+    if (path.get("alternate").isBlockStatement()) {
+      if (path.get("alternate").has("body")) {
+        this.insertBranchCounter(
+          path,
+          path.get("alternate").get("body")[0],
+          branch
+        );
+      } else {
+        this.insertBranchCounter(path, path.get("alternate"), branch, true);
+      }
+    } else {
+      this.insertBranchCounter(path, path.get("alternate"), branch);
+    }
   }
 
   const T = this.types;
@@ -299,32 +323,44 @@ function coverIfBranches(path) {
   path.insertBefore(T.expressionStatement(metaTracker));
 }
 
-function coverLoopBranch(path) {
+function coverLoopBranch(path: NodePath<t.Loop>) {
   const n = path.node;
   const branch = this.cov.newBranch("loop", n.loc);
 
-  this.insertBranchCounter(path, path.get("body"), branch, n.loc);
+  if (path.get("body").isBlockStatement()) {
+    if (path.get("body").has("body")) {
+      this.insertBranchCounter(path, path.get("body").get("body")[0], branch);
+    } else {
+      this.insertBranchCounter(path, path.get("body"), branch, true);
+    }
+  } else {
+    this.insertBranchCounter(path, path.get("body"), branch);
+  }
 
   const T = this.types;
 
-  const increment = this.getBranchIncrement(path, branch, {
-    start: path.node.loc.end,
-    end: path.node.loc.end,
-  });
+  const increment = this.getBranchIncrement(path, branch, undefined);
   path.insertAfter(T.expressionStatement(increment));
 
   // TODO we should actually print what the just defined variable is set to
   const justDefinedVariables = [];
 
-  path.get("init").traverse({
-    VariableDeclarator: {
-      enter: (p) => {
-        justDefinedVariables.push(p.node.id.name);
+  if (path.has("init")) {
+    (<NodePath<t.ForStatement>>path).get("init").traverse({
+      VariableDeclarator: {
+        enter: (p) => {
+          const id = p.get("id");
+          if (id.isIdentifier()) {
+            justDefinedVariables.push(id.node.name);
+          }
+        },
       },
-    },
-  });
+    });
+  }
 
-  const test = path.get("test");
+  const test = <
+    NodePath<t.ForStatement | t.WhileStatement | t.DoWhileStatement>
+  >path.get("test");
   const variables = [];
   test.traverse(
     {
@@ -374,6 +410,7 @@ function coverSwitchCase(path) {
   if (b === null) {
     throw new Error("Unable to get switch branch name");
   }
+
   const increment = this.getBranchIncrement(path, b, path.node.loc);
   path.node.consequent.unshift(T.expressionStatement(increment));
 }

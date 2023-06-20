@@ -414,11 +414,11 @@ export class VisitState {
     ];
   }
 
-  insertBranchCounter(ifPath, path, branchName, loc) {
+  insertBranchCounter(ifPath, path, branchName, placeholder = false) {
     const increment = this.getBranchIncrement(
       ifPath,
       branchName,
-      loc || path.node.loc
+      placeholder ? undefined : path.node.loc
     );
 
     this.insertCounter(path, increment);

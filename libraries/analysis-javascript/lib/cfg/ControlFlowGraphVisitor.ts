@@ -213,6 +213,24 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     return node;
   }
 
+  public _getPlaceholderNodeId(path: NodePath<t.Node>): string {
+    if (path.node.loc === undefined) {
+      throw new Error(
+        `Node ${path.type} in file '${this._filePath}' does not have a location`
+      );
+    }
+
+    const startLine = (<{ line: number }>(<unknown>path.node.loc.end)).line;
+    const startColumn = (<{ column: number }>(<unknown>path.node.loc.end))
+      .column;
+    const startIndex = (<{ index: number }>(<unknown>path.node.loc.end)).index;
+    const endLine = (<{ line: number }>(<unknown>path.node.loc.end)).line;
+    const endColumn = (<{ column: number }>(<unknown>path.node.loc.end)).column;
+    const endIndex = (<{ index: number }>(<unknown>path.node.loc.end)).index;
+
+    return `${this._filePath}:${startLine}:${startColumn}:::${endLine}:${endColumn}:::${startIndex}:${endIndex}`;
+  }
+
   /**
    * Create a placeholder node for a node that is not in the AST, but is used in the CFG.
    * Uses the end location of the parent node as the start and end location of the placeholder node.
@@ -220,7 +238,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
    * @returns
    */
   private _createPlaceholderNode(path: NodePath): Node {
-    const id = `placeholder:::${this._getNodeId(path)}`;
+    const id = `placeholder:::${this._getPlaceholderNodeId(path)}`;
     const location = this._getLocation(path);
     const node = new Node(
       id,
