@@ -29,16 +29,17 @@ export class ApproachLevel {
     approachLevel: number;
     closestCoveredNode: Node;
     closestCoveredBranchTrace: Datapoint;
+    lastEdgeType: boolean;
   } {
     // Construct map with key as id covered and value as datapoint that covers that id
     const idsTraceMap: Map<string, Datapoint> = new Map(
-      traces.map((trace) => [trace.id, trace])
+      traces.filter((trace) => trace.hits > 0).map((trace) => [trace.id, trace])
     );
 
     // Construct set of all covered ids
     const coveredNodeIds = new Set<string>(idsTraceMap.keys());
 
-    const { approachLevel, closestCoveredBranch } =
+    const { approachLevel, closestCoveredBranch, lastEdgeType } =
       this._findClosestCoveredBranch(cfg, node.id, coveredNodeIds);
 
     // if closest node is not found, we return the distance to the root branch
@@ -47,6 +48,7 @@ export class ApproachLevel {
         approachLevel: undefined,
         closestCoveredNode: undefined,
         closestCoveredBranchTrace: undefined,
+        lastEdgeType: undefined,
       };
     }
 
@@ -61,6 +63,7 @@ export class ApproachLevel {
       approachLevel,
       closestCoveredNode: closestCoveredBranch,
       closestCoveredBranchTrace,
+      lastEdgeType: lastEdgeType,
     };
   }
 
@@ -68,7 +71,11 @@ export class ApproachLevel {
     cfg: ControlFlowGraph,
     from: string,
     targets: Set<string>
-  ): { approachLevel: number; closestCoveredBranch: Node } {
+  ): {
+    approachLevel: number;
+    closestCoveredBranch: Node;
+    lastEdgeType: boolean;
+  } {
     const visitedNodeIdSet = new Set<string>([from]);
     const searchQueue: [string, number][] = [[from, 0]];
 
@@ -91,6 +98,7 @@ export class ApproachLevel {
           return {
             approachLevel: currentDistance,
             closestCoveredBranch: cfg.getNodeById(edge.source),
+            lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
           };
         }
 
@@ -111,6 +119,7 @@ export class ApproachLevel {
     return {
       approachLevel: -1,
       closestCoveredBranch: undefined,
+      lastEdgeType: undefined,
     };
   }
 }

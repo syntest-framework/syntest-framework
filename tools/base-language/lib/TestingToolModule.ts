@@ -34,6 +34,7 @@ import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/S
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
   override register(
@@ -64,6 +65,7 @@ export abstract class TestingToolModule extends Module {
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
+    moduleManager.registerPreset(this, new RandomSearchPreset());
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
