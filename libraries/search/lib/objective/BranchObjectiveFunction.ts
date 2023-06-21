@@ -142,10 +142,23 @@ export class BranchObjectiveFunction<
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
+    let trace;
+    if (lastEdgeType) {
+      const trueNode = trueEdge.target;
+      trace = executionResult
+        .getTraces()
+        .find((trace) => trace.id === trueNode && trace.type === "branch");
+    } else {
+      const falseNode = falseEdge.target;
+      trace = executionResult
+        .getTraces()
+        .find((trace) => trace.id === falseNode && trace.type === "branch");
+    }
+
     let branchDistance = this.branchDistance.calculate(
-      closestCoveredBranchTrace.condition_ast,
-      closestCoveredBranchTrace.condition,
-      closestCoveredBranchTrace.variables,
+      trace.condition_ast,
+      trace.condition,
+      trace.variables,
       lastEdgeType
     );
 
@@ -171,74 +184,16 @@ export class BranchObjectiveFunction<
       console.log(approachLevel);
       console.log();
 
-      const {
-        approachLevel: approachLevel1,
-        closestCoveredNode,
-        closestCoveredBranchTrace,
-      } = this.approachLevel.calculate(
-        function_.graph,
-        targetNode,
-        executionResult.getTraces()
-      );
-
-      if (closestCoveredNode === undefined) {
-        // weird
-        throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
-      }
-
-      const outgoingEdges = function_.graph.getOutgoingEdges(
-        closestCoveredNode.id
-      );
-
-      if (outgoingEdges.length < 2) {
-        // weird
-        throw new Error(
-          lessThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
-        );
-      }
-
-      if (outgoingEdges.length > 2) {
-        // weird
-        throw new Error(
-          moreThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
-        );
-      }
-
-      const trueEdge = outgoingEdges.find(
-        (edge) => edge.type === EdgeType.CONDITIONAL_TRUE
-      );
-      const falseEdge = outgoingEdges.find(
-        (edge) => edge.type === EdgeType.CONDITIONAL_FALSE
-      );
-
-      if (!trueEdge || !falseEdge) {
-        // weird
-        throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
-      }
-
-      const trueOrFalse = trueEdge.target === targetNode.id;
-
-      // if closest covered node is not found, we return the distance to the root branch
-      if (!closestCoveredBranchTrace) {
-        throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
-      }
-
       const branchDistance = this.branchDistance.calculate(
         closestCoveredBranchTrace.condition_ast,
         closestCoveredBranchTrace.condition,
         closestCoveredBranchTrace.variables,
-        trueOrFalse
+        lastEdgeType
       );
 
-      console.log(approachLevel1, branchDistance);
+      console.log(branchDistance);
     }
 
-    console.log(
-      "approachlevel",
-      approachLevel,
-      "branchdistance",
-      branchDistance
-    );
     if (approachLevel + branchDistance === 0) {
       // TODO this is a hack to make sure a wrong branch distance calculation doesnt throw off the entire distance
       console.log("branchdistance is zero");
