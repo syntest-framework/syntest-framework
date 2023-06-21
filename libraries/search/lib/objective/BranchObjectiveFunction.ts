@@ -103,8 +103,9 @@ export class BranchObjectiveFunction<
     );
 
     if (closestCoveredNode === undefined) {
-      // weird
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      // if closest node is not found, we return the distance to the root branch
+      // this happens when the function is not entered at all
+      return Number.MAX_VALUE;
     }
 
     const outgoingEdges = function_.graph.getOutgoingEdges(
@@ -167,6 +168,13 @@ export class BranchObjectiveFunction<
     }
 
     if (Number.isNaN(branchDistance)) {
+      console.log("branch distance is wrong");
+      console.log(this.getIdentifier());
+      console.log(approachLevel);
+      console.log(branchDistance);
+      console.log(trace.condition);
+      console.log(trace.variables);
+      console.log();
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
 
@@ -174,25 +182,19 @@ export class BranchObjectiveFunction<
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
 
-    if (branchDistance === 0 && approachLevel !== 0) {
-      throw new Error(shouldNeverHappen("ObjectiveManager"));
-    }
-
     if (branchDistance === 0) {
       console.log("branch distance is wrong");
       console.log(this.getIdentifier());
       console.log(approachLevel);
-      console.log();
-
-      const branchDistance = this.branchDistance.calculate(
-        closestCoveredBranchTrace.condition_ast,
-        closestCoveredBranchTrace.condition,
-        closestCoveredBranchTrace.variables,
-        lastEdgeType
-      );
-
       console.log(branchDistance);
+      console.log(trace.condition);
+      console.log(trace.variables);
+      console.log();
     }
+
+    // if (branchDistance === 0 && approachLevel !== 0) {
+    //   throw new Error(shouldNeverHappen("ObjectiveManager"));
+    // }
 
     if (approachLevel + branchDistance === 0) {
       // TODO this is a hack to make sure a wrong branch distance calculation doesnt throw off the entire distance
