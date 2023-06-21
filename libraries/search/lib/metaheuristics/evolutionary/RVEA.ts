@@ -167,7 +167,7 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
     RVEA.LOGGER.debug(
       `_iterate method has following current progress ${progress}.`
     );
-    const fr = 0.2;
+    const fr = 0.1;
     this._environmentalSelection(this._populationSize, alpha, progress, fr);
   }
 
