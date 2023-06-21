@@ -17,7 +17,7 @@
  */
 import { RootContext, SubTarget, Target } from "@syntest/analysis-javascript";
 import { TargetType } from "@syntest/analysis";
-import { ControlFlowGraph, Edge } from "@syntest/cfg";
+import { ControlFlowGraph, Edge, EdgeType } from "@syntest/cfg";
 import {
   FunctionObjectiveFunction,
   ObjectiveFunction,
@@ -142,9 +142,14 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
     while (edges2Visit.length > 0) {
       const edge = edges2Visit.pop();
 
-      if (visitedEdges.includes(edge))
+      if (visitedEdges.includes(edge)) {
         // this condition is made to avoid infinite loops
         continue;
+      }
+
+      if (edge.type === EdgeType.BACK_EDGE) {
+        continue;
+      }
 
       visitedEdges.push(edge);
 
@@ -152,9 +157,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
         (child) => child.getIdentifier() === edge.target
       );
       if (found.length === 0) {
-        const additionalEdges = graph.edges.filter(
-          (nextEdge) => nextEdge.source === edge.target
-        );
+        const additionalEdges = graph.getOutgoingEdges(edge.target);
         edges2Visit = [...edges2Visit, ...additionalEdges];
       } else {
         childObjectives = [...childObjectives, ...found];

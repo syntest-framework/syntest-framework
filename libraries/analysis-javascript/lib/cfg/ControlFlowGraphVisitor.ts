@@ -610,14 +610,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     // init
     if (path.has("init")) {
-      // stupit hack because the variable declaration of an init is not registered correctly?
-      if (path.get("init").isVariableDeclaration()) {
-        const node = this._createNode(path.get("init"));
+      const init = path.get("init");
+      // stupid hack because the variable declaration of an init is not registered correctly?
+      if (init.isVariableDeclaration()) {
+        const node = this._createNode(init.get("declarations")[0].get("init"));
 
         this._connectToParents(node);
         this._currentParents = [node.id];
       } else {
-        path.get("init").visit();
+        init.visit();
       }
     }
 
