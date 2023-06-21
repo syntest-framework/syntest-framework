@@ -16,36 +16,47 @@
  * limitations under the License.
  */
 
+import { getLogger, Logger } from "@syntest/logging";
+
 import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 
 /**
- * Archive of covered objectives with the fittest encoding for that objective.
+ * Archive that keeps track of the fittest encodings for each covered objective.
  *
  * @author Mitchell Olsthoorn
  */
 export class Archive<T extends Encoding> {
+  protected static LOGGER: Logger;
+
   /**
-   * Mapping of objective to encoding.
+   * Mapping of covered objectives to the corresponding fittest encoding.
    *
    * @protected
    */
   protected _map: Map<ObjectiveFunction<T>, T>;
 
   /**
-   * Constructor.
+   * Mapping of unique encodings contained within the archive to the objectives
+   * that they were selected for.
    *
-   * Initializes the map.
+   * @protected
    */
+  protected _uses: Map<T, ObjectiveFunction<T>[]>;
+
   constructor() {
+    Archive.LOGGER = getLogger("Archive");
     this._map = new Map<ObjectiveFunction<T>, T>();
+    this._uses = new Map<T, ObjectiveFunction<T>[]>();
   }
 
   /**
    * The size of the archive.
+   *
+   * Measured by the number of unique encodings contained in the archive.
    */
   get size(): number {
-    return this._map.size;
+    return this._uses.size;
   }
 
   /**
@@ -53,18 +64,57 @@ export class Archive<T extends Encoding> {
    *
    * @param objectiveFunction The objective function to check for
    */
-  has(objectiveFunction: ObjectiveFunction<T>): boolean {
+  hasObjective(objectiveFunction: ObjectiveFunction<T>): boolean {
     return this._map.has(objectiveFunction);
   }
 
   /**
-   * Updates a mapping in the archive.
+   * Determines if the archive already contains this encoding.
+   *
+   * @param encoding The encoding to check for
+   */
+  hasEncoding(encoding: T): boolean {
+    return this._uses.has(encoding);
+  }
+
+  /**
+   * Updates the archive with a new encoding.
+   *
+   * This function will overwrite the current encoding for the specified objective function.
+   *
+   * TODO: possibly throw an error when the encoding is already assigned to the objective function
+   * TODO: Decide if we should match on the id or the equality of the encoding
    *
    * @param objectiveFunction The objective to update
-   * @param encoding The corresponding encoding
+   * @param encoding The new encoding
    */
   update(objectiveFunction: ObjectiveFunction<T>, encoding: T): void {
+    const old_encoding = this._map.get(objectiveFunction);
+
+    // Remove the old encoding from the uses map
+    if (old_encoding && old_encoding.id !== encoding.id) {
+      const uses = this._uses.get(old_encoding);
+      uses.splice(uses.indexOf(objectiveFunction), 1);
+      if (uses.length === 0) {
+        this._uses.delete(old_encoding);
+      }
+    }
+
+    // Do not update if the encoding is already assigned to the objective function
+    if (old_encoding && old_encoding.id === encoding.id) {
+      Archive.LOGGER.debug("encoding already assigned to objective function");
+      return;
+    }
+
+    // Add the encoding to the archive
     this._map.set(objectiveFunction, encoding);
+
+    // Add the encoding to the uses map
+    if (this._uses.has(encoding)) {
+      this._uses.get(encoding).push(objectiveFunction);
+    } else {
+      this._uses.set(encoding, [objectiveFunction]);
+    }
   }
 
   /**
@@ -90,11 +140,27 @@ export class Archive<T extends Encoding> {
   }
 
   /**
+   * Return the encodings.
+   */
+  getEncodings(): T[] {
+    return [...this._uses.keys()];
+  }
+
+  /**
    * Return the encoding corresponding with the objective function.
    *
    * @param objective The objective to use.
    */
   getEncoding(objective: ObjectiveFunction<T>): T {
     return this._map.get(objective);
+  }
+
+  /**
+   * Return the uses of the encoding across the objective functions.
+   *
+   * @param encoding The encoding to look for.
+   */
+  getUses(encoding: T): ObjectiveFunction<T>[] {
+    return this._uses.get(encoding);
   }
 }

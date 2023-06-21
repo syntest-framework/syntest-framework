@@ -38,6 +38,7 @@ import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveCom
  */
 export abstract class ObjectiveManager<T extends Encoding> {
   protected static LOGGER: Logger;
+
   /**
    * Archive of covered objectives with the fittest encoding for that objective.
    * @protected
@@ -123,7 +124,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     encoding: T
   ) {
     ObjectiveManager.LOGGER.debug("updating archive");
-    if (!this._archive.has(objectiveFunction)) {
+    if (!this._archive.hasObjective(objectiveFunction)) {
       ObjectiveManager.LOGGER.debug(
         `new objective covered: ${objectiveFunction.getIdentifier()}`
       );
