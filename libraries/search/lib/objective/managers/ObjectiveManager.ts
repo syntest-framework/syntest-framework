@@ -134,7 +134,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   protected abstract _updateObjectives(
     objectiveFunction: ObjectiveFunction<T>
-  ): void;
+  ): ObjectiveFunction<T>[];
 
   /**
    * Evaluate multiple encodings on the current objectives.
@@ -182,31 +182,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // For all current objectives
     for (const objectiveFunction of this._currentObjectives) {
-      // Calculate and store the distance
-      const distance = objectiveFunction.calculateDistance(encoding);
-      if (Number.isNaN(distance)) {
-        throw new TypeError(shouldNeverHappen("ObjectiveManager"));
-      }
-      encoding.setDistance(objectiveFunction, distance);
-
-      // When the objective is covered, update the objectives and the archive
-      if (distance === 0) {
-        ObjectiveManager.LOGGER.debug(
-          `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
-            encoding.id
-          }`
-        );
-
-        this._handleCoveredObjective(objectiveFunction, encoding);
-      } else {
-        ObjectiveManager.LOGGER.debug(
-          `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
-            encoding.id
-          }`
-        );
-
-        this._handleUncoveredObjective(objectiveFunction, encoding, distance);
-      }
+      this.evaluateObjective(encoding, objectiveFunction);
     }
 
     // Create separate exception objective when an exception occurred in the execution
@@ -235,6 +211,37 @@ export abstract class ObjectiveManager<T extends Encoding> {
           false
         );
       }
+    }
+  }
+
+  protected evaluateObjective(
+    encoding: T,
+    objectiveFunction: ObjectiveFunction<T>
+  ) {
+    // Calculate and store the distance
+    const distance = objectiveFunction.calculateDistance(encoding);
+    if (Number.isNaN(distance)) {
+      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+    }
+    encoding.setDistance(objectiveFunction, distance);
+
+    // When the objective is covered, update the objectives and the archive
+    if (distance === 0) {
+      ObjectiveManager.LOGGER.debug(
+        `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
+          encoding.id
+        }`
+      );
+
+      this._handleCoveredObjective(objectiveFunction, encoding);
+    } else {
+      ObjectiveManager.LOGGER.debug(
+        `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
+          encoding.id
+        }`
+      );
+
+      this._handleUncoveredObjective(objectiveFunction, encoding, distance);
     }
   }
 
