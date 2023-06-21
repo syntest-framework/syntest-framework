@@ -183,24 +183,20 @@ export class BranchObjectiveFunction<
     }
 
     if (branchDistance === 0) {
-      console.log("branch distance is wrong");
+      console.log("branchdistance is zero");
       console.log(this.getIdentifier());
       console.log(approachLevel);
       console.log(branchDistance);
       console.log(trace.condition);
       console.log(trace.variables);
       console.log();
+
+      branchDistance += 0.999;
     }
 
     // if (branchDistance === 0 && approachLevel !== 0) {
     //   throw new Error(shouldNeverHappen("ObjectiveManager"));
     // }
-
-    if (approachLevel + branchDistance === 0) {
-      // TODO this is a hack to make sure a wrong branch distance calculation doesnt throw off the entire distance
-      console.log("branchdistance is zero");
-      branchDistance += 0.999;
-    }
 
     // add the distances
     return approachLevel + branchDistance;
