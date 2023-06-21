@@ -34,7 +34,9 @@ export class StructuralObjectiveManager<
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
+  protected _updateObjectives(
+    objectiveFunction: ObjectiveFunction<T>
+  ): ObjectiveFunction<T>[] {
     ObjectiveManager.LOGGER.debug("updating objectives");
     ObjectiveManager.LOGGER.debug(
       `covered: ${objectiveFunction.getIdentifier()}`
@@ -60,6 +62,8 @@ export class StructuralObjectiveManager<
         this._currentObjectives.add(objective);
       }
     }
+
+    return [];
   }
 
   /**

@@ -60,6 +60,7 @@ export class BranchObjectiveFunction<
     this._id = id;
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
 
@@ -146,14 +147,6 @@ export class BranchObjectiveFunction<
       trueOrFalse
     );
 
-    if (
-      !(typeof branchDistance === "number" && Number.isFinite(branchDistance))
-    ) {
-      // this is a dirty hack to prevent wrong branch distance numbers
-      // in the future we need to simply fix the branch distance calculation and remove this
-      branchDistance = 0.999;
-    }
-
     if (Number.isNaN(approachLevel)) {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
@@ -164,6 +157,15 @@ export class BranchObjectiveFunction<
 
     if (Number.isNaN(approachLevel + branchDistance)) {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+    }
+
+    if (branchDistance === 0 && approachLevel !== 0) {
+      throw new Error(shouldNeverHappen("ObjectiveManager"));
+    }
+
+    if (approachLevel + branchDistance === 0) {
+      // TODO this is a hack to make sure a wrong branch distance calculation doesnt throw off the entire distance
+      branchDistance += 0.999;
     }
 
     // add the distances

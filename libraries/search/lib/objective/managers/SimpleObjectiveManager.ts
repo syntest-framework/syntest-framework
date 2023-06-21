@@ -34,12 +34,16 @@ export class SimpleObjectiveManager<
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
+  protected _updateObjectives(
+    objectiveFunction: ObjectiveFunction<T>
+  ): ObjectiveFunction<T>[] {
     // Remove objective from the uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
 
     // Add objective to the covered objectives
     this._coveredObjectives.add(objectiveFunction);
+
+    return [];
   }
 
   /**

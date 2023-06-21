@@ -34,12 +34,13 @@ export class StructuralUncoveredObjectiveManager<
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
+  protected _updateObjectives(
+    objectiveFunction: ObjectiveFunction<T>
+  ): ObjectiveFunction<T>[] {
     ObjectiveManager.LOGGER.debug("updating objectives");
     ObjectiveManager.LOGGER.debug(
       `covered: ${objectiveFunction.getIdentifier()}`
     );
-
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
     this._currentObjectives.delete(objectiveFunction);
@@ -48,6 +49,7 @@ export class StructuralUncoveredObjectiveManager<
     this._coveredObjectives.add(objectiveFunction);
 
     // Add the child objectives to the current objectives
+    const childObjectives: ObjectiveFunction<T>[] = [];
     for (const objective of this._subject.getChildObjectives(
       objectiveFunction
     )) {
@@ -58,9 +60,13 @@ export class StructuralUncoveredObjectiveManager<
         ObjectiveManager.LOGGER.debug(
           `adding new objective: ${objective.getIdentifier()}`
         );
+
         this._currentObjectives.add(objective);
+        childObjectives.push(objective);
       }
     }
+
+    return childObjectives;
   }
 
   /**
