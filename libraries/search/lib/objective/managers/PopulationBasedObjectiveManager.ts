@@ -54,6 +54,7 @@ export abstract class PopulationBasedObjectiveManager<
   /**
    * The finalization step is used to update the archive with the final population.
    */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   public override finalize(finalPopulation: T[]): void {
     for (const encoding of finalPopulation) {
       if (encoding.getExecutionResult) {
@@ -62,6 +63,25 @@ export abstract class PopulationBasedObjectiveManager<
             ObjectiveManager.LOGGER.debug("updating archive");
             this._archive.update(objective, encoding, true);
           }
+        }
+      }
+
+      const executionResult = encoding.getExecutionResult();
+      if (executionResult) {
+        for (const objective of this._subject.getObjectives()) {
+          if (executionResult.coversId(objective.getIdentifier())) {
+            encoding.addMetaComment(
+              `Test1: Covers objective: ${objective.getIdentifier()}`
+            );
+          }
+        }
+      }
+
+      for (const objective of this._subject.getObjectives()) {
+        if (encoding.getDistance(objective) === 0) {
+          encoding.addMetaComment(
+            `Test2: Covers objective: ${objective.getIdentifier()}`
+          );
         }
       }
     }
