@@ -17,29 +17,30 @@
  */
 
 import { Encoding } from "../../Encoding";
-import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
+import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
 
 /**
- * Objective manager that only evaluates an encoding on currently reachable and covered objectives.
+ * Objective manager that only evaluates an encoding on currently reachable.
  *
  * @author Mitchell Olsthoorn
  */
 export class StructuralUncoveredObjectiveManager<
   T extends Encoding
-> extends ObjectiveManager<T> {
+> extends StructuralObjectiveManager<T> {
   /**
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
+  protected override _updateObjectives(
+    objectiveFunction: ObjectiveFunction<T>
+  ): ObjectiveFunction<T>[] {
     ObjectiveManager.LOGGER.debug("updating objectives");
     ObjectiveManager.LOGGER.debug(
       `covered: ${objectiveFunction.getIdentifier()}`
     );
-
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
     this._currentObjectives.delete(objectiveFunction);
@@ -48,6 +49,7 @@ export class StructuralUncoveredObjectiveManager<
     this._coveredObjectives.add(objectiveFunction);
 
     // Add the child objectives to the current objectives
+    const childObjectives: ObjectiveFunction<T>[] = [];
     for (const objective of this._subject.getChildObjectives(
       objectiveFunction
     )) {
@@ -58,45 +60,12 @@ export class StructuralUncoveredObjectiveManager<
         ObjectiveManager.LOGGER.debug(
           `adding new objective: ${objective.getIdentifier()}`
         );
+
         this._currentObjectives.add(objective);
+        childObjectives.push(objective);
       }
     }
-  }
 
-  /**
-   * @inheritDoc
-   */
-  load(subject: SearchSubject<T>): void {
-    // Set the subject
-    this._subject = subject;
-
-    // TODO: Reset the objective manager
-    const objectives = subject.getObjectives();
-
-    // Add all objectives to the uncovered objectives
-    for (const objective of objectives)
-      this._uncoveredObjectives.add(objective);
-
-    // Set the current objectives
-    const rootObjectiveIds = this._subject.cfg.functions.map(
-      (g) => g.id // should always be one child of the entry node
-    );
-
-    let rootObjectives: ObjectiveFunction<T>[] = [];
-    for (const id of rootObjectiveIds) {
-      rootObjectives = [
-        ...rootObjectives,
-        ...this._subject
-          .getObjectives()
-          .filter((objective) => objective.getIdentifier() === id),
-      ];
-    }
-
-    for (const objective of rootObjectives) {
-      ObjectiveManager.LOGGER.debug(
-        `adding root objective: ${objective.getIdentifier()}`
-      );
-      this._currentObjectives.add(objective);
-    }
+    return childObjectives;
   }
 }
