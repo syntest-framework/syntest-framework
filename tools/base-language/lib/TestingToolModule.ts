@@ -24,6 +24,7 @@ import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricList
 import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
 import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralUncoveredObjectiveManagerPlugin";
+import { TrackingObjectiveManagerPlugin } from "./plugins/objective-managers/TrackingObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
@@ -34,6 +35,7 @@ import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/S
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
   override register(
@@ -51,7 +53,7 @@ export abstract class TestingToolModule extends Module {
       this,
       new StructuralUncoveredObjectiveManagerPlugin()
     );
-
+    moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
@@ -64,8 +66,9 @@ export abstract class TestingToolModule extends Module {
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
-    moduleManager.registerPreset(this, new NSGAIIPreset());
-    moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
+    moduleManager.registerPreset(this, new MOSAPreset());
+    moduleManager.registerPreset(this, new NSGAIIPreset());
+    moduleManager.registerPreset(this, new RandomSearchPreset());
   }
 }

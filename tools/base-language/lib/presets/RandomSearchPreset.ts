@@ -15,32 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, RandomSearch, SearchAlgorithm } from "@syntest/search";
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
 
-import {
-  SearchAlgorithmOptions,
-  SearchAlgorithmPlugin,
-} from "../SearchAlgorithmPlugin";
+import { ArgumentsObject } from "../Configuration";
 
-/**
- * Plugin for RandomSearch
- *
- * @author Dimitri Stallenberg
- */
-export class RandomSearchPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class RandomSearchPreset extends Preset {
   constructor() {
-    super("random", "Random search algorithm");
+    super("random", "Random preset");
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new RandomSearch(options.objectiveManager, options.encodingSampler);
-  }
-
-  override getOptions() {
-    return new Map();
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "random";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "tracking";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 1;
   }
 }
