@@ -35,6 +35,7 @@ import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
 import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionStatement";
 import { ArrayStatement } from "../statements/complex/ArrayStatement";
 import { ObjectStatement } from "../statements/complex/ObjectStatement";
+import { IntegerStatement } from "../statements/primitive/IntegerStatement";
 
 /**
  * JavaScriptRandomSampler class
@@ -146,6 +147,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   abstract sampleNull(id: string, name: string): NullStatement;
 
   abstract sampleNumber(id: string, name: string): NumericStatement;
+  abstract sampleInteger(id: string, name: string): IntegerStatement;
 
   abstract sampleUndefined(id: string, name: string): UndefinedStatement;
 

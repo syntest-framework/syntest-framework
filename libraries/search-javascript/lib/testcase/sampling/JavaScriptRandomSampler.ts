@@ -52,6 +52,7 @@ import { JavaScriptTestCaseSampler } from "./JavaScriptTestCaseSampler";
 import { TargetType } from "@syntest/analysis";
 import { ObjectFunctionCall } from "../statements/action/ObjectFunctionCall";
 import { ObjectType } from "@syntest/analysis-javascript";
+import { IntegerStatement } from "../statements/primitive/IntegerStatement";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   private _rootContext: RootContext;
@@ -628,6 +629,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       case "numeric": {
         return this.sampleNumber(id, name);
       }
+      case "integer": {
+        return this.sampleInteger(id, name);
+      }
       case "null": {
         return this.sampleNull(id, name);
       }
@@ -814,6 +818,20 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       TypeEnum.NUMERIC,
       prng.uniqueId(),
       prng.nextDouble(min, max)
+    );
+  }
+
+  sampleInteger(id: string, name: string): IntegerStatement {
+    // by default we create small numbers (do we need very large numbers?)
+    const max = 10;
+    const min = -10;
+
+    return new IntegerStatement(
+      id,
+      name,
+      TypeEnum.INTEGER,
+      prng.uniqueId(),
+      prng.nextInt(min, max)
     );
   }
 

@@ -20,6 +20,8 @@ import { ElementType } from "../discovery/element/Element";
 
 export enum TypeEnum {
   NUMERIC = "numeric",
+  INTEGER = "integer", // decimal?
+
   STRING = "string",
   BOOLEAN = "boolean",
   NULL = "null",
