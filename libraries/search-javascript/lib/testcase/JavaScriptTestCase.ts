@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Decoder, Encoding } from "@syntest/search";
+import { Decoder, Encoding, prng } from "@syntest/search";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { RootStatement } from "./statements/root/RootStatement";
@@ -45,7 +45,7 @@ export class JavaScriptTestCase extends Encoding {
 
   mutate(sampler: JavaScriptTestCaseSampler): JavaScriptTestCase {
     JavaScriptTestCase.LOGGER.debug(`Mutating test case: ${this._id}`);
-    return sampler.resampleGeneProbability
+    return prng.nextBoolean(sampler.resampleGeneProbability)
       ? sampler.sample()
       : new JavaScriptTestCase(this._root.mutate(sampler, 0));
   }
