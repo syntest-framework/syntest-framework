@@ -20,6 +20,7 @@ import { EdgeType } from "@syntest/cfg";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../Encoding";
+import { ExecutionResult } from "../ExecutionResult";
 import { SearchSubject } from "../SearchSubject";
 import {
   moreThanTwoOutgoingEdges,
@@ -41,25 +42,14 @@ export class BranchObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
   protected static LOGGER: Logger;
-  protected _subject: SearchSubject<T>;
-  protected _id: string;
-
-  /**
-   * Constructor.
-   *
-   * @param subject
-   * @param id
-   */
   constructor(
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
     subject: SearchSubject<T>,
     id: string
   ) {
-    super(approachLevel, branchDistance);
+    super(id, subject, approachLevel, branchDistance);
     BranchObjectiveFunction.LOGGER = getLogger("BranchObjectiveFunction");
-    this._subject = subject;
-    this._id = id;
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -70,11 +60,20 @@ export class BranchObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    // let's check if the node is covered
+    // check if the branch is covered
     if (executionResult.coversId(this._id)) {
       return 0;
+    } else if (this.shallow) {
+      return Number.MAX_VALUE;
+    } else {
+      return this._calculateControlFlowDistance(executionResult);
     }
+  }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  protected _calculateControlFlowDistance(
+    executionResult: ExecutionResult
+  ): number {
     // find the corresponding node inside the cfg
     const functions_ = this._subject.cfg.functions.filter(
       (function_) => function_.graph.getNodeById(this._id) !== undefined
@@ -182,14 +181,6 @@ export class BranchObjectiveFunction<
       lastEdgeType
     );
 
-    if (
-      !(typeof branchDistance === "number" && Number.isFinite(branchDistance))
-    ) {
-      // this is a dirty hack to prevent wrong branch distance numbers
-      // in the future we need to simply fix the branch distance calculation and remove this
-      branchDistance = 0.999;
-    }
-
     if (Number.isNaN(approachLevel)) {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
@@ -209,19 +200,5 @@ export class BranchObjectiveFunction<
 
     // add the distances
     return approachLevel + branchDistance;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getIdentifier(): string {
-    return this._id;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getSubject(): SearchSubject<T> {
-    return this._subject;
   }
 }

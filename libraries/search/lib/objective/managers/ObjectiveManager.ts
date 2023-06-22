@@ -38,6 +38,7 @@ import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveCom
  */
 export abstract class ObjectiveManager<T extends Encoding> {
   protected static LOGGER: Logger;
+
   /**
    * Archive of covered objectives with the fittest encoding for that objective.
    * @protected
@@ -100,6 +101,30 @@ export abstract class ObjectiveManager<T extends Encoding> {
   }
 
   /**
+   * Logic for handling covered objectives.
+   *
+   * @param objectiveFunction
+   * @param encoding
+   */
+  protected abstract _handleCoveredObjective(
+    objectiveFunction: ObjectiveFunction<T>,
+    encoding: T
+  ): ObjectiveFunction<T>[];
+
+  /**
+   * Logic for handling uncovered objectives.
+   *
+   * @param objectiveFunction
+   * @param encoding
+   * @param distance
+   */
+  protected abstract _handleUncoveredObjective(
+    objectiveFunction: ObjectiveFunction<T>,
+    encoding: T,
+    distance: number
+  ): void;
+
+  /**
    * Update the objectives.
    *
    * @param objectiveFunction
@@ -109,49 +134,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   protected abstract _updateObjectives(
     objectiveFunction: ObjectiveFunction<T>
-  ): void;
-
-  /**
-   * Update the archive.
-   *
-   * @param objectiveFunction
-   * @param encoding
-   * @protected
-   */
-  protected _updateArchive(
-    objectiveFunction: ObjectiveFunction<T>,
-    encoding: T
-  ) {
-    ObjectiveManager.LOGGER.debug("updating archive");
-    if (!this._archive.has(objectiveFunction)) {
-      ObjectiveManager.LOGGER.debug(
-        `new objective covered: ${objectiveFunction.getIdentifier()}`
-      );
-      this._archive.update(objectiveFunction, encoding);
-      return;
-    }
-
-    // If the objective is already in the archive we use secondary objectives
-    const currentEncoding = this._archive.getEncoding(objectiveFunction);
-
-    // Look at secondary objectives when two solutions are found
-    for (const secondaryObjective of this._secondaryObjectives) {
-      const comparison = secondaryObjective.compare(encoding, currentEncoding);
-
-      // If one of the two encodings is better, don't evaluate the next objectives
-      if (comparison != 0) {
-        // Override the encoding if the current one is better
-        if (comparison > 0) {
-          ObjectiveManager.LOGGER.debug(
-            "overwriting archive with better encoding"
-          );
-
-          this._archive.update(objectiveFunction, encoding);
-        }
-        break;
-      }
-    }
-  }
+  ): ObjectiveFunction<T>[];
 
   /**
    * Evaluate multiple encodings on the current objectives.
@@ -167,8 +150,9 @@ export abstract class ObjectiveManager<T extends Encoding> {
   ): Promise<void> {
     for (const encoding of encodings) {
       // If there is no budget left or a termination trigger has been triggered, stop evaluating
-      if (!budgetManager.hasBudgetLeft() || terminationManager.isTriggered())
+      if (!budgetManager.hasBudgetLeft() || terminationManager.isTriggered()) {
         break;
+      }
 
       await this.evaluateOne(encoding, budgetManager, terminationManager);
     }
@@ -189,6 +173,8 @@ export abstract class ObjectiveManager<T extends Encoding> {
     ObjectiveManager.LOGGER.debug(`Evaluating encoding ${encoding.id}`);
     // Execute the encoding
     const result = await this._runner.execute(this._subject, encoding);
+
+    // TODO: Use events for this so we can elimate the dependency on the budget manager
     budgetManager.evaluation(encoding);
 
     // Store the execution result in the encoding
@@ -196,36 +182,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // For all current objectives
     for (const objectiveFunction of this._currentObjectives) {
-      // Calculate and store the distance
-      const distance = objectiveFunction.calculateDistance(encoding);
-      if (Number.isNaN(distance)) {
-        throw new TypeError(shouldNeverHappen("ObjectiveManager"));
-      }
-      encoding.setDistance(objectiveFunction, distance);
-
-      // When the objective is covered, update the objectives and the archive
-      if (distance === 0) {
-        ObjectiveManager.LOGGER.debug(
-          `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
-            encoding.id
-          }`
-        );
-        encoding.addMetaComment(
-          `Covers objective: ${objectiveFunction.getIdentifier()}`
-        );
-
-        // Update the objectives
-        this._updateObjectives(objectiveFunction);
-
-        // Update the archive
-        this._updateArchive(objectiveFunction, encoding);
-      } else {
-        ObjectiveManager.LOGGER.debug(
-          `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
-            encoding.id
-          }`
-        );
-      }
+      this.evaluateObjective(encoding, objectiveFunction);
     }
 
     // Create separate exception objective when an exception occurred in the execution
@@ -250,9 +207,48 @@ export abstract class ObjectiveManager<T extends Encoding> {
             hash,
             result.getExceptions()
           ),
-          encoding
+          encoding,
+          false
         );
       }
+    }
+  }
+
+  protected evaluateObjective(
+    encoding: T,
+    objectiveFunction: ObjectiveFunction<T>
+  ) {
+    // Calculate and store the distance
+    const distance = objectiveFunction.calculateDistance(encoding);
+    if (Number.isNaN(distance)) {
+      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+    }
+    encoding.setDistance(objectiveFunction, distance);
+
+    // When the objective is covered, update the objectives and the archive
+    if (distance === 0) {
+      ObjectiveManager.LOGGER.debug(
+        `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
+          encoding.id
+        }`
+      );
+
+      const newObjectives = this._handleCoveredObjective(
+        objectiveFunction,
+        encoding
+      );
+
+      for (const objective of newObjectives) {
+        this.evaluateObjective(encoding, objective);
+      }
+    } else {
+      ObjectiveManager.LOGGER.debug(
+        `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
+          encoding.id
+        }`
+      );
+
+      this._handleUncoveredObjective(objectiveFunction, encoding, distance);
     }
   }
 
@@ -262,6 +258,25 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * @param subject The subject to load in
    */
   public abstract load(subject: SearchSubject<T>): void;
+
+  /**
+   * Finalize the objectives before retrieving the archive.
+   */
+  public abstract finalize(_finalPopulation: T[]): void;
+
+  /**
+   * Reset the objectives.
+   *
+   * This function is used to reset the objectives when the search subject changes.
+   *
+   * TODO: Should the archive be reset as well?
+   */
+  protected _reset(): void {
+    this._archive.clear();
+    this._currentObjectives.clear();
+    this._coveredObjectives.clear();
+    this._uncoveredObjectives.clear();
+  }
 
   /**
    * Return the uncovered objectives.
