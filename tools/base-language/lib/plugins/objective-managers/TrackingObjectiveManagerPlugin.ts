@@ -15,20 +15,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
+import {
+  Encoding,
+  ObjectiveManager,
+  TrackingObjectiveManager,
+} from "@syntest/search";
 
-import { ArgumentsObject } from "../Configuration";
+import {
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+} from "../ObjectiveManagerPlugin";
 
-export class RandomSearchPreset extends Preset {
+/**
+ * Plugin for the tracking objective manager
+ */
+export class TrackingObjectiveManagerPlugin<
+  T extends Encoding
+> extends ObjectiveManagerPlugin<T> {
   constructor() {
-    super("random", "Random preset");
+    super("tracking", "A tracking objective manager");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "random";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "tracking";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 1;
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    return new TrackingObjectiveManager(
+      options.runner,
+      options.secondaryObjectives
+    );
+  }
+
+  override getOptions() {
+    return new Map();
   }
 }
