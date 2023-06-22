@@ -54,7 +54,7 @@
     "@syntest/logging": "^0.1.0-beta.6",
     "@syntest/metric": "^0.1.0-beta.6",
     "@syntest/module": "^0.1.0-beta.18",
-    "@syntest/search": "^0.4.0-beta.34",
+    "@syntest/search": "^0.4.0-beta.36",
     "@syntest/search-javascript": "*",
     "yargs": "^17.7.2"
   },

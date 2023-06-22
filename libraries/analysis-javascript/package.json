@@ -52,7 +52,7 @@
     "@syntest/ast-visitor-javascript": "*",
     "@syntest/cfg": "^0.3.0-beta.18",
     "@syntest/logging": "^0.1.0-beta.6",
-    "@syntest/search": "^0.4.0-beta.34"
+    "@syntest/search": "^0.4.0-beta.36"
   },
   "engines": {
     "node": ">=10.24.0"

@@ -87,8 +87,6 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
 
       // Add objective
       const functionObjective = new FunctionObjectiveFunction(
-        new ApproachLevel(),
-        new BranchDistance(),
         this,
         function_.id
       );
