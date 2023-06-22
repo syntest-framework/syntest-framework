@@ -30,6 +30,7 @@ export class ApproachLevel {
     closestCoveredNode: Node;
     closestCoveredBranchTrace: Datapoint;
     lastEdgeType: boolean;
+    statementFraction: number;
   } {
     // Construct map with key as id covered and value as datapoint that covers that id
     const idsTraceMap: Map<string, Datapoint> = new Map(
@@ -39,8 +40,12 @@ export class ApproachLevel {
     // Construct set of all covered ids
     const coveredNodeIds = new Set<string>(idsTraceMap.keys());
 
-    const { approachLevel, closestCoveredBranch, lastEdgeType } =
-      this._findClosestCoveredBranch(cfg, node.id, coveredNodeIds);
+    const {
+      approachLevel,
+      closestCoveredBranch,
+      lastEdgeType,
+      statementFraction,
+    } = this._findClosestCoveredBranch(cfg, node.id, coveredNodeIds);
 
     // if closest node is not found, we return the distance to the root branch
     if (!closestCoveredBranch) {
@@ -49,6 +54,7 @@ export class ApproachLevel {
         closestCoveredNode: undefined,
         closestCoveredBranchTrace: undefined,
         lastEdgeType: undefined,
+        statementFraction: undefined,
       };
     }
 
@@ -64,9 +70,11 @@ export class ApproachLevel {
       closestCoveredNode: closestCoveredBranch,
       closestCoveredBranchTrace,
       lastEdgeType: lastEdgeType,
+      statementFraction: statementFraction,
     };
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   _findClosestCoveredBranch(
     cfg: ControlFlowGraph,
     from: string,
@@ -75,6 +83,7 @@ export class ApproachLevel {
     approachLevel: number;
     closestCoveredBranch: Node;
     lastEdgeType: boolean;
+    statementFraction: number;
   } {
     const visitedNodeIdSet = new Set<string>([from]);
     const searchQueue: [string, number][] = [[from, 0]];
@@ -83,6 +92,25 @@ export class ApproachLevel {
       const current = searchQueue.shift();
       const currentNodeId: string = current[0];
       const currentDistance: number = current[1];
+
+      // return if one of the statements within the node has been covered
+      const currentNode = cfg.getNodeById(currentNodeId);
+      let statementCount = -1;
+      for (let index = 0; index < currentNode.statements.length; index++) {
+        const statement = currentNode.statements[index];
+        if (targets.has(statement.id)) {
+          statementCount = index + 1;
+        }
+      }
+
+      if (statementCount !== -1) {
+        return {
+          approachLevel: currentDistance,
+          closestCoveredBranch: currentNode,
+          lastEdgeType: undefined, // doesnt matter because we probably got an implicit edge
+          statementFraction: statementCount / currentNode.statements.length,
+        };
+      }
 
       // get all neighbors of currently considered node
       const incomingEdges = cfg.getIncomingEdges(currentNodeId);
@@ -99,7 +127,27 @@ export class ApproachLevel {
             approachLevel: currentDistance,
             closestCoveredBranch: cfg.getNodeById(edge.source),
             lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
+            statementFraction: -1,
           };
+        } else {
+          // also return if one of the statements within the node has been covered
+          const sourceNode = cfg.getNodeById(edge.source);
+          let statementCount = -1;
+          for (let index = 0; index < sourceNode.statements.length; index++) {
+            const statement = sourceNode.statements[index];
+            if (targets.has(statement.id)) {
+              statementCount = index + 1;
+            }
+          }
+
+          if (statementCount !== -1) {
+            return {
+              approachLevel: currentDistance,
+              closestCoveredBranch: cfg.getNodeById(edge.source),
+              lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
+              statementFraction: statementCount / sourceNode.statements.length,
+            };
+          }
         }
 
         // add element to queue and visited nodes to continue search
@@ -120,6 +168,7 @@ export class ApproachLevel {
       approachLevel: -1,
       closestCoveredBranch: undefined,
       lastEdgeType: undefined,
+      statementFraction: undefined,
     };
   }
 }

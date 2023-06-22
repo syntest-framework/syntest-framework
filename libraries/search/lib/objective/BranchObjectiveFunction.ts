@@ -17,11 +17,11 @@
  */
 
 import { EdgeType } from "@syntest/cfg";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
 import {
-  lessThanTwoOutgoingEdges,
   moreThanTwoOutgoingEdges,
   shouldNeverHappen,
 } from "../util/diagnostics";
@@ -40,6 +40,7 @@ import { BranchDistance } from "./heuristics/BranchDistance";
 export class BranchObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
+  protected static LOGGER: Logger;
   protected _subject: SearchSubject<T>;
   protected _id: string;
 
@@ -56,6 +57,7 @@ export class BranchObjectiveFunction<
     id: string
   ) {
     super(approachLevel, branchDistance);
+    BranchObjectiveFunction.LOGGER = getLogger("BranchObjectiveFunction");
     this._subject = subject;
     this._id = id;
   }
@@ -96,6 +98,7 @@ export class BranchObjectiveFunction<
       closestCoveredNode,
       closestCoveredBranchTrace,
       lastEdgeType,
+      statementFraction,
     } = this.approachLevel.calculate(
       function_.graph,
       targetNode,
@@ -113,10 +116,22 @@ export class BranchObjectiveFunction<
     );
 
     if (outgoingEdges.length < 2) {
-      // weird
-      throw new Error(
-        lessThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
-      );
+      // TODO this is a hack to give guidance to the algorithm
+      // it would be better to improve the cfg with implicit branches
+      // or to atleast choose a number based on what statement has been covered in the cfg node
+      // 0.25 is based on the fact the branch distance is minimally 0.5
+      // so 0.25 is exactly between 0.5 and 0
+      if (statementFraction === undefined) {
+        throw new Error(shouldNeverHappen(""));
+      }
+      if (statementFraction === 0) {
+        throw new Error(
+          shouldNeverHappen(
+            "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
+          )
+        );
+      }
+      return approachLevel + 0.48 * statementFraction + 0.01;
     }
 
     if (outgoingEdges.length > 2) {
@@ -156,6 +171,10 @@ export class BranchObjectiveFunction<
         .find((trace) => trace.id === falseNode && trace.type === "branch");
     }
 
+    if (trace === undefined) {
+      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+    }
+
     let branchDistance = this.branchDistance.calculate(
       trace.condition_ast,
       trace.condition,
@@ -168,13 +187,6 @@ export class BranchObjectiveFunction<
     }
 
     if (Number.isNaN(branchDistance)) {
-      console.log("branch distance is wrong");
-      console.log(this.getIdentifier());
-      console.log(approachLevel);
-      console.log(branchDistance);
-      console.log(trace.condition);
-      console.log(trace.variables);
-      console.log();
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
 
@@ -183,14 +195,7 @@ export class BranchObjectiveFunction<
     }
 
     if (branchDistance === 0) {
-      console.log("branchdistance is zero");
-      console.log(this.getIdentifier());
-      console.log(approachLevel);
-      console.log(branchDistance);
-      console.log(trace.condition);
-      console.log(trace.variables);
-      console.log();
-
+      BranchObjectiveFunction.LOGGER.warn("branch distance is zero");
       branchDistance += 0.999;
     }
 
