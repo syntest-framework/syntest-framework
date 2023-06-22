@@ -109,7 +109,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   protected abstract _updateObjectives(
     objectiveFunction: ObjectiveFunction<T>
-  ): ObjectiveFunction<T>[];
+  ): void;
 
   /**
    * Update the archive.
@@ -196,7 +196,36 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // For all current objectives
     for (const objectiveFunction of this._currentObjectives) {
-      await this.evaluateObjective(encoding, objectiveFunction);
+      // Calculate and store the distance
+      const distance = objectiveFunction.calculateDistance(encoding);
+      if (Number.isNaN(distance)) {
+        throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      }
+      encoding.setDistance(objectiveFunction, distance);
+
+      // When the objective is covered, update the objectives and the archive
+      if (distance === 0) {
+        ObjectiveManager.LOGGER.debug(
+          `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
+            encoding.id
+          }`
+        );
+        encoding.addMetaComment(
+          `Covers objective: ${objectiveFunction.getIdentifier()}`
+        );
+
+        // Update the objectives
+        this._updateObjectives(objectiveFunction);
+
+        // Update the archive
+        this._updateArchive(objectiveFunction, encoding);
+      } else {
+        ObjectiveManager.LOGGER.debug(
+          `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
+            encoding.id
+          }`
+        );
+      }
     }
 
     // Create separate exception objective when an exception occurred in the execution
@@ -224,46 +253,6 @@ export abstract class ObjectiveManager<T extends Encoding> {
           encoding
         );
       }
-    }
-  }
-
-  protected async evaluateObjective(
-    encoding: T,
-    objectiveFunction: ObjectiveFunction<T>
-  ) {
-    // Calculate and store the distance
-    const distance = objectiveFunction.calculateDistance(encoding);
-    if (Number.isNaN(distance)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
-    }
-    encoding.setDistance(objectiveFunction, distance);
-
-    // When the objective is covered, update the objectives and the archive
-    if (distance === 0) {
-      ObjectiveManager.LOGGER.debug(
-        `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
-          encoding.id
-        }`
-      );
-      encoding.addMetaComment(
-        `Covers objective: ${objectiveFunction.getIdentifier()}`
-      );
-
-      // Update the objectives
-      const newObjectives = this._updateObjectives(objectiveFunction);
-
-      // Update the archive
-      this._updateArchive(objectiveFunction, <T>encoding.copy());
-
-      for (const objective of newObjectives) {
-        await this.evaluateObjective(encoding, objective);
-      }
-    } else {
-      ObjectiveManager.LOGGER.debug(
-        `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
-          encoding.id
-        }`
-      );
     }
   }
 

@@ -34,17 +34,13 @@ export class UncoveredObjectiveManager<
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>
-  ): ObjectiveFunction<T>[] {
+  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
     this._currentObjectives.delete(objectiveFunction);
 
     // Add objective to the covered objectives
     this._coveredObjectives.add(objectiveFunction);
-
-    return [];
   }
 
   /**

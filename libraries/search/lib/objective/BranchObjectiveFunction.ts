@@ -182,6 +182,14 @@ export class BranchObjectiveFunction<
       lastEdgeType
     );
 
+    if (
+      !(typeof branchDistance === "number" && Number.isFinite(branchDistance))
+    ) {
+      // this is a dirty hack to prevent wrong branch distance numbers
+      // in the future we need to simply fix the branch distance calculation and remove this
+      branchDistance = 0.999;
+    }
+
     if (Number.isNaN(approachLevel)) {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
@@ -198,10 +206,6 @@ export class BranchObjectiveFunction<
       BranchObjectiveFunction.LOGGER.warn("branch distance is zero");
       branchDistance += 0.999;
     }
-
-    // if (branchDistance === 0 && approachLevel !== 0) {
-    //   throw new Error(shouldNeverHappen("ObjectiveManager"));
-    // }
 
     // add the distances
     return approachLevel + branchDistance;
