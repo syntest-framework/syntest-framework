@@ -109,7 +109,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
   protected abstract _handleCoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
     encoding: T
-  ): void;
+  ): ObjectiveFunction<T>[];
 
   /**
    * Logic for handling uncovered objectives.
@@ -233,7 +233,14 @@ export abstract class ObjectiveManager<T extends Encoding> {
         }`
       );
 
-      this._handleCoveredObjective(objectiveFunction, encoding);
+      const newObjectives = this._handleCoveredObjective(
+        objectiveFunction,
+        encoding
+      );
+
+      for (const objective of newObjectives) {
+        this.evaluateObjective(encoding, objective);
+      }
     } else {
       ObjectiveManager.LOGGER.debug(
         `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${

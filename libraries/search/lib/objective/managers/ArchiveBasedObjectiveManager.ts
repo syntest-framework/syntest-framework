@@ -35,12 +35,14 @@ export abstract class ArchiveBasedObjectiveManager<
   protected _handleCoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
     encoding: T
-  ): void {
+  ): ObjectiveFunction<T>[] {
     // Update the objectives
-    this._updateObjectives(objectiveFunction);
+    const childObjectives = this._updateObjectives(objectiveFunction);
 
     // Update the archive
     this._updateArchive(objectiveFunction, encoding);
+
+    return childObjectives;
   }
 
   /**
