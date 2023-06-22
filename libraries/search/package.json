@@ -1,6 +1,6 @@
 {
   "name": "@syntest/search",
-  "version": "0.4.0-beta.35",
+  "version": "0.4.0-beta.40",
   "description": "The common core of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -46,7 +46,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.1.0-beta.7",
+    "@syntest/analysis": "^0.1.0-beta.8",
     "@syntest/cfg": "*",
     "@syntest/logging": "*",
     "bignumber.js": "9.0.1",

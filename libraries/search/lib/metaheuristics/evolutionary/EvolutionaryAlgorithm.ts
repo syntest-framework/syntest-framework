@@ -38,13 +38,6 @@ export abstract class EvolutionaryAlgorithm<
   protected _encodingSampler: EncodingSampler<T>;
 
   /**
-   * The population of the EA.
-   * This population is evolved over time and becomes more optimized.
-   * @protected
-   */
-  protected _population: T[];
-
-  /**
    * The size of the population.
    * @protected
    */
@@ -73,8 +66,6 @@ export abstract class EvolutionaryAlgorithm<
     this._encodingSampler = encodingSampler;
     this._procreation = procreation;
     this._populationSize = populationSize;
-
-    this._population = [];
   }
 
   /**
