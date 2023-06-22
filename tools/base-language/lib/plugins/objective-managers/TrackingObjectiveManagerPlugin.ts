@@ -15,29 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding, RandomSearch, SearchAlgorithm } from "@syntest/search";
+import {
+  Encoding,
+  ObjectiveManager,
+  TrackingObjectiveManager,
+} from "@syntest/search";
 
 import {
-  SearchAlgorithmOptions,
-  SearchAlgorithmPlugin,
-} from "../SearchAlgorithmPlugin";
+  ObjectiveManagerOptions,
+  ObjectiveManagerPlugin,
+} from "../ObjectiveManagerPlugin";
 
 /**
- * Plugin for RandomSearch
- *
- * @author Dimitri Stallenberg
+ * Plugin for the tracking objective manager
  */
-export class RandomSearchPlugin<
+export class TrackingObjectiveManagerPlugin<
   T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+> extends ObjectiveManagerPlugin<T> {
   constructor() {
-    super("random", "Random search algorithm");
+    super("tracking", "A tracking objective manager");
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new RandomSearch(options.objectiveManager, options.encodingSampler);
+  createObjectiveManager(
+    options: ObjectiveManagerOptions<T>
+  ): ObjectiveManager<T> {
+    return new TrackingObjectiveManager(
+      options.runner,
+      options.secondaryObjectives
+    );
   }
 
   override getOptions() {

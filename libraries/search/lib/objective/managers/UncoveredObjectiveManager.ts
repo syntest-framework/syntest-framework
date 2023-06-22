@@ -20,7 +20,7 @@ import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
-import { ObjectiveManager } from "./ObjectiveManager";
+import { ArchiveBasedObjectiveManager } from "./ArchiveBasedObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on uncovered objectives.
@@ -29,18 +29,22 @@ import { ObjectiveManager } from "./ObjectiveManager";
  */
 export class UncoveredObjectiveManager<
   T extends Encoding
-> extends ObjectiveManager<T> {
+> extends ArchiveBasedObjectiveManager<T> {
   /**
    * @inheritDoc
    * @protected
    */
-  protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
+  protected _updateObjectives(
+    objectiveFunction: ObjectiveFunction<T>
+  ): ObjectiveFunction<T>[] {
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
     this._currentObjectives.delete(objectiveFunction);
 
     // Add objective to the covered objectives
     this._coveredObjectives.add(objectiveFunction);
+
+    return [];
   }
 
   /**
@@ -50,11 +54,12 @@ export class UncoveredObjectiveManager<
     // Set the subject
     this._subject = subject;
 
-    // TODO: Reset the objective manager
-    const objectives = subject.getObjectives();
+    // Reset the objective manager
+    this._reset();
 
+    // Add all objectives to both the uncovered objectives and the current objectives
+    const objectives = subject.getObjectives();
     for (const objective of objectives) {
-      // Add all objectives to both the uncovered objectives and the current objectives
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
     }

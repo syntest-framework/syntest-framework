@@ -15,12 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { getLogger } from "@syntest/logging";
+
 import { ControlFlowProgram } from "../ControlFlowProgram";
 import {
   cannotMergeEntryAndExit,
   exactlyOneEdgeShouldBeRemoved,
   exactlyOneNodeShouldBeRemoved,
   notDirectlyConnected,
+  shouldNeverHappen,
   tooManyIncoming,
   tooManyOutgoing,
 } from "../diagnostics";
@@ -85,6 +88,21 @@ export function edgeContraction(
       }
     );
   } while (changed);
+
+  // safety check
+  for (const edge of controlFlowGraph.edges) {
+    const outgoingFromSource = controlFlowGraph.getOutgoingEdges(edge.source);
+    const incomingToTarget = controlFlowGraph.getIncomingEdges(edge.target);
+
+    if (outgoingFromSource.length > 1 && incomingToTarget.length > 1) {
+      getLogger("edgeContration").warn(
+        shouldNeverHappen(
+          `Missing placeholder node: \n${edge.source}\n${edge.target}`
+        )
+      );
+      // throw new Error(shouldNeverHappen(`Missing placeholder node: \n${edge.source}\n${edge.target}`))
+    }
+  }
 
   return new ContractedControlFlowGraph(
     controlFlowGraph.entry,
