@@ -23,7 +23,7 @@ export * from "./lib/plugins/procreation-operators/DefaultProcreationPlugin";
 
 export * from "./lib/plugins/search-algorithms/MOSAFamilyPlugin";
 export * from "./lib/plugins/search-algorithms/PSOPlugin";
-export * from "./lib/plugins/search-algorithms/DynaPSOPlugin";
+export * from "./lib/plugins/search-algorithms/DynaMOSAPSOPlugin";
 export * from "./lib/plugins/search-algorithms/NSGAIIPlugin";
 export * from "./lib/plugins/search-algorithms/RandomSearchPlugin";
 

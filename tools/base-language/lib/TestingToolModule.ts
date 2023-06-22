@@ -26,7 +26,7 @@ import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/S
 import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralUncoveredObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
-import { DynaPSOPlugin } from "./plugins/search-algorithms/DynaPSOPlugin";
+import { DynaMOSAPSOPlugin } from "./plugins/search-algorithms/DynaMOSAPSOPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { PSOPlugin } from "./plugins/search-algorithms/PSOPlugin";
@@ -65,7 +65,7 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
     moduleManager.registerPlugin(this, new PSOPlugin());
-    moduleManager.registerPlugin(this, new DynaPSOPlugin());
+    moduleManager.registerPlugin(this, new DynaMOSAPSOPlugin());
 
     moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 

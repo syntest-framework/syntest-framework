@@ -35,7 +35,7 @@ export class DynaMOSAPSOPreset extends Preset {
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaPSO";
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaMOSAPSO";
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
       "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";

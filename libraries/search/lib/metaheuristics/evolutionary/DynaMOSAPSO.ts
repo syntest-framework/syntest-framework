@@ -34,7 +34,7 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
  *
  * @author Diego Viero
  */
-export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
+export class DynaMOSAPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   protected static override LOGGER: Logger;
   private W = 0.5;
   private c1 = 0.25;
@@ -56,7 +56,7 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     this.maximumVelocity = Number.NEGATIVE_INFINITY;
     this.minimumVelocity = Number.POSITIVE_INFINITY;
 
-    DynaPSO.LOGGER = getLogger("DynaPSO");
+    DynaMOSAPSO.LOGGER = getLogger("DynaMOSAPSO");
   }
 
   protected override _environmentalSelection(size: number): void {
@@ -73,7 +73,7 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       return; // the search should end
 
     // non-dominated sorting
-    DynaPSO.LOGGER.debug(
+    DynaMOSAPSO.LOGGER.debug(
       `Number of objectives = ${
         this._objectiveManager.getCurrentObjectives().size
       }`
@@ -99,7 +99,7 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     let remain = Math.max(size, F[0].length);
     let index = 0;
 
-    DynaPSO.LOGGER.debug(`First front size = ${F[0].length}`);
+    DynaMOSAPSO.LOGGER.debug(`First front size = ${F[0].length}`);
 
     // Obtain the next front
     let currentFront: T[] = F[index];
@@ -460,14 +460,14 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     const fronts: T[][] = [[]];
 
     if (objectiveFunctions === null) {
-      DynaPSO.LOGGER.debug(
+      DynaMOSAPSO.LOGGER.debug(
         "It looks like a bug in MOSA: the set of objectives cannot be null"
       );
       return fronts;
     }
 
     if (objectiveFunctions.size === 0) {
-      DynaPSO.LOGGER.debug("Trivial case: no objectives for the sorting");
+      DynaMOSAPSO.LOGGER.debug("Trivial case: no objectives for the sorting");
       return fronts;
     }
 
@@ -479,9 +479,9 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       individual.setRank(0);
     }
 
-    DynaPSO.LOGGER.debug(`First front size: ${frontZero.length}`);
-    DynaPSO.LOGGER.debug(`Pop size: ${this._populationSize}`);
-    DynaPSO.LOGGER.debug(`Pop + Off size: ${population.length}`);
+    DynaMOSAPSO.LOGGER.debug(`First front size: ${frontZero.length}`);
+    DynaMOSAPSO.LOGGER.debug(`Pop size: ${this._populationSize}`);
+    DynaMOSAPSO.LOGGER.debug(`Pop + Off size: ${population.length}`);
 
     // compute the remaining non-dominated Fronts
     const remainingSolutions: T[] = population;
@@ -516,10 +516,10 @@ export class DynaPSO<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       frontIndex += 1;
     }
 
-    DynaPSO.LOGGER.debug(`Number of fronts : ${fronts.length}`);
-    DynaPSO.LOGGER.debug(`Front zero size: ${fronts[0].length}`);
-    DynaPSO.LOGGER.debug(`# selected solutions: ${selectedSolutions}`);
-    DynaPSO.LOGGER.debug(`Pop size: ${this._populationSize}`);
+    DynaMOSAPSO.LOGGER.debug(`Number of fronts : ${fronts.length}`);
+    DynaMOSAPSO.LOGGER.debug(`Front zero size: ${fronts[0].length}`);
+    DynaMOSAPSO.LOGGER.debug(`# selected solutions: ${selectedSolutions}`);
+    DynaMOSAPSO.LOGGER.debug(`Pop size: ${this._populationSize}`);
     return fronts;
   }
 

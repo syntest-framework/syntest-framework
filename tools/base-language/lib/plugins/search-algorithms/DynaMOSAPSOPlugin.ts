@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DynaPSO, Encoding, SearchAlgorithm } from "@syntest/search";
+import { DynaMOSAPSO, Encoding, SearchAlgorithm } from "@syntest/search";
 
 import {
   SearchAlgorithmOptions,
@@ -27,17 +27,17 @@ import {
  *
  * @author Diego Viero
  */
-export class DynaPSOPlugin<
+export class DynaMOSAPSOPlugin<
   T extends Encoding
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("DynaPSO", "Dynamic Particle Swarm Optimization");
+    super("DynaMOSAPSO", "Dynamic Particle Swarm Optimization");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    return new DynaPSO<T>(
+    return new DynaMOSAPSO<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,
