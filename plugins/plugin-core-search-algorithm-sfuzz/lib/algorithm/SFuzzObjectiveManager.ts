@@ -16,13 +16,10 @@
  * limitations under the License.
  */
 
-import * as crypto from "node:crypto";
-
 import {
-  BudgetManager,
   Encoding,
-  ExceptionObjectiveFunction,
-  StructuralObjectiveManager,
+  ObjectiveFunction,
+  UncoveredObjectiveManager,
 } from "@syntest/search";
 
 /**
@@ -37,67 +34,20 @@ import {
  */
 export class SFuzzObjectiveManager<
   T extends Encoding
-> extends StructuralObjectiveManager<T> {
+> extends UncoveredObjectiveManager<T> {
   /**
    * @inheritdoc
    */
-  public override async evaluateOne(
+  protected override _handleUncoveredObjective(
+    objectiveFunction: ObjectiveFunction<T>,
     encoding: T,
-    budgetManager: BudgetManager<T>
-  ): Promise<void> {
-    // Execute the encoding
-    const result = await this._runner.execute(this._subject, encoding);
-    budgetManager.evaluation(encoding);
-
-    // Store the execution result in the encoding
-    encoding.setExecutionResult(result);
-
-    // For all current objectives
-    for (const objectiveFunction of this._currentObjectives) {
-      // Calculate and store the distance
-      const distance = objectiveFunction.calculateDistance(encoding);
-      if (distance > 1) {
-        // This is to ignore the approach level
-        encoding.setDistance(objectiveFunction, 1);
-      } else {
-        encoding.setDistance(objectiveFunction, distance);
-      }
-
-      // When the objective is covered, update the objectives and the archive
-      if (distance === 0) {
-        // Update the objectives
-        this._updateObjectives(objectiveFunction);
-
-        // Update the archive
-        this._updateArchive(objectiveFunction, encoding);
-      }
-    }
-
-    // Create separate exception objective when an exception occurred in the execution
-    if (result.hasExceptions()) {
-      // TODO there must be a better way
-      //  investigate error patterns somehow
-
-      const hash = crypto
-        .createHash("md5")
-        .update(result.getExceptions())
-        .digest("hex");
-
-      const numberOfExceptions = this._archive
-        .getObjectives()
-        .filter((objective) => objective instanceof ExceptionObjectiveFunction)
-        .filter((objective) => objective.getIdentifier() === hash).length;
-      if (numberOfExceptions === 0) {
-        // TODO this makes the archive become too large crashing the tool
-        this._archive.update(
-          new ExceptionObjectiveFunction(
-            this._subject,
-            hash,
-            result.getExceptions()
-          ),
-          encoding
-        );
-      }
+    distance: number
+  ): void {
+    if (distance > 1) {
+      // This is to ignore the approach level
+      encoding.setDistance(objectiveFunction, 1);
+    } else {
+      encoding.setDistance(objectiveFunction, distance);
     }
   }
 }

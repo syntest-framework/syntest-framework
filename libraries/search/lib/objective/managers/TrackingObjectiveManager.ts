@@ -23,11 +23,12 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
 import { ArchiveBasedObjectiveManager } from "./ArchiveBasedObjectiveManager";
 
 /**
- * Objective manager that only evaluates an encoding on uncovered objectives.
+ * An objective manager that only tracks if an objective is covered
+ * but doesn't provide any guidance.
  *
  * @author Mitchell Olsthoorn
  */
-export class UncoveredObjectiveManager<
+export class TrackingObjectiveManager<
   T extends Encoding
 > extends ArchiveBasedObjectiveManager<T> {
   /**
@@ -35,9 +36,8 @@ export class UncoveredObjectiveManager<
    * @protected
    */
   protected _updateObjectives(objectiveFunction: ObjectiveFunction<T>): void {
-    // Remove objective from the current and uncovered objectives
+    // Remove objective from the uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
-    this._currentObjectives.delete(objectiveFunction);
 
     // Add objective to the covered objectives
     this._coveredObjectives.add(objectiveFunction);
@@ -56,6 +56,9 @@ export class UncoveredObjectiveManager<
     // Add all objectives to both the uncovered objectives and the current objectives
     const objectives = subject.getObjectives();
     for (const objective of objectives) {
+      // If the objective is a control flow based objective, set the shallow flag
+      objective.shallow = true;
+
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
     }

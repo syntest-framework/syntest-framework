@@ -21,6 +21,7 @@ import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
+import { PopulationBasedObjectiveManager } from "./PopulationBasedObjectiveManager";
 
 /**
  * A simple objective manager that always evaluates an encoding on all objectives.
@@ -29,7 +30,20 @@ import { ObjectiveManager } from "./ObjectiveManager";
  */
 export class SimpleObjectiveManager<
   T extends Encoding
-> extends ObjectiveManager<T> {
+> extends PopulationBasedObjectiveManager<T> {
+  /**
+   * @inheritDoc
+   * @protected
+   * @override
+   */
+  protected _updateArchive(
+    objectiveFunction: ObjectiveFunction<T>,
+    encoding: T
+  ) {
+    ObjectiveManager.LOGGER.debug("updating archive");
+    this._archive.update(objectiveFunction, encoding, true);
+  }
+
   /**
    * @inheritDoc
    * @protected
@@ -49,11 +63,12 @@ export class SimpleObjectiveManager<
     // Set the subject
     this._subject = subject;
 
-    // TODO: Reset the objective manager
-    const objectives = subject.getObjectives();
+    // Reset the objective manager
+    this._reset();
 
+    // Add all objectives to both the uncovered objectives and the current objectives
+    const objectives = subject.getObjectives();
     for (const objective of objectives) {
-      // Add all objectives to both the uncovered objectives and the current objectives
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
     }
