@@ -20,6 +20,7 @@ import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
+import { shouldNeverHappen } from "./util/diagnostics";
 
 /**
  * Archive that keeps track of the fittest encodings for each covered objective.
@@ -82,28 +83,32 @@ export class Archive<T extends Encoding> {
    *
    * This function will overwrite the current encoding for the specified objective function.
    *
-   * TODO: possibly throw an error when the encoding is already assigned to the objective function
-   * TODO: Decide if we should match on the id or the equality of the encoding
-   *
    * @param objectiveFunction The objective to update
    * @param encoding The new encoding
+   * @param keepOld Whether to keep the old encoding in the archive
    */
-  update(objectiveFunction: ObjectiveFunction<T>, encoding: T): void {
+  update(
+    objectiveFunction: ObjectiveFunction<T>,
+    encoding: T,
+    keepOld: boolean
+  ): void {
     const old_encoding = this._map.get(objectiveFunction);
 
     // Remove the old encoding from the uses map
-    if (old_encoding && old_encoding.id !== encoding.id) {
+    if (old_encoding && old_encoding !== encoding) {
       const uses = this._uses.get(old_encoding);
       uses.splice(uses.indexOf(objectiveFunction), 1);
-      if (uses.length === 0) {
+      if (uses.length === 0 && !keepOld) {
         this._uses.delete(old_encoding);
       }
     }
 
     // Do not update if the encoding is already assigned to the objective function
-    if (old_encoding && old_encoding.id === encoding.id) {
+    if (old_encoding && old_encoding === encoding) {
       Archive.LOGGER.debug("encoding already assigned to objective function");
-      return;
+      throw new Error(
+        shouldNeverHappen("encoding already assigned to objective function")
+      );
     }
 
     // Add the encoding to the archive
@@ -128,8 +133,16 @@ export class Archive<T extends Encoding> {
    */
   merge(other: Archive<T>): void {
     for (const key of other.getObjectives()) {
-      this.update(key, other.getEncoding(key));
+      this.update(key, other.getEncoding(key), true);
     }
+  }
+
+  /**
+   * Clears the archive.
+   */
+  clear(): void {
+    this._map.clear();
+    this._uses.clear();
   }
 
   /**
