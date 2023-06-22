@@ -15,11 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum ObjectiveType {
-  PATH = "path",
-  EXCEPTION = "exception",
-  LINE = "line",
-  FUNCTION = "function",
-  BRANCH = "branch",
-  IMPLICIT_BRANCH = "implicit-branch",
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
+
+import { ArgumentsObject } from "../Configuration";
+
+export class RandomSearchPreset extends Preset {
+  constructor() {
+    super("random", "Random preset");
+  }
+
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "random";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "tracking";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 1;
+  }
 }

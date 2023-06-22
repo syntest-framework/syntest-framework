@@ -202,6 +202,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 0,
       closestCoveredBranch: cfgMini.getNodeById(cfgMini.getParentNode("1")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -217,6 +219,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 0,
       closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("D")),
+      lastEdgeType: false,
+      statementFraction: -1,
     });
   });
 
@@ -232,6 +236,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 1,
       closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("C")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -247,6 +253,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 0,
       closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("D")),
+      lastEdgeType: false,
+      statementFraction: -1,
     });
   });
 
@@ -262,6 +270,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 1,
       closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("A")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -277,6 +287,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 2,
       closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("A")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -304,6 +316,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 0,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("C")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -331,6 +345,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 0,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("F")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -358,6 +374,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 1,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("D")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -385,6 +403,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 1,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("F")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -412,6 +432,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 0,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("P")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -427,6 +449,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 2,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("C")),
+      lastEdgeType: false,
+      statementFraction: -1,
     });
   });
 
@@ -442,6 +466,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 2,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("C")),
+      lastEdgeType: false,
+      statementFraction: -1,
     });
   });
 
@@ -457,6 +483,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 3,
       closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("A")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -472,6 +500,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 1,
       closestCoveredBranch: CFG3.getNodeById(CFG3.getParentNode("A")),
+      lastEdgeType: true,
+      statementFraction: -1,
     });
   });
 
@@ -487,6 +517,8 @@ describe("CFG ancestors search", function () {
     ).to.eql({
       approachLevel: 2,
       closestCoveredBranch: CFG3.getNodeById(CFG3.getParentNode("C")),
+      lastEdgeType: false,
+      statementFraction: -1,
     });
   });
 });

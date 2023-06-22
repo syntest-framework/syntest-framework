@@ -17,11 +17,12 @@
  */
 
 import { EdgeType } from "@syntest/cfg";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../Encoding";
+import { ExecutionResult } from "../ExecutionResult";
 import { SearchSubject } from "../SearchSubject";
 import {
-  lessThanTwoOutgoingEdges,
   moreThanTwoOutgoingEdges,
   shouldNeverHappen,
 } from "../util/diagnostics";
@@ -40,26 +41,18 @@ import { BranchDistance } from "./heuristics/BranchDistance";
 export class BranchObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
-  protected _subject: SearchSubject<T>;
-  protected _id: string;
-
-  /**
-   * Constructor.
-   *
-   * @param subject
-   * @param id
-   */
+  protected static LOGGER: Logger;
   constructor(
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
     subject: SearchSubject<T>,
     id: string
   ) {
-    super(approachLevel, branchDistance);
-    this._subject = subject;
-    this._id = id;
+    super(id, subject, approachLevel, branchDistance);
+    BranchObjectiveFunction.LOGGER = getLogger("BranchObjectiveFunction");
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
 
@@ -67,11 +60,20 @@ export class BranchObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    // let's check if the node is covered
+    // check if the branch is covered
     if (executionResult.coversId(this._id)) {
       return 0;
+    } else if (this.shallow) {
+      return Number.MAX_VALUE;
+    } else {
+      return this._calculateControlFlowDistance(executionResult);
     }
+  }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  protected _calculateControlFlowDistance(
+    executionResult: ExecutionResult
+  ): number {
     // find the corresponding node inside the cfg
     const functions_ = this._subject.cfg.functions.filter(
       (function_) => function_.graph.getNodeById(this._id) !== undefined
@@ -90,16 +92,22 @@ export class BranchObjectiveFunction<
     }
 
     // Find approach level and ancestor based on node and covered nodes
-    const { approachLevel, closestCoveredNode, closestCoveredBranchTrace } =
-      this.approachLevel.calculate(
-        function_.graph,
-        targetNode,
-        executionResult.getTraces()
-      );
+    const {
+      approachLevel,
+      closestCoveredNode,
+      closestCoveredBranchTrace,
+      lastEdgeType,
+      statementFraction,
+    } = this.approachLevel.calculate(
+      function_.graph,
+      targetNode,
+      executionResult.getTraces()
+    );
 
     if (closestCoveredNode === undefined) {
-      // weird
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      // if closest node is not found, we return the distance to the root branch
+      // this happens when the function is not entered at all
+      return Number.MAX_VALUE;
     }
 
     const outgoingEdges = function_.graph.getOutgoingEdges(
@@ -107,10 +115,22 @@ export class BranchObjectiveFunction<
     );
 
     if (outgoingEdges.length < 2) {
-      // weird
-      throw new Error(
-        lessThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
-      );
+      // TODO this is a hack to give guidance to the algorithm
+      // it would be better to improve the cfg with implicit branches
+      // or to atleast choose a number based on what statement has been covered in the cfg node
+      // 0.25 is based on the fact the branch distance is minimally 0.5
+      // so 0.25 is exactly between 0.5 and 0
+      if (statementFraction === undefined) {
+        throw new Error(shouldNeverHappen(""));
+      }
+      if (statementFraction === 0) {
+        throw new Error(
+          shouldNeverHappen(
+            "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
+          )
+        );
+      }
+      return approachLevel + 0.48 * statementFraction + 0.01;
     }
 
     if (outgoingEdges.length > 2) {
@@ -132,27 +152,34 @@ export class BranchObjectiveFunction<
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
-    const trueOrFalse = trueEdge.target === targetNode.id;
-
     // if closest covered node is not found, we return the distance to the root branch
     if (!closestCoveredBranchTrace) {
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
-    let branchDistance = this.branchDistance.calculate(
-      closestCoveredBranchTrace.condition_ast,
-      closestCoveredBranchTrace.condition,
-      closestCoveredBranchTrace.variables,
-      trueOrFalse
-    );
-
-    if (
-      !(typeof branchDistance === "number" && Number.isFinite(branchDistance))
-    ) {
-      // this is a dirty hack to prevent wrong branch distance numbers
-      // in the future we need to simply fix the branch distance calculation and remove this
-      branchDistance = 0.999;
+    let trace;
+    if (lastEdgeType) {
+      const trueNode = trueEdge.target;
+      trace = executionResult
+        .getTraces()
+        .find((trace) => trace.id === trueNode && trace.type === "branch");
+    } else {
+      const falseNode = falseEdge.target;
+      trace = executionResult
+        .getTraces()
+        .find((trace) => trace.id === falseNode && trace.type === "branch");
     }
+
+    if (trace === undefined) {
+      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+    }
+
+    let branchDistance = this.branchDistance.calculate(
+      trace.condition_ast,
+      trace.condition,
+      trace.variables,
+      lastEdgeType
+    );
 
     if (Number.isNaN(approachLevel)) {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
@@ -166,21 +193,12 @@ export class BranchObjectiveFunction<
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
 
+    if (branchDistance === 0) {
+      BranchObjectiveFunction.LOGGER.warn("branch distance is zero");
+      branchDistance += 0.999;
+    }
+
     // add the distances
     return approachLevel + branchDistance;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getIdentifier(): string {
-    return this._id;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getSubject(): SearchSubject<T> {
-    return this._subject;
   }
 }
