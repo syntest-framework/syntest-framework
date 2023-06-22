@@ -58,10 +58,13 @@ export * from "./lib/objective/FunctionObjectiveFunction";
 export * from "./lib/objective/ImplicitBranchObjectiveFunction";
 export * from "./lib/objective/ObjectiveFunction";
 
+export * from "./lib/objective/managers/ArchiveBasedObjectiveManager";
 export * from "./lib/objective/managers/ObjectiveManager";
+export * from "./lib/objective/managers/PopulationBasedObjectiveManager";
 export * from "./lib/objective/managers/SimpleObjectiveManager";
 export * from "./lib/objective/managers/StructuralObjectiveManager";
 export * from "./lib/objective/managers/StructuralUncoveredObjectiveManager";
+export * from "./lib/objective/managers/TrackingObjectiveManager";
 export * from "./lib/objective/managers/UncoveredObjectiveManager";
 
 export * from "./lib/objective/secondary/LengthObjectiveComparator";
