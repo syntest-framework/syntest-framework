@@ -45,18 +45,4 @@ export class FunctionObjectiveFunction<
 
     return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
   }
-
-  /**
-   * @inheritDoc
-   */
-  getIdentifier(): string {
-    return this._id;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getSubject(): SearchSubject<T> {
-    return this._subject;
-  }
 }

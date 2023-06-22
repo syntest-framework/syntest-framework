@@ -167,18 +167,4 @@ export class BranchObjectiveFunction<
     // add the distances
     return approachLevel + branchDistance;
   }
-
-  /**
-   * @inheritDoc
-   */
-  getIdentifier(): string {
-    return this._id;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getSubject(): SearchSubject<T> {
-    return this._subject;
-  }
 }

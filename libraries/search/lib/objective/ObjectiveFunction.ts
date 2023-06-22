@@ -71,10 +71,14 @@ export abstract class ObjectiveFunction<T extends Encoding> {
   /**
    * Return the identifier of the objective.
    */
-  abstract getIdentifier(): string;
+  public getIdentifier(): string {
+    return this._id;
+  }
 
   /**
    * Return the subject of the objective.
    */
-  abstract getSubject(): SearchSubject<T>;
+  public getSubject(): SearchSubject<T> {
+    return this._subject;
+  }
 }

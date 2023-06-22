@@ -48,18 +48,4 @@ export class ExceptionObjectiveFunction<
     // So the distance is always zero.
     throw new Error(shouldNeverHappen("method not implemented."));
   }
-
-  /**
-   * @inheritDoc
-   */
-  getIdentifier(): string {
-    return this._id;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getSubject(): SearchSubject<T> {
-    return this._subject;
-  }
 }
