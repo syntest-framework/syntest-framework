@@ -52,7 +52,7 @@ export abstract class PopulationBasedObjectiveManager<
   }
 
   /**
-   * @inheritdoc
+   * The finalization step is used to update the archive with the final population.
    */
   public override finalize(finalPopulation: T[]): void {
     for (const encoding of finalPopulation) {

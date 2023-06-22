@@ -41,18 +41,13 @@ import { BranchDistance } from "./heuristics/BranchDistance";
 export class BranchObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
-  protected _subject: SearchSubject<T>;
-  protected _id: string;
-
   constructor(
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
     subject: SearchSubject<T>,
     id: string
   ) {
-    super(approachLevel, branchDistance);
-    this._subject = subject;
-    this._id = id;
+    super(id, subject, approachLevel, branchDistance);
   }
 
   calculateDistance(encoding: T): number {

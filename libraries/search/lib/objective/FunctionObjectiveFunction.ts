@@ -31,13 +31,8 @@ import { ObjectiveFunction } from "./ObjectiveFunction";
 export class FunctionObjectiveFunction<
   T extends Encoding
 > extends ObjectiveFunction<T> {
-  protected _subject: SearchSubject<T>;
-  protected _id: string;
-
   constructor(subject: SearchSubject<T>, id: string) {
-    super();
-    this._subject = subject;
-    this._id = id;
+    super(id, subject);
   }
 
   /**

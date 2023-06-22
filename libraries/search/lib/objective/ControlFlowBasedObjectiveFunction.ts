@@ -17,6 +17,7 @@
  */
 
 import { Encoding } from "../Encoding";
+import { SearchSubject } from "../SearchSubject";
 
 import { ApproachLevel } from "./heuristics/ApproachLevel";
 import { BranchDistance } from "./heuristics/BranchDistance";
@@ -33,8 +34,13 @@ export abstract class ControlFlowBasedObjectiveFunction<
   protected approachLevel: ApproachLevel;
   protected branchDistance: BranchDistance;
 
-  constructor(approachLevel: ApproachLevel, branchDistance: BranchDistance) {
-    super();
+  constructor(
+    id: string,
+    subject: SearchSubject<T>,
+    approachLevel: ApproachLevel,
+    branchDistance: BranchDistance
+  ) {
+    super(id, subject);
     this.approachLevel = approachLevel;
     this.branchDistance = branchDistance;
   }

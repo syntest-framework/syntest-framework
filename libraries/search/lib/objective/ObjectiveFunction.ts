@@ -25,6 +25,9 @@ import { SearchSubject } from "../SearchSubject";
  * @author Mitchell Olsthoorn
  */
 export abstract class ObjectiveFunction<T extends Encoding> {
+  protected _id: string;
+  protected _subject: SearchSubject<T>;
+
   /**
    * Indicates if the distance should be shallow or deep.
    *
@@ -36,7 +39,9 @@ export abstract class ObjectiveFunction<T extends Encoding> {
    */
   protected shallowDistance: boolean;
 
-  constructor() {
+  constructor(id: string, subject: SearchSubject<T>) {
+    this._id = id;
+    this._subject = subject;
     this.shallowDistance = false;
   }
 
