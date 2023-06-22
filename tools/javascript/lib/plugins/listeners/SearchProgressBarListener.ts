@@ -71,12 +71,14 @@ export class SearchProgressBarListener extends EventListenerPlugin {
           name: subject.name,
           value: [
             ...searchAlgorithm.getObjectiveManager().getCoveredObjectives(),
-          ].filter((coveredObjective) =>
-            originalObjectives.find(
-              (objective) =>
-                objective.getIdentifier() === coveredObjective.getIdentifier()
-            )
-          ).length,
+          ]
+            // filter out the exception objectives
+            .filter((coveredObjective) =>
+              originalObjectives.find(
+                (objective) =>
+                  objective.getIdentifier() === coveredObjective.getIdentifier()
+              )
+            ).length,
           maxValue: originalObjectives.length,
           meta: `${budgetManager.getBudget()}`,
         });

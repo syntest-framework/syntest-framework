@@ -357,15 +357,6 @@ export class JavaScriptLauncher extends Launcher {
       `${timeInMs}`
     );
 
-    // const maps = this.rootContext.getTypeModel().calculateProbabilitiesForFile(false, '/Users/dimitrist/Documents/git/syntest/syntest-javascript-benchmark/lodash/truncate.js')
-
-    // for (const [id, map] of maps.entries()) {
-    //   console.log(id)
-    //   console.log(map)
-    // }
-    // eslint-disable-next-line unicorn/no-process-exit
-    // process.exit(0)
-
     timeInMs = (Date.now() - start) / 1000;
     this.metricManager.recordProperty(
       PropertyName.PREPROCESS_TIME,

@@ -171,8 +171,13 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       for (const branchKey of Object.keys(instrumentationData[key].branchMap)) {
         const branch = instrumentationData[key].branchMap[branchKey];
         const hits = <number[]>instrumentationData[key].b[branchKey];
-        const meta =
-          metaData === undefined ? undefined : metaData[key]?.meta?.[branchKey];
+        let meta;
+
+        if (metaData !== undefined && key in metaData) {
+          const metaPath = metaData[key];
+          const metaMeta = metaPath.meta;
+          meta = metaMeta[branchKey.toString()];
+        }
 
         traces.push({
           id: branch.locations[0].id,
@@ -196,7 +201,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
             traces.push({
               id: location.id,
               path: key,
-              type: branch.type,
+              type: "branch",
               location: branch.locations[index],
 
               hits: hits[index],
@@ -212,7 +217,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           traces.push({
             id: branch.locations[1].id,
             path: key,
-            type: branch.type,
+            type: "branch",
             location: branch.locations[1],
 
             hits: hits[1],

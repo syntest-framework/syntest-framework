@@ -358,15 +358,14 @@ export class VisitState {
   }
 
   getBranchMetaTracker(
-    branchName,
-    testAsAst,
+    branchName: string,
     testAsCode: string,
     variables: string[]
   ) {
     const T = this.types;
 
     const metaTracker = T.callExpression(T.identifier(this.metaVarName), [
-      T.numericLiteral(branchName),
+      T.stringLiteral(`${branchName}`),
       T.objectExpression([
         T.objectProperty(
           T.stringLiteral("condition_ast"),
@@ -380,23 +379,12 @@ export class VisitState {
           T.stringLiteral("variables"),
           T.ObjectExpression([
             ...variables
-              .filter((v, i, a) => a.indexOf(v) === i)
-              .map((v) => {
-                if (v.includes(".")) {
-                  const split = v.split(".");
-
-                  return T.objectProperty(
-                    T.stringLiteral(v),
-                    T.optionalMemberExpression(
-                      T.identifier(split[0]),
-                      T.identifier(split[1]),
-                      false,
-                      true
-                    )
-                  );
-                } else {
-                  return T.objectProperty(T.stringLiteral(v), T.identifier(v));
-                }
+              .filter((v, i, a) => a.indexOf(v) === i) // remove duplicates
+              .map(([source, identifier]) => {
+                return T.objectProperty(
+                  T.stringLiteral(source),
+                  T.identifier(identifier)
+                );
               }),
           ])
         ),

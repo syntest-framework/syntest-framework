@@ -43,7 +43,7 @@ export class ArrayStatement extends Statement {
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
     if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleArgument(depth, this.id, this.type);
+      return sampler.sampleArgument(depth, this.id, this.name);
     }
     const children = this._children.map((a: Statement) => a.copy());
 

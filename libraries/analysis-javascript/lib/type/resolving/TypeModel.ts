@@ -55,6 +55,8 @@ export class TypeModel {
     this._scoreHasChangedMap = new Map();
 
     this._objectTypeDescription = new Map();
+
+    this.addId("anon"); // should be removed at some point
   }
 
   getObjectDescription(element: string): ObjectType {
@@ -343,8 +345,16 @@ export class TypeModel {
 
     const probabilityMap = new Map<string, number>();
 
+    if (id === "anon") {
+      return probabilityMap;
+    }
+
     const typeScoreMap = this._elementTypeScoreMap.get(id);
     const relationMap = this._relationScoreMap.get(id);
+
+    if (typeScoreMap === undefined) {
+      throw new Error(`Cannot get typescoreMap of ${id}`);
+    }
 
     if (!relationPairsVisited) {
       relationPairsVisited = new Map();
