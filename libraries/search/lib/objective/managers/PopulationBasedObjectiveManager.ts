@@ -35,9 +35,9 @@ export abstract class PopulationBasedObjectiveManager<
   protected _handleCoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
     _encoding: T
-  ): void {
+  ): ObjectiveFunction<T>[] {
     // Update the objectives
-    this._updateObjectives(objectiveFunction);
+    return this._updateObjectives(objectiveFunction);
   }
 
   /**
