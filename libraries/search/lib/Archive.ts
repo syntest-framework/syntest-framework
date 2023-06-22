@@ -92,19 +92,19 @@ export class Archive<T extends Encoding> {
     encoding: T,
     keepOld: boolean
   ): void {
-    const old_encoding = this._map.get(objectiveFunction);
+    const oldEncoding = this._map.get(objectiveFunction);
 
     // Remove the old encoding from the uses map
-    if (old_encoding && old_encoding !== encoding) {
-      const uses = this._uses.get(old_encoding);
+    if (oldEncoding && oldEncoding !== encoding) {
+      const uses = this._uses.get(oldEncoding);
       uses.splice(uses.indexOf(objectiveFunction), 1);
       if (uses.length === 0 && !keepOld) {
-        this._uses.delete(old_encoding);
+        this._uses.delete(oldEncoding);
       }
     }
 
     // Do not update if the encoding is already assigned to the objective function
-    if (old_encoding && old_encoding === encoding) {
+    if (oldEncoding && oldEncoding === encoding) {
       Archive.LOGGER.debug("encoding already assigned to objective function");
       throw new Error(
         shouldNeverHappen("encoding already assigned to objective function")
@@ -115,11 +115,11 @@ export class Archive<T extends Encoding> {
     this._map.set(objectiveFunction, encoding);
 
     // Add the encoding to the uses map
-    if (this._uses.has(encoding)) {
-      this._uses.get(encoding).push(objectiveFunction);
-    } else {
-      this._uses.set(encoding, [objectiveFunction]);
+    if (!this._uses.has(encoding)) {
+      this._uses.set(encoding, []);
     }
+
+    this._uses.get(encoding).push(objectiveFunction);
   }
 
   /**
