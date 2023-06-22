@@ -19,6 +19,7 @@
 import { Encoding } from "../Encoding";
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
+import { shouldNeverHappen } from "../util/diagnostics";
 
 /**
  * Objective function for the exception criterion.
@@ -28,20 +29,15 @@ import { SearchSubject } from "../SearchSubject";
  *
  * @author Mitchell Olsthoorn
  */
-export class ExceptionObjectiveFunction<T extends Encoding>
-  implements ObjectiveFunction<T>
-{
+export class ExceptionObjectiveFunction<
+  T extends Encoding
+> extends ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
   protected _message: string;
 
-  /**
-   * Constructor.
-   *
-   * @param subject
-   * @param id
-   */
   constructor(subject: SearchSubject<T>, id: string, message: string) {
+    super();
     this._subject = subject;
     this._id = id;
     this._message = message;
@@ -54,7 +50,7 @@ export class ExceptionObjectiveFunction<T extends Encoding>
     // This method should never be called.
     // The exception objective function is only created when an exception is already covered.
     // So the distance is always zero.
-    return 0;
+    throw new Error(shouldNeverHappen("method not implemented."));
   }
 
   /**

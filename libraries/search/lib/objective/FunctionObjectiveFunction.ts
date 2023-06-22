@@ -19,9 +19,7 @@
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
 
-import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
-import { ApproachLevel } from "./heuristics/ApproachLevel";
-import { BranchDistance } from "./heuristics/BranchDistance";
+import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Objective function for the function branch criterion.
@@ -32,24 +30,12 @@ import { BranchDistance } from "./heuristics/BranchDistance";
  */
 export class FunctionObjectiveFunction<
   T extends Encoding
-> extends ControlFlowBasedObjectiveFunction<T> {
+> extends ObjectiveFunction<T> {
   protected _subject: SearchSubject<T>;
   protected _id: string;
 
-  /**
-   * Constructor.
-   *
-   * @param subject
-   * @param id
-   * @param line
-   */
-  constructor(
-    approachLevel: ApproachLevel,
-    branchDistance: BranchDistance,
-    subject: SearchSubject<T>,
-    id: string
-  ) {
-    super(approachLevel, branchDistance);
+  constructor(subject: SearchSubject<T>, id: string) {
+    super();
     this._subject = subject;
     this._id = id;
   }
