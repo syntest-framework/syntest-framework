@@ -32,7 +32,7 @@ export class ApproachLevel {
   } {
     // Construct map with key as id covered and value as datapoint that covers that id
     const idsTraceMap: Map<string, Datapoint> = new Map(
-      traces.map((trace) => [trace.id, trace])
+      traces.filter((trace) => trace.hits > 0).map((trace) => [trace.id, trace])
     );
 
     // Construct set of all covered ids
