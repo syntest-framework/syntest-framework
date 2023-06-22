@@ -67,10 +67,11 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
   ): Promise<void> {
     // Sample a new random encoding
     const randomEncoding: T = this._encodingSampler.sample();
+    this._population = [randomEncoding];
 
     // Evaluate the new encoding
-    await this._objectiveManager.evaluateOne(
-      randomEncoding,
+    await this._objectiveManager.evaluateMany(
+      this._population,
       budgetManager,
       terminationManager
     );

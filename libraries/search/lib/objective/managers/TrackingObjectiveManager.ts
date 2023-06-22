@@ -20,30 +20,17 @@ import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
-import { ObjectiveManager } from "./ObjectiveManager";
-import { PopulationBasedObjectiveManager } from "./PopulationBasedObjectiveManager";
+import { ArchiveBasedObjectiveManager } from "./ArchiveBasedObjectiveManager";
 
 /**
- * A simple objective manager that always evaluates an encoding on all objectives.
+ * An objective manager that only tracks if an objective is covered
+ * but doesn't provide any guidance.
  *
  * @author Mitchell Olsthoorn
  */
-export class SimpleObjectiveManager<
+export class TrackingObjectiveManager<
   T extends Encoding
-> extends PopulationBasedObjectiveManager<T> {
-  /**
-   * @inheritDoc
-   * @protected
-   * @override
-   */
-  protected _updateArchive(
-    objectiveFunction: ObjectiveFunction<T>,
-    encoding: T
-  ) {
-    ObjectiveManager.LOGGER.debug("updating archive");
-    this._archive.update(objectiveFunction, encoding, true);
-  }
-
+> extends ArchiveBasedObjectiveManager<T> {
   /**
    * @inheritDoc
    * @protected
@@ -73,6 +60,9 @@ export class SimpleObjectiveManager<
     // Add all objectives to both the uncovered objectives and the current objectives
     const objectives = subject.getObjectives();
     for (const objective of objectives) {
+      // If the objective is a control flow based objective, set the shallow flag
+      objective.shallow = true;
+
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);
     }

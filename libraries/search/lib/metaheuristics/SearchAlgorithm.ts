@@ -41,6 +41,13 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   protected static LOGGER: Logger;
 
   /**
+   * The population.
+   *
+   * @protected
+   */
+  protected _population: T[];
+
+  /**
    * Manager that keeps track of which objectives have been covered and are still to be searched.
    * @protected
    */
@@ -55,6 +62,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    */
   protected constructor(objectiveManager: ObjectiveManager<T>) {
     SearchAlgorithm.LOGGER = getLogger(SearchAlgorithm.name);
+    this._population = [];
     this._objectiveManager = objectiveManager;
   }
 
@@ -173,6 +181,8 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       budgetManager,
       terminationManager
     );
+
+    this._objectiveManager.finalize(this._population);
 
     // Return the archive of covered objectives
     return this._objectiveManager.getArchive();

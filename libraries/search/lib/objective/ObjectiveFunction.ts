@@ -24,18 +24,61 @@ import { SearchSubject } from "../SearchSubject";
  *
  * @author Mitchell Olsthoorn
  */
-export interface ObjectiveFunction<T extends Encoding> {
+export abstract class ObjectiveFunction<T extends Encoding> {
+  protected _id: string;
+  protected _subject: SearchSubject<T>;
+
+  /**
+   * Indicates if the distance should be shallow or deep.
+   *
+   * Shallow distances only return 0 (covered) or 1 (uncovered).
+   * Deep distances return the actual distance.
+   *
+   * Shallow distances can be used to speed up the search process
+   * when an objective is already covered while still improving the solution.
+   */
+  protected shallowDistance: boolean;
+
+  constructor(id: string, subject: SearchSubject<T>) {
+    this._id = id;
+    this._subject = subject;
+    this.shallowDistance = false;
+  }
+
+  /**
+   * Return if the objective function is shallow (True) or deep (False).
+   */
+  get shallow(): boolean {
+    return this.shallowDistance;
+  }
+
+  /**
+   * Set the depth of the objective function.
+   *
+   * @param shallow True if the objective function is shallow, False otherwise.
+   */
+  set shallow(shallow: boolean) {
+    this.shallowDistance = shallow;
+  }
+
   /**
    * Calculate distance from the objective to an encoding.
    *
    * @param encoding Encoding
    */
-  calculateDistance(encoding: T): number;
+  abstract calculateDistance(encoding: T): number;
 
   /**
    * Return the identifier of the objective.
    */
-  getIdentifier(): string;
+  public getIdentifier(): string {
+    return this._id;
+  }
 
-  getSubject(): SearchSubject<T>;
+  /**
+   * Return the subject of the objective.
+   */
+  public getSubject(): SearchSubject<T> {
+    return this._subject;
+  }
 }

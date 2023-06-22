@@ -24,6 +24,7 @@ import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricList
 import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
 import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralUncoveredObjectiveManagerPlugin";
+import { TrackingObjectiveManagerPlugin } from "./plugins/objective-managers/TrackingObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
 import { DynaPCSEAPlugin } from "./plugins/search-algorithms/DynaPCSEAPlugin";
@@ -39,6 +40,7 @@ import { MOSAPCSEAPreset } from "./presets/MOSAPCSEAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 import { PCSEAPreset } from "./presets/PCSEAPreset";
+import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
   override register(
@@ -56,7 +58,7 @@ export abstract class TestingToolModule extends Module {
       this,
       new StructuralUncoveredObjectiveManagerPlugin()
     );
-
+    moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
@@ -71,12 +73,13 @@ export abstract class TestingToolModule extends Module {
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
-    moduleManager.registerPreset(this, new NSGAIIPreset());
-    moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPreset());
 
     moduleManager.registerPreset(this, new PCSEAPreset());
     moduleManager.registerPreset(this, new MOSAPCSEAPreset());
     moduleManager.registerPreset(this, new DynaMOSAPCSEAPreset());
+    moduleManager.registerPreset(this, new MOSAPreset());
+    moduleManager.registerPreset(this, new NSGAIIPreset());
+    moduleManager.registerPreset(this, new RandomSearchPreset());
   }
 }
