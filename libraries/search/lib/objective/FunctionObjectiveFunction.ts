@@ -19,9 +19,7 @@
 import { Encoding } from "../Encoding";
 import { SearchSubject } from "../SearchSubject";
 
-import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
-import { ApproachLevel } from "./heuristics/ApproachLevel";
-import { BranchDistance } from "./heuristics/BranchDistance";
+import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Objective function for the function branch criterion.
@@ -32,26 +30,9 @@ import { BranchDistance } from "./heuristics/BranchDistance";
  */
 export class FunctionObjectiveFunction<
   T extends Encoding
-> extends ControlFlowBasedObjectiveFunction<T> {
-  protected _subject: SearchSubject<T>;
-  protected _id: string;
-
-  /**
-   * Constructor.
-   *
-   * @param subject
-   * @param id
-   * @param line
-   */
-  constructor(
-    approachLevel: ApproachLevel,
-    branchDistance: BranchDistance,
-    subject: SearchSubject<T>,
-    id: string
-  ) {
-    super(approachLevel, branchDistance);
-    this._subject = subject;
-    this._id = id;
+> extends ObjectiveFunction<T> {
+  constructor(subject: SearchSubject<T>, id: string) {
+    super(id, subject);
   }
 
   /**
@@ -63,19 +44,5 @@ export class FunctionObjectiveFunction<
     }
 
     return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getIdentifier(): string {
-    return this._id;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getSubject(): SearchSubject<T> {
-    return this._subject;
   }
 }

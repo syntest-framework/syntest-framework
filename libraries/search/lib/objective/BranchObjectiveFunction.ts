@@ -19,6 +19,7 @@
 import { EdgeType } from "@syntest/cfg";
 
 import { Encoding } from "../Encoding";
+import { ExecutionResult } from "../ExecutionResult";
 import { SearchSubject } from "../SearchSubject";
 import {
   lessThanTwoOutgoingEdges,
@@ -40,24 +41,13 @@ import { BranchDistance } from "./heuristics/BranchDistance";
 export class BranchObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
-  protected _subject: SearchSubject<T>;
-  protected _id: string;
-
-  /**
-   * Constructor.
-   *
-   * @param subject
-   * @param id
-   */
   constructor(
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
     subject: SearchSubject<T>,
     id: string
   ) {
-    super(approachLevel, branchDistance);
-    this._subject = subject;
-    this._id = id;
+    super(id, subject, approachLevel, branchDistance);
   }
 
   calculateDistance(encoding: T): number {
@@ -67,11 +57,19 @@ export class BranchObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    // let's check if the node is covered
+    // check if the branch is covered
     if (executionResult.coversId(this._id)) {
       return 0;
+    } else if (this.shallow) {
+      return Number.MAX_VALUE;
+    } else {
+      return this._calculateControlFlowDistance(executionResult);
     }
+  }
 
+  protected _calculateControlFlowDistance(
+    executionResult: ExecutionResult
+  ): number {
     // find the corresponding node inside the cfg
     const functions_ = this._subject.cfg.functions.filter(
       (function_) => function_.graph.getNodeById(this._id) !== undefined
@@ -168,19 +166,5 @@ export class BranchObjectiveFunction<
 
     // add the distances
     return approachLevel + branchDistance;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getIdentifier(): string {
-    return this._id;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getSubject(): SearchSubject<T> {
-    return this._subject;
   }
 }

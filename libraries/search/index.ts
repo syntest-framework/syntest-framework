@@ -57,7 +57,6 @@ export * from "./lib/objective/ExceptionObjectiveFunction";
 export * from "./lib/objective/FunctionObjectiveFunction";
 export * from "./lib/objective/ImplicitBranchObjectiveFunction";
 export * from "./lib/objective/ObjectiveFunction";
-export * from "./lib/objective/ObjectiveType";
 
 export * from "./lib/objective/managers/ObjectiveManager";
 export * from "./lib/objective/managers/SimpleObjectiveManager";
