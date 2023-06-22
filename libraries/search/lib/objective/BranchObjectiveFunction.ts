@@ -17,12 +17,12 @@
  */
 
 import { EdgeType } from "@syntest/cfg";
+import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../Encoding";
 import { ExecutionResult } from "../ExecutionResult";
 import { SearchSubject } from "../SearchSubject";
 import {
-  lessThanTwoOutgoingEdges,
   moreThanTwoOutgoingEdges,
   shouldNeverHappen,
 } from "../util/diagnostics";
@@ -41,6 +41,7 @@ import { BranchDistance } from "./heuristics/BranchDistance";
 export class BranchObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
+  protected static LOGGER: Logger;
   constructor(
     approachLevel: ApproachLevel,
     branchDistance: BranchDistance,
@@ -48,6 +49,7 @@ export class BranchObjectiveFunction<
     id: string
   ) {
     super(id, subject, approachLevel, branchDistance);
+    BranchObjectiveFunction.LOGGER = getLogger("BranchObjectiveFunction");
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -68,6 +70,7 @@ export class BranchObjectiveFunction<
     }
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   protected _calculateControlFlowDistance(
     executionResult: ExecutionResult
   ): number {
@@ -89,16 +92,22 @@ export class BranchObjectiveFunction<
     }
 
     // Find approach level and ancestor based on node and covered nodes
-    const { approachLevel, closestCoveredNode, closestCoveredBranchTrace } =
-      this.approachLevel.calculate(
-        function_.graph,
-        targetNode,
-        executionResult.getTraces()
-      );
+    const {
+      approachLevel,
+      closestCoveredNode,
+      closestCoveredBranchTrace,
+      lastEdgeType,
+      statementFraction,
+    } = this.approachLevel.calculate(
+      function_.graph,
+      targetNode,
+      executionResult.getTraces()
+    );
 
     if (closestCoveredNode === undefined) {
-      // weird
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      // if closest node is not found, we return the distance to the root branch
+      // this happens when the function is not entered at all
+      return Number.MAX_VALUE;
     }
 
     const outgoingEdges = function_.graph.getOutgoingEdges(
@@ -106,10 +115,22 @@ export class BranchObjectiveFunction<
     );
 
     if (outgoingEdges.length < 2) {
-      // weird
-      throw new Error(
-        lessThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
-      );
+      // TODO this is a hack to give guidance to the algorithm
+      // it would be better to improve the cfg with implicit branches
+      // or to atleast choose a number based on what statement has been covered in the cfg node
+      // 0.25 is based on the fact the branch distance is minimally 0.5
+      // so 0.25 is exactly between 0.5 and 0
+      if (statementFraction === undefined) {
+        throw new Error(shouldNeverHappen(""));
+      }
+      if (statementFraction === 0) {
+        throw new Error(
+          shouldNeverHappen(
+            "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
+          )
+        );
+      }
+      return approachLevel + 0.48 * statementFraction + 0.01;
     }
 
     if (outgoingEdges.length > 2) {
@@ -131,18 +152,33 @@ export class BranchObjectiveFunction<
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
-    const trueOrFalse = trueEdge.target === targetNode.id;
-
     // if closest covered node is not found, we return the distance to the root branch
     if (!closestCoveredBranchTrace) {
       throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
     }
 
+    let trace;
+    if (lastEdgeType) {
+      const trueNode = trueEdge.target;
+      trace = executionResult
+        .getTraces()
+        .find((trace) => trace.id === trueNode && trace.type === "branch");
+    } else {
+      const falseNode = falseEdge.target;
+      trace = executionResult
+        .getTraces()
+        .find((trace) => trace.id === falseNode && trace.type === "branch");
+    }
+
+    if (trace === undefined) {
+      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+    }
+
     let branchDistance = this.branchDistance.calculate(
-      closestCoveredBranchTrace.condition_ast,
-      closestCoveredBranchTrace.condition,
-      closestCoveredBranchTrace.variables,
-      trueOrFalse
+      trace.condition_ast,
+      trace.condition,
+      trace.variables,
+      lastEdgeType
     );
 
     if (Number.isNaN(approachLevel)) {
@@ -157,12 +193,8 @@ export class BranchObjectiveFunction<
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
 
-    if (branchDistance === 0 && approachLevel !== 0) {
-      throw new Error(shouldNeverHappen("ObjectiveManager"));
-    }
-
-    if (approachLevel + branchDistance === 0) {
-      // TODO this is a hack to make sure a wrong branch distance calculation doesnt throw off the entire distance
+    if (branchDistance === 0) {
+      BranchObjectiveFunction.LOGGER.warn("branch distance is zero");
       branchDistance += 0.999;
     }
 
