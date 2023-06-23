@@ -18,26 +18,12 @@
 import { expect } from "chai";
 import { BranchDistance } from "../../lib/criterion/BranchDistance";
 
-describe("BranchDistance a < b test", () => {
+describe("BranchDistance a || b test", () => {
   // number
-  it("2 < 1 true", () => {
-    const condition = "2 < 1";
+  it("1 || 1 true", () => {
+    const condition = "1 || 1";
     const variables = {};
     const trueOrFalse = true;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.6666, 0.01);
-  });
-
-  it("2 < 1 false", () => {
-    const condition = "2 < 1";
-    const variables = {};
-    const trueOrFalse = false;
 
     const calculator = new BranchDistance(
       "0123456789abcdefghijklmnopqrstuvxyz"
@@ -48,8 +34,8 @@ describe("BranchDistance a < b test", () => {
     ).to.equal(0);
   });
 
-  it("1 < 1 true", () => {
-    const condition = "1 < 1";
+  it("1 || 0 true", () => {
+    const condition = "1 || 0";
     const variables = {};
     const trueOrFalse = true;
 
@@ -57,14 +43,83 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    // TODO shouldnt this be way lower (a 0.1 increase would also be enough)
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.equal(0);
+  });
+
+  it("0 || 1 true", () => {
+    const condition = "0 || 1";
+    const variables = {};
+    const trueOrFalse = true;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.equal(0);
+  });
+
+  it("0 || 0 true", () => {
+    const condition = "0 || 0";
+    const variables = {};
+    const trueOrFalse = true;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
     ).to.equal(0.5);
   });
 
-  it("1 < 1 false", () => {
-    const condition = "1 < 1";
+  it("1 || 1 false", () => {
+    const condition = "1 || 1";
+    const variables = {};
+    const trueOrFalse = false;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.equal(0.5);
+  });
+
+  it("1 || 0 false", () => {
+    const condition = "1 || 0";
+    const variables = {};
+    const trueOrFalse = false;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.be.closeTo(0.3333, 0.1);
+  });
+
+  it("0 || 1 false", () => {
+    const condition = "0 || 1";
+    const variables = {};
+    const trueOrFalse = false;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.be.closeTo(0.3333, 0.1);
+  });
+
+  it("0 || 0 false", () => {
+    const condition = "0 || 0";
     const variables = {};
     const trueOrFalse = false;
 
@@ -77,66 +132,9 @@ describe("BranchDistance a < b test", () => {
     ).to.equal(0);
   });
 
-  it("0 < -1 true", () => {
-    const condition = "0 < -1";
-    const variables = {};
-    const trueOrFalse = true;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.6666, 0.01);
-  });
-
-  it("0 < -1 false", () => {
-    const condition = "0 < -1";
-    const variables = {};
-    const trueOrFalse = false;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
-  });
-
-  // string
-  it("'a' < 'a' true", () => {
-    const condition = "'a' < 'a'";
-    const variables = {};
-    const trueOrFalse = true;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    // TODO making the first one into 'b' would suffice so it should indeed be 0.5
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.9999, 0.1);
-  });
-
-  it("'a' < 'a' false", () => {
-    const condition = "'a' < 'a'";
-    const variables = {};
-    const trueOrFalse = false;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
-  });
-
-  it("'a' < 'b' true", () => {
-    const condition = "'a' < 'b'";
+  // boolean
+  it("true || true true", () => {
+    const condition = "true || true";
     const variables = {};
     const trueOrFalse = true;
 
@@ -149,23 +147,8 @@ describe("BranchDistance a < b test", () => {
     ).to.equal(0);
   });
 
-  it("'a' < 'b' false", () => {
-    const condition = "'a' < 'b'";
-    const variables = {};
-    const trueOrFalse = false;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.9999, 0.1);
-  });
-
-  // number string mix
-  it("0 < '0' true", () => {
-    const condition = "0 < '0'";
+  it("true || false true", () => {
+    const condition = "true || false";
     const variables = {};
     const trueOrFalse = true;
 
@@ -175,11 +158,81 @@ describe("BranchDistance a < b test", () => {
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.9999, 0.1);
+    ).to.equal(0);
   });
 
-  it("0 < '0' false", () => {
-    const condition = "0 < '0'";
+  it("false || true true", () => {
+    const condition = "false || true";
+    const variables = {};
+    const trueOrFalse = true;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.equal(0);
+  });
+
+  it("false || false true", () => {
+    const condition = "false || false";
+    const variables = {};
+    const trueOrFalse = true;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.equal(0.5);
+  });
+
+  it("true || true false", () => {
+    const condition = "true || true";
+    const variables = {};
+    const trueOrFalse = false;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.equal(0.5);
+  });
+
+  it("true || false false", () => {
+    const condition = "true || false";
+    const variables = {};
+    const trueOrFalse = false;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.be.closeTo(0.3333, 0.1);
+  });
+
+  it("false || true false", () => {
+    const condition = "false || true";
+    const variables = {};
+    const trueOrFalse = false;
+
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
+
+    expect(
+      calculator.calculate("", condition, variables, trueOrFalse)
+    ).to.be.closeTo(0.3333, 0.1);
+  });
+
+  it("false || false false", () => {
+    const condition = "false || false";
     const variables = {};
     const trueOrFalse = false;
 

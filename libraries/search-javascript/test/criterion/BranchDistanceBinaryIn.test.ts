@@ -24,7 +24,7 @@ describe("BranchDistance a in b test", () => {
     // const condition = "'a' in {'a': 0}"
     // const variables = {}
     // const trueOrFalse = true
-    // const calculator = new BranchDistance()
+    // const calculator = new BranchDistance("0123456789abcdefghijklmnopqrstuvxyz")
     // expect(calculator.calculate("", condition, variables, trueOrFalse)).to.equal(0);
   });
 
@@ -32,7 +32,7 @@ describe("BranchDistance a in b test", () => {
     // const condition = "'a' in {'a': 0}"
     // const variables = {}
     // const trueOrFalse = false
-    // const calculator = new BranchDistance()
+    // const calculator = new BranchDistance("0123456789abcdefghijklmnopqrstuvxyz")
     // expect(calculator.calculate("", condition, variables, trueOrFalse)).to.equal(0.5);
   });
 });

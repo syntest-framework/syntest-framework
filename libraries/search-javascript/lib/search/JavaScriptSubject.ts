@@ -31,11 +31,24 @@ import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { BranchDistance } from "../criterion/BranchDistance";
 
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
-  constructor(target: Target, rootContext: RootContext) {
+  protected stringAlphabet: string;
+  constructor(
+    target: Target,
+    rootContext: RootContext,
+    stringAlphabet: string
+  ) {
     super(target, rootContext);
+    this.stringAlphabet = stringAlphabet;
+
+    this._extractObjectives();
   }
 
   protected _extractObjectives(): void {
+    this._objectives = new Map<
+      ObjectiveFunction<JavaScriptTestCase>,
+      ObjectiveFunction<JavaScriptTestCase>[]
+    >();
+
     const functions = this._rootContext.getControlFlowProgram(
       this._target.path
     ).functions;
@@ -63,7 +76,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
           this._objectives.set(
             new BranchObjectiveFunction(
               new ApproachLevel(),
-              new BranchDistance(),
+              new BranchDistance(this.stringAlphabet),
               this,
               edge.target
             ),

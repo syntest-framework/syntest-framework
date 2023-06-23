@@ -25,6 +25,13 @@ import { transformSync, traverse } from "@babel/core";
 import { defaultBabelOptions } from "@syntest/analysis-javascript";
 
 export class BranchDistance extends CoreBranchDistance {
+  protected stringAlphabet: string;
+
+  constructor(stringAlphabet: string) {
+    super();
+    this.stringAlphabet = stringAlphabet;
+  }
+
   calculate(
     _conditionAST: string, // deprecated
     condition: string,
@@ -37,10 +44,14 @@ export class BranchDistance extends CoreBranchDistance {
     const options: unknown = JSON.parse(JSON.stringify(defaultBabelOptions));
 
     const ast = transformSync(condition, options).ast;
-    const visitor = new BranchDistanceVisitor(variables, !trueOrFalse);
+    const visitor = new BranchDistanceVisitor(
+      this.stringAlphabet,
+      variables,
+      !trueOrFalse
+    );
 
     traverse(ast, visitor);
-    const distance = visitor._getDistance(condition);
+    let distance = visitor._getDistance(condition);
 
     if (distance > 1 || distance < 0) {
       throw new Error("Invalid distance!");
@@ -48,6 +59,11 @@ export class BranchDistance extends CoreBranchDistance {
 
     if (Number.isNaN(distance)) {
       throw new TypeError(shouldNeverHappen("BranchDistance"));
+    }
+
+    if (distance === 1) {
+      // We dont want a branch distance of 1 because then it will be equal to covering the oposite branch
+      distance = 0.999_999_999_999_999_9;
     }
 
     return distance;

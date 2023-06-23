@@ -25,7 +25,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -37,7 +39,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -49,7 +53,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     // TODO shouldnt this be way lower (a 0.1 increase would also be enough)
     expect(
@@ -62,7 +68,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -74,7 +82,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -86,7 +96,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -99,7 +111,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -111,11 +125,13 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    ).to.be.closeTo(0.9999, 0.1);
   });
 
   it("'a' >= 'b' true", () => {
@@ -123,12 +139,14 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     // should be 0.66
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    ).to.be.closeTo(0.9999, 0.1);
   });
 
   it("'a' >= 'b' false", () => {
@@ -136,7 +154,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -149,7 +169,9 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
@@ -161,10 +183,12 @@ describe("BranchDistance a >= b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance();
+    const calculator = new BranchDistance(
+      "0123456789abcdefghijklmnopqrstuvxyz"
+    );
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    ).to.be.closeTo(0.9999, 0.1);
   });
 });

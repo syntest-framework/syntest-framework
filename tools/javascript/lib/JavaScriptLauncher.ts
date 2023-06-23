@@ -598,7 +598,11 @@ export class JavaScriptLauncher extends Launcher {
     JavaScriptLauncher.LOGGER.info(
       `Testing target ${target.name} in ${target.path}`
     );
-    const currentSubject = new JavaScriptSubject(target, this.rootContext);
+    const currentSubject = new JavaScriptSubject(
+      target,
+      this.rootContext,
+      this.arguments_.stringAlphabet
+    );
 
     const rootTargets = currentSubject
       .getActionableTargets()

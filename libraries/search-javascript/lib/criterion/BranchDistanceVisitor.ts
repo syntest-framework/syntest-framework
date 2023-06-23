@@ -25,6 +25,8 @@ import { shouldNeverHappen } from "@syntest/search";
 export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   protected static override LOGGER: Logger;
 
+  protected _stringAlphabet: string;
+
   private _K = 1; // punishment factor
 
   private _variables: Record<string, unknown>;
@@ -34,8 +36,13 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   private _isDistanceMap: Map<string, boolean>;
   private _distance: number;
 
-  constructor(variables: Record<string, unknown>, inverted: boolean) {
+  constructor(
+    stringAlphabet: string,
+    variables: Record<string, unknown>,
+    inverted: boolean
+  ) {
     super("");
+    this._stringAlphabet = stringAlphabet;
     this._variables = variables;
     this._inverted = inverted;
 
@@ -282,22 +289,30 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
       case "!": {
         if (argumentIsDistance) {
-          value = this._inverted ? 1 - argumentValue : argumentValue;
+          value = this._inverted
+            ? this._normalize(1 - argumentValue)
+            : this._normalize(argumentValue);
         } else {
           if (this._inverted) {
-            value =
-              typeof argumentValue === "number"
-                ? this._normalize(Math.abs(0 - argumentValue))
-                : argumentValue
-                ? 0
-                : this._normalize(1);
+            if (typeof argumentValue === "boolean") {
+              value = argumentValue ? 0 : this._normalize(1);
+            } else if (typeof argumentValue === "number") {
+              value = argumentValue ? 0 : this._normalize(1);
+            } else {
+              // could be other type
+              value = argumentValue ? 0 : this._normalize(Number.MAX_VALUE);
+            }
           } else {
-            value =
-              typeof argumentValue === "number"
+            if (typeof argumentValue === "boolean") {
+              value = argumentValue ? this._normalize(1) : 0;
+            } else if (typeof argumentValue === "number") {
+              value = argumentValue
                 ? this._normalize(Math.abs(0 - argumentValue))
-                : argumentValue
-                ? this._normalize(1)
                 : 0;
+            } else {
+              // could be other type
+              value = argumentValue ? this._normalize(Number.MAX_VALUE) : 0;
+            }
           }
         }
         break;
@@ -457,7 +472,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
           typeof leftValue === "string" &&
           typeof rightValue === "string"
         ) {
-          value = this._editDistDP(leftValue, rightValue);
+          value = this._realCodedEditDistance(leftValue, rightValue);
         } else if (
           typeof leftValue === "boolean" &&
           typeof rightValue === "boolean"
@@ -466,9 +481,9 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
         } else {
           // TODO type difference?!
           if (operator === "===") {
-            value = leftValue === rightValue ? 0 : 1;
+            value = leftValue === rightValue ? 0 : Number.MAX_VALUE;
           } else {
-            value = leftValue == rightValue ? 0 : 1;
+            value = leftValue == rightValue ? 0 : Number.MAX_VALUE;
           }
         }
         break;
@@ -488,18 +503,18 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
           value = 1; // TODO should this one be inverted?
         } else {
           if (this._inverted) {
-            value = leftValue in rightValue ? 1 : 0;
+            value = leftValue in rightValue ? Number.MAX_VALUE : 0;
           } else {
-            value = leftValue in rightValue ? 0 : 1;
+            value = leftValue in rightValue ? 0 : Number.MAX_VALUE;
           }
         }
         break;
       }
       case "instanceof": {
         if (this._inverted) {
-          value = leftValue instanceof rightValue ? 1 : 0;
+          value = leftValue instanceof rightValue ? Number.MAX_VALUE : 0;
         } else {
-          value = leftValue instanceof rightValue ? 0 : 1;
+          value = leftValue instanceof rightValue ? 0 : Number.MAX_VALUE;
         }
         break;
       }
@@ -582,8 +597,18 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   public LogicalExpression: (path: NodePath<t.LogicalExpression>) => void = (
     path
   ) => {
+    let operator = path.node.operator;
+
     const left = path.get("left");
     const right = path.get("right");
+
+    if (this._inverted) {
+      if (operator === "||") {
+        operator = "&&";
+      } else if (operator === "&&") {
+        operator = "||";
+      }
+    }
 
     left.visit();
     right.visit();
@@ -592,26 +617,62 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     let rightValue = <any>this._valueMap.get(right.toString());
 
     if (!this._isDistanceMap.get(left.toString())) {
-      leftValue = leftValue ? 0 : 1;
+      // should we check for number /booleans here?
+      if (this._inverted) {
+        if (typeof leftValue === "boolean") {
+          leftValue = leftValue ? this._normalize(1) : 0;
+        } else if (typeof leftValue === "number") {
+          leftValue = leftValue ? this._normalize(Math.abs(0 - leftValue)) : 0;
+        } else {
+          leftValue = leftValue ? this._normalize(Number.MAX_VALUE) : 0;
+        }
+      } else {
+        if (typeof leftValue === "boolean") {
+          leftValue = leftValue ? 0 : this._normalize(1);
+        } else if (typeof leftValue === "number") {
+          leftValue = leftValue ? 0 : this._normalize(1);
+        } else {
+          leftValue = leftValue ? 0 : this._normalize(Number.MAX_VALUE);
+        }
+      }
     }
 
     if (!this._isDistanceMap.get(right.toString())) {
-      rightValue = rightValue ? 0 : 1;
+      // should we check for number /booleans here?
+      if (this._inverted) {
+        if (typeof rightValue === "boolean") {
+          rightValue = rightValue ? this._normalize(1) : 0;
+        } else if (typeof rightValue === "number") {
+          rightValue = rightValue
+            ? this._normalize(Math.abs(0 - rightValue))
+            : 0;
+        } else {
+          rightValue = rightValue ? this._normalize(Number.MAX_VALUE) : 0;
+        }
+      } else {
+        if (typeof rightValue === "boolean") {
+          rightValue = rightValue ? 0 : this._normalize(1);
+        } else if (typeof rightValue === "number") {
+          rightValue = rightValue ? 0 : this._normalize(1);
+        } else {
+          rightValue = rightValue ? 0 : this._normalize(Number.MAX_VALUE);
+        }
+      }
     }
 
     let value: unknown;
-    switch (path.node.operator) {
+    switch (operator) {
       case "||": {
-        value = this._normalize(Math.min(leftValue, rightValue));
+        value = Math.min(leftValue, rightValue); // should this be normalized?
         break;
       }
       case "&&": {
-        value = this._normalize(leftValue + rightValue);
+        value = this._normalize(leftValue + rightValue); // should this be normalized?
         break;
       }
       case "??": {
         // TODO no clue
-        value = 0;
+        value = this._normalize(Number.MAX_VALUE);
         break;
       }
       default: {
@@ -626,7 +687,115 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     path.skip();
   };
 
-  private _editDistDP(string1: string, string2: string) {
+  private minimum(a: number, b: number, c: number) {
+    let mi;
+
+    mi = a;
+    if (b < mi) {
+      mi = b;
+    }
+
+    if (c < mi) {
+      mi = c;
+    }
+    return mi;
+  }
+
+  protected _realCodedEditDistance(s: string, t: string) {
+    const d: number[][] = []; // matrix
+    let index; // iterates through s
+    let index_; // iterates through t
+    let s_index; // ith character of s
+    let t_index; // jth character of t
+    let cost; // cost
+
+    if (s == undefined && t != undefined) {
+      return t.length;
+    }
+    if (t == undefined && s != undefined) {
+      return s.length;
+    }
+    if (s == undefined && t == undefined) {
+      return Number.MAX_VALUE;
+    }
+    // Step 1
+
+    const n = s.length; // length of s
+    const m = t.length; // length of t
+    if (n == 0) {
+      return m;
+    }
+    if (m == 0) {
+      return n;
+    }
+
+    for (let indexA = 0; indexA < n + 1; indexA++) {
+      const row = [];
+      for (let indexB = 0; indexB < m + 1; indexB++) {
+        row.push(0);
+      }
+      d.push(row);
+    }
+
+    // Step 2
+
+    for (index = 0; index <= n; index++) {
+      d[index][0] = index;
+    }
+
+    for (index_ = 0; index_ <= m; index_++) {
+      d[0][index_] = index_;
+    }
+
+    // Step 3
+
+    for (index = 1; index <= n; index++) {
+      s_index = s.charAt(index - 1);
+
+      // Step 4
+
+      for (index_ = 1; index_ <= m; index_++) {
+        t_index = t.charAt(index_ - 1);
+
+        // Step 5
+
+        if (s_index == t_index) {
+          cost = 0;
+        } else {
+          //
+          if (
+            !this._stringAlphabet.includes(t_index) ||
+            !this._stringAlphabet.includes(s_index)
+          ) {
+            BranchDistanceVisitor.LOGGER.warn(
+              `cannot search for character missing from the sampling alphabet one of these is missing: ${t_index}, ${s_index}`
+            );
+            cost = Number.MAX_VALUE;
+          } else {
+            cost = Math.abs(
+              this._stringAlphabet.indexOf(s_index) -
+                this._stringAlphabet.indexOf(t_index)
+            );
+          }
+          cost = this._normalize(cost);
+        }
+
+        // Step 6
+
+        d[index][index_] = this.minimum(
+          d[index - 1][index_] + 1,
+          d[index][index_ - 1] + 1,
+          d[index - 1][index_ - 1] + cost
+        );
+      }
+    }
+
+    // Step 7
+
+    return d[n][m];
+  }
+
+  protected _editDistDP(string1: string, string2: string) {
     const m = string1.length;
     const n = string2.length;
     const table = [];

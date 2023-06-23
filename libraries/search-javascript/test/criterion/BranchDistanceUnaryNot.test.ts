@@ -18,26 +18,12 @@
 import { expect } from "chai";
 import { BranchDistance } from "../../lib/criterion/BranchDistance";
 
-describe("BranchDistance a < b test", () => {
+describe("BranchDistance !a test", () => {
   // number
-  it("2 < 1 true", () => {
-    const condition = "2 < 1";
+  it("!0 true", () => {
+    const condition = "!0";
     const variables = {};
     const trueOrFalse = true;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.6666, 0.01);
-  });
-
-  it("2 < 1 false", () => {
-    const condition = "2 < 1";
-    const variables = {};
-    const trueOrFalse = false;
 
     const calculator = new BranchDistance(
       "0123456789abcdefghijklmnopqrstuvxyz"
@@ -48,37 +34,22 @@ describe("BranchDistance a < b test", () => {
     ).to.equal(0);
   });
 
-  it("1 < 1 true", () => {
-    const condition = "1 < 1";
+  it("!0 false", () => {
+    const condition = "!0";
     const variables = {};
-    const trueOrFalse = true;
+    const trueOrFalse = false;
 
     const calculator = new BranchDistance(
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    // TODO shouldnt this be way lower (a 0.1 increase would also be enough)
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
     ).to.equal(0.5);
   });
 
-  it("1 < 1 false", () => {
-    const condition = "1 < 1";
-    const variables = {};
-    const trueOrFalse = false;
-
-    const calculator = new BranchDistance(
-      "0123456789abcdefghijklmnopqrstuvxyz"
-    );
-
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
-  });
-
-  it("0 < -1 true", () => {
-    const condition = "0 < -1";
+  it("!1 true", () => {
+    const condition = "!1";
     const variables = {};
     const trueOrFalse = true;
 
@@ -88,11 +59,11 @@ describe("BranchDistance a < b test", () => {
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.6666, 0.01);
+    ).to.equal(0.5);
   });
 
-  it("0 < -1 false", () => {
-    const condition = "0 < -1";
+  it("!1 false", () => {
+    const condition = "!1";
     const variables = {};
     const trueOrFalse = false;
 
@@ -105,9 +76,8 @@ describe("BranchDistance a < b test", () => {
     ).to.equal(0);
   });
 
-  // string
-  it("'a' < 'a' true", () => {
-    const condition = "'a' < 'a'";
+  it("!true true", () => {
+    const condition = "!true";
     const variables = {};
     const trueOrFalse = true;
 
@@ -115,14 +85,13 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    // TODO making the first one into 'b' would suffice so it should indeed be 0.5
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.9999, 0.1);
+    ).to.equal(0.5);
   });
 
-  it("'a' < 'a' false", () => {
-    const condition = "'a' < 'a'";
+  it("!true false", () => {
+    const condition = "!true";
     const variables = {};
     const trueOrFalse = false;
 
@@ -135,8 +104,8 @@ describe("BranchDistance a < b test", () => {
     ).to.equal(0);
   });
 
-  it("'a' < 'b' true", () => {
-    const condition = "'a' < 'b'";
+  it("!false true", () => {
+    const condition = "!false";
     const variables = {};
     const trueOrFalse = true;
 
@@ -149,8 +118,8 @@ describe("BranchDistance a < b test", () => {
     ).to.equal(0);
   });
 
-  it("'a' < 'b' false", () => {
-    const condition = "'a' < 'b'";
+  it("!false false", () => {
+    const condition = "!false";
     const variables = {};
     const trueOrFalse = false;
 
@@ -160,12 +129,11 @@ describe("BranchDistance a < b test", () => {
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.9999, 0.1);
+    ).to.equal(0.5);
   });
 
-  // number string mix
-  it("0 < '0' true", () => {
-    const condition = "0 < '0'";
+  it("!'a' true", () => {
+    const condition = "!'a'";
     const variables = {};
     const trueOrFalse = true;
 
@@ -178,8 +146,8 @@ describe("BranchDistance a < b test", () => {
     ).to.be.closeTo(0.9999, 0.1);
   });
 
-  it("0 < '0' false", () => {
-    const condition = "0 < '0'";
+  it("!'a' false", () => {
+    const condition = "!'a'";
     const variables = {};
     const trueOrFalse = false;
 
