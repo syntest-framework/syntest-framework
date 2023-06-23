@@ -93,25 +93,6 @@ export class ApproachLevel {
       const currentNodeId: string = current[0];
       const currentDistance: number = current[1];
 
-      // return if one of the statements within the node has been covered
-      const currentNode = cfg.getNodeById(currentNodeId);
-      let statementCount = -1;
-      for (let index = 0; index < currentNode.statements.length; index++) {
-        const statement = currentNode.statements[index];
-        if (targets.has(statement.id)) {
-          statementCount = index + 1;
-        }
-      }
-
-      if (statementCount !== -1) {
-        return {
-          approachLevel: currentDistance,
-          closestCoveredBranch: currentNode,
-          lastEdgeType: undefined, // doesnt matter because we probably got an implicit edge
-          statementFraction: statementCount / currentNode.statements.length,
-        };
-      }
-
       // get all neighbors of currently considered node
       const incomingEdges = cfg.getIncomingEdges(currentNodeId);
 
@@ -123,14 +104,6 @@ export class ApproachLevel {
 
         // return if one of targets nodes was found
         if (targets.has(edge.source)) {
-          return {
-            approachLevel: currentDistance,
-            closestCoveredBranch: cfg.getNodeById(edge.source),
-            lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
-            statementFraction: -1,
-          };
-        } else {
-          // also return if one of the statements within the node has been covered
           const sourceNode = cfg.getNodeById(edge.source);
           let statementCount = -1;
           for (let index = 0; index < sourceNode.statements.length; index++) {
@@ -139,17 +112,16 @@ export class ApproachLevel {
               statementCount = index + 1;
             }
           }
-
-          if (statementCount !== -1) {
-            return {
-              approachLevel: currentDistance,
-              closestCoveredBranch: cfg.getNodeById(edge.source),
-              lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
-              statementFraction: statementCount / sourceNode.statements.length,
-            };
-          }
+          return {
+            approachLevel: currentDistance,
+            closestCoveredBranch: cfg.getNodeById(edge.source),
+            lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
+            statementFraction:
+              sourceNode.statements.length === 0
+                ? -1
+                : statementCount / sourceNode.statements.length,
+          };
         }
-
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(edge.source);
         if (
