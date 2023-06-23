@@ -39,7 +39,7 @@ export class RVEA<T extends Encoding> extends SearchAlgorithm<T> {
    * This population is evolved over time and becomes more optimized.
    * @protected
    */
-  protected _population: T[];
+  protected override _population: T[];
 
   /**
    * The size of the population.
