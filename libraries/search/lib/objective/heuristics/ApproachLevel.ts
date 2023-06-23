@@ -116,7 +116,10 @@ export class ApproachLevel {
             approachLevel: currentDistance,
             closestCoveredBranch: cfg.getNodeById(edge.source),
             lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
-            statementFraction: statementCount / sourceNode.statements.length,
+            statementFraction:
+              sourceNode.statements.length === 0
+                ? -1
+                : statementCount / sourceNode.statements.length,
           };
         }
         // add element to queue and visited nodes to continue search
