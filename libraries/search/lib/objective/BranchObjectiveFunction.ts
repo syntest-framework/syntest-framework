@@ -114,23 +114,33 @@ export class BranchObjectiveFunction<
       closestCoveredNode.id
     );
 
-    if (outgoingEdges.length < 2) {
+    if (statementFraction !== -1 && statementFraction !== 1) {
+      // the statement fraction should never be -1
+      // if the statement fraction is 1 it is fully covered
+      // TODO    or the error happens at the end of a body where we dont record traces anymore
+      // TODO there can still be a crash inside of the if statement making the branch distance still zero
+
       // TODO this is a hack to give guidance to the algorithm
       // it would be better to improve the cfg with implicit branches
       // or to atleast choose a number based on what statement has been covered in the cfg node
       // 0.25 is based on the fact the branch distance is minimally 0.5
       // so 0.25 is exactly between 0.5 and 0
-      if (statementFraction === undefined) {
-        throw new Error(shouldNeverHappen(""));
-      }
-      if (statementFraction === 0) {
-        throw new Error(
-          shouldNeverHappen(
-            "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
-          )
-        );
-      }
       return approachLevel + 0.48 * statementFraction + 0.01;
+    }
+
+    if (outgoingEdges.length < 2) {
+      // todo end of block problem
+      // when a crash happens at the last line of a block the statement fraction becomes 1 since we do not record the last one
+      if (statementFraction === 1) {
+        return approachLevel + 0.499_999_999;
+      }
+
+      throw new Error(
+        shouldNeverHappen(
+          "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
+        )
+      );
+      // return approachLevel + 0.48 * statementFraction + 0.01;
     }
 
     if (outgoingEdges.length > 2) {
@@ -194,6 +204,7 @@ export class BranchObjectiveFunction<
     }
 
     if (branchDistance === 0) {
+      // TODO there can still be a crash inside of the if statement giving this result
       BranchObjectiveFunction.LOGGER.warn("branch distance is zero");
       branchDistance += 0.999;
     }
