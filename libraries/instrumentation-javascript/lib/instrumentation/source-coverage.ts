@@ -95,11 +95,28 @@ export class SourceCoverage extends classes.FileCoverage {
     };
   }
 
-  newStatement(loc) {
+  newStatement(loc, placeholder = false, double = false) {
     const s = this.meta.last.s;
-    this.data.statementMap[s] = this._cloneLocation(loc);
-    this.data.s[s] = 0;
-    this.meta.last.s += 1;
+
+    if (placeholder) {
+      const clone = this._cloneLocation({
+        start: loc.end,
+        end: loc.end,
+      });
+      let id = this._getPlaceholderNodeId(loc);
+      if (double) {
+        id = "placeholder:::" + id;
+      }
+      clone.id = `placeholder:::${id}`;
+      this.data.statementMap[s] = clone;
+      this.data.s[s] = 0;
+      this.meta.last.s += 1;
+    } else {
+      this.data.statementMap[s] = this._cloneLocation(loc);
+      this.data.s[s] = 0;
+      this.meta.last.s += 1;
+    }
+
     return s;
   }
 

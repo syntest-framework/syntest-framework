@@ -237,8 +237,11 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
    * @param path
    * @returns
    */
-  private _createPlaceholderNode(path: NodePath): Node {
-    const id = `placeholder:::${this._getPlaceholderNodeId(path)}`;
+  private _createPlaceholderNode(path: NodePath, double = false): Node {
+    let id = `placeholder:::${this._getPlaceholderNodeId(path)}`;
+    if (double) {
+      id = "placeholder:::" + id;
+    }
     const location = this._getLocation(path);
     const node = new Node(
       id,
@@ -521,10 +524,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       )
     );
 
-    // exit
+    // false
     this._currentParents = [loopNode.id];
     this._edgeType = EdgeType.CONDITIONAL_FALSE;
-    const loopExit = this._createPlaceholderNode(path);
+    const alternate = this._createPlaceholderNode(path);
+    this._connectToParents(alternate);
+
+    // exit
+    this._currentParents = [alternate.id];
+    const loopExit = this._createPlaceholderNode(path, true);
 
     // connect all break nodes to loop exit
     this._currentParents.push(...this._breakNodesStack.pop());
@@ -561,12 +569,11 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     this._continueNodesStack.push(new Set());
 
     // loop
-    const loopNode = this._createNode(path.get("test")); // or path.get("test") ??
-    // TODO test
+    const loopNode = this._createNode(path.get("test"));
 
     this._connectToParents(loopNode);
 
-    // body
+    // true body
     this._currentParents = [loopNode.id];
     this._edgeType = EdgeType.CONDITIONAL_TRUE;
     const beforeSize = this._nodes.size;
@@ -585,10 +592,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     this._edgeType = EdgeType.BACK_EDGE;
     this._connectToParents(loopNode); // TODO should be label back edge too
 
-    // exit
+    // false
     this._currentParents = [loopNode.id];
     this._edgeType = EdgeType.CONDITIONAL_FALSE;
-    const loopExit = this._createPlaceholderNode(path);
+    const alternate = this._createPlaceholderNode(path);
+    this._connectToParents(alternate); // TODO should be label back edge too
+
+    // exit
+    this._currentParents = [alternate.id];
+    const loopExit = this._createPlaceholderNode(path, true);
 
     // connect all break nodes to loop exit
     this._currentParents.push(...this._breakNodesStack.pop());
@@ -682,10 +694,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     this._edgeType = EdgeType.BACK_EDGE;
     this._connectToParents(testNode);
 
-    // exit // false
+    // false
     this._currentParents = [testNode.id];
     this._edgeType = EdgeType.CONDITIONAL_FALSE;
-    const loopExit = this._createPlaceholderNode(path);
+    const alternate = this._createPlaceholderNode(path);
+    this._connectToParents(alternate);
+
+    // exit
+    this._currentParents = [alternate.id];
+    const loopExit = this._createPlaceholderNode(path, true);
 
     // connect all break nodes to loop exit
     this._currentParents.push(...this._breakNodesStack.pop());
@@ -761,10 +778,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     this._edgeType = EdgeType.BACK_EDGE;
     this._connectToParents(testNode);
 
-    // exit // false
+    // false
     this._currentParents = [testNode.id];
     this._edgeType = EdgeType.CONDITIONAL_FALSE;
-    const loopExit = this._createPlaceholderNode(path);
+    const alternate = this._createPlaceholderNode(path);
+    this._connectToParents(alternate);
+
+    // exit
+    this._currentParents = [alternate.id];
+    const loopExit = this._createPlaceholderNode(path, true);
 
     // connect all break nodes to loop exit
     this._currentParents.push(...this._breakNodesStack.pop());
@@ -840,10 +862,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     this._edgeType = EdgeType.BACK_EDGE;
     this._connectToParents(testNode);
 
-    // exit // false
+    // false
     this._currentParents = [testNode.id];
     this._edgeType = EdgeType.CONDITIONAL_FALSE;
-    const loopExit = this._createPlaceholderNode(path);
+    const alternate = this._createPlaceholderNode(path);
+    this._connectToParents(alternate);
+
+    // exit
+    this._currentParents = [alternate.id];
+    const loopExit = this._createPlaceholderNode(path, true);
 
     // connect all break nodes to loop exit
     this._currentParents.push(...this._breakNodesStack.pop());
