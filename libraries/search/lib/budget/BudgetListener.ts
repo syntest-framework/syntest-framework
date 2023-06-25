@@ -56,8 +56,6 @@ export interface BudgetListener<T extends Encoding> {
 
   /**
    * Signal evaluation happened.
-   *
-   * @param encoding The encoding that was evaluated
    */
-  evaluation(encoding: T): void;
+  evaluation(): void;
 }
