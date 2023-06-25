@@ -26,6 +26,7 @@ import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
 import { ExecutionResult } from "../ExecutionResult";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
 import { TerminationManager } from "../termination/TerminationManager";
 import { Events } from "../util/Events";
@@ -169,6 +170,15 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         budgetManager,
         terminationManager
       );
+
+      // Check if the population is optimizing the objectives
+      const objectivePerformance = this._calculateObjectivePerformance();
+
+      console.log("Objective performance:");
+      for (const [objective, distance] of objectivePerformance) {
+        const objectiveName = objective.getIdentifier().split(path.sep).pop();
+        console.log(objectiveName, distance);
+      }
     }
 
     // Stop search budget tracking
@@ -182,10 +192,42 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       terminationManager
     );
 
+    // Finalize the population
     this._objectiveManager.finalize(this._population);
 
     // Return the archive of covered objectives
     return this._objectiveManager.getArchive();
+  }
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  protected _calculateObjectivePerformance(): Map<
+    ObjectiveFunction<T>,
+    number
+  > {
+    const objectivePerformace = new Map<ObjectiveFunction<T>, number>();
+
+    for (const encoding of this._population) {
+      if (encoding.getExecutionResult() === undefined) {
+        continue;
+      }
+
+      for (const objective of this._objectiveManager.getCurrentObjectives()) {
+        const distance = encoding.getDistance(objective);
+        if (distance === undefined) {
+          continue;
+        }
+
+        if (objectivePerformace.has(objective)) {
+          const smallestDistance = objectivePerformace.get(objective);
+          if (distance < smallestDistance) {
+            objectivePerformace.set(objective, distance);
+          }
+        } else {
+          objectivePerformace.set(objective, distance);
+        }
+      }
+    }
+    return objectivePerformace;
   }
 
   /**
