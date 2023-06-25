@@ -34,6 +34,7 @@ export abstract class Encoding {
   protected _id: string;
   protected _assertions: Map<string, string>;
   protected _metaComments: string[];
+  protected _age: number;
 
   /**
    * Mapping from objective to their distance values for this test case.
@@ -81,6 +82,14 @@ export abstract class Encoding {
 
   get id(): string {
     return this._id;
+  }
+
+  get age(): number {
+    return this._age;
+  }
+
+  set age(value: number) {
+    this._age = value;
   }
 
   get assertions(): Map<string, string> {
