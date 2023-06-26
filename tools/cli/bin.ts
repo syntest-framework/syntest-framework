@@ -33,6 +33,7 @@ import {
 import {
   BaseOptions,
   EventListenerPlugin,
+  extractArgumentValues,
   Configuration as ModuleConfiguration,
   ModuleManager,
   PluginType,
@@ -158,38 +159,12 @@ async function main() {
       await moduleManager.prepare();
       LOGGER.info("Modules prepared!");
 
-      // Write config to file
-      const copy = { ...argv };
-      const normalizedKeys = new Set();
-      for (const key of Object.keys(copy).sort()) {
-        // use a specific order
-        console.log(key);
-        // remove default args
-        if (key === "$0" || key === "_") {
-          delete copy[key];
-          continue;
-        }
-        // remove aliases
-        if (key.length === 1) {
-          delete copy[key];
-          continue;
-        }
-        // remove duplicates
-        const normalizedKey = key.replaceAll("-", "").toLowerCase();
-        if (normalizedKeys.has(normalizedKey)) {
-          delete copy[key];
-          continue;
-        }
-
-        if (normalizedKey) {
-          normalizedKeys.add(normalizedKey);
-        }
-      }
+      const argumentsValues = extractArgumentValues(argv, moduleManager);
 
       storageManager.store(
         [],
-        "config.json",
-        JSON.stringify(copy, undefined, 2)
+        ".syntest.json",
+        JSON.stringify(argumentsValues, undefined, 2)
       );
     })
     .parse(arguments_);
