@@ -15,18 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// globals
+import Yargs = require("yargs");
 
-import { setupLogger } from "@syntest/logging";
-import { initializePseudoRandomNumberGenerator } from "@syntest/prng";
+export type RandomOptions = {
+  randomSeed: string;
+};
 
-// setup
-// This will run before all test cases.
-before(() => {
-  // This will set the prng singleton for all test cases.
-  // The prng singleton is required for running certain parts of the code.
-  initializePseudoRandomNumberGenerator("0");
+export enum OptionGroups {
+  Random = "Random Options:",
+}
 
-  // This will set up the logger singleton
-  setupLogger("log", [], "debug");
-});
+export const Configuration = {
+  configureOptions(yargs: Yargs.Argv) {
+    return yargs.option("random-seed", {
+      alias: ["s"],
+      default: undefined,
+      description: "Seed to be used by the pseudo random number generator.",
+      group: OptionGroups.Random,
+      hidden: false,
+      type: "string",
+    });
+  },
+};

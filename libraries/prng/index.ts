@@ -15,18 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// globals
 
-import { setupLogger } from "@syntest/logging";
-import { initializePseudoRandomNumberGenerator } from "@syntest/prng";
-
-// setup
-// This will run before all test cases.
-before(() => {
-  // This will set the prng singleton for all test cases.
-  // The prng singleton is required for running certain parts of the code.
-  initializePseudoRandomNumberGenerator("0");
-
-  // This will set up the logger singleton
-  setupLogger("log", [], "debug");
-});
+export * from "./lib/Configuration";
+export * from "./lib/prng";
+export * from "./lib/seed";
