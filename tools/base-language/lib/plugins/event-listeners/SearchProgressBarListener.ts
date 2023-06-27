@@ -30,9 +30,6 @@ import TypedEventEmitter from "typed-emitter";
 export class SearchProgressBarListener extends EventListenerPlugin {
   private _userInterface: UserInterface;
 
-  /**
-   * Constructor.
-   */
   constructor(userInterface: UserInterface) {
     super(
       "SearchProgressBarListener",
@@ -45,7 +42,7 @@ export class SearchProgressBarListener extends EventListenerPlugin {
     (<TypedEventEmitter<Events>>process).on(
       "searchStart",
       <E extends Encoding>(
-        searchAlgorithm: SearchAlgorithm<E>,
+        _searchAlgorithm: SearchAlgorithm<E>,
         subject: SearchSubject<E>,
         budgetManager: BudgetManager<E>
       ) => {
