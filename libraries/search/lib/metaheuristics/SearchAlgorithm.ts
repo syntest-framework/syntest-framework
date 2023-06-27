@@ -170,15 +170,6 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         budgetManager,
         terminationManager
       );
-
-      // Check if the population is optimizing the objectives
-      const objectivePerformance = this._calculateObjectivePerformance();
-
-      console.log("Objective performance:");
-      for (const [objective, distance] of objectivePerformance) {
-        const objectiveName = objective.getIdentifier().split(path.sep).pop();
-        console.log(objectiveName, distance);
-      }
     }
 
     // Stop search budget tracking
@@ -200,10 +191,9 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  protected _calculateObjectivePerformance(): Map<
-    ObjectiveFunction<T>,
-    number
-  > {
+  public calculateObjectivePerformance(
+    objectives: ObjectiveFunction<T>[]
+  ): Map<ObjectiveFunction<T>, number> {
     const objectivePerformace = new Map<ObjectiveFunction<T>, number>();
 
     for (const encoding of this._population) {
@@ -211,7 +201,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         continue;
       }
 
-      for (const objective of this._objectiveManager.getCurrentObjectives()) {
+      for (const objective of objectives) {
         const distance = encoding.getDistance(objective);
         if (distance === undefined) {
           continue;
