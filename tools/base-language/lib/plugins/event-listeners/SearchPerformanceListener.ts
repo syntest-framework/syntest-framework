@@ -23,6 +23,7 @@ import {
   BudgetManager,
   Encoding,
   Events,
+  ObjectiveFunction,
   SearchAlgorithm,
   SearchSubject,
 } from "@syntest/search";
@@ -47,17 +48,14 @@ export class SearchPerformanceListener extends EventListenerPlugin {
         _subject: SearchSubject<E>,
         _budgetManager: BudgetManager<E>
       ) => {
-        const objectives = searchAlgorithm
+        const objectives: Set<ObjectiveFunction<E>> = searchAlgorithm
           .getObjectiveManager()
           .getCurrentObjectives();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const objectivePerformance =
           searchAlgorithm.calculateObjectivePerformance([...objectives]);
 
         for (const [objective, distance] of objectivePerformance) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           const objectiveName = objective.getIdentifier().split(path.sep).pop();
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           this._userInterface.printBold(`${objectiveName}: ${distance}`);
         }
       }
