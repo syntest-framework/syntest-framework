@@ -18,7 +18,7 @@
 
 // TODO
 
-import { prng } from "@syntest/search";
+import { prng } from "@syntest/prng";
 
 import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";

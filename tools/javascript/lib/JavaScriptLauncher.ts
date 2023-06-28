@@ -73,8 +73,6 @@ import {
   SearchTimeBudget,
   TerminationManager,
   TotalTimeBudget,
-  getSeed,
-  initializePseudoRandomNumberGenerator,
 } from "@syntest/search";
 import { Instrumenter } from "@syntest/instrumentation-javascript";
 import { getLogger, Logger } from "@syntest/logging";
@@ -116,7 +114,6 @@ export class JavaScriptLauncher extends Launcher {
   async initialize(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Initialization started");
     const start = Date.now();
-    initializePseudoRandomNumberGenerator(this.arguments_.randomSeed);
 
     this.storageManager.deleteTemporaryDirectories([
       [this.arguments_.testDirectory],
@@ -236,7 +233,7 @@ export class JavaScriptLauncher extends Launcher {
         ["Termination Triggers", `${this.arguments_.terminationTriggers}`],
         ["Test Minimization Enabled", `${this.arguments_.testMinimization}`],
 
-        ["Seed", getSeed()],
+        ["Seed", `${this.arguments_.randomSeed.toString()}`],
       ],
       footers: ["", ""],
     };

@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
-import { Crossover, prng } from "@syntest/search";
+import { Crossover } from "@syntest/search";
+import { prng } from "@syntest/prng";
 
 import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";
 import { RootStatement } from "../../testcase/statements/root/RootStatement";

@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
-import { Decoder, Encoding, prng } from "@syntest/search";
+import { prng } from "@syntest/prng";
+import { Decoder, Encoding } from "@syntest/search";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { RootStatement } from "./statements/root/RootStatement";

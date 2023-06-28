@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { prng } from "@syntest/search";
+import { prng } from "@syntest/prng";
 
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";

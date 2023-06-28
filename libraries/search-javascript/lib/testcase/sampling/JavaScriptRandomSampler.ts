@@ -27,7 +27,7 @@ import {
   RootContext,
   TypeEnum,
 } from "@syntest/analysis-javascript";
-import { prng } from "@syntest/search";
+import { prng } from "@syntest/prng";
 
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
