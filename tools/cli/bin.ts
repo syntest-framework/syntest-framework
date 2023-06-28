@@ -85,7 +85,8 @@ async function main() {
     .env("SYNTEST")
     .parseSync(arguments_);
 
-  const seed = <RandomOptions>(<unknown>baseArguments) || getSeed();
+  const seed =
+    (<RandomOptions>(<unknown>baseArguments)).randomSeed || getSeed();
   initializePseudoRandomNumberGenerator(seed);
 
   // Setup logger
