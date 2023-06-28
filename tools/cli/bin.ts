@@ -33,6 +33,7 @@ import {
 import {
   BaseOptions,
   EventListenerPlugin,
+  extractArgumentValues,
   Configuration as ModuleConfiguration,
   ModuleManager,
   PluginType,
@@ -157,6 +158,14 @@ async function main() {
       LOGGER.info("Preparing modules...");
       await moduleManager.prepare();
       LOGGER.info("Modules prepared!");
+
+      const argumentsValues = extractArgumentValues(argv, moduleManager);
+
+      storageManager.store(
+        [],
+        ".syntest.json",
+        JSON.stringify(argumentsValues, undefined, 2)
+      );
     })
     .parse(arguments_);
 }
