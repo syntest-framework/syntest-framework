@@ -1,1 +1,1 @@
-# The storage library of the SynTest Ecosystem
+# The pseudo random number generator library of the SynTest Ecosystem
