@@ -17,12 +17,14 @@
  */
 import * as chai from "chai";
 
-import { prng } from "../../lib/util/prng";
+import { initializePseudoRandomNumberGenerator, prng } from "../lib/prng";
 
 const expect = chai.expect;
 
 describe("PRNG", () => {
   it("Gaussian random variables follow a gaussian distribution", () => {
+    initializePseudoRandomNumberGenerator("0");
+
     const samples = 100_000;
     const mu = 5;
     const sigma = 2;

@@ -39,6 +39,12 @@ import {
   PluginType,
 } from "@syntest/module";
 import {
+  getSeed,
+  initializePseudoRandomNumberGenerator,
+  Configuration as RandomConfiguration,
+  RandomOptions,
+} from "@syntest/prng";
+import {
   Configuration as StorageConfiguration,
   StorageManager,
   StorageOptions,
@@ -71,12 +77,17 @@ async function main() {
   yargs = StorageConfiguration.configureOptions(yargs);
   yargs = LogConfiguration.configureOptions(yargs);
   yargs = MetricConfiguration.configureOptions(yargs);
+  yargs = RandomConfiguration.configureOptions(yargs);
 
   // Parse the arguments and config using only the base options
   const baseArguments = yargs
     .wrap(yargs.terminalWidth())
     .env("SYNTEST")
     .parseSync(arguments_);
+
+  const seed =
+    (<RandomOptions>(<unknown>baseArguments)).randomSeed || getSeed();
+  initializePseudoRandomNumberGenerator(seed);
 
   // Setup logger
   setupLogger(
@@ -138,6 +149,7 @@ async function main() {
     .env("SYNTEST")
     .middleware(async (argv) => {
       (<StorageOptions>(<unknown>argv)).fid = flowId;
+      (<RandomOptions>(<unknown>argv)).randomSeed = seed;
       // Set the arguments in the module manager
       storageManager.args = argv;
       // Set the arguments in the module manager
