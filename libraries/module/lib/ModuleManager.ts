@@ -385,9 +385,8 @@ export class ModuleManager {
     }
 
     const presetObject = this._presets.get(presetChoice);
-    yargs = yargs.middleware(
-      (arguments_) => presetObject.modifyArgs(arguments_),
-      true
+    yargs = yargs.middleware((arguments_) =>
+      presetObject.modifyArgs(arguments_)
     );
 
     return yargs;

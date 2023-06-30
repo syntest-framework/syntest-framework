@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2023-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,18 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// globals
 
-import { setupLogger } from "@syntest/logging";
-import { initializePseudoRandomNumberGenerator } from "@syntest/prng";
+/**
+ * This file is meant to provide consistent error messages throughout the tool.
+ */
+export const singletonNotSet = (name: string) =>
+  `The ${name} singleton has not been set yet!`;
+export const singletonAlreadySet = (name: string) =>
+  `The ${name} singleton has already been set!`;
 
-// setup
-// This will run before all test cases.
-before(() => {
-  // This will set the prng singleton for all test cases.
-  // The prng singleton is required for running certain parts of the code.
-  initializePseudoRandomNumberGenerator("0");
-
-  // This will set up the logger singleton
-  setupLogger("log", [], "debug");
-});
+export const emptyArray = (variableName: string) =>
+  `'${variableName}' cannot be empty!`;
