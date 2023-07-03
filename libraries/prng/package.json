@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-search-algorithm-sfuzz",
-  "version": "1.0.0-beta.45",
-  "description": "A plugin for the SynTest Core containing the sFuzz modules",
+  "name": "@syntest/prng",
+  "version": "0.1.0-beta.0",
+  "description": "The pseudo random number generator library of the SynTest Framework",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -19,12 +19,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/lib",
-    "dist/index.d.ts",
-    "dist/index.d.ts.map",
-    "dist/index.js",
-    "dist/index.js.map",
-    "NOTICE",
+    "/dist",
+    "/NOTICE",
     "README.md"
   ],
   "repository": {
@@ -46,16 +42,17 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-language": "^0.2.0-beta.48",
-    "@syntest/logging": "^0.1.0-beta.6",
-    "@syntest/metric": "^0.1.0-beta.6",
-    "@syntest/module": "*",
-    "@syntest/search": "^0.4.0-beta.42"
+    "@syntest/logging": "*",
+    "bignumber.js": "9.0.1",
+    "seedrandom": "3.0.5"
   },
   "engines": {
     "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.1"
   }
 }

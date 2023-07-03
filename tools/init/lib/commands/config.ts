@@ -18,52 +18,8 @@
 import { writeFileSync } from "node:fs";
 import * as path from "node:path";
 
-import { Command, ModuleManager, Plugin, Tool } from "@syntest/module";
+import { Command, extractArgumentValues, ModuleManager } from "@syntest/module";
 import Yargs = require("yargs");
-
-const manualRequired = "TODO fill this in yourself";
-
-function addCommandOptions(
-  options: { [key: string]: unknown },
-  tool: Tool,
-  command: Command,
-  moduleManager: ModuleManager
-) {
-  for (const [name, option] of command.options.entries()) {
-    options[name] =
-      option.default === undefined ? manualRequired : option.default;
-  }
-
-  for (const pluginsOfType of moduleManager.plugins.values()) {
-    for (const plugin of pluginsOfType.values()) {
-      addPluginOptions(options, tool, command, plugin);
-    }
-  }
-}
-
-function addPluginOptions(
-  options: { [key: string]: unknown },
-  tool: Tool,
-  command: Command,
-  plugin: Plugin
-) {
-  const toolOptions = plugin.getOptions(tool.name, tool.labels);
-
-  for (const [name, option] of toolOptions.entries()) {
-    options[name] =
-      option.default === undefined ? manualRequired : option.default;
-  }
-
-  const commandOptions = plugin.getOptions(
-    tool.name,
-    tool.labels,
-    command.command
-  );
-  for (const [name, option] of commandOptions.entries()) {
-    options[name] =
-      option.default === undefined ? manualRequired : option.default;
-  }
-}
 
 export function getConfigCommand(
   tool: string,
@@ -78,35 +34,10 @@ export function getConfigCommand(
     "Create a configuration file for the tool.",
     options,
     (arguments_: Yargs.ArgumentsCamelCase) => {
-      const allOptions: { [key: string]: unknown } = {};
-
-      // Set default values for each option provided by the modules
-      for (const tool of moduleManager.tools.values()) {
-        for (const [name, option] of tool.toolOptions.entries()) {
-          allOptions[name] =
-            option.default === undefined ? manualRequired : option.default;
-        }
-
-        for (const command of tool.commands) {
-          addCommandOptions(allOptions, tool, command, moduleManager);
-        }
-      }
-
-      // Set the values provided by the user
-      for (const argument of Object.keys(arguments_)) {
-        if (
-          argument.includes("_") ||
-          /[A-Z]/.test(argument) ||
-          argument === "_" ||
-          argument.length === 1 ||
-          argument === "help" ||
-          argument === "version" ||
-          argument === "$0"
-        ) {
-          continue;
-        }
-        allOptions[argument] = arguments_[argument];
-      }
+      const allOptions: { [key: string]: unknown } = extractArgumentValues(
+        arguments_,
+        moduleManager
+      );
 
       writeFileSync(
         path.resolve(".syntest.json"),

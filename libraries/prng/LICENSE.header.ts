@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-<%= YEAR %> Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,18 +15,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// globals
-
-import { setupLogger } from "@syntest/logging";
-import { initializePseudoRandomNumberGenerator } from "@syntest/prng";
-
-// setup
-// This will run before all test cases.
-before(() => {
-  // This will set the prng singleton for all test cases.
-  // The prng singleton is required for running certain parts of the code.
-  initializePseudoRandomNumberGenerator("0");
-
-  // This will set up the logger singleton
-  setupLogger("log", [], "debug");
-});

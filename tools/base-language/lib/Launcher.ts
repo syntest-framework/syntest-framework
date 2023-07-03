@@ -19,7 +19,6 @@
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
 import { ModuleManager } from "@syntest/module";
-import { getSeed } from "@syntest/search";
 import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 
@@ -146,7 +145,10 @@ export abstract class Launcher {
       `${this.arguments_.testMinimization.toString()}`
     );
 
-    this.metricManager.recordProperty(PropertyName.RANDOM_SEED, `${getSeed()}`);
+    this.metricManager.recordProperty(
+      PropertyName.RANDOM_SEED,
+      `${this.arguments_.randomSeed.toString()}`
+    );
     this.metricManager.recordProperty(
       PropertyName.MAX_DEPTH,
       `${this.arguments_.maxDepth.toString()}`

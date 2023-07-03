@@ -26,27 +26,14 @@ import {
   singletonNotSet,
 } from "./diagnostics";
 
-let usedSeed: string;
 let random: seedrandom.PRNG | undefined;
 
-export function getSeed(seed?: string): string {
-  if (!usedSeed) {
-    usedSeed = seed;
-
-    if (!seed) {
-      usedSeed = `${seedrandom()()}`;
-    }
-  }
-
-  return usedSeed;
-}
-
-export function initializePseudoRandomNumberGenerator(seed?: string) {
+export function initializePseudoRandomNumberGenerator(seed: string) {
   if (random) {
     throw new Error(singletonAlreadySet("PseudoRandomNumberGenerator"));
   }
 
-  random = seedrandom(getSeed(seed));
+  random = seedrandom(seed);
 }
 
 function generator() {
@@ -59,8 +46,6 @@ function generator() {
 
 /**
  * The global random generator.
- *
- * @author Dimitri Stallenberg
  */
 export const prng = {
   nextBoolean: (trueChance = 0.5): boolean => {
