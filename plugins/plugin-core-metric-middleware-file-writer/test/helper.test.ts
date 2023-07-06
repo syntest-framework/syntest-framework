@@ -15,18 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
+// globals
 
-import { StorageManager } from "../lib/StorageManager";
+import { setupLogger } from "@syntest/logging";
 
-const expect = chai.expect;
-
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", () => {
-    new StorageManager("path", "tempPath", "fid");
-    expect(true);
-  });
+// setup
+// This will run before all test cases.
+before(() => {
+  // This will set up the logger singleton
+  setupLogger("log", [], "debug");
 });

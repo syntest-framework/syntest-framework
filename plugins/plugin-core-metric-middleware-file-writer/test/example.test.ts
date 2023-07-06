@@ -27,7 +27,13 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new FileWriterMetricMiddleware("", new StorageManager(), [], [], "");
+    new FileWriterMetricMiddleware(
+      "",
+      new StorageManager("path", "tempPath", "fid"),
+      [],
+      [],
+      ""
+    );
     expect(true);
   });
 });

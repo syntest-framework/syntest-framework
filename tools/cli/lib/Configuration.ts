@@ -24,18 +24,29 @@ export enum OptionGroups {
 
 export type ConfigOptions = {
   config: string;
+  verbose: number;
 };
 
 export const Configuration = {
   configureOptions(yargs: yargs.Argv) {
-    return yargs.option("config", {
-      alias: ["c"],
-      default: ".syntest.json",
-      description: "The syntest configuration file",
-      group: OptionGroups.General,
-      hidden: false,
-      config: true,
-      type: "string",
-    });
+    return yargs
+      .option("config", {
+        alias: ["c"],
+        config: true,
+        default: ".syntest.json",
+        description: "Manually specify path to config file",
+        group: OptionGroups.General,
+        hidden: false,
+        type: "string",
+      })
+      .option("verbose", {
+        alias: ["v"],
+        count: true,
+        default: 0,
+        description: "Increase verbosity of output",
+        group: OptionGroups.General,
+        hidden: false,
+        type: "boolean",
+      });
   },
 };

@@ -66,7 +66,7 @@ async function main() {
 
   // Configure the base parser
   let config = yargs
-    .usage(`Usage: syntest <command> [options]`)
+    .usage(`Usage: $0 <command> [options]`)
     .epilog("visit https://syntest.org for more documentation")
     .env("SYNTEST")
     .pkgConf("syntest")
@@ -104,6 +104,18 @@ async function main() {
   // Generate a flow id
   const flowId = `FID-${Date.now()}-${uuid.generate()}`;
 
+  // Configure the console log level
+  let consoleLogLevel;
+  if (baseArguments.verbose >= 3) {
+    consoleLogLevel = "debug";
+  } else if (baseArguments.verbose >= 2) {
+    consoleLogLevel = "info";
+  } else if (baseArguments.verbose >= 1) {
+    consoleLogLevel = "warn";
+  } else {
+    consoleLogLevel = baseArguments.consoleLogLevel;
+  }
+
   // Setup logger
   setupLogger(
     path.join(
@@ -112,13 +124,17 @@ async function main() {
       baseArguments.logDirectory
     ),
     baseArguments.fileLogLevel,
-    baseArguments.consoleLogLevel
+    consoleLogLevel
   );
   const LOGGER = getLogger("cli");
 
   // Configure module system
   const metricManager = new MetricManager("global");
-  const storageManager = new StorageManager();
+  const storageManager = new StorageManager(
+    baseArguments.syntestDirectory,
+    baseArguments.tempSyntestDirectory,
+    flowId
+  );
   const userInterface = new UserInterface();
   const moduleManager = new ModuleManager(
     metricManager,
@@ -169,7 +185,6 @@ async function main() {
       baseArguments.randomSeed = seed;
 
       // Set the arguments in the module manager
-      storageManager.args = argv;
       moduleManager.args = argv;
 
       // Set the output metrics
