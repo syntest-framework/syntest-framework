@@ -24,7 +24,7 @@ import {
   Logger as WinstonLogger,
 } from "winston";
 
-let singleTonLogger: WinstonLogger;
+let singletonLogger: WinstonLogger;
 
 export function setupLogger(
   logDirectory: string,
@@ -73,11 +73,11 @@ export function setupLogger(
       })
     );
   }
-  singleTonLogger = createLogger(baseLoggerOptions);
+  singletonLogger = createLogger(baseLoggerOptions);
 }
 
 export function getLogger(context: string): Logger {
-  if (singleTonLogger === undefined) {
+  if (singletonLogger === undefined) {
     throw new Error(
       "Should call setupLogger function before using getLogger function!"
     );
@@ -101,7 +101,7 @@ class SubLogger {
   }
 
   error(message: string) {
-    singleTonLogger.log({
+    singletonLogger.log({
       level: "error",
       message: message,
       meta: { context: this._context },
@@ -109,7 +109,7 @@ class SubLogger {
   }
 
   warn(message: string) {
-    singleTonLogger.log({
+    singletonLogger.log({
       level: "warn",
       message: message,
       meta: { context: this._context },
@@ -117,7 +117,7 @@ class SubLogger {
   }
 
   info(message: string) {
-    singleTonLogger.log({
+    singletonLogger.log({
       level: "info",
       message: message,
       meta: { context: this._context },
@@ -125,7 +125,7 @@ class SubLogger {
   }
 
   debug(message: string) {
-    singleTonLogger.log({
+    singletonLogger.log({
       level: "debug",
       message: message,
       meta: { context: this._context },
@@ -133,7 +133,7 @@ class SubLogger {
   }
 
   silly(message: string) {
-    singleTonLogger.log({
+    singletonLogger.log({
       level: "silly",
       message: message,
       meta: { context: this._context },
