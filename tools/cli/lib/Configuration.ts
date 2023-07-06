@@ -15,43 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LoggingOptions } from "@syntest/logging";
-import yargs = require("yargs");
 
-export type BaseOptions = PresetOptions & LoggingOptions & ModuleOptions;
+import * as yargs from "yargs";
 
 export enum OptionGroups {
   General = "General Options:",
-  Module = "Module Options:",
 }
 
-export type PresetOptions = {
-  preset: string;
-};
-
-export type ModuleOptions = {
-  modules: string[];
+export type ConfigOptions = {
+  config: string;
 };
 
 export const Configuration = {
   configureOptions(yargs: yargs.Argv) {
-    return yargs
-      .option("preset", {
-        alias: ["p"],
-        default: "none",
-        description: "The preset you want to use",
-        group: OptionGroups.General,
-        hidden: false,
-        type: "string",
-      })
-      .option("modules", {
-        alias: ["m"],
-        array: true,
-        default: [],
-        description: "List of dependencies or paths to modules to load",
-        group: OptionGroups.Module,
-        hidden: false,
-        type: "string",
-      });
+    return yargs.option("config", {
+      alias: ["c"],
+      default: ".syntest.json",
+      description: "The syntest configuration file",
+      group: OptionGroups.General,
+      hidden: false,
+      config: true,
+      type: "string",
+    });
   },
 };

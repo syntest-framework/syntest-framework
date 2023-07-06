@@ -17,6 +17,7 @@
     "Dimitri Stallenberg"
   ],
   "files": [
+    "dist/lib",
     "dist/bin.d.ts",
     "dist/bin.d.ts.map",
     "dist/bin.js",

@@ -22,7 +22,8 @@ import * as path from "node:path";
 import { UserInterface } from "@syntest/cli-graphics";
 import {
   getLogger,
-  Configuration as LogConfiguration,
+  Configuration as LoggingConfiguration,
+  LoggingOptions,
   setupLogger,
 } from "@syntest/logging";
 import {
@@ -31,12 +32,13 @@ import {
   MetricOptions,
 } from "@syntest/metric";
 import {
-  BaseOptions,
   EventListenerPlugin,
   extractArgumentValues,
   Configuration as ModuleConfiguration,
   ModuleManager,
+  ModuleOptions,
   PluginType,
+  PresetOptions,
 } from "@syntest/module";
 import {
   getSeed,
@@ -49,64 +51,79 @@ import {
   StorageManager,
   StorageOptions,
 } from "@syntest/storage";
-import uuid = require("short-uuid");
-import yargHelper = require("yargs/helpers");
+import * as uuid from "short-uuid";
+import * as yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+import {
+  Configuration as CliConfiguration,
+  ConfigOptions,
+} from "./lib/Configuration";
 
 async function main() {
-  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
+  // Hide the bin name from the arguments
+  const arguments_ = hideBin(process.argv);
 
-  // Setup user interface
-  const userInterface = new UserInterface();
-  userInterface.printTitle("SynTest");
-  userInterface.printSuccess("");
-  userInterface.printSuccess(flowId);
+  // Configure the base parser
+  let config = yargs
+    .usage(`Usage: syntest <tool> <command> [options]`)
+    .example("$0 count -f foo.js", "count the lines in the given file")
+    .epilog("visit https://syntest.org for more documentation")
+    // We disable help and version here because, we don't want the help command to be triggered
+    // when we did not configure the commands and options from the added modules yet.
+    .help(false)
+    .version(false)
+    .env("SYNTEST")
+    .pkgConf("syntest")
+    .showHidden(false);
 
-  // Remove binary call from args
-  const arguments_ = yargHelper.hideBin(process.argv);
+  config = config.wrap(config.terminalWidth());
 
-  /**
-   * Configure base usage
-   *
-   * We disable help and version here because, we don't want the help command to be triggered.
-   * When we did not configure the commands and options from the added modules yet.
-   */
-  let yargs = ModuleConfiguration.configureUsage().help(false).version(false);
+  // Configure the base options
+  config = CliConfiguration.configureOptions(config);
+  config = RandomConfiguration.configureOptions(config);
+  config = LoggingConfiguration.configureOptions(config);
+  config = StorageConfiguration.configureOptions(config);
+  config = MetricConfiguration.configureOptions(config);
+  config = ModuleConfiguration.configureOptions(config);
 
-  // Configure general options
-  yargs = ModuleConfiguration.configureOptions(yargs);
-  yargs = StorageConfiguration.configureOptions(yargs);
-  yargs = LogConfiguration.configureOptions(yargs);
-  yargs = MetricConfiguration.configureOptions(yargs);
-  yargs = RandomConfiguration.configureOptions(yargs);
+  type BaseOptions = ConfigOptions &
+    RandomOptions &
+    LoggingOptions &
+    StorageOptions &
+    PresetOptions &
+    ModuleOptions;
 
   // Parse the arguments and config using only the base options
-  const baseArguments = yargs
-    .wrap(yargs.terminalWidth())
-    .env("SYNTEST")
-    .parseSync(arguments_);
+  const baseArguments = <BaseOptions>(<unknown>config.parseSync(arguments_));
 
-  const seed =
-    (<RandomOptions>(<unknown>baseArguments)).randomSeed || getSeed();
+  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
+
+  const seed = baseArguments.randomSeed || getSeed();
   initializePseudoRandomNumberGenerator(seed);
 
   // Setup logger
   setupLogger(
     path.join(
-      (<StorageOptions>(<unknown>baseArguments)).syntestDirectory,
+      baseArguments.syntestDirectory,
       flowId,
-      (<BaseOptions>(<unknown>baseArguments)).logDirectory
+      baseArguments.logDirectory
     ),
-    (<BaseOptions>(<unknown>baseArguments)).fileLogLevel,
-    (<BaseOptions>(<unknown>baseArguments)).consoleLogLevel
+    baseArguments.fileLogLevel,
+    baseArguments.consoleLogLevel
   );
   const LOGGER = getLogger("cli");
+
   LOGGER.info(`Starting Flow with id: ${flowId}`);
+
+  // Setup metric manager
+  const metricManager = new MetricManager("global");
 
   // Setup storage manager
   const storageManager = new StorageManager();
 
-  // Setup metric manager
-  const metricManager = new MetricManager("global");
+  // Setup user interface
+  const userInterface = new UserInterface();
 
   // Setup module manager
   const moduleManager = new ModuleManager(
@@ -115,19 +132,20 @@ async function main() {
     userInterface
   );
 
+  userInterface.printTitle("SynTest");
+  userInterface.printSuccess("");
+  userInterface.printSuccess(flowId);
+
   // Enable help on fail
-  yargs = yargs.showHelpOnFail(true);
+  config = config.showHelpOnFail(true);
 
   // Import defined modules
-  const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
+  const modules = baseArguments.modules;
   LOGGER.info("Loading standard modules...");
   await moduleManager.loadModule("@syntest/init", "@syntest/init");
   LOGGER.info(`Loading modules... [${modules.join(", ")}]`);
   await moduleManager.loadModules(modules);
-  yargs = moduleManager.configureModules(
-    yargs,
-    (<BaseOptions>(<unknown>baseArguments)).preset
-  );
+  config = moduleManager.configureModules(config, baseArguments.preset);
 
   // Set the metrics on the metric manager
   metricManager.metrics = await moduleManager.getMetrics();
@@ -140,13 +158,10 @@ async function main() {
 
   // Execute program
   LOGGER.info("Executing program...");
-  await yargs
-    .wrap(yargs.terminalWidth())
+  await config
     .help(true)
     .version(versions)
-    .showHidden(false)
     .demandCommand()
-    .env("SYNTEST")
     .middleware(async (argv) => {
       (<StorageOptions>(<unknown>argv)).fid = flowId;
       (<RandomOptions>(<unknown>argv)).randomSeed = seed;
@@ -171,8 +186,8 @@ async function main() {
       await moduleManager.prepare();
       LOGGER.info("Modules prepared!");
 
+      // Store the arguments
       const argumentsValues = extractArgumentValues(argv, moduleManager);
-
       storageManager.store(
         [],
         ".syntest.json",
