@@ -33,7 +33,6 @@ import {
 } from "@syntest/metric";
 import {
   EventListenerPlugin,
-  extractArgumentValues,
   Configuration as ModuleConfiguration,
   ModuleManager,
   ModuleOptions,
@@ -43,8 +42,8 @@ import {
 import {
   getSeed,
   initializePseudoRandomNumberGenerator,
-  Configuration as RandomConfiguration,
-  RandomOptions,
+  Configuration as PrngConfiguration,
+  PrngOptions,
 } from "@syntest/prng";
 import {
   Configuration as StorageConfiguration,
@@ -59,6 +58,7 @@ import {
   Configuration as CliConfiguration,
   ConfigOptions,
 } from "./lib/Configuration";
+import { storeConfig } from "./lib/middlewares/configStorage";
 
 async function main() {
   // Hide the bin name from the arguments
@@ -66,29 +66,29 @@ async function main() {
 
   // Configure the base parser
   let config = yargs
-    .usage(`Usage: syntest <tool> <command> [options]`)
-    .example("$0 count -f foo.js", "count the lines in the given file")
+    .usage(`Usage: syntest <command> [options]`)
     .epilog("visit https://syntest.org for more documentation")
-    // We disable help and version here because, we don't want the help command to be triggered
-    // when we did not configure the commands and options from the added modules yet.
-    .help(false)
-    .version(false)
     .env("SYNTEST")
     .pkgConf("syntest")
-    .showHidden(false);
+    .showHidden(false)
+    // We disable help and version here as we don't want the help command to be triggered
+    // when we did not configure the commands and options from the added modules yet.
+    .help(false)
+    .version(false);
 
+  // Wrap CLI to the terminal width
   config = config.wrap(config.terminalWidth());
 
   // Configure the base options
   config = CliConfiguration.configureOptions(config);
-  config = RandomConfiguration.configureOptions(config);
+  config = PrngConfiguration.configureOptions(config);
   config = LoggingConfiguration.configureOptions(config);
   config = StorageConfiguration.configureOptions(config);
   config = MetricConfiguration.configureOptions(config);
   config = ModuleConfiguration.configureOptions(config);
 
   type BaseOptions = ConfigOptions &
-    RandomOptions &
+    PrngOptions &
     LoggingOptions &
     StorageOptions &
     PresetOptions &
@@ -97,10 +97,12 @@ async function main() {
   // Parse the arguments and config using only the base options
   const baseArguments = <BaseOptions>(<unknown>config.parseSync(arguments_));
 
-  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
-
+  // Initialize the pseudo random number generator
   const seed = baseArguments.randomSeed || getSeed();
   initializePseudoRandomNumberGenerator(seed);
+
+  // Generate a flow id
+  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
 
   // Setup logger
   setupLogger(
@@ -114,18 +116,10 @@ async function main() {
   );
   const LOGGER = getLogger("cli");
 
-  LOGGER.info(`Starting Flow with id: ${flowId}`);
-
-  // Setup metric manager
+  // Configure module system
   const metricManager = new MetricManager("global");
-
-  // Setup storage manager
   const storageManager = new StorageManager();
-
-  // Setup user interface
   const userInterface = new UserInterface();
-
-  // Setup module manager
   const moduleManager = new ModuleManager(
     metricManager,
     storageManager,
@@ -135,14 +129,19 @@ async function main() {
   userInterface.printTitle("SynTest");
   userInterface.printSuccess("");
   userInterface.printSuccess(flowId);
+  LOGGER.info(`Starting Flow with id: ${flowId}`);
 
   // Enable help on fail
   config = config.showHelpOnFail(true);
 
   // Import defined modules
   const modules = baseArguments.modules;
+
+  // Load standard modules
   LOGGER.info("Loading standard modules...");
   await moduleManager.loadModule("@syntest/init", "@syntest/init");
+
+  // Load user defined modules
   LOGGER.info(`Loading modules... [${modules.join(", ")}]`);
   await moduleManager.loadModules(modules);
   config = moduleManager.configureModules(config, baseArguments.preset);
@@ -163,17 +162,21 @@ async function main() {
     .version(versions)
     .demandCommand()
     .middleware(async (argv) => {
-      (<StorageOptions>(<unknown>argv)).fid = flowId;
-      (<RandomOptions>(<unknown>argv)).randomSeed = seed;
+      const baseArguments = <BaseOptions>(<unknown>argv);
+
+      // Set the flow id and seed in the base arguments
+      baseArguments.fid = flowId;
+      baseArguments.randomSeed = seed;
+
       // Set the arguments in the module manager
       storageManager.args = argv;
-      // Set the arguments in the module manager
       moduleManager.args = argv;
+
+      // Set the output metrics
       metricManager.setOutputMetrics(
         (<MetricOptions>(<unknown>argv)).outputMetrics
       );
 
-      // process.setMaxListeners()
       // Register all listener plugins
       for (const plugin of moduleManager
         .getPluginsOfType(PluginType.EVENT_LISTENER)
@@ -185,15 +188,8 @@ async function main() {
       LOGGER.info("Preparing modules...");
       await moduleManager.prepare();
       LOGGER.info("Modules prepared!");
-
-      // Store the arguments
-      const argumentsValues = extractArgumentValues(argv, moduleManager);
-      storageManager.store(
-        [],
-        ".syntest.json",
-        JSON.stringify(argumentsValues, undefined, 2)
-      );
     })
+    .middleware((argv) => storeConfig(moduleManager, storageManager, argv))
     .parse(arguments_);
 }
 

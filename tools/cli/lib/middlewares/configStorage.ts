@@ -15,25 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Yargs = require("yargs");
 
-export type PrngOptions = {
-  randomSeed: string;
-};
+import { extractArgumentValues, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
+import * as yargs from "yargs";
 
-export enum OptionGroups {
-  Prng = "PRNG Options:",
+export function storeConfig(
+  moduleManager: ModuleManager,
+  storageManager: StorageManager,
+  arguments_: yargs.ArgumentsCamelCase
+): void {
+  // Store the arguments
+  const argumentsValues = extractArgumentValues(arguments_, moduleManager);
+  storageManager.store(
+    [],
+    ".syntest.json",
+    JSON.stringify(argumentsValues, undefined, 2)
+  );
 }
-
-export const Configuration = {
-  configureOptions(yargs: Yargs.Argv) {
-    return yargs.option("random-seed", {
-      alias: ["s"],
-      default: undefined,
-      description: "Seed to be used by the pseudo random number generator.",
-      group: OptionGroups.Prng,
-      hidden: false,
-      type: "string",
-    });
-  },
-};
