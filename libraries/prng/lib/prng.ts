@@ -33,7 +33,7 @@ export function initializePseudoRandomNumberGenerator(seed: string) {
     throw new Error(singletonAlreadySet("PseudoRandomNumberGenerator"));
   }
 
-  random = seedrandom(seed);
+  random = seedrandom(seed, { global: true });
 }
 
 function generator() {
