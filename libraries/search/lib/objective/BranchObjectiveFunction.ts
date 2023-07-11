@@ -23,8 +23,10 @@ import { Encoding } from "../Encoding";
 import { ExecutionResult } from "../ExecutionResult";
 import { SearchSubject } from "../SearchSubject";
 import {
+  InvalidObjectStateError,
   moreThanTwoOutgoingEdges,
-  shouldNeverHappen,
+  NumberIsNanError,
+  UndefinedValueError,
 } from "../util/diagnostics";
 
 import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
@@ -80,7 +82,9 @@ export class BranchObjectiveFunction<
     );
 
     if (functions_.length !== 1) {
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      throw new InvalidObjectStateError(
+        "More than 1 node with the same id found in CFG or there is no node with such id"
+      );
     }
 
     const function_ = functions_[0];
@@ -88,7 +92,7 @@ export class BranchObjectiveFunction<
     const targetNode = function_.graph.getNodeById(this._id);
 
     if (!targetNode) {
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      throw new InvalidObjectStateError("BranchObjectiveFunction");
     }
 
     // Find approach level and ancestor based on node and covered nodes
@@ -135,10 +139,8 @@ export class BranchObjectiveFunction<
         return approachLevel + 0.499_999_999;
       }
 
-      throw new Error(
-        shouldNeverHappen(
-          "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
-        )
+      throw new InvalidObjectStateError(
+        "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
       );
       // return approachLevel + 0.48 * statementFraction + 0.01;
     }
@@ -159,12 +161,16 @@ export class BranchObjectiveFunction<
 
     if (!trueEdge || !falseEdge) {
       // weird
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      throw new InvalidObjectStateError(
+        "CFG node doesn't have true or false edge"
+      );
     }
 
     // if closest covered node is not found, we return the distance to the root branch
     if (!closestCoveredBranchTrace) {
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      throw new InvalidObjectStateError(
+        "Closest covered branch trace is not found"
+      );
     }
 
     let trace;
@@ -181,7 +187,7 @@ export class BranchObjectiveFunction<
     }
 
     if (trace === undefined) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new UndefinedValueError("Trace was undefined");
     }
 
     let branchDistance = this.branchDistance.calculate(
@@ -192,15 +198,18 @@ export class BranchObjectiveFunction<
     );
 
     if (Number.isNaN(approachLevel)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new NumberIsNanError("Approach level is NaN");
     }
 
     if (Number.isNaN(branchDistance)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new NumberIsNanError("Branch distance is NaN");
     }
 
     if (Number.isNaN(approachLevel + branchDistance)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      // is this even possible???
+      throw new NumberIsNanError(
+        "Sum of branch distance and approach level is NaN"
+      );
     }
 
     if (branchDistance === 0) {

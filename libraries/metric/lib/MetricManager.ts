@@ -33,7 +33,7 @@ import {
   seriesDistributionTypeNotRegistered,
   seriesNotRegistered,
   seriesTypeNotRegistered,
-  shouldNeverHappen,
+  UndefinedValueError,
 } from "./util/diagnostics";
 
 export class MetricManager {
@@ -51,7 +51,7 @@ export class MetricManager {
     const namespacedManager = this._namespacedManagers.get(namespace);
 
     if (namespacedManager === undefined) {
-      throw new Error(shouldNeverHappen("MetricManager"));
+      throw new UndefinedValueError("MetricManager was undefined");
     }
 
     return namespacedManager;

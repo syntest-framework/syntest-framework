@@ -49,3 +49,31 @@ export const moreThanTwoOutgoingEdges = (
 
 export const cannotFindTraceThatIsCovered = () =>
   `Cannot find the branch trace that is covered`;
+
+export class NumberIsNanError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NumberIsNanError";
+  }
+}
+
+export class AlreadyAssignedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AlreadyAssignedError";
+  }
+}
+
+export class InvalidObjectStateError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InvalidObjectStateError";
+  }
+}
+
+export class UndefinedValueError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UndefinedMetricManagerError";
+  }
+}

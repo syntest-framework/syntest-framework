@@ -22,7 +22,7 @@ import { Decoder } from "./Decoder";
 import { EncodingSampler } from "./EncodingSampler";
 import { ExecutionResult } from "./ExecutionResult";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
-import { shouldNeverHappen } from "./util/diagnostics";
+import { NumberIsNanError } from "./util/diagnostics";
 
 /**
  * Encoding of the search problem.
@@ -126,7 +126,7 @@ export abstract class Encoding {
   getDistance(objectiveFunction: ObjectiveFunction<Encoding>): number {
     if (this._objectives.has(objectiveFunction)) {
       if (Number.isNaN(this._objectives.get(objectiveFunction))) {
-        throw new TypeError(shouldNeverHappen("Encoding"));
+        throw new NumberIsNanError("objectiveFunction was NaN");
       }
       return this._objectives.get(objectiveFunction);
     } else {
@@ -135,7 +135,7 @@ export abstract class Encoding {
       // with this code, we keep the objective values up to date
       const distance = objectiveFunction.calculateDistance(this);
       if (Number.isNaN(distance)) {
-        throw new TypeError(shouldNeverHappen("Encoding"));
+        throw new NumberIsNanError("Distance calculation resulted in NaN");
       }
       this._objectives.set(objectiveFunction, distance);
       return distance;
@@ -153,7 +153,7 @@ export abstract class Encoding {
     distance: number
   ): void {
     if (Number.isNaN(distance)) {
-      throw new TypeError(shouldNeverHappen("Encoding"));
+      throw new NumberIsNanError("Cannot set distance to NaN");
     }
     this._objectives.set(objectiveFunction, distance);
   }

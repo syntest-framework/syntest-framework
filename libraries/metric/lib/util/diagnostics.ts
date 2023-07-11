@@ -50,3 +50,10 @@ export const seriesDistributionTypeNotRegistered = (
 
 export const shouldNeverHappen = (bugLocation: string) =>
   `This should never happen.\nThere is likely a bug in the ${bugLocation}.`;
+
+export class UndefinedValueError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UndefinedMetricManagerError";
+  }
+}

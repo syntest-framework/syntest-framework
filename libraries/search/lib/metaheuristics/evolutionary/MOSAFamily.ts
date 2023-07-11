@@ -25,7 +25,7 @@ import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
 import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 import { Procreation } from "../../operators/procreation/Procreation";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
-import { shouldNeverHappen } from "../../util/diagnostics";
+import { InvalidObjectStateError } from "../../util/diagnostics";
 
 import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
 
@@ -59,7 +59,9 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       this._objectiveManager.getCurrentObjectives().size === 0 &&
       this._objectiveManager.getUncoveredObjectives().size > 0
     )
-      throw new Error(shouldNeverHappen("Objective Manager"));
+      throw new InvalidObjectStateError(
+        "Objective Manager has 0 current current objectives while having uncovered objectives"
+      );
 
     if (
       this._objectiveManager.getCurrentObjectives().size === 0 &&
