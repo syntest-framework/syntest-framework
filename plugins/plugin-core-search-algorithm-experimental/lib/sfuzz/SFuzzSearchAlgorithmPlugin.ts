@@ -22,7 +22,7 @@ import {
 } from "@syntest/base-language";
 import { Encoding, SearchAlgorithm } from "@syntest/search";
 
-import { SFuzz } from "../algorithm/SFuzz";
+import { SFuzz } from "./SFuzz";
 
 /**
  * Plugin for the sFuzz search algorithm.

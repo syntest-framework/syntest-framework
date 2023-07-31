@@ -15,19 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/extension/plugins/PluginType";
-export * from "./lib/extension/plugins/MetricMiddlewarePlugin";
-export * from "./lib/extension/plugins/EventListenerPlugin";
+import seedrandom = require("seedrandom");
 
-export * from "./lib/extension/Command";
-export * from "./lib/extension/Extension";
-export * from "./lib/extension/Module";
-export * from "./lib/extension/Plugin";
-export * from "./lib/extension/Preset";
-export * from "./lib/extension/Tool";
-
-export * from "./lib/util/Configuration";
-export * from "./lib/util/diagnostics";
-export * from "./lib/util/extractArgumentValues";
-
-export * from "./lib/ModuleManager";
+export function getSeed(): string {
+  return `${seedrandom()()}`;
+}
