@@ -15,19 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/extension/plugins/PluginType";
-export * from "./lib/extension/plugins/MetricMiddlewarePlugin";
-export * from "./lib/extension/plugins/EventListenerPlugin";
+import Yargs = require("yargs");
 
-export * from "./lib/extension/Command";
-export * from "./lib/extension/Extension";
-export * from "./lib/extension/Module";
-export * from "./lib/extension/Plugin";
-export * from "./lib/extension/Preset";
-export * from "./lib/extension/Tool";
+export type RandomOptions = {
+  randomSeed: string;
+};
 
-export * from "./lib/util/Configuration";
-export * from "./lib/util/diagnostics";
-export * from "./lib/util/extractArgumentValues";
+export enum OptionGroups {
+  Random = "Random Options:",
+}
 
-export * from "./lib/ModuleManager";
+export const Configuration = {
+  configureOptions(yargs: Yargs.Argv) {
+    return yargs.option("random-seed", {
+      alias: ["s"],
+      default: undefined,
+      description: "Seed to be used by the pseudo random number generator.",
+      group: OptionGroups.Random,
+      hidden: false,
+      type: "string",
+    });
+  },
+};
