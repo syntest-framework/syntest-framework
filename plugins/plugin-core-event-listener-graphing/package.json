@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-event-listener-graphing",
-  "version": "1.0.0-beta.23",
+  "version": "1.0.0-beta.24",
   "description": "A listener plugin for the SynTest Core containing graphing functionalities",
   "keywords": [
     "syntest",
@@ -46,7 +46,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.1.0-beta.8",
+    "@syntest/analysis": "^0.1.0-beta.9",
     "@syntest/base-language": "*",
     "@syntest/cfg": "*",
     "@syntest/logging": "*",

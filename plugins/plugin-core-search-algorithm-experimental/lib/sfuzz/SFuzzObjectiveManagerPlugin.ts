@@ -22,7 +22,7 @@ import {
 } from "@syntest/base-language";
 import { Encoding, ObjectiveManager } from "@syntest/search";
 
-import { SFuzzObjectiveManager } from "../algorithm/SFuzzObjectiveManager";
+import { SFuzzObjectiveManager } from "./SFuzzObjectiveManager";
 
 /**
  * Plugin for the sFuzz objective manager.
