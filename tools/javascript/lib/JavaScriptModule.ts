@@ -26,7 +26,6 @@ import { MetricManager } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
 import { RandomSamplerPlugin } from "./plugins/sampler/RandomSamplerPlugin";
 import { TreeCrossoverPlugin } from "./plugins/crossover/TreeCrossoverPlugin";
-import { SearchProgressBarListener } from "./plugins/listeners/SearchProgressBarListener";
 
 export default class JavaScriptModule extends TestingToolModule {
   constructor() {
@@ -77,10 +76,6 @@ export default class JavaScriptModule extends TestingToolModule {
 
     moduleManager.registerPlugin(this, new TreeCrossoverPlugin());
     moduleManager.registerPlugin(this, new RandomSamplerPlugin());
-    moduleManager.registerPlugin(
-      this,
-      new SearchProgressBarListener(userInterface)
-    );
 
     super.register(
       moduleManager,
