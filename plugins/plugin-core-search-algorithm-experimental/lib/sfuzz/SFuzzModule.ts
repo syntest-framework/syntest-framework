@@ -18,9 +18,9 @@
 
 import { Module, ModuleManager } from "@syntest/module";
 
-import { SFuzzObjectiveManagerPlugin } from "./plugins/SFuzzObjectiveManagerPlugin";
-import { SFuzzSearchAlgorithmPlugin } from "./plugins/SFuzzSearchAlgorithmPlugin";
+import { SFuzzObjectiveManagerPlugin } from "./SFuzzObjectiveManagerPlugin";
 import { SFuzzPreset } from "./SFuzzPreset";
+import { SFuzzSearchAlgorithmPlugin } from "./SFuzzSearchAlgorithmPlugin";
 
 export default class SFuzzModule extends Module {
   constructor() {
