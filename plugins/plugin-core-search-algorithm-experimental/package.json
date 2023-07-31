@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-search-algorithm-sfuzz",
-  "version": "1.0.0-beta.47",
-  "description": "A plugin for the SynTest Core containing the sFuzz modules",
+  "name": "@syntest/plugin-core-search-algorithm-experimental",
+  "version": "0.0.1",
+  "description": "A plugin with experimental search algorithms for SynTest",
   "keywords": [
     "syntest",
     "automatic-test-generation"
