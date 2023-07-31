@@ -18,10 +18,13 @@
 
 import { Module, ModuleManager } from "@syntest/module";
 
-import { SFuzzObjectiveManagerPlugin } from "./plugins/SFuzzObjectiveManagerPlugin";
-import { SFuzzSearchAlgorithmPlugin } from "./plugins/SFuzzSearchAlgorithmPlugin";
+import { SFuzzObjectiveManagerPlugin } from "./SFuzzObjectiveManagerPlugin";
 import { SFuzzPreset } from "./SFuzzPreset";
+import { SFuzzSearchAlgorithmPlugin } from "./SFuzzSearchAlgorithmPlugin";
 
+/**
+ * sFuzz module
+ */
 export default class SFuzzModule extends Module {
   constructor() {
     super(
