@@ -22,6 +22,9 @@ import { SFuzzObjectiveManagerPlugin } from "./SFuzzObjectiveManagerPlugin";
 import { SFuzzPreset } from "./SFuzzPreset";
 import { SFuzzSearchAlgorithmPlugin } from "./SFuzzSearchAlgorithmPlugin";
 
+/**
+ * sFuzz module
+ */
 export default class SFuzzModule extends Module {
   constructor() {
     super(
