@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-event-listener-websocket",
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.3",
   "description": "A listener plugin for the SynTest Core containing publishing functionalities for WebSocket",
   "keywords": [
     "syntest",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@syntest/analysis": "*",
     "@syntest/base-language": "*",
-    "@syntest/cfg": "^0.3.0-beta.19",
+    "@syntest/cfg": "^0.3.0-beta.20",
     "@syntest/logging": "*",
     "@syntest/module": "*",
     "@syntest/search": "*",
