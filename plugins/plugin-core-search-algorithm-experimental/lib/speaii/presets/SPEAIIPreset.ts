@@ -19,7 +19,6 @@ import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-
 export class SPEAIIPreset extends Preset {
   constructor() {
     super("SPEAII", "SPEAII preset");

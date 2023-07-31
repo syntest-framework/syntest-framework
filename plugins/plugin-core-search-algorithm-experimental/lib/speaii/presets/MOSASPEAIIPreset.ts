@@ -19,7 +19,6 @@ import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-
 export class MOSASPEAIIPreset extends Preset {
   constructor() {
     super("MOSASPEAII", "MOSASPEAII preset");

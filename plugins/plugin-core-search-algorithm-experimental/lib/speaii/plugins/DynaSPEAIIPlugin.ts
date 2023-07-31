@@ -23,7 +23,6 @@ import { Encoding, SearchAlgorithm } from "@syntest/search";
 
 import { DynaSPEAII } from "../DynaSPEAII";
 
-
 export class DynaSPEAIIPlugin<
   T extends Encoding
 > extends SearchAlgorithmPlugin<T> {

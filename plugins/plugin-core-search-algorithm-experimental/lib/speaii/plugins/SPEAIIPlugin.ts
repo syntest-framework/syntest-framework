@@ -23,7 +23,6 @@ import { Encoding, SearchAlgorithm } from "@syntest/search";
 
 import { SPEAII } from "../SPEAII";
 
-
 export class SPEAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("SPEAII", "SPEAII search algorithm");
