@@ -15,21 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-import { ArgumentsObject } from "../Configuration";
 
-export class MOSASPEAIIPreset extends Preset {
+export class SPEAIIPreset extends Preset {
   constructor() {
-    super("MOSASPEAII", "MOSASPEAII preset");
+    super("SPEAII", "SPEAII preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEAII";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "SPEAII";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }
 }

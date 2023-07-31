@@ -15,20 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
 
-import { ArgumentsObject } from "../Configuration";
+import { Crossover, minimumValue } from "@syntest/search";
 
-export class SPEAIIPreset extends Preset {
-  constructor() {
-    super("SPEAII", "SPEAII preset");
-  }
+import { DummyEncodingMock } from "./DummyEncoding.mock";
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "SPEAII";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+export class DummyCrossover extends Crossover<DummyEncodingMock> {
+  crossOver(parents: DummyEncodingMock[]): DummyEncodingMock[] {
+    if (parents.length < 2) {
+      throw new Error(minimumValue("number of parents", 2, parents.length));
+    }
+    return [parents[0].copy(), parents[1].copy()];
   }
 }

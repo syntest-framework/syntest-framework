@@ -28,19 +28,14 @@ import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-m
 import { TrackingObjectiveManagerPlugin } from "./plugins/objective-managers/TrackingObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
-import { DynaSPEAIIPlugin } from "./plugins/search-algorithms/DynaSPEAIIPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
-import { SPEAIIPlugin } from "./plugins/search-algorithms/SPEAIIPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
-import { DynaMOSASPEAIIPreset } from "./presets/DynaMOSASPEAIIPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
-import { MOSASPEAIIPreset } from "./presets/MOSASPEAIIPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
-import { SPEAIIPreset } from "./presets/SPEAIIPreset";
 import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
@@ -66,22 +61,17 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
+    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
+
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
 
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
-    moduleManager.registerPlugin(this, new SPEAIIPlugin());
-    moduleManager.registerPlugin(this, new DynaSPEAIIPlugin());
-    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
     moduleManager.registerPreset(this, new DynaMOSAPreset());
-
-    moduleManager.registerPreset(this, new SPEAIIPreset());
-    moduleManager.registerPreset(this, new MOSASPEAIIPreset());
-    moduleManager.registerPreset(this, new DynaMOSASPEAIIPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new RandomSearchPreset());

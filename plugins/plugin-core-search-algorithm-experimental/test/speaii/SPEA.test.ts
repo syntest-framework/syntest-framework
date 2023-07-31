@@ -15,20 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+  ApproachLevel,
+  BranchObjectiveFunction,
+  EncodingRunner,
+  EncodingSampler,
+  SimpleObjectiveManager,
+  UncoveredObjectiveManager,
+} from "@syntest/search";
 import * as chai from "chai";
 
-import { EncodingRunner } from "../../../lib/EncodingRunner";
-import { EncodingSampler } from "../../../lib/EncodingSampler";
-import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
-import { SimpleObjectiveManager } from "../../../lib/objective/managers/SimpleObjectiveManager";
-import { UncoveredObjectiveManager } from "../../../lib/objective/managers/UncoveredObjectiveManager";
-import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
-import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
-import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
-import { DummyProcreation } from "../../mocks/DummyProcreation.mock";
-import { DummySearchSubject } from "../../mocks/DummySubject.mock";
-import { MockedDynaSPEAII, MockedSPEAII } from "../../mocks/SPEAIIAdapter";
+import { DummyBranchDistance } from "../mocks/DummyBranchDistance.mock";
+import { DummyCrossover } from "../mocks/DummyCrossover.mock";
+import { DummyEncodingMock } from "../mocks/DummyEncoding.mock";
+import { DummyProcreation } from "../mocks/DummyProcreation.mock";
+import { DummySearchSubject } from "../mocks/DummySubject.mock";
+
+import { MockedDynaSPEAII, MockedSPEAII } from "./SPEAIIAdapter.mock";
 
 const expect = chai.expect;
 

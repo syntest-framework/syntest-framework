@@ -16,8 +16,7 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../Encoding";
-import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { Encoding, ObjectiveFunction } from "@syntest/search";
 
 import { SPEAIIFamily } from "./SPEAIIFamily";
 

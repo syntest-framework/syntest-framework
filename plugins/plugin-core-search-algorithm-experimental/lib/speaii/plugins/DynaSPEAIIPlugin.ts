@@ -15,22 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
+import {
+  SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
+} from "@syntest/base-language";
+import { Encoding, SearchAlgorithm } from "@syntest/search";
 
-import { ArgumentsObject } from "../Configuration";
+import { DynaSPEAII } from "../DynaSPEAII";
 
-export class DynaMOSASPEAIIPreset extends Preset {
+
+export class DynaSPEAIIPlugin<
+  T extends Encoding
+> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("DynaMOSASPEAII", "DynaMOSASPEAII preset");
+    super("DynaSPEAII", "DynaSPEAII search algorithm");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEAII";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
-      "structural-uncovered";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    return new DynaSPEAII<T>(
+      options.objectiveManager,
+      options.encodingSampler,
+      options.procreation,
+      options.populationSize,
+      options.populationSize
+    );
+  }
+
+  override getOptions() {
+    return new Map();
   }
 }

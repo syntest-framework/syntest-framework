@@ -15,16 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BudgetManager } from "../../budget/BudgetManager";
-import { DominanceComparator } from "../../comparators/DominanceComparator";
-import { Encoding } from "../../Encoding";
-import { EncodingSampler } from "../../EncodingSampler";
-import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
-import { Procreation } from "../../operators/procreation/Procreation";
-import { TerminationManager } from "../../termination/TerminationManager";
 
-import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
+import {
+  BudgetManager,
+  DominanceComparator,
+  Encoding,
+  EncodingSampler,
+  EvolutionaryAlgorithm,
+  ObjectiveFunction,
+  ObjectiveManager,
+  Procreation,
+  TerminationManager,
+} from "@syntest/search";
 
 /**
  * Abstract class for SPEA family of algorithms

@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../lib/Encoding";
-import { DynaSPEAII } from "../../lib/metaheuristics/evolutionary/DynaSPEAII";
-import { SPEAII } from "../../lib/metaheuristics/evolutionary/SPEAII";
 
-import { DummySearchSubject } from "./DummySubject.mock";
+import { Encoding } from "@syntest/search";
+
+import { DynaSPEAII } from "../../lib/speaii/DynaSPEAII";
+import { SPEAII } from "../../lib/speaii/SPEAII";
+import { DummySearchSubject } from "../mocks/DummySubject.mock";
 
 export class MockedSPEAII<T extends Encoding> extends SPEAII<T> {
   setPopulation(population: T[], size: number) {

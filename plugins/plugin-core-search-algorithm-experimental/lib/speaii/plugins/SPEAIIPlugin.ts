@@ -15,18 +15,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
+import {
+  SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
+} from "@syntest/base-language";
+import { Encoding, SearchAlgorithm } from "@syntest/search";
 
-import { SFuzzSearchAlgorithmPlugin } from "../lib/sfuzz/SFuzzSearchAlgorithmPlugin";
+import { SPEAII } from "../SPEAII";
 
-const expect = chai.expect;
 
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", () => {
-    new SFuzzSearchAlgorithmPlugin();
-    expect(true);
-  });
-});
+export class SPEAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+  constructor() {
+    super("SPEAII", "SPEAII search algorithm");
+  }
+
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    return new SPEAII<T>(
+      options.objectiveManager,
+      options.encodingSampler,
+      options.procreation,
+      options.populationSize,
+      options.populationSize
+    );
+  }
+
+  override getOptions() {
+    return new Map();
+  }
+}
