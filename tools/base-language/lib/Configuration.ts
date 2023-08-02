@@ -68,14 +68,12 @@ export type PostProcessingOptions = {
 export type SamplingOptions = {
   maxDepth: number;
   maxActionStatements: number;
-  constantPool: boolean;
   exploreIllegalValues: boolean;
   resampleGeneProbability: number;
   deltaMutationProbability: number;
   sampleExistingValueProbability: number;
   multiPointCrossoverProbability: number;
   crossoverProbability: number;
-  constantPoolProbability: number;
   sampleFunctionOutputAsArgument: number;
   stringAlphabet: string;
   stringMaxLength: number;
@@ -322,14 +320,6 @@ export class Configuration {
         hidden: false,
         type: "number",
       },
-      "constant-pool": {
-        alias: [],
-        default: false,
-        description: "Enable constant pool.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "boolean",
-      },
 
       // mutation settings
       "explore-illegal-values": {
@@ -380,15 +370,6 @@ export class Configuration {
         alias: [],
         default: 0.5,
         description: "Probability crossover happens at a certain branch point.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
-      "constant-pool-probability": {
-        alias: [],
-        default: 0.5,
-        description:
-          "Probability to sample from the constant pool instead creating random values",
         group: OptionGroups.Sampling,
         hidden: false,
         type: "number",

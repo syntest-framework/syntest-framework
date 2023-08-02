@@ -158,10 +158,6 @@ export abstract class Launcher {
       `${this.arguments_.maxActionStatements.toString()}`
     );
     this.metricManager.recordProperty(
-      PropertyName.CONSTANT_POOL_ENABLED,
-      `${this.arguments_.constantPool.toString()}`
-    );
-    this.metricManager.recordProperty(
       PropertyName.EXPLORE_ILLEGAL_VALUES,
       `${this.arguments_.exploreIllegalValues.toString()}`
     );
@@ -184,10 +180,6 @@ export abstract class Launcher {
     this.metricManager.recordProperty(
       PropertyName.CROSSOVER_PROBABILITY,
       `${this.arguments_.crossoverProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.CONSTANT_POOL_PROBABILITY,
-      `${this.arguments_.constantPoolProbability.toString()}`
     );
     this.metricManager.recordProperty(
       PropertyName.SAMPLE_FUNCTION_OUTPUT_AS_ARGUMENT,
