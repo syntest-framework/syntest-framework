@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
+import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 /**
  * Listener for budget signals.

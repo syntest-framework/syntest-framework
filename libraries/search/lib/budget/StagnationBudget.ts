@@ -18,8 +18,8 @@
 
 import { getLogger, Logger } from "@syntest/logging";
 
+import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 import { Budget } from "./Budget";
 

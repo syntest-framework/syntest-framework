@@ -39,14 +39,14 @@ export * from "./lib/budget/TotalTimeBudget";
 // - Comparators
 export * from "./lib/comparators/DominanceComparator";
 
-// - Metaheuristics
-export * from "./lib/metaheuristics/RandomSearch";
-export * from "./lib/metaheuristics/SearchAlgorithm";
+// - Algorithms
+export * from "./lib/algorithms/RandomSearch";
+export * from "./lib/algorithms/SearchAlgorithm";
 
 // - - Evolutionary
-export * from "./lib/metaheuristics/evolutionary/EvolutionaryAlgorithm";
-export * from "./lib/metaheuristics/evolutionary/NSGAII";
-export * from "./lib/metaheuristics/evolutionary/MOSAFamily";
+export * from "./lib/algorithms/evolutionary/EvolutionaryAlgorithm";
+export * from "./lib/algorithms/evolutionary/NSGAII";
+export * from "./lib/algorithms/evolutionary/MOSAFamily";
 
 // - Objective
 export * from "./lib/objective/heuristics/ApproachLevel";
