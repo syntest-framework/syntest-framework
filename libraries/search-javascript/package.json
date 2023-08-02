@@ -1,6 +1,6 @@
 {
   "name": "@syntest/search-javascript",
-  "version": "0.1.0-beta.12",
+  "version": "0.1.0-beta.13",
   "description": "SynTest JavaScript is a tool for automatically generating test cases for the JavaScript language",
   "keywords": [
     "syntest",
