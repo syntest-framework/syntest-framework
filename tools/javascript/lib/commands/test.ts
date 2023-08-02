@@ -33,6 +33,7 @@ export function getTestCommand(
   const options = new Map<string, Yargs.Options>();
 
   const commandGroup = "Type Inference Options:";
+  const samplingGroup = "Sampling Options:";
 
   options.set("incorporate-execution-information", {
     alias: [],
@@ -62,6 +63,25 @@ export function getTestCommand(
     type: "number",
   });
 
+  options.set("constant-pool", {
+    alias: [],
+    default: false,
+    description: "Enable constant pool.",
+    group: samplingGroup,
+    hidden: false,
+    type: "boolean",
+  });
+
+  options.set("constant-pool-probability", {
+    alias: [],
+    default: 0.5,
+    description:
+      "Probability to sample from the constant pool instead creating random values",
+    group: samplingGroup,
+    hidden: false,
+    type: "number",
+  });
+
   return new Command(
     moduleManager,
     tool,
@@ -85,4 +105,6 @@ export type TestCommandOptions = {
   incorporateExecutionInformation: boolean;
   typeInferenceMode: string;
   randomTypeProbability: number;
+  constantPool: boolean;
+  constantPoolProbability: number;
 };

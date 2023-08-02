@@ -18,6 +18,7 @@
 
 import {
   ClassTarget,
+  ConstantPoolManager,
   FunctionTarget,
   getRelationName,
   isExported,
@@ -59,6 +60,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   constructor(
     subject: JavaScriptSubject,
+    constantPoolManager: ConstantPoolManager,
+    constantPoolEnabled: boolean,
+    constantPoolProbability: number,
     typeInferenceMode: string,
     randomTypeProbability: number,
     incorporateExecutionInformation: boolean,
@@ -71,6 +75,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   ) {
     super(
       subject,
+      constantPoolManager,
+      constantPoolEnabled,
+      constantPoolProbability,
       typeInferenceMode,
       randomTypeProbability,
       incorporateExecutionInformation,
@@ -774,11 +781,21 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     alphabet = this.stringAlphabet,
     maxlength = this.stringMaxLength
   ): StringStatement {
-    const valueLength = prng.nextInt(0, maxlength - 1);
-    let value = "";
+    let value: string;
+    if (
+      this.constantPoolEnabled &&
+      prng.nextBoolean(this.constantPoolProbability)
+    ) {
+      value = this.constantPoolManager.contextConstantPool.getRandomString();
+    }
 
-    for (let index = 0; index < valueLength; index++) {
-      value += prng.pickOne([...alphabet]);
+    if (value === undefined) {
+      value = "";
+      const valueLength = prng.nextInt(0, maxlength - 1);
+
+      for (let index = 0; index < valueLength; index++) {
+        value += prng.pickOne([...alphabet]);
+      }
     }
 
     return new StringStatement(
@@ -812,12 +829,21 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const max = 10;
     const min = -10;
 
+    const value =
+      this.constantPoolEnabled && prng.nextBoolean(this.constantPoolProbability)
+        ? this.constantPoolManager.contextConstantPool.getRandomNumeric()
+        : prng.nextDouble(min, max);
+
+    if (value === undefined) {
+      prng.nextDouble(min, max);
+    }
+
     return new NumericStatement(
       id,
       name,
       TypeEnum.NUMERIC,
       prng.uniqueId(),
-      prng.nextDouble(min, max)
+      value
     );
   }
 
@@ -826,12 +852,21 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const max = 10;
     const min = -10;
 
+    const value =
+      this.constantPoolEnabled && prng.nextBoolean(this.constantPoolProbability)
+        ? this.constantPoolManager.contextConstantPool.getRandomInteger()
+        : prng.nextInt(min, max);
+
+    if (value === undefined) {
+      prng.nextInt(min, max);
+    }
+
     return new IntegerStatement(
       id,
       name,
       TypeEnum.INTEGER,
       prng.uniqueId(),
-      prng.nextInt(min, max)
+      value
     );
   }
 

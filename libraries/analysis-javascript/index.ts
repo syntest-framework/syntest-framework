@@ -21,6 +21,10 @@ export * from "./lib/ast/defaultBabelConfig";
 export * from "./lib/cfg/ControlFlowGraphFactory";
 export * from "./lib/cfg/ControlFlowGraphVisitor";
 
+export * from "./lib/constant/ConstantPool";
+export * from "./lib/constant/ConstantPoolManager";
+export * from "./lib/constant/ConstantVisitor";
+
 export * from "./lib/dependency/DependencyFactory";
 export * from "./lib/dependency/DependencyVisitor";
 
