@@ -21,19 +21,17 @@ import {
 } from "@syntest/base-language";
 import { Encoding, SearchAlgorithm } from "@syntest/search";
 
-import { DynaSPEAII } from "../DynaSPEAII";
+import { SPEA2 } from "../algorithms/SPEA2";
 
-export class DynaSPEAIIPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class SPEA2Plugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("DynaSPEAII", "DynaSPEAII search algorithm");
+    super("SPEA2", "SPEA2 search algorithm");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    return new DynaSPEAII<T>(
+    return new SPEA2<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,

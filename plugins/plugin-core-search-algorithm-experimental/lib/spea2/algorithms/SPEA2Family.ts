@@ -29,9 +29,13 @@ import {
 } from "@syntest/search";
 
 /**
- * Abstract class for SPEA family of algorithms
+ * Strength Pareto Evolutionary Algorithm 2 (SPEA2) family of search algorithms.
+ *
+ * Based on : SPEA2: Improving the strength pareto evolutionary algorithm
+ * E. Zitzler, M. Laumanns, L. Thiele
+ * https://doi.org/10.3929/ETHZ-A-004284029
  */
-export abstract class SPEAIIFamily<
+export abstract class SPEA2Family<
   T extends Encoding
 > extends EvolutionaryAlgorithm<T> {
   protected _archive: T[];

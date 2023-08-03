@@ -18,11 +18,11 @@
 
 import { Encoding } from "@syntest/search";
 
-import { DynaSPEAII } from "../../lib/speaii/DynaSPEAII";
-import { SPEAII } from "../../lib/speaii/SPEAII";
+import { DynaSPEA2 } from "../../lib/spea2/algorithms/DynaSPEA2";
+import { SPEA2 } from "../../lib/spea2/algorithms/SPEA2";
 import { DummySearchSubject } from "../mocks/DummySubject.mock";
 
-export class MockedSPEAII<T extends Encoding> extends SPEAII<T> {
+export class MockedSPEA2<T extends Encoding> extends SPEA2<T> {
   setPopulation(population: T[], size: number) {
     this._populationSize = size;
     for (const test of population) this._population.push(test);
@@ -42,7 +42,7 @@ export class MockedSPEAII<T extends Encoding> extends SPEAII<T> {
 }
 
 //TODO Fix code duplication by making generic class
-export class MockedDynaSPEAII<T extends Encoding> extends DynaSPEAII<T> {
+export class MockedDynaSPEA2<T extends Encoding> extends DynaSPEA2<T> {
   setPopulation(population: T[], size: number) {
     this._populationSize = size;
     for (const test of population) this._population.push(test);

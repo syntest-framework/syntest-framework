@@ -19,13 +19,13 @@ import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-export class SPEAIIPreset extends Preset {
+export class SPEA2Preset extends Preset {
   constructor() {
-    super("SPEAII", "SPEAII preset");
+    super("SPEA2", "SPEA2 preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "SPEAII";
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "SPEA2";
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;

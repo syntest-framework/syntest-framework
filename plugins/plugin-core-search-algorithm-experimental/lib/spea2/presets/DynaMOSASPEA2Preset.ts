@@ -19,13 +19,13 @@ import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-export class DynaMOSASPEAIIPreset extends Preset {
+export class DynaMOSASPEA2Preset extends Preset {
   constructor() {
-    super("DynaMOSASPEAII", "DynaMOSASPEAII preset");
+    super("DynaMOSASPEA2", "DynaMOSASPEA2 preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEAII";
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEA2";
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
       "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";

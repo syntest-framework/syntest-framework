@@ -21,11 +21,11 @@ import { Module, ModuleManager } from "@syntest/module";
 import { SFuzzObjectiveManagerPlugin } from "./sfuzz/SFuzzObjectiveManagerPlugin";
 import { SFuzzPreset } from "./sfuzz/SFuzzPreset";
 import { SFuzzSearchAlgorithmPlugin } from "./sfuzz/SFuzzSearchAlgorithmPlugin";
-import { DynaSPEAIIPlugin } from "./speaii/plugins/DynaSPEAIIPlugin";
-import { SPEAIIPlugin } from "./speaii/plugins/SPEAIIPlugin";
-import { DynaMOSASPEAIIPreset } from "./speaii/presets/DynaMOSASPEAIIPreset";
-import { MOSASPEAIIPreset } from "./speaii/presets/MOSASPEAIIPreset";
-import { SPEAIIPreset } from "./speaii/presets/SPEAIIPreset";
+import { DynaSPEA2Plugin } from "./spea2/plugins/DynaSPEA2Plugin";
+import { SPEA2Plugin } from "./spea2/plugins/SPEA2Plugin";
+import { DynaMOSASPEA2Preset } from "./spea2/presets/DynaMOSASPEA2Preset";
+import { MOSASPEA2Preset } from "./spea2/presets/MOSASPEA2Preset";
+import { SPEA2Preset } from "./spea2/presets/SPEA2Preset";
 
 /**
  * Experimental module
@@ -45,11 +45,10 @@ export default class ExperimentalModule extends Module {
     moduleManager.registerPlugin(this, new SFuzzSearchAlgorithmPlugin());
     moduleManager.registerPreset(this, new SFuzzPreset());
 
-    moduleManager.registerPlugin(this, new SPEAIIPlugin());
-    moduleManager.registerPlugin(this, new DynaSPEAIIPlugin());
-
-    moduleManager.registerPreset(this, new SPEAIIPreset());
-    moduleManager.registerPreset(this, new MOSASPEAIIPreset());
-    moduleManager.registerPreset(this, new DynaMOSASPEAIIPreset());
+    moduleManager.registerPlugin(this, new SPEA2Plugin());
+    moduleManager.registerPlugin(this, new DynaSPEA2Plugin());
+    moduleManager.registerPreset(this, new SPEA2Preset());
+    moduleManager.registerPreset(this, new MOSASPEA2Preset());
+    moduleManager.registerPreset(this, new DynaMOSASPEA2Preset());
   }
 }

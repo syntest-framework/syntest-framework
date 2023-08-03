@@ -17,12 +17,12 @@
  */
 import { Encoding } from "@syntest/search";
 
-import { SPEAIIFamily } from "./SPEAIIFamily";
+import { SPEA2Family } from "./SPEA2Family";
 
 /**
- * Strength Pareto Evolutionary Algorithm II (SPEAII)
+ * Strength Pareto Evolutionary Algorithm 2 (SPEA2)
  */
-export class SPEAII<T extends Encoding> extends SPEAIIFamily<T> {
+export class SPEA2<T extends Encoding> extends SPEA2Family<T> {
   /**
    * Performs environmental selection on the current population.
    * @param size - the size of the next population
