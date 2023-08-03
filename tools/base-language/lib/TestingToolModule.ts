@@ -66,6 +66,8 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
+    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
+
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
 
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
@@ -73,8 +75,6 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
     moduleManager.registerPlugin(this, new RVEAPlugin());
     moduleManager.registerPlugin(this, new MOSARVEAPlugin());
-
-    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
