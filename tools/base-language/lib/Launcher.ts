@@ -68,6 +68,7 @@ export abstract class Launcher {
     } catch (error) {
       console.log(error);
       console.trace(error);
+      await this.exit();
     }
   }
 
