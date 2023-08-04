@@ -37,13 +37,13 @@ export class FileWriterMetricMiddleware extends MiddleWare {
   private outputDirectory: string;
 
   constructor(
+    metricManager: MetricManager,
+    metrics: Metric[],
     fid: string,
     storageManager: StorageManager,
-    metrics: Metric[],
-    outputMetrics: Metric[],
     outputDirectory: string
   ) {
-    super(metrics, outputMetrics);
+    super(metricManager, metrics);
     this.fid = fid;
     this.storageManager = storageManager;
     this.outputDirectory = outputDirectory;

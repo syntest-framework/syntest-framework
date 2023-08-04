@@ -15,26 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MetricManager } from "@syntest/metric";
-import { StorageManager } from "@syntest/storage";
-import * as chai from "chai";
+export type PropertyName = string;
+export type Property = string;
 
-import { FileWriterMetricMiddleware } from "../lib/middleware/FileWriterMetricMiddleware";
+export type DistributionName = string;
+export type Distribution = number[];
 
-const expect = chai.expect;
-
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", () => {
-    new FileWriterMetricMiddleware(
-      new MetricManager(""),
-      [],
-      "",
-      new StorageManager(),
-      ""
-    );
-    expect(true);
-  });
-});
+export type SeriesName = string;
+export type SeriesTyping = string;
+export type Series<T> = Map<number, T>;

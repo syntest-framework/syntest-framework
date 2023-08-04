@@ -22,11 +22,17 @@ import { Plugin } from "../Plugin";
 import { PluginType } from "./PluginType";
 
 export abstract class MetricMiddlewarePlugin extends Plugin {
+  protected metrics: Metric[];
+
   constructor(name: string, describe: string) {
     super(PluginType.METRIC_MIDDLEWARE, name, describe);
   }
 
   abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
+
+  setMetrics(metrics: Metric[]): void {
+    this.metrics = metrics;
+  }
 
   override getOptionChoices(option: string): string[] {
     // for every tool/label

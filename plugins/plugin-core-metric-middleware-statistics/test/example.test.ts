@@ -16,10 +16,9 @@
  * limitations under the License.
  */
 import { MetricManager } from "@syntest/metric";
-import { StorageManager } from "@syntest/storage";
 import * as chai from "chai";
 
-import { FileWriterMetricMiddleware } from "../lib/middleware/FileWriterMetricMiddleware";
+import { StatisticsMetricMiddleware } from "../lib/middleware/StatisticsMetricMiddleware";
 
 const expect = chai.expect;
 
@@ -28,13 +27,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new FileWriterMetricMiddleware(
-      new MetricManager(""),
-      [],
-      "",
-      new StorageManager(),
-      ""
-    );
+    new StatisticsMetricMiddleware(new MetricManager(""), [], []);
     expect(true);
   });
 });

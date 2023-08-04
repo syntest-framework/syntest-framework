@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-<%= YEAR %> Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,26 +15,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MetricManager } from "@syntest/metric";
-import { StorageManager } from "@syntest/storage";
-import * as chai from "chai";
-
-import { FileWriterMetricMiddleware } from "../lib/middleware/FileWriterMetricMiddleware";
-
-const expect = chai.expect;
-
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", () => {
-    new FileWriterMetricMiddleware(
-      new MetricManager(""),
-      [],
-      "",
-      new StorageManager(),
-      ""
-    );
-    expect(true);
-  });
-});
