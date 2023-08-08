@@ -17,31 +17,33 @@
  */
 
 import {
-  ObjectiveManagerOptions,
-  ObjectiveManagerPlugin,
+  SearchAlgorithmOptions,
+  SearchAlgorithmPlugin,
 } from "@syntest/base-language";
-import { Encoding, ObjectiveManager } from "@syntest/search";
+import { Encoding, SearchAlgorithm } from "@syntest/search";
 
-import { SFuzzObjectiveManager } from "../algorithm/SFuzzObjectiveManager";
+import { SFuzz } from "./SFuzz";
 
 /**
- * Plugin for the sFuzz objective manager.
+ * Plugin for the sFuzz search algorithm.
  *
  * @author Dimitri Stallenberg
  */
-export class SFuzzObjectiveManagerPlugin<
+export class SFuzzSearchAlgorithmPlugin<
   T extends Encoding
-> extends ObjectiveManagerPlugin<T> {
+> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("sFuzz", "sFuzz objective manager");
+    super("sFuzz", "sFuzz search algorithm");
   }
 
-  createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
-  ): ObjectiveManager<T> {
-    return new SFuzzObjectiveManager<T>(
-      options.runner,
-      options.secondaryObjectives
+  createSearchAlgorithm(
+    options: SearchAlgorithmOptions<T>
+  ): SearchAlgorithm<T> {
+    return new SFuzz<T>(
+      options.objectiveManager,
+      options.encodingSampler,
+      options.procreation,
+      options.populationSize
     );
   }
 

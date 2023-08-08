@@ -18,6 +18,7 @@
 
 import { LoggingOptions } from "@syntest/logging";
 import { GeneralOptions } from "@syntest/module";
+import { RandomOptions } from "@syntest/prng";
 import { StorageOptions as ModuleStorageOptions } from "@syntest/storage";
 import Yargs = require("yargs");
 
@@ -65,17 +66,14 @@ export type PostProcessingOptions = {
 };
 
 export type SamplingOptions = {
-  randomSeed: string;
   maxDepth: number;
   maxActionStatements: number;
-  constantPool: boolean;
   exploreIllegalValues: boolean;
   resampleGeneProbability: number;
   deltaMutationProbability: number;
   sampleExistingValueProbability: number;
   multiPointCrossoverProbability: number;
   crossoverProbability: number;
-  constantPoolProbability: number;
   sampleFunctionOutputAsArgument: number;
   stringAlphabet: string;
   stringMaxLength: number;
@@ -96,7 +94,8 @@ export type ArgumentsObject = GeneralOptions &
   LoggingOptions &
   PostProcessingOptions &
   SamplingOptions &
-  ResearchModeOptions;
+  ResearchModeOptions &
+  RandomOptions;
 
 export class Configuration {
   getOptions(): { [key: string]: Yargs.Options } {
@@ -303,15 +302,6 @@ export class Configuration {
 
   getSamplingOptions(): { [key: string]: Yargs.Options } {
     return {
-      "random-seed": {
-        alias: ["s"],
-        default: undefined,
-        description: "Seed to be used by the pseudo random number generator.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "string",
-      },
-
       // sampling settings
       "max-depth": {
         alias: [],
@@ -329,14 +319,6 @@ export class Configuration {
         group: OptionGroups.Sampling,
         hidden: false,
         type: "number",
-      },
-      "constant-pool": {
-        alias: [],
-        default: false,
-        description: "Enable constant pool.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "boolean",
       },
 
       // mutation settings
@@ -388,15 +370,6 @@ export class Configuration {
         alias: [],
         default: 0.5,
         description: "Probability crossover happens at a certain branch point.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
-      "constant-pool-probability": {
-        alias: [],
-        default: 0.5,
-        description:
-          "Probability to sample from the constant pool instead creating random values",
         group: OptionGroups.Sampling,
         hidden: false,
         type: "number",

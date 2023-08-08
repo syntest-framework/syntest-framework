@@ -22,6 +22,7 @@ import { StorageManager } from "@syntest/storage";
 
 import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricListener";
 import { SearchPerformanceListener } from "./plugins/event-listeners/SearchPerformanceListener";
+import { SearchProgressBarListener } from "./plugins/event-listeners/SearchProgressBarListener";
 import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
 import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralUncoveredObjectiveManagerPlugin";
@@ -51,6 +52,10 @@ export abstract class TestingToolModule extends Module {
       this,
       new SearchPerformanceListener(userInterface)
     );
+    moduleManager.registerPlugin(
+      this,
+      new SearchProgressBarListener(userInterface)
+    );
 
     moduleManager.registerPlugin(this, new SimpleObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new StructuralObjectiveManagerPlugin());
@@ -61,13 +66,13 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
+    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
+
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
 
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
-
-    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 

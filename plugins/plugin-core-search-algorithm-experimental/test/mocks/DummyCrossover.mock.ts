@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core sFuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,5 +16,15 @@
  * limitations under the License.
  */
 
-// Plugin
-export * as module from "./lib/SFuzzModule";
+import { Crossover, minimumValue } from "@syntest/search";
+
+import { DummyEncodingMock } from "./DummyEncoding.mock";
+
+export class DummyCrossover extends Crossover<DummyEncodingMock> {
+  crossOver(parents: DummyEncodingMock[]): DummyEncodingMock[] {
+    if (parents.length < 2) {
+      throw new Error(minimumValue("number of parents", 2, parents.length));
+    }
+    return [parents[0].copy(), parents[1].copy()];
+  }
+}

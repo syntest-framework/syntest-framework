@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core sFuzz Plugin.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
   SearchAlgorithmOptions,
   SearchAlgorithmPlugin,
 } from "@syntest/base-language";
 import { Encoding, SearchAlgorithm } from "@syntest/search";
 
-import { SFuzz } from "../algorithm/SFuzz";
+import { SPEAII } from "../SPEAII";
 
-/**
- * Plugin for the sFuzz search algorithm.
- *
- * @author Dimitri Stallenberg
- */
-export class SFuzzSearchAlgorithmPlugin<
-  T extends Encoding
-> extends SearchAlgorithmPlugin<T> {
+export class SPEAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {
-    super("sFuzz", "sFuzz search algorithm");
+    super("SPEAII", "SPEAII search algorithm");
   }
 
   createSearchAlgorithm(
     options: SearchAlgorithmOptions<T>
   ): SearchAlgorithm<T> {
-    return new SFuzz<T>(
+    return new SPEAII<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,
+      options.populationSize,
       options.populationSize
     );
   }
