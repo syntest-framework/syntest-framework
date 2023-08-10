@@ -18,14 +18,19 @@
 
 import { Module, ModuleManager } from "@syntest/module";
 
-import { SFuzzObjectiveManagerPlugin } from "./SFuzzObjectiveManagerPlugin";
-import { SFuzzPreset } from "./SFuzzPreset";
-import { SFuzzSearchAlgorithmPlugin } from "./SFuzzSearchAlgorithmPlugin";
+import { SFuzzObjectiveManagerPlugin } from "./sfuzz/SFuzzObjectiveManagerPlugin";
+import { SFuzzPreset } from "./sfuzz/SFuzzPreset";
+import { SFuzzSearchAlgorithmPlugin } from "./sfuzz/SFuzzSearchAlgorithmPlugin";
+import { DynaSPEAIIPlugin } from "./speaii/plugins/DynaSPEAIIPlugin";
+import { SPEAIIPlugin } from "./speaii/plugins/SPEAIIPlugin";
+import { DynaMOSASPEAIIPreset } from "./speaii/presets/DynaMOSASPEAIIPreset";
+import { MOSASPEAIIPreset } from "./speaii/presets/MOSASPEAIIPreset";
+import { SPEAIIPreset } from "./speaii/presets/SPEAIIPreset";
 
 /**
- * sFuzz module
+ * Experimental module
  */
-export default class SFuzzModule extends Module {
+export default class ExperimentalModule extends Module {
   constructor() {
     super(
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
@@ -39,5 +44,12 @@ export default class SFuzzModule extends Module {
     moduleManager.registerPlugin(this, new SFuzzObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new SFuzzSearchAlgorithmPlugin());
     moduleManager.registerPreset(this, new SFuzzPreset());
+
+    moduleManager.registerPlugin(this, new SPEAIIPlugin());
+    moduleManager.registerPlugin(this, new DynaSPEAIIPlugin());
+
+    moduleManager.registerPreset(this, new SPEAIIPreset());
+    moduleManager.registerPreset(this, new MOSASPEAIIPreset());
+    moduleManager.registerPreset(this, new DynaMOSASPEAIIPreset());
   }
 }
