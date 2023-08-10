@@ -171,20 +171,12 @@ export abstract class Launcher {
       `${this.arguments_.deltaMutationProbability.toString()}`
     );
     this.metricManager.recordProperty(
-      PropertyName.SAMPLE_EXISTING_VALUE_PROBABILITY,
-      `${this.arguments_.sampleExistingValueProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
       PropertyName.MULTI_POINT_CROSSOVER_PROBABILITY,
       `${this.arguments_.multiPointCrossoverProbability.toString()}`
     );
     this.metricManager.recordProperty(
       PropertyName.CROSSOVER_PROBABILITY,
       `${this.arguments_.crossoverProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.SAMPLE_FUNCTION_OUTPUT_AS_ARGUMENT,
-      `${this.arguments_.sampleFunctionOutputAsArgument.toString()}`
     );
     this.metricManager.recordProperty(
       PropertyName.STRING_ALPHABET,
