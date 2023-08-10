@@ -163,10 +163,6 @@ export abstract class Launcher {
       `${this.arguments_.exploreIllegalValues.toString()}`
     );
     this.metricManager.recordProperty(
-      PropertyName.RESAMPLE_GENE_PROBABILITY,
-      `${this.arguments_.resampleGeneProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
       PropertyName.DELTA_MUTATION_PROBABILITY,
       `${this.arguments_.deltaMutationProbability.toString()}`
     );
