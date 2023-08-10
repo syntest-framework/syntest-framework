@@ -368,7 +368,7 @@ export class Configuration {
       "string-alphabet": {
         alias: [],
         default:
-          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'",
+          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'\n\t",
         description: "The alphabet to be used by the string gene.",
         group: OptionGroups.Sampling,
         hidden: false,
