@@ -17,12 +17,8 @@
  */
 
 /**
- * Enum for a Visibility Types.
+ * Visibility Types.
  *
  * @author Dimitri Stallenberg
  */
-export enum VisibilityType {
-  PUBLIC = "public",
-  PRIVATE = "private",
-  PROTECTED = "protected",
-}
+export type VisibilityType = "public" | "private" | "protected";

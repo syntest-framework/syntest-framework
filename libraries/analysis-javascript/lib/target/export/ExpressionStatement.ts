@@ -18,300 +18,280 @@
 
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
-import { shouldNeverHappen } from "@syntest/search";
 
 import { Export } from "./Export";
 import { ExportVisitor } from "./ExportVisitor";
 
-function getName(node: t.Node): string {
-  switch (node.type) {
-    case "Identifier": {
-      return node.name;
-    }
-    case "ArrayExpression":
-    case "ObjectExpression": {
-      return `${node.type}`;
-    }
-    case "FunctionExpression": {
-      return node.id?.name || "anonymous";
-    }
-    case "ArrowFunctionExpression": {
-      return "anonymous";
-    }
-  }
+type PartialExport = PartialDefaultExport | PartialNonDefaultExport;
 
-  if (node.type.includes("Literal")) {
-    return `${node.type}`;
-  }
+type PartialDefaultExport = {
+  default: true;
+};
 
-  // throw new Error(`Cannot get name of node of type ${node.type}`)
-  return "anonymous";
-}
+type PartialNonDefaultExport = {
+  default: false;
+  renamedTo: string;
+};
 
-export function extractExportsFromExpressionStatement(
+export function extractExportsFromAssignmentExpression(
   visitor: ExportVisitor,
   filePath: string,
-  path: NodePath<t.ExpressionStatement>
-): Export[] | undefined {
-  const expression = path.get("expression");
-  if (!expression.isAssignmentExpression()) {
-    // cannot happen (because we check this in the visitor)
-    return undefined;
-  }
-
-  const assigned = expression.node.left;
-  const init = expression.node.right;
-
-  const initPath = expression.get("right");
-
-  let name: string;
-  let default_ = false;
-
-  if (assigned.type === "Identifier" && assigned.name === "exports") {
-    // e.g. exports = ??
-    name = getName(init);
-    default_ = true;
-  } else if (assigned.type === "MemberExpression") {
-    const object = assigned.object;
-    const property = assigned.property;
-
-    if (object.type === "Identifier") {
-      if (object.name === "exports") {
-        // e.g. exports.?? = ??
-        if (property.type === "Identifier") {
-          if (assigned.computed) {
-            // e.g. exports[x] = ??
-            // unsupported
-            throw new Error("Unsupported export declaration");
-          } else {
-            // e.g. exports.x = ??
-            name = property.name;
-          }
-        } else if (property.type === "StringLiteral") {
-          // e.g. exports["x"] = ??
-          name = property.value;
-        } else {
-          // e.g. exports.x() = ??
-          // unsupported
-          // dont think this is possible
-          throw new Error("Unsupported export declaration");
-        }
-      } else if (object.name === "module") {
-        // e.g. module.? = ??
-        if (property.type === "Identifier" && property.name === "exports") {
-          // e.g. module.exports = ??
-          if (assigned.computed) {
-            // e.g. module[exports] = ??
-            // unsupported
-            throw new Error("Unsupported export declaration");
-          }
-          name = getName(init);
-          default_ = true;
-        } else if (
-          property.type === "StringLiteral" &&
-          property.value === "exports"
-        ) {
-          // e.g. module["exports"] = ??
-          name = getName(init);
-          default_ = true;
-        } else {
-          // e.g. module.exports() = ??
-          // e.g. module.somethingelse = ??
-          // unsupported
-          // should this just return undefined?
-          // throw new Error("Unsupported export declaration");
-          return undefined;
-        }
-      } else {
-        // e.g. somethingelse.? = ??
-        // e.g. somethingelse.? = ??
-        // dont care
-        return undefined;
-      }
-    } else if (object.type === "MemberExpression") {
-      // e.g. ??.??.?? = ??
-      const higherObject = object.object;
-      const higherProperty = object.property;
-
-      if (
-        higherObject.type === "Identifier" &&
-        higherObject.name === "module" &&
-        higherProperty.type === "Identifier" &&
-        higherProperty.name === "exports"
-      ) {
-        // e.g. module.exports.?? = ??
-        if (property.type === "Identifier") {
-          // e.g. module.exports.x = ??
-          if (assigned.computed) {
-            // e.g. module.exports[x] = ??
-            // unsupported
-            throw new Error("Unsupported export declaration");
-          }
-          name = property.name;
-        } else if (property.type === "StringLiteral") {
-          // e.g. module.exports["x"] = ??
-          name = property.value;
-        } else {
-          // e.g. module.exports.x() = ??
-          // unsupported
-          // not possible i think
-          throw new Error("Unsupported export declaration");
-        }
-      } else {
-        // e.g. module.somethingelse.?? = ??
-        // e.g. somethingelse.exports.?? = ??
-        // e.g. somethingelse.somethingelse.?? = ??
-
-        // dont care
-        return undefined;
-      }
-    } else {
-      return undefined;
-    }
-  } else {
-    // this is probably an unrelated statement
-    // e.g. not an export
-    return undefined;
-  }
-
-  if (!name) {
-    // not possible
-    throw new Error(shouldNeverHappen("ExpressionStatement"));
-  }
-
+  path_: NodePath<t.AssignmentExpression>
+): Export[] {
   const exports: Export[] = [];
+  const left = path_.get("left");
+  const right = path_.get("right");
 
-  if (default_) {
-    if (initPath.isObjectExpression()) {
-      // e.g. exports = { a: ? }
-      // e.g. module.exports = { a: ? }
-      for (const property of initPath.get("properties")) {
-        if (property.isObjectMethod()) {
-          // e.g. exports = { a() {} }
+  const partialExport: PartialExport | false = _checkExportAndDefault(left);
+  if (!partialExport) {
+    // not an export
+    return [];
+  }
 
-          const key = property.get("key");
-          if (!key.isIdentifier()) {
-            // e.g. exports = { () {} }
-            // unsupported
-            // not possible i think
-            throw new Error("Unsupported export declaration");
-          }
+  const module = true;
 
-          exports.push({
-            id: visitor._getNodeId(property),
-            filePath,
-            name: key.node.name,
-            renamedTo: key.node.name,
-            default: false,
-            module: true,
-          });
-        } else if (property.isSpreadElement()) {
-          // e.g. exports = { ...a }
-          // unsupported
-          throw new Error("Unsupported export declaration");
-        } else if (property.isObjectProperty()) {
-          const keyPath = property.get("key");
-          const valuePath = property.get("value");
-
-          let key: string;
-          if (keyPath.node.type.includes("Literal")) {
-            // e.g. exports = { "a": ? }
-            // e.g. exports = { 1: ? }
-            // e.g. exports = { true: ? }
-            // e.g. exports = { null: ? }
-            // eslint-disable-next-line unicorn/no-null
-            key = `${"value" in keyPath.node ? keyPath.node.value : null}`;
-          } else if (keyPath.isIdentifier()) {
-            // e.g. exports = { a: ? }
-            key = keyPath.node.name;
-          } else {
-            // e.g. exports = { 1: ? }
-            // unsupported
-            throw new Error("Unsupported export declaration");
-          }
-
-          if (valuePath.isIdentifier()) {
-            // e.g. exports = { a: b }
-            // get binding of b
-            const bindingId = visitor._getBindingId(valuePath);
-            exports.push({
-              id: bindingId,
-              filePath,
-              name: valuePath.node.name,
-              renamedTo: key,
-              default: false,
-              module: true,
-            });
-          } else {
-            // e.g. exports = { a: 1 }
-            exports.push({
-              id: visitor._getNodeId(valuePath),
-              filePath,
-              name: key,
-              renamedTo: key,
-              default: false,
-              module: true,
-            });
-          }
-        }
-      }
-    } else {
-      // e.g. exports = ?
-
-      if (initPath.isIdentifier()) {
-        // e.g. exports = obj
-        // e.g. module.exports = obj
-        // get binding of obj
-        const bindingId = visitor._getBindingId(initPath);
-
-        exports.push({
-          id: bindingId,
-          filePath,
-          name: name,
-          renamedTo: name,
-          default: default_,
-          module: true,
-        });
-      } else {
-        // e.g. exports = 1
-        // e.g. module.exports = 1
-        exports.push({
-          id: visitor._getNodeId(initPath),
-          filePath,
-          name: name,
-          renamedTo: name,
-          default: default_,
-          module: true,
-        });
-      }
-    }
+  if (partialExport.default && right.isObjectExpression()) {
+    // module.exports = {...}
+    // exports = {...}
+    // so not default actually
+    // TODO extract the stuff from the object
+    const properties = right.get("properties");
+    exports.push(
+      ..._extractObjectProperties(properties, visitor, filePath, module)
+    );
+  } else if (partialExport.default) {
+    // module.exports = ?
+    // exports = ?
+    // but ? is not an object expression
+    const id = visitor._getBindingId(right);
+    const name = _getName(right);
+    exports.push({
+      id: id,
+      filePath: filePath,
+      name: name,
+      renamedTo: name, // actually renamed to nothing aka default but we keep the name
+      default: partialExport.default,
+      module: module,
+    });
   } else {
-    // e.g. exports.a = ??
-    // e.g. module.exports.a = ??
-    if (init.type === "Identifier") {
-      // e.g. exports.a = b
-      // get binding of b
-      const bindingId = visitor._getBindingId(initPath);
-      exports.push({
-        id: bindingId,
-        filePath,
-        name: init.name,
-        renamedTo: name,
-        default: default_,
-        module: true,
-      });
-    } else {
-      // e.g. exports.a = 1
-      exports.push({
-        id: visitor._getNodeId(initPath),
-        filePath,
-        name: name,
-        renamedTo: name,
-        default: default_,
-        module: true,
-      });
-    }
+    // module.exports.? = ?
+    // exports.? = ?
+    // ? can be object but we dont care since it is not a default export
+    const id = visitor._getBindingId(right);
+    const name = _getName(right);
+    exports.push({
+      id: id,
+      filePath: filePath,
+      name:
+        name === "default"
+          ? (<PartialNonDefaultExport>partialExport).renamedTo
+          : name,
+      renamedTo: (<PartialNonDefaultExport>partialExport).renamedTo,
+      default: partialExport.default,
+      module: module,
+    });
   }
 
   return exports;
+}
+
+function _extractObjectProperties(
+  properties: NodePath<t.ObjectMethod | t.ObjectProperty | t.SpreadElement>[],
+  visitor: ExportVisitor,
+  filePath: string,
+  module: boolean
+): Export[] {
+  const default_ = false;
+  const exports: Export[] = [];
+  for (const property of properties) {
+    if (property.isObjectMethod()) {
+      // {a () {}}
+      const key = property.get("key");
+      if (!key.isIdentifier()) {
+        // e.g. exports = { () {} }
+        // unsupported
+        // not possible i think
+        throw new Error("Unsupported export declaration");
+      }
+
+      exports.push({
+        id: visitor._getNodeId(property),
+        filePath: filePath,
+        name: key.node.name,
+        renamedTo: key.node.name,
+        default: default_,
+        module: module,
+      });
+    } else if (property.isObjectProperty()) {
+      // {a: b}
+      const key = property.get("key");
+      const value = property.get("value");
+
+      let keyName: string;
+      if (
+        key.isStringLiteral() ||
+        key.isNumericLiteral() ||
+        key.isBooleanLiteral() ||
+        key.isBigIntLiteral()
+      ) {
+        // e.g. exports = { "a": ? }
+        // e.g. exports = { 1: ? }
+        // e.g. exports = { true: ? }
+        keyName = `${key.node.value}`;
+      } else if (key.isIdentifier()) {
+        // e.g. exports = { a: ? }
+        keyName = key.node.name;
+      } else {
+        // e.g. exports = { ?: ? }
+        // unsupported
+        throw new Error("Unsupported export declaration");
+      }
+
+      if (value.isIdentifier()) {
+        // e.g. exports = { a: b }
+        exports.push({
+          id: visitor._getBindingId(value),
+          filePath,
+          name: value.node.name,
+          renamedTo: keyName,
+          default: default_,
+          module: module,
+        });
+      } else {
+        // e.g. exports = { a: 1 }
+        exports.push({
+          id: visitor._getBindingId(value),
+          filePath,
+          name: keyName,
+          renamedTo: keyName,
+          default: default_,
+          module: module,
+        });
+      }
+    } else {
+      // {...a}
+      // unsupport
+      throw new Error("Unsupported export declaration");
+    }
+  }
+  return exports;
+}
+
+function _getName(expression: NodePath<t.Expression>): string {
+  if (expression.isIdentifier()) {
+    return expression.node.name;
+  }
+
+  if (
+    expression.isLiteral() ||
+    expression.isArrayExpression() ||
+    expression.isObjectExpression()
+  ) {
+    return expression.type;
+  }
+
+  if (expression.isFunction() || expression.isClass()) {
+    if (!expression.has("id")) {
+      return expression.isFunction() ? "anonymousFunction" : "anonymousClass";
+    }
+    const id = expression.get("id");
+
+    // must be identifier type if it is a nodepath
+    return (<NodePath<t.Identifier>>id).node.name;
+  }
+
+  return "default";
+}
+
+function _checkExportAndDefault(
+  expression: NodePath<t.LVal>
+): false | PartialExport {
+  if (expression.isIdentifier() && expression.node.name === "exports") {
+    // exports = ?
+    return { default: true };
+  } else if (expression.isMemberExpression()) {
+    // ?.? = ?
+    const object = expression.get("object");
+    const property = expression.get("property");
+
+    if (object.isIdentifier()) {
+      // ?.? = ?
+      if (object.node.name === "module") {
+        if (
+          (!expression.node.computed &&
+            property.isIdentifier() &&
+            property.node.name === "exports") ||
+          (expression.node.computed &&
+            property.isStringLiteral() &&
+            property.node.value === "exports")
+        ) {
+          // module.exports = ?
+          // module['exports'] = ?
+          return { default: true };
+        } else {
+          // module[exports] = ?
+          // TODO replace by logger
+          console.warn(`Unsupported syntax 'module[x] = ?'`);
+        }
+      } else if (object.node.name === "exports") {
+        // exports.? = ?
+        return {
+          default: false,
+          renamedTo: _getNameOfProperty(property, expression.node.computed),
+        };
+      }
+    } else if (object.isMemberExpression()) {
+      // ?.?.? = ?
+      const subObject = object.get("object");
+      const subProperty = object.get("property");
+
+      if (
+        subObject.isIdentifier() &&
+        subObject.node.name === "module" &&
+        ((!object.node.computed &&
+          subProperty.isIdentifier() &&
+          subProperty.node.name === "exports") ||
+          (object.node.computed &&
+            subProperty.isStringLiteral() &&
+            subProperty.node.value === "exports"))
+      ) {
+        // module.exports.? = ?
+        // module['exports'].? = ?
+        // module.exports[?] = ?
+        return {
+          default: false,
+          renamedTo: _getNameOfProperty(property, expression.node.computed),
+        };
+      }
+    }
+  }
+
+  return false;
+}
+
+function _getNameOfProperty(
+  property: NodePath<t.PrivateName | t.Expression>,
+  computed: boolean
+): string {
+  if (computed) {
+    // module.exports[?] = ?
+    if (
+      property.isStringLiteral() ||
+      property.isNumericLiteral() ||
+      property.isBooleanLiteral() ||
+      property.isBigIntLiteral()
+    ) {
+      // module.exports['x'] = ?
+      return `${property.node.value}`;
+    } else {
+      // module.exports[a] = ?
+      throw new Error('Unsupported syntax "module.exports[a] = ?"');
+    }
+  } else if (property.isIdentifier()) {
+    // module.exports.x = ?
+    return property.node.name;
+  } else {
+    // module.exports.? = ?
+    throw new Error('Unsupported syntax "module.exports.? = ?"');
+  }
 }

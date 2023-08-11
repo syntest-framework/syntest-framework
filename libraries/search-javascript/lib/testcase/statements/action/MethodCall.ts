@@ -22,8 +22,6 @@ import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
-import { Getter } from "./Getter";
-import { Setter } from "./Setter";
 import { ConstructorCall } from "./ConstructorCall";
 import { ClassActionStatement } from "./ClassActionStatement";
 
@@ -60,30 +58,17 @@ export class MethodCall extends ClassActionStatement {
     this._classType = "MethodCall";
   }
 
-  mutate(
-    sampler: JavaScriptTestCaseSampler,
-    depth: number
-  ): Getter | Setter | MethodCall {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleClassAction(depth);
-    }
-
-    const probability = 1 / (this.args.length + 1); // plus one for the constructor
-
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): MethodCall {
     const arguments_ = this.args.map((a: Statement) => a.copy());
+    let constructor_ = this.constructor_.copy();
+    const index = prng.nextInt(0, arguments_.length);
 
-    if (arguments_.length > 0) {
+    if (index < arguments_.length) {
       // go over each arg
-      for (let index = 0; index < arguments_.length; index++) {
-        if (prng.nextBoolean(probability)) {
-          arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
-        }
-      }
+      arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
+    } else {
+      constructor_ = constructor_.mutate(sampler, depth + 1);
     }
-
-    const constructor_ = prng.nextBoolean(probability)
-      ? this.constructor_.mutate(sampler, depth + 1)
-      : this.constructor_.copy();
 
     return new MethodCall(
       this.variableIdentifier,

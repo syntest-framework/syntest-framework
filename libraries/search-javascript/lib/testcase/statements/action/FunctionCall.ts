@@ -61,12 +61,8 @@ export class FunctionCall extends ActionStatement {
     const arguments_ = this.args.map((a: Statement) => a.copy());
 
     if (arguments_.length > 0) {
-      // go over each arg
-      for (let index = 0; index < arguments_.length; index++) {
-        if (prng.nextBoolean(1 / arguments_.length)) {
-          arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
-        }
-      }
+      const index = prng.nextInt(0, arguments_.length - 1);
+      arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
     }
 
     return new FunctionCall(
@@ -105,7 +101,7 @@ export class FunctionCall extends ActionStatement {
       a.decode(decoder, id, options)
     );
 
-    let decoded = `const ${this.varName} = await ${this._export.name}(${arguments_})`;
+    let decoded = `const ${this.varName} = await ${this.name}(${arguments_})`;
 
     if (options.addLogs) {
       const logDirectory = decoder.getLogDirectory(id, this.varName);

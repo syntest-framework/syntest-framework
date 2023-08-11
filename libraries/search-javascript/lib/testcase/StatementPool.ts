@@ -15,20 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { TypeEnum } from "@syntest/analysis-javascript";
 import { ActionStatement } from "./statements/action/ActionStatement";
 import { Statement } from "./statements/Statement";
 import { prng } from "@syntest/prng";
 import { ConstructorCall } from "./statements/action/ConstructorCall";
+import { ConstantObject } from "./statements/action/ConstantObject";
+import { FunctionCall } from "./statements/action/FunctionCall";
+import { ClassActionStatement } from "./statements/action/ClassActionStatement";
+import { ObjectFunctionCall } from "./statements/action/ObjectFunctionCall";
 
 export class StatementPool {
   // type -> statement array
   private pool: Map<string, Statement[]>;
+  // this is a bit out of scope for this class but otherwise we have to walk the tree multiple times
+  // we can solve this by making a singular tree walker class with visitors
+  private constructors: ConstructorCall[];
+  private objects: ConstantObject[];
 
   constructor(roots: ActionStatement[]) {
     this.pool = new Map();
-
+    this.constructors = [];
+    this.objects = [];
     this._fillGenePool(roots);
   }
 
@@ -42,6 +49,27 @@ export class StatementPool {
     return prng.pickOne(statements);
   }
 
+  public getRandomConstructor(exportId?: string): ConstructorCall {
+    const options = exportId
+      ? this.constructors.filter((o) => exportId === o.export.id)
+      : this.constructors;
+
+    if (options.length === 0) {
+      return undefined;
+    }
+    return prng.pickOne(options);
+  }
+
+  public getRandomConstantObject(exportId: string): ConstantObject {
+    const options = exportId
+      ? this.objects.filter((o) => exportId === o.export.id)
+      : this.objects;
+    if (options.length === 0) {
+      return undefined;
+    }
+    return prng.pickOne(options);
+  }
+
   private _fillGenePool(roots: ActionStatement[]) {
     for (const action of roots) {
       const queue: Statement[] = [action];
@@ -49,33 +77,36 @@ export class StatementPool {
       while (queue.length > 0) {
         const statement = queue.pop();
 
-        if (statement.type === TypeEnum.OBJECT) {
-          // use type identifier
-          if (!this.pool.has(statement.typeIdentifier)) {
-            this.pool.set(statement.typeIdentifier, []);
-          }
-          this.pool.get(statement.typeIdentifier).push(statement);
-        } else if (statement.type === TypeEnum.FUNCTION) {
-          // use return type
-          if (statement instanceof ConstructorCall) {
-            if (!this.pool.has(statement.classIdentifier)) {
-              this.pool.set(statement.classIdentifier, []);
-            }
-            this.pool.get(statement.classIdentifier).push(statement);
-          }
-
-          // TODO other function return types
-        } else {
-          // use type enum for primitives and arrays
-          if (!this.pool.has(statement.type)) {
-            this.pool.set(statement.type, []);
-          }
-          this.pool.get(statement.type).push(statement);
-        }
-
         if (statement.hasChildren()) {
           queue.push(...statement.getChildren());
         }
+
+        // use type enum for primitives and arrays
+        let type = statement.type;
+
+        if (statement instanceof ConstantObject) {
+          // use export identifier
+          type = statement.export.id;
+          this.objects.push(statement);
+        } else if (statement instanceof ConstructorCall) {
+          // use export identifier
+          type = statement.export.id;
+          this.constructors.push(statement);
+        } else if (
+          statement instanceof FunctionCall ||
+          statement instanceof ClassActionStatement ||
+          statement instanceof ObjectFunctionCall
+        ) {
+          // TODO use return type
+          // type = statement.
+          // skip for now
+          continue;
+        }
+
+        if (!this.pool.has(type)) {
+          this.pool.set(type, []);
+        }
+        this.pool.get(type).push(statement);
       }
     }
   }

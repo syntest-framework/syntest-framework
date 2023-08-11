@@ -36,6 +36,7 @@ export interface SubTarget extends CoreSubTarget {
 
 export interface NamedSubTarget extends SubTarget {
   name: string;
+  typeId: string;
 }
 
 export type Exportable = {

@@ -23,16 +23,20 @@ import { StatementPool } from "../../StatementPool";
 export abstract class Generator<S extends Statement> {
   protected _sampler: JavaScriptTestCaseSampler;
   protected _rootContext: RootContext;
-  protected _reuseStatementProbability: number;
+
+  protected _statementPoolEnabled: boolean;
+  protected _statementPoolProbability: number;
 
   constructor(
     sampler: JavaScriptTestCaseSampler,
     rootContext: RootContext,
-    reuseStatementProbability: number
+    statementPoolEnabled: boolean,
+    statementPoolProbability: number
   ) {
     this._sampler = sampler;
     this._rootContext = rootContext;
-    this._reuseStatementProbability = reuseStatementProbability;
+    this._statementPoolEnabled = statementPoolEnabled;
+    this._statementPoolProbability = statementPoolProbability;
   }
 
   abstract generate(
@@ -52,7 +56,11 @@ export abstract class Generator<S extends Statement> {
     return this._rootContext;
   }
 
-  get reuseStatementProbability() {
-    return this._reuseStatementProbability;
+  get statementPoolEnabled() {
+    return this._statementPoolEnabled;
+  }
+
+  get statementPoolProbability() {
+    return this._statementPoolProbability;
   }
 }

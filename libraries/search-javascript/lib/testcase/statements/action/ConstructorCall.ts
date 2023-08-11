@@ -75,31 +75,34 @@ export class ConstructorCall extends ActionStatement {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): ConstructorCall {
-    // if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-    //   return sampler.sampleConstructorCall(depth, this._classIdentifier);
-    // }
+    if (prng.nextBoolean(sampler.deltaMutationProbability)) {
+      const arguments_ = this.args.map((a: Statement) => a.copy());
 
-    const arguments_ = this.args.map((a: Statement) => a.copy());
-
-    if (arguments_.length > 0) {
-      // go over each arg
-      for (let index = 0; index < arguments_.length; index++) {
-        if (prng.nextBoolean(1 / arguments_.length)) {
-          arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
-        }
+      if (arguments_.length > 0) {
+        const index = prng.nextInt(0, arguments_.length - 1);
+        arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
       }
-    }
 
-    return new ConstructorCall(
-      this.variableIdentifier,
-      this.typeIdentifier,
-      this._classIdentifier,
-      this.name,
-      this.type,
-      prng.uniqueId(),
-      arguments_,
-      this.export
-    );
+      return new ConstructorCall(
+        this.variableIdentifier,
+        this.typeIdentifier,
+        this._classIdentifier,
+        this.name,
+        this.type,
+        prng.uniqueId(),
+        arguments_,
+        this.export
+      );
+    } else {
+      return sampler.constructorCallGenerator.generate(
+        depth,
+        this.variableIdentifier,
+        this.typeIdentifier,
+        this.export.id,
+        this.name,
+        sampler.statementPool
+      );
+    }
   }
 
   copy(): ConstructorCall {

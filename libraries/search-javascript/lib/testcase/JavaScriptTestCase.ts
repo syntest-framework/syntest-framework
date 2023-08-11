@@ -44,7 +44,7 @@ export class JavaScriptTestCase extends Encoding {
   constructor(roots: ActionStatement[]) {
     super();
     JavaScriptTestCase.LOGGER = getLogger(JavaScriptTestCase.name);
-    this._roots = [...roots];
+    this._roots = roots.map((value) => value.copy());
 
     if (roots.length === 0) {
       throw new Error("Requires atleast one root action statement");
@@ -55,44 +55,40 @@ export class JavaScriptTestCase extends Encoding {
 
   mutate(sampler: JavaScriptTestCaseSampler): JavaScriptTestCase {
     JavaScriptTestCase.LOGGER.debug(`Mutating test case: ${this._id}`);
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sample();
-    }
-
     sampler.statementPool = this._statementPool;
     const roots = this._roots.map((action) => action.copy());
-    const finalRoots = [];
 
-    // go over each call
-    for (let index = 0; index < roots.length; index++) {
-      if (prng.nextBoolean(1 / roots.length)) {
-        // Mutate this position
-        const choice = prng.nextDouble();
+    const choice = prng.nextDouble();
 
-        if (choice < 0.1) {
-          // 10% chance to add a root on this position
-          finalRoots.push(sampler.sampleRoot(), roots[index]);
-        } else if (
-          choice < 0.2 &&
-          (roots.length > 1 || finalRoots.length > 0)
-        ) {
-          // 10% chance to delete the root
-        } else {
-          // 80% chance to just mutate the root
-          finalRoots.push(roots[index].mutate(sampler, 1));
-        }
+    if (roots.length > 1) {
+      if (choice < 0.33) {
+        // 33% chance to add a root on this position
+        const index = prng.nextInt(0, roots.length);
+        roots.splice(index, 0, sampler.sampleRoot());
+      } else if (choice < 0.66) {
+        // 33% chance to delete the root
+        const index = prng.nextInt(0, roots.length - 1);
+        roots.splice(index, 1);
       } else {
-        finalRoots.push(roots[index]);
+        // 33% chance to just mutate the root
+        const index = prng.nextInt(0, roots.length - 1);
+        roots.splice(index, 1, roots[index].mutate(sampler, 1));
       }
-    }
-    // add one at the end 10% * (1 / |roots|)
-    if (prng.nextBoolean(0.1) && prng.nextBoolean(1 / roots.length)) {
-      finalRoots.push(sampler.sampleRoot());
+    } else {
+      if (choice < 0.5) {
+        // 50% chance to add a root on this position
+        const index = prng.nextInt(0, roots.length);
+        roots.splice(index, 0, sampler.sampleRoot());
+      } else {
+        // 50% chance to just mutate the root
+        const index = prng.nextInt(0, roots.length - 1);
+        roots.splice(index, 1, roots[index].mutate(sampler, 1));
+      }
     }
 
     sampler.statementPool = undefined;
 
-    return new JavaScriptTestCase(finalRoots);
+    return new JavaScriptTestCase(roots);
   }
 
   hashCode(decoder: Decoder<Encoding, string>): number {
@@ -117,6 +113,6 @@ export class JavaScriptTestCase extends Encoding {
   }
 
   get roots(): ActionStatement[] {
-    return [...this._roots];
+    return this._roots.map((value) => value.copy());
   }
 }

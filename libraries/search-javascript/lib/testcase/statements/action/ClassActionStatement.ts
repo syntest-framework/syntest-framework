@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { shouldNeverHappen } from "@syntest/search";
 import { Statement } from "../Statement";
 import { ActionStatement } from "./ActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
@@ -41,6 +42,33 @@ export abstract class ClassActionStatement extends ActionStatement {
   ) {
     super(variableIdentifier, typeIdentifier, name, type, uniqueId, arguments_);
     this._constructor = constructor_;
+  }
+
+  override setChild(index: number, newChild: Statement) {
+    if (!newChild) {
+      throw new Error("Invalid new child!");
+    }
+
+    if (index < 0 || index > this.args.length) {
+      throw new Error(shouldNeverHappen(`Invalid index used index: ${index}`));
+    }
+
+    if (index === this.args.length) {
+      if (!(newChild instanceof ConstructorCall)) {
+        throw new TypeError(shouldNeverHappen("should be a constructor"));
+      }
+      this._constructor = newChild;
+    } else {
+      this.args[index] = newChild;
+    }
+  }
+
+  override hasChildren(): boolean {
+    return true;
+  }
+
+  override getChildren(): Statement[] {
+    return [...this.args, this._constructor];
   }
 
   get constructor_() {

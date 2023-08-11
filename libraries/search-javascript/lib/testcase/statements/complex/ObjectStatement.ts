@@ -17,6 +17,7 @@
  */
 
 import { prng } from "@syntest/prng";
+import { shouldNeverHappen } from "@syntest/search";
 
 import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
@@ -42,59 +43,118 @@ export class ObjectStatement extends Statement {
     super(variableIdentifier, typeIdentifier, name, type, uniqueId);
     this._object = object;
     this._classType = "ObjectStatement";
+
+    // check for circular
+    for (const [key, statement] of Object.entries(this._object)) {
+      if (statement && statement.uniqueId === this.uniqueId) {
+        console.log("circular detected");
+        this._object[key] = undefined;
+      }
+    }
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleArgument(depth, this.variableIdentifier, this.name);
-    }
+    if (prng.nextBoolean(sampler.deltaMutationProbability)) {
+      // 80%
+      const object: ObjectType = {};
 
-    const object: ObjectType = {};
+      const keys = Object.keys(this._object);
 
-    for (const key of Object.keys(this._object)) {
-      object[key] = this._object[key].copy();
-    }
+      if (keys.length === 0) {
+        return new ObjectStatement(
+          this.variableIdentifier,
+          this.typeIdentifier,
+          this.name,
+          this.type,
+          prng.uniqueId(),
+          object
+        );
+      }
 
-    const keys = Object.keys(object);
-    // go over each child
-    for (let index = 0; index < keys.length; index++) {
-      if (prng.nextBoolean(1 / keys.length)) {
-        const key = keys[index];
-        // Mutate this position
-        const choice = prng.nextDouble();
+      const availableKeys = [];
+      for (const key of keys) {
+        if (!this._object[key]) {
+          object[key] = undefined;
+          continue;
+        }
+        object[key] = this._object[key].copy();
+        availableKeys.push(key);
+      }
 
-        if (choice < 0.1) {
-          // 10% chance to add a call on this position
+      const choice = prng.nextDouble();
 
+      if (availableKeys.length > 0) {
+        if (choice < 0.33) {
+          // 33% chance to add a child on this position
+          const index = prng.nextInt(0, keys.length - 1);
+          const key = keys[index];
           object[key] = sampler.sampleObjectArgument(
             depth + 1,
-            this.variableIdentifier,
+            this.typeIdentifier,
             key
           );
-        } else if (choice < 0.2) {
-          // 10% chance to delete the call
+        } else if (choice < 0.66) {
+          // 33% chance to remove a child on this position
+          const key = prng.pickOne(availableKeys);
           object[key] = undefined;
         } else {
-          // 80% chance to just mutate the call
+          // 33% chance to mutate a child
+          const key = prng.pickOne(availableKeys);
           object[key] = object[key].mutate(sampler, depth + 1);
         }
+      } else {
+        // no keys available so we add one
+        const index = prng.nextInt(0, keys.length - 1);
+        const key = keys[index];
+        object[key] = sampler.sampleObjectArgument(
+          depth + 1,
+          this.typeIdentifier,
+          key
+        );
+      }
+
+      return new ObjectStatement(
+        this.variableIdentifier,
+        this.typeIdentifier,
+        this.name,
+        this.type,
+        prng.uniqueId(),
+        object
+      );
+    } else {
+      // 20%
+      if (prng.nextBoolean(0.5)) {
+        // 50%
+        return sampler.sampleArgument(
+          depth,
+          this.variableIdentifier,
+          this.name
+        );
+      } else {
+        // 50%
+        return sampler.sampleObject(
+          depth,
+          this.variableIdentifier,
+          this.name,
+          this.type
+        );
       }
     }
-
-    return new ObjectStatement(
-      this.variableIdentifier,
-      this.typeIdentifier,
-      this.name,
-      this.type,
-      prng.uniqueId(),
-      object
-    );
   }
 
   copy(): ObjectStatement {
     const object: ObjectType = {};
 
     for (const key of Object.keys(this._object)) {
+      if (this._object[key] === undefined) {
+        object[key] = undefined;
+        continue;
+      }
+      if (this._object[key].uniqueId === this.uniqueId) {
+        console.log("circular detected");
+        object[key] = undefined;
+        continue;
+      }
       object[key] = this._object[key].copy();
     }
 
@@ -115,14 +175,14 @@ export class ObjectStatement extends Statement {
   ): Decoding[] {
     const children = Object.keys(this._object)
       .filter((key) => this._object[key] !== undefined)
-      .map((key) => `\t"${key}": ${this._object[key].varName}`)
-      .join(",\n\t");
+      .map((key) => `\t\t\t"${key}": ${this._object[key].varName}`)
+      .join(",\n");
 
-    const childStatements: Decoding[] = Object.values(this._object).flatMap(
-      (a) => a.decode(decoder, id, options)
-    );
+    const childStatements: Decoding[] = Object.values(this._object)
+      .filter((a) => a !== undefined)
+      .flatMap((a) => a.decode(decoder, id, options));
 
-    let decoded = `const ${this.varName} = {\n${children}\n\t}`;
+    let decoded = `const ${this.varName} = {\n${children}\n\t\t}`;
 
     if (options.addLogs) {
       const logDirectory = decoder.getLogDirectory(id, this.varName);
@@ -139,13 +199,14 @@ export class ObjectStatement extends Statement {
   }
 
   getChildren(): Statement[] {
-    return [...this.children];
+    return Object.keys(this._object)
+      .sort()
+      .filter((key) => this._object[key] !== undefined)
+      .map((key) => this._object[key]);
   }
 
   hasChildren(): boolean {
-    return Object.keys(this._object).some(
-      (key) => this._object[key] !== undefined
-    );
+    return this.getChildren().length > 0;
   }
 
   setChild(index: number, newChild: Statement) {
@@ -153,16 +214,15 @@ export class ObjectStatement extends Statement {
       throw new Error("Invalid new child!");
     }
 
-    if (index >= this.children.length) {
-      throw new Error("Invalid child location!");
+    if (index < 0 || index >= this.getChildren().length) {
+      throw new Error(shouldNeverHappen(`Invalid index used index: ${index}`));
     }
 
-    this.children[index] = newChild;
-  }
+    const keys = Object.keys(this._object)
+      .sort()
+      .filter((key) => this._object[key] !== undefined);
+    const key = keys[index];
 
-  get children(): Statement[] {
-    return Object.keys(this._object)
-      .filter((key) => this._object[key] !== undefined)
-      .map((key) => this._object[key]);
+    this._object[key] = newChild;
   }
 }

@@ -17,6 +17,7 @@
  */
 
 import { prng } from "@syntest/prng";
+import { shouldNeverHappen } from "@syntest/search";
 
 import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
@@ -40,32 +41,50 @@ export class ArrayStatement extends Statement {
     super(variableIdentifier, typeIdentifier, name, type, uniqueId);
     this._children = children;
     this._classType = "ArrayStatement";
+
+    // check for circular
+    for (const [index, statement] of this._children.entries()) {
+      if (statement && statement.uniqueId === this.uniqueId) {
+        console.log("circular detected");
+        this._children.splice(index, 1);
+      }
+    }
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleArgument(depth, this.variableIdentifier, this.name);
-    }
-    const children = this._children.map((a: Statement) => a.copy());
+    if (prng.nextBoolean(sampler.deltaMutationProbability)) {
+      const children = this._children.map((a: Statement) => a.copy());
 
-    //
-    // if (children.length !== 0) {
-    //   const index = prng.nextInt(0, children.length - 1);
-    //   if (prng.nextBoolean(Properties.resample_gene_probability)) { // TODO should be different property
-    //     children[index] = sampler.sampleArgument(depth + 1, children[index].identifierDescription)
-    //   } else {
-    //     children[index] = children[index].mutate(sampler, depth + 1);
-    //   }
-    // }
+      const choice = prng.nextDouble();
 
-    const finalChildren = [];
-
-    // If there are no children, add one
-    if (children.length === 0) {
-      // add a item
-      finalChildren.push(
-        sampler.sampleArrayArgument(depth + 1, this.variableIdentifier, 0)
-      );
+      if (children.length > 0) {
+        if (choice < 0.33) {
+          // 33% chance to add a child on this position
+          const index = prng.nextInt(0, children.length);
+          children.splice(
+            index,
+            0,
+            sampler.sampleArrayArgument(depth + 1, this.typeIdentifier, index)
+          );
+        } else if (choice < 0.66) {
+          // 33% chance to remove a child on this position
+          const index = prng.nextInt(0, children.length - 1);
+          children.splice(index, 1);
+        } else {
+          // 33% chance to mutate a child on this position
+          const index = prng.nextInt(0, children.length - 1);
+          children.splice(
+            index,
+            1,
+            sampler.sampleArrayArgument(depth + 1, this.typeIdentifier, index)
+          );
+        }
+      } else {
+        // no children found so we always add
+        children.push(
+          sampler.sampleArrayArgument(depth + 1, this.typeIdentifier, 0)
+        );
+      }
 
       return new ArrayStatement(
         this.variableIdentifier,
@@ -73,43 +92,26 @@ export class ArrayStatement extends Statement {
         this.name,
         this.type,
         prng.uniqueId(),
-        finalChildren
+        children
       );
-    }
-
-    // go over each call
-    for (let index = 0; index < children.length; index++) {
-      if (prng.nextBoolean(1 / children.length)) {
-        // Mutate this position
-        const choice = prng.nextDouble();
-
-        if (choice < 0.1) {
-          // 10% chance to add a argument on this position
-          finalChildren.push(
-            sampler.sampleArrayArgument(
-              depth + 1,
-              this.variableIdentifier,
-              index
-            ),
-            children[index]
-          );
-        } else if (choice < 0.2) {
-          // 10% chance to delete the child
-        } else {
-          // 80% chance to just mutate the child
-          finalChildren.push(children[index].mutate(sampler, depth + 1));
-        }
+    } else {
+      if (prng.nextBoolean(0.5)) {
+        // 50%
+        return sampler.sampleArgument(
+          depth,
+          this.variableIdentifier,
+          this.name
+        );
+      } else {
+        // 50%
+        return sampler.sampleArray(
+          depth,
+          this.variableIdentifier,
+          this.name,
+          this.type
+        );
       }
     }
-
-    return new ArrayStatement(
-      this.variableIdentifier,
-      this.typeIdentifier,
-      this.name,
-      this.type,
-      prng.uniqueId(),
-      finalChildren
-    );
   }
 
   copy(): ArrayStatement {
@@ -119,7 +121,15 @@ export class ArrayStatement extends Statement {
       this.name,
       this.type,
       this.uniqueId,
-      this._children.map((a) => a.copy())
+      this._children
+        .filter((a) => {
+          if (a.uniqueId === this.uniqueId) {
+            console.log("circular detected");
+            return false;
+          }
+          return true;
+        })
+        .map((a) => a.copy())
     );
   }
 
@@ -163,14 +173,14 @@ export class ArrayStatement extends Statement {
       throw new Error("Invalid new child!");
     }
 
-    if (index >= this.children.length) {
-      throw new Error("Invalid child location!");
+    if (index < 0 || index >= this.children.length) {
+      throw new Error(shouldNeverHappen(`Invalid index used index: ${index}`));
     }
 
     this.children[index] = newChild;
   }
 
-  get children(): Statement[] {
+  protected get children(): Statement[] {
     return this._children;
   }
 }

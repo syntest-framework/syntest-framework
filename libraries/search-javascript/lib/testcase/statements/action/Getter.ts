@@ -22,8 +22,6 @@ import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding } from "../Statement";
 
-import { MethodCall } from "./MethodCall";
-import { Setter } from "./Setter";
 import { ClassActionStatement } from "./ClassActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
 
@@ -58,14 +56,7 @@ export class Getter extends ClassActionStatement {
     this._classType = "Getter";
   }
 
-  mutate(
-    sampler: JavaScriptTestCaseSampler,
-    depth: number
-  ): Getter | Setter | MethodCall {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleClassAction(depth);
-    }
-
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): Getter {
     const constructor_ = this.constructor_.mutate(sampler, depth + 1);
 
     return new Getter(

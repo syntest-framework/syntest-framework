@@ -17,6 +17,7 @@
  */
 
 import { prng } from "@syntest/prng";
+import { shouldNeverHappen } from "@syntest/search";
 
 import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
@@ -57,26 +58,16 @@ export class ObjectFunctionCall extends ActionStatement {
     sampler: JavaScriptTestCaseSampler,
     depth: number
   ): ObjectFunctionCall {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleObjectFunctionCall(depth);
-    }
-
-    const probability = 1 / (this.args.length + 1); // plus one for the constructor
-
     const arguments_ = this.args.map((a: Statement) => a.copy());
+    let object_ = this._object.copy();
+    const index = prng.nextInt(0, arguments_.length);
 
-    if (arguments_.length > 0) {
+    if (index < arguments_.length) {
       // go over each arg
-      for (let index = 0; index < arguments_.length; index++) {
-        if (prng.nextBoolean(probability)) {
-          arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
-        }
-      }
+      arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
+    } else {
+      object_ = object_.mutate(sampler, depth + 1);
     }
-
-    const object_ = prng.nextBoolean(probability)
-      ? this._object.mutate(sampler, depth + 1)
-      : this._object.copy();
 
     return new ObjectFunctionCall(
       this.variableIdentifier,
@@ -87,6 +78,33 @@ export class ObjectFunctionCall extends ActionStatement {
       arguments_,
       object_
     );
+  }
+
+  override setChild(index: number, newChild: Statement) {
+    if (!newChild) {
+      throw new Error("Invalid new child!");
+    }
+
+    if (index < 0 || index > this.args.length) {
+      throw new Error(shouldNeverHappen(`Invalid index used index: ${index}`));
+    }
+
+    if (index === this.args.length) {
+      if (!(newChild instanceof ConstantObject)) {
+        throw new TypeError(shouldNeverHappen("should be a constant object"));
+      }
+      this._object = newChild;
+    } else {
+      this.args[index] = newChild;
+    }
+  }
+
+  override hasChildren(): boolean {
+    return true;
+  }
+
+  override getChildren(): Statement[] {
+    return [...this.args, this._object];
   }
 
   copy(): ObjectFunctionCall {

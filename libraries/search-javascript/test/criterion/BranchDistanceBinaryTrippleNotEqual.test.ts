@@ -158,7 +158,7 @@ describe("BranchDistance a !== b test", () => {
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.closeTo(0.3333, 0.1);
+    ).to.be.equal(0.5);
   });
 
   // number string mix

@@ -505,7 +505,8 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
         if (involved.length === 0) {
           throw new Error(`Function definition has no involved elements`);
         }
-        const [functionId, ...parameters] = involved;
+        const functionId = relationId;
+        const [_identifierId, ...parameters] = involved;
 
         for (const [index, id] of parameters.entries()) {
           this._typeModel.addParameter(functionId, index, id);
@@ -534,9 +535,15 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
         const [objectId, propertyId] = involved;
         const [, originalProperty] = originalInvolved;
 
-        // TODO check if the property is array or string
-
         const propertyElement = this.getElement(originalProperty);
+
+        // TODO
+        // we add these scores by default because it is likely a string/object/array
+        // however we should check if its one of the default properties of any of the primitives
+        // if that is the case we should not give it string object or array
+        this._typeModel.addTypeScore(objectId, TypeEnum.ARRAY);
+        this._typeModel.addTypeScore(objectId, TypeEnum.STRING);
+        this._typeModel.addTypeScore(objectId, TypeEnum.OBJECT);
 
         if (propertyElement === undefined) {
           // e.g. object[b ? 1 : 0]
@@ -545,6 +552,11 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
           // e.g. object[0]
           // add array type to object
           this._typeModel.addTypeScore(objectId, TypeEnum.ARRAY);
+          this._typeModel.addTypeScore(objectId, TypeEnum.STRING);
+        } else if (propertyElement.type === ElementType.StringLiteral) {
+          // e.g. object["abc"]
+          // add array type to object
+          this._typeModel.addTypeScore(objectId, TypeEnum.OBJECT);
         } else {
           const propertyName =
             "name" in propertyElement

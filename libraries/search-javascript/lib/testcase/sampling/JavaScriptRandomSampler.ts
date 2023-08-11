@@ -61,34 +61,36 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     constantPoolManager: ConstantPoolManager,
     constantPoolEnabled: boolean,
     constantPoolProbability: number,
+    typePoolEnabled: boolean,
+    typePoolProbability: number,
+    statementPoolEnabled: boolean,
+    statementPoolProbability: number,
     typeInferenceMode: string,
     randomTypeProbability: number,
     incorporateExecutionInformation: boolean,
     maxActionStatements: number,
     stringAlphabet: string,
     stringMaxLength: number,
-    resampleGeneProbability: number,
     deltaMutationProbability: number,
-    exploreIllegalValues: boolean,
-    reuseStatementProbability: number,
-    useMockedObjectProbability: number
+    exploreIllegalValues: boolean
   ) {
     super(
       subject,
       constantPoolManager,
       constantPoolEnabled,
       constantPoolProbability,
+      typePoolEnabled,
+      typePoolProbability,
+      statementPoolEnabled,
+      statementPoolProbability,
       typeInferenceMode,
       randomTypeProbability,
       incorporateExecutionInformation,
       maxActionStatements,
       stringAlphabet,
       stringMaxLength,
-      resampleGeneProbability,
       deltaMutationProbability,
-      exploreIllegalValues,
-      reuseStatementProbability,
-      useMockedObjectProbability
+      exploreIllegalValues
     );
   }
 
@@ -97,7 +99,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     for (
       let index = 0;
-      index < prng.nextInt(1, this.maxActionStatements);
+      index < prng.nextInt(1, this.maxActionStatements); // (i think its better to start with a single statement)
       index++
     ) {
       this.statementPool = new StatementPool(roots);
@@ -110,6 +112,45 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   sampleRoot(): ActionStatement {
     const targets = (<JavaScriptSubject>this._subject).getActionableTargets();
+
+    if (this.statementPoolEnabled) {
+      const constructor_ = this.statementPool.getRandomConstructor();
+
+      if (constructor_ && prng.nextBoolean(this.statementPoolProbability)) {
+        // TODO ignoring getters and setters for now
+        const targets = this.rootContext.getSubTargets(
+          constructor_.typeIdentifier.split(":")[0]
+        );
+        const methods = <MethodTarget[]>(
+          targets.filter(
+            (target) =>
+              target.type === TargetType.METHOD &&
+              (<MethodTarget>target).methodType === "method" &&
+              (<MethodTarget>target).classId === constructor_.classIdentifier
+          )
+        );
+        if (methods.length > 0) {
+          const method = prng.pickOne(methods);
+
+          const type_ = this.rootContext
+            .getTypeModel()
+            .getObjectDescription(method.typeId);
+
+          const arguments_: Statement[] =
+            this.methodCallGenerator.sampleArguments(0, type_);
+
+          return new MethodCall(
+            method.id,
+            method.typeId,
+            method.name,
+            TypeEnum.FUNCTION,
+            prng.uniqueId(),
+            arguments_,
+            constructor_
+          );
+        }
+      }
+    }
 
     const action = prng.pickOne(
       targets.filter(
@@ -167,7 +208,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     return this.functionCallGenerator.generate(
       depth,
       function_.id,
-      function_.id,
+      function_.typeId,
       function_.id,
       function_.name,
       this.statementPool
@@ -224,7 +265,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
       return new ConstructorCall(
         class_.id,
-        class_.id,
+        class_.typeId,
         class_.id,
         class_.name,
         TypeEnum.FUNCTION,
@@ -237,7 +278,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       return this.constructorCallGenerator.generate(
         depth,
         action.id,
-        action.id,
+        (<MethodTarget>action).typeId,
         class_.id,
         class_.name,
         this.statementPool
@@ -289,7 +330,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     return this.methodCallGenerator.generate(
       depth,
       method.id,
-      method.id,
+      method.typeId,
       class_.id,
       method.name,
       this.statementPool
@@ -325,7 +366,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     return this.setterGenerator.generate(
       depth,
       method.id,
-      method.id,
+      method.typeId,
       class_.id,
       method.name,
       this.statementPool
@@ -364,7 +405,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     return this.constantObjectGenerator.generate(
       depth,
       object_.id,
-      object_.id,
+      object_.typeId,
       object_.id,
       object_.name,
       this.statementPool
@@ -382,7 +423,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     return this.objectFunctionCallGenerator.generate(
       depth,
       randomFunction.id,
-      randomFunction.id,
+      randomFunction.typeId,
       object_.id,
       randomFunction.name,
       this.statementPool
@@ -410,12 +451,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // TODO should be done in the typemodel somehow
       // maybe create types for the subproperties by doing /main/array/id::1::1[element-index]
       // maybe create types for the subproperties by doing /main/array/id::1::1.property
-      return this.sampleString(
-        "anon",
-        "anon",
-        this.stringAlphabet,
-        this.stringMaxLength
-      );
+      return this.sampleArgument(depth, "anon", "anon");
     }
 
     return this.sampleArgument(depth, prng.pickOne(childIds), String(index));
@@ -423,16 +459,18 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   sampleObjectArgument(
     depth: number,
-    objectId: string,
+    objectTypeId: string,
     property: string
   ): Statement {
     const objectType = <ObjectType>(
-      this.rootContext.getTypeModel().getObjectDescription(objectId)
+      this.rootContext.getTypeModel().getObjectDescription(objectTypeId)
     );
 
     const value = objectType.properties.get(property);
     if (!value) {
-      throw new Error(`Property ${property} not found in object ${objectId}`);
+      throw new Error(
+        `Property ${property} not found in object ${objectTypeId}`
+      );
     }
 
     return this.sampleArgument(depth, value, property);
@@ -441,27 +479,41 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   sampleArgument(depth: number, id: string, name: string): Statement {
     let chosenType: string;
 
-    if (
-      this.typeInferenceMode === "proportional" ||
-      this.typeInferenceMode === "none"
-    ) {
-      chosenType = this.rootContext
-        .getTypeModel()
-        .getRandomType(
-          this.incorporateExecutionInformation,
-          this.randomTypeProbability,
-          id
+    switch (this.typeInferenceMode) {
+      case "none": {
+        chosenType = this.rootContext
+          .getTypeModel()
+          .getRandomType(false, 1, id);
+
+        break;
+      }
+      case "proportional": {
+        chosenType = this.rootContext
+          .getTypeModel()
+          .getRandomType(
+            this.incorporateExecutionInformation,
+            this.randomTypeProbability,
+            id
+          );
+
+        break;
+      }
+      case "ranked": {
+        chosenType = this.rootContext
+          .getTypeModel()
+          .getHighestProbabilityType(
+            this.incorporateExecutionInformation,
+            this.randomTypeProbability,
+            id
+          );
+
+        break;
+      }
+      default: {
+        throw new Error(
+          "Invalid identifierDescription inference mode selected"
         );
-    } else if (this.typeInferenceMode === "ranked") {
-      chosenType = this.rootContext
-        .getTypeModel()
-        .getHighestProbabilityType(
-          this.incorporateExecutionInformation,
-          this.randomTypeProbability,
-          id
-        );
-    } else {
-      throw new Error("Invalid identifierDescription inference mode selected");
+      }
     }
 
     if (chosenType.endsWith("object")) {
@@ -473,10 +525,16 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     }
 
     // take from pool
-    const statementFromPool = this.statementPool.getRandomStatement(chosenType);
+    if (this.statementPoolEnabled) {
+      const statementFromPool =
+        this.statementPool.getRandomStatement(chosenType);
 
-    if (statementFromPool && prng.nextBoolean(this.reuseStatementProbability)) {
-      return statementFromPool;
+      if (
+        statementFromPool &&
+        prng.nextBoolean(this.statementPoolProbability)
+      ) {
+        return statementFromPool;
+      }
     }
 
     switch (chosenType) {
@@ -514,87 +572,94 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .getTypeModel()
       .getObjectDescription(typeId);
 
-    const typeFromTypePool = this.rootContext
-      .getTypePool()
-      .getRandomMatchingType(typeObject);
+    if (this.typePoolEnabled) {
+      // TODO maybe we should sample from the typepool for the other stuff as well (move this to sample arg for example)
+      const typeFromTypePool = this.rootContext
+        .getTypePool()
+        // .getRandomMatchingType(typeObject)
+        // TODO this prevents ONLY allows sampling of matching class constructors
+        .getRandomMatchingType(
+          typeObject,
+          (type_) => type_.kind === DiscoveredObjectKind.CLASS
+        );
 
-    if (
-      typeFromTypePool &&
-      prng.nextBoolean(1 - this.useMockedObjectProbability)
-    ) {
-      // always prefer type from type pool
-      switch (typeFromTypePool.kind) {
-        case DiscoveredObjectKind.CLASS: {
-          // find constructor of class
-          const targets = this.rootContext.getSubTargets(
-            typeFromTypePool.id.split(":")[0]
-          );
-          const constructor_ = targets.find(
-            (target) =>
-              target.type === TargetType.METHOD &&
-              (<MethodTarget>target).methodType === "constructor" &&
-              (<MethodTarget>target).classId === typeFromTypePool.id
-          );
+      if (typeFromTypePool && prng.nextBoolean(this.typePoolProbability)) {
+        // always prefer type from type pool
+        switch (typeFromTypePool.kind) {
+          case DiscoveredObjectKind.CLASS: {
+            // find constructor of class
+            const targets = this.rootContext.getSubTargets(
+              typeFromTypePool.id.split(":")[0]
+            );
+            const constructor_ = <MethodTarget>(
+              targets.find(
+                (target) =>
+                  target.type === TargetType.METHOD &&
+                  (<MethodTarget>target).methodType === "constructor" &&
+                  (<MethodTarget>target).classId === typeFromTypePool.id
+              )
+            );
 
-          if (constructor_) {
+            if (constructor_) {
+              return this.constructorCallGenerator.generate(
+                depth,
+                id, // variable id
+                constructor_.typeId, // constructor call id
+                typeFromTypePool.id, // class export id
+                name,
+                this.statementPool
+              );
+            }
+
             return this.constructorCallGenerator.generate(
               depth,
               id, // variable id
-              constructor_.id, // constructor call id
+              typeFromTypePool.id, // constructor call id
               typeFromTypePool.id, // class export id
               name,
               this.statementPool
             );
           }
-
-          return this.constructorCallGenerator.generate(
-            depth,
-            id, // variable id
-            typeFromTypePool.id, // constructor call id
-            typeFromTypePool.id, // class export id
-            name,
-            this.statementPool
-          );
+          case DiscoveredObjectKind.FUNCTION: {
+            return this.functionCallGenerator.generate(
+              depth,
+              id,
+              typeFromTypePool.id,
+              typeFromTypePool.id,
+              name,
+              this.statementPool
+            );
+          }
+          case DiscoveredObjectKind.INTERFACE: {
+            // TODO
+            return this.constructorCallGenerator.generate(
+              depth,
+              id,
+              typeFromTypePool.id,
+              typeFromTypePool.id,
+              name,
+              this.statementPool
+            );
+          }
+          case DiscoveredObjectKind.OBJECT: {
+            return this.constantObjectGenerator.generate(
+              depth,
+              id,
+              typeFromTypePool.id,
+              typeFromTypePool.id,
+              name,
+              this.statementPool
+            );
+          }
+          // No default
         }
-        case DiscoveredObjectKind.FUNCTION: {
-          return this.functionCallGenerator.generate(
-            depth,
-            id,
-            typeFromTypePool.id,
-            typeFromTypePool.id,
-            name,
-            this.statementPool
-          );
-        }
-        case DiscoveredObjectKind.INTERFACE: {
-          // TODO
-          return this.constructorCallGenerator.generate(
-            depth,
-            id,
-            typeFromTypePool.id,
-            typeFromTypePool.id,
-            name,
-            this.statementPool
-          );
-        }
-        case DiscoveredObjectKind.OBJECT: {
-          return this.constantObjectGenerator.generate(
-            depth,
-            id,
-            typeFromTypePool.id,
-            typeFromTypePool.id,
-            name,
-            this.statementPool
-          );
-        }
-        // No default
       }
     }
 
     const object_: { [key: string]: Statement } = {};
 
-    for (const [key, id] of typeObject.properties.entries()) {
-      object_[key] = this.sampleArgument(depth + 1, id, key);
+    for (const key of typeObject.properties.keys()) {
+      object_[key] = this.sampleObjectArgument(depth + 1, typeId, key);
     }
 
     return new ObjectStatement(
@@ -625,14 +690,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     // maybe create types for the subproperties by doing /main/array/id::1::1.property
 
     if (children.length === 0) {
-      children.push(
-        this.sampleString(
-          "anon",
-          "anon",
-          this.stringAlphabet,
-          this.stringMaxLength
-        )
-      );
+      children.push(this.sampleArrayArgument(depth + 1, id, 0));
     }
 
     // if some children are missing, fill them with fake params
@@ -764,8 +822,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   sampleNumber(id: string, name: string): NumericStatement {
     // by default we create small numbers (do we need very large numbers?)
-    const max = 10;
-    const min = -10;
+    const max = 1000;
+    const min = -1000;
 
     const value =
       this.constantPoolEnabled && prng.nextBoolean(this.constantPoolProbability)
@@ -788,8 +846,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   sampleInteger(id: string, name: string): IntegerStatement {
     // by default we create small numbers (do we need very large numbers?)
-    const max = 10;
-    const min = -10;
+    const max = 1000;
+    const min = -1000;
 
     const value =
       this.constantPoolEnabled && prng.nextBoolean(this.constantPoolProbability)

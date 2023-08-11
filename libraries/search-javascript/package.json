@@ -65,6 +65,7 @@
     "clear": "0.1.0",
     "figlet": "1.5.2",
     "fs-extra": "11.1.0",
+    "isolated-vm": "^4.6.0",
     "istanbul-lib-instrument": "5.1.0",
     "lodash.clonedeep": "4.5.0",
     "mocha": "10.2.0",

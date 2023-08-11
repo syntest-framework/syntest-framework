@@ -39,9 +39,13 @@ export class RandomSamplerPlugin extends SamplerPlugin<JavaScriptTestCase> {
   ): EncodingSampler<JavaScriptTestCase> {
     return new JavaScriptRandomSampler(
       options.subject as unknown as JavaScriptSubject,
-      undefined,
-      undefined,
-      undefined,
+      undefined, // TODO incorrect constant pool should be part of sampler options
+      (<JavaScriptArguments>(<unknown>this.args)).constantPool,
+      (<JavaScriptArguments>(<unknown>this.args)).constantPoolProbability,
+      (<JavaScriptArguments>(<unknown>this.args)).typePool,
+      (<JavaScriptArguments>(<unknown>this.args)).typePoolProbability,
+      (<JavaScriptArguments>(<unknown>this.args)).statementPool,
+      (<JavaScriptArguments>(<unknown>this.args)).statementPoolProbability,
       (<JavaScriptArguments>(<unknown>this.args)).typeInferenceMode,
       (<JavaScriptArguments>(<unknown>this.args)).randomTypeProbability,
       (<JavaScriptArguments>(
@@ -50,11 +54,8 @@ export class RandomSamplerPlugin extends SamplerPlugin<JavaScriptTestCase> {
       (<JavaScriptArguments>(<unknown>this.args)).maxActionStatements,
       (<JavaScriptArguments>(<unknown>this.args)).stringAlphabet,
       (<JavaScriptArguments>(<unknown>this.args)).stringMaxLength,
-      (<JavaScriptArguments>(<unknown>this.args)).resampleGeneProbability,
       (<JavaScriptArguments>(<unknown>this.args)).deltaMutationProbability,
-      (<JavaScriptArguments>(<unknown>this.args)).exploreIllegalValues,
-      (<JavaScriptArguments>(<unknown>this.args)).reuseStatementProbability,
-      (<JavaScriptArguments>(<unknown>this.args)).useMockedObjectProbability
+      (<JavaScriptArguments>(<unknown>this.args)).exploreIllegalValues
     );
   }
 

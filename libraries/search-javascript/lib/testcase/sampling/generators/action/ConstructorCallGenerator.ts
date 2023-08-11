@@ -50,11 +50,16 @@ export class ConstructorCallGenerator extends CallGenerator<ConstructorCall> {
     //   );
     // }
 
-    const statementFromPool =
-      statementPool.getRandomStatement(exportIdentifier);
+    if (this.statementPoolEnabled) {
+      const statementFromPool =
+        statementPool.getRandomConstructor(exportIdentifier);
 
-    if (statementFromPool && prng.nextBoolean(this.reuseStatementProbability)) {
-      return <ConstructorCall>statementFromPool;
+      if (
+        statementFromPool &&
+        prng.nextBoolean(this.statementPoolProbability)
+      ) {
+        return statementFromPool;
+      }
     }
 
     const type_ = this.rootContext

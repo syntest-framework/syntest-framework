@@ -60,17 +60,25 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   private _constantPoolManager: ConstantPoolManager;
   private _constantPoolEnabled: boolean;
   private _constantPoolProbability: number;
+
+  private _typePoolEnabled: boolean;
+  private _typePoolProbability: number;
+
+  private _statementPoolEnabled: boolean;
+  private _statementPoolProbability: number;
+
   private _typeInferenceMode: string;
   private _randomTypeProbability: number;
   private _incorporateExecutionInformation: boolean;
   private _maxActionStatements: number;
   private _stringAlphabet: string;
   private _stringMaxLength: number;
-  private _resampleGeneProbability: number;
+
   private _deltaMutationProbability: number;
+  // private _deltaSigma: number; // todo
+  // private _adaptiveDeltaSigma: boolean; // todo
+
   private _exploreIllegalValues: boolean;
-  private _reuseStatementProbability: number;
-  private _useMockedObjectProbability: number;
 
   private _statementPool: StatementPool | null;
 
@@ -89,33 +97,38 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     constantPoolManager: ConstantPoolManager,
     constantPoolEnabled: boolean,
     constantPoolProbability: number,
+    typePoolEnabled: boolean,
+    typePoolProbability: number,
+    statementPoolEnabled: boolean,
+    statementPoolProbability: number,
     typeInferenceMode: string,
     randomTypeProbability: number,
     incorporateExecutionInformation: boolean,
     maxActionStatements: number,
     stringAlphabet: string,
     stringMaxLength: number,
-    resampleGeneProbability: number,
     deltaMutationProbability: number,
-    exploreIllegalValues: boolean,
-    reuseStatementProbability: number,
-    useMockedObjectProbability: number
+    exploreIllegalValues: boolean
   ) {
     super(subject);
     this._constantPoolManager = constantPoolManager;
     this._constantPoolEnabled = constantPoolEnabled;
     this._constantPoolProbability = constantPoolProbability;
+
+    this._typePoolEnabled = typePoolEnabled;
+    this._typePoolProbability = typePoolProbability;
+
+    this._statementPoolEnabled = statementPoolEnabled;
+    this._statementPoolProbability = statementPoolProbability;
+
     this._typeInferenceMode = typeInferenceMode;
     this._randomTypeProbability = randomTypeProbability;
     this._incorporateExecutionInformation = incorporateExecutionInformation;
     this._maxActionStatements = maxActionStatements;
     this._stringAlphabet = stringAlphabet;
     this._stringMaxLength = stringMaxLength;
-    this._resampleGeneProbability = resampleGeneProbability;
     this._deltaMutationProbability = deltaMutationProbability;
     this._exploreIllegalValues = exploreIllegalValues;
-    this._reuseStatementProbability = reuseStatementProbability;
-    this._useMockedObjectProbability = useMockedObjectProbability;
   }
 
   get rootContext() {
@@ -128,37 +141,44 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     this._functionCallGenerator = new FunctionCallGenerator(
       this,
       rootContext,
-      this.reuseStatementProbability
+      this._statementPoolEnabled,
+      this._statementPoolProbability
     );
     this._constructorCallGenerator = new ConstructorCallGenerator(
       this,
       rootContext,
-      this.reuseStatementProbability
+      this._statementPoolEnabled,
+      this._statementPoolProbability
     );
     this._methodCallGenerator = new MethodCallGenerator(
       this,
       rootContext,
-      this.reuseStatementProbability
+      this._statementPoolEnabled,
+      this._statementPoolProbability
     );
     this._getterGenerator = new GetterGenerator(
       this,
       rootContext,
-      this.reuseStatementProbability
+      this._statementPoolEnabled,
+      this._statementPoolProbability
     );
     this._setterGenerator = new SetterGenerator(
       this,
       rootContext,
-      this.reuseStatementProbability
+      this._statementPoolEnabled,
+      this._statementPoolProbability
     );
     this._constantObjectGenerator = new ConstantObjectGenerator(
       this,
       rootContext,
-      this.reuseStatementProbability
+      this._statementPoolEnabled,
+      this._statementPoolProbability
     );
     this._objectFunctionCallGenerator = new ObjectFunctionCallGenerator(
       this,
       rootContext,
-      this.reuseStatementProbability
+      this._statementPoolEnabled,
+      this._statementPoolProbability
     );
   }
 
@@ -284,6 +304,22 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     return this._constantPoolProbability;
   }
 
+  get typePoolEnabled(): boolean {
+    return this._typePoolEnabled;
+  }
+
+  get typePoolProbability(): number {
+    return this._typePoolProbability;
+  }
+
+  get statementPoolEnabled(): boolean {
+    return this._statementPoolEnabled;
+  }
+
+  get statementPoolProbability(): number {
+    return this._statementPoolProbability;
+  }
+
   get typeInferenceMode(): string {
     return this._typeInferenceMode;
   }
@@ -308,23 +344,11 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     return this._stringMaxLength;
   }
 
-  get resampleGeneProbability(): number {
-    return this._resampleGeneProbability;
-  }
-
   get deltaMutationProbability(): number {
     return this._deltaMutationProbability;
   }
 
   get exploreIllegalValues(): boolean {
     return this._exploreIllegalValues;
-  }
-
-  get reuseStatementProbability(): number {
-    return this._reuseStatementProbability;
-  }
-
-  get useMockedObjectProbability(): number {
-    return this._useMockedObjectProbability;
   }
 }

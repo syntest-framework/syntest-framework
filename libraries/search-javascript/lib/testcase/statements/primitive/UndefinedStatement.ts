@@ -46,20 +46,23 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
+    if (prng.nextBoolean(sampler.deltaMutationProbability)) {
+      // 80%
+      return new UndefinedStatement(
+        this.variableIdentifier,
+        this.typeIdentifier,
+        this.name,
+        this.type,
+        prng.uniqueId()
+      );
+    } else {
+      // 20%
       return sampler.sampleArgument(
         depth + 1,
         this.variableIdentifier,
         this.name
       );
     }
-    return new UndefinedStatement(
-      this.variableIdentifier,
-      this.typeIdentifier,
-      this.name,
-      this.type,
-      prng.uniqueId()
-    );
   }
 
   copy(): UndefinedStatement {

@@ -34,7 +34,6 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
 
   private _valueMap: Map<string, unknown>;
   private _isDistanceMap: Map<string, boolean>;
-  private _distance: number;
 
   constructor(
     stringAlphabet: string,
@@ -48,7 +47,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
 
     this._valueMap = new Map();
     this._isDistanceMap = new Map();
-    this._distance = -1;
+
     BranchDistanceVisitor.LOGGER = getLogger("BranchDistanceVisitor");
 
     for (const variable of Object.keys(this._variables)) {
@@ -59,21 +58,16 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   }
 
   _getDistance(condition: string): number {
-    if (!this._distance) {
-      if (
-        !this._valueMap.has(condition) ||
-        !this._isDistanceMap.get(condition)
-      ) {
-        // the value does not exist or is not a distance
-        throw new Error(shouldNeverHappen("BranchDistanceVisitor"));
-      }
-
-      this._distance = <number>this._valueMap.get(condition);
+    if (!this._valueMap.has(condition) || !this._isDistanceMap.get(condition)) {
+      // the value does not exist or is not a distance
+      throw new Error(shouldNeverHappen("BranchDistanceVisitor"));
     }
-    return this._distance;
+
+    return <number>this._valueMap.get(condition);
   }
 
   public Statement: (path: NodePath<t.Statement>) => void = (path) => {
+    let id: string;
     if (
       path.isConditionalExpression() ||
       path.isIfStatement() ||
@@ -83,47 +77,39 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       const test = <NodePath<t.Node>>path.get("test");
 
       test.visit();
-
-      const testId = test.toString();
-
-      if (this._isDistanceMap.get(testId)) {
-        this._distance = <number>this._valueMap.get(path.toString());
-      } else {
-        this._distance = this._valueMap.get(path.toString()) ? 0 : 1;
-      }
-    }
-
-    if (path.isSwitchCase() || path.isForStatement()) {
+      id = test.toString();
+    } else if (path.isSwitchCase() || path.isForStatement()) {
       const test = <NodePath<t.Node>>path.get("test");
 
       if (test) {
         test.visit();
-        const testId = test.toString();
-
-        if (this._isDistanceMap.get(testId)) {
-          this._distance = <number>this._valueMap.get(path.toString());
-        } else {
-          this._distance = this._valueMap.get(path.toString()) ? 0 : 1;
-        }
+        id = test.toString();
       } else {
-        this._distance = 0;
+        path.skip();
+        return;
       }
-    }
-
-    if (path.isExpressionStatement()) {
-      path.get("expression").visit();
-
+    } else if (path.isExpressionStatement()) {
       const expression = <NodePath<t.Node>>path.get("expression");
-      const expressionId = expression.toString();
-
-      if (this._isDistanceMap.get(expressionId)) {
-        this._distance = <number>this._valueMap.get(path.toString());
-      } else {
-        this._distance = this._valueMap.get(path.toString()) ? 0 : 1;
-      }
+      expression.visit();
+      id = expression.toString();
     }
 
     // TODO for in and for of
+
+    let _distance: number;
+    if (this._isDistanceMap.get(id)) {
+      _distance = <number>this._valueMap.get(id);
+    } else {
+      if (this._inverted) {
+        _distance = this._valueMap.get(id) ? 1 : 0;
+      } else {
+        _distance = this._valueMap.get(id) ? 0 : 1;
+      }
+      _distance = this._normalize(_distance);
+    }
+
+    this._isDistanceMap.set(id, true);
+    this._valueMap.set(id, _distance);
 
     path.skip();
   };
@@ -470,7 +456,9 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
           value = Math.abs(leftValue - rightValue);
         } else if (
           typeof leftValue === "string" &&
-          typeof rightValue === "string"
+          typeof rightValue === "string" &&
+          !left.toString().startsWith("typeof ") && // typeof x === 'string' (should not be compared as strings (but as enums))
+          !right.toString().startsWith("typeof ") // 'string' === typeof x (should not be compared as strings (but as enums))
         ) {
           value = this._realCodedEditDistance(leftValue, rightValue);
         } else if (
@@ -777,7 +765,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
                 this._stringAlphabet.indexOf(t_index)
             );
           }
-          cost = this._normalize(cost);
+          // cost = this._normalize(cost);
         }
 
         // Step 6

@@ -55,6 +55,11 @@ export function extractExportsFromExportDefaultDeclaration(
       id = visitor._getNodeId(path.get("declaration"));
       break;
     }
+    case "CallExpression": {
+      name = "default";
+      id = visitor._getNodeId(path.get("declaration"));
+      break;
+    }
     default: {
       // we could also put anon here, but that would be a bit weird
       //   name = "anonymous"
@@ -66,7 +71,9 @@ export function extractExportsFromExportDefaultDeclaration(
       // export default {}
       // export default []
       // etc.
-      throw new Error("Unsupported export default declaration");
+      throw new Error(
+        `Unsupported export default declaration at ${visitor._getNodeId(path)}`
+      );
     }
   }
 

@@ -142,13 +142,14 @@ describe("TargetVisitor test", () => {
         `;
 
     const targets = targetHelper(source);
-
+    console.log(targets);
     expect(targets.length).to.equal(1);
 
     checkFunction(targets[0], "name1", true, true);
   });
 
   it("FunctionExpression: functions overwritten in subscope", () => {
+    // TODO we cannot know which one is actually exported (async or not)
     const source = `
           let name1 = function () {}
 
@@ -366,6 +367,7 @@ describe("TargetVisitor test", () => {
 
     expect(targets.length).to.equal(2);
 
+    console.log(targets);
     checkClass(targets[0], "name1", false);
     checkClassMethod(
       targets[1],
@@ -389,13 +391,14 @@ describe("TargetVisitor test", () => {
 
     const targets = targetHelper(source);
 
-    expect(targets.length).to.equal(2);
+    expect(targets.length).to.equal(3);
 
-    checkClass(targets[0], "name1", false);
+    checkObject(targets[0], "obj", false);
+    checkClass(targets[1], "name1", false);
     checkClassMethod(
-      targets[1],
+      targets[2],
       "method1",
-      targets[0].id,
+      targets[1].id,
       "method",
       "public",
       false,
@@ -414,13 +417,42 @@ describe("TargetVisitor test", () => {
 
     const targets = targetHelper(source);
 
-    expect(targets.length).to.equal(2);
+    console.log(targets);
+    expect(targets.length).to.equal(3);
 
-    checkClass(targets[0], "name1", false);
+    checkObject(targets[0], "obj", false);
+    checkClass(targets[1], "name1", false);
     checkClassMethod(
-      targets[1],
+      targets[2],
       "method1",
-      targets[0].id,
+      targets[1].id,
+      "method",
+      "public",
+      false,
+      false
+    );
+  });
+
+  it("ArrowFunctionExpression: as class expression property where class expression is in object using literal", () => {
+    const source = `
+        const obj = { 
+            "name1": class name2 {
+                method1 = () => {}
+            }
+        }
+        exports = obj
+        `;
+
+    const targets = targetHelper(source);
+
+    expect(targets.length).to.equal(3);
+
+    checkObject(targets[0], "obj", true);
+    checkClass(targets[1], "name1", false);
+    checkClassMethod(
+      targets[2],
+      "method1",
+      targets[1].id,
       "method",
       "public",
       false,
@@ -433,7 +465,9 @@ describe("TargetVisitor test", () => {
         const x = {}
         x[y] = function name1() {}
         `;
-    expect(targetHelper(source)).to.deep.equal([]);
+    const targets = targetHelper(source);
+
+    expect(targets.length).to.equal(1);
   });
 
   it("FunctionExpression: assignment memberexpression", () => {
@@ -450,7 +484,7 @@ describe("TargetVisitor test", () => {
     checkObjectFunction(targets[1], "y", targets[0].id, false);
   });
 
-  it("ObjectFunction: assignment memberexpression using literal", () => {
+  it("ObjectFunction: assignment memberexpression using literal two", () => {
     const source = `
         const x = {}
         x['y'] = function name1() {}
@@ -461,12 +495,12 @@ describe("TargetVisitor test", () => {
 
     expect(targets.length).to.equal(3);
 
-    checkObject(targets[1], "x", false);
-    checkObjectFunction(targets[0], "y", targets[0].id, false);
+    checkObject(targets[0], "x", false);
+    checkObjectFunction(targets[1], "y", targets[0].id, false);
     checkObjectFunction(targets[2], "z", targets[0].id, true);
   });
 
-  it("ObjectFunction: assignment memberexpression using literal", () => {
+  it("ObjectFunction: assignment memberexpression using literal with export", () => {
     const source = `
         const x = {}
         x['y'] = function name1() {}
@@ -481,7 +515,7 @@ describe("TargetVisitor test", () => {
     checkObjectFunction(targets[1], "y", targets[0].id, false);
   });
 
-  it("ObjectFunction: assignment memberexpression using literal", () => {
+  it("ObjectFunction: assignment memberexpression using literal with module export", () => {
     const source = `
         const x = {}
         x['y'] = function name1() {}

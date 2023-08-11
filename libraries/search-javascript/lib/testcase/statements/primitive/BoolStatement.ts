@@ -40,22 +40,24 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
+    if (prng.nextBoolean(sampler.deltaMutationProbability)) {
+      // 80%
+      return new BoolStatement(
+        this.variableIdentifier,
+        this.typeIdentifier,
+        this.name,
+        this.type,
+        prng.uniqueId(),
+        !this.value
+      );
+    } else {
+      // 20%
       return sampler.sampleArgument(
         depth + 1,
         this.variableIdentifier,
         this.name
       );
     }
-
-    return new BoolStatement(
-      this.variableIdentifier,
-      this.typeIdentifier,
-      this.name,
-      this.type,
-      prng.uniqueId(),
-      !this.value
-    );
   }
 
   copy(): BoolStatement {

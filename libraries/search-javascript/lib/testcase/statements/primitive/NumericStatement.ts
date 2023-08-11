@@ -22,6 +22,7 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Statement } from "../Statement";
+import { IntegerStatement } from "./IntegerStatement";
 
 /**
  * Generic number class
@@ -42,24 +43,39 @@ export class NumericStatement extends PrimitiveStatement<number> {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleArgument(
-        depth + 1,
-        this.variableIdentifier,
-        this.name
-      );
-    }
-
     if (prng.nextBoolean(sampler.deltaMutationProbability)) {
+      // 80%
+      if (prng.nextBoolean(0.5)) {
+        // 50%
+        return new IntegerStatement(
+          this.variableIdentifier,
+          this.typeIdentifier,
+          this.name,
+          this.type,
+          prng.uniqueId(),
+          this.value
+        ).deltaMutation(sampler);
+      }
       return this.deltaMutation(sampler);
+    } else {
+      // 20%
+      if (prng.nextBoolean(0.5)) {
+        // 50%
+        return sampler.sampleArgument(
+          depth + 1,
+          this.variableIdentifier,
+          this.name
+        );
+      } else {
+        // 50%
+        return sampler.sampleNumber(this.variableIdentifier, this.name);
+      }
     }
-
-    return sampler.sampleNumber(this.variableIdentifier, this.name);
   }
 
   deltaMutation(sampler: JavaScriptTestCaseSampler): NumericStatement {
     // small mutation
-    const change = prng.nextGaussian(0, 20);
+    const change = prng.nextGaussian(0, 5);
 
     let newValue = this.value + change;
 
@@ -91,7 +107,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
       this.typeIdentifier,
       this.name,
       this.type,
-      prng.uniqueId(),
+      this.uniqueId,
       this.value
     );
   }

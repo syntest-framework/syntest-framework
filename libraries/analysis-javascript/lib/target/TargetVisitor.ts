@@ -22,14 +22,16 @@ import { TargetType } from "@syntest/analysis";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
 
 import {
+  Callable,
   ClassTarget,
+  Exportable,
   FunctionTarget,
   MethodTarget,
+  NamedSubTarget,
   ObjectFunctionTarget,
   ObjectTarget,
   SubTarget,
 } from "./Target";
-import { VisibilityType } from "./VisibilityType";
 import { Export } from "./export/Export";
 import { unsupportedSyntax } from "../utils/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
@@ -174,6 +176,18 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             // e.g. x.y = class {}
             // e.g. x.y = function {}
             // e.g. x.y = () => {}
+            if (
+              assigned.property.name === "exports" &&
+              assigned.object.type === "Identifier" &&
+              assigned.object.name === "module"
+            ) {
+              // e.g. module.exports = class {}
+              // e.g. module.exports = function {}
+              // e.g. module.exports = () => {}
+              return "id" in parentNode.right
+                ? parentNode.right.id.name
+                : "anonymousFunction";
+            }
             return assigned.property.name;
           } else {
             // e.g. x.? = class {}
@@ -260,17 +274,13 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. () => {}
         // Should not be possible
         throw new Error(
-          `unknown class expression ${parentNode.type} in ${this.filePath}`
+          `unknown class expression ${parentNode.type} in ${this._getNodeId(
+            path
+          )}`
         );
       }
     }
   }
-
-  public FunctionExpression: (path: NodePath<t.FunctionExpression>) => void = (
-    path
-  ) => {
-    this._functionExpression(path);
-  };
 
   public FunctionDeclaration: (path: NodePath<t.FunctionDeclaration>) => void =
     (path) => {
@@ -279,446 +289,549 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       const id = this._getNodeId(path);
       const export_ = this._getExport(id);
 
-      const target: FunctionTarget = {
-        id: id,
-        name: targetName,
-        type: TargetType.FUNCTION,
-        exported: !!export_,
-        default: export_ ? export_.default : false,
-        module: export_ ? export_.module : false,
-        isAsync: path.node.async,
-      };
+      this._extractFromFunction(
+        path,
+        id,
+        id,
+        targetName,
+        export_,
+        false,
+        false
+      );
 
-      this.subTargets.push(target);
+      path.skip();
     };
-
-  public ClassExpression: (path: NodePath<t.ClassExpression>) => void = (
-    path
-  ) => {
-    const targetName = this._getTargetNameOfExpression(path);
-    const export_ = this._getExport(this._getNodeId(path));
-
-    const target: ClassTarget = {
-      id: `${this._getNodeId(path)}`,
-      name: targetName,
-      type: TargetType.CLASS,
-      exported: !!export_,
-      default: export_ ? export_.default : false,
-      module: export_ ? export_.module : false,
-    };
-
-    this.subTargets.push(target);
-  };
 
   public ClassDeclaration: (path: NodePath<t.ClassDeclaration>) => void = (
     path
   ) => {
     // e.g. class A {}
     const targetName = this._getTargetNameOfDeclaration(path);
-    const export_ = this._getExport(this._getNodeId(path));
+    const id = this._getNodeId(path);
+    const export_ = this._getExport(id);
 
+    this._extractFromClass(path, id, id, targetName, export_);
+
+    path.skip();
+  };
+
+  public FunctionExpression: (path: NodePath<t.FunctionExpression>) => void = (
+    path
+  ) => {
+    // only thing left where these can be found is:
+    // call(function () {})
+    const targetName = this._getTargetNameOfExpression(path);
+    const id = this._getNodeId(path);
+    const export_ = this._getExport(id);
+
+    this._extractFromFunction(path, id, id, targetName, export_, false, false);
+
+    path.skip();
+  };
+
+  public ClassExpression: (path: NodePath<t.ClassExpression>) => void = (
+    path
+  ) => {
+    // only thing left where these can be found is:
+    // call(class {})
+    const targetName = this._getTargetNameOfExpression(path);
+    const id = this._getNodeId(path);
+    const export_ = this._getExport(id);
+
+    this._extractFromClass(path, id, id, targetName, export_);
+
+    path.skip();
+  };
+
+  public ArrowFunctionExpression: (
+    path: NodePath<t.ArrowFunctionExpression>
+  ) => void = (path) => {
+    // only thing left where these can be found is:
+    // call(() => {})
+    const targetName = this._getTargetNameOfExpression(path);
+    const id = this._getNodeId(path);
+    const export_ = this._getExport(id);
+
+    this._extractFromFunction(path, id, id, targetName, export_, false, false);
+
+    path.skip();
+  };
+
+  public VariableDeclarator: (path: NodePath<t.VariableDeclarator>) => void = (
+    path
+  ) => {
+    if (!path.has("init")) {
+      path.skip();
+      return;
+    }
+    const idPath = <NodePath<t.Identifier>>path.get("id");
+    const init = path.get("init");
+
+    const targetName = idPath.node.name;
+    const id = this._getNodeId(path);
+    const typeId = this._getNodeId(init);
+    const export_ = this._getExport(id);
+
+    if (init.isFunction()) {
+      this._extractFromFunction(
+        init,
+        id,
+        typeId,
+        targetName,
+        export_,
+        false,
+        false
+      );
+    } else if (init.isClass()) {
+      this._extractFromClass(init, id, typeId, targetName, export_);
+    } else if (init.isObjectExpression()) {
+      this._extractFromObjectExpression(init, id, typeId, targetName, export_);
+    } else {
+      // TODO
+    }
+
+    path.skip();
+  };
+
+  public AssignmentExpression: (
+    path: NodePath<t.AssignmentExpression>
+  ) => void = (path) => {
+    const left = path.get("left");
+    const right = path.get("right");
+
+    if (
+      !right.isFunction() &&
+      !right.isClass() &&
+      !right.isObjectExpression()
+    ) {
+      return;
+    }
+
+    const targetName = this._getTargetNameOfExpression(right);
+    let isObject = false;
+    let isMethod = false;
+    let objectId: string;
+
+    let id: string = this._getBindingId(left);
+    if (left.isMemberExpression()) {
+      const object = left.get("object");
+      const property = left.get("property");
+
+      if (left.get("property").isIdentifier() && left.node.computed) {
+        TargetVisitor.LOGGER.warn(
+          "We do not support dynamic computed properties: x[a] = ?"
+        );
+        path.skip();
+        return;
+      } else if (!left.get("property").isIdentifier() && !left.node.computed) {
+        // we also dont support a.f() = ?
+        // or equivalent
+        path.skip();
+        return;
+      }
+
+      if (object.isIdentifier()) {
+        // x.? = ?
+        // x['?'] = ?
+        if (object.node.name === "exports") {
+          // exports.? = ?
+          isObject = false;
+          id = this._getBindingId(right);
+        } else if (
+          object.node.name === "module" &&
+          property.isIdentifier() &&
+          property.node.name === "exports"
+        ) {
+          // module.exports = ?
+          isObject = false;
+          id = this._getBindingId(right);
+        } else {
+          isObject = true;
+          objectId = this._getBindingId(object);
+          // find object
+          const objectTarget = this._subTargets.find(
+            (value) => value.id === objectId && value.type === TargetType.OBJECT
+          );
+
+          if (!objectTarget) {
+            const export_ = this._getExport(objectId);
+            // create one if it does not exist
+            const objectTarget: ObjectTarget = {
+              id: objectId,
+              typeId: objectId,
+              name: object.node.name,
+              type: TargetType.OBJECT,
+              exported: !!export_,
+              default: export_ ? export_.default : false,
+              module: export_ ? export_.module : false,
+            };
+            this._subTargets.push(objectTarget);
+          }
+        }
+      } else if (object.isMemberExpression()) {
+        // ?.?.? = ?
+        const subObject = object.get("object");
+        const subProperty = object.get("property");
+        // what about module.exports.x
+        if (
+          subObject.isIdentifier() &&
+          subProperty.isIdentifier() &&
+          subProperty.node.name === "prototype"
+        ) {
+          // x.prototype.? = ?
+          objectId = this._getBindingId(subObject);
+          const objectTarget = <NamedSubTarget & Exportable>(
+            this._subTargets.find((value) => value.id === objectId)
+          );
+
+          const newTargetClass: ClassTarget = {
+            id: objectTarget.id,
+            type: TargetType.CLASS,
+            name: objectTarget.name,
+            typeId: objectTarget.id,
+            exported: objectTarget.exported,
+            renamedTo: objectTarget.renamedTo,
+            module: objectTarget.module,
+            default: objectTarget.default,
+          };
+
+          // replace original target by prototype class
+          this._subTargets[this._subTargets.indexOf(objectTarget)] =
+            newTargetClass;
+
+          const constructorTarget: MethodTarget = {
+            id: objectTarget.id,
+            type: TargetType.METHOD,
+            name: objectTarget.name,
+            typeId: objectTarget.id,
+            methodType: "constructor",
+            classId: objectTarget.id,
+            visibility: "public",
+            isStatic: false,
+            isAsync:
+              "isAsync" in objectTarget
+                ? (<Callable>objectTarget).isAsync
+                : false,
+          };
+
+          this._subTargets.push(constructorTarget);
+
+          isMethod = true;
+        }
+      } else {
+        path.skip();
+        return;
+      }
+    }
+
+    const typeId = this._getNodeId(right);
+    const export_ = this._getExport(isObject ? objectId : id);
+
+    if (right.isFunction()) {
+      this._extractFromFunction(
+        right,
+        id,
+        typeId,
+        targetName,
+        export_,
+        isObject,
+        isMethod,
+        objectId
+      );
+    } else if (right.isClass()) {
+      this._extractFromClass(right, id, typeId, targetName, export_);
+    } else if (right.isObjectExpression()) {
+      this._extractFromObjectExpression(right, id, typeId, targetName, export_);
+    } else {
+      // TODO
+    }
+
+    path.skip();
+  };
+
+  private _extractFromFunction(
+    path: NodePath<t.Function>,
+    functionId: string,
+    typeId: string,
+    functionName: string,
+    export_: Export | undefined,
+    isObjectFunction: boolean,
+    isMethod: boolean,
+    superId?: string
+  ) {
+    let target: FunctionTarget | ObjectFunctionTarget | MethodTarget;
+
+    if (isObjectFunction && isMethod) {
+      throw new Error("Cannot be method and object function");
+    }
+
+    if (isObjectFunction) {
+      if (!superId) {
+        throw new Error(
+          "if it is an object function the object id should be given"
+        );
+      }
+      target = {
+        id: functionId,
+        typeId: typeId,
+        objectId: superId,
+        name: functionName,
+        type: TargetType.OBJECT_FUNCTION,
+        isAsync: path.node.async,
+      };
+    } else if (isMethod) {
+      if (!superId) {
+        throw new Error(
+          "if it is an object function the object id should be given"
+        );
+      }
+      target = {
+        id: functionId,
+        typeId: typeId,
+        classId: superId,
+        name: functionName,
+        type: TargetType.METHOD,
+        isAsync: path.node.async,
+        methodType: path.isClassMethod() ? path.node.kind : "method",
+        visibility:
+          path.isClassMethod() && path.node.access
+            ? path.node.access
+            : "public",
+        isStatic:
+          path.isClassMethod() || path.isClassProperty()
+            ? path.node.static
+            : false,
+      };
+    } else {
+      target = {
+        id: functionId,
+        typeId: typeId,
+        name: functionName,
+        type: TargetType.FUNCTION,
+        exported: !!export_,
+        default: export_ ? export_.default : false,
+        module: export_ ? export_.module : false,
+        isAsync: path.node.async,
+      };
+    }
+
+    this._subTargets.push(target);
+
+    const body = path.get("body");
+
+    if (Array.isArray(body)) {
+      throw new TypeError("weird function body");
+    } else {
+      body.visit();
+    }
+  }
+
+  private _extractFromObjectExpression(
+    path: NodePath<t.ObjectExpression>,
+    objectId: string,
+    typeId: string,
+    objectName: string,
+    export_?: Export
+  ) {
+    const target: ObjectTarget = {
+      id: objectId,
+      typeId: typeId,
+      name: objectName,
+      type: TargetType.OBJECT,
+      exported: !!export_,
+      default: export_ ? export_.default : false,
+      module: export_ ? export_.module : false,
+    };
+
+    this._subTargets.push(target);
+
+    // loop over object properties
+    for (const property of path.get("properties")) {
+      if (property.isObjectMethod()) {
+        if (property.node.key.type !== "Identifier") {
+          // e.g. class A { ?() {} }
+          // unsupported
+          // not possible i think
+          throw new Error("unknown class method key");
+        }
+        const targetName = property.node.key.name;
+
+        const id = this._getNodeId(property);
+        this._extractFromFunction(
+          property,
+          id,
+          id,
+          targetName,
+          undefined,
+          true,
+          false,
+          objectId
+        );
+      } else if (property.isObjectProperty()) {
+        const key = property.get("key");
+        const value = property.get("value");
+
+        if (value) {
+          const id = this._getNodeId(property);
+          let targetName: string;
+          if (key.isIdentifier()) {
+            targetName = key.node.name;
+          } else if (
+            key.isStringLiteral() ||
+            key.isBooleanLiteral() ||
+            key.isNumericLiteral() ||
+            key.isBigIntLiteral()
+          ) {
+            targetName = `${key.node.value}`;
+          }
+
+          if (value.isFunction()) {
+            this._extractFromFunction(
+              value,
+              id,
+              id,
+              targetName,
+              undefined,
+              true,
+              false,
+              objectId
+            );
+          } else if (value.isClass()) {
+            this._extractFromClass(value, id, id, targetName);
+          } else if (value.isObjectExpression()) {
+            this._extractFromObjectExpression(value, id, id, targetName);
+          } else {
+            // TODO
+          }
+        }
+      } else if (property.isSpreadElement()) {
+        // TODO
+        // extract the spread element
+      }
+    }
+  }
+
+  private _extractFromClass(
+    path: NodePath<t.Class>,
+    classId: string,
+    typeId: string,
+    className: string,
+    export_?: Export | undefined
+  ): void {
     const target: ClassTarget = {
-      id: `${this._getNodeId(path)}`,
-      name: targetName,
+      id: classId,
+      typeId: typeId,
+      name: className,
       type: TargetType.CLASS,
       exported: !!export_,
       default: export_ ? export_.default : false,
       module: export_ ? export_.module : false,
     };
 
-    this.subTargets.push(target);
-  };
+    this._subTargets.push(target);
 
-  private _getParentClassId(
-    path: NodePath<
-      | t.ClassMethod
-      | t.ClassProperty
-      | t.ClassPrivateMethod
-      | t.ClassPrivateProperty
-    >
-  ): string {
-    return this._getNodeId(path.parentPath.parentPath);
-  }
-
-  public ClassMethod: (path: NodePath<t.ClassMethod>) => void = (path) => {
-    if (path.parentPath.type !== "ClassBody") {
-      // unsupported
-      // not possible i think
-      throw new Error("unknown class method parent");
-    }
-
-    const parentClassId: string = this._getParentClassId(path);
-
-    if (path.node.key.type !== "Identifier") {
-      // e.g. class A { ?() {} }
-      // unsupported
-      // not possible i think
-      throw new Error("unknown class method key");
-    }
-
-    const targetName = path.node.key.name;
-
-    let visibility = VisibilityType.PUBLIC;
-    if (path.node.access === "private") {
-      visibility = VisibilityType.PRIVATE;
-    } else if (path.node.access === "protected") {
-      visibility = VisibilityType.PROTECTED;
-    }
-
-    const target: MethodTarget = {
-      id: `${this._getNodeId(path)}`,
-      name: targetName,
-      type: TargetType.METHOD,
-      classId: parentClassId,
-      isStatic: path.node.static,
-      isAsync: path.node.async,
-      methodType: path.node.kind,
-      visibility: visibility,
-    };
-
-    this.subTargets.push(target);
-  };
-
-  private _functionExpression(
-    path: NodePath<t.ArrowFunctionExpression | t.FunctionExpression>
-  ) {
-    // e.g. const x = () => {}
-    const targetName = this._getTargetNameOfExpression(path);
-
-    const parent = path.parentPath;
-    let left;
-    if (
-      parent.isAssignmentExpression() &&
-      ((left = parent.get("left")), left.isMemberExpression())
-    ) {
-      let object = left.get("object");
-      const property = left.get("property");
-
-      if (object.isMemberExpression()) {
-        const subObject = object.get("object");
-        const subProperty = object.get("property");
-
-        if (!subProperty.isIdentifier()) {
-          // e.g. a.x().y = function () {}
+    const body = <NodePath<t.ClassBody>>path.get("body");
+    for (const classBodyAttribute of body.get("body")) {
+      if (classBodyAttribute.isClassMethod()) {
+        if (classBodyAttribute.node.key.type !== "Identifier") {
+          // e.g. class A { ?() {} }
           // unsupported
-          throw new Error(
-            unsupportedSyntax(path.node.type, this._getNodeId(path))
-          );
+          // not possible i think
+          throw new Error("unknown class method key");
         }
 
-        if (subProperty.node.name === "prototype") {
-          // e.g. a.prototype.y = function() {}
-          object = subObject;
-          if (object.isIdentifier()) {
-            const prototypeName = object.node.name;
-            // find function
-            const target = <FunctionTarget>(
-              this._subTargets.find(
-                (target) =>
-                  target.type === TargetType.FUNCTION &&
-                  (<FunctionTarget>target).name === prototypeName
-              )
-            );
-            if (target) {
-              // remove
-              this._subTargets = this._subTargets.filter(
-                (subTarget) => subTarget.id !== target.id
-              );
-              // add new
-              this._subTargets.push(
-                <ClassTarget>{
-                  id: target.id,
-                  type: TargetType.CLASS,
-                  name: target.name,
-                  exported: target.exported,
-                  renamedTo: target.renamedTo,
-                  module: target.module,
-                  default: target.default,
-                },
-                // add constructor
-                <MethodTarget>{
-                  id: target.id,
-                  type: TargetType.METHOD,
-                  name: "constructor",
-                  classId: target.id,
+        const targetName = classBodyAttribute.node.key.name;
 
-                  visibility: VisibilityType.PUBLIC,
+        const id = this._getNodeId(classBodyAttribute);
 
-                  methodType: "constructor",
-                  isStatic: false,
-                  isAsync: target.isAsync,
-                }
-              );
-            }
-            // add this as class method
-            if (!property.isIdentifier()) {
-              throw new Error(
-                unsupportedSyntax(path.node.type, this._getNodeId(path))
-              );
-            }
+        this._extractFromFunction(
+          classBodyAttribute,
+          id,
+          id,
+          targetName,
+          undefined,
+          false,
+          true,
+          classId
+        );
+      } else if (classBodyAttribute.isClassProperty()) {
+        const key = classBodyAttribute.get("key");
+        const value = classBodyAttribute.get("value");
 
-            this._subTargets.push(<MethodTarget>{
-              id: `${this._getNodeId(path)}`,
-              type: TargetType.METHOD,
-              name: property.node.name,
-              classId: this._getBindingId(object),
-
-              visibility: VisibilityType.PUBLIC,
-
-              methodType: "method",
-              isStatic: false,
-              isAsync: path.node.async,
-            });
-            return;
-          } else {
-            // e.g. a().prototype.y = function() {}
-            throw new Error(
-              unsupportedSyntax(path.node.type, this._getNodeId(path))
-            );
+        if (value) {
+          const id = this._getNodeId(classBodyAttribute);
+          let targetName: string;
+          if (key.isIdentifier()) {
+            targetName = key.node.name;
+          } else if (
+            key.isStringLiteral() ||
+            key.isBooleanLiteral() ||
+            key.isNumericLiteral() ||
+            key.isBigIntLiteral()
+          ) {
+            targetName = `${key.node.value}`;
           }
-        } else {
-          // e.g. a.x.y = function () {}
-          // unsupported for now should create a objecttarget as a subtarget
-          throw new Error(
-            unsupportedSyntax(path.node.type, this._getNodeId(path))
-          );
+
+          if (value.isFunction()) {
+            this._extractFromFunction(
+              value,
+              id,
+              id,
+              targetName,
+              undefined,
+              false,
+              true,
+              classId
+            );
+          } else if (value.isClass()) {
+            this._extractFromClass(value, id, id, targetName);
+          } else if (value.isObjectExpression()) {
+            this._extractFromObjectExpression(value, id, id, targetName);
+          } else {
+            // TODO
+          }
         }
-      }
-
-      // e.g. a.x = function () {}
-      if (object.isIdentifier()) {
-        if (
-          left.node.computed == true &&
-          !property.node.type.includes("Literal")
-        ) {
-          // e.g. x[y] = class {}
-          // e.g. x[y] = function {}
-          // e.g. x[y] = () => {}
-          // TODO unsupported cannot get the name unless executing
-          TargetVisitor.LOGGER.warn(
-            `This tool does not support computed property assignments. Found one at ${this._getNodeId(
-              path
-            )}`
-          );
-          return;
-        }
-
-        const functionName = property.isIdentifier()
-          ? property.node.name
-          : "value" in property.node
-          ? property.node.value.toString()
-          : "null";
-
-        if (object.node.name === "exports") {
-          // e.g. exports.x = function () {}
-          // this is simply a function not an object function
-          const export_ = this._getExport(this._getNodeId(path));
-
-          const functionTarget: FunctionTarget = {
-            id: `${this._getNodeId(path)}`,
-            type: TargetType.FUNCTION,
-            name: functionName,
-            exported: !!export_,
-            default: export_ ? export_.default : false,
-            module: export_ ? export_.module : false,
-            isAsync: path.node.async,
-          };
-          this._subTargets.push(functionTarget);
-        } else if (
-          object.node.name === "module" &&
-          property.isIdentifier() &&
-          property.node.name === "exports"
-        ) {
-          // e.g. module.exports = function () {}
-          // this is simply a function not an object function
-          const export_ = this._getExport(this._getNodeId(path));
-
-          const functionTarget: FunctionTarget = {
-            id: `${this._getNodeId(path)}`,
-            type: TargetType.FUNCTION,
-            name: path.has("id")
-              ? (<NodePath<t.Identifier>>path.get("id")).node.name
-              : "default",
-            exported: !!export_,
-            default: export_ ? export_.default : false,
-            module: export_ ? export_.module : false,
-            isAsync: path.node.async,
-          };
-
-          this._subTargets.push(functionTarget);
-        } else {
-          const export_ = this._getExport(this._getBindingId(object));
-
-          const objectTarget: ObjectTarget = {
-            type: TargetType.OBJECT,
-            name: object.node.name,
-            id: `${this._getBindingId(object)}`,
-            exported: !!export_,
-            default: export_ ? export_.default : false,
-            module: export_ ? export_.module : false,
-          };
-          const objectFunctionTarget: ObjectFunctionTarget = {
-            type: TargetType.OBJECT_FUNCTION,
-            objectId: `${this._getBindingId(object)}`,
-            name: functionName,
-            id: `${this._getNodeId(path)}`,
-            isAsync: path.node.async,
-          };
-
-          this.subTargets.push(objectTarget, objectFunctionTarget);
-        }
-      } else if (object.isThisExpression()) {
-        // TODO repair this
-        // get the this scope object name
-        // create new object function target
-        return;
       } else {
-        // e.g. a().x = function () {}
-        // unsupported
-        throw new Error(
-          unsupportedSyntax(path.node.type, this._getNodeId(path))
+        TargetVisitor.LOGGER.warn(
+          `Unsupported class body attribute: ${classBodyAttribute.node.type}`
         );
       }
-    } else
-      switch (parent.node.type) {
-        case "ClassPrivateProperty": {
-          // e.g. class A { #x = () => {} }
-          // unsupported
-          throw new Error("unknown class method parent");
-        }
-        case "ClassProperty": {
-          // e.g. class A { x = () => {} }
-          const parentClassId: string = this._getParentClassId(
-            <NodePath<t.ClassProperty>>path.parentPath
-          );
-
-          const visibility = VisibilityType.PUBLIC;
-          // apparantly there is no access property on class properties
-          // if (parentNode.access === "private") {
-          //   visibility = VisibilityType.PRIVATE;
-          // } else if (parentNode.access === "protected") {
-          //   visibility = VisibilityType.PROTECTED;
-          // }
-
-          const target: MethodTarget = {
-            id: `${this._getNodeId(path)}`,
-            classId: parentClassId,
-            name: targetName,
-            type: TargetType.METHOD,
-            isStatic: (<t.ClassProperty>parent.node).static,
-            isAsync: path.node.async,
-            methodType: "method",
-            visibility: visibility,
-          };
-
-          this.subTargets.push(target);
-
-          break;
-        }
-        case "VariableDeclarator": {
-          if (!path.parentPath.has("id")) {
-            // unsupported
-            throw new Error(
-              unsupportedSyntax(path.node.type, this._getNodeId(path))
-            );
-          }
-
-          const export_ = this._getExport(this._getNodeId(path.parentPath));
-
-          const target: FunctionTarget = {
-            id: `${this._getNodeId(path.parentPath)}`,
-            name: targetName,
-            type: TargetType.FUNCTION,
-            exported: !!export_,
-            default: export_ ? export_.default : false,
-            module: export_ ? export_.module : false,
-            isAsync: path.node.async,
-          };
-
-          this.subTargets.push(target);
-
-          break;
-        }
-        case "LogicalExpression":
-        case "ConditionalExpression": {
-          let parent = path.parentPath;
-          const export_ = this._getExport(this._getNodeId(parent));
-
-          while (parent.isLogicalExpression() || parent.isConditional()) {
-            parent = parent.parentPath;
-          }
-
-          const target: FunctionTarget = {
-            id: `${this._getNodeId(parent)}`,
-            name: targetName,
-            type: TargetType.FUNCTION,
-            exported: !!export_,
-            default: export_ ? export_.default : false,
-            module: export_ ? export_.module : false,
-            isAsync: path.node.async,
-          };
-
-          this.subTargets.push(target);
-        }
-        default: {
-          const export_ = this._getExport(this._getNodeId(path));
-
-          const target: FunctionTarget = {
-            id: `${this._getNodeId(path)}`,
-            name: targetName,
-            type: TargetType.FUNCTION,
-            exported: !!export_,
-            default: export_ ? export_.default : false,
-            module: export_ ? export_.module : false,
-            isAsync: path.node.async,
-          };
-
-          this.subTargets.push(target);
-        }
-      }
+    }
   }
 
-  public ArrowFunctionExpression: (
-    path: NodePath<t.ArrowFunctionExpression>
-  ) => void = (path) => {
-    this._functionExpression(path);
-  };
-
   get subTargets(): SubTarget[] {
-    // filter duplicates because of redefinitions
-    // e.g. let a = 1; a = 2;
-    // this would result in two subtargets with the same name "a"
-    // but we only want the last one
-    this._subTargets = this._subTargets
+    return this._subTargets
       .reverse()
       .filter((subTarget, index, self) => {
-        if ("name" in subTarget) {
-          return (
-            index ===
-            self.findIndex((t) => {
-              return (
-                "name" in t &&
-                t.id === subTarget.id &&
-                t.type === subTarget.type &&
-                t.name === subTarget.name &&
-                (t.type === TargetType.METHOD
-                  ? (<MethodTarget>t).methodType ===
-                      (<MethodTarget>subTarget).methodType &&
-                    (<MethodTarget>t).isStatic ===
-                      (<MethodTarget>subTarget).isStatic &&
-                    (<MethodTarget>t).classId ===
-                      (<MethodTarget>subTarget).classId
-                  : true)
-              );
-            })
-          );
+        if (!("name" in subTarget)) {
+          // paths/branches/lines are always unique
+          return true;
         }
 
-        // paths/branches/lines are always unique
-        return true;
+        // filter duplicates because of redefinitions
+        // e.g. let a = 1; a = 2;
+        // this would result in two subtargets with the same name "a"
+        // but we only want the last one
+        return (
+          index ===
+          self.findIndex((t) => {
+            return (
+              "name" in t &&
+              t.id === subTarget.id &&
+              t.type === subTarget.type &&
+              t.name === subTarget.name &&
+              (t.type === TargetType.METHOD
+                ? (<MethodTarget>t).methodType ===
+                    (<MethodTarget>subTarget).methodType &&
+                  (<MethodTarget>t).isStatic ===
+                    (<MethodTarget>subTarget).isStatic &&
+                  (<MethodTarget>t).classId ===
+                    (<MethodTarget>subTarget).classId
+                : true)
+            );
+          })
+        );
       })
       .reverse();
-
-    return this._subTargets;
   }
 }

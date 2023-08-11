@@ -29,12 +29,6 @@ import { ActionStatement } from "./ActionStatement";
  * @author Dimitri Stallenberg
  */
 export class ConstantObject extends ActionStatement {
-  /**
-   * Constructor
-   * @param type the return identifierDescription of the constructor
-   * @param uniqueId optional argument
-   * @param calls the child calls on the object
-   */
   constructor(
     variableIdentifier: string,
     typeIdentifier: string,
@@ -56,18 +50,17 @@ export class ConstantObject extends ActionStatement {
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): ConstantObject {
-    // if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-    //   return sampler.sampleConstantObject(depth);
-    // }
-
-    return new ConstantObject(
-      this.variableIdentifier,
-      this.typeIdentifier,
-      this.name,
-      this.type,
-      prng.uniqueId(),
-      this.export
-    );
+    // delta mutations are non existance here so we make a copy instead
+    return prng.nextBoolean(sampler.deltaMutationProbability)
+      ? this.copy()
+      : sampler.constantObjectGenerator.generate(
+          depth,
+          this.variableIdentifier,
+          this.typeIdentifier,
+          this.export.id,
+          this.name,
+          sampler.statementPool
+        );
   }
 
   copy(): ConstantObject {

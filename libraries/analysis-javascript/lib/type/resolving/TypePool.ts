@@ -74,9 +74,16 @@ export class TypePool {
     return matchingTypes;
   }
 
-  public getRandomMatchingType(objectType: ObjectType): DiscoveredObjectType {
-    const matchingTypes: DiscoveredObjectType[] =
+  public getRandomMatchingType(
+    objectType: ObjectType,
+    extraFilter?: (type: DiscoveredObjectType) => boolean
+  ): DiscoveredObjectType {
+    let matchingTypes: DiscoveredObjectType[] =
       this._getMatchingTypes(objectType);
+
+    if (extraFilter) {
+      matchingTypes = matchingTypes.filter((type) => extraFilter(type));
+    }
 
     if (matchingTypes.length === 0) {
       return undefined;

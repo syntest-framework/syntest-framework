@@ -23,7 +23,7 @@ import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
 import { Export } from "./Export";
 import { extractExportsFromExportDefaultDeclaration } from "./ExportDefaultDeclaration";
 import { extractExportsFromExportNamedDeclaration } from "./ExportNamedDeclaration";
-import { extractExportsFromExpressionStatement } from "./ExpressionStatement";
+import { extractExportsFromAssignmentExpression } from "./ExpressionStatement";
 
 export class ExportVisitor extends AbstractSyntaxTreeVisitor {
   private _exports: Export[];
@@ -59,21 +59,16 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
 
   // e.g. module.exports = ...
   // e.g. exports.foo = ...
-  public ExpressionStatement: (path: NodePath<t.ExpressionStatement>) => void =
-    (path) => {
-      if (path.node.expression.type !== "AssignmentExpression") {
-        return;
-      }
-
-      const exports = extractExportsFromExpressionStatement(
-        this,
-        this.filePath,
-        path
-      );
-      if (exports) {
-        this._exports.push(...exports);
-      }
-    };
+  public AssignmentExpression: (
+    path: NodePath<t.AssignmentExpression>
+  ) => void = (path) => {
+    const exports = extractExportsFromAssignmentExpression(
+      this,
+      this.filePath,
+      path
+    );
+    this._exports.push(...exports);
+  };
 
   // getters
   get exports(): Export[] {

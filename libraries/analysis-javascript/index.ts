@@ -56,7 +56,6 @@ export * from "./lib/type/resolving/TypeEnum";
 export * from "./lib/type/resolving/TypeModel";
 export * from "./lib/type/resolving/TypeModelFactory";
 export * from "./lib/type/resolving/InferenceTypeModelFactory";
-export * from "./lib/type/resolving/RandomTypeModelFactory";
 
 export * from "./lib/utils/fileSystem";
 

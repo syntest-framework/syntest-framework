@@ -39,7 +39,7 @@ export class FunctionCallGenerator extends CallGenerator<FunctionCall> {
 
     const export_ = [...this.rootContext.getAllExports().values()]
       .flat()
-      .find((export_) => export_.id === typeIdentifier);
+      .find((export_) => export_.id === exportIdentifier);
 
     return new FunctionCall(
       variableIdentifier,

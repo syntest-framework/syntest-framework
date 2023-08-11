@@ -34,11 +34,23 @@ export class ConstantObjectGenerator extends CallGenerator<ConstantObject> {
       .flat()
       .find((export_) => export_.id === exportIdentifier);
 
+    if (this.statementPoolEnabled) {
+      const statementFromPool =
+        statementPool.getRandomConstantObject(exportIdentifier);
+
+      if (
+        statementFromPool &&
+        prng.nextBoolean(this.statementPoolProbability)
+      ) {
+        return statementFromPool;
+      }
+    }
+
     return new ConstantObject(
       variableIdentifier,
       typeIdentifier,
       name,
-      TypeEnum.FUNCTION,
+      TypeEnum.OBJECT,
       prng.uniqueId(),
       export_
     );

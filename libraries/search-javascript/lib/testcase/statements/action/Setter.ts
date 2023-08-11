@@ -64,14 +64,10 @@ export class Setter extends ClassActionStatement {
     sampler: JavaScriptTestCaseSampler,
     depth: number
   ): Getter | Setter | MethodCall {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleClassAction(depth);
-    }
-    const probability = 1 / 2; // plus one for the constructor
-
     let argument = this.args.map((a: Statement) => a.copy())[0];
     let constructor_ = this.constructor_.copy();
-    if (prng.nextBoolean(probability)) {
+
+    if (prng.nextBoolean(0.5)) {
       argument = argument.mutate(sampler, depth + 1);
     } else {
       constructor_ = constructor_.mutate(sampler, depth + 1);

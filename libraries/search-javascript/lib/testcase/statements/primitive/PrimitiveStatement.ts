@@ -55,6 +55,10 @@ export abstract class PrimitiveStatement<T> extends Statement {
     return [];
   }
 
+  setChild(index: number, newChild: Statement): void {
+    throw new Error("Primitive statements don't have children");
+  }
+
   static getRandom() {
     throw new Error("Unimplemented function!");
   }
