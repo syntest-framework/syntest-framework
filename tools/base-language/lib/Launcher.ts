@@ -174,10 +174,10 @@ export abstract class Launcher {
       PropertyName.CROSSOVER_PROBABILITY,
       `${this.arguments_.crossoverProbability.toString()}`
     );
-    // this.metricManager.recordProperty(
-    //   PropertyName.STRING_ALPHABET,
-    //   `${this.arguments_.stringAlphabet.toString()}`
-    // );
+    this.metricManager.recordProperty(
+      PropertyName.STRING_ALPHABET,
+      `${this.arguments_.stringAlphabet.toString()}`
+    );
     this.metricManager.recordProperty(
       PropertyName.STRING_MAX_LENGTH,
       `${this.arguments_.stringMaxLength.toString()}`
