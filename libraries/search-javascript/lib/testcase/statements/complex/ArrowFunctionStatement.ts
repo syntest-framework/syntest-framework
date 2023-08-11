@@ -32,14 +32,15 @@ export class ArrowFunctionStatement extends Statement {
   private _returnValue: Statement | undefined;
 
   constructor(
-    id: string,
+    variableIdentifier: string,
+    typeIdentifier: string,
     name: string,
     type: string,
     uniqueId: string,
     parameters: string[],
     returnValue: Statement | undefined
   ) {
-    super(id, name, type, uniqueId);
+    super(variableIdentifier, typeIdentifier, name, type, uniqueId);
     this._parameters = parameters;
     this._returnValue = returnValue;
     this._classType = "ArrowFunctionStatement";
@@ -47,11 +48,12 @@ export class ArrowFunctionStatement extends Statement {
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
     if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleArgument(depth, this.id, this.name);
+      return sampler.sampleArgument(depth, this.variableIdentifier, this.name);
     }
 
     return new ArrowFunctionStatement(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       prng.uniqueId(),
@@ -64,7 +66,8 @@ export class ArrowFunctionStatement extends Statement {
 
   copy(): ArrowFunctionStatement {
     return new ArrowFunctionStatement(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       this.uniqueId,
@@ -121,9 +124,5 @@ export class ArrowFunctionStatement extends Statement {
 
   get returnValue(): Statement {
     return this._returnValue;
-  }
-
-  getFlatTypes(): string[] {
-    return ["arrowfunction"];
   }
 }

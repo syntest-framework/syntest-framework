@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getAllFiles } from "../../utils/fileSystem";
 import { ObjectVisitor } from "./object/ObjectVisitor";
 import traverse from "@babel/traverse";
 import { ElementVisitor } from "./element/ElementVisitor";
@@ -37,12 +36,7 @@ export class TypeExtractor {
   }
 
   extractAll(rootContext: RootContext) {
-    const files = getAllFiles(rootContext.rootPath, ".js").filter(
-      (x) =>
-        !x.includes("/test/") &&
-        !x.includes(".test.js") &&
-        !x.includes("node_modules")
-    ); // maybe we should also take those into account
+    const files = rootContext.getFiles();
 
     for (const file of files) {
       this.extract(rootContext, file);
@@ -52,7 +46,7 @@ export class TypeExtractor {
   extract(rootContext: RootContext, filePath: string) {
     const elementVisitor = new ElementVisitor(filePath);
     const relationVisitor = new RelationVisitor(filePath);
-    const complexTypeVisitor = new ObjectVisitor(filePath);
+    const objectVisitor = new ObjectVisitor(filePath);
 
     const ast = rootContext.getAbstractSyntaxTree(filePath);
     // traverse(
@@ -62,7 +56,7 @@ export class TypeExtractor {
 
     traverse(ast, elementVisitor);
     traverse(ast, relationVisitor);
-    traverse(ast, complexTypeVisitor);
+    traverse(ast, objectVisitor);
 
     this._elementMap = new Map([
       ...this._elementMap,
@@ -74,7 +68,7 @@ export class TypeExtractor {
     ]);
     this._objectMap = new Map([
       ...this._objectMap,
-      ...complexTypeVisitor.complexTypeMap,
+      ...objectVisitor.complexTypeMap,
     ]);
   }
 

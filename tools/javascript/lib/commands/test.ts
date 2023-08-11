@@ -63,6 +63,26 @@ export function getTestCommand(
     type: "number",
   });
 
+  options.set("reuse-statement-probability", {
+    alias: [],
+    default: 0.9,
+    description:
+      "The probability we reuse a statement instead of generating a new one.",
+    group: samplingGroup,
+    hidden: false,
+    type: "number",
+  });
+
+  options.set("use-mocked-object-probability", {
+    alias: [],
+    default: 0.1,
+    description:
+      "The probability we use a mocked object instead of generating an actual instance.",
+    group: samplingGroup,
+    hidden: false,
+    type: "number",
+  });
+
   options.set("constant-pool", {
     alias: [],
     default: false,
@@ -105,6 +125,8 @@ export type TestCommandOptions = {
   incorporateExecutionInformation: boolean;
   typeInferenceMode: string;
   randomTypeProbability: number;
+  reuseStatementProbability: number;
+  useMockedObjectProbability: number;
   constantPool: boolean;
   constantPoolProbability: number;
 };

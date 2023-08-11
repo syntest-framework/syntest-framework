@@ -38,7 +38,7 @@ export class ExecutionInformationIntegrator {
       return;
     }
 
-    const queue: Statement[] = [testCase.root];
+    const queue: Statement[] = testCase.roots;
 
     while (queue.length > 0) {
       const root = queue.pop();
@@ -46,7 +46,11 @@ export class ExecutionInformationIntegrator {
 
       for (const child of children) {
         if (testResult.err.message.includes(child.name)) {
-          this._typeModel.addExecutionScore(child.id, child.type, -1);
+          this._typeModel.addExecutionScore(
+            child.variableIdentifier,
+            child.type,
+            -1
+          );
         }
         queue.push(child);
       }

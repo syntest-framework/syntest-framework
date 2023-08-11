@@ -22,20 +22,14 @@ import { Export } from "@syntest/analysis-javascript";
 import { Decoder } from "@syntest/search";
 
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
-import { RootStatement } from "../testcase/statements/root/RootStatement";
 import { Decoding } from "../testcase/statements/Statement";
+import { ActionStatement } from "../testcase/statements/action/ActionStatement";
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
-  private exports: Export[];
   private targetRootDirectory: string;
   private tempLogDirectory: string;
 
-  constructor(
-    exports: Export[],
-    targetRootDirectory: string,
-    temporaryLogDirectory: string
-  ) {
-    this.exports = exports;
+  constructor(targetRootDirectory: string, temporaryLogDirectory: string) {
     this.targetRootDirectory = targetRootDirectory;
     this.tempLogDirectory = temporaryLogDirectory;
   }
@@ -54,13 +48,19 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     const imports: string[] = [];
 
     for (const testCase of testCases) {
-      const root = testCase.root;
+      const roots: ActionStatement[] = testCase.roots;
 
-      const importableGenes: RootStatement[] = [];
-      let statements: Decoding[] = root.decode(this, testCase.id, {
-        addLogs,
-        exception: false,
-      });
+      const importableGenes: ActionStatement[] = [];
+      let statements: Decoding[] = roots.flatMap((root) =>
+        root.decode(this, testCase.id, {
+          addLogs,
+          exception: false,
+        })
+      );
+
+      if (statements.length === 0) {
+        throw new Error("No statements in test case");
+      }
 
       const testString: string[] = [];
       if (addLogs) {
@@ -88,16 +88,30 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         statements = statements.slice(0, index + 1);
       }
 
+      if (statements.length === 0) {
+        throw new Error("No statements in test case");
+      }
+
       for (const [index, value] of statements.entries()) {
-        if (value.reference instanceof RootStatement) {
+        const asString = "\t\t" + value.decoded.replace("\n", "\n\t\t");
+        if (testString.includes(asString)) {
+          // skip repeated statements
+          continue;
+        }
+
+        if (
+          value.reference instanceof ActionStatement &&
+          value.reference.export
+        ) {
           importableGenes.push(value.reference);
         }
+
         if (addLogs) {
           // add log per statement
           testString.push("\t\t" + `count = ${index};`);
         }
 
-        testString.push("\t\t" + value.decoded.replace("\n", "\n\t\t"));
+        testString.push(asString);
       }
 
       if (addLogs) {
@@ -176,7 +190,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
       return (
         importsString +
-        `describe('${targetName}', () => {\n` +
+        `describe('${targetName}', function() {\n\t` +
         tests.join("\n\n") +
         `\n})`
       );
@@ -189,7 +203,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
           .join("\n\t") + `\n\n`;
 
       return (
-        `describe('${targetName}', () => {\n\t` +
+        `describe('${targetName}', function() {\n\t` +
         importsString +
         tests.join("\n\n") +
         `\n})`
@@ -200,7 +214,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   gatherImports(
     sourceDirectory: string,
     testStrings: string[],
-    importableGenes: RootStatement[]
+    importableGenes: ActionStatement[]
   ): string[] {
     const imports: string[] = [];
     const importedDependencies: Set<string> = new Set<string>();
@@ -208,21 +222,12 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     for (const gene of importableGenes) {
       // TODO how to get the export of a variable?
       // the below does not work with duplicate exports
-      let export_: Export = this.exports.find((x) => x.id === gene.id);
-
-      if (!export_) {
-        // dirty hack to fix certain exports
-        export_ = this.exports.find(
-          (x) =>
-            gene.id.split(":")[0] === x.filePath &&
-            (x.name === gene.name || x.renamedTo === gene.name)
-        );
-      }
+      const export_: Export = gene.export;
 
       if (!export_) {
         throw new Error(
           "Cannot find an export corresponding to the importable gene: " +
-            gene.id
+            gene.variableIdentifier
         );
       }
 

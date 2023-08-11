@@ -23,12 +23,13 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 import { Decoding, Statement } from "../Statement";
 
 import { ActionStatement } from "./ActionStatement";
+import { ConstantObject } from "./ConstantObject";
 
 /**
  * @author Dimitri Stallenberg
  */
 export class ObjectFunctionCall extends ActionStatement {
-  private readonly _objectName: string;
+  private _object: ConstantObject;
 
   /**
    * Constructor
@@ -39,16 +40,17 @@ export class ObjectFunctionCall extends ActionStatement {
    * @param args the arguments of the function
    */
   constructor(
-    id: string,
+    variableIdentifier: string,
+    typeIdentifier: string,
     name: string,
     type: string,
     uniqueId: string,
-    objectName: string,
-    arguments_: Statement[]
+    arguments_: Statement[],
+    object_: ConstantObject
   ) {
-    super(id, name, type, uniqueId, arguments_);
+    super(variableIdentifier, typeIdentifier, name, type, uniqueId, arguments_);
     this._classType = "ObjectFunctionCall";
-    this._objectName = objectName;
+    this._object = object_;
   }
 
   mutate(
@@ -56,24 +58,34 @@ export class ObjectFunctionCall extends ActionStatement {
     depth: number
   ): ObjectFunctionCall {
     if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleObjectFunctionCall(depth, this._objectName);
+      return sampler.sampleObjectFunctionCall(depth);
     }
+
+    const probability = 1 / (this.args.length + 1); // plus one for the constructor
 
     const arguments_ = this.args.map((a: Statement) => a.copy());
 
     if (arguments_.length > 0) {
-      const index = prng.nextInt(0, arguments_.length - 1);
-
-      arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
+      // go over each arg
+      for (let index = 0; index < arguments_.length; index++) {
+        if (prng.nextBoolean(probability)) {
+          arguments_[index] = arguments_[index].mutate(sampler, depth + 1);
+        }
+      }
     }
 
+    const object_ = prng.nextBoolean(probability)
+      ? this._object.mutate(sampler, depth + 1)
+      : this._object.copy();
+
     return new ObjectFunctionCall(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       prng.uniqueId(),
-      this.className,
-      arguments_
+      arguments_,
+      object_
     );
   }
 
@@ -81,28 +93,20 @@ export class ObjectFunctionCall extends ActionStatement {
     const deepCopyArguments = this.args.map((a: Statement) => a.copy());
 
     return new ObjectFunctionCall(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       this.uniqueId,
-      this.className,
-      deepCopyArguments
+      deepCopyArguments,
+      this._object.copy()
     );
   }
 
-  get className(): string {
-    return this._objectName;
-  }
-
-  decode(): Decoding[] {
-    throw new Error("Cannot call decode on method calls!");
-  }
-
-  decodeWithObject(
+  decode(
     decoder: JavaScriptDecoder,
     id: string,
-    options: { addLogs: boolean; exception: boolean },
-    objectVariable: string
+    options: { addLogs: boolean; exception: boolean }
   ): Decoding[] {
     const arguments_ = this.args.map((a) => a.varName).join(", ");
 
@@ -110,7 +114,7 @@ export class ObjectFunctionCall extends ActionStatement {
       a.decode(decoder, id, options)
     );
 
-    let decoded = `const ${this.varName} = await ${objectVariable}.${this.name}(${arguments_})`;
+    let decoded = `const ${this.varName} = await ${this._object.varName}.${this.name}(${arguments_})`;
 
     if (options.addLogs) {
       const logDirectory = decoder.getLogDirectory(id, this.varName);
@@ -118,18 +122,18 @@ export class ObjectFunctionCall extends ActionStatement {
     }
 
     return [
+      ...this._object.decode(decoder, id, options),
       ...argumentStatements,
       {
         decoded: decoded,
         reference: this,
-        objectVariable: objectVariable,
       },
     ];
   }
 
   // TODO
-  decodeErroring(objectVariable: string): string {
+  decodeErroring(): string {
     const arguments_ = this.args.map((a) => a.varName).join(", ");
-    return `await expect(${objectVariable}.${this.name}(${arguments_})).to.be.rejectedWith(Error);`;
+    return `await expect(${this._object.varName}.${this.name}(${arguments_})).to.be.rejectedWith(Error);`;
   }
 }

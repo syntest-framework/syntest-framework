@@ -20,7 +20,6 @@ import * as path from "node:path";
 
 import { TestCommandOptions } from "./commands/test";
 import {
-  Export,
   TypeModelFactory,
   RandomTypeModelFactory,
   InferenceTypeModelFactory,
@@ -93,7 +92,6 @@ export class JavaScriptLauncher extends Launcher {
   private rootContext: RootContext;
   private archive: Archive<JavaScriptTestCase>;
 
-  private exports: Export[];
   private dependencyMap: Map<string, string[]>;
 
   private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>();
@@ -384,7 +382,6 @@ export class JavaScriptLauncher extends Launcher {
     JavaScriptLauncher.LOGGER.info("Processing started");
     const start = Date.now();
     this.archive = new Archive<JavaScriptTestCase>();
-    this.exports = [];
     this.dependencyMap = new Map();
 
     for (const target of this.targets) {
@@ -395,7 +392,6 @@ export class JavaScriptLauncher extends Launcher {
       this.archive.merge(archive);
 
       this.dependencyMap.set(target.name, dependencies);
-      this.exports.push(...this.rootContext.getExports(target.path));
     }
     JavaScriptLauncher.LOGGER.info("Processing done");
     const timeInMs = (Date.now() - start) / 1000;
@@ -406,7 +402,6 @@ export class JavaScriptLauncher extends Launcher {
     JavaScriptLauncher.LOGGER.info("Postprocessing started");
     const start = Date.now();
     const decoder = new JavaScriptDecoder(
-      this.exports,
       this.arguments_.targetRootDirectory,
       path.join(
         this.arguments_.tempSyntestDirectory,
@@ -641,10 +636,8 @@ export class JavaScriptLauncher extends Launcher {
     const dependencies = rootContext.getDependencies(target.path);
     const dependencyMap = new Map<string, string[]>();
     dependencyMap.set(target.name, dependencies);
-    const exports = rootContext.getExports(target.path);
 
     const decoder = new JavaScriptDecoder(
-      exports,
       this.arguments_.targetRootDirectory,
       path.join(
         this.arguments_.tempSyntestDirectory,
@@ -703,9 +696,10 @@ export class JavaScriptLauncher extends Launcher {
       this.arguments_.stringMaxLength,
       this.arguments_.resampleGeneProbability,
       this.arguments_.deltaMutationProbability,
-      this.arguments_.exploreIllegalValues
+      this.arguments_.exploreIllegalValues,
+      (<JavaScriptArguments>this.arguments_).reuseStatementProbability,
+      (<JavaScriptArguments>this.arguments_).useMockedObjectProbability
     );
-
     sampler.rootContext = rootContext;
 
     const secondaryObjectives = new Set(

@@ -22,21 +22,18 @@ import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding } from "../Statement";
 
-import { MethodCall } from "./MethodCall";
-import { Setter } from "./Setter";
-import { ClassActionStatement } from "./ClassActionStatement";
-import { ConstructorCall } from "./ConstructorCall";
+import { Export } from "@syntest/analysis-javascript";
+import { ActionStatement } from "./ActionStatement";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Getter extends ClassActionStatement {
+export class ConstantObject extends ActionStatement {
   /**
    * Constructor
-   * @param identifierDescription the return type options of the function
-   * @param type the type of property
-   * @param uniqueId id of the gene
-   * @param property the name of the property
+   * @param type the return identifierDescription of the constructor
+   * @param uniqueId optional argument
+   * @param calls the child calls on the object
    */
   constructor(
     variableIdentifier: string,
@@ -44,7 +41,7 @@ export class Getter extends ClassActionStatement {
     name: string,
     type: string,
     uniqueId: string,
-    constructor_: ConstructorCall
+    export_: Export
   ) {
     super(
       variableIdentifier,
@@ -53,39 +50,34 @@ export class Getter extends ClassActionStatement {
       type,
       uniqueId,
       [],
-      constructor_
+      export_
     );
-    this._classType = "Getter";
+    this._classType = "ConstantObject";
   }
 
-  mutate(
-    sampler: JavaScriptTestCaseSampler,
-    depth: number
-  ): Getter | Setter | MethodCall {
-    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleClassAction(depth);
-    }
+  mutate(sampler: JavaScriptTestCaseSampler, depth: number): ConstantObject {
+    // if (prng.nextBoolean(sampler.resampleGeneProbability)) {
+    //   return sampler.sampleConstantObject(depth);
+    // }
 
-    const constructor_ = this.constructor_.mutate(sampler, depth + 1);
-
-    return new Getter(
+    return new ConstantObject(
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
       this.type,
       prng.uniqueId(),
-      constructor_
+      this.export
     );
   }
 
-  copy(): Getter {
-    return new Getter(
+  copy(): ConstantObject {
+    return new ConstantObject(
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
       this.type,
       this.uniqueId,
-      this.constructor_
+      this.export
     );
   }
 
@@ -94,7 +86,7 @@ export class Getter extends ClassActionStatement {
     id: string,
     options: { addLogs: boolean; exception: boolean }
   ): Decoding[] {
-    let decoded = `const ${this.varName} = await ${this.constructor_.varName}.${this.name}`;
+    let decoded = `const ${this.varName} = ${this.name}`;
 
     if (options.addLogs) {
       const logDirectory = decoder.getLogDirectory(id, this.varName);
@@ -102,16 +94,10 @@ export class Getter extends ClassActionStatement {
     }
 
     return [
-      ...this.constructor_.decode(decoder, id, options),
       {
         decoded: decoded,
         reference: this,
       },
     ];
-  }
-
-  // TODO
-  decodeErroring(): string {
-    return `await expect(${this.constructor_.varName}.${this.name}).to.be.rejectedWith(Error);`;
   }
 }

@@ -22,16 +22,15 @@ import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
-import { ActionStatement } from "./ActionStatement";
 import { Getter } from "./Getter";
 import { MethodCall } from "./MethodCall";
+import { ClassActionStatement } from "./ClassActionStatement";
+import { ConstructorCall } from "./ConstructorCall";
 
 /**
  * @author Dimitri Stallenberg
  */
-export class Setter extends ActionStatement {
-  private readonly _className: string;
-
+export class Setter extends ClassActionStatement {
   /**
    * Constructor
    * @param identifierDescription the return type options of the function
@@ -41,16 +40,24 @@ export class Setter extends ActionStatement {
    * @param arg the argument of the setter
    */
   constructor(
-    id: string,
+    variableIdentifier: string,
+    typeIdentifier: string,
     name: string,
     type: string,
     uniqueId: string,
-    className: string,
-    argument: Statement
+    argument: Statement,
+    constructor_: ConstructorCall
   ) {
-    super(id, name, type, uniqueId, [argument]);
+    super(
+      variableIdentifier,
+      typeIdentifier,
+      name,
+      type,
+      uniqueId,
+      [argument],
+      constructor_
+    );
     this._classType = "Setter";
-    this._className = className;
   }
 
   mutate(
@@ -58,20 +65,26 @@ export class Setter extends ActionStatement {
     depth: number
   ): Getter | Setter | MethodCall {
     if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleClassCall(depth, this._className);
+      return sampler.sampleClassAction(depth);
     }
+    const probability = 1 / 2; // plus one for the constructor
 
     let argument = this.args.map((a: Statement) => a.copy())[0];
-
-    argument = argument.mutate(sampler, depth + 1);
+    let constructor_ = this.constructor_.copy();
+    if (prng.nextBoolean(probability)) {
+      argument = argument.mutate(sampler, depth + 1);
+    } else {
+      constructor_ = constructor_.mutate(sampler, depth + 1);
+    }
 
     return new Setter(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       prng.uniqueId(),
-      this.className,
-      argument
+      argument,
+      constructor_
     );
   }
 
@@ -79,28 +92,20 @@ export class Setter extends ActionStatement {
     const deepCopyArgument = this.args.map((a: Statement) => a.copy())[0];
 
     return new Setter(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       this.uniqueId,
-      this.className,
-      deepCopyArgument
+      deepCopyArgument,
+      this.constructor_.copy()
     );
   }
 
-  get className(): string {
-    return this._className;
-  }
-
-  decode(): Decoding[] {
-    throw new Error("Cannot call decode on method calls!");
-  }
-
-  decodeWithObject(
+  decode(
     decoder: JavaScriptDecoder,
     id: string,
-    options: { addLogs: boolean; exception: boolean },
-    objectVariable: string
+    options: { addLogs: boolean; exception: boolean }
   ): Decoding[] {
     const argument = this.args.map((a) => a.varName).join(", ");
 
@@ -108,7 +113,7 @@ export class Setter extends ActionStatement {
       a.decode(decoder, id, options)
     );
 
-    let decoded = `${objectVariable}.${this.name} = ${argument}`;
+    let decoded = `${this.constructor_.varName}.${this.name} = ${argument}`;
 
     if (options.addLogs) {
       const logDirectory = decoder.getLogDirectory(id, this.varName);
@@ -116,18 +121,18 @@ export class Setter extends ActionStatement {
     }
 
     return [
+      ...this.constructor_.decode(decoder, id, options),
       ...argumentStatement,
       {
         decoded: decoded,
         reference: this,
-        objectVariable: objectVariable,
       },
     ];
   }
 
   // TODO
-  decodeErroring(objectVariable: string): string {
+  decodeErroring(): string {
     const argument = this.args.map((a) => a.varName).join(", ");
-    return `await expect(${objectVariable}.${this.name} = ${argument}).to.be.rejectedWith(Error);`;
+    return `await expect(${this.constructor_.varName}.${this.name} = ${argument}).to.be.rejectedWith(Error);`;
   }
 }

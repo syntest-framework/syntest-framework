@@ -37,7 +37,7 @@ import { JavaScriptDecoder } from "../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 
 import { ExecutionInformationIntegrator } from "./ExecutionInformationIntegrator";
-import { SilentMochaReporter } from "./SilentMochaReporter";
+// import { SilentMochaReporter } from "./SilentMochaReporter";
 import { StorageManager } from "@syntest/storage";
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
@@ -60,12 +60,12 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     this.executionInformationIntegrator = executionInformationIntergrator;
     this.tempTestDirectory = temporaryTestDirectory;
 
-    // process.on("uncaughtException", (reason) => {
-    //   throw reason;
-    // });
-    // process.on("unhandledRejection", (reason) => {
-    //   throw reason;
-    // });
+    process.on("uncaughtException", (reason) => {
+      throw reason;
+    });
+    process.on("unhandledRejection", (reason) => {
+      throw reason;
+    });
   }
 
   async run(paths: string[]): Promise<Runner> {
@@ -73,7 +73,16 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
     const argv: Mocha.MochaOptions = <Mocha.MochaOptions>(<unknown>{
       spec: paths,
-      reporter: SilentMochaReporter,
+      // reporter: SilentMochaReporter,
+      diff: true,
+      checkLeaks: true,
+      slow: 1,
+      timeout: 1,
+
+      watch: false,
+      parallel: false,
+      recursive: false,
+      sort: false,
     });
 
     const mocha = new Mocha(argv); // require('ts-node/register')

@@ -30,26 +30,31 @@ import { Statement } from "../Statement";
  */
 export class NumericStatement extends PrimitiveStatement<number> {
   constructor(
-    id: string,
+    variableIdentifier: string,
+    typeIdentifier: string,
     name: string,
     type: string,
     uniqueId: string,
     value: number
   ) {
-    super(id, name, type, uniqueId, value);
+    super(variableIdentifier, typeIdentifier, name, type, uniqueId, value);
     this._classType = "NumericStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
     if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleArgument(depth + 1, this.id, this.name);
+      return sampler.sampleArgument(
+        depth + 1,
+        this.variableIdentifier,
+        this.name
+      );
     }
 
     if (prng.nextBoolean(sampler.deltaMutationProbability)) {
       return this.deltaMutation(sampler);
     }
 
-    return sampler.sampleNumber(this.id, this.name);
+    return sampler.sampleNumber(this.variableIdentifier, this.name);
   }
 
   deltaMutation(sampler: JavaScriptTestCaseSampler): NumericStatement {
@@ -71,7 +76,8 @@ export class NumericStatement extends PrimitiveStatement<number> {
     }
 
     return new NumericStatement(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       prng.uniqueId(),
@@ -81,15 +87,12 @@ export class NumericStatement extends PrimitiveStatement<number> {
 
   copy(): NumericStatement {
     return new NumericStatement(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       prng.uniqueId(),
       this.value
     );
-  }
-
-  getFlatTypes(): string[] {
-    return ["number"];
   }
 }

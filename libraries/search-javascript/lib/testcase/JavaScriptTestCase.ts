@@ -20,8 +20,9 @@ import { prng } from "@syntest/prng";
 import { Decoder, Encoding } from "@syntest/search";
 import { getLogger, Logger } from "@syntest/logging";
 
-import { RootStatement } from "./statements/root/RootStatement";
 import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
+import { ActionStatement } from "./statements/action/ActionStatement";
+import { StatementPool } from "./StatementPool";
 
 /**
  * JavaScriptTestCase class
@@ -31,24 +32,67 @@ import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler"
 export class JavaScriptTestCase extends Encoding {
   protected static LOGGER: Logger;
 
-  private _root: RootStatement;
+  private _roots: ActionStatement[];
+
+  private _statementPool: StatementPool;
 
   /**
    * Constructor.
    *
-   * @param root The root of the tree chromosome of the test case
+   * @param roots The roots of the tree chromosome of the test case
    */
-  constructor(root: RootStatement) {
+  constructor(roots: ActionStatement[]) {
     super();
     JavaScriptTestCase.LOGGER = getLogger(JavaScriptTestCase.name);
-    this._root = root;
+    this._roots = [...roots];
+
+    if (roots.length === 0) {
+      throw new Error("Requires atleast one root action statement");
+    }
+
+    this._statementPool = new StatementPool(roots);
   }
 
   mutate(sampler: JavaScriptTestCaseSampler): JavaScriptTestCase {
     JavaScriptTestCase.LOGGER.debug(`Mutating test case: ${this._id}`);
-    return prng.nextBoolean(sampler.resampleGeneProbability)
-      ? sampler.sample()
-      : new JavaScriptTestCase(this._root.mutate(sampler, 0));
+    if (prng.nextBoolean(sampler.resampleGeneProbability)) {
+      return sampler.sample();
+    }
+
+    sampler.statementPool = this._statementPool;
+    const roots = this._roots.map((action) => action.copy());
+    const finalRoots = [];
+
+    // go over each call
+    for (let index = 0; index < roots.length; index++) {
+      if (prng.nextBoolean(1 / roots.length)) {
+        // Mutate this position
+        const choice = prng.nextDouble();
+
+        if (choice < 0.1) {
+          // 10% chance to add a root on this position
+          finalRoots.push(sampler.sampleRoot(), roots[index]);
+        } else if (
+          choice < 0.2 &&
+          (roots.length > 1 || finalRoots.length > 0)
+        ) {
+          // 10% chance to delete the root
+        } else {
+          // 80% chance to just mutate the root
+          finalRoots.push(roots[index].mutate(sampler, 1));
+        }
+      } else {
+        finalRoots.push(roots[index]);
+      }
+    }
+    // add one at the end 10% * (1 / |roots|)
+    if (prng.nextBoolean(0.1) && prng.nextBoolean(1 / roots.length)) {
+      finalRoots.push(sampler.sampleRoot());
+    }
+
+    sampler.statementPool = undefined;
+
+    return new JavaScriptTestCase(finalRoots);
   }
 
   hashCode(decoder: Decoder<Encoding, string>): number {
@@ -63,14 +107,16 @@ export class JavaScriptTestCase extends Encoding {
   }
 
   copy<E extends Encoding>(): E {
-    return <E>(<unknown>new JavaScriptTestCase(this.root.copy()));
+    return <E>(
+      (<unknown>new JavaScriptTestCase(this._roots.map((root) => root.copy())))
+    );
   }
 
   getLength(): number {
-    return this.root.getChildren().length;
+    return this.roots.length;
   }
 
-  get root(): RootStatement {
-    return this._root;
+  get roots(): ActionStatement[] {
+    return [...this._roots];
   }
 }

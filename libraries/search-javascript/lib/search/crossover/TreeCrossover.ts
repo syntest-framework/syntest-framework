@@ -20,7 +20,6 @@ import { Crossover } from "@syntest/search";
 import { prng } from "@syntest/prng";
 
 import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";
-import { RootStatement } from "../../testcase/statements/root/RootStatement";
 import { Statement } from "../../testcase/statements/Statement";
 import { ActionStatement } from "../../testcase/statements/action/ActionStatement";
 
@@ -50,17 +49,21 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
       throw new Error("Expected exactly 2 parents, got: " + parents.length);
     }
 
-    const rootA: RootStatement = (<JavaScriptTestCase>parents[0].copy()).root;
-    const rootB: RootStatement = (<JavaScriptTestCase>parents[1].copy()).root;
+    const rootA: ActionStatement[] = (<JavaScriptTestCase>parents[0].copy())
+      .roots;
+    const rootB: ActionStatement[] = (<JavaScriptTestCase>parents[1].copy())
+      .roots;
 
     const queueA: QueueEntry[] = [];
 
-    for (let index = 0; index < rootA.getChildren().length; index++) {
-      queueA.push({
-        parent: rootA,
-        childIndex: index,
-        child: rootA.getChildren()[index],
-      });
+    for (const root of rootA) {
+      for (let index = 0; index < root.getChildren().length; index++) {
+        queueA.push({
+          parent: root,
+          childIndex: index,
+          child: root.getChildren()[index],
+        });
+      }
     }
 
     const crossoverOptions = [];
@@ -78,15 +81,17 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
         }
       }
 
-      if (prng.nextBoolean(this.crossoverStatementProbability)) {
-        // crossover
-        const donorSubtrees = this.findSimilarSubtree(pair.child, rootB);
+      for (const root of rootB) {
+        if (prng.nextBoolean(this.crossoverStatementProbability)) {
+          // crossover
+          const donorSubtrees = this.findSimilarSubtree(pair.child, root);
 
-        for (const donorTree of donorSubtrees) {
-          crossoverOptions.push({
-            p1: pair,
-            p2: donorTree,
-          });
+          for (const donorTree of donorSubtrees) {
+            crossoverOptions.push({
+              p1: pair,
+              p2: donorTree,
+            });
+          }
         }
       }
     }
@@ -147,7 +152,7 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
       }
 
       // TODO not sure about the ids
-      if (wanted.id === pair.child.id) {
+      if (wanted.variableIdentifier === pair.child.variableIdentifier) {
         // && wanted.classType === pair.child.classType) { TODO this might be necessary
         similar.push(pair);
       }

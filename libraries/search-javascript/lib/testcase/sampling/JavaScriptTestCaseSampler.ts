@@ -26,9 +26,9 @@ import { Setter } from "../statements/action/Setter";
 import { BoolStatement } from "../statements/primitive/BoolStatement";
 import { NumericStatement } from "../statements/primitive/NumericStatement";
 import { StringStatement } from "../statements/primitive/StringStatement";
-import { ConstructorCall } from "../statements/root/ConstructorCall";
+import { ConstructorCall } from "../statements/action/ConstructorCall";
 import { Statement } from "../statements/Statement";
-import { RootObject } from "../statements/root/RootObject";
+import { ConstantObject } from "../statements/action/ConstantObject";
 import { ObjectFunctionCall } from "../statements/action/ObjectFunctionCall";
 import { NullStatement } from "../statements/primitive/NullStatement";
 import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
@@ -36,6 +36,17 @@ import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionState
 import { ArrayStatement } from "../statements/complex/ArrayStatement";
 import { ObjectStatement } from "../statements/complex/ObjectStatement";
 import { IntegerStatement } from "../statements/primitive/IntegerStatement";
+import { FunctionCall } from "../statements/action/FunctionCall";
+import { FunctionCallGenerator } from "./generators/action/FunctionCallGenerator";
+import { RootContext } from "@syntest/analysis-javascript";
+import { StatementPool } from "../StatementPool";
+import { ActionStatement } from "../statements/action/ActionStatement";
+import { ConstructorCallGenerator } from "./generators/action/ConstructorCallGenerator";
+import { MethodCallGenerator } from "./generators/action/MethodCallGenerator";
+import { GetterGenerator } from "./generators/action/GetterGenerator";
+import { SetterGenerator } from "./generators/action/SetterGenerator";
+import { ConstantObjectGenerator } from "./generators/action/ConstantObjectGenerator";
+import { ObjectFunctionCallGenerator } from "./generators/action/ObjectFunctionCallGenerator";
 import { ConstantPoolManager } from "@syntest/analysis-javascript";
 
 /**
@@ -44,6 +55,8 @@ import { ConstantPoolManager } from "@syntest/analysis-javascript";
  * @author Dimitri Stallenberg
  */
 export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScriptTestCase> {
+  private _rootContext: RootContext;
+
   private _constantPoolManager: ConstantPoolManager;
   private _constantPoolEnabled: boolean;
   private _constantPoolProbability: number;
@@ -56,6 +69,20 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   private _resampleGeneProbability: number;
   private _deltaMutationProbability: number;
   private _exploreIllegalValues: boolean;
+  private _reuseStatementProbability: number;
+  private _useMockedObjectProbability: number;
+
+  private _statementPool: StatementPool | null;
+
+  private _functionCallGenerator: FunctionCallGenerator;
+
+  private _constructorCallGenerator: ConstructorCallGenerator;
+  private _methodCallGenerator: MethodCallGenerator;
+  private _getterGenerator: GetterGenerator;
+  private _setterGenerator: SetterGenerator;
+
+  private _constantObjectGenerator: ConstantObjectGenerator;
+  private _objectFunctionCallGenerator: ObjectFunctionCallGenerator;
 
   constructor(
     subject: JavaScriptSubject,
@@ -70,7 +97,9 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     stringMaxLength: number,
     resampleGeneProbability: number,
     deltaMutationProbability: number,
-    exploreIllegalValues: boolean
+    exploreIllegalValues: boolean,
+    reuseStatementProbability: number,
+    useMockedObjectProbability: number
   ) {
     super(subject);
     this._constantPoolManager = constantPoolManager;
@@ -85,29 +114,111 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     this._resampleGeneProbability = resampleGeneProbability;
     this._deltaMutationProbability = deltaMutationProbability;
     this._exploreIllegalValues = exploreIllegalValues;
+    this._reuseStatementProbability = reuseStatementProbability;
+    this._useMockedObjectProbability = useMockedObjectProbability;
   }
 
-  abstract sampleClass(depth: number): ConstructorCall;
-  // TODO sampleConstructor
-  abstract sampleClassCall(
+  get rootContext() {
+    return this._rootContext;
+  }
+
+  set rootContext(rootContext: RootContext) {
+    this._rootContext = rootContext;
+
+    this._functionCallGenerator = new FunctionCallGenerator(
+      this,
+      rootContext,
+      this.reuseStatementProbability
+    );
+    this._constructorCallGenerator = new ConstructorCallGenerator(
+      this,
+      rootContext,
+      this.reuseStatementProbability
+    );
+    this._methodCallGenerator = new MethodCallGenerator(
+      this,
+      rootContext,
+      this.reuseStatementProbability
+    );
+    this._getterGenerator = new GetterGenerator(
+      this,
+      rootContext,
+      this.reuseStatementProbability
+    );
+    this._setterGenerator = new SetterGenerator(
+      this,
+      rootContext,
+      this.reuseStatementProbability
+    );
+    this._constantObjectGenerator = new ConstantObjectGenerator(
+      this,
+      rootContext,
+      this.reuseStatementProbability
+    );
+    this._objectFunctionCallGenerator = new ObjectFunctionCallGenerator(
+      this,
+      rootContext,
+      this.reuseStatementProbability
+    );
+  }
+
+  get functionCallGenerator() {
+    return this._functionCallGenerator;
+  }
+
+  get constructorCallGenerator() {
+    return this._constructorCallGenerator;
+  }
+
+  get methodCallGenerator() {
+    return this._methodCallGenerator;
+  }
+
+  get getterGenerator() {
+    return this._getterGenerator;
+  }
+
+  get setterGenerator() {
+    return this._setterGenerator;
+  }
+
+  get constantObjectGenerator() {
+    return this._constantObjectGenerator;
+  }
+
+  get objectFunctionCallGenerator() {
+    return this._objectFunctionCallGenerator;
+  }
+
+  get statementPool() {
+    return this._statementPool;
+  }
+
+  set statementPool(statementPool: StatementPool) {
+    this._statementPool = statementPool;
+  }
+
+  abstract sampleRoot(): ActionStatement;
+
+  abstract sampleFunctionCall(depth: number): FunctionCall;
+
+  abstract sampleConstructorCall(
     depth: number,
-    className: string
-  ): MethodCall | Getter | Setter;
-  abstract sampleMethodCall(depth: number, className: string): MethodCall;
+    classId?: string
+  ): ConstructorCall;
+  abstract sampleClassAction(depth: number): MethodCall | Getter | Setter;
+  abstract sampleMethodCall(depth: number): MethodCall;
+  abstract sampleGetter(depth: number): Getter;
+  abstract sampleSetter(depth: number): Setter;
 
-  abstract sampleGetter(depth: number, className: string): Getter;
-
-  abstract sampleSetter(depth: number, className: string): Setter;
-
-  abstract sampleRootObject(depth: number): RootObject;
-  abstract sampleObjectFunctionCall(
+  abstract sampleConstantObject(
     depth: number,
-    objectName: string
-  ): ObjectFunctionCall;
+    objectId?: string
+  ): ConstantObject;
+  abstract sampleObjectFunctionCall(depth: number): ObjectFunctionCall;
 
   // TODO
   // abstract sampleStaticMethodCall(depth: number): MethodCall;
-  // abstract sampleFunctionCall(depth: number): FunctionCall;
 
   abstract sampleArrayArgument(
     depth: number,
@@ -128,7 +239,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     id: string,
     name: string,
     type: string
-  ): ObjectStatement;
+  ): ObjectStatement | ConstructorCall | ConstantObject | FunctionCall;
 
   abstract sampleArray(
     depth: number,
@@ -207,5 +318,13 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
 
   get exploreIllegalValues(): boolean {
     return this._exploreIllegalValues;
+  }
+
+  get reuseStatementProbability(): number {
+    return this._reuseStatementProbability;
+  }
+
+  get useMockedObjectProbability(): number {
+    return this._useMockedObjectProbability;
   }
 }

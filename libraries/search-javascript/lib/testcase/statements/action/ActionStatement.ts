@@ -19,22 +19,41 @@
 import { Encoding, EncodingSampler } from "@syntest/search";
 
 import { Statement } from "../Statement";
+import { Export } from "@syntest/analysis-javascript";
+import { prng } from "@syntest/prng";
 
 /**
  * @author Dimitri Stallenberg
  */
 export abstract class ActionStatement extends Statement {
   private _args: Statement[];
+  protected _export?: Export;
 
   protected constructor(
-    id: string,
+    variableIdentifier: string,
+    typeIdentifier: string,
     name: string,
     type: string,
     uniqueId: string,
-    arguments_: Statement[]
+    arguments_: Statement[],
+    export_?: Export
   ) {
-    super(id, name, type, uniqueId);
+    super(variableIdentifier, typeIdentifier, name, type, uniqueId);
     this._args = arguments_;
+    this._export = export_;
+
+    this._varName = "_" + this.generateVarName(name, type);
+  }
+
+  protected override generateVarName(name: string, type: string): string {
+    // TODO should use return type
+    if (this._export) {
+      return name + "_" + this._export.name + "_" + prng.uniqueId(4);
+    }
+
+    return type.includes("<>")
+      ? name + "_" + type.split("<>")[1] + "_" + prng.uniqueId(4)
+      : name + "_" + type + "_" + prng.uniqueId(4);
   }
 
   abstract override mutate(
@@ -60,7 +79,7 @@ export abstract class ActionStatement extends Statement {
     return this._args;
   }
 
-  getFlatTypes(): string[] {
-    return this.args.flatMap((a) => a.getFlatTypes());
+  get export() {
+    return this._export;
   }
 }

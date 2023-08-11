@@ -49,14 +49,9 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     this._subTargets = [];
   }
 
-  private _getExport(
-    path: NodePath<t.Node>,
-    targetName: string
-  ): Export | undefined {
-    // TODO scoping
-    // what if renamed
+  private _getExport(id: string): Export | undefined {
     return this._exports.find((x) => {
-      return x.name === targetName || x.renamedTo === targetName;
+      return x.id === id;
     });
   }
 
@@ -281,10 +276,11 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     (path) => {
       // e.g. function x() {}
       const targetName = this._getTargetNameOfDeclaration(path);
-      const export_ = this._getExport(path, targetName);
+      const id = this._getNodeId(path);
+      const export_ = this._getExport(id);
 
       const target: FunctionTarget = {
-        id: `${this._getNodeId(path)}`,
+        id: id,
         name: targetName,
         type: TargetType.FUNCTION,
         exported: !!export_,
@@ -300,7 +296,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     path
   ) => {
     const targetName = this._getTargetNameOfExpression(path);
-    const export_ = this._getExport(path, targetName);
+    const export_ = this._getExport(this._getNodeId(path));
 
     const target: ClassTarget = {
       id: `${this._getNodeId(path)}`,
@@ -319,7 +315,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   ) => {
     // e.g. class A {}
     const targetName = this._getTargetNameOfDeclaration(path);
-    const export_ = this._getExport(path, targetName);
+    const export_ = this._getExport(this._getNodeId(path));
 
     const target: ClassTarget = {
       id: `${this._getNodeId(path)}`,
@@ -333,7 +329,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     this.subTargets.push(target);
   };
 
-  private _getParentClassName(
+  private _getParentClassId(
     path: NodePath<
       | t.ClassMethod
       | t.ClassProperty
@@ -341,69 +337,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       | t.ClassPrivateProperty
     >
   ): string {
-    const parentNode = path.parentPath.parentPath.node;
-    const parentOfParentNode = path.parentPath.parentPath.parentPath.node;
-    if (parentNode.type === "ClassDeclaration") {
-      // e.g. class A { ... }
-      if (parentNode.id && parentNode.id.type === "Identifier") {
-        return parentNode.id.name;
-      } else if (
-        parentOfParentNode !== undefined &&
-        parentOfParentNode.type === "ExportDefaultDeclaration"
-      ) {
-        // e.g. export default class { ... }
-        return "default";
-      } else {
-        // e.g. class { ... }
-        // unsupported
-        // should not be possible
-        throw new Error("unknown class method parent");
-      }
-    } else if (parentNode.type === "ClassExpression") {
-      // e.g. const x = class A { ... }
-      // e.g. const x = class { ... }
-      // e.g. { x: class A { ... } }
-      // in all cases the name should be x
-
-      if (
-        parentOfParentNode !== undefined &&
-        parentOfParentNode.type === "VariableDeclarator"
-      ) {
-        // e.g. ? = class A { ... }
-        if (parentOfParentNode.id.type === "Identifier") {
-          // e.g. const x = class A { ... }
-          return parentOfParentNode.id.name;
-        } else {
-          // e.g. ? = class { ... }
-          // unsupported
-          // should not be possible
-          throw new Error("unknown class method parent");
-        }
-      } else if (
-        parentOfParentNode !== undefined &&
-        parentOfParentNode.type === "ObjectProperty"
-      ) {
-        // e.g. { x: class A { ... } }
-        if (parentOfParentNode.key.type === "Identifier") {
-          return parentOfParentNode.key.name;
-        } else if (parentOfParentNode.key.type.includes("Literal")) {
-          // e.g. { "x": class A { ... } }
-          return "value" in parentOfParentNode.key
-            ? parentOfParentNode.key.value.toString()
-            : "null";
-        } else {
-          // e.g. { ??: class { ... } }
-          // unsupported
-          throw new Error("unknown class method parent");
-        }
-      } else {
-        // unsupported
-        throw new Error("unknown class method parent");
-      }
-    } else {
-      // unsupported
-      throw new Error("unknown class method parent");
-    }
+    return this._getNodeId(path.parentPath.parentPath);
   }
 
   public ClassMethod: (path: NodePath<t.ClassMethod>) => void = (path) => {
@@ -413,7 +347,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       throw new Error("unknown class method parent");
     }
 
-    const parentClassName: string = this._getParentClassName(path);
+    const parentClassId: string = this._getParentClassId(path);
 
     if (path.node.key.type !== "Identifier") {
       // e.g. class A { ?() {} }
@@ -435,7 +369,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       id: `${this._getNodeId(path)}`,
       name: targetName,
       type: TargetType.METHOD,
-      className: parentClassName,
+      classId: parentClassId,
       isStatic: path.node.static,
       isAsync: path.node.async,
       methodType: path.node.kind,
@@ -506,7 +440,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
                   id: target.id,
                   type: TargetType.METHOD,
                   name: "constructor",
-                  className: prototypeName,
+                  classId: target.id,
 
                   visibility: VisibilityType.PUBLIC,
 
@@ -527,7 +461,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
               id: `${this._getNodeId(path)}`,
               type: TargetType.METHOD,
               name: property.node.name,
-              className: prototypeName,
+              classId: this._getBindingId(object),
 
               visibility: VisibilityType.PUBLIC,
 
@@ -576,9 +510,9 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           : "null";
 
         if (object.node.name === "exports") {
-          // e.g. exports.x =  function () {}
+          // e.g. exports.x = function () {}
           // this is simply a function not an object function
-          const export_ = this._getExport(path, functionName);
+          const export_ = this._getExport(this._getNodeId(path));
 
           const functionTarget: FunctionTarget = {
             id: `${this._getNodeId(path)}`,
@@ -590,8 +524,30 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             isAsync: path.node.async,
           };
           this._subTargets.push(functionTarget);
+        } else if (
+          object.node.name === "module" &&
+          property.isIdentifier() &&
+          property.node.name === "exports"
+        ) {
+          // e.g. module.exports = function () {}
+          // this is simply a function not an object function
+          const export_ = this._getExport(this._getNodeId(path));
+
+          const functionTarget: FunctionTarget = {
+            id: `${this._getNodeId(path)}`,
+            type: TargetType.FUNCTION,
+            name: path.has("id")
+              ? (<NodePath<t.Identifier>>path.get("id")).node.name
+              : "default",
+            exported: !!export_,
+            default: export_ ? export_.default : false,
+            module: export_ ? export_.module : false,
+            isAsync: path.node.async,
+          };
+
+          this._subTargets.push(functionTarget);
         } else {
-          const export_ = this._getExport(path, object.node.name);
+          const export_ = this._getExport(this._getBindingId(object));
 
           const objectTarget: ObjectTarget = {
             type: TargetType.OBJECT,
@@ -603,7 +559,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           };
           const objectFunctionTarget: ObjectFunctionTarget = {
             type: TargetType.OBJECT_FUNCTION,
-            objectName: object.node.name,
+            objectId: `${this._getBindingId(object)}`,
             name: functionName,
             id: `${this._getNodeId(path)}`,
             isAsync: path.node.async,
@@ -632,7 +588,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         }
         case "ClassProperty": {
           // e.g. class A { x = () => {} }
-          const parentClassName: string = this._getParentClassName(
+          const parentClassId: string = this._getParentClassId(
             <NodePath<t.ClassProperty>>path.parentPath
           );
 
@@ -646,7 +602,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
 
           const target: MethodTarget = {
             id: `${this._getNodeId(path)}`,
-            className: parentClassName,
+            classId: parentClassId,
             name: targetName,
             type: TargetType.METHOD,
             isStatic: (<t.ClassProperty>parent.node).static,
@@ -667,7 +623,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             );
           }
 
-          const export_ = this._getExport(path, targetName);
+          const export_ = this._getExport(this._getNodeId(path.parentPath));
 
           const target: FunctionTarget = {
             id: `${this._getNodeId(path.parentPath)}`,
@@ -685,9 +641,8 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         }
         case "LogicalExpression":
         case "ConditionalExpression": {
-          const export_ = this._getExport(path, targetName);
-
           let parent = path.parentPath;
+          const export_ = this._getExport(this._getNodeId(parent));
 
           while (parent.isLogicalExpression() || parent.isConditional()) {
             parent = parent.parentPath;
@@ -706,7 +661,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           this.subTargets.push(target);
         }
         default: {
-          const export_ = this._getExport(path, targetName);
+          const export_ = this._getExport(this._getNodeId(path));
 
           const target: FunctionTarget = {
             id: `${this._getNodeId(path)}`,
@@ -729,217 +684,6 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     this._functionExpression(path);
   };
 
-  // public VariableDeclarator: (path: NodePath<t.VariableDeclarator>) => void = (
-  //   path
-  // ) => {
-  //   if (!path.node.init) {
-  //     return;
-  //   }
-
-  //   if (!(path.node.init.type === "ArrowFunctionExpression")) {
-  //     return;
-  //   }
-
-  //   const targetName = path.node.id.name;
-  //   const functionName = targetName;
-
-  //   this._createMaps(targetName);
-
-  //   let scope;
-  //   path.traverse({
-  //     ArrowFunctionExpression: {
-  //       enter: (p) => {
-  //         scope = {
-  //           uid: `${p.scope.uid - this.scopeIdOffset}`,
-  //           filePath: this.filePath,
-  //         };
-  //       },
-  //     },
-  //     FunctionExpression: {
-  //       enter: (p) => {
-  //         scope = {
-  //           uid: `${p.scope.uid - this.scopeIdOffset}`,
-  //           filePath: this.filePath,
-  //         };
-  //       },
-  //     },
-  //   });
-
-  //   this._functionMap.get(targetName).set(functionName, {
-  //     scope: scope,
-  //     name: functionName,
-  //     type: ActionType.FUNCTION,
-  //     visibility: VisibilityType.PUBLIC,
-  //     isConstructor: false,
-  //     parameters: path.node.init.params.map((x) => this._extractParam(x)),
-  //     returnParameter: {
-  //       name: "returnValue",
-  //       typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
-  //     },
-  //     isStatic: path.node.init.static,
-  //     isAsync: path.node.init.async,
-  //   });
-  // };
-
-  // // prototyping
-  // public AssignmentExpression: (
-  //   path: NodePath<t.AssignmentExpression>
-  // ) => void = (path) => {
-  //   if (path.node.right.type !== "FunctionExpression") {
-  //     return;
-  //   }
-
-  //   let scope;
-  //   path.traverse({
-  //     FunctionExpression: {
-  //       enter: (p) => {
-  //         scope = {
-  //           uid: `${p.scope.uid - this.scopeIdOffset}`,
-  //           filePath: this.filePath,
-  //         };
-  //       },
-  //     },
-  //   });
-
-  //   let targetName;
-
-  //   if (path.node.left.type === "MemberExpression") {
-  //     if (
-  //       path.node.left.object.name === "module" &&
-  //       path.node.left.property.name === "exports"
-  //     ) {
-  //       targetName = path.node.right.id?.name;
-
-  //       if (!targetName) {
-  //         targetName = "anon";
-  //       }
-  //     } else if (path.node.left.object.name === "exports") {
-  //       targetName = path.node.left.property.name;
-  //     } else if (
-  //       path.node.left.object.type === "MemberExpression" &&
-  //       path.node.left.object.property.name === "prototype"
-  //     ) {
-  //       targetName = path.node.left.object.object.name;
-  //       const functionName = path.node.left.property.name;
-
-  //       if (path.node.left.computed) {
-  //         // we cannot know the name of computed properties unless we find out what the identifier refers to
-  //         // see line 136 of Axios.js as example
-  //         // Axios.prototype[method] = ?
-  //         return;
-  //       }
-
-  //       if (functionName === "method") {
-  //         throw new Error("Invalid functionName");
-  //       }
-
-  //       if (this._functionMap.has(targetName)) {
-  //         // modify original
-  //         this._functionMap.get(targetName).get(targetName).type =
-  //           ActionType.CONSTRUCTOR;
-  //         this._functionMap.get(targetName).get(targetName).isConstructor =
-  //           true;
-  //       } else {
-  //         this._createMaps(targetName);
-
-  //         // modify original
-  //         // but there is no original so... no constructor?
-  //       }
-
-  //       // TODO this one is probably wrong
-
-  //       this._functionMap.get(targetName).set(functionName, {
-  //         scope: scope,
-  //         name: functionName,
-  //         type:
-  //           functionName === "constructor"
-  //             ? ActionType.CONSTRUCTOR
-  //             : ActionType.METHOD,
-  //         visibility: VisibilityType.PUBLIC,
-  //         isConstructor: functionName === "constructor",
-  //         parameters: path.node.right.params.map((x) => this._extractParam(x)),
-  //         returnParameter: {
-  //           name: "returnValue",
-  //           typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
-  //         },
-  //         isStatic: path.node.right.static,
-  //         isAsync: path.node.right.async,
-  //       });
-  //       return;
-  //     } else {
-  //       targetName = path.node.left.object.name;
-  //       const functionName = path.node.left.property.name;
-
-  //       if (path.node.left.computed) {
-  //         // we cannot know the name of computed properties unless we find out what the identifier refers to
-  //         // see line 136 of Axios.js as example
-  //         // Axios.prototype[method] = ?
-  //         return;
-  //       }
-
-  //       if (functionName === "method") {
-  //         throw new Error("Invalid functionName");
-  //       }
-
-  //       if (!this._functionMap.has(targetName)) {
-  //         this._createMaps(targetName);
-
-  //         // modify original
-  //         // but there is no original so... no constructor?
-  //       }
-
-  //       if (this.functionMap.get(targetName).has(targetName)) {
-  //         // modify original
-  //         this._functionMap.get(targetName).get(targetName).type =
-  //           ActionType.CONSTRUCTOR;
-  //         this._functionMap.get(targetName).get(targetName).isConstructor =
-  //           true;
-  //       }
-
-  //       // TODO this one is probably wrong
-
-  //       this._functionMap.get(targetName).set(functionName, {
-  //         scope: scope,
-  //         name: functionName,
-  //         type: ActionType.METHOD,
-  //         visibility: VisibilityType.PUBLIC,
-  //         isConstructor: false,
-  //         parameters: path.node.right.params.map((x) => this._extractParam(x)),
-  //         returnParameter: {
-  //           name: "returnValue",
-  //           typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
-  //         },
-  //         isStatic: path.node.right.static,
-  //         isAsync: path.node.right.async,
-  //       });
-  //       return;
-  //     }
-  //   } else if (path.node.left.type === "Identifier") {
-  //     targetName = path.node.left.name;
-  //   } else {
-  //     throw new Error("unknown function expression name");
-  //   }
-
-  //   if (!this.targetMap.has(targetName)) {
-  //     this._createMaps(targetName);
-  //   }
-
-  //   this._functionMap.get(targetName).set(targetName, {
-  //     scope: scope,
-  //     name: targetName,
-  //     type: ActionType.FUNCTION,
-  //     visibility: VisibilityType.PUBLIC,
-  //     isConstructor: false,
-  //     parameters: path.node.right.params.map((x) => this._extractParam(x)),
-  //     returnParameter: {
-  //       name: "returnValue",
-  //       typeProbabilityMap: new TypeProbability(), // TODO unknown because javascript! (check how this looks in typescript)
-  //     },
-  //     isStatic: path.node.right.static,
-  //     isAsync: path.node.right.async,
-  //   });
-  // };
-
   get subTargets(): SubTarget[] {
     // filter duplicates because of redefinitions
     // e.g. let a = 1; a = 2;
@@ -954,6 +698,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             self.findIndex((t) => {
               return (
                 "name" in t &&
+                t.id === subTarget.id &&
                 t.type === subTarget.type &&
                 t.name === subTarget.name &&
                 (t.type === TargetType.METHOD
@@ -961,8 +706,8 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
                       (<MethodTarget>subTarget).methodType &&
                     (<MethodTarget>t).isStatic ===
                       (<MethodTarget>subTarget).isStatic &&
-                    (<MethodTarget>t).className ===
-                      (<MethodTarget>subTarget).className
+                    (<MethodTarget>t).classId ===
+                      (<MethodTarget>subTarget).classId
                   : true)
               );
             })

@@ -82,6 +82,7 @@ export class JavaScriptExecutionResult implements ExecutionResult {
 
     if (!trace) {
       if (id.startsWith("placeholder")) {
+        // TODO maybe this already fixed?
         // TODO stupit hack because the placeholder nodes we add in the cfg are not being registred by the instrumentation
         // should fix
         return false;

@@ -32,20 +32,21 @@ export class ObjectStatement extends Statement {
   private _object: ObjectType;
 
   constructor(
-    id: string,
+    variableIdentifier: string,
+    typeIdentifier: string,
     name: string,
     type: string,
     uniqueId: string,
     object: ObjectType
   ) {
-    super(id, name, type, uniqueId);
+    super(variableIdentifier, typeIdentifier, name, type, uniqueId);
     this._object = object;
     this._classType = "ObjectStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
     if (prng.nextBoolean(sampler.resampleGeneProbability)) {
-      return sampler.sampleArgument(depth, this.id, this.name);
+      return sampler.sampleArgument(depth, this.variableIdentifier, this.name);
     }
 
     const object: ObjectType = {};
@@ -65,7 +66,11 @@ export class ObjectStatement extends Statement {
         if (choice < 0.1) {
           // 10% chance to add a call on this position
 
-          object[key] = sampler.sampleObjectArgument(depth + 1, this.id, key);
+          object[key] = sampler.sampleObjectArgument(
+            depth + 1,
+            this.variableIdentifier,
+            key
+          );
         } else if (choice < 0.2) {
           // 10% chance to delete the call
           object[key] = undefined;
@@ -77,7 +82,8 @@ export class ObjectStatement extends Statement {
     }
 
     return new ObjectStatement(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       prng.uniqueId(),
@@ -93,7 +99,8 @@ export class ObjectStatement extends Statement {
     }
 
     return new ObjectStatement(
-      this.id,
+      this.variableIdentifier,
+      this.typeIdentifier,
       this.name,
       this.type,
       this.uniqueId,
@@ -157,9 +164,5 @@ export class ObjectStatement extends Statement {
     return Object.keys(this._object)
       .filter((key) => this._object[key] !== undefined)
       .map((key) => this._object[key]);
-  }
-
-  getFlatTypes(): string[] {
-    return ["object", ...this.children.flatMap((a) => a.getFlatTypes())];
   }
 }

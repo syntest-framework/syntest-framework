@@ -74,7 +74,7 @@ function checkObject(target: SubTarget, name: string, exported: boolean): void {
 function checkObjectFunction(
   target: SubTarget,
   name: string,
-  objectName: string,
+  objectId: string,
   isAsync: boolean
 ): void {
   expect(target.type).to.equal(TargetType.OBJECT_FUNCTION);
@@ -82,7 +82,7 @@ function checkObjectFunction(
   const functionTarget = <ObjectFunctionTarget>target;
 
   expect(functionTarget.name).to.equal(name);
-  expect(functionTarget.objectName).to.equal(objectName);
+  expect(functionTarget.objectId).to.equal(objectId);
   expect(functionTarget.isAsync).to.equal(isAsync);
 }
 
@@ -98,7 +98,7 @@ function checkClass(target: SubTarget, name: string, exported: boolean): void {
 function checkClassMethod(
   target: SubTarget,
   name: string,
-  className: string,
+  classId: string,
   methodType: string,
   visibility: string,
   isStatic: boolean,
@@ -109,7 +109,7 @@ function checkClassMethod(
   const methodTarget = <MethodTarget>target;
 
   expect(methodTarget.name).to.equal(name);
-  expect(methodTarget.className).to.equal(className);
+  expect(methodTarget.classId).to.equal(classId);
   expect(methodTarget.methodType).to.equal(methodType);
   expect(methodTarget.visibility).to.equal(visibility);
   expect(methodTarget.isStatic).to.equal(isStatic);
@@ -235,7 +235,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[1],
       "constructor",
-      "name1",
+      targets[0].id,
       "constructor",
       "public",
       false,
@@ -244,7 +244,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[2],
       "method1",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       false,
@@ -253,7 +253,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[3],
       "method2",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       true,
@@ -262,7 +262,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[4],
       "method3",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       false,
@@ -271,7 +271,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[5],
       "method4",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       true,
@@ -280,7 +280,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[6],
       "prop1",
-      "name1",
+      targets[0].id,
       "get",
       "public",
       false,
@@ -289,7 +289,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[7],
       "prop1",
-      "name1",
+      targets[0].id,
       "set",
       "public",
       false,
@@ -324,7 +324,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[1],
       "method1",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       false,
@@ -347,7 +347,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[1],
       "method1",
-      "default",
+      targets[0].id,
       "method",
       "public",
       false,
@@ -370,7 +370,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[1],
       "method1",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       false,
@@ -395,7 +395,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[1],
       "method1",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       false,
@@ -420,7 +420,7 @@ describe("TargetVisitor test", () => {
     checkClassMethod(
       targets[1],
       "method1",
-      "name1",
+      targets[0].id,
       "method",
       "public",
       false,
@@ -447,7 +447,7 @@ describe("TargetVisitor test", () => {
     expect(targets.length).to.equal(2);
 
     checkObject(targets[0], "x", false);
-    checkObjectFunction(targets[1], "y", "x", false);
+    checkObjectFunction(targets[1], "y", targets[0].id, false);
   });
 
   it("ObjectFunction: assignment memberexpression using literal", () => {
@@ -462,8 +462,8 @@ describe("TargetVisitor test", () => {
     expect(targets.length).to.equal(3);
 
     checkObject(targets[1], "x", false);
-    checkObjectFunction(targets[0], "y", "x", false);
-    checkObjectFunction(targets[2], "z", "x", true);
+    checkObjectFunction(targets[0], "y", targets[0].id, false);
+    checkObjectFunction(targets[2], "z", targets[0].id, true);
   });
 
   it("ObjectFunction: assignment memberexpression using literal", () => {
@@ -478,7 +478,7 @@ describe("TargetVisitor test", () => {
     expect(targets.length).to.equal(2);
 
     checkObject(targets[0], "x", true);
-    checkObjectFunction(targets[1], "y", "x", false);
+    checkObjectFunction(targets[1], "y", targets[0].id, false);
   });
 
   it("ObjectFunction: assignment memberexpression using literal", () => {
@@ -493,6 +493,6 @@ describe("TargetVisitor test", () => {
     expect(targets.length).to.equal(2);
 
     checkObject(targets[0], "x", true);
-    checkObjectFunction(targets[1], "y", "x", false);
+    checkObjectFunction(targets[1], "y", targets[0].id, false);
   });
 });
