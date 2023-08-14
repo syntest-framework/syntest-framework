@@ -30,5 +30,28 @@ export class RandomSearchPreset extends Preset {
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "tracking";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 1;
+
+    if ("constantPool" in arguments_) {
+      (<{ constantPool: boolean }>(<unknown>arguments_)).constantPool = false;
+    }
+
+    if ("typePool" in arguments_) {
+      (<{ typePool: boolean }>(<unknown>arguments_)).typePool = false;
+    }
+
+    if ("statementPool" in arguments_) {
+      (<{ statementPool: boolean }>(<unknown>arguments_)).statementPool = false;
+    }
+
+    if ("incorporateExecutionInformation" in arguments_) {
+      (<{ incorporateExecutionInformation: boolean }>(
+        (<unknown>arguments_)
+      )).incorporateExecutionInformation = false;
+    }
+
+    if ("typeInferenceMode" in arguments_) {
+      (<{ typeInferenceMode: string }>(<unknown>arguments_)).typeInferenceMode =
+        "none";
+    }
   }
 }

@@ -69,7 +69,6 @@ export type SamplingOptions = {
   maxDepth: number;
   maxActionStatements: number;
   exploreIllegalValues: boolean;
-  resampleGeneProbability: number;
   deltaMutationProbability: number;
   multiPointCrossoverProbability: number;
   crossoverProbability: number;
@@ -331,14 +330,6 @@ export class Configuration {
       },
 
       // probability settings
-      "resample-gene-probability": {
-        alias: [],
-        default: 0.01,
-        description: "Probability a gene gets resampled from scratch.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
       "delta-mutation-probability": {
         alias: [],
         default: 0.8,
@@ -368,7 +359,7 @@ export class Configuration {
       "string-alphabet": {
         alias: [],
         default:
-          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'",
+          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'\n\t",
         description: "The alphabet to be used by the string gene.",
         group: OptionGroups.Sampling,
         hidden: false,

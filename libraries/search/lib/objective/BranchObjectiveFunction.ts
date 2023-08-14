@@ -123,7 +123,7 @@ export class BranchObjectiveFunction<
       // TODO this is a hack to give guidance to the algorithm
       // it would be better to improve the cfg with implicit branches
       // or to atleast choose a number based on what statement has been covered in the cfg node
-      // 0.25 is based on the fact the branch distance is minimally 0.5
+      // 0.25 is based on the fact the branch distance is minimally 0.5 // TODO FALSE!!!!
       // so 0.25 is exactly between 0.5 and 0
       return approachLevel + 0.48 * statementFraction + 0.01;
     }

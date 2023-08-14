@@ -163,10 +163,6 @@ export abstract class Launcher {
       `${this.arguments_.exploreIllegalValues.toString()}`
     );
     this.metricManager.recordProperty(
-      PropertyName.RESAMPLE_GENE_PROBABILITY,
-      `${this.arguments_.resampleGeneProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
       PropertyName.DELTA_MUTATION_PROBABILITY,
       `${this.arguments_.deltaMutationProbability.toString()}`
     );
@@ -178,10 +174,10 @@ export abstract class Launcher {
       PropertyName.CROSSOVER_PROBABILITY,
       `${this.arguments_.crossoverProbability.toString()}`
     );
-    this.metricManager.recordProperty(
-      PropertyName.STRING_ALPHABET,
-      `${this.arguments_.stringAlphabet.toString()}`
-    );
+    // this.metricManager.recordProperty(
+    //   PropertyName.STRING_ALPHABET,
+    //   `${this.arguments_.stringAlphabet.toString()}`
+    // );
     this.metricManager.recordProperty(
       PropertyName.STRING_MAX_LENGTH,
       `${this.arguments_.stringMaxLength.toString()}`
