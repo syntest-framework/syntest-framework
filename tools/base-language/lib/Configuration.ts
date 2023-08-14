@@ -71,10 +71,8 @@ export type SamplingOptions = {
   exploreIllegalValues: boolean;
   resampleGeneProbability: number;
   deltaMutationProbability: number;
-  sampleExistingValueProbability: number;
   multiPointCrossoverProbability: number;
   crossoverProbability: number;
-  sampleFunctionOutputAsArgument: number;
   stringAlphabet: string;
   stringMaxLength: number;
   numericMaxValue: number;
@@ -349,15 +347,6 @@ export class Configuration {
         hidden: false,
         type: "number",
       },
-      "sample-existing-value-probability": {
-        alias: [],
-        default: 0.5,
-        description:
-          "Probability the return value of a function is used as argument for another function.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
       "crossover-probability": {
         alias: [],
         default: 0.7,
@@ -374,21 +363,12 @@ export class Configuration {
         hidden: false,
         type: "number",
       },
-      "sample-function-output-as-argument": {
-        alias: [],
-        default: 0.5,
-        description:
-          "Probability to sample the output of a function as an argument.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
 
       // gene defaults
       "string-alphabet": {
         alias: [],
         default:
-          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'",
         description: "The alphabet to be used by the string gene.",
         group: OptionGroups.Sampling,
         hidden: false,
