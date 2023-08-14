@@ -20,6 +20,7 @@ import {
   SearchAlgorithmPlugin,
 } from "@syntest/base-language";
 import { Encoding, SearchAlgorithm } from "@syntest/search";
+import Yargs = require("yargs");
 
 import { SPEA2 } from "../algorithms/SPEA2";
 
@@ -36,11 +37,31 @@ export class SPEA2Plugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
       options.encodingSampler,
       options.procreation,
       options.populationSize,
-      options.populationSize
+      options.populationSize,
+      (<AlgorithmOptions>(<unknown>this.args)).SPEA2Strategy
     );
   }
 
-  override getOptions() {
-    return new Map();
+  override getOptions(): Map<string, Yargs.Options> {
+    // any tool can use this listener
+    // any label can use this listener
+
+    const map = new Map<string, Yargs.Options>();
+
+    map.set("strategy", {
+      alias: [],
+      default: 1,
+      description: "The strategy of SPEA2",
+      group: "Search Algorithm Options",
+      hidden: false,
+      normalize: true,
+      type: "number",
+    });
+
+    return map;
   }
 }
+
+export type AlgorithmOptions = {
+  SPEA2Strategy: number;
+};
