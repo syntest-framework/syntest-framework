@@ -54,6 +54,7 @@ export abstract class SPEA2Family<
     this._archive = [];
     this._archive_size = archiveSize;
     this._strategy = strategy;
+    console.log("SPEA2Family", this._strategy);
   }
 
   /**

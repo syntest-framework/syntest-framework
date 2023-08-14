@@ -23,7 +23,9 @@ import { SFuzzPreset } from "./sfuzz/SFuzzPreset";
 import { SFuzzSearchAlgorithmPlugin } from "./sfuzz/SFuzzSearchAlgorithmPlugin";
 import { DynaSPEA2Plugin } from "./spea2/plugins/DynaSPEA2Plugin";
 import { SPEA2Plugin } from "./spea2/plugins/SPEA2Plugin";
+import { DynaMOSASPEA2HighestPreset } from "./spea2/presets/DynaMOSASPEA2HighestPreset";
 import { DynaMOSASPEA2Preset } from "./spea2/presets/DynaMOSASPEA2Preset";
+import { DynaMOSASPEA2SumPreset } from "./spea2/presets/DynaMOSASPEA2SumPreset";
 import { MOSASPEA2Preset } from "./spea2/presets/MOSASPEA2Preset";
 import { SPEA2Preset } from "./spea2/presets/SPEA2Preset";
 
@@ -50,5 +52,7 @@ export default class ExperimentalModule extends Module {
     moduleManager.registerPreset(this, new SPEA2Preset());
     moduleManager.registerPreset(this, new MOSASPEA2Preset());
     moduleManager.registerPreset(this, new DynaMOSASPEA2Preset());
+    moduleManager.registerPreset(this, new DynaMOSASPEA2HighestPreset());
+    moduleManager.registerPreset(this, new DynaMOSASPEA2SumPreset());
   }
 }
