@@ -46,16 +46,16 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.1.0-beta.7",
     "@syntest/analysis-javascript": "*",
     "@syntest/base-language": "^0.2.0-beta.39",
     "@syntest/cli-graphics": "^0.1.0-beta.3",
     "@syntest/instrumentation-javascript": "*",
-    "@syntest/logging": "^0.1.0-beta.6",
+    "@syntest/logging": "^0.1.0-beta.7",
     "@syntest/metric": "^0.1.0-beta.6",
     "@syntest/module": "^0.1.0-beta.18",
     "@syntest/search": "^0.4.0-beta.36",
     "@syntest/search-javascript": "*",
+    "@syntest/storage": "*",
     "yargs": "^17.7.2"
   },
   "engines": {

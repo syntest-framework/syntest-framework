@@ -46,10 +46,9 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/logging": "^0.1.0-beta.6",
+    "@syntest/logging": "^0.1.0-beta.7",
     "@babel/core": "7.20.12",
     "@babel/traverse": "7.20.12",
-    "@syntest/logging": "^0.1.0-beta.6",
     "globals": "^13.20.0"
   },
   "engines": {
