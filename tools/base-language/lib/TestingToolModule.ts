@@ -34,6 +34,15 @@ import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlug
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { DynaMOSANoTypePreset } from "./presets/DynaMOSAPresetNoType";
+import { DynaMOSAProbPreset } from "./presets/DynaMOSAPresetProb";
+import { DynaMOSAProbAllPreset } from "./presets/DynaMOSAPresetProbAll";
+import { DynaMOSAProbDynPreset } from "./presets/DynaMOSAPresetProbDyn";
+import { DynaMOSAProbPoolPreset } from "./presets/DynaMOSAPresetProbPool";
+import { DynaMOSARankedPreset } from "./presets/DynaMOSAPresetRanked";
+import { DynaMOSARankedAllPreset } from "./presets/DynaMOSAPresetRankedAll";
+import { DynaMOSARankedDynPreset } from "./presets/DynaMOSAPresetRankedDyn";
+import { DynaMOSARankedPoolPreset } from "./presets/DynaMOSAPresetRankedPool";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 import { RandomSearchPreset } from "./presets/RandomSearchPreset";
@@ -75,5 +84,15 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new RandomSearchPreset());
+
+    moduleManager.registerPreset(this, new DynaMOSANoTypePreset());
+    moduleManager.registerPreset(this, new DynaMOSAProbPreset());
+    moduleManager.registerPreset(this, new DynaMOSAProbAllPreset());
+    moduleManager.registerPreset(this, new DynaMOSAProbDynPreset());
+    moduleManager.registerPreset(this, new DynaMOSAProbPoolPreset());
+    moduleManager.registerPreset(this, new DynaMOSARankedPreset());
+    moduleManager.registerPreset(this, new DynaMOSARankedAllPreset());
+    moduleManager.registerPreset(this, new DynaMOSARankedDynPreset());
+    moduleManager.registerPreset(this, new DynaMOSARankedPoolPreset());
   }
 }
