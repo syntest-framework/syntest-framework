@@ -34,6 +34,11 @@ import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlug
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { DynaMOSA10Preset } from "./presets/DynaMOSAPreset10";
+import { DynaMOSA20Preset } from "./presets/DynaMOSAPreset20";
+import { DynaMOSA30Preset } from "./presets/DynaMOSAPreset30";
+import { DynaMOSA40Preset } from "./presets/DynaMOSAPreset40";
+import { DynaMOSA5Preset } from "./presets/DynaMOSAPreset5";
 import { DynaMOSANoTypePreset } from "./presets/DynaMOSAPresetNoType";
 import { DynaMOSAProbPreset } from "./presets/DynaMOSAPresetProb";
 import { DynaMOSAProbAllPreset } from "./presets/DynaMOSAPresetProbAll";
@@ -44,7 +49,17 @@ import { DynaMOSARankedAllPreset } from "./presets/DynaMOSAPresetRankedAll";
 import { DynaMOSARankedDynPreset } from "./presets/DynaMOSAPresetRankedDyn";
 import { DynaMOSARankedPoolPreset } from "./presets/DynaMOSAPresetRankedPool";
 import { MOSAPreset } from "./presets/MOSAPreset";
+import { MOSA10Preset } from "./presets/MOSAPreset10";
+import { MOSA20Preset } from "./presets/MOSAPreset20";
+import { MOSA30Preset } from "./presets/MOSAPreset30";
+import { MOSA40Preset } from "./presets/MOSAPreset40";
+import { MOSA5Preset } from "./presets/MOSAPreset5";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { NSGAII10Preset } from "./presets/NSGAIIPreset10";
+import { NSGAII20Preset } from "./presets/NSGAIIPreset20";
+import { NSGAII30Preset } from "./presets/NSGAIIPreset30";
+import { NSGAII40Preset } from "./presets/NSGAIIPreset40";
+import { NSGAII5Preset } from "./presets/NSGAIIPreset5";
 import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
@@ -94,5 +109,25 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPreset(this, new DynaMOSARankedAllPreset());
     moduleManager.registerPreset(this, new DynaMOSARankedDynPreset());
     moduleManager.registerPreset(this, new DynaMOSARankedPoolPreset());
+
+    moduleManager.registerPreset(this, new NSGAII5Preset());
+    moduleManager.registerPreset(this, new MOSA5Preset());
+    moduleManager.registerPreset(this, new DynaMOSA5Preset());
+
+    moduleManager.registerPreset(this, new NSGAII10Preset());
+    moduleManager.registerPreset(this, new MOSA10Preset());
+    moduleManager.registerPreset(this, new DynaMOSA10Preset());
+
+    moduleManager.registerPreset(this, new NSGAII20Preset());
+    moduleManager.registerPreset(this, new MOSA20Preset());
+    moduleManager.registerPreset(this, new DynaMOSA20Preset());
+
+    moduleManager.registerPreset(this, new NSGAII30Preset());
+    moduleManager.registerPreset(this, new MOSA30Preset());
+    moduleManager.registerPreset(this, new DynaMOSA30Preset());
+
+    moduleManager.registerPreset(this, new NSGAII40Preset());
+    moduleManager.registerPreset(this, new MOSA40Preset());
+    moduleManager.registerPreset(this, new DynaMOSA40Preset());
   }
 }
