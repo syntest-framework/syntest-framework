@@ -125,7 +125,9 @@ export class BranchObjectiveFunction<
       // or to atleast choose a number based on what statement has been covered in the cfg node
       // 0.25 is based on the fact the branch distance is minimally 0.5 // TODO FALSE!!!!
       // so 0.25 is exactly between 0.5 and 0
-      return approachLevel + 0.48 * statementFraction + 0.01;
+
+      // we add 0.999_999 such that it is less than one but more than the branch distance
+      return approachLevel + 0.999_999; // 0.48 * statementFraction + 0.01;
     }
 
     if (outgoingEdges.length < 2) {
