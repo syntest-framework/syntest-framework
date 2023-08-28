@@ -57,7 +57,12 @@ export class BranchDistance extends CoreBranchDistance {
     let distance = visitor._getDistance(condition);
 
     if (distance > 1 || distance < 0) {
-      throw new Error("Invalid distance!");
+      const variables_ = Object.entries(variables)
+        .map(([key, value]) => `${key}=${value}`)
+        .join(", ");
+      throw new Error(
+        `Invalid distance: ${distance} for ${condition} -> ${trueOrFalse}. Variables: ${variables_}`
+      );
     }
 
     if (Number.isNaN(distance)) {
