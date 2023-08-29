@@ -127,14 +127,18 @@ export class BranchObjectiveFunction<
       // so 0.25 is exactly between 0.5 and 0
 
       // we add 0.999_999 such that it is less than one but more than the branch distance
-      return approachLevel + 0.999_999; // 0.48 * statementFraction + 0.01;
+      const distance = Math.max(
+        0.01,
+        Math.min(0.99, Math.round(statementFraction * 100) / 100)
+      );
+      return approachLevel + distance; // 0.999_999; // 0.48 * statementFraction + 0.01;
     }
 
     if (outgoingEdges.length < 2) {
       // todo end of block problem
       // when a crash happens at the last line of a block the statement fraction becomes 1 since we do not record the last one
       if (statementFraction === 1) {
-        return approachLevel + 0.499_999_999;
+        return approachLevel + 0.99;
       }
 
       throw new Error(
@@ -212,6 +216,6 @@ export class BranchObjectiveFunction<
     }
 
     // add the distances
-    return approachLevel + branchDistance;
+    return approachLevel + branchDistance / 100;
   }
 }
