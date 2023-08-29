@@ -127,7 +127,7 @@ export class BranchObjectiveFunction<
       // so 0.25 is exactly between 0.5 and 0
 
       // we add 0.999_999 such that it is less than one but more than the branch distance
-      let distance = statementFraction * 0.98 + 0.01;
+      let distance = (1 - statementFraction) * 0.98 + 0.01;
       distance = Math.round(distance * 100) / 100;
       return approachLevel + distance; // 0.999_999; // 0.48 * statementFraction + 0.01;
     }
@@ -136,7 +136,7 @@ export class BranchObjectiveFunction<
       // todo end of block problem
       // when a crash happens at the last line of a block the statement fraction becomes 1 since we do not record the last one
       if (statementFraction === 1) {
-        return approachLevel + 0.99;
+        return approachLevel + 0.01;
       }
 
       throw new Error(
