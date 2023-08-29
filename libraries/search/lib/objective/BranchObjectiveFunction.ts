@@ -127,10 +127,8 @@ export class BranchObjectiveFunction<
       // so 0.25 is exactly between 0.5 and 0
 
       // we add 0.999_999 such that it is less than one but more than the branch distance
-      const distance = Math.max(
-        0.01,
-        Math.min(0.99, Math.round(statementFraction * 100) / 100)
-      );
+      let distance = statementFraction * 0.98 + 0.01;
+      distance = Math.round(distance * 100) / 100;
       return approachLevel + distance; // 0.999_999; // 0.48 * statementFraction + 0.01;
     }
 
