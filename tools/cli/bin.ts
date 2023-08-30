@@ -129,9 +129,6 @@ async function main() {
     (<BaseOptions>(<unknown>baseArguments)).preset
   );
 
-  // Set the metrics on the metric manager
-  metricManager.metrics = await moduleManager.getMetrics();
-
   moduleManager.printModuleVersionTable();
 
   const versions = [...moduleManager.modules.values()]
@@ -154,6 +151,10 @@ async function main() {
       storageManager.args = argv;
       // Set the arguments in the module manager
       moduleManager.args = argv;
+
+      // Set the metrics on the metric manager
+      metricManager.metrics = await moduleManager.getMetrics();
+
       metricManager.setOutputMetrics(
         (<MetricOptions>(<unknown>argv)).outputMetrics
       );

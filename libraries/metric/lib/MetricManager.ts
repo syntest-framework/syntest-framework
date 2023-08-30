@@ -26,6 +26,15 @@ import {
 } from "./Metric";
 import { MiddleWare } from "./Middleware";
 import {
+  Distribution,
+  DistributionName,
+  Property,
+  PropertyName,
+  Series,
+  SeriesName,
+  SeriesTyping,
+} from "./PropertyTypes";
+import {
   distributionNotRegistered,
   propertyNotRegistered,
   seriesDistributionNotRegistered,
@@ -61,12 +70,12 @@ export class MetricManager {
   private _metrics: Metric[] | undefined = undefined;
   private _outputMetrics: Metric[] | undefined = undefined;
 
-  private properties: Map<string, string>;
-  private distributions: Map<string, number[]>;
-  private series: Map<string, Map<string, Map<number, number>>>;
+  private properties: Map<PropertyName, Property>;
+  private distributions: Map<DistributionName, Distribution>;
+  private series: Map<SeriesName, Map<SeriesTyping, Series<number>>>;
   private seriesDistributions: Map<
-    string,
-    Map<string, Map<string, Map<number, number[]>>>
+    DistributionName,
+    Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
   >;
 
   constructor(namespace: string) {
@@ -272,7 +281,7 @@ export class MetricManager {
     }
   }
 
-  recordProperty(property: string, value: string) {
+  recordProperty(property: PropertyName, value: Property) {
     MetricManager.LOGGER.debug(`Recording property ${property} = ${value}`);
 
     if (!this.properties.has(property)) {
@@ -282,7 +291,7 @@ export class MetricManager {
     this.properties.set(property, value);
   }
 
-  recordDistribution(distributionName: string, value: number) {
+  recordDistribution(distributionName: DistributionName, value: number) {
     MetricManager.LOGGER.debug(
       `Recording distribution ${distributionName} = ${value}`
     );
@@ -295,8 +304,8 @@ export class MetricManager {
   }
 
   recordSeries(
-    seriesName: string,
-    seriesType: string,
+    seriesName: SeriesName,
+    seriesType: SeriesTyping,
     index: number,
     value: number
   ) {
@@ -316,9 +325,9 @@ export class MetricManager {
   }
 
   recordSeriesDistribution(
-    distributionName: string,
-    seriesName: string,
-    seriesType: string,
+    distributionName: DistributionName,
+    seriesName: SeriesName,
+    seriesType: SeriesTyping,
     index: number,
     value: number
   ) {
@@ -421,21 +430,21 @@ export class MetricManager {
       .get(seriesType);
   }
 
-  getAllProperties(): Map<string, string> {
+  getAllProperties(): Map<PropertyName, Property> {
     return this.properties;
   }
 
-  getAllDistributions(): Map<string, number[]> {
+  getAllDistributions(): Map<DistributionName, Distribution> {
     return this.distributions;
   }
 
-  getAllSeries(): Map<string, Map<string, Map<number, number>>> {
+  getAllSeries(): Map<SeriesName, Map<SeriesTyping, Series<number>>> {
     return this.series;
   }
 
   getAllSeriesDistributions(): Map<
-    string,
-    Map<string, Map<string, Map<number, number[]>>>
+    DistributionName,
+    Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
   > {
     return this.seriesDistributions;
   }
