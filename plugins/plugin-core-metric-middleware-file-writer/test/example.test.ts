@@ -28,8 +28,10 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
+    const metricManager = new MetricManager("");
+    metricManager.setOutputMetrics([]);
     new FileWriterMetricMiddleware(
-      new MetricManager(""),
+      metricManager,
       [],
       "",
       new StorageManager(),

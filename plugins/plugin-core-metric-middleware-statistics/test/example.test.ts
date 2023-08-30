@@ -27,7 +27,9 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new StatisticsMetricMiddleware(new MetricManager(""), [], []);
+    const metricManager = new MetricManager("");
+    metricManager.setOutputMetrics([]);
+    new StatisticsMetricMiddleware(metricManager, [], []);
     expect(true);
   });
 });
