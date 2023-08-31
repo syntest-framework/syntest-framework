@@ -1,7 +1,7 @@
 {
   "name": "@syntest/plugin-core-metric-middleware-file-writer",
-  "version": "0.1.0-beta.12",
-  "description": "A metric middleware plugin for writing to file the SynTest Core containing graphing functionalities",
+  "version": "0.1.0-beta.13",
+  "description": "A metric middleware plugin for writing metrics to file",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -43,17 +43,11 @@
   },
   "dependencies": {
     "@syntest/logging": "^0.1.0-beta.7",
-    "@syntest/metric": "^0.1.0-beta.6",
-    "@syntest/module": "*",
-    "d3": "6.7.0",
-    "fast-csv": "^4.3.6",
-    "jsdom": "^21.1.0"
+    "@syntest/metric": "^0.1.0-beta.7",
+    "@syntest/module": "*"
   },
   "engines": {
     "node": ">=16"
-  },
-  "devDependencies": {
-    "@types/d3": "^7.4.0"
   },
   "publishConfig": {
     "access": "public"

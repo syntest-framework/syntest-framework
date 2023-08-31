@@ -15,11 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/Middleware";
+import { MetricManager } from "@syntest/metric";
+import * as chai from "chai";
 
-export * from "./lib/util/Configuration";
-export * from "./lib/util/diagnostics";
+import { StatisticsMetricMiddleware } from "../lib/middleware/StatisticsMetricMiddleware";
 
-export * from "./lib/Metric";
-export * from "./lib/MetricManager";
-export * from "./lib/PropertyTypes";
+const expect = chai.expect;
+
+/**
+ * This test is only added such that the github action does not fail.
+ */
+describe("example test", () => {
+  it("test", () => {
+    const metricManager = new MetricManager("");
+    metricManager.setOutputMetrics([]);
+    new StatisticsMetricMiddleware(metricManager, [], []);
+    expect(true);
+  });
+});

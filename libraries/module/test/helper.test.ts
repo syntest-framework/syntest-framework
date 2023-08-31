@@ -15,11 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/Middleware";
+// globals
 
-export * from "./lib/util/Configuration";
-export * from "./lib/util/diagnostics";
+import { setupLogger } from "@syntest/logging";
+import { initializePseudoRandomNumberGenerator } from "@syntest/prng";
 
-export * from "./lib/Metric";
-export * from "./lib/MetricManager";
-export * from "./lib/PropertyTypes";
+// setup
+// This will run before all test cases.
+before(() => {
+  // This will set the prng singleton for all test cases.
+  // The prng singleton is required for running certain parts of the code.
+  initializePseudoRandomNumberGenerator("0");
+
+  // This will set up the logger singleton
+  setupLogger("log", [], "debug");
+});

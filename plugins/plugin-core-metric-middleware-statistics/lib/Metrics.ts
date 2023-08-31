@@ -15,11 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/Middleware";
+import { Metric, MetricType } from "@syntest/metric";
 
-export * from "./lib/util/Configuration";
-export * from "./lib/util/diagnostics";
+const AUC: Metric = {
+  type: MetricType.PROPERTY,
+  property: "AUC",
+};
 
-export * from "./lib/Metric";
-export * from "./lib/MetricManager";
-export * from "./lib/PropertyTypes";
+export const Metrics = {
+  AUC,
+};
