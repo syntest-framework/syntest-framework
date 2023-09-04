@@ -15,12 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export type PropertyName = string;
-export type Property = string;
+export type Name = string;
 
-export type DistributionName = string;
 export type Distribution = number[];
 
-export type SeriesName = string;
-export type SeriesTyping = string;
+export enum SeriesUnit {
+  SEARCH_TIME = "search-time",
+  TOTAL_TIME = "total-time",
+  EVALUATION = "evaluation",
+  ITERATION = "iteration",
+}
 export type Series<T> = Map<number, T>;
+
+export type PropertiesMap<T> = Map<Name, T>;
+export type DistributionsMap = Map<Name, Distribution>;
+export type SeriesMap<T> = Map<Name, Map<SeriesUnit, Series<T>>>;

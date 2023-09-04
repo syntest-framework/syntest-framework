@@ -15,33 +15,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { SeriesUnit } from "./PropertyTypes";
+
 export type Metric =
   | PropertyMetric
   | DistributionMetric
   | SeriesMetric
-  | SeriesDistributionMetric;
+  | SeriesDistributionMetric
+  | SeriesMeasurementMetric;
 
 export interface PropertyMetric {
   type: MetricType.PROPERTY;
-  property: string;
+  name: string;
 }
 
 export interface DistributionMetric {
   type: MetricType.DISTRIBUTION;
-  distributionName: string;
+  name: string;
 }
 
 export interface SeriesMetric {
   type: MetricType.SERIES;
-  seriesName: string;
-  seriesType: SeriesType;
+  name: string;
+  seriesUnit: SeriesUnit;
 }
 
 export interface SeriesDistributionMetric {
   type: MetricType.SERIES_DISTRUBUTION;
-  distributionName: string;
-  seriesName: string;
-  seriesType: SeriesType;
+  name: string;
+  seriesUnit: SeriesUnit;
+}
+
+export interface SeriesMeasurementMetric {
+  type: MetricType.SERIES_MEASUREMENT;
+  name: string;
+  seriesUnit: SeriesUnit;
 }
 
 export enum MetricType {
@@ -49,11 +57,5 @@ export enum MetricType {
   DISTRIBUTION = "distribution",
   SERIES = "series",
   SERIES_DISTRUBUTION = "series-distribution",
-}
-
-export enum SeriesType {
-  SEARCH_TIME = "search-time",
-  TOTAL_TIME = "total-time",
-  ITERATION = "iteration",
-  EVALUATION = "evaluation",
+  SERIES_MEASUREMENT = "series-measurement",
 }

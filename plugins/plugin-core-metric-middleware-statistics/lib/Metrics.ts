@@ -19,7 +19,7 @@ import { Metric, MetricType } from "@syntest/metric";
 
 const AUC: Metric = {
   type: MetricType.PROPERTY,
-  property: "AUC",
+  name: "AUC",
 };
 
 export const Metrics = {
