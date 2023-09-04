@@ -339,7 +339,7 @@ export class SearchMetricListener extends EventListenerPlugin {
         budgetManager: BudgetManager<E>
       ) => {
         // create a new metric manager for this search subject
-        this.currentNamespace = subject.name;
+        this.currentNamespace = subject.path;
 
         this.recordSeries(searchAlgorithm, subject, budgetManager);
       }
