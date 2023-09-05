@@ -68,7 +68,10 @@ export class BranchObjectiveFunction<
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
 
-    if (executionResult === undefined) {
+    if (
+      executionResult === undefined ||
+      executionResult.getTraces().length === 0
+    ) {
       return Number.MAX_VALUE;
     }
 
