@@ -31,22 +31,22 @@ import { DummyEncodingMock } from "../mocks/DummyEncoding.mock";
 import { DummyProcreation } from "../mocks/DummyProcreation.mock";
 import { DummySearchSubject } from "../mocks/DummySubject.mock";
 
-import { MockedDynaSPEAII, MockedSPEAII } from "./SPEAIIAdapter.mock";
+import { MockedDynaSPEA2, MockedSPEA2 } from "./SPEA2Adapter.mock";
 
 const expect = chai.expect;
 
 /**
  * @author Annibale Panichella
  */
-describe("Test SPEA-II", function () {
+describe("Test SPEA-2", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
   let searchSubject: DummySearchSubject<DummyEncodingMock>;
   let mockedRunner: EncodingRunner<DummyEncodingMock>;
   let mockedSampler: EncodingSampler<DummyEncodingMock>;
   let mockedCrossover: DummyCrossover;
   let mockedProcreation: DummyProcreation<DummyEncodingMock>;
-  let spea: MockedSPEAII<DummyEncodingMock>;
-  let dynaSpea: MockedDynaSPEAII<DummyEncodingMock>;
+  let spea: MockedSPEA2<DummyEncodingMock>;
+  let dynaSpea: MockedDynaSPEA2<DummyEncodingMock>;
 
   let ind1: DummyEncodingMock;
   let ind2: DummyEncodingMock;
@@ -82,7 +82,7 @@ describe("Test SPEA-II", function () {
       (sampler, encoding) => encoding.mutate(),
       mockedSampler
     );
-    spea = new MockedSPEAII(
+    spea = new MockedSPEA2(
       new SimpleObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedProcreation,
@@ -90,7 +90,7 @@ describe("Test SPEA-II", function () {
       3
     );
 
-    dynaSpea = new MockedDynaSPEAII(
+    dynaSpea = new MockedDynaSPEA2(
       new UncoveredObjectiveManager(mockedRunner, new Set()),
       mockedSampler,
       mockedProcreation,

@@ -15,32 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  SearchAlgorithmOptions,
-  SearchAlgorithmPlugin,
-} from "@syntest/base-language";
-import { Encoding, SearchAlgorithm } from "@syntest/search";
+import { ArgumentsObject } from "@syntest/base-language";
+import { Preset } from "@syntest/module";
+import { ArgumentsCamelCase } from "yargs";
 
-import { SPEAII } from "../SPEAII";
-
-export class SPEAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
+export class MOSASPEA2Preset extends Preset {
   constructor() {
-    super("SPEAII", "SPEAII search algorithm");
+    super("MOSASPEA2", "MOSASPEA2 preset");
   }
 
-  createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
-  ): SearchAlgorithm<T> {
-    return new SPEAII<T>(
-      options.objectiveManager,
-      options.encodingSampler,
-      options.procreation,
-      options.populationSize,
-      options.populationSize
-    );
-  }
-
-  override getOptions() {
-    return new Map();
+  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEA2";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
+    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
+    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }
 }

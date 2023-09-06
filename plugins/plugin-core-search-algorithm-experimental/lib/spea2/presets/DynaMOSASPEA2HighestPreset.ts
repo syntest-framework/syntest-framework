@@ -19,16 +19,20 @@ import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
 import { ArgumentsCamelCase } from "yargs";
 
-export class MOSASPEAIIPreset extends Preset {
+import { AlgorithmOptions } from "../plugins/DynaSPEA2Plugin";
+
+export class DynaMOSASPEA2HighestPreset extends Preset {
   constructor() {
-    super("MOSASPEAII", "MOSASPEAII preset");
+    super("DynaMOSASPEA2Highest", "DynaMOSASPEA2 preset");
   }
 
   modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEAII";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
+    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEA2";
+    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
+      "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+    (<AlgorithmOptions>(<unknown>arguments_)).DynaSPEA2Strategy = 2;
   }
 }

@@ -29,24 +29,32 @@ import {
 } from "@syntest/search";
 
 /**
- * Abstract class for SPEA family of algorithms
+ * Strength Pareto Evolutionary Algorithm 2 (SPEA2) family of search algorithms.
+ *
+ * Based on : SPEA2: Improving the strength pareto evolutionary algorithm
+ * E. Zitzler, M. Laumanns, L. Thiele
+ * https://doi.org/10.3929/ETHZ-A-004284029
  */
-export abstract class SPEAIIFamily<
+export abstract class SPEA2Family<
   T extends Encoding
 > extends EvolutionaryAlgorithm<T> {
   protected _archive: T[];
   protected _archive_size: number;
+  protected _strategy: number;
 
   constructor(
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
     populationSize: number,
-    archiveSize: number
+    archiveSize: number,
+    strategy = 1
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     this._archive = [];
     this._archive_size = archiveSize;
+    this._strategy = strategy;
+    console.log("SPEA2Family", this._strategy);
   }
 
   /**
@@ -98,6 +106,181 @@ export abstract class SPEAIIFamily<
       }
     }
     return rawFitness;
+  }
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  public calculateRawFitnessAdapted1(
+    solutions: T[],
+    objectives: Set<ObjectiveFunction<T>>
+  ): Map<T, number> {
+    const strength = new Map<T, number>();
+    const rawFitness = new Map<T, number>();
+
+    for (const solution of solutions) {
+      strength.set(solution, 0);
+      rawFitness.set(solution, 0);
+    }
+    for (let index = 0; index < solutions.length; index++) {
+      for (const objective of objectives) {
+        let strengthTemporary = 0;
+        for (let index_ = 0; index_ < solutions.length; index_++) {
+          if (
+            index !== index_ &&
+            DominanceComparator.compare(
+              solutions[index],
+              solutions[index_],
+              new Set<ObjectiveFunction<T>>().add(objective)
+            ) === -1
+          ) {
+            strengthTemporary++;
+          }
+        }
+
+        if (strengthTemporary > strength.get(solutions[index])) {
+          strength.set(solutions[index], strengthTemporary);
+        }
+      }
+    }
+    for (let index = 0; index < solutions.length; index++) {
+      for (let index_ = 0; index_ < solutions.length; index_++) {
+        if (
+          index !== index_ &&
+          DominanceComparator.compare(
+            solutions[index],
+            solutions[index_],
+            objectives
+          ) == -1
+        ) {
+          rawFitness.set(
+            solutions[index_],
+            rawFitness.get(solutions[index_]) + strength.get(solutions[index])
+          );
+        }
+      }
+    }
+    return rawFitness;
+  }
+
+  public calculateRawFitnessAdapted2(
+    solutions: T[],
+    objectives: Set<ObjectiveFunction<T>>
+  ): Map<T, number> {
+    const strength = new Map<T, number>();
+
+    for (const solution of solutions) {
+      strength.set(solution, 0);
+    }
+    for (let index = 0; index < solutions.length; index++) {
+      for (const objective of objectives) {
+        let strengthTemporary = 0;
+        for (let index_ = 0; index_ < solutions.length; index_++) {
+          if (
+            index !== index_ &&
+            DominanceComparator.compare(
+              solutions[index],
+              solutions[index_],
+              new Set<ObjectiveFunction<T>>().add(objective)
+            ) === -1
+          ) {
+            strengthTemporary++;
+          }
+        }
+
+        if (strengthTemporary > strength.get(solutions[index])) {
+          strength.set(solutions[index], strengthTemporary);
+        }
+      }
+    }
+
+    return strength;
+  }
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  public calculateRawFitnessAdapted3(
+    solutions: T[],
+    objectives: Set<ObjectiveFunction<T>>
+  ): Map<T, number> {
+    const strength = new Map<T, number>();
+    const rawFitness = new Map<T, number>();
+
+    for (const solution of solutions) {
+      strength.set(solution, 0);
+      rawFitness.set(solution, 0);
+    }
+    for (let index = 0; index < solutions.length; index++) {
+      for (const objective of objectives) {
+        let strengthTemporary = 0;
+        for (let index_ = 0; index_ < solutions.length; index_++) {
+          if (
+            index !== index_ &&
+            DominanceComparator.compare(
+              solutions[index],
+              solutions[index_],
+              new Set<ObjectiveFunction<T>>().add(objective)
+            ) === -1
+          ) {
+            strengthTemporary++;
+          }
+        }
+
+        strength.set(
+          solutions[index],
+          strength.get(solutions[index]) + strengthTemporary
+        );
+      }
+    }
+    for (let index = 0; index < solutions.length; index++) {
+      for (let index_ = 0; index_ < solutions.length; index_++) {
+        if (
+          index !== index_ &&
+          DominanceComparator.compare(
+            solutions[index],
+            solutions[index_],
+            objectives
+          ) == -1
+        ) {
+          rawFitness.set(
+            solutions[index_],
+            rawFitness.get(solutions[index_]) + strength.get(solutions[index])
+          );
+        }
+      }
+    }
+    return rawFitness;
+  }
+
+  public calculateRawFitnessAdapted4(
+    solutions: T[],
+    objectives: Set<ObjectiveFunction<T>>
+  ): Map<T, number> {
+    const strength = new Map<T, number>();
+
+    for (const solution of solutions) {
+      strength.set(solution, 0);
+    }
+    for (let index = 0; index < solutions.length; index++) {
+      for (const objective of objectives) {
+        let strengthTemporary = 0;
+        for (let index_ = 0; index_ < solutions.length; index_++) {
+          if (
+            index !== index_ &&
+            DominanceComparator.compare(
+              solutions[index],
+              solutions[index_],
+              new Set<ObjectiveFunction<T>>().add(objective)
+            ) === -1
+          ) {
+            strengthTemporary++;
+          }
+        }
+
+        strength.set(
+          solutions[index],
+          strength.get(solutions[index]) + strengthTemporary
+        );
+      }
+    }
+    return strength;
   }
 
   /**
@@ -161,7 +344,31 @@ export abstract class SPEAIIFamily<
   ): Map<T, number> {
     const fitness = new Map<T, number>();
     const distanceMatrix = this.distanceMatrix(solutions, objectives);
-    const rawFitness = this.calculateRawFitness(solutions, objectives);
+
+    let rawFitness: Map<T, number>;
+    switch (this._strategy) {
+      case 1: {
+        rawFitness = this.calculateRawFitness(solutions, objectives);
+        break;
+      }
+      case 2: {
+        rawFitness = this.calculateRawFitnessAdapted1(solutions, objectives);
+        break;
+      }
+      case 3: {
+        rawFitness = this.calculateRawFitnessAdapted2(solutions, objectives);
+        break;
+      }
+      case 4: {
+        rawFitness = this.calculateRawFitnessAdapted3(solutions, objectives);
+        break;
+      }
+      case 5: {
+        rawFitness = this.calculateRawFitnessAdapted4(solutions, objectives);
+        break;
+      }
+      // No default
+    }
 
     for (const solution of solutions) {
       const distances = distanceMatrix[solutions.indexOf(solution)];
