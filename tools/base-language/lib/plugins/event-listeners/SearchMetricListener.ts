@@ -15,7 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metric, MetricManager, SeriesType } from "@syntest/metric";
+import {
+  Metric,
+  MetricManager,
+  SeriesIndex,
+  SeriesType,
+} from "@syntest/metric";
 import { EventListenerPlugin } from "@syntest/module";
 import {
   BranchObjectiveFunction,
@@ -155,8 +160,8 @@ export class SearchMetricListener extends EventListenerPlugin {
   }
 
   recordCoveredSeries(
-    type: string,
-    index: number,
+    seriesType: SeriesType,
+    seriesIndex: SeriesIndex,
     coveredPaths: number,
     coveredBranches: number,
     coveredFunctions: number,
@@ -167,44 +172,44 @@ export class SearchMetricListener extends EventListenerPlugin {
   ) {
     this.metricManager.recordSeries(
       SeriesName.PATH_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesType,
+      seriesIndex,
       coveredPaths
     );
     this.metricManager.recordSeries(
       SeriesName.BRANCH_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesType,
+      seriesIndex,
       coveredBranches
     );
     this.metricManager.recordSeries(
       SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesType,
+      seriesIndex,
       coveredExceptions
     );
     this.metricManager.recordSeries(
       SeriesName.FUNCTION_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesType,
+      seriesIndex,
       coveredFunctions
     );
     this.metricManager.recordSeries(
       SeriesName.LINE_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesType,
+      seriesIndex,
       coveredLines
     );
     this.metricManager.recordSeries(
       SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesType,
+      seriesIndex,
       coveredImplicitBranches
     );
     this.metricManager.recordSeries(
       SeriesName.OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesType,
+      seriesIndex,
       covered
     );
   }

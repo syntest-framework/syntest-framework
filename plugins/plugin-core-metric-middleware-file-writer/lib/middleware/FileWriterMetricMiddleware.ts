@@ -21,17 +21,21 @@ import * as path from "node:path";
 
 import * as csv from "@fast-csv/format";
 import {
+  Distribution,
   DistributionMetric,
   Metric,
   MetricManager,
-  MiddleWare,
+  MetricName,
+  Middleware,
   PropertyMetric,
   SeriesDistributionMetric,
+  SeriesIndex,
   SeriesMetric,
+  SeriesType,
 } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
 
-export class FileWriterMetricMiddleware extends MiddleWare {
+export class FileWriterMetricMiddleware extends Middleware {
   private fid: string;
   private storageManager: StorageManager;
   private outputDirectory: string;
@@ -126,7 +130,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
   async writePropertiesToCSV(
     filePath: string,
     namespace: string,
-    properties: Map<string, string>
+    properties: Map<MetricName, string>
   ): Promise<void> {
     const fileName = "properties.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -159,7 +163,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
   async writeDistributionsToCSV(
     filePath: string,
     namespace: string,
-    distributions: Map<string, number[]>
+    distributions: Map<MetricName, Distribution>
   ): Promise<void> {
     const fileName = "distributions.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -202,22 +206,22 @@ export class FileWriterMetricMiddleware extends MiddleWare {
   async writeSeriesToCSV(
     filePath: string,
     namespace: string,
-    series: Map<string, Map<string, Map<number, number>>>
+    series: Map<MetricName, Map<SeriesType, Map<SeriesIndex, number>>>
   ): Promise<void> {
     const fileName = "series.csv";
     const exists = existsSync(path.join(filePath, fileName));
 
     const fullData = [];
 
-    for (const [seriesName, seriesType] of series.entries()) {
-      for (const [seriesTypeName, seriesTypeData] of seriesType.entries()) {
-        for (const [index, value] of seriesTypeData.entries()) {
+    for (const [seriesName, seriesByType] of series.entries()) {
+      for (const [seriesType, seriesData] of seriesByType.entries()) {
+        for (const [seriesIndex, value] of seriesData.entries()) {
           fullData.push({
             fid: this.fid,
             namespace: namespace,
             seriesName: seriesName,
-            seriesTypeName: seriesTypeName,
-            index: index,
+            seriesTypeName: seriesType,
+            index: seriesIndex,
             value: value,
           });
         }
@@ -248,8 +252,8 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     filePath: string,
     namespace: string,
     seriesDistributions: Map<
-      string,
-      Map<string, Map<string, Map<number, number[]>>>
+      MetricName,
+      Map<SeriesType, Map<SeriesIndex, Distribution>>
     >
   ): Promise<void> {
     const fileName = "series-distributions.csv";
@@ -258,23 +262,20 @@ export class FileWriterMetricMiddleware extends MiddleWare {
     const fullData = [];
 
     for (const [
-      distributionName,
-      distributionData,
+      seriesDistributionName,
+      seriesDistributionByType,
     ] of seriesDistributions.entries()) {
-      for (const [seriesName, seriesNameData] of distributionData.entries()) {
-        for (const [seriesType, seriesTypeData] of seriesNameData.entries()) {
-          for (const [index, value] of seriesTypeData.entries()) {
-            for (const distributionValue of value) {
-              fullData.push({
-                fid: this.fid,
-                namespace: namespace,
-                distributionName: distributionName,
-                seriesName: seriesName,
-                seriesType: seriesType,
-                index: index,
-                value: distributionValue,
-              });
-            }
+      for (const [seriesType, series] of seriesDistributionByType.entries()) {
+        for (const [seriesIndex, distribution] of series.entries()) {
+          for (const value of distribution) {
+            fullData.push({
+              fid: this.fid,
+              namespace: namespace,
+              seriesDistributionName: seriesDistributionName,
+              seriesType: seriesType,
+              index: seriesIndex,
+              value: value,
+            });
           }
         }
       }

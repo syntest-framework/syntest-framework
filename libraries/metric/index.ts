@@ -22,4 +22,3 @@ export * from "./lib/util/diagnostics";
 
 export * from "./lib/Metric";
 export * from "./lib/MetricManager";
-export * from "./lib/PropertyTypes";

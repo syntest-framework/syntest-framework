@@ -15,15 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SeriesName } from "@syntest/base-language";
-import { MetricManager, SeriesType } from "@syntest/metric";
 import {
   Distribution,
-  DistributionName,
-  Property,
-  PropertyName,
+  MetricManager,
+  MetricName,
   Series,
-} from "@syntest/metric/lib/PropertyTypes";
+  SeriesType,
+} from "@syntest/metric";
 
 import { Statistic } from "./Statistic";
 
@@ -34,24 +32,31 @@ export class AUC extends Statistic {
 
   generate(
     metricManager: MetricManager,
-    _properties: Map<PropertyName, Property>,
-    _distributions: Map<DistributionName, Distribution>,
-    series: Map<SeriesName, Map<SeriesType, Series<number>>>,
-    _seriesDistributions: Map<
-      DistributionName,
-      Map<SeriesName, Map<SeriesType, Series<Distribution>>>
-    >
+    _properties: Map<MetricName, string>,
+    _distributions: Map<MetricName, Distribution>,
+    series: Map<MetricName, Map<SeriesType, Series<number>>>,
+    _seriesDistributions: Map<MetricName, Map<SeriesType, Series<Distribution>>>
   ): void {
-    this.loopThroughSeries(series, (newPropertyName, seriesByType) => {
-      let auc = 0;
-      for (const [, series_] of seriesByType) {
-        for (const [, value] of series_) {
-          auc += value;
+    this.loopThroughSeries(
+      series,
+      (newPropertyName, _seriesName, _seriesType, series) => {
+        // Skip calculation if the series is empty
+        if (series.size === 0) return;
+
+        let auc = 0;
+
+        console.log(newPropertyName);
+
+        let previousIndex = 0;
+        let previousValue = 0;
+        for (const [index, value] of series) {
+          // Trapezoidal rule
+          auc += ((index - previousIndex) * (value + previousValue)) / 2;
+          previousIndex = index;
+          previousValue = value;
         }
-        // one per
-        break;
+        metricManager.recordProperty(newPropertyName, `${auc}`);
       }
-      metricManager.recordProperty(newPropertyName, `${auc}`);
-    });
+    );
   }
 }

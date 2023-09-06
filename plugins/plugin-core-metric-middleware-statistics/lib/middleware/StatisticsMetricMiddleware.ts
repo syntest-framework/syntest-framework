@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
+import { Metric, MetricManager, Middleware } from "@syntest/metric";
 
 import { Statistic } from "../statistics/Statistic";
 
-export class StatisticsMetricMiddleware extends MiddleWare {
+export class StatisticsMetricMiddleware extends Middleware {
   private statistics: Statistic[];
 
   constructor(

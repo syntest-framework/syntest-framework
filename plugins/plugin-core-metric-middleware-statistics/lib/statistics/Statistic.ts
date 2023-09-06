@@ -15,16 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MetricManager } from "@syntest/metric";
 import {
   Distribution,
-  DistributionName,
-  Property,
-  PropertyName,
+  MetricManager,
+  MetricName,
   Series,
-  SeriesName,
-  SeriesTyping,
-} from "@syntest/metric/lib/PropertyTypes";
+  SeriesType,
+} from "@syntest/metric";
 
 export abstract class Statistic {
   private _name: string;
@@ -35,62 +32,73 @@ export abstract class Statistic {
 
   abstract generate(
     metricManager: MetricManager,
-    properties: Map<PropertyName, Property>,
-    distributions: Map<DistributionName, Distribution>,
-    series: Map<SeriesName, Map<SeriesTyping, Series<number>>>,
-    seriesDistributions: Map<
-      DistributionName,
-      Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
-    >
+    properties: Map<MetricName, string>,
+    distributions: Map<MetricName, Distribution>,
+    series: Map<MetricName, Map<SeriesType, Series<number>>>,
+    seriesDistributions: Map<MetricName, Map<SeriesType, Series<Distribution>>>
   ): void;
 
   loopThroughProperties(
-    properties: Map<PropertyName, Property>,
+    properties: Map<MetricName, string>,
     callback: (newPropertyName: string, propertyValue: string) => void
   ) {
-    for (const [propertyName, propertyValue] of properties) {
-      callback(this.getPropertyName(propertyName), propertyValue);
+    for (const [property, value] of properties) {
+      callback(`${this.name}-${property}`, value);
     }
   }
 
   loopThroughDistributions(
-    distributions: Map<DistributionName, Distribution>,
+    distributions: Map<MetricName, Distribution>,
     callback: (newPropertyName: string, distribution: Distribution) => void
   ) {
     for (const [distributionName, distribution] of distributions) {
-      callback(this.getPropertyName(distributionName), distribution);
+      callback(`${this.name}-${distributionName}`, distribution);
     }
   }
 
   loopThroughSeries(
-    series: Map<SeriesName, Map<SeriesTyping, Series<number>>>,
+    series: Map<MetricName, Map<SeriesType, Series<number>>>,
     callback: (
       newPropertyName: string,
-      seriesByType: Map<SeriesTyping, Series<number>>
+      seriesName: MetricName,
+      seriesType: SeriesType,
+      series: Series<number>
     ) => void
   ) {
     for (const [seriesName, seriesByType] of series) {
-      callback(this.getPropertyName(seriesName), seriesByType);
+      for (const [seriesType, series_] of seriesByType) {
+        callback(
+          `${this.name}-${seriesName}-${seriesType}`,
+          seriesName,
+          seriesType,
+          series_
+        );
+      }
     }
   }
 
   loopThroughSeriesDistribution(
-    seriesDistributions: Map<
-      DistributionName,
-      Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
-    >,
+    seriesDistributions: Map<MetricName, Map<SeriesType, Series<Distribution>>>,
     callback: (
       newPropertyName: string,
-      seriesByType: Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
+      seriesDistributionName: MetricName,
+      seriesType: SeriesType,
+      series: Series<Distribution>
     ) => void
   ) {
-    for (const [distributionName, distribution] of seriesDistributions) {
-      callback(this.getPropertyName(distributionName), distribution);
+    for (const [
+      seriesDistributionName,
+      seriesDistributionByType,
+    ] of seriesDistributions) {
+      for (const [seriesType, series] of seriesDistributionByType) {
+        callback(
+          `${this.name}-${seriesDistributionName}-${seriesType}`,
+          seriesDistributionName,
+          seriesType,
+          series
+        );
+      }
     }
-  }
-
-  getPropertyName(property: string): string {
-    return `${this.name}-${property}`;
   }
 
   get name() {

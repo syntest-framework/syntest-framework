@@ -18,7 +18,7 @@
 import { Metric } from "./Metric";
 import { MetricManager } from "./MetricManager";
 
-export abstract class MiddleWare {
+export abstract class Middleware {
   protected metricManager: MetricManager;
   protected availableMetrics: Metric[];
   protected outputMetrics: Metric[];
