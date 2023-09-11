@@ -93,7 +93,7 @@ export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
 
           newMetrics.push({
             type: MetricType.PROPERTY,
-            name: `${statistic}-${metric.name}-${metric.seriesType}`,
+            name: `${statistic}-${metric.name}-${metric.seriesUnit}`,
           });
         }
       }

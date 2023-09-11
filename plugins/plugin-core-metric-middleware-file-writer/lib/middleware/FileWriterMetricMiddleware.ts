@@ -23,15 +23,16 @@ import * as csv from "@fast-csv/format";
 import {
   Distribution,
   DistributionMetric,
+  DistributionsMap,
   Metric,
   MetricManager,
-  MetricName,
   Middleware,
+  PropertiesMap,
   PropertyMetric,
   SeriesDistributionMetric,
-  SeriesIndex,
+  SeriesMap,
+  SeriesMeasurementMetric,
   SeriesMetric,
-  SeriesType,
 } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
 
@@ -89,6 +90,14 @@ export class FileWriterMetricMiddleware extends Middleware {
         )
       );
 
+      const seriesMeasurements = mergedManager.collectSeriesMeasurements(
+        <SeriesMeasurementMetric[]>(
+          this.outputMetrics.filter(
+            (metric) => metric.type === "series-measurement"
+          )
+        )
+      );
+
       if (properties.size > 0) {
         await this.writePropertiesToCSV(
           this.outputDirectory,
@@ -113,6 +122,13 @@ export class FileWriterMetricMiddleware extends Middleware {
           seriesDistributions
         );
       }
+      if (seriesMeasurements.size > 0) {
+        await this.writeSeriesMeasurementToCSV(
+          this.outputDirectory,
+          namespace,
+          seriesMeasurements
+        );
+      }
     }
   }
 
@@ -130,7 +146,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writePropertiesToCSV(
     filePath: string,
     namespace: string,
-    properties: Map<MetricName, string>
+    properties: PropertiesMap<string>
   ): Promise<void> {
     const fileName = "properties.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -163,7 +179,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writeDistributionsToCSV(
     filePath: string,
     namespace: string,
-    distributions: Map<MetricName, Distribution>
+    distributions: DistributionsMap
   ): Promise<void> {
     const fileName = "distributions.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -206,21 +222,21 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writeSeriesToCSV(
     filePath: string,
     namespace: string,
-    series: Map<MetricName, Map<SeriesType, Map<SeriesIndex, number>>>
+    series: SeriesMap<number>
   ): Promise<void> {
     const fileName = "series.csv";
     const exists = existsSync(path.join(filePath, fileName));
 
     const fullData = [];
 
-    for (const [seriesName, seriesByType] of series.entries()) {
-      for (const [seriesType, seriesData] of seriesByType.entries()) {
+    for (const [seriesName, seriesByUnit] of series.entries()) {
+      for (const [seriesUnit, seriesData] of seriesByUnit.entries()) {
         for (const [seriesIndex, value] of seriesData.entries()) {
           fullData.push({
             fid: this.fid,
             namespace: namespace,
             seriesName: seriesName,
-            seriesTypeName: seriesType,
+            seriesUnit: seriesUnit,
             index: seriesIndex,
             value: value,
           });
@@ -241,7 +257,7 @@ export class FileWriterMetricMiddleware extends Middleware {
    * Create one line per value
    *
    * The format is:
-   * namespace,distributionName,seriesName,seriesType,index,value
+   * namespace,name,seriesUnit,index,value
    *
    * @param filePath
    * @param namespace
@@ -251,10 +267,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writeSeriesDistributionToCSV(
     filePath: string,
     namespace: string,
-    seriesDistributions: Map<
-      MetricName,
-      Map<SeriesType, Map<SeriesIndex, Distribution>>
-    >
+    seriesDistributions: SeriesMap<Distribution>
   ): Promise<void> {
     const fileName = "series-distributions.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -263,17 +276,68 @@ export class FileWriterMetricMiddleware extends Middleware {
 
     for (const [
       seriesDistributionName,
-      seriesDistributionByType,
+      seriesDistributionsByType,
     ] of seriesDistributions.entries()) {
-      for (const [seriesType, series] of seriesDistributionByType.entries()) {
+      for (const [seriesUnit, series] of seriesDistributionsByType.entries()) {
         for (const [seriesIndex, distribution] of series.entries()) {
           for (const value of distribution) {
             fullData.push({
               fid: this.fid,
               namespace: namespace,
               seriesDistributionName: seriesDistributionName,
-              seriesType: seriesType,
+              seriesUnit: seriesUnit,
               index: seriesIndex,
+              value: value,
+            });
+          }
+        }
+      }
+    }
+
+    const dataAsString = await csv.writeToString(fullData, {
+      headers: !exists,
+      includeEndRowDelimiter: true,
+    });
+
+    this.storageManager.store([filePath], fileName, dataAsString);
+  }
+
+  /**
+   * Creates a CSV file with the series measurements
+   * Create one line per index
+   *
+   * The format is:
+   * namespace,name,seriesUnit,index,key,value
+   *
+   * @param filePath
+   * @param namespace
+   * @param seriesMeasurements
+   */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  async writeSeriesMeasurementToCSV(
+    filePath: string,
+    namespace: string,
+    seriesDistributions: SeriesMap<PropertiesMap<number>>
+  ): Promise<void> {
+    const fileName = "series-measurements.csv";
+    const exists = existsSync(path.join(filePath, fileName));
+
+    const fullData = [];
+
+    for (const [
+      seriesMeasurementName,
+      seriesMeasurementsByType,
+    ] of seriesDistributions.entries()) {
+      for (const [seriesUnit, series] of seriesMeasurementsByType.entries()) {
+        for (const [seriesIndex, measurements] of series.entries()) {
+          for (const [key, value] of measurements.entries()) {
+            fullData.push({
+              fid: this.fid,
+              namespace: namespace,
+              seriesName: seriesMeasurementName,
+              seriesUnit: seriesUnit,
+              index: seriesIndex,
+              key: key,
               value: value,
             });
           }

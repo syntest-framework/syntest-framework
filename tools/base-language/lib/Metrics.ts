@@ -15,9 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metric, MetricType, SeriesType } from "@syntest/metric";
+import { Metric, MetricType, SeriesUnit } from "@syntest/metric";
 
 export enum SeriesName {
+  OBJECTIVE_DISTANCE = "objective-distance",
+
   BRANCHES_COVERED = "branches-covered",
   STATEMENTS_COVERED = "statements-covered",
   FUNCTIONS_COVERED = "functions-covered",
@@ -120,217 +122,237 @@ export enum PropertyName {
 }
 
 export const metrics: Metric[] = [
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
+  },
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
+  },
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.EVALUATION,
+  },
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.ITERATION,
+  },
   // coverage
   // search time
   {
     type: MetricType.SERIES,
     name: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
 
   {
     type: MetricType.SERIES,
     name: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
 
   // total time
   {
     type: MetricType.SERIES,
     name: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
 
   {
     type: MetricType.SERIES,
     name: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
 
   // iterations
   {
     type: MetricType.SERIES,
     name: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
 
   {
     type: MetricType.SERIES,
     name: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    seriesUnit: SeriesUnit.ITERATION,
   },
 
   // evaluations
   {
     type: MetricType.SERIES,
     name: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
 
   {
     type: MetricType.SERIES,
     name: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
     name: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
 
   // totals
@@ -612,7 +634,7 @@ export const metrics: Metric[] = [
   {
     type: MetricType.SERIES,
     name: SeriesName.ARCHIVE_SIZE,
-    seriesType: SeriesType.TOTAL_TIME,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,

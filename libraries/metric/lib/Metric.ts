@@ -20,7 +20,8 @@ export type Metric =
   | PropertyMetric
   | DistributionMetric
   | SeriesMetric
-  | SeriesDistributionMetric;
+  | SeriesDistributionMetric
+  | SeriesMeasurementMetric;
 
 export interface PropertyMetric {
   type: MetricType.PROPERTY;
@@ -35,14 +36,24 @@ export interface DistributionMetric {
 export interface SeriesMetric {
   type: MetricType.SERIES;
   name: MetricName;
-  seriesType: SeriesType;
+  seriesUnit: SeriesUnit;
 }
 
 export interface SeriesDistributionMetric {
   type: MetricType.SERIES_DISTRIBUTION;
   name: MetricName;
-  seriesType: SeriesType;
+  seriesUnit: SeriesUnit;
 }
+
+export interface SeriesMeasurementMetric {
+  type: MetricType.SERIES_MEASUREMENT;
+  name: MetricName;
+  seriesUnit: SeriesUnit;
+}
+
+export type PropertiesMap<T> = Map<MetricName, T>;
+export type DistributionsMap = Map<MetricName, Distribution>;
+export type SeriesMap<T> = Map<MetricName, Map<SeriesUnit, Series<T>>>;
 
 export type MetricName = string;
 
@@ -51,15 +62,16 @@ export enum MetricType {
   DISTRIBUTION = "distribution",
   SERIES = "series",
   SERIES_DISTRIBUTION = "series-distribution",
+  SERIES_MEASUREMENT = "series-measurement",
 }
 
 export type Distribution = number[];
 
-export enum SeriesType {
+export enum SeriesUnit {
   SEARCH_TIME = "search-time",
   TOTAL_TIME = "total-time",
-  ITERATION = "iteration",
   EVALUATION = "evaluation",
+  ITERATION = "iteration",
 }
 
 export type Series<T> = Map<SeriesIndex, T>;

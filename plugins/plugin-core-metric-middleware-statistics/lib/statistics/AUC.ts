@@ -17,10 +17,10 @@
  */
 import {
   Distribution,
+  DistributionsMap,
   MetricManager,
-  MetricName,
-  Series,
-  SeriesType,
+  PropertiesMap,
+  SeriesMap,
 } from "@syntest/metric";
 
 import { Statistic } from "./Statistic";
@@ -32,10 +32,11 @@ export class AUC extends Statistic {
 
   generate(
     metricManager: MetricManager,
-    _properties: Map<MetricName, string>,
-    _distributions: Map<MetricName, Distribution>,
-    series: Map<MetricName, Map<SeriesType, Series<number>>>,
-    _seriesDistributions: Map<MetricName, Map<SeriesType, Series<Distribution>>>
+    _properties: PropertiesMap<string>,
+    _distributions: DistributionsMap,
+    series: SeriesMap<number>,
+    _seriesDistributions: SeriesMap<Distribution>,
+    _seriesMeasurements: SeriesMap<PropertiesMap<number>>
   ): void {
     this.loopThroughSeries(
       series,

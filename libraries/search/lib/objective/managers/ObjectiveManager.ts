@@ -224,6 +224,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
     encoding.setDistance(objectiveFunction, distance);
+    objectiveFunction.updateDistance(distance);
 
     // When the objective is covered, update the objectives and the archive
     if (distance === 0) {
