@@ -91,6 +91,9 @@ const reservedKeywords = new Set([
   "with",
   "yield",
 ]);
+
+export const MemberSeparator = " <-> ";
+
 export class AbstractSyntaxTreeVisitor implements TraverseOptions {
   protected static LOGGER: Logger;
 
@@ -166,10 +169,18 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       // we are the property of a member expression
       // so the binding id is equal to the object of the member expression relation + the id of the property
       // e.g. bar.foo
+      if (
+        !path.isIdentifier() &&
+        !path.isStringLiteral() &&
+        !path.isNumericLiteral()
+      ) {
+        return this._getNodeId(path);
+      }
       return (
         this._getBindingId(path.parentPath.get("object")) +
-        " <-> " +
-        this._getNodeId(path)
+        MemberSeparator +
+        (path.isIdentifier() ? path.node.name : path.node.value)
+        // this._getNodeId(path) // bad
       );
     }
 
@@ -333,33 +344,5 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     }
 
     return this._thisScopeStack[this._thisScopeStack.length - 1];
-  }
-
-  // protected _getCurrentThisScopeName() {
-  //   if (this._thisScopeStackNames.length === 0) {
-  //     throw new Error("Invalid scope stack!");
-  //   }
-
-  //   return this._thisScopeStackNames[this._thisScopeStackNames.length - 1];
-  // }
-
-  protected _getNameFromNode(node: t.Node): string {
-    if (node.type === "Identifier") {
-      return node.name;
-    }
-
-    if ("name" in node) {
-      if (typeof node.name === "string") {
-        return node.name;
-      } else if (node.name.type === "JSXMemberExpression") {
-        return "anon";
-      } else if (node.name.type === "JSXNamespacedName") {
-        return node.name.name.name;
-      } else {
-        return node.name.name;
-      }
-    }
-
-    return "anon";
   }
 }

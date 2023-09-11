@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ObjectType, getRelationName } from "@syntest/analysis-javascript";
+import { ObjectType } from "@syntest/analysis-javascript";
 import { Statement } from "../../../statements/Statement";
 import { prng } from "@syntest/prng";
 import { Generator } from "../Generator";
@@ -25,35 +25,11 @@ export abstract class CallGenerator<S extends Statement> extends Generator<S> {
     const arguments_: Statement[] = [];
 
     for (const [index, parameterId] of type_.parameters.entries()) {
-      const element = this.rootContext.getElement(parameterId);
-
-      if (element) {
-        const name = "name" in element ? element.name : element.value;
-
-        arguments_[index] = this.sampler.sampleArgument(
-          depth + 1,
-          parameterId,
-          name
-        );
-        continue;
-      }
-
-      const relation = this.rootContext.getRelation(parameterId);
-
-      if (relation) {
-        const name = getRelationName(relation.type);
-        // TODO look deeper into the relation
-
-        arguments_[index] = this.sampler.sampleArgument(
-          depth + 1,
-          parameterId,
-          name
-        );
-        continue;
-      }
-
-      throw new Error(
-        `Could not find element or relation with id ${parameterId}`
+      const name = type_.parameterNames.get(index);
+      arguments_[index] = this.sampler.sampleArgument(
+        depth + 1,
+        parameterId,
+        name
       );
     }
 

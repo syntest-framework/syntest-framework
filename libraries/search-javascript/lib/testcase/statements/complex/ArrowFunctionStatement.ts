@@ -22,6 +22,7 @@ import { shouldNeverHappen } from "@syntest/search";
 import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -34,12 +35,17 @@ export class ArrowFunctionStatement extends Statement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     parameters: string[],
     returnValue: Statement | undefined
   ) {
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId);
+    super(
+      variableIdentifier,
+      typeIdentifier,
+      name,
+      TypeEnum.FUNCTION,
+      uniqueId
+    );
     this._parameters = parameters;
     this._returnValue = returnValue;
     this._classType = "ArrowFunctionStatement";
@@ -52,7 +58,6 @@ export class ArrowFunctionStatement extends Statement {
         this.variableIdentifier,
         this.typeIdentifier,
         this.name,
-        this.type,
         prng.uniqueId(),
         this._parameters,
         this.returnValue
@@ -73,8 +78,8 @@ export class ArrowFunctionStatement extends Statement {
         return sampler.sampleArrowFunction(
           depth,
           this.variableIdentifier,
-          this.name,
-          this.type
+          this.typeIdentifier,
+          this.name
         );
       }
     }
@@ -85,7 +90,6 @@ export class ArrowFunctionStatement extends Statement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       this._parameters,
       this._returnValue

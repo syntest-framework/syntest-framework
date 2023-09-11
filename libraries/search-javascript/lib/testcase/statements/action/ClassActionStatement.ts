@@ -19,6 +19,7 @@ import { shouldNeverHappen } from "@syntest/search";
 import { Statement } from "../Statement";
 import { ActionStatement } from "./ActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 export abstract class ClassActionStatement extends ActionStatement {
   private _constructor: ConstructorCall;
@@ -35,7 +36,7 @@ export abstract class ClassActionStatement extends ActionStatement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
+    type: TypeEnum,
     uniqueId: string,
     arguments_: Statement[],
     constructor_: ConstructorCall

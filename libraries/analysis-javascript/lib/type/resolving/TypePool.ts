@@ -23,13 +23,13 @@ import { Export } from "../../target/export/Export";
 
 // TODO we could cache some of this stuff (unless we do dynamic adding of properties at some point)
 export class TypePool {
-  private _objectMap: Map<string, DiscoveredObjectType>;
+  private _objectMap: Map<string, Map<string, DiscoveredObjectType>>;
   private _exports: Map<string, Export[]>;
 
   private _exportedObjects: Map<string, DiscoveredObjectType>;
 
   constructor(
-    objectMap: Map<string, DiscoveredObjectType>,
+    objectMap: Map<string, Map<string, DiscoveredObjectType>>,
     exports: Map<string, Export[]>
   ) {
     this._objectMap = objectMap;
@@ -43,12 +43,11 @@ export class TypePool {
 
     for (const [, exports] of this._exports.entries()) {
       for (const export_ of exports) {
-        for (const [
-          objectName,
-          discoveredObject,
-        ] of this._objectMap.entries()) {
-          if (discoveredObject.id === export_.id) {
-            exportedTypes.set(objectName, discoveredObject);
+        for (const objectMap of this._objectMap.values()) {
+          for (const [objectName, discoveredObject] of objectMap.entries()) {
+            if (discoveredObject.id === export_.id) {
+              exportedTypes.set(objectName, discoveredObject);
+            }
           }
         }
       }

@@ -139,7 +139,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
             const argumentValue = <string>(
               this._valueMap.get(argument.toString())
             );
-            
+
             const endOfObject =
               objectValue.length > argumentValue.length
                 ? objectValue.slice(-argumentValue.length)

@@ -59,4 +59,5 @@ export * from "./lib/type/resolving/InferenceTypeModelFactory";
 
 export * from "./lib/utils/fileSystem";
 
+export * from "./lib/Events";
 export * from "./lib/RootContext";

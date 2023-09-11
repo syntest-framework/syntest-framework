@@ -21,6 +21,7 @@ import { prng } from "@syntest/prng";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Statement } from "../Statement";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -30,11 +31,17 @@ export class NullStatement extends PrimitiveStatement<boolean> {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string
   ) {
-    // eslint-disable-next-line unicorn/no-null
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId, null);
+    super(
+      variableIdentifier,
+      typeIdentifier,
+      name,
+      TypeEnum.NULL,
+      uniqueId,
+      // eslint-disable-next-line unicorn/no-null
+      null
+    );
     this._classType = "NullStatement";
   }
 
@@ -45,7 +52,6 @@ export class NullStatement extends PrimitiveStatement<boolean> {
         this.variableIdentifier,
         this.typeIdentifier,
         this.name,
-        this.type,
         prng.uniqueId()
       );
     } else {
@@ -63,7 +69,6 @@ export class NullStatement extends PrimitiveStatement<boolean> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId
     );
   }

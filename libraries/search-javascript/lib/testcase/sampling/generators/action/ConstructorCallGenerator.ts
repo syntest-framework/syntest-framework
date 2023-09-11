@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TypeEnum } from "@syntest/analysis-javascript";
 import { Statement } from "../../../statements/Statement";
 import { prng } from "@syntest/prng";
 import { CallGenerator } from "./CallGenerator";
@@ -34,21 +33,6 @@ export class ConstructorCallGenerator extends CallGenerator<ConstructorCall> {
     const export_ = [...this.rootContext.getAllExports().values()]
       .flat()
       .find((export_) => export_.id === exportIdentifier);
-
-    //   console.log(exportIdentifier, typeIdentifier)
-    // if (exportIdentifier === typeIdentifier) {
-    //   // default constructor with no type and no args
-    //   return new ConstructorCall(
-    //     variableIdentifier,
-    //     typeIdentifier,
-    //     exportIdentifier,
-    //     name,
-    //     TypeEnum.FUNCTION,
-    //     prng.uniqueId(),
-    //     [],
-    //     export_
-    //   );
-    // }
 
     if (this.statementPoolEnabled) {
       const statementFromPool =
@@ -73,7 +57,6 @@ export class ConstructorCallGenerator extends CallGenerator<ConstructorCall> {
       typeIdentifier,
       exportIdentifier,
       name,
-      TypeEnum.FUNCTION,
       prng.uniqueId(),
       arguments_,
       export_

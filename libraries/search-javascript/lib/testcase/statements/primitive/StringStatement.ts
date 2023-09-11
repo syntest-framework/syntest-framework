@@ -22,6 +22,7 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 import { Decoding, Statement } from "../Statement";
 
 import { PrimitiveStatement } from "./PrimitiveStatement";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -34,13 +35,19 @@ export class StringStatement extends PrimitiveStatement<string> {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     value: string,
     alphabet: string,
     maxlength: number
   ) {
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId, value);
+    super(
+      variableIdentifier,
+      typeIdentifier,
+      name,
+      TypeEnum.STRING,
+      uniqueId,
+      value
+    );
     this._classType = "StringStatement";
 
     this.alphabet = alphabet;
@@ -99,7 +106,11 @@ export class StringStatement extends PrimitiveStatement<string> {
         );
       } else {
         // 50%
-        return sampler.sampleString(this.variableIdentifier, this.name);
+        return sampler.sampleString(
+          this.variableIdentifier,
+          this.typeIdentifier,
+          this.name
+        );
       }
     }
   }
@@ -115,7 +126,6 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       newValue.join(""),
       this.alphabet,
@@ -133,7 +143,6 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       newValue.join(""),
       this.alphabet,
@@ -152,7 +161,6 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       newValue.join(""),
       this.alphabet,
@@ -184,7 +192,6 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       newValue.join(""),
       this.alphabet,
@@ -197,7 +204,6 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       this.value,
       this.alphabet,

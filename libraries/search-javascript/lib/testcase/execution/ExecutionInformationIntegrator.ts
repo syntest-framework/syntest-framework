@@ -45,8 +45,8 @@ export class ExecutionInformationIntegrator {
         if (testResult.exception && testResult.exception.includes(child.name)) {
           this._typeModel.addExecutionScore(
             child.variableIdentifier,
-            child.type,
-            -1
+            child.typeIdentifier,
+            child.type
           );
         }
         queue.push(child);

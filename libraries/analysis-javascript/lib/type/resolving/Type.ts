@@ -21,12 +21,14 @@ export interface ObjectType {
   properties: Map<string, string>;
 
   // array
-  // index -> id
-  elements: Map<number, string>;
+  // id
+  elements: Set<string>;
 
   // function
   // index -> id
   parameters: Map<number, string>;
+  // index -> name
+  parameterNames: Map<number, string>;
   // id
   return: Set<string>;
 }

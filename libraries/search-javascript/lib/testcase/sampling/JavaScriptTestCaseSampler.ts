@@ -240,11 +240,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   // TODO
   // abstract sampleStaticMethodCall(depth: number): MethodCall;
 
-  abstract sampleArrayArgument(
-    depth: number,
-    arrayId: string,
-    index?: number
-  ): Statement;
+  abstract sampleArrayArgument(depth: number, arrayId: string): Statement;
 
   abstract sampleObjectArgument(
     depth: number,
@@ -257,40 +253,53 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   abstract sampleObject(
     depth: number,
     id: string,
-    name: string,
-    type: string
+    typeId: string,
+    name: string
   ): ObjectStatement | ConstructorCall | ConstantObject | FunctionCall;
 
   abstract sampleArray(
     depth: number,
     id: string,
-    name: string,
-    type: string
+    typeId: string,
+    name: string
   ): ArrayStatement;
 
   abstract sampleArrowFunction(
     depth: number,
     id: string,
-    name: string,
-    type: string
+    typeId: string,
+    name: string
   ): ArrowFunctionStatement;
 
   abstract sampleString(
     id: string,
+    typeId: string,
     name: string,
     alphabet?: string,
     maxlength?: number
   ): StringStatement;
 
   // primitive types
-  abstract sampleBool(id: string, name: string): BoolStatement;
+  abstract sampleBool(id: string, typeId: string, name: string): BoolStatement;
 
-  abstract sampleNull(id: string, name: string): NullStatement;
+  abstract sampleNull(id: string, typeId: string, name: string): NullStatement;
 
-  abstract sampleNumber(id: string, name: string): NumericStatement;
-  abstract sampleInteger(id: string, name: string): IntegerStatement;
+  abstract sampleNumber(
+    id: string,
+    typeId: string,
+    name: string
+  ): NumericStatement;
+  abstract sampleInteger(
+    id: string,
+    typeId: string,
+    name: string
+  ): IntegerStatement;
 
-  abstract sampleUndefined(id: string, name: string): UndefinedStatement;
+  abstract sampleUndefined(
+    id: string,
+    typeId: string,
+    name: string
+  ): UndefinedStatement;
 
   get constantPoolManager(): ConstantPoolManager {
     return this._constantPoolManager;

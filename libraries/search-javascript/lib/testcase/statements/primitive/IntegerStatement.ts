@@ -23,6 +23,7 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Statement } from "../Statement";
 import { NumericStatement } from "./NumericStatement";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * Generic number class
@@ -34,7 +35,6 @@ export class IntegerStatement extends PrimitiveStatement<number> {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     value: number
   ) {
@@ -42,7 +42,7 @@ export class IntegerStatement extends PrimitiveStatement<number> {
       variableIdentifier,
       typeIdentifier,
       name,
-      type,
+      TypeEnum.INTEGER,
       uniqueId,
       Math.round(value)
     );
@@ -58,7 +58,6 @@ export class IntegerStatement extends PrimitiveStatement<number> {
           this.variableIdentifier,
           this.typeIdentifier,
           this.name,
-          this.type,
           prng.uniqueId(),
           this.value
         ).deltaMutation(sampler);
@@ -75,7 +74,11 @@ export class IntegerStatement extends PrimitiveStatement<number> {
         );
       } else {
         // 50%
-        return sampler.sampleInteger(this.variableIdentifier, this.name);
+        return sampler.sampleInteger(
+          this.variableIdentifier,
+          this.typeIdentifier,
+          this.name
+        );
       }
     }
   }
@@ -102,7 +105,6 @@ export class IntegerStatement extends PrimitiveStatement<number> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       newValue
     );
@@ -113,7 +115,6 @@ export class IntegerStatement extends PrimitiveStatement<number> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       this.value
     );

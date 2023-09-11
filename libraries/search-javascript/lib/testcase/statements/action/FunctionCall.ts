@@ -22,7 +22,7 @@ import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
-import { Export } from "@syntest/analysis-javascript";
+import { Export, TypeEnum } from "@syntest/analysis-javascript";
 import { ActionStatement } from "./ActionStatement";
 
 /**
@@ -39,7 +39,6 @@ export class FunctionCall extends ActionStatement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     arguments_: Statement[],
     export_: Export
@@ -48,7 +47,7 @@ export class FunctionCall extends ActionStatement {
       variableIdentifier,
       typeIdentifier,
       name,
-      type,
+      TypeEnum.FUNCTION,
       uniqueId,
       arguments_,
       export_
@@ -69,7 +68,6 @@ export class FunctionCall extends ActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       arguments_,
       this.export
@@ -83,7 +81,6 @@ export class FunctionCall extends ActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       deepCopyArguments,
       this.export

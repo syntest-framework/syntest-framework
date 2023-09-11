@@ -1,14 +1,14 @@
 {
-  "name": "@syntest/analysis-javascript",
-  "version": "0.1.0-beta.19",
-  "description": "SynTest CFG JavaScript is a library for generating control flow graphs for the JavaScript language",
+  "name": "@syntest/plugin-javascript-event-listener-state-storage",
+  "version": "0.0.1",
+  "description": "A listener plugin for SynTest JavaScript containing state storage functionalities",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "automatic-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-javascript/issues"
+    "url": "https://github.com/syntest-framework/syntest-core/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -29,39 +29,36 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-javascript.git"
+    "url": "git+https://github.com/syntest-framework/syntest-core.git"
   },
   "scripts": {
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
-    "clean": "rm -rf .nyc_output dist node_modules",
+    "clean": "rm -rf .nyc_output dist node_modules coverage",
     "clean:dist": "rm -rf dist",
     "format": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
     "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
     "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
-    "test": "mocha --config ../../.mocharc.json -g 'InferenceTypeModelFactory test'",
-    "test:coverage": "nyc --reporter=text --reporter=html --reporter=lcov mocha --config ../../.mocharc.json",
+    "test": "mocha --config ../../.mocharc.json",
+    "test:coverage": "nyc --reporter=text --reporter=html mocha --config ../../.mocharc.json",
     "test:coverage:ci": "nyc --reporter=lcovonly mocha --config ../../.mocharc.json --reporter json --reporter-option output=test-results.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@babel/core": "7.20.12",
-    "@babel/traverse": "7.20.12",
-    "@syntest/analysis": "^0.1.0-beta.7",
-    "@syntest/ast-visitor-javascript": "*",
-    "@syntest/cfg": "^0.3.0-beta.18",
-    "@syntest/logging": "^0.1.0-beta.7",
-    "@syntest/prng": "*",
-    "@syntest/search": "^0.4.0-beta.36"
+    "@syntest/analysis": "*",
+    "@syntest/analysis-javascript": "*",
+    "@syntest/base-language": "*",
+    "@syntest/cfg": "*",
+    "@syntest/logging": "*",
+    "@syntest/metric": "*",
+    "@syntest/module": "*",
+    "@syntest/search": "*"
   },
   "engines": {
-    "node": ">=10.24.0"
+    "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {
-    "@babel/types": "^7.21.5"
   }
 }

@@ -19,7 +19,7 @@
 import { Encoding, EncodingSampler, shouldNeverHappen } from "@syntest/search";
 
 import { Statement } from "../Statement";
-import { Export } from "@syntest/analysis-javascript";
+import { Export, TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -32,7 +32,7 @@ export abstract class ActionStatement extends Statement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
+    type: TypeEnum,
     uniqueId: string,
     arguments_: Statement[],
     export_?: Export

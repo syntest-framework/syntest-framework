@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { TypeEnum } from "@syntest/analysis-javascript";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
@@ -32,7 +33,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
+    type: TypeEnum,
     uniqueId: string,
     value: T
   ) {

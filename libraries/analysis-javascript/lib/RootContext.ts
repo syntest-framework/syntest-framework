@@ -35,6 +35,8 @@ import { Element } from "./type/discovery/element/Element";
 import { DiscoveredObjectType } from "./type/discovery/object/DiscoveredType";
 import { Relation } from "./type/discovery/relation/Relation";
 import { TypePool } from "./type/resolving/TypePool";
+import TypedEmitter from "typed-emitter";
+import { Events } from "./Events";
 
 export class RootContext extends CoreRootContext<t.Node> {
   protected _exportFactory: ExportFactory;
@@ -42,9 +44,12 @@ export class RootContext extends CoreRootContext<t.Node> {
   protected _typeResolver: TypeModelFactory;
 
   protected _files: string[];
-  protected _elementMap: Map<string, Element>;
-  protected _relationMap: Map<string, Relation>;
-  protected _objectMap: Map<string, DiscoveredObjectType>;
+  // filepath -> id -> element
+  protected _elementMap: Map<string, Map<string, Element>>;
+  // filepath -> id -> relation
+  protected _relationMap: Map<string, Map<string, Relation>>;
+  // filepath -> id -> object
+  protected _objectMap: Map<string, Map<string, DiscoveredObjectType>>;
 
   protected _typeModel: TypeModel;
   protected _typePool: TypePool;
@@ -126,13 +131,26 @@ export class RootContext extends CoreRootContext<t.Node> {
     return this._sources.get(absoluteTargetPath);
   }
 
-  private getExports(filePath: string): Export[] {
+  getExports(filePath: string): Export[] {
     const absolutePath = this.resolvePath(filePath);
 
     if (!this._exportMap.has(absolutePath)) {
-      return this._exportFactory.extract(
+      (<TypedEmitter<Events>>process).emit(
+        "exportExtractionStart",
+        this,
+        absolutePath
+      );
+      this._exportMap.set(
         absolutePath,
-        this.getAbstractSyntaxTree(absolutePath)
+        this._exportFactory.extract(
+          absolutePath,
+          this.getAbstractSyntaxTree(absolutePath)
+        )
+      );
+      (<TypedEmitter<Events>>process).emit(
+        "exportExtractionComplete",
+        this,
+        absolutePath
       );
     }
 
@@ -150,26 +168,137 @@ export class RootContext extends CoreRootContext<t.Node> {
     return this._exportMap;
   }
 
-  extractTypes(): void {
-    if (!this._elementMap || !this._relationMap || !this._objectMap) {
-      this._typeExtractor.extractAll(this);
-      this._elementMap = this._typeExtractor.elementMap;
-      this._relationMap = this._typeExtractor.relationMap;
-      this._objectMap = this._typeExtractor.objectMap;
+  getElements(filepath: string) {
+    const absolutePath = this.resolvePath(filepath);
+
+    if (!this._elementMap.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "elementExtractionStart",
+        this,
+        absolutePath
+      );
+      const elementMap = this._typeExtractor.extractElements(
+        absolutePath,
+        this.getAbstractSyntaxTree(absolutePath)
+      );
+
+      this._elementMap.set(absolutePath, elementMap);
+      (<TypedEmitter<Events>>process).emit(
+        "elementExtractionComplete",
+        this,
+        absolutePath
+      );
     }
+
+    return this._elementMap.get(absolutePath);
+  }
+
+  getAllElements() {
+    if (!this._elementMap) {
+      this._elementMap = new Map();
+
+      for (const filepath of this.getFiles()) {
+        this._elementMap.set(filepath, this.getElements(filepath));
+      }
+    }
+    return this._elementMap;
+  }
+
+  getRelations(filepath: string) {
+    const absolutePath = this.resolvePath(filepath);
+
+    if (!this._relationMap.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "relationExtractionStart",
+        this,
+        absolutePath
+      );
+      const relationsMap = this._typeExtractor.extractRelations(
+        absolutePath,
+        this.getAbstractSyntaxTree(absolutePath)
+      );
+
+      this._relationMap.set(absolutePath, relationsMap);
+      (<TypedEmitter<Events>>process).emit(
+        "relationExtractionComplete",
+        this,
+        absolutePath
+      );
+    }
+
+    return this._relationMap.get(absolutePath);
+  }
+
+  getAllRelations() {
+    if (!this._relationMap) {
+      this._relationMap = new Map();
+
+      for (const filepath of this.getFiles()) {
+        this._relationMap.set(filepath, this.getRelations(filepath));
+      }
+    }
+    return this._relationMap;
+  }
+
+  getObjectTypes(filepath: string) {
+    const absolutePath = this.resolvePath(filepath);
+
+    if (!this._objectMap.has(absolutePath)) {
+      (<TypedEmitter<Events>>process).emit(
+        "objectTypeExtractionStart",
+        this,
+        absolutePath
+      );
+      const objectsMap = this._typeExtractor.extractObjectTypes(
+        absolutePath,
+        this.getAbstractSyntaxTree(absolutePath)
+      );
+
+      this._objectMap.set(absolutePath, objectsMap);
+      (<TypedEmitter<Events>>process).emit(
+        "objectTypeExtractionComplete",
+        this,
+        absolutePath
+      );
+    }
+
+    return this._objectMap.get(absolutePath);
+  }
+
+  getAllObjectTypes() {
+    if (!this._objectMap) {
+      this._objectMap = new Map();
+
+      for (const filepath of this.getFiles()) {
+        this._objectMap.set(filepath, this.getObjectTypes(filepath));
+      }
+    }
+    return this._objectMap;
   }
 
   resolveTypes(): void {
-    if (!this._elementMap || !this._relationMap || !this._objectMap) {
-      this.extractTypes();
+    // TODO allow sub selections of files (do not consider entire context)
+    if (!this._elementMap) {
+      this.getAllElements();
+    }
+    if (!this._relationMap) {
+      this.getAllRelations();
+    }
+    if (!this._objectMap) {
+      this.getAllObjectTypes();
+    }
+    if (!this._exportMap) {
+      this.getAllExports();
     }
 
     if (!this._typeModel) {
+      (<TypedEmitter<Events>>process).emit("typeResolvingStart", this);
       this._typeModel = this._typeResolver.resolveTypes(
         this._elementMap,
         this._relationMap
       );
-      this._typePool = new TypePool(this._objectMap, this.getAllExports());
+      this._typePool = new TypePool(this._objectMap, this._exportMap);
+      (<TypedEmitter<Events>>process).emit("typeResolvingComplete", this);
     }
   }
 
@@ -187,26 +316,5 @@ export class RootContext extends CoreRootContext<t.Node> {
     }
 
     return this._typePool;
-  }
-
-  getElement(id: string): Element {
-    if (!this._elementMap || !this._elementMap.has(id)) {
-      this.extractTypes();
-    }
-    return this._elementMap.get(id);
-  }
-
-  getRelation(id: string): Relation {
-    if (!this._relationMap || !this._relationMap.has(id)) {
-      this.extractTypes();
-    }
-    return this._relationMap.get(id);
-  }
-
-  getObject(id: string): DiscoveredObjectType {
-    if (!this._objectMap || !this._objectMap.has(id)) {
-      this.extractTypes();
-    }
-    return this._objectMap.get(id);
   }
 }

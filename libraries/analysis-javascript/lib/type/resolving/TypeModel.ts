@@ -59,6 +59,18 @@ export class TypeModel {
     this.addId("anon"); // should be removed at some point
   }
 
+  get relationScoreMap() {
+    return this._relationScoreMap;
+  }
+
+  get elementTypeScoreMap() {
+    return this._elementTypeScoreMap;
+  }
+
+  get typeExecutionScoreMap() {
+    return this._typeExecutionScoreMap;
+  }
+
   getObjectDescription(element: string): ObjectType {
     if (!this._objectTypeDescription.has(element)) {
       throw new Error(`Element ${element} does not have an object description`);
@@ -81,10 +93,53 @@ export class TypeModel {
 
     this._objectTypeDescription.set(id, {
       properties: new Map(),
-      elements: new Map(),
+      elements: new Set(),
       parameters: new Map(),
+      parameterNames: new Map(),
       return: new Set(),
     });
+  }
+
+  setEqual(id1: string, id2: string) {
+    //TODO maybe merge
+    for (const [key, value] of this._relationScoreMap.get(id2).entries())
+      this._relationScoreMap.get(id1).has(key)
+        ? this._relationScoreMap
+            .get(id1)
+            .set(key, this._relationScoreMap.get(id1).get(key) + value)
+        : this._relationScoreMap.get(id1).set(key, value);
+    for (const [key, value] of this._elementTypeScoreMap.get(id2).entries())
+      this._elementTypeScoreMap.get(id1).has(key)
+        ? this._elementTypeScoreMap
+            .get(id1)
+            .set(key, this._elementTypeScoreMap.get(id1).get(key) + value)
+        : this._elementTypeScoreMap.get(id1).set(key, value);
+    for (const [key, value] of this._elementTypeProbabilityMap
+      .get(id2)
+      .entries())
+      this._elementTypeProbabilityMap.get(id1).has(key)
+        ? this._elementTypeProbabilityMap
+            .get(id1)
+            .set(key, this._elementTypeProbabilityMap.get(id1).get(key) + value)
+        : this._elementTypeProbabilityMap.get(id1).set(key, value);
+    for (const [key, value] of this._typeExecutionScoreMap.get(id2).entries())
+      this._typeExecutionScoreMap.get(id1).has(key)
+        ? this._typeExecutionScoreMap
+            .get(id1)
+            .set(key, this._typeExecutionScoreMap.get(id1).get(key) + value)
+        : this._typeExecutionScoreMap.get(id1).set(key, value);
+
+    this._relationScoreMap.set(id2, this._relationScoreMap.get(id1));
+    this._elementTypeScoreMap.set(id2, this._elementTypeScoreMap.get(id1));
+    this._elementTypeProbabilityMap.set(
+      id2,
+      this._elementTypeProbabilityMap.get(id1)
+    );
+    this._typeExecutionScoreMap.set(id2, this._typeExecutionScoreMap.get(id1));
+    this._scoreHasChangedMap.set(id2, this._scoreHasChangedMap.get(id1));
+    // TODO maybe this should be merged too?
+    // or should we keep them separate?
+    this._objectTypeDescription.set(id2, this._objectTypeDescription.get(id1));
   }
 
   private _addRelationScore(id1: string, id2: string, score: number) {
@@ -102,9 +157,26 @@ export class TypeModel {
     this._scoreHasChangedMap.set(id1, true);
   }
 
-  addRelationScore(id1: string, id2: string, score = 1) {
+  addWeakRelation(id1: string, id2: string) {
+    this.addRelationScore(id1, id2, 1);
+  }
+
+  addStrongRelation(id1: string, id2: string) {
+    this.addRelationScore(id1, id2, 3);
+  }
+
+  addRelationScore(id1: string, id2: string, score: number) {
+    if (id1 === id2) {
+      // no self loops
+      return;
+      // throw new Error(`ids should not be equal to add a relation id: ${id1}`);
+    }
     this._addRelationScore(id1, id2, score);
     this._addRelationScore(id2, id1, score);
+  }
+
+  addStrongTypeScore(id: string, type: TypeEnum) {
+    this.addTypeScore(id, type, 5);
   }
 
   addTypeScore(id: string, type: TypeEnum, score = 1) {
@@ -114,22 +186,21 @@ export class TypeModel {
     if (!this._elementTypeScoreMap.get(id).has(type)) {
       this._elementTypeScoreMap.get(id).set(type, 0);
     }
+    if (!this._typeExecutionScoreMap.get(id).has(type)) {
+      this._typeExecutionScoreMap.get(id).set(type, 0);
+    }
 
     const currentScore = this._elementTypeScoreMap.get(id).get(type);
 
     this._elementTypeScoreMap.get(id).set(type, currentScore + score);
     this._scoreHasChangedMap.set(id, true);
 
-    if (!this._typeExecutionScoreMap.get(id).has(type)) {
-      this._typeExecutionScoreMap.get(id).set(type, 0);
-    }
-
     if (type === TypeEnum.NUMERIC) {
       this.addTypeScore(id, TypeEnum.INTEGER, score);
     }
   }
 
-  addProperty(element: string, property: string, id: string) {
+  addPropertyType(element: string, property: string, id: string) {
     // check if the property is from a string/array/function
 
     if (functionProperties.has(property)) {
@@ -149,40 +220,50 @@ export class TypeModel {
     this.getObjectDescription(element).properties.set(property, id);
   }
 
-  addParameter(element: string, index: number, id: string) {
+  addParameterType(element: string, index: number, id: string, name: string) {
     this.addTypeScore(element, TypeEnum.FUNCTION);
     this.getObjectDescription(element).parameters.set(index, id);
+    this.getObjectDescription(element).parameterNames.set(index, name);
   }
 
-  addReturn(element: string, returnId: string) {
+  addReturnType(element: string, returnId: string) {
     this.addTypeScore(element, TypeEnum.FUNCTION);
     this.getObjectDescription(element).return.add(returnId);
   }
 
-  addElement(element: string, index: number, id: string) {
+  addElementType(element: string, id: string) {
     this.addTypeScore(element, TypeEnum.ARRAY);
-    this.getObjectDescription(element).elements.set(index, id);
+    this.getObjectDescription(element).elements.add(id);
   }
 
-  // TODO type should be TypeEnum?
-  addExecutionScore(id: string, type: string, score: number) {
+  // TODO should also add scores to  the relations when relevant
+  addExecutionScore(
+    id: string,
+    typeId: string,
+    typeEnum: TypeEnum,
+    score = -1
+  ) {
     if (!this._typeExecutionScoreMap.has(id)) {
       throw new Error(`Element ${id} does not exist`);
+    }
+
+    let type: string = typeEnum;
+
+    if (id !== typeId) {
+      type = `${typeId}<>${typeEnum}`;
     }
 
     if (!this._typeExecutionScoreMap.get(id).has(type)) {
       this._typeExecutionScoreMap.get(id).set(type, 0);
     }
 
-    const currentScore = this._typeExecutionScoreMap.get(id).get(type);
-
-    this._typeExecutionScoreMap.get(id).set(type, currentScore + score);
-
-    this._scoreHasChangedMap.set(id, true);
-
     if (!this._elementTypeScoreMap.get(id).has(type)) {
       this._elementTypeScoreMap.get(id).set(type, 0);
     }
+
+    const currentScore = this._typeExecutionScoreMap.get(id).get(type);
+    this._typeExecutionScoreMap.get(id).set(type, currentScore + score);
+    this._scoreHasChangedMap.set(id, true);
   }
 
   private _sum(iterable: Iterable<number>) {
@@ -202,13 +283,25 @@ export class TypeModel {
   getRandomType(
     incorporateExecutionScore: boolean,
     randomTypeProbability: number,
-    id: string,
-    matchType?: TypeEnum
+    id: string
   ): string {
     const probabilities = this.calculateProbabilitiesForElement(
       incorporateExecutionScore,
       id
     );
+
+    // const x = new Map();
+    // for (const [type, probability] of probabilities.entries()) {
+    //   const typeEnum = type.includes("<>") ? type.split("<>")[1] : type;
+
+    //   if (!x.has(typeEnum)) {
+    //     x.set(typeEnum, 0);
+    //   }
+
+    //   x.set(typeEnum, x.get(typeEnum) + probability);
+    // }
+    // console.log(id);
+    // console.log(x);
 
     const genericTypes = [
       TypeEnum.ARRAY,
@@ -227,23 +320,17 @@ export class TypeModel {
       return prng.pickOne(genericTypes);
     }
 
-    if (prng.nextBoolean(randomTypeProbability)) {
+    if (
+      this._sum(probabilities.values()) === 0 ||
+      prng.nextBoolean(randomTypeProbability)
+    ) {
       return prng.pickOne([
         ...new Set([...probabilities.keys(), ...genericTypes]),
       ]);
     }
 
-    let matchingTypes = [...probabilities.entries()];
-    let totalProbability = 1;
-
-    if (matchType) {
-      matchingTypes = matchingTypes.filter(([type]) =>
-        type.endsWith(matchType)
-      );
-      totalProbability = this._sum(
-        matchingTypes.map(([, probability]) => probability)
-      );
-    }
+    const matchingTypes = [...probabilities.entries()];
+    const totalProbability = 1;
 
     const choice = prng.nextDouble(0, totalProbability);
     let index = 0;
@@ -264,8 +351,7 @@ export class TypeModel {
   getHighestProbabilityType(
     incorporateExecutionScore: boolean,
     randomTypeProbability: number,
-    id: string,
-    matchType?: TypeEnum
+    id: string
   ): string {
     const probabilities = this.calculateProbabilitiesForElement(
       incorporateExecutionScore,
@@ -295,15 +381,7 @@ export class TypeModel {
       ]);
     }
 
-    let matchingTypes = probabilities;
-
-    if (matchType) {
-      matchingTypes = new Map(
-        [...matchingTypes.entries()].filter(([type]) =>
-          type.endsWith(matchType)
-        )
-      );
-    }
+    const matchingTypes = probabilities;
 
     let best: string = matchingTypes.keys().next().value;
 
@@ -373,11 +451,21 @@ export class TypeModel {
     const usableRelations = new Set<string>();
 
     for (const [relation, score] of relationMap.entries()) {
+      if (relation === id) {
+        // ignore self references
+        continue;
+      }
       if (!relationPairsVisited.has(id)) {
         relationPairsVisited.set(id, new Set());
       }
+      if (!relationPairsVisited.has(relation)) {
+        relationPairsVisited.set(relation, new Set());
+      }
 
-      if (relationPairsVisited.get(id).has(relation)) {
+      if (
+        relationPairsVisited.get(id).has(relation) ||
+        relationPairsVisited.get(relation).has(id)
+      ) {
         // we have already visited this relation pair
         // this means that we have a cycle in the graph
         // we can safely ignore this relation
@@ -385,6 +473,10 @@ export class TypeModel {
       }
       usableRelations.add(relation);
       totalScore += score;
+    }
+
+    if (totalScore === 0) {
+      totalScore = 1;
     }
 
     for (const [type, score] of typeScoreMap.entries()) {
@@ -400,6 +492,7 @@ export class TypeModel {
       }
 
       relationPairsVisited.get(id).add(relation);
+      relationPairsVisited.get(relation).add(id);
 
       const probabilityOfRelation = score / totalScore;
 
@@ -412,15 +505,16 @@ export class TypeModel {
       for (const [type, probability] of probabilityMapOfRelation.entries()) {
         let finalType = type;
 
-        if (
-          type === TypeEnum.FUNCTION ||
-          type === TypeEnum.ARRAY ||
-          type === TypeEnum.OBJECT
-        ) {
+        if (!type.includes("<>")) {
           // maybe should check for includes (or the inverse by checking for primitive types)
           // this will only add only the final relation id
           // the other method will add all relation id from the element to the final relation
           finalType = `${relation}<>${type}`;
+        }
+
+        if (finalType.includes("<>") && finalType.split("<>")[0] === id) {
+          // skip this is a self loop
+          continue;
         }
 
         if (!probabilityMap.has(finalType)) {
@@ -434,15 +528,6 @@ export class TypeModel {
       }
     }
 
-    // sanity check
-    // const totalProbability = this._sum(probabilityMap.values());
-
-    // if (Math.abs(totalProbability - 1) > 0.0001) {
-    //   throw new Error(
-    //     `Total probability should be 1, but is ${totalProbability}`
-    //   );
-    // }
-
     // incorporate execution scores
     const executionScoreMap = this._typeExecutionScoreMap.get(id);
 
@@ -454,10 +539,7 @@ export class TypeModel {
 
       let totalScore = 0;
       for (const type of probabilityMap.keys()) {
-        let score = executionScoreMap.has(type)
-          ? executionScoreMap.get(type)
-          : 0;
-
+        let score = executionScoreMap.get(type) ?? 0;
         score -= minValue;
         score += 1;
         totalScore += score;
@@ -469,6 +551,10 @@ export class TypeModel {
 
       if (totalScore === 0) {
         throw new Error("Total score should be positive");
+      }
+
+      if (Number.isNaN(totalScore)) {
+        throw new TypeError("Total score should be positive");
       }
 
       // incorporate execution score
@@ -485,17 +571,17 @@ export class TypeModel {
 
         probabilityMap.set(type, newProbability);
       }
+    }
 
-      // normalize to 1
-      let totalProbability = 0;
-      for (const probability of probabilityMap.values()) {
-        totalProbability += probability;
-      }
+    // normalize to 1
+    let totalProbability = 0;
+    for (const probability of probabilityMap.values()) {
+      totalProbability += probability;
+    }
 
-      if (totalProbability !== 0) {
-        for (const [type, probability] of probabilityMap.entries()) {
-          probabilityMap.set(type, probability / totalProbability);
-        }
+    if (totalProbability !== 0 && totalProbability !== 1) {
+      for (const [type, probability] of probabilityMap.entries()) {
+        probabilityMap.set(type, probability / totalProbability);
       }
     }
 

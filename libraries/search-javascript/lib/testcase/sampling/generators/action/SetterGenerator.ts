@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TypeEnum } from "@syntest/analysis-javascript";
 import { Statement } from "../../../statements/Statement";
 import { prng } from "@syntest/prng";
 import { CallGenerator } from "./CallGenerator";
@@ -50,7 +49,6 @@ export class SetterGenerator extends CallGenerator<Setter> {
       variableIdentifier,
       typeIdentifier,
       name,
-      TypeEnum.FUNCTION,
       prng.uniqueId(),
       arguments_[0],
       constructor_

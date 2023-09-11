@@ -349,10 +349,34 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     // only thing left where these can be found is:
     // call(() => {})
     const targetName = this._getTargetNameOfExpression(path);
-    const id = this._getNodeId(path);
-    const export_ = this._getExport(id);
 
-    this._extractFromFunction(path, id, id, targetName, export_, false, false);
+    if (path.parentPath.isVariableDeclarator()) {
+      const id = this._getNodeId(path);
+      const export_ = this._getExport(id);
+
+      this._extractFromFunction(
+        path,
+        id,
+        id,
+        targetName,
+        export_,
+        false,
+        false
+      );
+    } else {
+      const id = this._getNodeId(path);
+      const export_ = this._getExport(id);
+
+      this._extractFromFunction(
+        path,
+        id,
+        id,
+        targetName,
+        export_,
+        false,
+        false
+      );
+    }
 
     path.skip();
   };

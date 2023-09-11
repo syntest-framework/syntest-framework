@@ -22,6 +22,7 @@ import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSamp
 
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Statement } from "../Statement";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -31,11 +32,17 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     value: boolean
   ) {
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId, value);
+    super(
+      variableIdentifier,
+      typeIdentifier,
+      name,
+      TypeEnum.BOOLEAN,
+      uniqueId,
+      value
+    );
     this._classType = "BoolStatement";
   }
 
@@ -46,7 +53,6 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
         this.variableIdentifier,
         this.typeIdentifier,
         this.name,
-        this.type,
         prng.uniqueId(),
         !this.value
       );
@@ -65,7 +71,6 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       this.value
     );

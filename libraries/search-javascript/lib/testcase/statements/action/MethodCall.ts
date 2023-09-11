@@ -24,6 +24,7 @@ import { Decoding, Statement } from "../Statement";
 
 import { ConstructorCall } from "./ConstructorCall";
 import { ClassActionStatement } from "./ClassActionStatement";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -32,7 +33,6 @@ export class MethodCall extends ClassActionStatement {
   /**
    * Constructor
    * @param identifierDescription the return type options of the function
-   * @param type the return type of the function
    * @param uniqueId id of the gene
    * @param methodName the name of the function
    * @param args the arguments of the function
@@ -41,7 +41,6 @@ export class MethodCall extends ClassActionStatement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     arguments_: Statement[],
     constructor_: ConstructorCall
@@ -50,7 +49,7 @@ export class MethodCall extends ClassActionStatement {
       variableIdentifier,
       typeIdentifier,
       name,
-      type,
+      TypeEnum.FUNCTION,
       uniqueId,
       arguments_,
       constructor_
@@ -74,7 +73,6 @@ export class MethodCall extends ClassActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       arguments_,
       constructor_
@@ -88,7 +86,6 @@ export class MethodCall extends ClassActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       deepCopyArguments,
       this.constructor_.copy()

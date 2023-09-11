@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TypeEnum } from "@syntest/analysis-javascript";
 import { prng } from "@syntest/prng";
 import { CallGenerator } from "./CallGenerator";
 import { ConstantObject } from "../../../statements/action/ConstantObject";
@@ -50,7 +49,6 @@ export class ConstantObjectGenerator extends CallGenerator<ConstantObject> {
       variableIdentifier,
       typeIdentifier,
       name,
-      TypeEnum.OBJECT,
       prng.uniqueId(),
       export_
     );

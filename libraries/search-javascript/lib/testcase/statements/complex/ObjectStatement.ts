@@ -22,6 +22,7 @@ import { shouldNeverHappen } from "@syntest/search";
 import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -36,11 +37,10 @@ export class ObjectStatement extends Statement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     object: ObjectType
   ) {
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId);
+    super(variableIdentifier, typeIdentifier, name, TypeEnum.OBJECT, uniqueId);
     this._object = object;
     this._classType = "ObjectStatement";
 
@@ -65,7 +65,6 @@ export class ObjectStatement extends Statement {
           this.variableIdentifier,
           this.typeIdentifier,
           this.name,
-          this.type,
           prng.uniqueId(),
           object
         );
@@ -117,7 +116,6 @@ export class ObjectStatement extends Statement {
         this.variableIdentifier,
         this.typeIdentifier,
         this.name,
-        this.type,
         prng.uniqueId(),
         object
       );
@@ -135,8 +133,8 @@ export class ObjectStatement extends Statement {
         return sampler.sampleObject(
           depth,
           this.variableIdentifier,
-          this.name,
-          this.type
+          this.typeIdentifier,
+          this.name
         );
       }
     }
@@ -162,7 +160,6 @@ export class ObjectStatement extends Statement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       this._object
     );

@@ -20,18 +20,19 @@ export type Element = Identifier | Literal;
 
 export interface Identifier {
   id: string;
+  bindingId: string;
   filePath: string;
   location: {
     startIndex: number;
     endIndex: number;
   };
   type: ElementType.Identifier;
-  bindingId: string;
   name: string;
 }
 
 export interface Literal {
   id: string;
+  bindingId: string;
   filePath: string;
   location: {
     startIndex: number;

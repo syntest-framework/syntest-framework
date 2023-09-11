@@ -22,7 +22,7 @@ import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding } from "../Statement";
 
-import { Export } from "@syntest/analysis-javascript";
+import { Export, TypeEnum } from "@syntest/analysis-javascript";
 import { ActionStatement } from "./ActionStatement";
 
 /**
@@ -33,7 +33,6 @@ export class ConstantObject extends ActionStatement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     export_: Export
   ) {
@@ -41,7 +40,7 @@ export class ConstantObject extends ActionStatement {
       variableIdentifier,
       typeIdentifier,
       name,
-      type,
+      TypeEnum.OBJECT,
       uniqueId,
       [],
       export_
@@ -68,7 +67,6 @@ export class ConstantObject extends ActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       this.export
     );

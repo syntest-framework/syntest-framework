@@ -21,18 +21,18 @@ import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
 import { DiscoveredObjectKind, DiscoveredType } from "./DiscoveredType";
 
 export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
-  private _complexTypeMap: Map<string, DiscoveredType>;
+  private _objectTypeMap: Map<string, DiscoveredType>;
 
   // TODO separate stack for static and non-static properties
   private _objectStack: DiscoveredType[];
 
-  get complexTypeMap(): Map<string, DiscoveredType> {
-    return this._complexTypeMap;
+  get objectTypeMap(): Map<string, DiscoveredType> {
+    return this._objectTypeMap;
   }
 
   constructor(filePath: string) {
     super(filePath);
-    this._complexTypeMap = new Map();
+    this._objectTypeMap = new Map();
     this._objectStack = [];
   }
 
@@ -87,7 +87,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       kind: DiscoveredObjectKind.CLASS,
       properties: new Map(),
     };
-    this._complexTypeMap.set(this._getNodeId(path), complexType);
+    this._objectTypeMap.set(this._getNodeId(path), complexType);
     this._objectStack.push(complexType);
 
     path.get("body").visit();
@@ -105,7 +105,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       kind: DiscoveredObjectKind.CLASS,
       properties: new Map(),
     };
-    this._complexTypeMap.set(this._getNodeId(path), complexType);
+    this._objectTypeMap.set(this._getNodeId(path), complexType);
     this._objectStack.push(complexType);
 
     path.get("body").visit();
@@ -169,7 +169,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       kind: DiscoveredObjectKind.OBJECT,
       properties: new Map(),
     };
-    this._complexTypeMap.set(this._getNodeId(path), complexType);
+    this._objectTypeMap.set(this._getNodeId(path), complexType);
     this._objectStack.push(complexType);
 
     for (const property of path.get("properties")) {
@@ -189,7 +189,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       kind: DiscoveredObjectKind.OBJECT,
       properties: new Map(),
     };
-    this._complexTypeMap.set(this._getNodeId(path), complexType);
+    this._objectTypeMap.set(this._getNodeId(path), complexType);
     this._objectStack.push(complexType);
 
     for (const property of path.get("properties")) {
@@ -236,7 +236,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
         kind: DiscoveredObjectKind.FUNCTION,
         properties: new Map(),
       };
-      this._complexTypeMap.set(this._getNodeId(path), complexType);
+      this._objectTypeMap.set(this._getNodeId(path), complexType);
       this._objectStack.push(complexType);
 
       path.get("body").visit();
@@ -254,7 +254,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       kind: DiscoveredObjectKind.FUNCTION,
       properties: new Map(),
     };
-    this._complexTypeMap.set(this._getNodeId(path), complexType);
+    this._objectTypeMap.set(this._getNodeId(path), complexType);
     this._objectStack.push(complexType);
 
     path.get("body").visit();
@@ -272,7 +272,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       kind: DiscoveredObjectKind.FUNCTION,
       properties: new Map(),
     };
-    this._complexTypeMap.set(this._getNodeId(path), complexType);
+    this._objectTypeMap.set(this._getNodeId(path), complexType);
     this._objectStack.push(complexType);
 
     path.get("body").visit();
@@ -292,7 +292,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
     if (path.node.object.type === "ThisExpression") {
       const parent = this._getThisParent(path);
 
-      const _object = this.complexTypeMap.get(this._getNodeId(parent));
+      const _object = this.objectTypeMap.get(this._getNodeId(parent));
 
       if (!_object) {
         throw new Error(`Unexpected object type: ${path.node.object.type}`);
@@ -309,7 +309,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       }
     } else if (path.node.object.type === "Identifier") {
       const bindingId = this._getBindingId(path.get("object"));
-      let _object = this.complexTypeMap.get(bindingId);
+      let _object = this.objectTypeMap.get(bindingId);
 
       if (!_object) {
         _object = {
@@ -317,7 +317,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
           kind: DiscoveredObjectKind.OBJECT, // not sure actually
           properties: new Map(),
         };
-        this._complexTypeMap.set(bindingId, _object);
+        this._objectTypeMap.set(bindingId, _object);
       }
 
       if (path.node.property.type === "PrivateName") {

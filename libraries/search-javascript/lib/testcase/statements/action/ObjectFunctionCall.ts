@@ -25,6 +25,7 @@ import { Decoding, Statement } from "../Statement";
 
 import { ActionStatement } from "./ActionStatement";
 import { ConstantObject } from "./ConstantObject";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -44,12 +45,18 @@ export class ObjectFunctionCall extends ActionStatement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     arguments_: Statement[],
     object_: ConstantObject
   ) {
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId, arguments_);
+    super(
+      variableIdentifier,
+      typeIdentifier,
+      name,
+      TypeEnum.FUNCTION,
+      uniqueId,
+      arguments_
+    );
     this._classType = "ObjectFunctionCall";
     this._object = object_;
   }
@@ -73,7 +80,6 @@ export class ObjectFunctionCall extends ActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       arguments_,
       object_
@@ -114,7 +120,6 @@ export class ObjectFunctionCall extends ActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       deepCopyArguments,
       this._object.copy()

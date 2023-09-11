@@ -21,6 +21,7 @@ import { prng } from "@syntest/prng";
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Statement } from "../Statement";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -30,14 +31,13 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string
   ) {
     super(
       variableIdentifier,
       typeIdentifier,
       name,
-      type,
+      TypeEnum.UNDEFINED,
       uniqueId,
       // eslint-disable-next-line unicorn/no-useless-undefined
       undefined
@@ -52,7 +52,6 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
         this.variableIdentifier,
         this.typeIdentifier,
         this.name,
-        this.type,
         prng.uniqueId()
       );
     } else {
@@ -70,7 +69,6 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId
     );
   }

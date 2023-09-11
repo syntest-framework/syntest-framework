@@ -17,13 +17,27 @@
  */
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
-import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+import {
+  AbstractSyntaxTreeVisitor,
+  MemberSeparator,
+} from "@syntest/ast-visitor-javascript";
 import { Element, ElementType } from "../element/Element";
 
 export class ElementVisitor extends AbstractSyntaxTreeVisitor {
   private _elementMap: Map<string, Element>;
 
   get elementMap(): Map<string, Element> {
+    for (const value of this._elementMap.values()) {
+      if (
+        !this._elementMap.has(value.bindingId) &&
+        value.bindingId.includes(MemberSeparator)
+      ) {
+        this._elementMap.set(value.bindingId, {
+          ...value,
+          id: value.bindingId,
+        });
+      }
+    }
     return this._elementMap;
   }
 
@@ -37,24 +51,25 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
     type: ElementType,
     value: string
   ) {
-    if (type === ElementType.Identifier) {
-      const bindingId = this._getBindingId(path);
+    const bindingId = this._getBindingId(path);
 
+    if (type === ElementType.Identifier) {
       const element: Element = {
         id: this._getNodeId(path),
+        bindingId,
         filePath: this._filePath,
         location: {
           startIndex: (<{ index: number }>(<unknown>path.node.loc.start)).index,
           endIndex: (<{ index: number }>(<unknown>path.node.loc.end)).index,
         },
         type: ElementType.Identifier,
-        bindingId,
         name: value,
       };
       this._elementMap.set(element.id, element);
     } else {
       const element: Element = {
         id: this._getNodeId(path),
+        bindingId,
         filePath: this._filePath,
         location: {
           startIndex: (<{ index: number }>(<unknown>path.node.loc.start)).index,

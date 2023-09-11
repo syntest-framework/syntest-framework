@@ -25,7 +25,6 @@ import {
   MethodTarget,
   ObjectFunctionTarget,
   ObjectTarget,
-  TypeEnum,
 } from "@syntest/analysis-javascript";
 import { prng } from "@syntest/prng";
 
@@ -143,7 +142,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
             method.id,
             method.typeId,
             method.name,
-            TypeEnum.FUNCTION,
             prng.uniqueId(),
             arguments_,
             constructor_
@@ -268,7 +266,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         class_.typeId,
         class_.id,
         class_.name,
-        TypeEnum.FUNCTION,
         prng.uniqueId(),
         [],
         export_
@@ -431,21 +428,12 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   // arguments
-  sampleArrayArgument(
-    depth: number,
-    arrayId: string,
-    index: number
-  ): Statement {
+  sampleArrayArgument(depth: number, arrayId: string): Statement {
     const arrayType = this.rootContext
       .getTypeModel()
       .getObjectDescription(arrayId);
 
-    const element = arrayType.elements.get(index);
-    if (element) {
-      return this.sampleArgument(depth, element, String(index));
-    }
-
-    const childIds = [...arrayType.elements.values()];
+    const childIds = [...arrayType.elements];
 
     if (childIds.length === 0) {
       // TODO should be done in the typemodel somehow
@@ -454,7 +442,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       return this.sampleArgument(depth, "anon", "anon");
     }
 
-    return this.sampleArgument(depth, prng.pickOne(childIds), String(index));
+    const element = prng.pickOne(childIds);
+    return this.sampleArgument(depth, element, "");
   }
 
   sampleObjectArgument(
@@ -516,14 +505,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
     }
 
-    if (chosenType.endsWith("object")) {
-      return this.sampleObject(depth, id, name, chosenType);
-    } else if (chosenType.endsWith("array")) {
-      return this.sampleArray(depth, id, name, chosenType);
-    } else if (chosenType.endsWith("function")) {
-      return this.sampleArrowFunction(depth, id, name, chosenType);
-    }
-
     // take from pool
     if (this.statementPoolEnabled) {
       const statementFromPool =
@@ -537,37 +518,49 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
     }
 
-    switch (chosenType) {
+    const typeId = chosenType.includes("<>") ? chosenType.split("<>")[0] : id;
+    const type = chosenType.includes("<>")
+      ? chosenType.split("<>")[1]
+      : chosenType;
+
+    switch (type) {
       case "boolean": {
-        return this.sampleBool(id, name);
+        return this.sampleBool(id, typeId, name);
       }
       case "string": {
-        return this.sampleString(id, name);
+        return this.sampleString(id, typeId, name);
       }
       case "numeric": {
-        return this.sampleNumber(id, name);
+        return this.sampleNumber(id, typeId, name);
       }
       case "integer": {
-        return this.sampleInteger(id, name);
+        return this.sampleInteger(id, typeId, name);
       }
       case "null": {
-        return this.sampleNull(id, name);
+        return this.sampleNull(id, typeId, name);
       }
       case "undefined": {
-        return this.sampleUndefined(id, name);
+        return this.sampleUndefined(id, typeId, name);
+      }
+      case "object": {
+        return this.sampleObject(depth, id, typeId, name);
+      }
+      case "array": {
+        return this.sampleArray(depth, id, typeId, name);
+      }
+      case "function": {
+        return this.sampleArrowFunction(depth, id, typeId, name);
       }
       case "regex": {
         // TODO REGEX
-        return this.sampleString(id, name);
+        return this.sampleString(id, typeId, name);
       }
     }
 
     throw new Error(`unknown type: ${chosenType}`);
   }
 
-  sampleObject(depth: number, id: string, name: string, type: string) {
-    const typeId = type.includes("<>") ? type.split("<>")[0] : id;
-
+  sampleObject(depth: number, id: string, typeId: string, name: string) {
     const typeObject = this.rootContext
       .getTypeModel()
       .getObjectDescription(typeId);
@@ -662,78 +655,36 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       object_[key] = this.sampleObjectArgument(depth + 1, typeId, key);
     }
 
-    return new ObjectStatement(
-      id,
-      typeId,
-      name,
-      type,
-      prng.uniqueId(),
-      object_
-    );
+    return new ObjectStatement(id, typeId, name, prng.uniqueId(), object_);
   }
 
-  sampleArray(depth: number, id: string, name: string, type: string) {
-    const typeId = type.includes("<>") ? type.split("<>")[0] : id;
-
-    const typeObject = this.rootContext
-      .getTypeModel()
-      .getObjectDescription(typeId);
-
+  sampleArray(depth: number, id: string, typeId: string, name: string) {
     const children: Statement[] = [];
 
-    for (const [index] of typeObject.elements.entries()) {
-      children[index] = this.sampleArrayArgument(depth + 1, id, index);
+    for (
+      let index = 0;
+      index < prng.nextInt(0, this.maxActionStatements);
+      index++
+    ) {
+      children.push(this.sampleArrayArgument(depth + 1, typeId));
     }
 
-    // TODO should be done in the typemodel somehow
-    // maybe create types for the subproperties by doing /main/array/id::1::1[element-index]
-    // maybe create types for the subproperties by doing /main/array/id::1::1.property
-
-    if (children.length === 0) {
-      children.push(this.sampleArrayArgument(depth + 1, id, 0));
-    }
-
-    // if some children are missing, fill them with fake params
-    const childIds = [...typeObject.elements.values()];
-    for (let index = 0; index < children.length; index++) {
-      if (!children[index]) {
-        children[index] = this.sampleArgument(
-          depth + 1,
-          prng.pickOne(childIds),
-          String(index)
-        );
-      }
-    }
-
-    return new ArrayStatement(
-      id,
-      typeId,
-      name,
-      type,
-      prng.uniqueId(),
-      children
-    );
+    return new ArrayStatement(id, typeId, name, prng.uniqueId(), children);
   }
 
   sampleArrowFunction(
     depth: number,
     id: string,
-    name: string,
-    type: string
+    typeId: string,
+    name: string
   ): ArrowFunctionStatement {
-    const typeId = type.includes("<>") ? type.split("<>")[0] : id;
-
     const typeObject = this.rootContext
       .getTypeModel()
       .getObjectDescription(typeId);
 
     const parameters: string[] = [];
 
-    for (const [index, parameterId] of typeObject.parameters.entries()) {
-      const element = this.rootContext.getElement(parameterId);
-
-      const name = "name" in element ? element.name : element.value;
-
+    for (const [index, name] of typeObject.parameterNames.entries()) {
       parameters[index] = name;
     }
 
@@ -749,7 +700,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         id,
         typeId,
         name,
-        TypeEnum.FUNCTION,
         prng.uniqueId(),
         parameters,
         undefined // maybe something random?
@@ -762,7 +712,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       id,
       typeId,
       name,
-      type,
       prng.uniqueId(),
       parameters,
       this.sampleArgument(depth + 1, chosenReturn, "return")
@@ -771,6 +720,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
   sampleString(
     id: string,
+    typeId: string,
     name: string,
     alphabet = this.stringAlphabet,
     maxlength = this.stringMaxLength
@@ -794,9 +744,8 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     return new StringStatement(
       id,
-      id,
+      typeId,
       name,
-      TypeEnum.STRING,
       prng.uniqueId(),
       value,
       alphabet,
@@ -805,22 +754,21 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   // primitives
-  sampleBool(id: string, name: string): BoolStatement {
+  sampleBool(id: string, typeId: string, name: string): BoolStatement {
     return new BoolStatement(
       id,
-      id,
+      typeId,
       name,
-      TypeEnum.BOOLEAN,
       prng.uniqueId(),
       prng.nextBoolean()
     );
   }
 
-  sampleNull(id: string, name: string): NullStatement {
-    return new NullStatement(id, id, name, TypeEnum.NULL, prng.uniqueId());
+  sampleNull(id: string, typeId: string, name: string): NullStatement {
+    return new NullStatement(id, typeId, name, prng.uniqueId());
   }
 
-  sampleNumber(id: string, name: string): NumericStatement {
+  sampleNumber(id: string, typeId: string, name: string): NumericStatement {
     // by default we create small numbers (do we need very large numbers?)
     const max = 1000;
     const min = -1000;
@@ -834,17 +782,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       prng.nextDouble(min, max);
     }
 
-    return new NumericStatement(
-      id,
-      id,
-      name,
-      TypeEnum.NUMERIC,
-      prng.uniqueId(),
-      value
-    );
+    return new NumericStatement(id, typeId, name, prng.uniqueId(), value);
   }
 
-  sampleInteger(id: string, name: string): IntegerStatement {
+  sampleInteger(id: string, typeId: string, name: string): IntegerStatement {
     // by default we create small numbers (do we need very large numbers?)
     const max = 1000;
     const min = -1000;
@@ -858,23 +799,14 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       prng.nextInt(min, max);
     }
 
-    return new IntegerStatement(
-      id,
-      id,
-      name,
-      TypeEnum.INTEGER,
-      prng.uniqueId(),
-      value
-    );
+    return new IntegerStatement(id, typeId, name, prng.uniqueId(), value);
   }
 
-  sampleUndefined(id: string, name: string): UndefinedStatement {
-    return new UndefinedStatement(
-      id,
-      id,
-      name,
-      TypeEnum.UNDEFINED,
-      prng.uniqueId()
-    );
+  sampleUndefined(
+    id: string,
+    typeId: string,
+    name: string
+  ): UndefinedStatement {
+    return new UndefinedStatement(id, typeId, name, prng.uniqueId());
   }
 }

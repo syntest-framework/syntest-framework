@@ -26,6 +26,7 @@ import { Getter } from "./Getter";
 import { MethodCall } from "./MethodCall";
 import { ClassActionStatement } from "./ClassActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
+import { TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * @author Dimitri Stallenberg
@@ -43,7 +44,6 @@ export class Setter extends ClassActionStatement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: string,
     uniqueId: string,
     argument: Statement,
     constructor_: ConstructorCall
@@ -52,7 +52,7 @@ export class Setter extends ClassActionStatement {
       variableIdentifier,
       typeIdentifier,
       name,
-      type,
+      TypeEnum.FUNCTION,
       uniqueId,
       [argument],
       constructor_
@@ -77,7 +77,6 @@ export class Setter extends ClassActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       prng.uniqueId(),
       argument,
       constructor_
@@ -91,7 +90,6 @@ export class Setter extends ClassActionStatement {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.type,
       this.uniqueId,
       deepCopyArgument,
       this.constructor_.copy()
