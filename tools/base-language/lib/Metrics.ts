@@ -15,9 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metric, MetricType, SeriesType } from "@syntest/metric";
+import { Metric, MetricType, SeriesUnit } from "@syntest/metric";
 
 export enum SeriesName {
+  OBJECTIVE_DISTANCE = "objective-distance",
+
   BRANCHES_COVERED = "branches-covered",
   STATEMENTS_COVERED = "statements-covered",
   FUNCTIONS_COVERED = "functions-covered",
@@ -120,506 +122,526 @@ export enum PropertyName {
 }
 
 export const metrics: Metric[] = [
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
+  },
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
+  },
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.EVALUATION,
+  },
+  {
+    type: MetricType.SERIES_MEASUREMENT,
+    name: SeriesName.OBJECTIVE_DISTANCE,
+    seriesUnit: SeriesUnit.ITERATION,
+  },
   // coverage
   // search time
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.STATEMENTS_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.BRANCHES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.FUNCTIONS_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
 
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.PATH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.SEARCH_TIME,
+    name: SeriesName.OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.SEARCH_TIME,
   },
 
   // total time
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.STATEMENTS_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.BRANCHES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.FUNCTIONS_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
 
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.PATH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
 
   // iterations
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.STATEMENTS_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.BRANCHES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.FUNCTIONS_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
 
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.PATH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.ITERATION,
+    name: SeriesName.OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.ITERATION,
   },
 
   // evaluations
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.STATEMENTS_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.STATEMENTS_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCHES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.BRANCHES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTIONS_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.FUNCTIONS_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
 
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.PATH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.PATH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.EXCEPTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.FUNCTION_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.FUNCTION_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.LINE_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.LINE_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.OBJECTIVES_COVERED,
-    seriesType: SeriesType.EVALUATION,
+    name: SeriesName.OBJECTIVES_COVERED,
+    seriesUnit: SeriesUnit.EVALUATION,
   },
 
   // totals
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.STATEMENTS_TOTAL,
+    name: PropertyName.STATEMENTS_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.BRANCHES_TOTAL,
+    name: PropertyName.BRANCHES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.FUNCTIONS_TOTAL,
+    name: PropertyName.FUNCTIONS_TOTAL,
   },
 
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PATH_OBJECTIVES_TOTAL,
+    name: PropertyName.PATH_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.BRANCH_OBJECTIVES_TOTAL,
+    name: PropertyName.BRANCH_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.FUNCTION_OBJECTIVES_TOTAL,
+    name: PropertyName.FUNCTION_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.EXCEPTION_OBJECTIVES_TOTAL,
+    name: PropertyName.EXCEPTION_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.LINE_OBJECTIVES_TOTAL,
+    name: PropertyName.LINE_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.IMPLICIT_BRANCH_OBJECTIVES_TOTAL,
+    name: PropertyName.IMPLICIT_BRANCH_OBJECTIVES_TOTAL,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.OBJECTIVES_TOTAL,
+    name: PropertyName.OBJECTIVES_TOTAL,
   },
 
   // final coverage
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.STATEMENTS_COVERED,
+    name: PropertyName.STATEMENTS_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.BRANCHES_COVERED,
+    name: PropertyName.BRANCHES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.FUNCTIONS_COVERED,
+    name: PropertyName.FUNCTIONS_COVERED,
   },
 
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PATH_OBJECTIVES_COVERED,
+    name: PropertyName.PATH_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.BRANCH_OBJECTIVES_COVERED,
+    name: PropertyName.BRANCH_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.FUNCTION_OBJECTIVES_COVERED,
+    name: PropertyName.FUNCTION_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.EXCEPTION_OBJECTIVES_COVERED,
+    name: PropertyName.EXCEPTION_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.LINE_OBJECTIVES_COVERED,
+    name: PropertyName.LINE_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
+    name: PropertyName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.OBJECTIVES_COVERED,
+    name: PropertyName.OBJECTIVES_COVERED,
   },
 
   // general properties
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PRESET,
+    name: PropertyName.PRESET,
   },
 
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TARGET_ROOT_DIRECTORY,
+    name: PropertyName.TARGET_ROOT_DIRECTORY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.INCLUDE,
+    name: PropertyName.INCLUDE,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.EXCLUDE,
+    name: PropertyName.EXCLUDE,
   },
 
   // search
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SEARCH_ALGORITHM,
+    name: PropertyName.SEARCH_ALGORITHM,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.POPULATION_SIZE,
+    name: PropertyName.POPULATION_SIZE,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.OBJECTIVE_MANAGER,
+    name: PropertyName.OBJECTIVE_MANAGER,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SECONDARY_OBJECTIVES,
+    name: PropertyName.SECONDARY_OBJECTIVES,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PROCREATION,
+    name: PropertyName.PROCREATION,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.CROSSOVER,
+    name: PropertyName.CROSSOVER,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SAMPLER,
+    name: PropertyName.SAMPLER,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TERMINATION_TRIGGERS,
+    name: PropertyName.TERMINATION_TRIGGERS,
   },
 
   // timing
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MAX_TOTAL_TIME,
+    name: PropertyName.MAX_TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MAX_SEARCH_TIME,
+    name: PropertyName.MAX_SEARCH_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MAX_EVALUATIONS,
+    name: PropertyName.MAX_EVALUATIONS,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MAX_ITERATIONS,
+    name: PropertyName.MAX_ITERATIONS,
   },
   // postprocess
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TEST_MINIMIZATION,
+    name: PropertyName.TEST_MINIMIZATION,
   },
   // sampling
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.RANDOM_SEED,
+    name: PropertyName.RANDOM_SEED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MAX_DEPTH,
+    name: PropertyName.MAX_DEPTH,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MAX_ACTION_STATEMENTS,
+    name: PropertyName.MAX_ACTION_STATEMENTS,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.CONSTANT_POOL_ENABLED,
+    name: PropertyName.CONSTANT_POOL_ENABLED,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.EXPLORE_ILLEGAL_VALUES,
+    name: PropertyName.EXPLORE_ILLEGAL_VALUES,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.RESAMPLE_GENE_PROBABILITY,
+    name: PropertyName.RESAMPLE_GENE_PROBABILITY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.DELTA_MUTATION_PROBABILITY,
+    name: PropertyName.DELTA_MUTATION_PROBABILITY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SAMPLE_EXISTING_VALUE_PROBABILITY,
+    name: PropertyName.SAMPLE_EXISTING_VALUE_PROBABILITY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MULTI_POINT_CROSSOVER_PROBABILITY,
+    name: PropertyName.MULTI_POINT_CROSSOVER_PROBABILITY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.CROSSOVER_PROBABILITY,
+    name: PropertyName.CROSSOVER_PROBABILITY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.CONSTANT_POOL_PROBABILITY,
+    name: PropertyName.CONSTANT_POOL_PROBABILITY,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SAMPLE_FUNCTION_OUTPUT_AS_ARGUMENT,
+    name: PropertyName.SAMPLE_FUNCTION_OUTPUT_AS_ARGUMENT,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.STRING_ALPHABET,
+    name: PropertyName.STRING_ALPHABET,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.STRING_MAX_LENGTH,
+    name: PropertyName.STRING_MAX_LENGTH,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.NUMERIC_MAX_VALUE,
+    name: PropertyName.NUMERIC_MAX_VALUE,
   },
 
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.CONFIGURATION,
+    name: PropertyName.CONFIGURATION,
   },
 
   // Timing
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TOTAL_TIME,
+    name: PropertyName.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.SEARCH_TIME,
+    name: PropertyName.SEARCH_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.EVALUATIONS,
+    name: PropertyName.EVALUATIONS,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.ITERATIONS,
+    name: PropertyName.ITERATIONS,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.INITIALIZATION_TIME,
+    name: PropertyName.INITIALIZATION_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PREPROCESS_TIME,
+    name: PropertyName.PREPROCESS_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.PROCESS_TIME,
+    name: PropertyName.PROCESS_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.POSTPROCESS_TIME,
+    name: PropertyName.POSTPROCESS_TIME,
   },
 
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TARGET_LOAD_TIME,
+    name: PropertyName.TARGET_LOAD_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.INSTRUMENTATION_TIME,
+    name: PropertyName.INSTRUMENTATION_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.TYPE_RESOLVE_TIME,
+    name: PropertyName.TYPE_RESOLVE_TIME,
   },
 
   // Archive
   {
     type: MetricType.SERIES,
-    seriesName: SeriesName.ARCHIVE_SIZE,
-    seriesType: SeriesType.TOTAL_TIME,
+    name: SeriesName.ARCHIVE_SIZE,
+    seriesUnit: SeriesUnit.TOTAL_TIME,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.ARCHIVE_SIZE,
+    name: PropertyName.ARCHIVE_SIZE,
   },
   {
     type: MetricType.PROPERTY,
-    property: PropertyName.MINIMIZED_ARCHIVE_SIZE,
+    name: PropertyName.MINIMIZED_ARCHIVE_SIZE,
   },
 ];

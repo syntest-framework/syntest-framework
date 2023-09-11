@@ -22,23 +22,23 @@ import {
   Metric,
   PropertyMetric,
   SeriesDistributionMetric,
+  SeriesMeasurementMetric,
   SeriesMetric,
 } from "./Metric";
 import { MiddleWare } from "./Middleware";
 import {
   Distribution,
-  DistributionName,
-  Property,
-  PropertyName,
+  DistributionsMap,
+  Name,
+  PropertiesMap,
   Series,
-  SeriesName,
-  SeriesTyping,
+  SeriesMap,
+  SeriesUnit,
 } from "./PropertyTypes";
 import {
   distributionNotRegistered,
   propertyNotRegistered,
   seriesDistributionNotRegistered,
-  seriesDistributionSeriesNotRegistered,
   seriesDistributionTypeNotRegistered,
   seriesNotRegistered,
   seriesTypeNotRegistered,
@@ -70,13 +70,11 @@ export class MetricManager {
   private _metrics: Metric[] | undefined = undefined;
   private _outputMetrics: Metric[] | undefined = undefined;
 
-  private properties: Map<PropertyName, Property>;
-  private distributions: Map<DistributionName, Distribution>;
-  private series: Map<SeriesName, Map<SeriesTyping, Series<number>>>;
-  private seriesDistributions: Map<
-    DistributionName,
-    Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
-  >;
+  private properties: PropertiesMap<string>;
+  private distributions: DistributionsMap;
+  private series: SeriesMap<number>;
+  private seriesDistributions: SeriesMap<Distribution>;
+  private seriesMeasurement: SeriesMap<PropertiesMap<number>>;
 
   constructor(namespace: string) {
     MetricManager.LOGGER = getLogger("MetricManager");
@@ -87,6 +85,7 @@ export class MetricManager {
     this.distributions = new Map();
     this.series = new Map();
     this.seriesDistributions = new Map();
+    this.seriesMeasurement = new Map();
   }
 
   get outputMetrics() {
@@ -113,7 +112,7 @@ export class MetricManager {
 
     // Merge series
     for (const [name, seriesData] of other.series.entries()) {
-      const seriesMap = new Map<string, Map<number, number>>();
+      const seriesMap = new Map<SeriesUnit, Map<number, number>>();
       for (const [type, seriesTypeData] of seriesData.entries()) {
         seriesMap.set(type, new Map(seriesTypeData));
       }
@@ -125,18 +124,31 @@ export class MetricManager {
       name,
       seriesDistributionData,
     ] of other.seriesDistributions.entries()) {
-      const seriesDistributionsMap = new Map<
-        string,
-        Map<string, Map<number, number[]>>
-      >();
-      for (const [seriesName, seriesData] of seriesDistributionData.entries()) {
-        const seriesMap = new Map<string, Map<number, number[]>>();
-        for (const [seriesType, seriesTypeData] of seriesData.entries()) {
-          seriesMap.set(seriesType, new Map(seriesTypeData));
-        }
-        seriesDistributionsMap.set(seriesName, seriesMap);
+      const seriesMap = new Map<SeriesUnit, Series<Distribution>>();
+      for (const [
+        seriesUnit,
+        seriesTypeData,
+      ] of seriesDistributionData.entries()) {
+        seriesMap.set(seriesUnit, new Map(seriesTypeData));
       }
-      this.seriesDistributions.set(name, seriesDistributionsMap);
+
+      this.seriesDistributions.set(name, seriesMap);
+    }
+
+    // Merge series measurements
+    for (const [
+      name,
+      seriesMeasurementData,
+    ] of other.seriesMeasurement.entries()) {
+      const seriesMap = new Map<SeriesUnit, Series<PropertiesMap<number>>>();
+      for (const [
+        seriesUnit,
+        seriesTypeData,
+      ] of seriesMeasurementData.entries()) {
+        seriesMap.set(seriesUnit, new Map(seriesTypeData));
+      }
+
+      this.seriesMeasurement.set(name, seriesMap);
     }
   }
 
@@ -172,22 +184,17 @@ export class MetricManager {
 
           switch (m.type) {
             case "property": {
-              return split[1] === "*" || m.property === split[1];
+              return split[1] === "*" || m.name === split[1];
             }
             case "distribution": {
-              return split[1] === "*" || m.distributionName === split[1];
+              return split[1] === "*" || m.name === split[1];
             }
-            case "series": {
+            case "series":
+            case "series-distribution":
+            case "series-measurement": {
               return (
-                (split[1] === "*" || m.seriesName === split[1]) &&
-                (split[2] === "*" || m.seriesType === split[2])
-              );
-            }
-            case "series-distribution": {
-              return (
-                (split[1] === "*" || m.distributionName === split[1]) &&
-                (split[2] === "*" || m.seriesName === split[2]) &&
-                (split[3] === "*" || m.seriesType === split[3])
+                (split[1] === "*" || m.name === split[1]) &&
+                (split[2] === "*" || m.seriesUnit === split[2])
               );
             }
           }
@@ -221,38 +228,40 @@ export class MetricManager {
     for (const metric of this._metrics) {
       switch (metric.type) {
         case "property": {
-          this.properties.set(metric.property, "");
+          this.properties.set(metric.name, "");
           break;
         }
         case "distribution": {
-          this.distributions.set(metric.distributionName, []);
+          this.distributions.set(metric.name, []);
           break;
         }
         case "series": {
-          if (!this.series.has(metric.seriesName)) {
-            this.series.set(metric.seriesName, new Map());
+          if (!this.series.has(metric.name)) {
+            this.series.set(metric.name, new Map());
           }
-          this.series.get(metric.seriesName).set(metric.seriesType, new Map());
+          this.series.get(metric.name).set(metric.seriesUnit, new Map());
           break;
         }
         case "series-distribution": {
-          if (!this.seriesDistributions.has(metric.distributionName)) {
-            this.seriesDistributions.set(metric.distributionName, new Map());
+          if (!this.seriesDistributions.has(metric.name)) {
+            this.seriesDistributions.set(metric.name, new Map());
           }
 
-          if (
-            !this.seriesDistributions
-              .get(metric.distributionName)
-              .has(metric.seriesName)
-          ) {
-            this.seriesDistributions
-              .get(metric.distributionName)
-              .set(metric.seriesName, new Map());
-          }
           this.seriesDistributions
-            .get(metric.distributionName)
-            .get(metric.seriesName)
-            .set(metric.seriesType, new Map());
+            .get(metric.name)
+            .set(metric.seriesUnit, new Map());
+
+          break;
+        }
+
+        case "series-measurement": {
+          if (!this.seriesMeasurement.has(metric.name)) {
+            this.seriesMeasurement.set(metric.name, new Map());
+          }
+
+          this.seriesMeasurement
+            .get(metric.name)
+            .set(metric.seriesUnit, new Map());
 
           break;
         }
@@ -281,7 +290,7 @@ export class MetricManager {
     }
   }
 
-  recordProperty(property: PropertyName, value: Property) {
+  recordProperty(property: Name, value: string) {
     MetricManager.LOGGER.debug(`Recording property ${property} = ${value}`);
 
     if (!this.properties.has(property)) {
@@ -291,7 +300,7 @@ export class MetricManager {
     this.properties.set(property, value);
   }
 
-  recordDistribution(distributionName: DistributionName, value: number) {
+  recordDistribution(distributionName: Name, value: number) {
     MetricManager.LOGGER.debug(
       `Recording distribution ${distributionName} = ${value}`
     );
@@ -304,82 +313,75 @@ export class MetricManager {
   }
 
   recordSeries(
-    seriesName: SeriesName,
-    seriesType: SeriesTyping,
+    seriesName: Name,
+    seriesUnit: SeriesUnit,
     index: number,
     value: number
   ) {
     MetricManager.LOGGER.debug(
-      `Recording series ${seriesName}.${seriesType}[${index}] = ${value}`
+      `Recording series ${seriesName}.${seriesUnit}[${index}] = ${value}`
     );
 
     if (!this.series.has(seriesName)) {
       throw new Error(seriesNotRegistered(seriesName));
     }
 
-    if (!this.series.get(seriesName).has(seriesType)) {
-      throw new Error(seriesTypeNotRegistered(seriesName, seriesType));
+    if (!this.series.get(seriesName).has(seriesUnit)) {
+      throw new Error(seriesTypeNotRegistered(seriesName, seriesUnit));
     }
 
-    this.series.get(seriesName).get(seriesType).set(index, value);
+    this.series.get(seriesName).get(seriesUnit).set(index, value);
   }
 
   recordSeriesDistribution(
-    distributionName: DistributionName,
-    seriesName: SeriesName,
-    seriesType: SeriesTyping,
+    name: Name,
+    seriesUnit: SeriesUnit,
     index: number,
     value: number
   ) {
     MetricManager.LOGGER.debug(
-      `Recording series distribution ${distributionName}.${seriesName}.${seriesType}[${index}] = ${value}`
+      `Recording series distribution ${name}.${seriesUnit}[${index}] = ${value}`
     );
 
-    if (!this.seriesDistributions.has(distributionName)) {
-      throw new Error(seriesDistributionNotRegistered(distributionName));
+    if (!this.seriesDistributions.has(name)) {
+      throw new Error(seriesDistributionNotRegistered(name));
     }
 
-    if (!this.seriesDistributions.get(distributionName).has(seriesName)) {
-      throw new Error(
-        seriesDistributionSeriesNotRegistered(distributionName, seriesName)
-      );
+    if (!this.seriesDistributions.get(name).has(seriesUnit)) {
+      throw new Error(seriesDistributionTypeNotRegistered(name, seriesUnit));
     }
 
-    if (
-      !this.seriesDistributions
-        .get(distributionName)
-        .get(seriesName)
-        .has(seriesType)
-    ) {
-      throw new Error(
-        seriesDistributionTypeNotRegistered(
-          distributionName,
-          seriesName,
-          seriesType
-        )
-      );
+    if (!this.seriesDistributions.get(name).get(seriesUnit).has(index)) {
+      this.seriesDistributions.get(name).get(seriesUnit).set(index, []);
     }
 
-    if (
-      !this.seriesDistributions
-        .get(distributionName)
-        .get(seriesName)
-        .get(seriesType)
-        .has(index)
-    ) {
-      this.seriesDistributions
-        .get(distributionName)
-        .get(seriesName)
-        .get(seriesType)
-        .set(index, []);
+    this.seriesDistributions.get(name).get(seriesUnit).get(index).push(value);
+  }
+
+  recordSeriesMeasurement(
+    name: Name,
+    seriesUnit: SeriesUnit,
+    index: number,
+    key: string,
+    value: number
+  ) {
+    MetricManager.LOGGER.debug(
+      `Recording series measurement ${name}.${seriesUnit}[${index}].${key} = ${value}`
+    );
+
+    if (!this.seriesMeasurement.has(name)) {
+      throw new Error(seriesDistributionNotRegistered(name));
     }
 
-    this.seriesDistributions
-      .get(distributionName)
-      .get(seriesName)
-      .get(seriesType)
-      .get(index)
-      .push(value);
+    if (!this.seriesMeasurement.get(name).has(seriesUnit)) {
+      throw new Error(seriesDistributionTypeNotRegistered(name, seriesUnit));
+    }
+
+    if (!this.seriesMeasurement.get(name).get(seriesUnit).has(index)) {
+      this.seriesMeasurement.get(name).get(seriesUnit).set(index, new Map());
+    }
+
+    this.seriesMeasurement.get(name).get(seriesUnit).get(index).set(key, value);
   }
 
   getProperty(property: string): string | undefined {
@@ -396,99 +398,102 @@ export class MetricManager {
 
   getSeries(
     seriesName: string,
-    seriesType: string
+    seriesUnit: SeriesUnit
   ): Map<number, number> | undefined {
-    MetricManager.LOGGER.debug(`Getting series ${seriesName}.${seriesType}`);
+    MetricManager.LOGGER.debug(`Getting series ${seriesName}.${seriesUnit}`);
 
     if (!this.series.has(seriesName)) {
       return undefined;
     }
 
-    return this.series.get(seriesName).get(seriesType);
+    return this.series.get(seriesName).get(seriesUnit);
   }
 
   getSeriesDistribution(
-    distributionName: string,
-    seriesName: string,
-    seriesType: string
+    name: string,
+    seriesUnit: SeriesUnit
   ): Map<number, number[]> | undefined {
     MetricManager.LOGGER.debug(
-      `Getting series distribution ${distributionName}.${seriesName}.${seriesType}`
+      `Getting series distribution ${name}.${seriesUnit}`
     );
 
-    if (!this.seriesDistributions.has(distributionName)) {
+    if (!this.seriesDistributions.has(name)) {
       return undefined;
     }
 
-    if (!this.seriesDistributions.get(distributionName).has(seriesName)) {
-      return undefined;
-    }
-
-    return this.seriesDistributions
-      .get(distributionName)
-      .get(seriesName)
-      .get(seriesType);
+    return this.seriesDistributions.get(name).get(seriesUnit);
   }
 
-  getAllProperties(): Map<PropertyName, Property> {
+  getSeriesMeasurement(
+    name: string,
+    seriesUnit: SeriesUnit
+  ): Series<PropertiesMap<number>> | undefined {
+    MetricManager.LOGGER.debug(
+      `Getting series measurement ${name}.${seriesUnit}`
+    );
+
+    if (!this.seriesMeasurement.has(name)) {
+      return undefined;
+    }
+
+    return this.seriesMeasurement.get(name).get(seriesUnit);
+  }
+
+  getAllProperties(): PropertiesMap<string> {
     return this.properties;
   }
 
-  getAllDistributions(): Map<DistributionName, Distribution> {
+  getAllDistributions(): DistributionsMap {
     return this.distributions;
   }
 
-  getAllSeries(): Map<SeriesName, Map<SeriesTyping, Series<number>>> {
+  getAllSeries(): SeriesMap<number> {
     return this.series;
   }
 
-  getAllSeriesDistributions(): Map<
-    DistributionName,
-    Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
-  > {
+  getAllSeriesDistributions(): SeriesMap<Distribution> {
     return this.seriesDistributions;
+  }
+
+  getAllSeriesMeasurements(): SeriesMap<PropertiesMap<number>> {
+    return this.seriesMeasurement;
   }
 
   collectProperties(wanted: PropertyMetric[]): Map<string, string> {
     const properties = new Map<string, string>();
 
     for (const property of wanted) {
-      const value = this.getProperty(property.property);
+      const value = this.getProperty(property.name);
 
-      properties.set(property.property, value);
+      properties.set(property.name, value);
     }
 
     return properties;
   }
 
-  collectDistributions(wanted: DistributionMetric[]): Map<string, number[]> {
+  collectDistributions(wanted: DistributionMetric[]): DistributionsMap {
     const distributions = new Map<string, number[]>();
 
     for (const distribution of wanted) {
-      const value = this.getDistribution(distribution.distributionName);
+      const value = this.getDistribution(distribution.name);
 
-      distributions.set(distribution.distributionName, value);
+      distributions.set(distribution.name, value);
     }
 
     return distributions;
   }
 
-  collectSeries(
-    wanted: SeriesMetric[]
-  ): Map<string, Map<string, Map<number, number>>> {
-    const series = new Map<string, Map<string, Map<number, number>>>();
+  collectSeries(wanted: SeriesMetric[]): SeriesMap<number> {
+    const series = new Map<string, Map<SeriesUnit, Series<number>>>();
 
     for (const seriesMetric of wanted) {
-      const value = this.getSeries(
-        seriesMetric.seriesName,
-        seriesMetric.seriesType
-      );
+      const value = this.getSeries(seriesMetric.name, seriesMetric.seriesUnit);
 
-      if (!series.has(seriesMetric.seriesName)) {
-        series.set(seriesMetric.seriesName, new Map());
+      if (!series.has(seriesMetric.name)) {
+        series.set(seriesMetric.name, new Map());
       }
 
-      series.get(seriesMetric.seriesName).set(seriesMetric.seriesType, value);
+      series.get(seriesMetric.name).set(seriesMetric.seriesUnit, value);
     }
 
     return series;
@@ -496,39 +501,53 @@ export class MetricManager {
 
   collectSeriesDistributions(
     wanted: SeriesDistributionMetric[]
-  ): Map<string, Map<string, Map<string, Map<number, number[]>>>> {
+  ): SeriesMap<Distribution> {
     const seriesDistributions = new Map<
-      string,
-      Map<string, Map<string, Map<number, number[]>>>
+      Name,
+      Map<SeriesUnit, Series<Distribution>>
     >();
 
     for (const seriesDistribution of wanted) {
       const value = this.getSeriesDistribution(
-        seriesDistribution.distributionName,
-        seriesDistribution.seriesName,
-        seriesDistribution.seriesType
+        seriesDistribution.name,
+        seriesDistribution.seriesUnit
       );
 
-      if (!seriesDistributions.has(seriesDistribution.distributionName)) {
-        seriesDistributions.set(seriesDistribution.distributionName, new Map());
-      }
-
-      if (
-        !seriesDistributions
-          .get(seriesDistribution.distributionName)
-          .has(seriesDistribution.seriesName)
-      ) {
-        seriesDistributions
-          .get(seriesDistribution.distributionName)
-          .set(seriesDistribution.seriesName, new Map());
+      if (!seriesDistributions.has(seriesDistribution.name)) {
+        seriesDistributions.set(seriesDistribution.name, new Map());
       }
 
       seriesDistributions
-        .get(seriesDistribution.distributionName)
-        .get(seriesDistribution.seriesName)
-        .set(seriesDistribution.seriesType, value);
+        .get(seriesDistribution.name)
+        .set(seriesDistribution.seriesUnit, value);
     }
 
     return seriesDistributions;
+  }
+
+  collectSeriesMeasurements(
+    wanted: SeriesMeasurementMetric[]
+  ): SeriesMap<PropertiesMap<number>> {
+    const seriesMeasurements = new Map<
+      Name,
+      Map<SeriesUnit, Series<PropertiesMap<number>>>
+    >();
+
+    for (const seriesMeasurement of wanted) {
+      const value = this.getSeriesMeasurement(
+        seriesMeasurement.name,
+        seriesMeasurement.seriesUnit
+      );
+
+      if (!seriesMeasurements.has(seriesMeasurement.name)) {
+        seriesMeasurements.set(seriesMeasurement.name, new Map());
+      }
+
+      seriesMeasurements
+        .get(seriesMeasurement.name)
+        .set(seriesMeasurement.seriesUnit, value);
+    }
+
+    return seriesMeasurements;
   }
 }

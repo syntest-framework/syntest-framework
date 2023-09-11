@@ -15,15 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MetricManager } from "@syntest/metric";
+import {
+  DistributionsMap,
+  MetricManager,
+  PropertiesMap,
+  SeriesMap,
+} from "@syntest/metric";
 import {
   Distribution,
-  DistributionName,
-  Property,
-  PropertyName,
   Series,
-  SeriesName,
-  SeriesTyping,
+  SeriesUnit,
 } from "@syntest/metric/lib/PropertyTypes";
 
 export abstract class Statistic {
@@ -35,17 +36,15 @@ export abstract class Statistic {
 
   abstract generate(
     metricManager: MetricManager,
-    properties: Map<PropertyName, Property>,
-    distributions: Map<DistributionName, Distribution>,
-    series: Map<SeriesName, Map<SeriesTyping, Series<number>>>,
-    seriesDistributions: Map<
-      DistributionName,
-      Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
-    >
+    properties: PropertiesMap<string>,
+    distributions: DistributionsMap,
+    series: SeriesMap<number>,
+    seriesDistributions: SeriesMap<Distribution>,
+    seriesMeasurements: SeriesMap<PropertiesMap<number>>
   ): void;
 
   loopThroughProperties(
-    properties: Map<PropertyName, Property>,
+    properties: PropertiesMap<string>,
     callback: (newPropertyName: string, propertyValue: string) => void
   ) {
     for (const [propertyName, propertyValue] of properties) {
@@ -54,7 +53,7 @@ export abstract class Statistic {
   }
 
   loopThroughDistributions(
-    distributions: Map<DistributionName, Distribution>,
+    distributions: DistributionsMap,
     callback: (newPropertyName: string, distribution: Distribution) => void
   ) {
     for (const [distributionName, distribution] of distributions) {
@@ -63,10 +62,10 @@ export abstract class Statistic {
   }
 
   loopThroughSeries(
-    series: Map<SeriesName, Map<SeriesTyping, Series<number>>>,
+    series: SeriesMap<number>,
     callback: (
       newPropertyName: string,
-      seriesByType: Map<SeriesTyping, Series<number>>
+      seriesByType: Map<SeriesUnit, Series<number>>
     ) => void
   ) {
     for (const [seriesName, seriesByType] of series) {
@@ -75,17 +74,26 @@ export abstract class Statistic {
   }
 
   loopThroughSeriesDistribution(
-    seriesDistributions: Map<
-      DistributionName,
-      Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
-    >,
+    seriesDistributions: SeriesMap<Distribution>,
     callback: (
       newPropertyName: string,
-      seriesByType: Map<SeriesName, Map<SeriesTyping, Series<Distribution>>>
+      seriesByType: Map<SeriesUnit, Series<Distribution>>
     ) => void
   ) {
     for (const [distributionName, distribution] of seriesDistributions) {
       callback(this.getPropertyName(distributionName), distribution);
+    }
+  }
+
+  loopThroughSeriesMeasurement(
+    seriesMeasurements: SeriesMap<PropertiesMap<number>>,
+    callback: (
+      newPropertyName: string,
+      seriesByType: Map<SeriesUnit, Series<PropertiesMap<number>>>
+    ) => void
+  ) {
+    for (const [name, series] of seriesMeasurements) {
+      callback(this.getPropertyName(name), series);
     }
   }
 

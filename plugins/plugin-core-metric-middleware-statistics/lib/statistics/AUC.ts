@@ -15,15 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SeriesName } from "@syntest/base-language";
-import { MetricManager, SeriesType } from "@syntest/metric";
 import {
-  Distribution,
-  DistributionName,
-  Property,
-  PropertyName,
-  Series,
-} from "@syntest/metric/lib/PropertyTypes";
+  DistributionsMap,
+  MetricManager,
+  PropertiesMap,
+  SeriesMap,
+} from "@syntest/metric";
+import { Distribution } from "@syntest/metric/lib/PropertyTypes";
 
 import { Statistic } from "./Statistic";
 
@@ -34,13 +32,11 @@ export class AUC extends Statistic {
 
   generate(
     metricManager: MetricManager,
-    _properties: Map<PropertyName, Property>,
-    _distributions: Map<DistributionName, Distribution>,
-    series: Map<SeriesName, Map<SeriesType, Series<number>>>,
-    _seriesDistributions: Map<
-      DistributionName,
-      Map<SeriesName, Map<SeriesType, Series<Distribution>>>
-    >
+    _properties: PropertiesMap<string>,
+    _distributions: DistributionsMap,
+    series: SeriesMap<number>,
+    _seriesDistributions: SeriesMap<Distribution>,
+    _seriesMeasurements: SeriesMap<PropertiesMap<number>>
   ): void {
     this.loopThroughSeries(series, (newPropertyName, seriesByType) => {
       let auc = 0;

@@ -50,6 +50,7 @@ export class StatisticsMetricMiddleware extends MiddleWare {
       const series = mergedManager.getAllSeries();
 
       const seriesDistributions = mergedManager.getAllSeriesDistributions();
+      const seriesMeasurements = mergedManager.getAllSeriesMeasurements();
 
       for (const statistic of this.statistics) {
         statistic.generate(
@@ -57,7 +58,8 @@ export class StatisticsMetricMiddleware extends MiddleWare {
           properties,
           distributions,
           series,
-          seriesDistributions
+          seriesDistributions,
+          seriesMeasurements
         );
       }
     }

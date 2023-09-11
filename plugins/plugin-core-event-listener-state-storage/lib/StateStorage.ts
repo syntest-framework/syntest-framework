@@ -19,6 +19,7 @@ import * as path from "node:path";
 
 import { RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram, makeSerializeable } from "@syntest/cfg";
+import { Encoding, SearchAlgorithm, SearchSubject } from "@syntest/search";
 import { StorageManager } from "@syntest/storage";
 
 export class StateStorage {
@@ -48,7 +49,7 @@ export class StateStorage {
     filePath: string,
     ast: S
   ): void {
-    this.save(JSON.stringify(ast), filePath, "ast.json");
+    this.save(JSON.stringify(ast, undefined, 2), filePath, "ast.json");
   }
 
   targetExtractionComplete<S>(
@@ -56,7 +57,7 @@ export class StateStorage {
     filePath: string,
     target: Target
   ): void {
-    this.save(JSON.stringify(target), filePath, "target.json");
+    this.save(JSON.stringify(target, undefined, 2), filePath, "target.json");
   }
 
   dependencyResolvingComplete<S>(
@@ -65,16 +66,77 @@ export class StateStorage {
     dependencies: string[]
   ): void {
     this.save(
-      JSON.stringify({ depedencies: dependencies }),
+      JSON.stringify({ depedencies: dependencies }, undefined, 2),
       filePath,
       "dependencies.json"
+    );
+  }
+
+  sortFunction = (a: string, b: string): number => {
+    const partsA = a.replace("placeholder:::", "").split(":::");
+    const partsB = b.replace("placeholder:::", "").split(":::");
+    const [indexStartA, indexEndA] = partsA[2]
+      .split(":")
+      .map((x) => Number.parseInt(x));
+    const [indexStartB, indexEndB] = partsB[2]
+      .split(":")
+      .map((x) => Number.parseInt(x));
+
+    if (indexStartA < indexStartB) {
+      return -1;
+    } else if (indexStartA > indexStartB) {
+      return 1;
+    }
+
+    // equal start
+    if (indexEndA < indexEndB) {
+      return -1;
+    } else if (indexEndA > indexEndB) {
+      return 1;
+    }
+
+    return 0;
+  };
+
+  searchComplete<E extends Encoding>(
+    searchAlgorithm: SearchAlgorithm<E>,
+    subject: SearchSubject<E>
+  ): void {
+    const covered = searchAlgorithm
+      .getObjectiveManager()
+      .getCoveredObjectives();
+    const uncovered = searchAlgorithm
+      .getObjectiveManager()
+      .getUncoveredObjectives();
+    const filePath = subject.path;
+
+    this.save(
+      JSON.stringify(
+        {
+          covered: [...covered]
+            .map((objective) => objective.getIdentifier())
+            .sort(this.sortFunction),
+          uncovered: [...uncovered]
+            .map((objective) => objective.getIdentifier())
+            .sort(this.sortFunction),
+        },
+        undefined,
+        2
+      ),
+      filePath,
+      "covered.json"
     );
   }
 
   save(
     data: string,
     filePath: string,
-    type: "cfg.json" | "ast.json" | "target.json" | "dependencies.json"
+    type:
+      | "cfg.json"
+      | "ast.json"
+      | "target.json"
+      | "dependencies.json"
+      | "covered.json"
   ) {
     const name = path.basename(filePath, path.extname(filePath));
 
