@@ -29,14 +29,19 @@ import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-m
 import { TrackingObjectiveManagerPlugin } from "./plugins/objective-managers/TrackingObjectiveManagerPlugin";
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
+import { DynaPCSEAPlugin } from "./plugins/search-algorithms/DynaPCSEAPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
+import { PCSEAPlugin } from "./plugins/search-algorithms/PCSEAPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { DynaMOSAPCSEAPreset } from "./presets/DynaPCSEAPreset";
+import { MOSAPCSEAPreset } from "./presets/MOSAPCSEAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { PCSEAPreset } from "./presets/PCSEAPreset";
 import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
@@ -70,10 +75,16 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
+    moduleManager.registerPlugin(this, new PCSEAPlugin());
+    moduleManager.registerPlugin(this, new DynaPCSEAPlugin());
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
     moduleManager.registerPreset(this, new DynaMOSAPreset());
+
+    moduleManager.registerPreset(this, new PCSEAPreset());
+    moduleManager.registerPreset(this, new MOSAPCSEAPreset());
+    moduleManager.registerPreset(this, new DynaMOSAPCSEAPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new RandomSearchPreset());
