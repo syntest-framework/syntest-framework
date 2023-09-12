@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Metric, MetricManager, MiddleWare } from "@syntest/metric";
+import { Metric, MetricManager, Middleware } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
 import {
   StorageOptions as CoreStorageOptions,
@@ -40,12 +40,12 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     this.storageManager = storageManager;
   }
 
-  createMetricMiddleware(metrics: Metric[]): MiddleWare {
+  createMetricMiddleware(metrics: Metric[]): Middleware {
     return new FileWriterMetricMiddleware(
+      this.metricManager,
+      metrics,
       (<CoreStorageOptions>(<unknown>this.args)).fid,
       this.storageManager,
-      metrics,
-      this.metricManager.outputMetrics,
       (<StorageOptions>(<unknown>this.args)).fileWriterMetricsDirectory
     );
   }

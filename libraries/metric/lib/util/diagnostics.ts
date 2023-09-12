@@ -28,25 +28,19 @@ export const distributionNotRegistered = (distribution: string) =>
 
 export const seriesNotRegistered = (series: string) =>
   `Cannot record series! Metric '${series}' is not registered by any module!`;
-export const seriesTypeNotRegistered = (
+export const seriesUnitNotRegistered = (
   seriesName: string,
-  seriesType: string
+  seriesUnit: string
 ) =>
-  `Cannot record series! Metric '${seriesName}.${seriesType}' is not registered by any module!`;
+  `Cannot record series! Metric '${seriesName}.${seriesUnit}' is not registered by any module!`;
 
 export const seriesDistributionNotRegistered = (distribution: string) =>
   `Cannot record series distribution! Metric '${distribution}' is not registered by any module!`;
-export const seriesDistributionSeriesNotRegistered = (
-  distribution: string,
-  seriesName: string
-) =>
-  `Cannot record series distribution! Metric '${distribution}.${seriesName}' is not registered by any module!`;
 export const seriesDistributionTypeNotRegistered = (
   distribution: string,
-  seriesName: string,
-  seriesType: string
+  seriesUnit: string
 ) =>
-  `Cannot record series distribution! Metric '${distribution}.${seriesName}.${seriesType}' is not registered by any module!`;
+  `Cannot record series distribution! Metric '${distribution}.${seriesUnit}' is not registered by any module!`;
 
 export const shouldNeverHappen = (bugLocation: string) =>
   `This should never happen.\nThere is likely a bug in the ${bugLocation}.`;

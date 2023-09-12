@@ -15,7 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metric, MetricManager, SeriesType } from "@syntest/metric";
+import {
+  Metric,
+  MetricManager,
+  SeriesIndex,
+  SeriesUnit,
+} from "@syntest/metric";
 import { EventListenerPlugin } from "@syntest/module";
 import {
   BranchObjectiveFunction,
@@ -26,6 +31,7 @@ import {
   ExceptionObjectiveFunction,
   FunctionObjectiveFunction,
   ImplicitBranchObjectiveFunction,
+  ObjectiveFunction,
   SearchAlgorithm,
   SearchSubject,
 } from "@syntest/search";
@@ -87,6 +93,10 @@ export class SearchMetricListener extends EventListenerPlugin {
       ...searchAlgorithm.getObjectiveManager().getCoveredObjectives(),
     ];
 
+    const uncovered = [
+      ...searchAlgorithm.getObjectiveManager().getUncoveredObjectives(),
+    ];
+
     const coveredPaths = 0;
     const coveredBranches = covered.filter(
       (objectiveFunction) =>
@@ -109,7 +119,7 @@ export class SearchMetricListener extends EventListenerPlugin {
 
     // search times
     this.recordCoveredSeries(
-      SeriesType.SEARCH_TIME,
+      SeriesUnit.SEARCH_TIME,
       searchTime,
       coveredPaths,
       coveredBranches,
@@ -117,10 +127,12 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredLines,
       coveredImplicitBranches,
       coveredObjectives,
-      coveredExceptions
+      coveredExceptions,
+      covered,
+      uncovered
     );
     this.recordCoveredSeries(
-      SeriesType.TOTAL_TIME,
+      SeriesUnit.TOTAL_TIME,
       totalTime,
       coveredPaths,
       coveredBranches,
@@ -128,10 +140,12 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredLines,
       coveredImplicitBranches,
       coveredObjectives,
-      coveredExceptions
+      coveredExceptions,
+      covered,
+      uncovered
     );
     this.recordCoveredSeries(
-      SeriesType.ITERATION,
+      SeriesUnit.ITERATION,
       iterations,
       coveredPaths,
       coveredBranches,
@@ -139,10 +153,12 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredLines,
       coveredImplicitBranches,
       coveredObjectives,
-      coveredExceptions
+      coveredExceptions,
+      covered,
+      uncovered
     );
     this.recordCoveredSeries(
-      SeriesType.EVALUATION,
+      SeriesUnit.EVALUATION,
       evaluations,
       coveredPaths,
       coveredBranches,
@@ -150,61 +166,85 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredLines,
       coveredImplicitBranches,
       coveredObjectives,
-      coveredExceptions
+      coveredExceptions,
+      covered,
+      uncovered
     );
   }
 
-  recordCoveredSeries(
-    type: string,
-    index: number,
+  recordCoveredSeries<E extends Encoding>(
+    seriesUnit: SeriesUnit,
+    seriesIndex: SeriesIndex,
     coveredPaths: number,
     coveredBranches: number,
     coveredFunctions: number,
     coveredLines: number,
     coveredImplicitBranches: number,
     covered: number,
-    coveredExceptions: number
+    coveredExceptions: number,
+    coveredObjectives: ObjectiveFunction<E>[],
+    uncoveredObjectives: ObjectiveFunction<E>[]
   ) {
+    for (const objective of coveredObjectives) {
+      this.metricManager.recordSeriesMeasurement(
+        SeriesName.OBJECTIVE_DISTANCE,
+        seriesUnit,
+        seriesIndex,
+        objective.getIdentifier(),
+        objective.getLowestDistance()
+      );
+    }
+
+    for (const objective of uncoveredObjectives) {
+      this.metricManager.recordSeriesMeasurement(
+        SeriesName.OBJECTIVE_DISTANCE,
+        seriesUnit,
+        seriesIndex,
+        objective.getIdentifier(),
+        objective.getLowestDistance()
+      );
+    }
+
     this.metricManager.recordSeries(
       SeriesName.PATH_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesUnit,
+      seriesIndex,
       coveredPaths
     );
     this.metricManager.recordSeries(
       SeriesName.BRANCH_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesUnit,
+      seriesIndex,
       coveredBranches
     );
     this.metricManager.recordSeries(
       SeriesName.EXCEPTION_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesUnit,
+      seriesIndex,
       coveredExceptions
     );
     this.metricManager.recordSeries(
       SeriesName.FUNCTION_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesUnit,
+      seriesIndex,
       coveredFunctions
     );
     this.metricManager.recordSeries(
       SeriesName.LINE_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesUnit,
+      seriesIndex,
       coveredLines
     );
     this.metricManager.recordSeries(
       SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesUnit,
+      seriesIndex,
       coveredImplicitBranches
     );
     this.metricManager.recordSeries(
       SeriesName.OBJECTIVES_COVERED,
-      type,
-      index,
+      seriesUnit,
+      seriesIndex,
       covered
     );
   }
@@ -339,7 +379,7 @@ export class SearchMetricListener extends EventListenerPlugin {
         budgetManager: BudgetManager<E>
       ) => {
         // create a new metric manager for this search subject
-        this.currentNamespace = subject.name;
+        this.currentNamespace = subject.path;
 
         this.recordSeries(searchAlgorithm, subject, budgetManager);
       }

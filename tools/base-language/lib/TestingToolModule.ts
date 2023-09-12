@@ -21,6 +21,7 @@ import { Module, ModuleManager } from "@syntest/module";
 import { StorageManager } from "@syntest/storage";
 
 import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricListener";
+import { SearchPerformanceListener } from "./plugins/event-listeners/SearchPerformanceListener";
 import { SearchProgressBarListener } from "./plugins/event-listeners/SearchProgressBarListener";
 import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
@@ -47,6 +48,7 @@ export abstract class TestingToolModule extends Module {
     _modules: Module[]
   ): void {
     moduleManager.registerPlugin(this, new SearchMetricListener());
+    moduleManager.registerPlugin(this, new SearchPerformanceListener());
     moduleManager.registerPlugin(
       this,
       new SearchProgressBarListener(userInterface)
