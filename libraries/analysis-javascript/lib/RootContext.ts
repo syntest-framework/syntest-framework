@@ -27,7 +27,7 @@ import { DependencyFactory } from "./dependency/DependencyFactory";
 import { Export } from "./target/export/Export";
 import { TargetFactory } from "./target/TargetFactory";
 import { TypeModelFactory } from "./type/resolving/TypeModelFactory";
-import { getAllFiles, readFile } from "./utils/fileSystem";
+import { readFile } from "./utils/fileSystem";
 import { ExportFactory } from "./target/export/ExportFactory";
 import { TypeExtractor } from "./type/discovery/TypeExtractor";
 import { TypeModel } from "./type/resolving/TypeModel";
@@ -51,7 +51,9 @@ export class RootContext extends CoreRootContext<t.Node> {
 
   protected _constantPoolFactory: ConstantPoolFactory;
 
-  protected _files: string[];
+  protected _targetFiles: Set<string>;
+  protected _analysisFiles: Set<string>;
+
   // filepath -> id -> element
   protected _elementMap: Map<string, Map<string, Element>>;
   // filepath -> id -> relation
@@ -67,6 +69,8 @@ export class RootContext extends CoreRootContext<t.Node> {
 
   constructor(
     rootPath: string,
+    targetFiles: Set<string>,
+    analysisFiles: Set<string>,
     abstractSyntaxTreeFactory: AbstractSyntaxTreeFactory,
     controlFlowGraphFactory: ControlFlowGraphFactory,
     targetFactory: TargetFactory,
@@ -85,6 +89,8 @@ export class RootContext extends CoreRootContext<t.Node> {
       dependencyFactory
     );
     RootContext.LOGGER = getLogger("RootContext");
+    this._targetFiles = targetFiles;
+    this._analysisFiles = analysisFiles;
     this._exportFactory = exportFactory;
     this._typeExtractor = typeExtractor;
     this._typeResolver = typeResolver;
@@ -93,21 +99,6 @@ export class RootContext extends CoreRootContext<t.Node> {
 
   get rootPath(): string {
     return this._rootPath;
-  }
-
-  // TODO something with the types
-
-  getFiles() {
-    if (!this._files) {
-      this._files = getAllFiles(this.rootPath, ".js").filter(
-        (x) =>
-          !x.includes("/test/") &&
-          !x.includes(".test.js") &&
-          !x.includes("node_modules")
-      ); // maybe we should also take those into account
-    }
-
-    return this._files;
   }
 
   override getSource(filePath: string) {
@@ -172,7 +163,7 @@ export class RootContext extends CoreRootContext<t.Node> {
     if (!this._exportMap) {
       this._exportMap = new Map();
 
-      for (const filepath of this.getFiles()) {
+      for (const filepath of this._analysisFiles) {
         this._exportMap.set(filepath, this.getExports(filepath));
       }
     }
@@ -208,7 +199,7 @@ export class RootContext extends CoreRootContext<t.Node> {
     if (!this._elementMap) {
       this._elementMap = new Map();
 
-      for (const filepath of this.getFiles()) {
+      for (const filepath of this._analysisFiles) {
         this._elementMap.set(filepath, this.getElements(filepath));
       }
     }
@@ -244,7 +235,7 @@ export class RootContext extends CoreRootContext<t.Node> {
     if (!this._relationMap) {
       this._relationMap = new Map();
 
-      for (const filepath of this.getFiles()) {
+      for (const filepath of this._analysisFiles) {
         this._relationMap.set(filepath, this.getRelations(filepath));
       }
     }
@@ -280,7 +271,7 @@ export class RootContext extends CoreRootContext<t.Node> {
     if (!this._objectMap) {
       this._objectMap = new Map();
 
-      for (const filepath of this.getFiles()) {
+      for (const filepath of this._analysisFiles) {
         this._objectMap.set(filepath, this.getObjectTypes(filepath));
       }
     }
@@ -332,7 +323,7 @@ export class RootContext extends CoreRootContext<t.Node> {
   // TODO cache
   private _getContextConstantPool(): ConstantPool {
     const constantPool = new ConstantPool();
-    for (const filepath of this.getFiles()) {
+    for (const filepath of this._analysisFiles) {
       const ast = this.getAbstractSyntaxTree(filepath);
       this._constantPoolFactory.extract(filepath, ast, constantPool);
     }

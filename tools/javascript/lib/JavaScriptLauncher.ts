@@ -44,6 +44,7 @@ import {
   ProcreationPlugin,
   TerminationTriggerPlugin,
   PropertyName,
+  FileSelector,
 } from "@syntest/base-language";
 import {
   UserInterface,
@@ -170,8 +171,35 @@ export class JavaScriptLauncher extends Launcher {
       (<JavaScriptArguments>this.arguments_).syntaxForgiving
     );
 
+    const fileSelector = new FileSelector();
+    const targetFiles = fileSelector.loadFilePaths(
+      this.arguments_.targetInclude,
+      this.arguments_.targetExclude
+    );
+
+    if (this.arguments_.analysisInclude.length === 0) {
+      JavaScriptLauncher.LOGGER.warn(
+        "'analysis-include' config parameter is empty so we only use the target files for analysis"
+      );
+    }
+
+    for (const target of targetFiles) {
+      if (this.arguments_.analysisExclude.includes(target)) {
+        throw new Error(
+          `Target files cannot be excluded from analysis. Target file: ${target}`
+        );
+      }
+    }
+
+    const analysisFiles = fileSelector.loadFilePaths(
+      [...targetFiles, ...this.arguments_.analysisInclude],
+      this.arguments_.analysisExclude
+    );
+
     this.rootContext = new RootContext(
       this.arguments_.targetRootDirectory,
+      targetFiles,
+      analysisFiles,
       abstractSyntaxTreeFactory,
       controlFlowGraphFactory,
       targetFactory,
@@ -183,15 +211,6 @@ export class JavaScriptLauncher extends Launcher {
     );
 
     this.userInterface.printHeader("GENERAL INFO");
-
-    // TODO ui info messages
-
-    // this.userInterface.report("property-set", [
-    //   "Target Settings",
-    //   <string>(
-    //     (<unknown>[["Target Root Directory", this.arguments_.targetRootDirectory]])
-    //   ),
-    // ]);
 
     const timeInMs = (Date.now() - start) / 1000;
     this.metricManager.recordProperty(
@@ -209,8 +228,8 @@ export class JavaScriptLauncher extends Launcher {
     const startTargetSelection = Date.now();
     const targetSelector = new TargetSelector(this.rootContext);
     this.targets = targetSelector.loadTargets(
-      this.arguments_.include,
-      this.arguments_.exclude
+      this.arguments_.targetInclude,
+      this.arguments_.targetExclude
     );
     let timeInMs = (Date.now() - startTargetSelection) / 1000;
     this.metricManager.recordProperty(
@@ -221,7 +240,7 @@ export class JavaScriptLauncher extends Launcher {
     if (this.targets.length === 0) {
       // Shut server down
       this.userInterface.printError(
-        `No targets where selected! Try changing the 'include' parameter`
+        `No targets where selected! Try changing the 'target-include' parameter`
       );
       await this.exit();
       // eslint-disable-next-line unicorn/no-process-exit
@@ -242,6 +261,19 @@ export class JavaScriptLauncher extends Launcher {
     }
 
     this.userInterface.printItemization("TARGETS", itemization);
+
+    const selectionSettings: TableObject = {
+      headers: ["Setting", "Value"],
+      rows: [
+        ["Target Root Directory", this.arguments_.targetRootDirectory],
+        ["Target Include", `${this.arguments_.targetInclude.join(", ")}`],
+        ["Target Exclude", `${this.arguments_.targetExclude.join(", ")}`],
+        ["Analysis Include", `${this.arguments_.analysisInclude.join(", ")}`],
+        ["Analysis Exclude", `${this.arguments_.analysisExclude.join(", ")}`],
+      ],
+      footers: ["", ""],
+    };
+    this.userInterface.printTable("SELECTION SETTINGS", selectionSettings);
 
     const settings: TableObject = {
       headers: ["Setting", "Value"],
