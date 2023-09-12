@@ -207,6 +207,16 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     }
 
     if (
+      path.parentPath.isExportSpecifier() &&
+      path.parentPath.get("exported") === path
+    ) {
+      // we are the export name of a renamed export
+      // so this is the first definition of foo
+      // e.g. export {bar as foo}
+      return this._getNodeId(path);
+    }
+
+    if (
       (path.parentPath.isObjectProperty() ||
         path.parentPath.isObjectMethod()) &&
       path.parentPath.get("key") === path
@@ -290,7 +300,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
             path
           )}`
         );
-        return <NodePath<t.Program>>path.findParent((p) => p.isProgram());
+        return undefined; // <NodePath<t.Program>>path.findParent((p) => p.isProgram());
       } else {
         throw new Error(
           `ThisExpression without parent function found at ${this._getNodeId(
@@ -311,7 +321,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
               path
             )}`
           );
-          return <NodePath<t.Program>>path.findParent((p) => p.isProgram());
+          return undefined; // <NodePath<t.Program>>path.findParent((p) => p.isProgram());
         } else {
           throw new Error(
             `ThisExpression without parent function found at ${this._getNodeId(

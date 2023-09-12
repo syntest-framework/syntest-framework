@@ -26,69 +26,80 @@ export function extractExportsFromExportDefaultDeclaration(
   visitor: ExportVisitor,
   filePath: string,
   path: NodePath<t.ExportDefaultDeclaration>
-): Export {
+): Export[] {
   let name: string;
   let id: string;
 
-  switch (path.node.declaration.type) {
-    case "Identifier": {
-      name = path.node.declaration.name;
-      id = visitor._getBindingId(path.get("declaration"));
-      break;
-    }
-    case "NewExpression": {
-      if (path.node.declaration.callee.type !== "Identifier") {
-        // unsupported
-        throw new Error("Unsupported export default declaration");
-      }
-      name = path.node.declaration.callee.name;
-      // idk if this is correct
-      id = visitor._getNodeId(path.get("declaration"));
+  const declaration = path.get("declaration");
 
-      break;
-    }
-    case "FunctionDeclaration":
-    case "ClassDeclaration": {
-      name = path.node.declaration.id
-        ? path.node.declaration.id.name
-        : "default";
-      id = visitor._getNodeId(path.get("declaration"));
-      break;
-    }
-    case "CallExpression": {
-      // e.g export default func(...)
-      name = "default";
-      id = visitor._getNodeId(path.get("declaration"));
-      break;
-    }
-    case "ObjectExpression": {
-      // e.g export default {}
-      name = "default";
-      id = visitor._getNodeId(path.get("declaration"));
-      break;
-    }
-    default: {
-      // we could also put anon here, but that would be a bit weird
-      //   name = "anonymous"
+  if (declaration.isIdentifier()) {
+    name = declaration.node.name;
+    id = visitor._getBindingId(declaration);
+  } else if (declaration.isLiteral()) {
+    name = "default";
+    id = visitor._getNodeId(declaration);
+  } else if (declaration.isNewExpression()) {
+    if (declaration.node.callee.type !== "Identifier") {
       // unsupported
-      // examples which we don't support:
-      // export default true
-      // export default 1
-      // export default "string"
-      // export default []
-      // etc.
-      throw new Error(
-        `Unsupported export default declaration at ${visitor._getNodeId(path)}`
-      );
+      throw new Error("Unsupported export default declaration");
     }
+    name = declaration.node.callee.name;
+    // idk if this is correct
+    id = visitor._getNodeId(declaration);
+  } else if (
+    declaration.isFunctionDeclaration() ||
+    declaration.isClassDeclaration()
+  ) {
+    name = declaration.node.id ? declaration.node.id.name : "default";
+    id = visitor._getNodeId(declaration);
+  } else if (declaration.isCallExpression()) {
+    name = "default";
+    id = visitor._getNodeId(declaration);
+  } else if (declaration.isObjectExpression()) {
+    const exports: Export[] = [];
+    for (const property of declaration.get("properties")) {
+      if (property.isObjectProperty()) {
+        const key = property.get("key");
+        const value = property.get("value");
+        if (!key.isIdentifier()) {
+          throw new Error("unsupported syntax");
+        }
+        exports.push({
+          id: visitor._getBindingId(value),
+          filePath,
+          name: value.isIdentifier() ? value.node.name : key.node.name,
+          renamedTo: key.node.name,
+          default: false,
+          module: false,
+        });
+      }
+    }
+
+    return exports;
+  } else {
+    // we could also put anon here, but that would be a bit weird
+    //   name = "anonymous"
+    // unsupported
+    // examples which we don't support:
+    // export default true
+    // export default 1
+    // export default "string"
+    // export default {}
+    // export default []
+    // etc.
+    throw new Error(
+      `Unsupported export default declaration at ${visitor._getNodeId(path)}`
+    );
   }
 
-  return {
-    id: id,
-    filePath,
-    name: name,
-    renamedTo: name,
-    default: true,
-    module: false,
-  };
+  return [
+    {
+      id: id,
+      filePath,
+      name: name,
+      renamedTo: name,
+      default: true,
+      module: false,
+    },
+  ];
 }

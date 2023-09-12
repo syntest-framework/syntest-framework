@@ -305,6 +305,9 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
     if (path.node.object.type === "ThisExpression") {
       const parent = this._getThisParent(path);
 
+      if (!parent) {
+        return;
+      }
       const _object = this.objectTypeMap.get(this._getNodeId(parent));
 
       if (!_object) {

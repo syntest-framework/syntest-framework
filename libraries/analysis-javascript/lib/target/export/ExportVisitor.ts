@@ -53,7 +53,7 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
     path: NodePath<t.ExportDefaultDeclaration>
   ) => void = (path) => {
     this._exports.push(
-      extractExportsFromExportDefaultDeclaration(this, this.filePath, path)
+      ...extractExportsFromExportDefaultDeclaration(this, this.filePath, path)
     );
   };
 
