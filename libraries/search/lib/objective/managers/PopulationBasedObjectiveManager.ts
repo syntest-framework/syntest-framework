@@ -71,17 +71,9 @@ export abstract class PopulationBasedObjectiveManager<
         for (const objective of this._subject.getObjectives()) {
           if (executionResult.coversId(objective.getIdentifier())) {
             encoding.addMetaComment(
-              `Test1: Covers objective: ${objective.getIdentifier()}`
+              `Covers objective: ${objective.getIdentifier()}`
             );
           }
-        }
-      }
-
-      for (const objective of this._subject.getObjectives()) {
-        if (encoding.getDistance(objective) === 0) {
-          encoding.addMetaComment(
-            `Test2: Covers objective: ${objective.getIdentifier()}`
-          );
         }
       }
     }
