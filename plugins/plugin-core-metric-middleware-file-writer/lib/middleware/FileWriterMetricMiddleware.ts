@@ -26,7 +26,7 @@ import {
   DistributionsMap,
   Metric,
   MetricManager,
-  MiddleWare,
+  Middleware,
   PropertiesMap,
   PropertyMetric,
   SeriesDistributionMetric,
@@ -36,7 +36,7 @@ import {
 } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
 
-export class FileWriterMetricMiddleware extends MiddleWare {
+export class FileWriterMetricMiddleware extends Middleware {
   private fid: string;
   private storageManager: StorageManager;
   private outputDirectory: string;
@@ -213,7 +213,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
    * Create one line per index
    *
    * The format is:
-   * namespace,seriesName,seriesTypeName,index,value
+   * namespace,seriesName,seriesUnit,seriesIndex,value
    *
    * @param filePath
    * @param namespace
@@ -229,15 +229,15 @@ export class FileWriterMetricMiddleware extends MiddleWare {
 
     const fullData = [];
 
-    for (const [seriesName, seriesType] of series.entries()) {
-      for (const [seriesTypeName, seriesTypeData] of seriesType.entries()) {
-        for (const [index, value] of seriesTypeData.entries()) {
+    for (const [seriesName, seriesByUnit] of series.entries()) {
+      for (const [seriesUnit, seriesData] of seriesByUnit.entries()) {
+        for (const [seriesIndex, value] of seriesData.entries()) {
           fullData.push({
             fid: this.fid,
             namespace: namespace,
             seriesName: seriesName,
-            seriesTypeName: seriesTypeName,
-            index: index,
+            seriesUnit: seriesUnit,
+            seriesIndex: seriesIndex,
             value: value,
           });
         }
@@ -257,7 +257,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
    * Create one line per value
    *
    * The format is:
-   * namespace,name,seriesUnit,index,value
+   * namespace,seriesDistributionName,seriesUnit,seriesIndex,value
    *
    * @param filePath
    * @param namespace
@@ -274,17 +274,20 @@ export class FileWriterMetricMiddleware extends MiddleWare {
 
     const fullData = [];
 
-    for (const [name, seriesData] of seriesDistributions.entries()) {
-      for (const [seriesUnit, seriesTypeData] of seriesData.entries()) {
-        for (const [index, value] of seriesTypeData.entries()) {
-          for (const distributionValue of value) {
+    for (const [
+      seriesDistributionName,
+      seriesDistributionsByType,
+    ] of seriesDistributions.entries()) {
+      for (const [seriesUnit, series] of seriesDistributionsByType.entries()) {
+        for (const [seriesIndex, distribution] of series.entries()) {
+          for (const value of distribution) {
             fullData.push({
               fid: this.fid,
               namespace: namespace,
-              seriesName: name,
-              seriesType: seriesUnit,
-              index: index,
-              value: distributionValue,
+              seriesDistributionName: seriesDistributionName,
+              seriesUnit: seriesUnit,
+              seriesIndex: seriesIndex,
+              value: value,
             });
           }
         }
@@ -304,7 +307,7 @@ export class FileWriterMetricMiddleware extends MiddleWare {
    * Create one line per index
    *
    * The format is:
-   * namespace,name,seriesUnit,index,key,value
+   * namespace,seriesMeasurementName,seriesUnit,seriesIndex,key,value
    *
    * @param filePath
    * @param namespace
@@ -321,16 +324,19 @@ export class FileWriterMetricMiddleware extends MiddleWare {
 
     const fullData = [];
 
-    for (const [name, seriesData] of seriesDistributions.entries()) {
-      for (const [seriesUnit, seriesTypeData] of seriesData.entries()) {
-        for (const [index, map] of seriesTypeData.entries()) {
-          for (const [key, value] of map.entries()) {
+    for (const [
+      seriesMeasurementName,
+      seriesMeasurementsByType,
+    ] of seriesDistributions.entries()) {
+      for (const [seriesUnit, series] of seriesMeasurementsByType.entries()) {
+        for (const [seriesIndex, measurements] of series.entries()) {
+          for (const [key, value] of measurements.entries()) {
             fullData.push({
               fid: this.fid,
               namespace: namespace,
-              seriesName: name,
-              seriesType: seriesUnit,
-              index: index,
+              seriesMeasurementName: seriesMeasurementName,
+              seriesUnit: seriesUnit,
+              seriesIndex: seriesIndex,
               key: key,
               value: value,
             });

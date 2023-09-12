@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Metric, MetricManager, MetricType, MiddleWare } from "@syntest/metric";
+import { Metric, MetricManager, MetricType, Middleware } from "@syntest/metric";
 import { MetricMiddlewarePlugin } from "@syntest/module";
 import Yargs = require("yargs");
 
@@ -37,7 +37,7 @@ export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     this.metricManager = metricManager;
   }
 
-  createMetricMiddleware(metrics: Metric[]): MiddleWare {
+  createMetricMiddleware(metrics: Metric[]): Middleware {
     const statistics = (<StatisticsOptions>(<unknown>this.args))
       .statisticsMetrics;
 
@@ -78,14 +78,14 @@ export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
   }
 
   override getMetrics(): Promise<Metric[]> | Metric[] {
-    // TODO make sure the args are prosesed before the get metrics is called such that we can check which metrics are available
+    // TODO make sure the args are processed before the get metrics is called such that we can check which metrics are available
     const metrics: Metric[] = this.metrics;
 
     const newMetrics: Metric[] = [];
 
     for (const statistic of (<StatisticsOptions>(<unknown>this.args))
-      .statisticsMetrics)
-      if (statistic === "AUC")
+      .statisticsMetrics) {
+      if (statistic === "AUC") {
         for (const metric of metrics) {
           if (metric.type !== MetricType.SERIES) {
             continue;
@@ -93,9 +93,11 @@ export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
 
           newMetrics.push({
             type: MetricType.PROPERTY,
-            name: `${statistic}-${metric.name}`,
+            name: `${statistic}-${metric.name}-${metric.seriesUnit}`,
           });
         }
+      }
+    }
 
     return newMetrics;
   }

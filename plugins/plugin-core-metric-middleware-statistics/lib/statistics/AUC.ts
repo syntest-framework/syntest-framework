@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 import {
+  Distribution,
   DistributionsMap,
   MetricManager,
   PropertiesMap,
   SeriesMap,
 } from "@syntest/metric";
-import { Distribution } from "@syntest/metric/lib/PropertyTypes";
 
 import { Statistic } from "./Statistic";
 
@@ -38,16 +38,24 @@ export class AUC extends Statistic {
     _seriesDistributions: SeriesMap<Distribution>,
     _seriesMeasurements: SeriesMap<PropertiesMap<number>>
   ): void {
-    this.loopThroughSeries(series, (newPropertyName, seriesByType) => {
-      let auc = 0;
-      for (const [, series_] of seriesByType) {
-        for (const [, value] of series_) {
-          auc += value;
+    this.loopThroughSeries(
+      series,
+      (newPropertyName, _seriesName, _seriesUnit, series) => {
+        // Skip calculation if the series is empty
+        if (series.size === 0) return;
+
+        let auc = 0;
+
+        let previousIndex = 0;
+        let previousValue = 0;
+        for (const [index, value] of series) {
+          // Trapezoidal rule
+          auc += ((index - previousIndex) * (value + previousValue)) / 2;
+          previousIndex = index;
+          previousValue = value;
         }
-        // one per
-        break;
+        metricManager.recordProperty(newPropertyName, `${auc}`);
       }
-      metricManager.recordProperty(newPropertyName, `${auc}`);
-    });
+    );
   }
 }

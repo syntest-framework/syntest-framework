@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metric, MiddleWare } from "@syntest/metric";
+import { Metric, Middleware } from "@syntest/metric";
 
 import { Plugin } from "../Plugin";
 
@@ -28,7 +28,7 @@ export abstract class MetricMiddlewarePlugin extends Plugin {
     super(PluginType.METRIC_MIDDLEWARE, name, describe);
   }
 
-  abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
+  abstract createMetricMiddleware(metrics: Metric[]): Middleware;
 
   setMetrics(metrics: Metric[]): void {
     this.metrics = metrics;
