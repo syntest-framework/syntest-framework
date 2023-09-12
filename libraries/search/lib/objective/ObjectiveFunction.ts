@@ -27,6 +27,7 @@ import { SearchSubject } from "../SearchSubject";
 export abstract class ObjectiveFunction<T extends Encoding> {
   protected _id: string;
   protected _subject: SearchSubject<T>;
+  protected _lowestDistance: number;
 
   /**
    * Indicates if the distance should be shallow or deep.
@@ -43,6 +44,7 @@ export abstract class ObjectiveFunction<T extends Encoding> {
     this._id = id;
     this._subject = subject;
     this.shallowDistance = false;
+    this._lowestDistance = Number.MAX_VALUE;
   }
 
   /**
@@ -80,5 +82,21 @@ export abstract class ObjectiveFunction<T extends Encoding> {
    */
   public getSubject(): SearchSubject<T> {
     return this._subject;
+  }
+
+  /**
+   * Update the lowest distance with a new distance
+   * @param distance
+   */
+  public updateDistance(distance: number) {
+    this._lowestDistance = Math.min(distance, this._lowestDistance);
+  }
+
+  /**
+   * Gets the lowest distance to this objective function
+   * @returns the lowest distance encountered so far
+   */
+  public getLowestDistance(): number {
+    return this._lowestDistance;
   }
 }

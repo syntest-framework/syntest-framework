@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
+import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 import { Budget } from "./Budget";
 import { BudgetListener } from "./BudgetListener";
@@ -74,7 +74,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to add
    */
-  addBudget(name: BudgetType, budget: Budget<T>): BudgetManager<T> {
+  addBudget(name: BudgetType, budget: Budget<T>): this {
     this._budgets.set(name, budget);
     return this;
   }
@@ -91,10 +91,8 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    *
    * @param budget The budget to remove
    */
-  removeBudget(budget: Budget<T>): BudgetManager<T> {
-    const name = [...this._budgets.entries()].find(
-      ([, b]) => b === budget
-    )?.[0];
+  removeBudget(budget: Budget<T>): this {
+    const name = [...this._budgets.entries()].find(([, b]) => b === budget)[0];
     this._budgets.delete(name);
     return this;
   }
@@ -138,7 +136,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   /**
    * @inheritDoc
    */
-  evaluation(encoding: T): void {
-    for (const budget of this._budgets.values()) budget.evaluation(encoding);
+  evaluation(): void {
+    for (const budget of this._budgets.values()) budget.evaluation();
   }
 }

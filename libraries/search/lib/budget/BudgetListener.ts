@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
+import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 /**
  * Listener for budget signals.
@@ -56,8 +56,6 @@ export interface BudgetListener<T extends Encoding> {
 
   /**
    * Signal evaluation happened.
-   *
-   * @param encoding The encoding that was evaluated
    */
-  evaluation(encoding: T): void;
+  evaluation(): void;
 }

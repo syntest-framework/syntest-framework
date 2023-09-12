@@ -175,7 +175,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     const result = await this._runner.execute(this._subject, encoding);
 
     // TODO: Use events for this so we can elimate the dependency on the budget manager
-    budgetManager.evaluation(encoding);
+    budgetManager.evaluation();
 
     // Store the execution result in the encoding
     encoding.setExecutionResult(result);
@@ -224,6 +224,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
     encoding.setDistance(objectiveFunction, distance);
+    objectiveFunction.updateDistance(distance);
 
     // When the objective is covered, update the objectives and the archive
     if (distance === 0) {

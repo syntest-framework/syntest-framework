@@ -18,6 +18,7 @@
 
 import { LoggingOptions } from "@syntest/logging";
 import { GeneralOptions } from "@syntest/module";
+import { RandomOptions } from "@syntest/prng";
 import { StorageOptions as ModuleStorageOptions } from "@syntest/storage";
 import Yargs = require("yargs");
 
@@ -65,18 +66,12 @@ export type PostProcessingOptions = {
 };
 
 export type SamplingOptions = {
-  randomSeed: string;
   maxDepth: number;
   maxActionStatements: number;
-  constantPool: boolean;
   exploreIllegalValues: boolean;
-  resampleGeneProbability: number;
   deltaMutationProbability: number;
-  sampleExistingValueProbability: number;
   multiPointCrossoverProbability: number;
   crossoverProbability: number;
-  constantPoolProbability: number;
-  sampleFunctionOutputAsArgument: number;
   stringAlphabet: string;
   stringMaxLength: number;
   numericMaxValue: number;
@@ -96,7 +91,8 @@ export type ArgumentsObject = GeneralOptions &
   LoggingOptions &
   PostProcessingOptions &
   SamplingOptions &
-  ResearchModeOptions;
+  ResearchModeOptions &
+  RandomOptions;
 
 export class Configuration {
   getOptions(): { [key: string]: Yargs.Options } {
@@ -303,15 +299,6 @@ export class Configuration {
 
   getSamplingOptions(): { [key: string]: Yargs.Options } {
     return {
-      "random-seed": {
-        alias: ["s"],
-        default: undefined,
-        description: "Seed to be used by the pseudo random number generator.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "string",
-      },
-
       // sampling settings
       "max-depth": {
         alias: [],
@@ -330,14 +317,6 @@ export class Configuration {
         hidden: false,
         type: "number",
       },
-      "constant-pool": {
-        alias: [],
-        default: false,
-        description: "Enable constant pool.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "boolean",
-      },
 
       // mutation settings
       "explore-illegal-values": {
@@ -351,27 +330,10 @@ export class Configuration {
       },
 
       // probability settings
-      "resample-gene-probability": {
-        alias: [],
-        default: 0.01,
-        description: "Probability a gene gets resampled from scratch.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
       "delta-mutation-probability": {
         alias: [],
         default: 0.8,
         description: "Probability a delta mutation is performed.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
-      "sample-existing-value-probability": {
-        alias: [],
-        default: 0.5,
-        description:
-          "Probability the return value of a function is used as argument for another function.",
         group: OptionGroups.Sampling,
         hidden: false,
         type: "number",
@@ -392,30 +354,12 @@ export class Configuration {
         hidden: false,
         type: "number",
       },
-      "constant-pool-probability": {
-        alias: [],
-        default: 0.5,
-        description:
-          "Probability to sample from the constant pool instead creating random values",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
-      "sample-function-output-as-argument": {
-        alias: [],
-        default: 0.5,
-        description:
-          "Probability to sample the output of a function as an argument.",
-        group: OptionGroups.Sampling,
-        hidden: false,
-        type: "number",
-      },
 
       // gene defaults
       "string-alphabet": {
         alias: [],
         default:
-          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'\n\t",
         description: "The alphabet to be used by the string gene.",
         group: OptionGroups.Sampling,
         hidden: false,

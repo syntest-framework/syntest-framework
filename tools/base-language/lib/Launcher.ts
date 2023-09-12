@@ -19,7 +19,6 @@
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
 import { ModuleManager } from "@syntest/module";
-import { getSeed } from "@syntest/search";
 import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 
@@ -69,6 +68,7 @@ export abstract class Launcher {
     } catch (error) {
       console.log(error);
       console.trace(error);
+      await this.exit();
     }
   }
 
@@ -146,7 +146,10 @@ export abstract class Launcher {
       `${this.arguments_.testMinimization.toString()}`
     );
 
-    this.metricManager.recordProperty(PropertyName.RANDOM_SEED, `${getSeed()}`);
+    this.metricManager.recordProperty(
+      PropertyName.RANDOM_SEED,
+      `${this.arguments_.randomSeed.toString()}`
+    );
     this.metricManager.recordProperty(
       PropertyName.MAX_DEPTH,
       `${this.arguments_.maxDepth.toString()}`
@@ -156,24 +159,12 @@ export abstract class Launcher {
       `${this.arguments_.maxActionStatements.toString()}`
     );
     this.metricManager.recordProperty(
-      PropertyName.CONSTANT_POOL_ENABLED,
-      `${this.arguments_.constantPool.toString()}`
-    );
-    this.metricManager.recordProperty(
       PropertyName.EXPLORE_ILLEGAL_VALUES,
       `${this.arguments_.exploreIllegalValues.toString()}`
     );
     this.metricManager.recordProperty(
-      PropertyName.RESAMPLE_GENE_PROBABILITY,
-      `${this.arguments_.resampleGeneProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
       PropertyName.DELTA_MUTATION_PROBABILITY,
       `${this.arguments_.deltaMutationProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.SAMPLE_EXISTING_VALUE_PROBABILITY,
-      `${this.arguments_.sampleExistingValueProbability.toString()}`
     );
     this.metricManager.recordProperty(
       PropertyName.MULTI_POINT_CROSSOVER_PROBABILITY,
@@ -183,18 +174,10 @@ export abstract class Launcher {
       PropertyName.CROSSOVER_PROBABILITY,
       `${this.arguments_.crossoverProbability.toString()}`
     );
-    this.metricManager.recordProperty(
-      PropertyName.CONSTANT_POOL_PROBABILITY,
-      `${this.arguments_.constantPoolProbability.toString()}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.SAMPLE_FUNCTION_OUTPUT_AS_ARGUMENT,
-      `${this.arguments_.sampleFunctionOutputAsArgument.toString()}`
-    );
-    this.metricManager.recordProperty(
-      PropertyName.STRING_ALPHABET,
-      `${this.arguments_.stringAlphabet.toString()}`
-    );
+    // this.metricManager.recordProperty(
+    //   PropertyName.STRING_ALPHABET,
+    //   `${this.arguments_.stringAlphabet.toString()}`
+    // );
     this.metricManager.recordProperty(
       PropertyName.STRING_MAX_LENGTH,
       `${this.arguments_.stringMaxLength.toString()}`

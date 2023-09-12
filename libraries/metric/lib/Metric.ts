@@ -15,45 +15,64 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export type Metric =
   | PropertyMetric
   | DistributionMetric
   | SeriesMetric
-  | SeriesDistributionMetric;
+  | SeriesDistributionMetric
+  | SeriesMeasurementMetric;
 
 export interface PropertyMetric {
   type: MetricType.PROPERTY;
-  property: string;
+  name: MetricName;
 }
 
 export interface DistributionMetric {
   type: MetricType.DISTRIBUTION;
-  distributionName: string;
+  name: MetricName;
 }
 
 export interface SeriesMetric {
   type: MetricType.SERIES;
-  seriesName: string;
-  seriesType: SeriesType;
+  name: MetricName;
+  seriesUnit: SeriesUnit;
 }
 
 export interface SeriesDistributionMetric {
-  type: MetricType.SERIES_DISTRUBUTION;
-  distributionName: string;
-  seriesName: string;
-  seriesType: SeriesType;
+  type: MetricType.SERIES_DISTRIBUTION;
+  name: MetricName;
+  seriesUnit: SeriesUnit;
 }
+
+export interface SeriesMeasurementMetric {
+  type: MetricType.SERIES_MEASUREMENT;
+  name: MetricName;
+  seriesUnit: SeriesUnit;
+}
+
+export type PropertiesMap<T> = Map<MetricName, T>;
+export type DistributionsMap = Map<MetricName, Distribution>;
+export type SeriesMap<T> = Map<MetricName, Map<SeriesUnit, Series<T>>>;
+
+export type MetricName = string;
 
 export enum MetricType {
   PROPERTY = "property",
   DISTRIBUTION = "distribution",
   SERIES = "series",
-  SERIES_DISTRUBUTION = "series-distribution",
+  SERIES_DISTRIBUTION = "series-distribution",
+  SERIES_MEASUREMENT = "series-measurement",
 }
 
-export enum SeriesType {
+export type Distribution = number[];
+
+export enum SeriesUnit {
   SEARCH_TIME = "search-time",
   TOTAL_TIME = "total-time",
-  ITERATION = "iteration",
   EVALUATION = "evaluation",
+  ITERATION = "iteration",
 }
+
+export type Series<T> = Map<SeriesIndex, T>;
+export type SeriesIndex = number;

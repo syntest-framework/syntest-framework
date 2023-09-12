@@ -17,9 +17,9 @@
  */
 import * as chai from "chai";
 
+import { MOSAFamily } from "../../../lib/algorithms/evolutionary/MOSAFamily";
 import { EncodingRunner } from "../../../lib/EncodingRunner";
 import { EncodingSampler } from "../../../lib/EncodingSampler";
-import { MOSAFamily } from "../../../lib/metaheuristics/evolutionary/MOSAFamily";
 import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
 import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
 import { UncoveredObjectiveManager } from "../../../lib/objective/managers/UncoveredObjectiveManager";

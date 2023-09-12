@@ -173,7 +173,10 @@ export class ModuleManager {
       }
     }
 
-    for (const pluginsOfType of this.plugins.values()) {
+    for (const [pluginType, pluginsOfType] of this.plugins.entries()) {
+      if (pluginType === PluginType.METRIC_MIDDLEWARE) {
+        continue;
+      }
       for (const plugin of pluginsOfType.values()) {
         if (plugin.getMetrics) {
           const pluginMetrics = await plugin.getMetrics();
@@ -186,6 +189,40 @@ export class ModuleManager {
           );
           metrics.push(...pluginMetrics);
         }
+      }
+    }
+
+    if (!this.plugins.has(PluginType.METRIC_MIDDLEWARE)) {
+      return metrics;
+    }
+
+    const metricMiddlewarePlugins = [
+      ...this.plugins.get(PluginType.METRIC_MIDDLEWARE).values(),
+    ];
+    // sort based on pipeline
+    const order = (<MetricOptions>(<unknown>this.args))
+      .metricMiddlewarePipeline;
+
+    metricMiddlewarePlugins.sort(
+      (a, b) =>
+        order.indexOf(`metric-middleware-${a.name}`) -
+        order.indexOf(`metric-middleware-${b.name}`)
+    );
+
+    for (const plugin of metricMiddlewarePlugins) {
+      // set previous metrics for this plugin
+      (<MetricMiddlewarePlugin>plugin).setMetrics(metrics);
+
+      if (plugin.getMetrics) {
+        const pluginMetrics = await plugin.getMetrics();
+        ModuleManager.LOGGER.info(
+          `Metric Middleware Plugin ${plugin.name} has ${
+            pluginMetrics.length
+          } metrics: [${pluginMetrics
+            .map((metric) => Object.values(metric).join("."))
+            .join(", ")}]`
+        );
+        metrics.push(...pluginMetrics);
       }
     }
 
@@ -210,7 +247,12 @@ export class ModuleManager {
     ];
     const order = (<MetricOptions>(<unknown>this.args))
       .metricMiddlewarePipeline;
-    metricPlugins.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+    metricPlugins.sort(
+      (a, b) =>
+        order.indexOf(`metric-middleware-${a.name}`) -
+        order.indexOf(`metric-middleware-${b.name}`)
+    );
+
     const metricMiddleWare = metricPlugins.map((plugin) =>
       plugin.createMetricMiddleware(this._metricManager.metrics)
     );
@@ -385,9 +427,8 @@ export class ModuleManager {
     }
 
     const presetObject = this._presets.get(presetChoice);
-    yargs = yargs.middleware(
-      (arguments_) => presetObject.modifyArgs(arguments_),
-      true
+    yargs = yargs.middleware((arguments_) =>
+      presetObject.modifyArgs(arguments_)
     );
 
     return yargs;
