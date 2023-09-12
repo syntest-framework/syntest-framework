@@ -17,7 +17,7 @@
  */
 import * as path from "node:path";
 
-import { UserInterface } from "@syntest/cli-graphics";
+import { getLogger, Logger } from "@syntest/logging";
 import { EventListenerPlugin } from "@syntest/module";
 import {
   BudgetManager,
@@ -30,14 +30,14 @@ import {
 import TypedEventEmitter from "typed-emitter";
 
 export class SearchPerformanceListener extends EventListenerPlugin {
-  private _userInterface: UserInterface;
+  protected static LOGGER: Logger;
 
-  constructor(userInterface: UserInterface) {
+  constructor() {
     super(
       "SearchPerformanceListener",
-      "A listener that shows the performance of the search algorithm."
+      "A listener that outputs the performance of the search algorithm."
     );
-    this._userInterface = userInterface;
+    SearchPerformanceListener.LOGGER = getLogger("SearchPerformanceListener");
   }
 
   setupEventListener(): void {
@@ -54,9 +54,12 @@ export class SearchPerformanceListener extends EventListenerPlugin {
         const objectivePerformance =
           searchAlgorithm.calculateObjectivePerformance([...objectives]);
 
+        SearchPerformanceListener.LOGGER.info("Objective performance:");
         for (const [objective, distance] of objectivePerformance) {
           const objectiveName = objective.getIdentifier().split(path.sep).pop();
-          this._userInterface.printBold(`${objectiveName}: ${distance}`);
+          SearchPerformanceListener.LOGGER.info(
+            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()})`
+          );
         }
       }
     );
@@ -75,18 +78,17 @@ export class SearchPerformanceListener extends EventListenerPlugin {
         const objectivePerformance =
           searchAlgorithm.calculateObjectivePerformance([...objectives]);
 
+        SearchPerformanceListener.LOGGER.info("Objective performance:");
         for (const [objective, distance] of objectivePerformance) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           const objectiveName = objective.getIdentifier().split(path.sep).pop();
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          this._userInterface.printBold(`${objectiveName}: ${distance}`);
+          SearchPerformanceListener.LOGGER.info(
+            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()}`
+          );
         }
       }
     );
-    (<TypedEventEmitter<Events>>process).on("searchComplete", () => {
-      this._userInterface.stopProgressBars();
-    });
   }
+
   override getOptions() {
     return new Map();
   }

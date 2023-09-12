@@ -48,10 +48,7 @@ export abstract class TestingToolModule extends Module {
     _modules: Module[]
   ): void {
     moduleManager.registerPlugin(this, new SearchMetricListener());
-    moduleManager.registerPlugin(
-      this,
-      new SearchPerformanceListener(userInterface)
-    );
+    moduleManager.registerPlugin(this, new SearchPerformanceListener());
     moduleManager.registerPlugin(
       this,
       new SearchProgressBarListener(userInterface)
