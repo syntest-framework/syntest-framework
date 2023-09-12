@@ -30,13 +30,18 @@ import { TrackingObjectiveManagerPlugin } from "./plugins/objective-managers/Tra
 import { UncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/UncoveredObjectiveManagerPlugin";
 import { DefaultProcreationPlugin } from "./plugins/procreation-operators/DefaultProcreationPlugin";
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
+import { MOSARVEAPlugin } from "./plugins/search-algorithms/MOSARVEAPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
+import { RVEAPlugin } from "./plugins/search-algorithms/RVEAPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
+import { DynaMOSARVEAPreset } from "./presets/DynaMOSARVEAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
+import { MOSARVEAPreset } from "./presets/MOSARVEAPreset";
 import { NSGAIIPreset } from "./presets/NSGAIIPreset";
+import { RVEAPreset } from "./presets/RVEAPreset";
 import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
@@ -70,10 +75,16 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
+    moduleManager.registerPlugin(this, new RVEAPlugin());
+    moduleManager.registerPlugin(this, new MOSARVEAPlugin());
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 
     moduleManager.registerPreset(this, new DynaMOSAPreset());
+
+    moduleManager.registerPreset(this, new RVEAPreset());
+    moduleManager.registerPreset(this, new MOSARVEAPreset());
+    moduleManager.registerPreset(this, new DynaMOSARVEAPreset());
     moduleManager.registerPreset(this, new MOSAPreset());
     moduleManager.registerPreset(this, new NSGAIIPreset());
     moduleManager.registerPreset(this, new RandomSearchPreset());
