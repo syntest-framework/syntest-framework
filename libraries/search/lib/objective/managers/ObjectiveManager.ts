@@ -175,7 +175,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     const result = await this._runner.execute(this._subject, encoding);
 
     // TODO: Use events for this so we can elimate the dependency on the budget manager
-    budgetManager.evaluation(encoding);
+    budgetManager.evaluation();
 
     // Store the execution result in the encoding
     encoding.setExecutionResult(result);
