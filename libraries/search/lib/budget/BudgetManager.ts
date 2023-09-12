@@ -92,9 +92,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    * @param budget The budget to remove
    */
   removeBudget(budget: Budget<T>): this {
-    const name = [...this._budgets.entries()].find(
-      ([, b]) => b === budget
-    )[0];
+    const name = [...this._budgets.entries()].find(([, b]) => b === budget)[0];
     this._budgets.delete(name);
     return this;
   }
