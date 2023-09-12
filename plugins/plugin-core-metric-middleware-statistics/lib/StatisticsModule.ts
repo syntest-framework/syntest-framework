@@ -16,18 +16,13 @@
  * limitations under the License.
  */
 
+import { MetricManager } from "@syntest/metric";
 import { Module, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 
-import { DynaSPEAIIPlugin } from "./plugins/DynaSPEAIIPlugin";
-import { SPEAIIPlugin } from "./plugins/SPEAIIPlugin";
-import { DynaMOSASPEAIIPreset } from "./presets/DynaMOSASPEAIIPreset";
-import { MOSASPEAIIPreset } from "./presets/MOSASPEAIIPreset";
-import { SPEAIIPreset } from "./presets/SPEAIIPreset";
+import { StatisticsMetricMiddlewarePlugin } from "./plugins/StatisticsMetricMiddlewarePlugin";
 
-/**
- * SPEAII module
- */
-export default class SPEAIIModule extends Module {
+export default class StatisticsModule extends Module {
   constructor() {
     super(
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
@@ -37,12 +32,14 @@ export default class SPEAIIModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this, new SPEAIIPlugin());
-    moduleManager.registerPlugin(this, new DynaSPEAIIPlugin());
-
-    moduleManager.registerPreset(this, new SPEAIIPreset());
-    moduleManager.registerPreset(this, new MOSASPEAIIPreset());
-    moduleManager.registerPreset(this, new DynaMOSASPEAIIPreset());
+  register(
+    moduleManager: ModuleManager,
+    metricManager: MetricManager,
+    _storageManager: StorageManager
+  ): void {
+    moduleManager.registerPlugin(
+      this,
+      new StatisticsMetricMiddlewarePlugin(metricManager)
+    );
   }
 }

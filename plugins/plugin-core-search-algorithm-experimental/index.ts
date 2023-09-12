@@ -17,4 +17,4 @@
  */
 
 // Plugin
-export * as module from "./lib/sfuzz/SFuzzModule";
+export * as module from "./lib/ExperimentalModule";

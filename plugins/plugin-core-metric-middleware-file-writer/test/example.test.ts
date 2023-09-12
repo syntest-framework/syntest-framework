@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { MetricManager } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
 import * as chai from "chai";
 
@@ -27,7 +28,15 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new FileWriterMetricMiddleware("", new StorageManager(), [], [], "");
+    const metricManager = new MetricManager("");
+    metricManager.setOutputMetrics([]);
+    new FileWriterMetricMiddleware(
+      metricManager,
+      [],
+      "",
+      new StorageManager(),
+      ""
+    );
     expect(true);
   });
 });

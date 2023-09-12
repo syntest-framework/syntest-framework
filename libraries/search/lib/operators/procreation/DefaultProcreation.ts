@@ -48,7 +48,10 @@ export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
         );
       }
     }
-    offspring.push(this.sampler.sample());
+    for (let index = 0; index < Math.ceil(populationSize * 0.2); index++) {
+      offspring.push(this.sampler.sample());
+    }
+
     return offspring;
   }
 }
