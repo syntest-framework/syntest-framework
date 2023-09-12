@@ -129,10 +129,6 @@ export abstract class Statistic {
     }
   }
 
-  getPropertyName(property: string): string {
-    return `${this.name}-${property}`;
-  }
-
   get name() {
     return this._name;
   }
