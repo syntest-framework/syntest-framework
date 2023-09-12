@@ -84,11 +84,11 @@ export abstract class Launcher {
     );
     this.metricManager.recordProperty(
       PropertyName.INCLUDE,
-      `[${this.arguments_.include.join(", ")}]`
+      `[${this.arguments_.targetInclude.join(", ")}]`
     );
     this.metricManager.recordProperty(
       PropertyName.EXCLUDE,
-      `[${this.arguments_.exclude.join(", ")}]`
+      `[${this.arguments_.targetExclude.join(", ")}]`
     );
 
     this.metricManager.recordProperty(
