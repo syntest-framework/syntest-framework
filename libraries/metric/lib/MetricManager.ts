@@ -40,7 +40,7 @@ import {
   seriesDistributionNotRegistered,
   seriesDistributionTypeNotRegistered,
   seriesNotRegistered,
-  seriesTypeNotRegistered,
+  seriesUnitNotRegistered,
   shouldNeverHappen,
 } from "./util/diagnostics";
 
@@ -333,7 +333,7 @@ export class MetricManager {
     }
 
     if (!this.series.get(seriesName).has(seriesUnit)) {
-      throw new Error(seriesTypeNotRegistered(seriesName, seriesUnit));
+      throw new Error(seriesUnitNotRegistered(seriesName, seriesUnit));
     }
 
     this.series.get(seriesName).get(seriesUnit).set(seriesIndex, value);

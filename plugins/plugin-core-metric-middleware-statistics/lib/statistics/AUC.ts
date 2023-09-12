@@ -40,13 +40,11 @@ export class AUC extends Statistic {
   ): void {
     this.loopThroughSeries(
       series,
-      (newPropertyName, _seriesName, _seriesType, series) => {
+      (newPropertyName, _seriesName, _seriesUnit, series) => {
         // Skip calculation if the series is empty
         if (series.size === 0) return;
 
         let auc = 0;
-
-        console.log(newPropertyName);
 
         let previousIndex = 0;
         let previousValue = 0;

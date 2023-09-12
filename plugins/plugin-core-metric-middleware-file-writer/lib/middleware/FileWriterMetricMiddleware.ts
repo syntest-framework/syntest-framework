@@ -213,7 +213,7 @@ export class FileWriterMetricMiddleware extends Middleware {
    * Create one line per index
    *
    * The format is:
-   * namespace,seriesName,seriesTypeName,index,value
+   * namespace,seriesName,seriesUnit,seriesIndex,value
    *
    * @param filePath
    * @param namespace
@@ -237,7 +237,7 @@ export class FileWriterMetricMiddleware extends Middleware {
             namespace: namespace,
             seriesName: seriesName,
             seriesUnit: seriesUnit,
-            index: seriesIndex,
+            seriesIndex: seriesIndex,
             value: value,
           });
         }
@@ -257,7 +257,7 @@ export class FileWriterMetricMiddleware extends Middleware {
    * Create one line per value
    *
    * The format is:
-   * namespace,name,seriesUnit,index,value
+   * namespace,seriesDistributionName,seriesUnit,seriesIndex,value
    *
    * @param filePath
    * @param namespace
@@ -286,7 +286,7 @@ export class FileWriterMetricMiddleware extends Middleware {
               namespace: namespace,
               seriesDistributionName: seriesDistributionName,
               seriesUnit: seriesUnit,
-              index: seriesIndex,
+              seriesIndex: seriesIndex,
               value: value,
             });
           }
@@ -307,7 +307,7 @@ export class FileWriterMetricMiddleware extends Middleware {
    * Create one line per index
    *
    * The format is:
-   * namespace,name,seriesUnit,index,key,value
+   * namespace,seriesMeasurementName,seriesUnit,seriesIndex,key,value
    *
    * @param filePath
    * @param namespace
@@ -334,9 +334,9 @@ export class FileWriterMetricMiddleware extends Middleware {
             fullData.push({
               fid: this.fid,
               namespace: namespace,
-              seriesName: seriesMeasurementName,
+              seriesMeasurementName: seriesMeasurementName,
               seriesUnit: seriesUnit,
-              index: seriesIndex,
+              seriesIndex: seriesIndex,
               key: key,
               value: value,
             });
