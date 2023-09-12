@@ -45,6 +45,7 @@ export * from "./lib/presets/NSGAIIPreset";
 export * from "./lib/util/Events";
 
 export * from "./lib/Configuration";
+export * from "./lib/FileSelector";
 export * from "./lib/Launcher";
 export * from "./lib/Metrics";
 export * from "./lib/TargetSelector";

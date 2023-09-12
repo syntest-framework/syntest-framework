@@ -33,8 +33,10 @@ export enum OptionGroups {
 }
 export type TargetOptions = {
   targetRootDirectory: string;
-  include: string[];
-  exclude: string[];
+  targetInclude: string[];
+  targetExclude: string[];
+  analysisInclude: string[];
+  analysisExclude: string[];
 };
 
 export type StorageOptions = {
@@ -119,19 +121,37 @@ export class Configuration {
         normalize: true,
         type: "string",
       },
-      include: {
+      "target-include": {
         alias: ["i"],
-        default: ["./src/**/*.*"],
-        description: "Files/Directories to include",
+        default: [],
+        description: "Files/Directories to include as targets",
         group: OptionGroups.Target,
         hidden: false,
         normalize: true,
         type: "array",
       },
-      exclude: {
+      "target-exclude": {
         alias: ["e"],
         default: [],
-        description: "Files/Directories to exclude",
+        description: "Files/Directories to exclude as targets",
+        group: OptionGroups.Target,
+        hidden: false,
+        normalize: true,
+        type: "array",
+      },
+      "analysis-include": {
+        alias: [],
+        default: [],
+        description: "Files/Directories to include for analysis",
+        group: OptionGroups.Target,
+        hidden: false,
+        normalize: true,
+        type: "array",
+      },
+      "analysis-exclude": {
+        alias: [],
+        default: [],
+        description: "Files/Directories to exclude for analysis",
         group: OptionGroups.Target,
         hidden: false,
         normalize: true,
