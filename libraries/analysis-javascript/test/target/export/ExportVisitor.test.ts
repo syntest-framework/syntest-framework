@@ -27,7 +27,7 @@ function exportHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
   const ast = generator.convert("", source);
 
-  const visitor = new ExportVisitor("");
+  const visitor = new ExportVisitor("", false);
 
   traverse(ast, visitor);
 

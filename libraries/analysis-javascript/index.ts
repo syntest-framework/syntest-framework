@@ -22,6 +22,7 @@ export * from "./lib/cfg/ControlFlowGraphFactory";
 export * from "./lib/cfg/ControlFlowGraphVisitor";
 
 export * from "./lib/constant/ConstantPool";
+export * from "./lib/constant/ConstantPoolFactory";
 export * from "./lib/constant/ConstantPoolManager";
 export * from "./lib/constant/ConstantVisitor";
 

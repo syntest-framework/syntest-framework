@@ -30,8 +30,8 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
     return this._objectTypeMap;
   }
 
-  constructor(filePath: string) {
-    super(filePath);
+  constructor(filePath: string, syntaxForgiving: boolean) {
+    super(filePath, syntaxForgiving);
     this._objectTypeMap = new Map();
     this._objectStack = [];
   }
@@ -74,7 +74,11 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       // e.g. const {x} = function {}
       // e.g. const {x} = () => {}
       // Should not be possible
-      throw new Error(`Unexpected property name type: ${node.type}`);
+      throw new Error(
+        `Unexpected property name type: ${node.type} at ${this._getNodeId(
+          node
+        )}`
+      );
     }
   }
 
@@ -215,6 +219,15 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   ) => {
     const currentObject = this._getCurrentObject(path);
 
+    if (path.node.computed) {
+      ObjectVisitor.LOGGER.warn(
+        `This tool does not support computed property assignments. Found one at ${this._getNodeId(
+          path
+        )}`
+      );
+      return;
+    }
+
     if (path.node.key.type === "PrivateName") {
       const name = this._getPropertyName(path.node.key.id);
 
@@ -295,7 +308,11 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       const _object = this.objectTypeMap.get(this._getNodeId(parent));
 
       if (!_object) {
-        throw new Error(`Unexpected object type: ${path.node.object.type}`);
+        throw new Error(
+          `Unexpected object type: ${
+            path.node.object.type
+          } at ${this._getNodeId(path)}`
+        );
       }
 
       if (path.node.property.type === "PrivateName") {

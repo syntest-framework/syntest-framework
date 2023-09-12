@@ -23,8 +23,16 @@ import { ConstantPool } from "./ConstantPool";
 export class ConstantVisitor extends AbstractSyntaxTreeVisitor {
   protected _constantPool: ConstantPool;
 
-  constructor(filePath: string, constantPool: ConstantPool) {
-    super(filePath);
+  get constantPool() {
+    return this._constantPool;
+  }
+
+  constructor(
+    filePath: string,
+    syntaxForgiving: boolean,
+    constantPool: ConstantPool
+  ) {
+    super(filePath, syntaxForgiving);
     this._constantPool = constantPool;
   }
 

@@ -44,8 +44,8 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
 
   private _subTargets: SubTarget[];
 
-  constructor(filePath: string, exports: Export[]) {
-    super(filePath);
+  constructor(filePath: string, syntaxForgiving: boolean, exports: Export[]) {
+    super(filePath, syntaxForgiving);
     TargetVisitor.LOGGER = getLogger("TargetVisitor");
     this._exports = exports;
     this._subTargets = [];
@@ -234,14 +234,18 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           );
         }
       }
-      case "ReturnStatement": {
-        // e.g. return class {}
-        // e.g. return function () {}
-        // e.g. return () => {}
-        return "id" in path.node && path.node.id && "name" in path.node.id
-          ? path.node.id.name
-          : "anonymous";
-      }
+      case "ReturnStatement":
+      // e.g. return class {}
+      // e.g. return function () {}
+      // e.g. return () => {}
+      case "ArrowFunctionExpression":
+      // e.g. () => class {}
+      // e.g. () => function () {}
+      // e.g. () => () => {}
+      case "NewExpression":
+      // e.g. new Class(class {}) // dont think this one is possible but unsure
+      // e.g. new Class(function () {})
+      // e.g. new Class(() => {})
       case "CallExpression": {
         // e.g. function(class {}) // dont think this one is possible but unsure
         // e.g. function(function () {})
@@ -255,18 +259,12 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. c ? function () {} : b
         // e.g. c ? () => {} : b
         return this._getTargetNameOfExpression(path.parentPath);
-        // return "id" in path.node && path.node.id
-        //     ? path.node.id.name
-        //     : "anonymous";
       }
       case "LogicalExpression": {
         // e.g. c || class {}
         // e.g. c || function () {}
         // e.g. c || () => {}
         return this._getTargetNameOfExpression(path.parentPath);
-        // return "id" in path.node && path.node.id
-        //     ? path.node.id.name
-        //     : "anonymous";
       }
       default: {
         // e.g. class {}
@@ -274,9 +272,9 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. () => {}
         // Should not be possible
         throw new Error(
-          `unknown class expression ${parentNode.type} in ${this._getNodeId(
-            path
-          )}`
+          `Unknown parent expression ${parentNode.type} for ${
+            path.node.type
+          } in ${this._getNodeId(path)}`
         );
       }
     }

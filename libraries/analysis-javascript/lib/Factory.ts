@@ -15,21 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect } from "chai";
-import { BranchDistanceVisitor } from "../../lib/criterion/BranchDistanceVisitor";
 
-describe("BranchDistance string functions", () => {
-  it("'abc'.endsWith('bc') true", () => {
-    const calculator = new BranchDistanceVisitor(
-      true,
-      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'\n\t",
-      {},
-      true
-    );
+export class Factory {
+  private _syntaxForgiving: boolean;
 
-    const string1 = "";
-    const string2 = "0123456789";
+  constructor(syntaxForgiving: boolean) {
+    this._syntaxForgiving = syntaxForgiving;
+  }
 
-    expect(calculator._realCodedEditDistance(string1, string2)).to.equal(10);
-  });
-});
+  get syntaxForgiving() {
+    return this._syntaxForgiving;
+  }
+}

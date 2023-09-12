@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Javascript.
+ * This file is part of SynTest Framework - SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { traverse } from "@babel/core";
 import * as t from "@babel/types";
 
-import { ExportVisitor } from "./ExportVisitor";
-import { Export } from "./Export";
-import { Factory } from "../../Factory";
+import { Factory } from "../Factory";
+import { ConstantVisitor } from "./ConstantVisitor";
+import { ConstantPool } from "./ConstantPool";
 
-/**
- * ExportFactory for Javascript.
- *
- * @author Dimitri Stallenberg
- */
-export class ExportFactory extends Factory {
+export class ConstantPoolFactory extends Factory {
   /**
-   * Generate exports for specified target.
+   * Generate function map for specified target.
    *
-   * @param filePath The filePath of the target
    * @param AST The AST of the target
    */
-  extract(filePath: string, AST: t.Node): Export[] {
-    const exportVisitor = new ExportVisitor(filePath, this.syntaxForgiving);
+  extract(
+    filePath: string,
+    AST: t.Node,
+    constantPool?: ConstantPool | undefined
+  ): ConstantPool {
+    if (!constantPool) {
+      constantPool = new ConstantPool();
+    }
+    const constantVisitor = new ConstantVisitor(
+      filePath,
+      this.syntaxForgiving,
+      constantPool
+    );
+    traverse(AST, constantVisitor);
 
-    traverse(AST, exportVisitor);
-
-    return exportVisitor.exports;
+    return constantPool;
   }
 }

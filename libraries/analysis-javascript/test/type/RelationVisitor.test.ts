@@ -28,7 +28,7 @@ function relationHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
   const ast = generator.convert("", source);
 
-  const visitor = new RelationVisitor("");
+  const visitor = new RelationVisitor("", false);
   traverse(ast, visitor);
 
   return visitor.relationMap;

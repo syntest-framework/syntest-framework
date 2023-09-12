@@ -127,8 +127,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     };
   }
 
-  constructor(filePath: string) {
-    super(filePath);
+  constructor(filePath: string, syntaxForgiving: boolean) {
+    super(filePath, syntaxForgiving);
     ControlFlowGraphVisitor.LOGGER = getLogger("ControlFlowGraphVisitor");
 
     this._nodesList = [];
@@ -365,7 +365,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       this._currentParents = [node.id];
     }
 
-    const subVisitor = new ControlFlowGraphVisitor(this.filePath);
+    const subVisitor = new ControlFlowGraphVisitor(
+      this.filePath,
+      this.syntaxForgiving
+    );
     path.traverse(subVisitor);
 
     if (!subVisitor._nodes.has("ENTRY")) {

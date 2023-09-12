@@ -28,8 +28,8 @@ import { extractExportsFromAssignmentExpression } from "./ExpressionStatement";
 export class ExportVisitor extends AbstractSyntaxTreeVisitor {
   private _exports: Export[];
 
-  constructor(filePath: string) {
-    super(filePath);
+  constructor(filePath: string, syntaxForgiving: boolean) {
+    super(filePath, syntaxForgiving);
     this._exports = [];
   }
 

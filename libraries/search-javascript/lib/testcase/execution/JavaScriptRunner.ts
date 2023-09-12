@@ -50,6 +50,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   protected executionTimeout: number;
   protected testTimeout: number;
 
+  protected silenceTestOutput: boolean;
+
   private _process: ChildProcess;
 
   constructor(
@@ -58,7 +60,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     executionInformationIntergrator: ExecutionInformationIntegrator,
     temporaryTestDirectory: string,
     executionTimeout: number,
-    testTimeout: number
+    testTimeout: number,
+    silenceTestOutput: boolean
   ) {
     JavaScriptRunner.LOGGER = getLogger(JavaScriptRunner.name);
     this.storageManager = storageManager;
@@ -67,6 +70,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     this.tempTestDirectory = temporaryTestDirectory;
     this.executionTimeout = executionTimeout;
     this.testTimeout = testTimeout;
+    this.silenceTestOutput = silenceTestOutput;
 
     // eslint-disable-next-line unicorn/prefer-module
     this._process = fork(path.join(__dirname, "TestExecutor.js"));
@@ -123,6 +127,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
       childProcess.send({
         message: "run",
+        silent: this.silenceTestOutput,
         paths: paths,
         timeout: this.testTimeout,
       });

@@ -56,6 +56,13 @@ export function extractExportsFromExportDefaultDeclaration(
       break;
     }
     case "CallExpression": {
+      // e.g export default func(...)
+      name = "default";
+      id = visitor._getNodeId(path.get("declaration"));
+      break;
+    }
+    case "ObjectExpression": {
+      // e.g export default {}
       name = "default";
       id = visitor._getNodeId(path.get("declaration"));
       break;
@@ -68,7 +75,6 @@ export function extractExportsFromExportDefaultDeclaration(
       // export default true
       // export default 1
       // export default "string"
-      // export default {}
       // export default []
       // etc.
       throw new Error(

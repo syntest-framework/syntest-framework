@@ -23,10 +23,14 @@ export class ConstantPoolManager {
   protected _contextConstantPool: ConstantPool;
   protected _dynamicConstantPool: ConstantPool;
 
-  constructor() {
-    this._targetConstantPool = new ConstantPool();
-    this._contextConstantPool = new ConstantPool();
-    this._dynamicConstantPool = new ConstantPool();
+  constructor(
+    targetConstantPool: ConstantPool,
+    contextConstantPool: ConstantPool,
+    dynamicConstantPool: ConstantPool
+  ) {
+    this._targetConstantPool = targetConstantPool;
+    this._contextConstantPool = contextConstantPool;
+    this._dynamicConstantPool = dynamicConstantPool;
   }
 
   public get targetConstantPool(): ConstantPool {

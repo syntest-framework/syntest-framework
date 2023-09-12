@@ -466,6 +466,12 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleArgument(depth: number, id: string, name: string): Statement {
+    if (depth > 10) {
+      // max depth
+      // TODO should be any primitive type
+      return this.sampleBool(id, id, name);
+    }
+
     let chosenType: string;
 
     switch (this.typeInferenceMode) {

@@ -28,7 +28,7 @@ function cfgHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
   const ast = generator.convert("", source);
 
-  const visitor = new ControlFlowGraphVisitor("");
+  const visitor = new ControlFlowGraphVisitor("", false);
   traverse(ast, visitor);
 
   return visitor.cfg;

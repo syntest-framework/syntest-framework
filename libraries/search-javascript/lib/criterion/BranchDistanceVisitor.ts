@@ -36,11 +36,12 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   private _isDistanceMap: Map<string, boolean>;
 
   constructor(
+    syntaxForgiving: boolean,
     stringAlphabet: string,
     variables: Record<string, unknown>,
     inverted: boolean
   ) {
-    super("");
+    super("", syntaxForgiving);
     this._stringAlphabet = stringAlphabet;
     this._variables = variables;
     this._inverted = inverted;

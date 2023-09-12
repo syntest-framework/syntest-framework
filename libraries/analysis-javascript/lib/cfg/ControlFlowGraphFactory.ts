@@ -21,12 +21,14 @@ import { ControlFlowGraphFactory as CoreControlFlowGraphFactory } from "@syntest
 import { ControlFlowProgram, contractControlFlowProgram } from "@syntest/cfg";
 
 import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
+import { Factory } from "../Factory";
 
 export class ControlFlowGraphFactory
+  extends Factory
   implements CoreControlFlowGraphFactory<t.Node>
 {
   convert(filePath: string, AST: t.Node): ControlFlowProgram {
-    const visitor = new ControlFlowGraphVisitor(filePath);
+    const visitor = new ControlFlowGraphVisitor(filePath, this.syntaxForgiving);
     traverse(AST, visitor);
 
     return contractControlFlowProgram(visitor.cfg);

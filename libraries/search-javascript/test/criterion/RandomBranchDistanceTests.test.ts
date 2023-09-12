@@ -27,6 +27,7 @@ describe("Random Tests", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -43,6 +44,7 @@ describe("Random Tests", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -59,6 +61,7 @@ describe("Random Tests", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -75,6 +78,7 @@ describe("Random Tests", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -91,6 +95,7 @@ describe("Random Tests", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -108,6 +113,7 @@ describe("Random Tests", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 

@@ -27,8 +27,8 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
     return this._relationMap;
   }
 
-  constructor(filePath: string) {
-    super(filePath);
+  constructor(filePath: string, syntaxForgiving: boolean) {
+    super(filePath, syntaxForgiving);
     this._relationMap = new Map();
   }
 

@@ -99,6 +99,8 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
 
   protected _filePath: string;
 
+  protected _syntaxForgiving: boolean;
+
   protected _scopeIdOffset: number;
 
   protected _thisScopes: Set<string> = new Set([
@@ -112,34 +114,38 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     return this._filePath;
   }
 
+  get syntaxForgiving() {
+    return this._syntaxForgiving;
+  }
+
   get scopeIdOffset() {
     return this._scopeIdOffset;
   }
 
-  constructor(filePath: string) {
-    this._filePath = filePath;
+  constructor(filePath: string, syntaxForgiving: boolean) {
     AbstractSyntaxTreeVisitor.LOGGER = getLogger("AbstractSyntaxTreeVisitor");
+    this._filePath = filePath;
+    this._syntaxForgiving = syntaxForgiving;
   }
 
   protected _getUidFromScope(scope: BabelScope): number {
     return (<{ uid: number }>(<unknown>scope))["uid"];
   }
 
-  public _getNodeId(path: NodePath<t.Node>): string {
-    if (path.node.loc === undefined) {
+  public _getNodeId(path: NodePath<t.Node> | t.Node): string {
+    const loc = "node" in path ? path.node.loc : path.loc;
+    if (loc === undefined) {
       throw new Error(
         `Node ${path.type} in file '${this._filePath}' does not have a location`
       );
     }
 
-    const startLine = (<{ line: number }>(<unknown>path.node.loc.start)).line;
-    const startColumn = (<{ column: number }>(<unknown>path.node.loc.start))
-      .column;
-    const startIndex = (<{ index: number }>(<unknown>path.node.loc.start))
-      .index;
-    const endLine = (<{ line: number }>(<unknown>path.node.loc.end)).line;
-    const endColumn = (<{ column: number }>(<unknown>path.node.loc.end)).column;
-    const endIndex = (<{ index: number }>(<unknown>path.node.loc.end)).index;
+    const startLine = (<{ line: number }>(<unknown>loc.start)).line;
+    const startColumn = (<{ column: number }>(<unknown>loc.start)).column;
+    const startIndex = (<{ index: number }>(<unknown>loc.start)).index;
+    const endLine = (<{ line: number }>(<unknown>loc.end)).line;
+    const endColumn = (<{ column: number }>(<unknown>loc.end)).column;
+    const endIndex = (<{ index: number }>(<unknown>loc.end)).index;
 
     return `${this._filePath}:${startLine}:${startColumn}:::${endLine}:${endColumn}:::${startIndex}:${endIndex}`;
   }
@@ -158,8 +164,14 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
        * }
        */
       // not supported
-      AbstractSyntaxTreeVisitor.LOGGER.info(`Unsupported labeled statement`);
-      throw new Error("Cannot get binding for labeled statement");
+      if (this.syntaxForgiving) {
+        AbstractSyntaxTreeVisitor.LOGGER.warn(
+          `Unsupported labeled statement found at ${this._getNodeId(path)}`
+        );
+        return this._getNodeId(path);
+      } else {
+        throw new Error("Cannot get binding for labeled statement");
+      }
     }
 
     if (
@@ -241,9 +253,20 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     ) {
       return `global::${path.node.name}`;
     } else if (binding === undefined) {
-      throw new Error(
-        `Cannot find binding for ${path.node.name} at ${this._getNodeId(path)}`
-      );
+      if (this.syntaxForgiving) {
+        AbstractSyntaxTreeVisitor.LOGGER.warn(
+          `Cannot find binding for ${path.node.name} at ${this._getNodeId(
+            path
+          )}`
+        );
+        return this._getNodeId(path);
+      } else {
+        throw new Error(
+          `Cannot find binding for ${path.node.name} at ${this._getNodeId(
+            path
+          )}`
+        );
+      }
     } else {
       return this._getNodeId(binding.path);
     }
@@ -252,12 +275,29 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
   public _getThisParent(
     path: NodePath<t.Node>
   ): NodePath<
-    t.FunctionDeclaration | t.FunctionExpression | t.ObjectMethod | t.Class
+    | t.FunctionDeclaration
+    | t.FunctionExpression
+    | t.ObjectExpression
+    | t.Class
+    | t.Program
   > {
     let parent = path.getFunctionParent();
 
     if (parent === undefined || parent === null) {
-      throw new Error("ThisExpression must be inside a function");
+      if (this.syntaxForgiving) {
+        AbstractSyntaxTreeVisitor.LOGGER.warn(
+          `ThisExpression without parent function found at ${this._getNodeId(
+            path
+          )}`
+        );
+        return <NodePath<t.Program>>path.findParent((p) => p.isProgram());
+      } else {
+        throw new Error(
+          `ThisExpression without parent function found at ${this._getNodeId(
+            path
+          )}`
+        );
+      }
     }
 
     while (parent.isArrowFunctionExpression()) {
@@ -265,27 +305,56 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       parent = parent.getFunctionParent();
 
       if (parent === undefined || parent === null) {
-        throw new Error("ThisExpression must be inside a function");
+        if (this.syntaxForgiving) {
+          AbstractSyntaxTreeVisitor.LOGGER.warn(
+            `ThisExpression without parent function found at ${this._getNodeId(
+              path
+            )}`
+          );
+          return <NodePath<t.Program>>path.findParent((p) => p.isProgram());
+        } else {
+          throw new Error(
+            `ThisExpression without parent function found at ${this._getNodeId(
+              path
+            )}`
+          );
+        }
       }
     }
 
     if (parent.isClassMethod() || parent.isClassPrivateMethod()) {
       const classParent = path.findParent((p) => p.isClass());
       if (classParent === undefined || classParent === null) {
-        throw new Error("ThisExpression must be inside a class");
+        // impossible?
+        throw new Error(
+          `ThisExpression without parent class found at ${this._getNodeId(
+            path
+          )}`
+        );
       }
       return <NodePath<t.Class>>classParent;
     }
 
-    if (
-      parent.isFunctionDeclaration() ||
-      parent.isFunctionExpression() ||
-      parent.isObjectMethod()
-    ) {
+    if (parent.isObjectMethod()) {
+      const objectParent = path.findParent((p) => p.isObjectExpression());
+      if (objectParent === undefined || objectParent === null) {
+        // impossible?
+        throw new Error(
+          `ThisExpression without parent object found at ${this._getNodeId(
+            path
+          )}`
+        );
+      }
+      return <NodePath<t.ObjectExpression>>objectParent;
+    }
+
+    if (parent.isFunctionDeclaration() || parent.isFunctionExpression()) {
       return parent;
     }
 
-    throw new Error("ThisExpression must be inside a function");
+    throw new Error(
+      `ThisExpression without parent function found at ${this._getNodeId(path)}`
+    );
   }
 
   enter = (path: NodePath<t.Node>) => {

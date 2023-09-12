@@ -27,7 +27,7 @@ function dependencyHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
   const ast = generator.convert("", source);
 
-  const visitor = new DependencyVisitor("");
+  const visitor = new DependencyVisitor("", false);
   traverse(ast, visitor);
 
   return visitor.imports;

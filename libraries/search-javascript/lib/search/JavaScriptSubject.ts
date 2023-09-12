@@ -31,13 +31,16 @@ import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { BranchDistance } from "../criterion/BranchDistance";
 
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
+  protected syntaxForgiving: boolean;
   protected stringAlphabet: string;
   constructor(
     target: Target,
     rootContext: RootContext,
+    syntaxForgiving: boolean,
     stringAlphabet: string
   ) {
     super(target, rootContext);
+    this.syntaxForgiving = syntaxForgiving;
     this.stringAlphabet = stringAlphabet;
 
     this._extractObjectives();
@@ -76,7 +79,7 @@ export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
           this._objectives.set(
             new BranchObjectiveFunction(
               new ApproachLevel(),
-              new BranchDistance(this.stringAlphabet),
+              new BranchDistance(this.syntaxForgiving, this.stringAlphabet),
               this,
               edge.target
             ),

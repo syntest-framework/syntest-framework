@@ -455,16 +455,12 @@ export class TypeModel {
         // ignore self references
         continue;
       }
-      if (!relationPairsVisited.has(id)) {
-        relationPairsVisited.set(id, new Set());
-      }
-      if (!relationPairsVisited.has(relation)) {
-        relationPairsVisited.set(relation, new Set());
-      }
 
       if (
-        relationPairsVisited.get(id).has(relation) ||
-        relationPairsVisited.get(relation).has(id)
+        (relationPairsVisited.has(id) &&
+          relationPairsVisited.get(id).has(relation)) ||
+        (relationPairsVisited.has(relation) &&
+          relationPairsVisited.get(relation).has(id))
       ) {
         // we have already visited this relation pair
         // this means that we have a cycle in the graph
@@ -483,12 +479,13 @@ export class TypeModel {
       probabilityMap.set(type, score / totalScore);
     }
 
-    for (const [relation, score] of relationMap.entries()) {
-      if (!usableRelations.has(relation)) {
-        // we have already visited this relation pair
-        // this means that we have a cycle in the graph
-        // we can safely ignore this relation
-        continue;
+    for (const relation of usableRelations) {
+      const score = relationMap.get(relation);
+      if (!relationPairsVisited.has(id)) {
+        relationPairsVisited.set(id, new Set());
+      }
+      if (!relationPairsVisited.has(relation)) {
+        relationPairsVisited.set(relation, new Set());
       }
 
       relationPairsVisited.get(id).add(relation);

@@ -29,7 +29,7 @@ function elementHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
   const ast = generator.convert("", source);
 
-  const visitor = new ElementVisitor("");
+  const visitor = new ElementVisitor("", false);
   traverse(ast, visitor);
 
   return visitor.elementMap;

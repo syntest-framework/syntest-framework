@@ -25,13 +25,17 @@ import { TargetFactory as CoreTargetFactory } from "@syntest/analysis";
 import { ExportVisitor } from "./export/ExportVisitor";
 import { Target } from "./Target";
 import { TargetVisitor } from "./TargetVisitor";
+import { Factory } from "../Factory";
 
 /**
  * TargetFactory for Javascript.
  *
  * @author Dimitri Stallenberg
  */
-export class TargetFactory implements CoreTargetFactory<t.Node> {
+export class TargetFactory
+  extends Factory
+  implements CoreTargetFactory<t.Node>
+{
   /**
    * Generate function map for specified target.
    *
@@ -40,12 +44,12 @@ export class TargetFactory implements CoreTargetFactory<t.Node> {
    */
   extract(filePath: string, AST: t.Node): Target {
     // bit sad that we have to do this twice, but we need to know the exports
-    const exportVisitor = new ExportVisitor(filePath);
+    const exportVisitor = new ExportVisitor(filePath, this.syntaxForgiving);
 
     traverse(AST, exportVisitor);
 
     const exports = exportVisitor.exports;
-    const visitor = new TargetVisitor(filePath, exports);
+    const visitor = new TargetVisitor(filePath, this.syntaxForgiving, exports);
 
     traverse(AST, visitor);
 

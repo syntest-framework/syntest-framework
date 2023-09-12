@@ -26,8 +26,8 @@ export class DependencyVisitor extends AbstractSyntaxTreeVisitor {
 
   private _imports: Set<string>;
 
-  constructor(filePath: string) {
-    super(filePath);
+  constructor(filePath: string, syntaxForgiving: boolean) {
+    super(filePath, syntaxForgiving);
     DependencyVisitor.LOGGER = getLogger("DependencyVisitor");
     this._imports = new Set<string>();
   }

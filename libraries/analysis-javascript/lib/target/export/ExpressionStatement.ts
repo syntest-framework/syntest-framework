@@ -21,6 +21,7 @@ import * as t from "@babel/types";
 
 import { Export } from "./Export";
 import { ExportVisitor } from "./ExportVisitor";
+import { getLogger } from "@syntest/logging";
 
 type PartialExport = PartialDefaultExport | PartialNonDefaultExport;
 
@@ -42,7 +43,10 @@ export function extractExportsFromAssignmentExpression(
   const left = path_.get("left");
   const right = path_.get("right");
 
-  const partialExport: PartialExport | false = _checkExportAndDefault(left);
+  const partialExport: PartialExport | false = _checkExportAndDefault(
+    visitor,
+    left
+  );
   if (!partialExport) {
     // not an export
     return [];
@@ -57,7 +61,7 @@ export function extractExportsFromAssignmentExpression(
     // TODO extract the stuff from the object
     const properties = right.get("properties");
     exports.push(
-      ..._extractObjectProperties(properties, visitor, filePath, module)
+      ..._extractObjectProperties(right, properties, visitor, filePath, module)
     );
   } else if (partialExport.default) {
     // module.exports = ?
@@ -96,6 +100,7 @@ export function extractExportsFromAssignmentExpression(
 }
 
 function _extractObjectProperties(
+  path: NodePath<t.Node>,
   properties: NodePath<t.ObjectMethod | t.ObjectProperty | t.SpreadElement>[],
   visitor: ExportVisitor,
   filePath: string,
@@ -170,8 +175,17 @@ function _extractObjectProperties(
       }
     } else {
       // {...a}
-      // unsupport
-      throw new Error("Unsupported export declaration");
+      // unsupported
+      if (visitor.syntaxForgiving) {
+        // Log it
+        getLogger("ExportVisitor").warn(
+          `Unsupported export declaration at ${visitor._getNodeId(path)}`
+        );
+      } else {
+        throw new Error(
+          `Unsupported export declaration at ${visitor._getNodeId(path)}`
+        );
+      }
     }
   }
   return exports;
@@ -204,6 +218,7 @@ function _getName(expression: NodePath<t.Expression>): string {
 }
 
 function _checkExportAndDefault(
+  visitor: ExportVisitor,
   expression: NodePath<t.LVal>
 ): false | PartialExport {
   if (expression.isIdentifier() && expression.node.name === "exports") {
@@ -235,9 +250,17 @@ function _checkExportAndDefault(
         }
       } else if (object.node.name === "exports") {
         // exports.? = ?
+        const name = _getNameOfProperty(
+          visitor,
+          property,
+          expression.node.computed
+        );
+        if (!name) {
+          return false;
+        }
         return {
           default: false,
-          renamedTo: _getNameOfProperty(property, expression.node.computed),
+          renamedTo: name,
         };
       }
     } else if (object.isMemberExpression()) {
@@ -258,9 +281,17 @@ function _checkExportAndDefault(
         // module.exports.? = ?
         // module['exports'].? = ?
         // module.exports[?] = ?
+        const name = _getNameOfProperty(
+          visitor,
+          property,
+          expression.node.computed
+        );
+        if (!name) {
+          return false;
+        }
         return {
           default: false,
-          renamedTo: _getNameOfProperty(property, expression.node.computed),
+          renamedTo: name,
         };
       }
     }
@@ -270,9 +301,10 @@ function _checkExportAndDefault(
 }
 
 function _getNameOfProperty(
+  visitor: ExportVisitor,
   property: NodePath<t.PrivateName | t.Expression>,
   computed: boolean
-): string {
+): string | undefined {
   if (computed) {
     // module.exports[?] = ?
     if (
@@ -285,7 +317,12 @@ function _getNameOfProperty(
       return `${property.node.value}`;
     } else {
       // module.exports[a] = ?
-      throw new Error('Unsupported syntax "module.exports[a] = ?"');
+      getLogger("ExportVisitor").warn(
+        `This tool does not support computed export statements. Found one at ${visitor._getNodeId(
+          property
+        )}`
+      );
+      return undefined;
     }
   } else if (property.isIdentifier()) {
     // module.exports.x = ?

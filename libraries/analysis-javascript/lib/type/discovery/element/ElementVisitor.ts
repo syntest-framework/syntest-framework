@@ -41,8 +41,8 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
     return this._elementMap;
   }
 
-  constructor(filePath: string) {
-    super(filePath);
+  constructor(filePath: string, syntaxForgiving: boolean) {
+    super(filePath, syntaxForgiving);
     this._elementMap = new Map();
   }
 

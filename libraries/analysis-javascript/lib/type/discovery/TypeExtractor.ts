@@ -20,10 +20,11 @@ import traverse from "@babel/traverse";
 import { ElementVisitor } from "./element/ElementVisitor";
 import { RelationVisitor } from "./relation/RelationVisitor";
 import * as t from "@babel/types";
+import { Factory } from "../../Factory";
 
-export class TypeExtractor {
+export class TypeExtractor extends Factory {
   extractElements(filepath: string, ast: t.Node) {
-    const elementVisitor = new ElementVisitor(filepath);
+    const elementVisitor = new ElementVisitor(filepath, this.syntaxForgiving);
 
     traverse(ast, elementVisitor);
 
@@ -31,7 +32,7 @@ export class TypeExtractor {
   }
 
   extractRelations(filepath: string, ast: t.Node) {
-    const relationVisitor = new RelationVisitor(filepath);
+    const relationVisitor = new RelationVisitor(filepath, this.syntaxForgiving);
 
     traverse(ast, relationVisitor);
 
@@ -39,7 +40,7 @@ export class TypeExtractor {
   }
 
   extractObjectTypes(filepath: string, ast: t.Node) {
-    const objectVisitor = new ObjectVisitor(filepath);
+    const objectVisitor = new ObjectVisitor(filepath, this.syntaxForgiving);
 
     traverse(ast, objectVisitor);
 

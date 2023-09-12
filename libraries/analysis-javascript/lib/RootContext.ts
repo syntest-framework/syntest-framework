@@ -37,11 +37,19 @@ import { Relation } from "./type/discovery/relation/Relation";
 import { TypePool } from "./type/resolving/TypePool";
 import TypedEmitter from "typed-emitter";
 import { Events } from "./Events";
+import { ConstantPoolManager } from "./constant/ConstantPoolManager";
+import { Logger, getLogger } from "@syntest/logging";
+import { ConstantPoolFactory } from "./constant/ConstantPoolFactory";
+import { ConstantPool } from "./constant/ConstantPool";
 
 export class RootContext extends CoreRootContext<t.Node> {
+  protected static LOGGER: Logger;
+
   protected _exportFactory: ExportFactory;
   protected _typeExtractor: TypeExtractor;
   protected _typeResolver: TypeModelFactory;
+
+  protected _constantPoolFactory: ConstantPoolFactory;
 
   protected _files: string[];
   // filepath -> id -> element
@@ -65,7 +73,8 @@ export class RootContext extends CoreRootContext<t.Node> {
     dependencyFactory: DependencyFactory,
     exportFactory: ExportFactory,
     typeExtractor: TypeExtractor,
-    typeResolver: TypeModelFactory
+    typeResolver: TypeModelFactory,
+    constantPoolFactory: ConstantPoolFactory
   ) {
     super(
       rootPath,
@@ -75,9 +84,11 @@ export class RootContext extends CoreRootContext<t.Node> {
       targetFactory,
       dependencyFactory
     );
+    RootContext.LOGGER = getLogger("RootContext");
     this._exportFactory = exportFactory;
     this._typeExtractor = typeExtractor;
     this._typeResolver = typeResolver;
+    this._constantPoolFactory = constantPoolFactory;
   }
 
   get rootPath(): string {
@@ -316,5 +327,40 @@ export class RootContext extends CoreRootContext<t.Node> {
     }
 
     return this._typePool;
+  }
+
+  // TODO cache
+  private _getContextConstantPool(): ConstantPool {
+    const constantPool = new ConstantPool();
+    for (const filepath of this.getFiles()) {
+      const ast = this.getAbstractSyntaxTree(filepath);
+      this._constantPoolFactory.extract(filepath, ast, constantPool);
+    }
+
+    return constantPool;
+  }
+
+  // TODO cache
+  getConstantPoolManager(filepath: string): ConstantPoolManager {
+    const absolutePath = this.resolvePath(filepath);
+
+    RootContext.LOGGER.info("Extracting constants");
+    const ast = this.getAbstractSyntaxTree(absolutePath);
+
+    const targetConstantPool = this._constantPoolFactory.extract(
+      absolutePath,
+      ast
+    );
+    const contextConstantPool = this._getContextConstantPool();
+    const dynamicConstantPool = new ConstantPool();
+
+    const constantPoolManager = new ConstantPoolManager(
+      targetConstantPool,
+      contextConstantPool,
+      dynamicConstantPool
+    );
+
+    RootContext.LOGGER.info("Extracting constants done");
+    return constantPoolManager;
   }
 }

@@ -26,6 +26,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -40,6 +41,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -54,6 +56,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -69,6 +72,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -83,6 +87,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -97,6 +102,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -112,6 +118,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -127,6 +134,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -141,6 +149,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -155,6 +164,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -170,6 +180,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = true;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
@@ -184,6 +195,7 @@ describe("BranchDistance a < b test", () => {
     const trueOrFalse = false;
 
     const calculator = new BranchDistance(
+      false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 

@@ -25,10 +25,10 @@ function helper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
   const ast = generator.convert("", source);
 
-  const elementVisitor = new ElementVisitor("");
+  const elementVisitor = new ElementVisitor("", false);
   traverse(ast, elementVisitor);
 
-  const relationVisitor = new RelationVisitor("");
+  const relationVisitor = new RelationVisitor("", false);
   traverse(ast, relationVisitor);
 
   const factory = new InferenceTypeModelFactory();

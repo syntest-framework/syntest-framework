@@ -31,9 +31,6 @@ import {
   DependencyFactory,
   TypeExtractor,
   isExported,
-  ConstantPoolManager,
-  ConstantVisitor,
-  getAllFiles,
 } from "@syntest/analysis-javascript";
 import {
   ArgumentsObject,
@@ -79,7 +76,7 @@ import { Instrumenter } from "@syntest/instrumentation-javascript";
 import { getLogger, Logger } from "@syntest/logging";
 import { MetricManager } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
-import traverse from "@babel/traverse";
+import { ConstantPoolFactory } from "@syntest/analysis-javascript";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
 export class JavaScriptLauncher extends Launcher {
@@ -153,12 +150,25 @@ export class JavaScriptLauncher extends Launcher {
     );
 
     const abstractSyntaxTreeFactory = new AbstractSyntaxTreeFactory();
-    const targetFactory = new TargetFactory();
-    const controlFlowGraphFactory = new ControlFlowGraphFactory();
-    const dependencyFactory = new DependencyFactory();
-    const exportFactory = new ExportFactory();
-    const typeExtractor = new TypeExtractor();
+    const targetFactory = new TargetFactory(
+      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+    );
+    const controlFlowGraphFactory = new ControlFlowGraphFactory(
+      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+    );
+    const dependencyFactory = new DependencyFactory(
+      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+    );
+    const exportFactory = new ExportFactory(
+      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+    );
+    const typeExtractor = new TypeExtractor(
+      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+    );
     const typeResolver: TypeModelFactory = new InferenceTypeModelFactory();
+    const constantPoolFactory = new ConstantPoolFactory(
+      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+    );
 
     this.rootContext = new RootContext(
       this.arguments_.targetRootDirectory,
@@ -168,7 +178,8 @@ export class JavaScriptLauncher extends Launcher {
       dependencyFactory,
       exportFactory,
       typeExtractor,
-      typeResolver
+      typeResolver,
+      constantPoolFactory
     );
 
     this.userInterface.printHeader("GENERAL INFO");
@@ -397,7 +408,8 @@ export class JavaScriptLauncher extends Launcher {
       executionInformationIntegrator,
       this.arguments_.testDirectory,
       (<JavaScriptArguments>this.arguments_).executionTimeout,
-      (<JavaScriptArguments>this.arguments_).testTimeout
+      (<JavaScriptArguments>this.arguments_).testTimeout,
+      (<JavaScriptArguments>this.arguments_).silenceTestOutput
     );
 
     JavaScriptLauncher.LOGGER.info("Preprocessing done");
@@ -625,6 +637,7 @@ export class JavaScriptLauncher extends Launcher {
     const currentSubject = new JavaScriptSubject(
       target,
       this.rootContext,
+      (<JavaScriptArguments>this.arguments_).syntaxForgiving,
       this.arguments_.stringAlphabet
     );
 
@@ -644,33 +657,7 @@ export class JavaScriptLauncher extends Launcher {
     const dependencyMap = new Map<string, string[]>();
     dependencyMap.set(target.name, dependencies);
 
-    JavaScriptLauncher.LOGGER.info("Extracting constants");
-    const constantPoolManager = new ConstantPoolManager();
-    const targetAbstractSyntaxTree = this.rootContext.getAbstractSyntaxTree(
-      target.path
-    );
-    const constantVisitor = new ConstantVisitor(
-      target.path,
-      constantPoolManager.targetConstantPool
-    );
-    traverse(targetAbstractSyntaxTree, constantVisitor);
-
-    const files = getAllFiles(this.rootContext.rootPath, ".js").filter(
-      (x) =>
-        !x.includes("/test/") &&
-        !x.includes(".test.js") &&
-        !x.includes("node_modules")
-    );
-
-    for (const file of files) {
-      const abstractSyntaxTree = this.rootContext.getAbstractSyntaxTree(file);
-      const constantVisitor = new ConstantVisitor(
-        file,
-        constantPoolManager.contextConstantPool
-      );
-      traverse(abstractSyntaxTree, constantVisitor);
-    }
-    JavaScriptLauncher.LOGGER.info("Extracting constants done");
+    const constantPoolManager = rootContext.getConstantPoolManager(target.path);
 
     const sampler = new JavaScriptRandomSampler(
       currentSubject,

@@ -26,7 +26,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new AbstractSyntaxTreeVisitor("");
+    new AbstractSyntaxTreeVisitor("", false);
     expect(true);
   });
 });
