@@ -42,14 +42,19 @@ describe("ControlFlowGraphVisitor test for ternary statements", () => {
 
     const cfg = cfgHelper(source);
 
-    console.log(cfg.graph);
-    expect(cfg.graph.nodes).to.have.lengthOf(8);
-    expect(cfg.graph.edges).to.have.lengthOf(7);
+    expect(cfg.graph.nodes).to.have.lengthOf(9);
+    expect(cfg.graph.edges).to.have.lengthOf(8);
 
     expect(cfg.graph.getIncomingEdges("ENTRY")).to.have.lengthOf(0);
     expect(cfg.graph.getOutgoingEdges("ENTRY")).to.have.lengthOf(1);
 
-    const assignment = cfg.graph.getOutgoingEdges("ENTRY")[0].target;
+    const variableDeclaration = cfg.graph.getOutgoingEdges("ENTRY")[0].target;
+
+    expect(cfg.graph.getIncomingEdges(variableDeclaration)).to.have.lengthOf(1);
+    expect(cfg.graph.getOutgoingEdges(variableDeclaration)).to.have.lengthOf(1);
+
+    const assignment =
+      cfg.graph.getOutgoingEdges(variableDeclaration)[0].target;
 
     expect(cfg.graph.getIncomingEdges(assignment)).to.have.lengthOf(1);
     expect(cfg.graph.getOutgoingEdges(assignment)).to.have.lengthOf(1);

@@ -142,7 +142,6 @@ describe("TargetVisitor test", () => {
         `;
 
     const targets = targetHelper(source);
-    console.log(targets);
     expect(targets.length).to.equal(1);
 
     checkFunction(targets[0], "name1", true, true);
@@ -367,7 +366,6 @@ describe("TargetVisitor test", () => {
 
     expect(targets.length).to.equal(2);
 
-    console.log(targets);
     checkClass(targets[0], "name1", false);
     checkClassMethod(
       targets[1],
@@ -417,7 +415,6 @@ describe("TargetVisitor test", () => {
 
     const targets = targetHelper(source);
 
-    console.log(targets);
     expect(targets.length).to.equal(3);
 
     checkObject(targets[0], "obj", false);

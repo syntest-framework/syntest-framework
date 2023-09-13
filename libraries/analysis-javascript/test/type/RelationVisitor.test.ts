@@ -66,7 +66,7 @@ describe("RelationVisitor test", () => {
     expect(relations.length).to.equal(2);
     expect(relations[0].involved.length).to.equal(2);
     expect(relations[1].involved.length).to.equal(1);
-    expect(relations[1].involved[0]).to.equal(`${relations[1].id}::anonymous`);
+    expect(relations[1].involved[0]).to.equal(`${relations[1].id}`);
     expect(relations[0].involved[1]).to.equal(relations[1].id);
   });
 

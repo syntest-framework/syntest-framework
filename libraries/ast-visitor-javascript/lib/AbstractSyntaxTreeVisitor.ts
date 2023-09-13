@@ -20,77 +20,8 @@ import { Scope as BabelScope, TraverseOptions } from "@babel/traverse";
 import * as t from "@babel/types";
 
 import { getLogger, Logger } from "@syntest/logging";
-import * as globals from "globals";
-
-const flatGlobals = new Set(
-  Object.values(globals).flatMap((value) => Object.keys(value))
-);
-const reservedKeywords = new Set([
-  "abstract",
-  "arguments",
-  "await*",
-  "boolean",
-  "break",
-  "byte",
-  "case",
-  "catch",
-  "char",
-  "class*",
-  "const",
-  "continue",
-  "debugger",
-  "default",
-  "delete",
-  "do",
-  "double",
-  "else",
-  "enum*",
-  "eval",
-  "export*",
-  "extends*",
-  "false",
-  "final",
-  "finally",
-  "float",
-  "for",
-  "function",
-  "goto",
-  "if",
-  "implements",
-  "import*",
-  "in",
-  "instanceof",
-  "int",
-  "interface",
-  "let*",
-  "long",
-  "native",
-  "new",
-  "null",
-  "package",
-  "private",
-  "protected",
-  "public",
-  "return",
-  "short",
-  "static",
-  "super*",
-  "switch",
-  "synchronized",
-  "this",
-  "throw",
-  "throws",
-  "transient",
-  "true",
-  "try",
-  "typeof",
-  "var",
-  "void",
-  "volatile",
-  "while",
-  "with",
-  "yield",
-]);
+import { reservedKeywords } from "./reservedKeywords";
+import { globalVariables } from "./globalVariables";
 
 export const MemberSeparator = " <-> ";
 
@@ -207,16 +138,6 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     }
 
     if (
-      path.parentPath.isExportSpecifier() &&
-      path.parentPath.get("exported") === path
-    ) {
-      // we are the export name of a renamed export
-      // so this is the first definition of foo
-      // e.g. export {bar as foo}
-      return this._getNodeId(path);
-    }
-
-    if (
       (path.parentPath.isObjectProperty() ||
         path.parentPath.isObjectMethod()) &&
       path.parentPath.get("key") === path
@@ -242,6 +163,16 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
 
     if (
       path.parentPath.isExportSpecifier() &&
+      path.parentPath.get("exported") === path
+    ) {
+      // we are the export name of a renamed export
+      // so this is the first definition of foo
+      // e.g. export {bar as foo}
+      return this._getNodeId(path);
+    }
+
+    if (
+      path.parentPath.isExportSpecifier() &&
       path.parentPath.parentPath.has("source")
     ) {
       // we export from source
@@ -259,7 +190,8 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
 
     if (
       binding === undefined &&
-      (flatGlobals.has(path.node.name) || reservedKeywords.has(path.node.name))
+      (globalVariables.has(path.node.name) ||
+        reservedKeywords.has(path.node.name))
     ) {
       return `global::${path.node.name}`;
     } else if (binding === undefined) {

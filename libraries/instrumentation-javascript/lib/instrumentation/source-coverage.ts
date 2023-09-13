@@ -69,9 +69,9 @@ export class SourceCoverage extends classes.FileCoverage {
       );
     }
 
-    const startLine = (<{ line: number }>(<unknown>loc.end)).line;
-    const startColumn = (<{ column: number }>(<unknown>loc.end)).column;
-    const startIndex = (<{ index: number }>(<unknown>loc.end)).index;
+    const startLine = (<{ line: number }>(<unknown>loc.start)).line;
+    const startColumn = (<{ column: number }>(<unknown>loc.start)).column;
+    const startIndex = (<{ index: number }>(<unknown>loc.start)).index;
     const endLine = (<{ line: number }>(<unknown>loc.end)).line;
     const endColumn = (<{ column: number }>(<unknown>loc.end)).column;
     const endIndex = (<{ index: number }>(<unknown>loc.end)).index;

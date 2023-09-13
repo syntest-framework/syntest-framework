@@ -58,7 +58,7 @@ export function extractExportsFromAssignmentExpression(
     // module.exports = {...}
     // exports = {...}
     // so not default actually
-    // TODO extract the stuff from the object
+    // extract the stuff from the object
     const properties = right.get("properties");
     exports.push(
       ..._extractObjectProperties(right, properties, visitor, filePath, module)

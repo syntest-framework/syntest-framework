@@ -317,9 +317,19 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   override sampleMethodCall(depth: number): MethodCall {
+    const targets = (<JavaScriptSubject>this._subject).getActionableTargets();
+
     const methods = (<JavaScriptSubject>this._subject)
       .getActionableTargetsByType(TargetType.METHOD)
-      .filter((method) => (<MethodTarget>method).methodType === "method");
+      .filter((method) => (<MethodTarget>method).methodType === "method")
+      .filter((target) =>
+        isExported(
+          targets.find(
+            (objectTarget) =>
+              objectTarget.id === (<ObjectFunctionTarget>target).objectId
+          )
+        )
+      );
 
     const method = <MethodTarget>prng.pickOne(methods);
     const class_ = this._getClass(method.classId);
@@ -335,9 +345,19 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleGetter(depth: number): Getter {
+    const targets = (<JavaScriptSubject>this._subject).getActionableTargets();
+
     const methods = (<JavaScriptSubject>this._subject)
       .getActionableTargetsByType(TargetType.METHOD)
-      .filter((method) => (<MethodTarget>method).methodType === "get");
+      .filter((method) => (<MethodTarget>method).methodType === "get")
+      .filter((target) =>
+        isExported(
+          targets.find(
+            (objectTarget) =>
+              objectTarget.id === (<ObjectFunctionTarget>target).objectId
+          )
+        )
+      );
 
     const method = <MethodTarget>prng.pickOne(methods);
     const class_ = this._getClass(method.classId);
@@ -353,9 +373,19 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleSetter(depth: number): Setter {
+    const targets = (<JavaScriptSubject>this._subject).getActionableTargets();
+
     const methods = (<JavaScriptSubject>this._subject)
       .getActionableTargetsByType(TargetType.METHOD)
-      .filter((method) => (<MethodTarget>method).methodType === "set");
+      .filter((method) => (<MethodTarget>method).methodType === "set")
+      .filter((target) =>
+        isExported(
+          targets.find(
+            (objectTarget) =>
+              objectTarget.id === (<ObjectFunctionTarget>target).objectId
+          )
+        )
+      );
 
     const method = <MethodTarget>prng.pickOne(methods);
     const class_ = this._getClass(method.classId);
@@ -380,7 +410,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       if (!result) {
         throw new Error("missing object with id: " + id);
       } else if (!isExported(result)) {
-        throw new Error("object with id: " + id + "is not exported");
+        throw new Error("object with id: " + id + " is not exported");
       }
       return result;
     }
@@ -410,9 +440,18 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleObjectFunctionCall(depth: number): ObjectFunctionCall {
-    const functions = (<JavaScriptSubject>(
-      this._subject
-    )).getActionableTargetsByType(TargetType.OBJECT_FUNCTION);
+    const targets = (<JavaScriptSubject>this._subject).getActionableTargets();
+
+    const functions = (<JavaScriptSubject>this._subject)
+      .getActionableTargetsByType(TargetType.OBJECT_FUNCTION)
+      .filter((target) =>
+        isExported(
+          targets.find(
+            (objectTarget) =>
+              objectTarget.id === (<ObjectFunctionTarget>target).objectId
+          )
+        )
+      );
 
     const randomFunction = <ObjectFunctionTarget>prng.pickOne(functions);
     const object_ = this._getObject(randomFunction.objectId);

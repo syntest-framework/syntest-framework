@@ -437,7 +437,14 @@ describe("ExportVisitor test", () => {
   it("export default const value", () => {
     const source = `export default 1`;
 
-    expect(() => exportHelper(source)).throw();
+    const exports = exportHelper(source);
+
+    expect(exports.length).to.equal(1);
+
+    expect(exports[0].name).to.equal("default");
+    expect(exports[0].default).to.equal(true);
+    expect(exports[0].module).to.equal(false);
+    expect(exports[0].renamedTo).to.equal("default");
   });
 
   it("export default new expression non identifier", () => {
@@ -701,7 +708,10 @@ describe("ExportVisitor test", () => {
     const a = 1;
     exports[x] = a`;
 
-    expect(() => exportHelper(source)).throw();
+    const exports = exportHelper(source);
+
+    // should give a warning
+    expect(exports.length).to.equal(0);
   });
 
   it("export module.x equals a", () => {
@@ -797,7 +807,10 @@ describe("ExportVisitor test", () => {
   it("export module.exports[x] equals a", () => {
     const source = `module.exports[x] = a`;
 
-    expect(() => exportHelper(source)).throw();
+    const exports = exportHelper(source);
+
+    // should give a warning
+    expect(exports.length).to.equal(0);
   });
 
   it("export exports equals object expression with object method", () => {

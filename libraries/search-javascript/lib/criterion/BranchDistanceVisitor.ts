@@ -651,9 +651,15 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
       case "instanceof": {
         if (this._inverted) {
-          value = leftValue instanceof rightValue ? Number.MAX_VALUE : 0;
+          value =
+            rightValue instanceof Object && leftValue instanceof rightValue
+              ? Number.MAX_VALUE
+              : 0;
         } else {
-          value = leftValue instanceof rightValue ? 0 : Number.MAX_VALUE;
+          value =
+            rightValue instanceof Object && leftValue instanceof rightValue
+              ? 0
+              : Number.MAX_VALUE;
         }
         break;
       }

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Javascript.
+ * This file is part of SynTest Framework - SynTest JavaScript.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as globals from "globals";
 
-export * from "./lib/AbstractSyntaxTreeVisitor";
-export * from "./lib/globalVariables";
-export * from "./lib/reservedKeywords";
+export const globalVariables = new Set(
+  Object.values(globals).flatMap((value) => Object.keys(value))
+);

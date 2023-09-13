@@ -153,7 +153,7 @@ describe("BranchDistance a == b test", () => {
 
     expect(
       calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.be.equal(0.5);
+    ).to.be.closeTo(0.3333, 0.001);
   });
 
   it("'a' == 'b' false", () => {

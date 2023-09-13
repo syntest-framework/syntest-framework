@@ -22,6 +22,10 @@ import { createHash } from "crypto";
 import { NodePath, template } from "@babel/core";
 import * as t from "@babel/types";
 import { Scope } from "@babel/traverse";
+import {
+  globalVariables,
+  reservedKeywords,
+} from "@syntest/ast-visitor-javascript";
 
 const name = "syntest";
 
@@ -261,9 +265,8 @@ function extractAndReplaceVariablesFromTest(
         enter: (p: NodePath<t.Identifier>) => {
           // const newIdentifier = test.scope.generateUidIdentifier('meta')
           if (
-            ["eval", "arguments", "undefined", "NaN", "Infinity"].includes(
-              p.node.name
-            )
+            globalVariables.has(p.node.name) ||
+            reservedKeywords.has(p.node.name)
           ) {
             return;
           }
@@ -288,6 +291,21 @@ function extractAndReplaceVariablesFromTest(
         },
       },
       MemberExpression: {
+        enter: (p) => {
+          const newIdentifier = scope.generateUidIdentifier("meta");
+
+          variables.push([p.getSource(), newIdentifier.name]);
+          p.replaceWith(
+            t.sequenceExpression([
+              t.assignmentExpression("=", newIdentifier, p.node),
+              newIdentifier,
+            ])
+          );
+
+          p.skip();
+        },
+      },
+      UpdateExpression: {
         enter: (p) => {
           const newIdentifier = scope.generateUidIdentifier("meta");
 
@@ -369,6 +387,14 @@ function coverIfBranches(path) {
   path.insertBefore(
     t.variableDeclaration("let", [
       ...variables
+        // filter duplicates
+        .filter(
+          ([source, identifier], index) =>
+            index ===
+            variables.findIndex(
+              ([source2, identifier2]) => identifier === identifier2
+            )
+        )
         .filter(([source, identifier]) => {
           const binding = path.scope.getBinding(identifier);
           // all identifiers with a binding should be skipped
@@ -448,6 +474,14 @@ function coverLoopBranch(path: NodePath<t.Loop>) {
     path.insertBefore(
       t.variableDeclaration("let", [
         ...variables
+          // filter duplicates
+          .filter(
+            ([source, identifier], index) =>
+              index ===
+              variables.findIndex(
+                ([source2, identifier2]) => identifier === identifier2
+              )
+          )
           .filter(([source, identifier]) => {
             const binding = path.scope.getBinding(identifier);
             // all identifiers with a binding should be skipped
@@ -554,6 +588,14 @@ function coverTernary(path: NodePath<t.Conditional>) {
     .insertBefore(
       t.variableDeclaration("let", [
         ...variables
+          // filter duplicates
+          .filter(
+            ([source, identifier], index) =>
+              index ===
+              variables.findIndex(
+                ([source2, identifier2]) => identifier === identifier2
+              )
+          )
           .filter(([source, identifier]) => {
             const binding = path.scope.getBinding(identifier);
             // all identifiers with a binding should be skipped

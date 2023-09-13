@@ -40,7 +40,7 @@
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
     "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
     "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
-    "test": "mocha --config ../../.mocharc.json -g 'InferenceTypeModelFactory test'",
+    "test": "mocha --config ../../.mocharc.json",
     "test:coverage": "nyc --reporter=text --reporter=html --reporter=lcov mocha --config ../../.mocharc.json",
     "test:coverage:ci": "nyc --reporter=lcovonly mocha --config ../../.mocharc.json --reporter json --reporter-option output=test-results.json",
     "test:watch": "mocha --config ../../.mocharc.json --watch"

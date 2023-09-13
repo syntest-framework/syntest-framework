@@ -414,7 +414,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
       case RelationType.For: {
         const conditionId = involved[0];
 
-        if (conditionId) {
+        if (conditionId === undefined) {
           // weird
           break;
         }

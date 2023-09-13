@@ -20,6 +20,7 @@ import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFacto
 import { ElementVisitor } from "../../lib/type/discovery/element/ElementVisitor";
 import { InferenceTypeModelFactory } from "../../lib/type/resolving/InferenceTypeModelFactory";
 import { RelationVisitor } from "../../lib/type/discovery/relation/RelationVisitor";
+import { RelationType } from "../../lib/type/discovery/relation/Relation";
 
 function helper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
@@ -52,12 +53,18 @@ describe("InferenceTypeModelFactory test", () => {
         `;
 
     const { elements, relations, model } = helper(code);
-    console.log(elements);
-    console.log(relations);
-    console.log();
 
     const x = [...elements.values()].find((v) => "name" in v && v.name === "x");
+    const assignment_ = [...relations.values()].find(
+      (v) => v.type === RelationType.Assignment && v.involved.includes(x.id)
+    );
 
-    model.getObjectDescription(x.id);
+    const function_ = [...relations.values()].find(
+      (v) =>
+        v.type === RelationType.FunctionDefinition &&
+        v.involved.includes(assignment_.id)
+    );
+
+    model.getObjectDescription(function_.id);
   });
 });

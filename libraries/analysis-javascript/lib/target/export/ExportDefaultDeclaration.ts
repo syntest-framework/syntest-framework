@@ -33,12 +33,18 @@ export function extractExportsFromExportDefaultDeclaration(
   const declaration = path.get("declaration");
 
   if (declaration.isIdentifier()) {
+    // export default x
     name = declaration.node.name;
     id = visitor._getBindingId(declaration);
   } else if (declaration.isLiteral()) {
+    // export default 1
+    // export default "abc"
+    // export default true
     name = "default";
     id = visitor._getNodeId(declaration);
   } else if (declaration.isNewExpression()) {
+    // export default new Class()
+
     if (declaration.node.callee.type !== "Identifier") {
       // unsupported
       throw new Error("Unsupported export default declaration");
@@ -50,12 +56,16 @@ export function extractExportsFromExportDefaultDeclaration(
     declaration.isFunctionDeclaration() ||
     declaration.isClassDeclaration()
   ) {
+    // export default function () {}
+    // export default class {}
     name = declaration.node.id ? declaration.node.id.name : "default";
     id = visitor._getNodeId(declaration);
   } else if (declaration.isCallExpression()) {
+    // export default x()
     name = "default";
     id = visitor._getNodeId(declaration);
   } else if (declaration.isObjectExpression()) {
+    // export default {}
     const exports: Export[] = [];
     for (const property of declaration.get("properties")) {
       if (property.isObjectProperty()) {
@@ -81,10 +91,6 @@ export function extractExportsFromExportDefaultDeclaration(
     //   name = "anonymous"
     // unsupported
     // examples which we don't support:
-    // export default true
-    // export default 1
-    // export default "string"
-    // export default {}
     // export default []
     // etc.
     throw new Error(

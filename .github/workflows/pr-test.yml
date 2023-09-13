@@ -100,9 +100,13 @@ jobs:
           - libraries/ast-visitor-javascript
           - libraries/instrumentation-javascript
           - libraries/search-javascript
+          - plugins/plugin-javascript-event-listener-state-storage
           - tools/javascript
 
     steps:
+      # Cloning
+      - uses: actions/checkout@v3
+
       # Download test results
       - uses: actions/download-artifact@v3
         with:
@@ -117,6 +121,7 @@ jobs:
           # We collect all coverages in parallel
           parallel: true
           flag-name: ${{ matrix.package }}
+          base-path: ${{ matrix.package }}/
           path-to-lcov: ${{ github.workspace }}/${{ matrix.package }}/coverage/lcov.info
 
   # Indicate sending coverage to Coveralls is finished

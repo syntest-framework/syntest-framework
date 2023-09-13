@@ -51,11 +51,22 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
     type: ElementType,
     value: string
   ) {
+    const id = this._getNodeId(path);
     const bindingId = this._getBindingId(path);
+
+    if (this._elementMap.has(id)) {
+      if (
+        path.parentPath.isExportSpecifier() &&
+        path.parentPath.get("exported") === path
+      ) {
+        return;
+      }
+      throw new Error(`Overriding element with id: ${id}`);
+    }
 
     if (type === ElementType.Identifier) {
       const element: Element = {
-        id: this._getNodeId(path),
+        id: id,
         bindingId,
         filePath: this._filePath,
         location: {
@@ -68,7 +79,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
       this._elementMap.set(element.id, element);
     } else {
       const element: Element = {
-        id: this._getNodeId(path),
+        id: id,
         bindingId,
         filePath: this._filePath,
         location: {
