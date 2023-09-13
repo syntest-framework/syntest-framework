@@ -187,10 +187,16 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // Create separate exception objective when an exception occurred in the execution
     if (result.hasError()) {
-      const hash = crypto
-        .createHash("md5")
-        .update(result.getError().stack ?? result.getError().message)
-        .digest("hex");
+      let stack = result.getError().stack;
+
+      stack = stack
+        ? stack
+            .split("\n")
+            .filter((line) => line.startsWith("    at"))
+            .join("\n")
+        : result.getError().message;
+
+      const hash = crypto.createHash("md5").update(stack).digest("hex");
 
       const numberOfExceptions = this._archive
         .getObjectives()
