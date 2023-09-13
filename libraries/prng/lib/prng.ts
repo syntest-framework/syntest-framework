@@ -26,14 +26,15 @@ import {
   singletonNotSet,
 } from "./diagnostics";
 
-let random: seedrandom.PRNG | undefined;
+let random: Math["random"] | undefined;
 
 export function initializePseudoRandomNumberGenerator(seed: string) {
   if (random) {
     throw new Error(singletonAlreadySet("PseudoRandomNumberGenerator"));
   }
 
-  random = seedrandom(seed, { global: true });
+  seedrandom(seed, { global: true });
+  random = Math.random;
 }
 
 function generator() {
