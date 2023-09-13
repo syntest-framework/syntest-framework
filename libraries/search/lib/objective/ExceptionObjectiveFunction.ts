@@ -39,6 +39,10 @@ export class ExceptionObjectiveFunction<
     this._error = error;
   }
 
+  get error() {
+    return this._error;
+  }
+
   /**
    * @inheritDoc
    */

@@ -192,7 +192,10 @@ export abstract class ObjectiveManager<T extends Encoding> {
       stack = stack
         ? stack
             .split("\n")
+            // only use location lines
             .filter((line) => line.startsWith("    at"))
+            // only use locations within the source code (i.e. not from the generated tests)
+            .filter((line) => line.includes("/instrumented/")) // stupid hack should be done better somehow, suffices for now
             .join("\n")
         : result.getError().message;
 
