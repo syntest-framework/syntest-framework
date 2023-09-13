@@ -32,11 +32,11 @@ import { shouldNeverHappen } from "../util/diagnostics";
 export class ExceptionObjectiveFunction<
   T extends Encoding
 > extends ObjectiveFunction<T> {
-  protected _message: string;
+  protected _error: Error;
 
-  constructor(subject: SearchSubject<T>, id: string, message: string) {
+  constructor(subject: SearchSubject<T>, id: string, error: Error) {
     super(id, subject);
-    this._message = message;
+    this._error = error;
   }
 
   /**

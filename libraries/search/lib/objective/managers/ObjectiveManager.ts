@@ -186,13 +186,10 @@ export abstract class ObjectiveManager<T extends Encoding> {
     }
 
     // Create separate exception objective when an exception occurred in the execution
-    if (result.hasExceptions()) {
-      // TODO there must be a better way
-      //  investigate error patterns somehow
-
+    if (result.hasError()) {
       const hash = crypto
         .createHash("md5")
-        .update(result.getExceptions())
+        .update(result.getError().stack)
         .digest("hex");
 
       const numberOfExceptions = this._archive
@@ -200,12 +197,11 @@ export abstract class ObjectiveManager<T extends Encoding> {
         .filter((objective) => objective instanceof ExceptionObjectiveFunction)
         .filter((objective) => objective.getIdentifier() === hash).length;
       if (numberOfExceptions === 0) {
-        // TODO this makes the archive become too large crashing the tool
         this._archive.update(
           new ExceptionObjectiveFunction(
             this._subject,
             hash,
-            result.getExceptions()
+            result.getError()
           ),
           encoding,
           false

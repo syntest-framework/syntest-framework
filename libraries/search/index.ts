@@ -87,6 +87,6 @@ export * from "./lib/termination/TerminationManager";
 export * from "./lib/termination/TerminationTrigger";
 
 // Util
-export * from "./lib/util/Datapoint";
+export * from "./lib/Trace";
 export * from "./lib/util/diagnostics";
 export * from "./lib/util/Events";

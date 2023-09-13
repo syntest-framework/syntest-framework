@@ -23,7 +23,6 @@ export abstract class BranchDistance {
    * @param node
    */
   public abstract calculate(
-    conditionAST: string,
     condition: string,
     variables: unknown,
     trueOrFalse: boolean
