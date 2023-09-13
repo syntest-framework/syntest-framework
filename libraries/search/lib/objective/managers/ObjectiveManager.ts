@@ -189,7 +189,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     if (result.hasError()) {
       const hash = crypto
         .createHash("md5")
-        .update(result.getError().stack)
+        .update(result.getError().stack ?? result.getError().message)
         .digest("hex");
 
       const numberOfExceptions = this._archive
