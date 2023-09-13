@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-javascript-event-listener-state-storage",
-  "version": "0.0.1",
+  "version": "0.1.0-beta.0",
   "description": "A listener plugin for SynTest JavaScript containing state storage functionalities",
   "keywords": [
     "syntest",
