@@ -98,7 +98,7 @@ describe("Tournament selection", function () {
     ind4.setCrowdingDistance(4);
 
     const winner: DummyEncodingMock = tournamentSelection(
-      [ind2, ind1, ind3, ind4],
+      [ind1, ind2, ind3, ind4],
       20
     );
     expect(winner.getRank()).to.equal(0);

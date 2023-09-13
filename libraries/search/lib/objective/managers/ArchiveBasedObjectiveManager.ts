@@ -59,6 +59,7 @@ export abstract class ArchiveBasedObjectiveManager<
   /**
    * @inheritdoc
    */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   public finalize(_finalPopulation: T[]): void {
     const encodings = this._archive.getEncodings();
     for (const encoding of encodings) {
@@ -67,6 +68,17 @@ export abstract class ArchiveBasedObjectiveManager<
         encoding.addMetaComment(
           `Selected for objective: ${use.getIdentifier()}`
         );
+      }
+
+      const executionResult = encoding.getExecutionResult();
+      if (executionResult) {
+        for (const objective of this._subject.getObjectives()) {
+          if (executionResult.coversId(objective.getIdentifier())) {
+            encoding.addMetaComment(
+              `Covers objective: ${objective.getIdentifier()}`
+            );
+          }
+        }
       }
     }
   }
