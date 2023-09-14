@@ -28,11 +28,10 @@ import {
   Node,
   NodeType,
 } from "@syntest/cfg";
-import { getLogger } from "@syntest/logging";
+import { Logger, getLogger } from "@syntest/logging";
 
 export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected static override LOGGER: any;
+  protected static override LOGGER: Logger;
 
   private _nodesList: Node[];
   private _nodes: Map<string, Node>;
@@ -299,29 +298,6 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     return node;
   }
-
-  // private _isSpecial(path: NodePath): boolean {
-  //   return (
-  //     path.isFunction() ||
-  //     path.isClass() ||
-  //     path.isConditional() ||
-  //     path.isLoop() ||
-  //     path.isBlock() ||
-  //     // terminating statements
-  //     path.isBreakStatement() ||
-  //     path.isContinueStatement() ||
-  //     path.isReturnStatement() ||
-  //     path.isThrowStatement() ||
-  //     // exports
-  //     path.isExportAllDeclaration() ||
-  //     path.isExportDeclaration() ||
-  //     path.isExportDefaultDeclaration() ||
-  //     path.isExportDefaultSpecifier() ||
-  //     path.isExportNamedDeclaration() ||
-  //     path.isExportNamespaceSpecifier() ||
-  //     path.isExportSpecifier()
-  //   );
-  // }
 
   private _createEdge(
     source: Node,

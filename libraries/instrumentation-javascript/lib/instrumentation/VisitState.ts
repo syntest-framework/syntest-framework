@@ -368,10 +368,6 @@ export class VisitState {
       T.stringLiteral(`${branchName}`),
       T.objectExpression([
         T.objectProperty(
-          T.stringLiteral("condition_ast"),
-          T.stringLiteral("TODO we should remove the condition asts entirely")
-        ),
-        T.objectProperty(
           T.stringLiteral("condition"),
           T.stringLiteral(testAsCode)
         ),

@@ -31,9 +31,9 @@ describe("Random Tests", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("args false", () => {
@@ -48,9 +48,7 @@ describe("Random Tests", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("args false", () => {
@@ -65,9 +63,9 @@ describe("Random Tests", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("cmd.options.length true", () => {
@@ -82,9 +80,9 @@ describe("Random Tests", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("cmd.options.length false", () => {
@@ -99,9 +97,7 @@ describe("Random Tests", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("option.defaultValue !== undefined && !option.negate true", () => {
@@ -117,8 +113,6 @@ describe("Random Tests", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 });

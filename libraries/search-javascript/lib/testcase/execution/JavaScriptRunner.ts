@@ -18,7 +18,7 @@
 
 import * as path from "node:path";
 
-import { Datapoint, EncodingRunner, ExecutionResult } from "@syntest/search";
+import { Trace, EncodingRunner, ExecutionResult } from "@syntest/search";
 import { getLogger, Logger } from "@syntest/logging";
 
 import {
@@ -112,7 +112,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         if (data.message === "done") {
           childProcess.removeAllListeners();
           clearTimeout(timeout);
-
           if (!data.instrumentationData) {
             return reject("no instrumentation data found");
           }
@@ -161,7 +160,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       // If one of the executions failed, log it
       this.executionInformationIntegrator.process(testCase, test, stats);
 
-      const traces: Datapoint[] = this._extractTraces(
+      const traces: Trace[] = this._extractTraces(
         instrumentationData,
         metaData
       );
@@ -171,7 +170,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         test.status,
         traces,
         test.duration,
-        test.exception
+        test.error
       );
     } catch (error) {
       if (error === "timeout") {
@@ -201,8 +200,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   private _extractTraces(
     instrumentationData: InstrumentationData,
     metaData: MetaData
-  ): Datapoint[] {
-    const traces: Datapoint[] = [];
+  ): Trace[] {
+    const traces: Trace[] = [];
 
     for (const key of Object.keys(instrumentationData)) {
       for (const functionKey of Object.keys(instrumentationData[key].fnMap)) {
@@ -254,7 +253,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
           hits: hits[0],
 
-          condition_ast: meta?.condition_ast,
           condition: meta?.condition,
           variables: meta?.variables,
         });
@@ -273,7 +271,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
               hits: hits[index],
 
-              condition_ast: meta?.condition_ast,
               condition: meta?.condition,
               variables: meta?.variables,
             });
@@ -289,7 +286,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
             hits: hits[1],
 
-            condition_ast: meta?.condition_ast,
             condition: meta?.condition,
             variables: meta?.variables,
           });
@@ -306,7 +302,6 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
             hits: hits[0] ? 0 : 1,
 
-            condition_ast: meta?.condition_ast,
             condition: meta?.condition,
             variables: meta?.variables,
           });

@@ -50,7 +50,7 @@ export type Suite = {
 
 export type Test = {
   status: JavaScriptExecutionStatus;
-  exception?: string;
+  error?: Error | undefined;
   duration: number;
 };
 
@@ -118,11 +118,16 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
         } else {
           status = JavaScriptExecutionStatus.FAILED;
         }
+
         return {
           status: status,
-          exception:
+          error:
             status === JavaScriptExecutionStatus.FAILED
-              ? test.err.message
+              ? {
+                  name: test.err.name,
+                  message: test.err.message,
+                  stack: test.err.stack,
+                }
               : undefined,
           duration: test.duration,
         };

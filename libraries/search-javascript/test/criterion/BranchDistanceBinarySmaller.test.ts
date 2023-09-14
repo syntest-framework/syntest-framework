@@ -31,7 +31,7 @@ describe("BranchDistance a < b test", () => {
     );
 
     expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
+      calculator.calculate(condition, variables, trueOrFalse)
     ).to.be.closeTo(0.6666, 0.01);
   });
 
@@ -45,9 +45,7 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("1 < 1 true", () => {
@@ -61,9 +59,9 @@ describe("BranchDistance a < b test", () => {
     );
 
     // TODO shouldnt this be way lower (a 0.1 increase would also be enough)
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("1 < 1 false", () => {
@@ -76,9 +74,7 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("0 < -1 true", () => {
@@ -92,7 +88,7 @@ describe("BranchDistance a < b test", () => {
     );
 
     expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
+      calculator.calculate(condition, variables, trueOrFalse)
     ).to.be.closeTo(0.6666, 0.01);
   });
 
@@ -106,9 +102,7 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   // string
@@ -124,7 +118,7 @@ describe("BranchDistance a < b test", () => {
 
     // TODO making the first one into 'b' would suffice so it should indeed be 0.5
     expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
+      calculator.calculate(condition, variables, trueOrFalse)
     ).to.be.closeTo(0.9999, 0.1);
   });
 
@@ -138,9 +132,7 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("'a' < 'b' true", () => {
@@ -153,9 +145,7 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("'a' < 'b' false", () => {
@@ -169,7 +159,7 @@ describe("BranchDistance a < b test", () => {
     );
 
     expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
+      calculator.calculate(condition, variables, trueOrFalse)
     ).to.be.closeTo(0.9999, 0.1);
   });
 
@@ -185,7 +175,7 @@ describe("BranchDistance a < b test", () => {
     );
 
     expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
+      calculator.calculate(condition, variables, trueOrFalse)
     ).to.be.closeTo(0.9999, 0.1);
   });
 
@@ -199,8 +189,6 @@ describe("BranchDistance a < b test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 });

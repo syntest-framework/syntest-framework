@@ -42,7 +42,11 @@ export class ExecutionInformationIntegrator {
       const children = root.getChildren();
 
       for (const child of children) {
-        if (testResult.exception && testResult.exception.includes(child.name)) {
+        if (
+          testResult.error &&
+          testResult.error.message &&
+          testResult.error.message.includes(child.name)
+        ) {
           this._typeModel.addExecutionScore(
             child.variableIdentifier,
             child.typeIdentifier,

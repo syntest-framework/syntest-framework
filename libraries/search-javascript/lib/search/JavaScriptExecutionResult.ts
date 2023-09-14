@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Datapoint, ExecutionResult } from "@syntest/search";
+import { Trace, ExecutionResult } from "@syntest/search";
 
 export enum JavaScriptExecutionStatus {
   PASSED,
@@ -42,7 +42,7 @@ export class JavaScriptExecutionResult implements ExecutionResult {
    * ARRAY of traces of the execution.
    * @protected
    */
-  protected _traces: Datapoint[];
+  protected _traces: Trace[];
 
   /**
    * Duration of the execution.
@@ -51,10 +51,10 @@ export class JavaScriptExecutionResult implements ExecutionResult {
   protected _duration: number;
 
   /**
-   * Exception of execution.
+   * Error of execution.
    * @protected
    */
-  protected _exception: string;
+  protected _error: Error | undefined;
 
   /**
    * Constructor.
@@ -66,14 +66,14 @@ export class JavaScriptExecutionResult implements ExecutionResult {
    */
   public constructor(
     status: JavaScriptExecutionStatus,
-    traces: Datapoint[],
+    traces: Trace[],
     duration: number,
-    exception?: string | undefined
+    error?: Error | undefined
   ) {
     this._status = status;
     this._traces = traces;
     this._duration = duration;
-    this._exception = exception;
+    this._error = error;
   }
 
   /**
@@ -132,22 +132,22 @@ export class JavaScriptExecutionResult implements ExecutionResult {
   /**
    * @inheritDoc
    */
-  public getExceptions(): string {
-    return this._exception;
+  public getError(): Error {
+    return this._error;
   }
 
   /**
    * @inheritDoc
    */
-  public getTraces(): Datapoint[] {
+  public getTraces(): Trace[] {
     return this._traces;
   }
 
   /**
    * @inheritDoc
    */
-  public hasExceptions(): boolean {
-    return this._exception !== null && this._exception !== undefined;
+  public hasError(): boolean {
+    return this._error !== null && this._error !== undefined;
   }
 
   /**

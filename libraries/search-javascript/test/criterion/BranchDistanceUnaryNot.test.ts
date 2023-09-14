@@ -30,9 +30,7 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("!0 false", () => {
@@ -45,9 +43,9 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("!1 true", () => {
@@ -60,9 +58,9 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("!1 false", () => {
@@ -75,9 +73,7 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("!true true", () => {
@@ -90,9 +86,9 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("!true false", () => {
@@ -105,9 +101,7 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("!false true", () => {
@@ -120,9 +114,7 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 
   it("!false false", () => {
@@ -135,9 +127,9 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0.5);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
+      0.5
+    );
   });
 
   it("!'a' true", () => {
@@ -151,7 +143,7 @@ describe("BranchDistance !a test", () => {
     );
 
     expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
+      calculator.calculate(condition, variables, trueOrFalse)
     ).to.be.closeTo(0.9999, 0.1);
   });
 
@@ -165,8 +157,6 @@ describe("BranchDistance !a test", () => {
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
 
-    expect(
-      calculator.calculate("", condition, variables, trueOrFalse)
-    ).to.equal(0);
+    expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
   });
 });

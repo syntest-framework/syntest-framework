@@ -38,7 +38,6 @@ export class BranchDistance extends CoreBranchDistance {
   }
 
   calculate(
-    _conditionAST: string, // deprecated
     condition: string,
     variables: Record<string, unknown>,
     trueOrFalse: boolean
