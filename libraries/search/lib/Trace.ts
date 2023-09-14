@@ -19,9 +19,9 @@
 import { Location } from "@syntest/cfg";
 
 /**
- * @author Dimitri Stallenberg
+ * Execution trace
  */
-export interface Datapoint {
+export interface Trace {
   id: string;
   type: string;
 
@@ -30,7 +30,6 @@ export interface Datapoint {
 
   hits: number;
 
-  condition_ast?: string;
   condition?: string;
   variables?: unknown;
 }

@@ -17,6 +17,7 @@
  */
 
 import { Encoding } from "../../Encoding";
+import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
@@ -65,9 +66,17 @@ export abstract class ArchiveBasedObjectiveManager<
     for (const encoding of encodings) {
       const uses = this._archive.getUses(encoding);
       for (const use of uses) {
-        encoding.addMetaComment(
-          `Selected for objective: ${use.getIdentifier()}`
-        );
+        if (use instanceof ExceptionObjectiveFunction) {
+          encoding.addMetaComment(`Selected for:`);
+          for (const line of use.error.stack.split("\n")) {
+            encoding.addMetaComment(`\t${line}`);
+          }
+          encoding.addMetaComment("");
+        } else {
+          encoding.addMetaComment(
+            `Selected for objective: ${use.getIdentifier()}`
+          );
+        }
       }
 
       const executionResult = encoding.getExecutionResult();

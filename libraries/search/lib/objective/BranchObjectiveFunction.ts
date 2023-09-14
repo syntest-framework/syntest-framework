@@ -196,7 +196,6 @@ export class BranchObjectiveFunction<
     }
 
     let branchDistance = this.branchDistance.calculate(
-      trace.condition_ast,
       trace.condition,
       trace.variables,
       lastEdgeType
