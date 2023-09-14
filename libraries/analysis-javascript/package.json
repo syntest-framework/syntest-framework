@@ -1,6 +1,6 @@
 {
   "name": "@syntest/analysis-javascript",
-  "version": "0.1.0-beta.20",
+  "version": "0.1.0-beta.21",
   "description": "SynTest CFG JavaScript is a library for generating control flow graphs for the JavaScript language",
   "keywords": [
     "syntest",
