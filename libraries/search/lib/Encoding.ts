@@ -26,14 +26,11 @@ import { shouldNeverHappen } from "./util/diagnostics";
 
 /**
  * Encoding of the search problem.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class Encoding {
   protected _crowdingDistance: number;
   protected _rank: number;
   protected _id: string;
-  protected _assertions: Map<string, string>;
   protected _metaComments: string[];
 
   /**
@@ -56,7 +53,6 @@ export abstract class Encoding {
     this._rank = 0;
     this._id = prng.uniqueId(20);
     this._objectives = new Map<ObjectiveFunction<Encoding>, number>();
-    this._assertions = new Map();
     this._metaComments = [];
   }
 
@@ -82,14 +78,6 @@ export abstract class Encoding {
 
   get id(): string {
     return this._id;
-  }
-
-  get assertions(): Map<string, string> {
-    return this._assertions;
-  }
-
-  set assertions(value: Map<string, string>) {
-    this._assertions = value;
   }
 
   get metaComments(): string[] {
