@@ -16,12 +16,10 @@
  * limitations under the License.
  */
 
-import { Datapoint } from "./util/Datapoint";
+import { Trace } from "./Trace";
 
 /**
  * Results of an execution by the runner.
- *
- * @author Mitchell Olsthoorn
  */
 export interface ExecutionResult {
   /**
@@ -37,19 +35,19 @@ export interface ExecutionResult {
   getDuration(): number;
 
   /**
-   * Return all exceptions that occurred during the execution.
+   * Return error that occurred during the execution.
    */
-  getExceptions(): string;
+  getError(): Error;
 
   /**
    * Return all the traces produced by the execution.
    */
-  getTraces(): Datapoint[];
+  getTraces(): Trace[];
 
   /**
-   * Return if any exceptions occurred during the execution.
+   * Return if an error occurred during the execution.
    */
-  hasExceptions(): boolean;
+  hasError(): boolean;
 
   /**
    * Return if the execution has passed.

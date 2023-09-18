@@ -186,26 +186,31 @@ export abstract class ObjectiveManager<T extends Encoding> {
     }
 
     // Create separate exception objective when an exception occurred in the execution
-    if (result.hasExceptions()) {
-      // TODO there must be a better way
-      //  investigate error patterns somehow
+    if (result.hasError()) {
+      let stack = result.getError().stack;
 
-      const hash = crypto
-        .createHash("md5")
-        .update(result.getExceptions())
-        .digest("hex");
+      stack = stack
+        ? stack
+            .split("\n")
+            // only use location lines
+            .filter((line) => line.startsWith("    at"))
+            // only use locations within the source code (i.e. not from the generated tests)
+            .filter((line) => line.includes("/instrumented/")) // stupid hack should be done better somehow, suffices for now
+            .join("\n")
+        : result.getError().message;
+
+      const hash = crypto.createHash("md5").update(stack).digest("hex");
 
       const numberOfExceptions = this._archive
         .getObjectives()
         .filter((objective) => objective instanceof ExceptionObjectiveFunction)
         .filter((objective) => objective.getIdentifier() === hash).length;
       if (numberOfExceptions === 0) {
-        // TODO this makes the archive become too large crashing the tool
         this._archive.update(
           new ExceptionObjectiveFunction(
             this._subject,
             hash,
-            result.getExceptions()
+            result.getError()
           ),
           encoding,
           false
