@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli-graphics",
-  "version": "0.1.0",
+  "version": "0.2.0-beta.0",
   "description": "The cli graphics library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -46,7 +46,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/logging": "*",
+    "@syntest/logging": "^0.1.1-beta.0",
     "chalk": "4.1.1",
     "clear": "0.1.0",
     "cli-progress": "3.11.2",

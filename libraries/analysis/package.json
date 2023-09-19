@@ -1,6 +1,6 @@
 {
   "name": "@syntest/analysis",
-  "version": "0.1.0",
+  "version": "0.2.0-beta.0",
   "description": "An analysis package",
   "keywords": [
     "syntest",
@@ -46,8 +46,8 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cfg": "^0.3.0",
-    "@syntest/logging": "^0.1.0",
+    "@syntest/cfg": "^0.4.0-beta.0",
+    "@syntest/logging": "^0.1.1-beta.0",
     "lodash.clonedeep": "^4.5.0"
   },
   "engines": {
