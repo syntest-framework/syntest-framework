@@ -1,6 +1,6 @@
 {
   "name": "@syntest/metric",
-  "version": "0.1.1-beta.0",
+  "version": "0.1.1",
   "description": "The metrics library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -42,7 +42,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/logging": "^0.1.1-beta.0",
+    "@syntest/logging": "^0.1.1",
     "yargs": "^17.7.1"
   },
   "engines": {

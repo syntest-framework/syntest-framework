@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.4.1-beta.0...@syntest/search@0.4.1) (2023-09-19)
+
+**Note:** Version bump only for package @syntest/search
+
 ## [0.4.1-beta.0](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.4.0-beta.56...@syntest/search@0.4.1-beta.0) (2023-09-19)
 
 **Note:** Version bump only for package @syntest/search

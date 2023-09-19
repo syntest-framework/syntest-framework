@@ -1,6 +1,6 @@
 {
   "name": "@syntest/base-language",
-  "version": "0.2.1-beta.0",
+  "version": "0.2.1",
   "description": "The base testing tool of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -46,13 +46,13 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.2.0-beta.0",
-    "@syntest/cli-graphics": "^0.2.0-beta.0",
-    "@syntest/logging": "^0.1.1-beta.0",
-    "@syntest/metric": "^0.1.1-beta.0",
-    "@syntest/module": "^0.1.1-beta.0",
-    "@syntest/search": "^0.4.1-beta.0",
-    "@syntest/storage": "^0.2.0-beta.0",
+    "@syntest/analysis": "^0.2.0",
+    "@syntest/cli-graphics": "^0.2.0",
+    "@syntest/logging": "^0.1.1",
+    "@syntest/metric": "^0.1.1",
+    "@syntest/module": "^0.1.1",
+    "@syntest/search": "^0.4.1",
+    "@syntest/storage": "^0.2.0",
     "globby": "11.0.4",
     "yargs": "^17.7.1"
   },
