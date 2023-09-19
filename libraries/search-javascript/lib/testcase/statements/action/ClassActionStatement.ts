@@ -15,11 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TypeEnum } from "@syntest/analysis-javascript";
 import { shouldNeverHappen } from "@syntest/search";
+
 import { Statement } from "../Statement";
+
 import { ActionStatement } from "./ActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
-import { TypeEnum } from "@syntest/analysis-javascript";
 
 export abstract class ClassActionStatement extends ActionStatement {
   private _constructor: ConstructorCall;

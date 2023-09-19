@@ -18,7 +18,8 @@
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
-import { Relation, RelationType, getRelationType } from "../relation/Relation";
+
+import { getRelationType, Relation, RelationType } from "../relation/Relation";
 
 export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   private _relationMap: Map<string, Relation>;

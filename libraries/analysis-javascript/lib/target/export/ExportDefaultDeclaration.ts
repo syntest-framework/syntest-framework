@@ -36,10 +36,13 @@ export function extractExportsFromExportDefaultDeclaration(
     // export default x
     name = declaration.node.name;
     id = visitor._getBindingId(declaration);
-  } else if (declaration.isLiteral()) {
+  } else if (declaration.isLiteral() || declaration.isCallExpression()) {
     // export default 1
     // export default "abc"
     // export default true
+
+    // export default x()
+
     name = "default";
     id = visitor._getNodeId(declaration);
   } else if (declaration.isNewExpression()) {
@@ -59,10 +62,6 @@ export function extractExportsFromExportDefaultDeclaration(
     // export default function () {}
     // export default class {}
     name = declaration.node.id ? declaration.node.id.name : "default";
-    id = visitor._getNodeId(declaration);
-  } else if (declaration.isCallExpression()) {
-    // export default x()
-    name = "default";
     id = visitor._getNodeId(declaration);
   } else if (declaration.isObjectExpression()) {
     // export default {}

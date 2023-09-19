@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-import { Crossover } from "@syntest/search";
 import { prng } from "@syntest/prng";
+import { Crossover } from "@syntest/search";
 
 import { JavaScriptTestCase } from "../../testcase/JavaScriptTestCase";
-import { Statement } from "../../testcase/statements/Statement";
 import { ActionStatement } from "../../testcase/statements/action/ActionStatement";
-import { ConstructorCall } from "../../testcase/statements/action/ConstructorCall";
 import { ConstantObject } from "../../testcase/statements/action/ConstantObject";
+import { ConstructorCall } from "../../testcase/statements/action/ConstructorCall";
+import { Statement } from "../../testcase/statements/Statement";
 
 type SwapStatement = {
   parent: Statement;
@@ -50,11 +50,13 @@ type MatchingPair = {
 export class TreeCrossover extends Crossover<JavaScriptTestCase> {
   public crossOver(parents: JavaScriptTestCase[]): JavaScriptTestCase[] {
     if (parents.length !== 2) {
-      throw new Error("Expected exactly 2 parents, got: " + parents.length);
+      throw new Error(`Expected exactly 2 parents, got: ${parents.length}`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const rootA: ActionStatement[] = (<JavaScriptTestCase>parents[0].copy())
       .roots;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const rootB: ActionStatement[] = (<JavaScriptTestCase>parents[1].copy())
       .roots;
 

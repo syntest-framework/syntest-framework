@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 import { UserInterface } from "@syntest/cli-graphics";
+import { MetricManager } from "@syntest/metric";
 import { Command, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 import Yargs = require("yargs");
 
 import { JavaScriptArguments, JavaScriptLauncher } from "../JavaScriptLauncher";
-import { MetricManager } from "@syntest/metric";
-import { StorageManager } from "@syntest/storage";
 
 export function getTestCommand(
   tool: string,

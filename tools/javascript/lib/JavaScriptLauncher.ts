@@ -18,50 +18,43 @@
 
 import * as path from "node:path";
 
-import { TestCommandOptions } from "./commands/test";
 import {
-  TypeModelFactory,
-  InferenceTypeModelFactory,
-  Target,
   AbstractSyntaxTreeFactory,
-  TargetFactory,
-  RootContext,
+  ConstantPoolFactory,
   ControlFlowGraphFactory,
-  ExportFactory,
   DependencyFactory,
-  TypeExtractor,
+  ExportFactory,
+  InferenceTypeModelFactory,
   isExported,
+  RootContext,
+  Target,
+  TargetFactory,
+  TypeExtractor,
+  TypeModelFactory,
 } from "@syntest/analysis-javascript";
 import {
   ArgumentsObject,
+  CrossoverPlugin,
+  FileSelector,
   Launcher,
   ObjectiveManagerPlugin,
-  CrossoverPlugin,
-  SearchAlgorithmPlugin,
-  TargetSelector,
   PluginType,
-  SecondaryObjectivePlugin,
   ProcreationPlugin,
-  TerminationTriggerPlugin,
   PropertyName,
-  FileSelector,
+  SearchAlgorithmPlugin,
+  SecondaryObjectivePlugin,
+  TargetSelector,
+  TerminationTriggerPlugin,
 } from "@syntest/base-language";
 import {
-  UserInterface,
-  TableObject,
   ItemizationItem,
+  TableObject,
+  UserInterface,
 } from "@syntest/cli-graphics";
+import { Instrumenter } from "@syntest/instrumentation-javascript";
+import { getLogger, Logger } from "@syntest/logging";
+import { MetricManager } from "@syntest/metric";
 import { ModuleManager } from "@syntest/module";
-import {
-  JavaScriptTestCase,
-  JavaScriptDecoder,
-  JavaScriptRunner,
-  JavaScriptSuiteBuilder,
-  JavaScriptSubject,
-  JavaScriptRandomSampler,
-  JavaScriptTestCaseSampler,
-  ExecutionInformationIntegrator,
-} from "@syntest/search-javascript";
 import {
   Archive,
   BudgetManager,
@@ -73,11 +66,19 @@ import {
   TerminationManager,
   TotalTimeBudget,
 } from "@syntest/search";
-import { Instrumenter } from "@syntest/instrumentation-javascript";
-import { getLogger, Logger } from "@syntest/logging";
-import { MetricManager } from "@syntest/metric";
+import {
+  ExecutionInformationIntegrator,
+  JavaScriptDecoder,
+  JavaScriptRandomSampler,
+  JavaScriptRunner,
+  JavaScriptSubject,
+  JavaScriptSuiteBuilder,
+  JavaScriptTestCase,
+  JavaScriptTestCaseSampler,
+} from "@syntest/search-javascript";
 import { StorageManager } from "@syntest/storage";
-import { ConstantPoolFactory } from "@syntest/analysis-javascript";
+
+import { TestCommandOptions } from "./commands/test";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
 export class JavaScriptLauncher extends Launcher {
@@ -87,8 +88,6 @@ export class JavaScriptLauncher extends Launcher {
 
   private rootContext: RootContext;
   private archive: Archive<JavaScriptTestCase>;
-
-  private dependencyMap: Map<string, string[]>;
 
   private coveredInPath = new Map<string, Archive<JavaScriptTestCase>>();
 
@@ -112,6 +111,7 @@ export class JavaScriptLauncher extends Launcher {
     JavaScriptLauncher.LOGGER = getLogger("JavaScriptLauncher");
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async initialize(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Initialization started");
     const start = Date.now();
@@ -282,12 +282,18 @@ export class JavaScriptLauncher extends Launcher {
         ["Search Algorithm", this.arguments_.searchAlgorithm],
         ["Population Size", `${this.arguments_.populationSize}`],
         ["Objective Manager", `${this.arguments_.objectiveManager}`],
-        ["Secondary Objectives", `${this.arguments_.secondaryObjectives}`],
+        [
+          "Secondary Objectives",
+          `[${this.arguments_.secondaryObjectives.join(", ")}]`,
+        ],
         ["Procreation Operator", `${this.arguments_.procreation}`],
         ["Crossover Operator", `${this.arguments_.crossover}`],
         ["Sampling Operator", `${this.arguments_.sampler}`],
-        ["Termination Triggers", `${this.arguments_.terminationTriggers}`],
-        ["Test Minimization Enabled", `${this.arguments_.testMinimization}`],
+        [
+          "Termination Triggers",
+          `[${this.arguments_.terminationTriggers.join(", ")}]`,
+        ],
+        ["Test Minimization Enabled", String(this.arguments_.testMinimization)],
 
         ["Seed", `${this.arguments_.randomSeed.toString()}`],
       ],
@@ -324,10 +330,13 @@ export class JavaScriptLauncher extends Launcher {
         // sampling
         ["Max Depth", `${this.arguments_.maxDepth}`],
         ["Max Action Statements", `${this.arguments_.maxActionStatements}`],
-        ["Explore Illegal Values", `${this.arguments_.exploreIllegalValues}`],
+        [
+          "Explore Illegal Values",
+          String(this.arguments_.exploreIllegalValues),
+        ],
         [
           "Use Constant Pool Values",
-          `${(<JavaScriptArguments>this.arguments_).constantPool}`,
+          String((<JavaScriptArguments>this.arguments_).constantPool),
         ],
         [
           "Use Constant Pool Probability",
@@ -335,7 +344,7 @@ export class JavaScriptLauncher extends Launcher {
         ],
         [
           "Use Type Pool Values",
-          `${(<JavaScriptArguments>this.arguments_).typePool}`,
+          String((<JavaScriptArguments>this.arguments_).typePool),
         ],
         [
           "Use Type Pool Probability",
@@ -343,7 +352,7 @@ export class JavaScriptLauncher extends Launcher {
         ],
         [
           "Use Statement Pool Values",
-          `${(<JavaScriptArguments>this.arguments_).statementPool}`,
+          String((<JavaScriptArguments>this.arguments_).statementPool),
         ],
         [
           "Use Statement Pool Probability",
@@ -363,10 +372,10 @@ export class JavaScriptLauncher extends Launcher {
         ],
         [
           "Incorporate Execution Information",
-          `${
+          String(
             (<JavaScriptArguments>this.arguments_)
               .incorporateExecutionInformation
-          }`,
+          ),
         ],
         [
           "Random Type Probability",
@@ -444,16 +453,11 @@ export class JavaScriptLauncher extends Launcher {
     JavaScriptLauncher.LOGGER.info("Processing started");
     const start = Date.now();
     this.archive = new Archive<JavaScriptTestCase>();
-    this.dependencyMap = new Map();
 
     for (const target of this.targets) {
       JavaScriptLauncher.LOGGER.info(`Processing ${target.name}`);
       const archive = await this.testTarget(this.rootContext, target);
-
-      const dependencies = this.rootContext.getDependencies(target.path);
       this.archive.merge(archive);
-
-      this.dependencyMap.set(target.name, dependencies);
     }
     JavaScriptLauncher.LOGGER.info("Processing done");
     const timeInMs = (Date.now() - start) / 1000;
@@ -557,9 +561,9 @@ export class JavaScriptLauncher extends Launcher {
 
       table.rows.push([
         `${path.basename(target.path)}: ${target.name}`,
-        summary["statement"] + " / " + Object.keys(data.s).length,
-        summary["branch"] + " / " + Object.keys(data.b).length * 2,
-        summary["function"] + " / " + Object.keys(data.f).length,
+        `${summary["statement"]} / ${Object.keys(data.s).length}`,
+        `${summary["branch"]} / ${Object.keys(data.b).length * 2}`,
+        `${summary["function"]} / ${Object.keys(data.f).length}`,
         target.path,
       ]);
     }
@@ -609,9 +613,9 @@ export class JavaScriptLauncher extends Launcher {
     if (totalFunctions === 0) overall["function"] = 1;
 
     table.footers.push(
-      overall["statement"] * 100 + " %",
-      overall["branch"] * 100 + " %",
-      overall["function"] * 100 + " %",
+      `${overall["statement"] * 100} %`,
+      `${overall["branch"] * 100} %`,
+      `${overall["function"] * 100} %`,
       ""
     );
 
@@ -666,10 +670,6 @@ export class JavaScriptLauncher extends Launcher {
       // report skipped
       return new Archive();
     }
-
-    const dependencies = rootContext.getDependencies(target.path);
-    const dependencyMap = new Map<string, string[]>();
-    dependencyMap.set(target.name, dependencies);
 
     const constantPoolManager = rootContext.getConstantPoolManager(target.path);
 
@@ -829,6 +829,7 @@ export class JavaScriptLauncher extends Launcher {
     return archive;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async exit(): Promise<void> {
     JavaScriptLauncher.LOGGER.info("Exiting");
     if (this.runner && this.runner.process) {

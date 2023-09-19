@@ -21,6 +21,7 @@ import {
   AbstractSyntaxTreeVisitor,
   MemberSeparator,
 } from "@syntest/ast-visitor-javascript";
+
 import { Element, ElementType } from "../element/Element";
 
 export class ElementVisitor extends AbstractSyntaxTreeVisitor {

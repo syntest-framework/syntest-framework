@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
+import { Export, TypeEnum } from "@syntest/analysis-javascript";
 import { Encoding, EncodingSampler, shouldNeverHappen } from "@syntest/search";
 
 import { Statement } from "../Statement";
-import { Export, TypeEnum } from "@syntest/analysis-javascript";
 
 /**
  * ActionStatement

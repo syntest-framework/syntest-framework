@@ -15,20 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RootContext, SubTarget, Target } from "@syntest/analysis-javascript";
 import { TargetType } from "@syntest/analysis";
+import { RootContext, SubTarget, Target } from "@syntest/analysis-javascript";
 import { ControlFlowGraph, Edge, EdgeType } from "@syntest/cfg";
 import {
+  ApproachLevel,
+  BranchObjectiveFunction,
   FunctionObjectiveFunction,
   ObjectiveFunction,
   SearchSubject,
-  ApproachLevel,
   shouldNeverHappen,
-  BranchObjectiveFunction,
 } from "@syntest/search";
 
-import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { BranchDistance } from "../criterion/BranchDistance";
+import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
   protected syntaxForgiving: boolean;

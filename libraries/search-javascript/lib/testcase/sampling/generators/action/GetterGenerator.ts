@@ -16,9 +16,11 @@
  * limitations under the License.
  */
 import { prng } from "@syntest/prng";
-import { CallGenerator } from "./CallGenerator";
-import { Getter } from "../../../statements/action/Getter";
+
 import { StatementPool } from "../../../StatementPool";
+import { Getter } from "../../../statements/action/Getter";
+
+import { CallGenerator } from "./CallGenerator";
 
 export class GetterGenerator extends CallGenerator<Getter> {
   override generate(
@@ -27,7 +29,7 @@ export class GetterGenerator extends CallGenerator<Getter> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    statementPool: StatementPool
+    _statementPool: StatementPool
   ): Getter {
     const constructor_ = this.sampler.sampleConstructorCall(
       depth + 1,

@@ -28,7 +28,7 @@ import {
   Node,
   NodeType,
 } from "@syntest/cfg";
-import { Logger, getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 
 export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   protected static override LOGGER: Logger;

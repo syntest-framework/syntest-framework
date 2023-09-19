@@ -17,9 +17,11 @@
  */
 
 import { prng } from "@syntest/prng";
-import { DiscoveredObjectType } from "../discovery/object/DiscoveredType";
-import { ObjectType } from "./Type";
+
 import { Export } from "../../target/export/Export";
+import { DiscoveredObjectType } from "../discovery/object/DiscoveredType";
+
+import { ObjectType } from "./Type";
 
 // TODO we could cache some of this stuff (unless we do dynamic adding of properties at some point)
 export class TypePool {

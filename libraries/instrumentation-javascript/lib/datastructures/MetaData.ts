@@ -16,16 +16,18 @@
  * limitations under the License.
  */
 export type MetaData = {
-  [path: string]: {
-    hash: string;
-    meta: {
-      [id: string]: {
-        condition_ast: string;
-        condition: string;
-        variables: {
-          [id: string]: unknown;
-        };
+  hash: string;
+  meta: {
+    [id: string]: {
+      condition_ast: string;
+      condition: string;
+      variables: {
+        [id: string]: unknown;
       };
     };
   };
+};
+
+export type MetaDataMap = {
+  [path: string]: MetaData;
 };

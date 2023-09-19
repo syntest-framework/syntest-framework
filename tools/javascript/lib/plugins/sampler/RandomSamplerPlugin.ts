@@ -16,13 +16,14 @@
  * limitations under the License.
  */
 import { SamplerOptions, SamplerPlugin } from "@syntest/base-language";
+import { EncodingSampler } from "@syntest/search";
 import {
   JavaScriptRandomSampler,
   JavaScriptSubject,
   JavaScriptTestCase,
 } from "@syntest/search-javascript";
+
 import { JavaScriptArguments } from "../../JavaScriptLauncher";
-import { EncodingSampler } from "@syntest/search";
 
 /**
  * Plugin for RandomSampler

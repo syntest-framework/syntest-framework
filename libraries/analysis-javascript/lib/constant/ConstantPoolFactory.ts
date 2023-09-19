@@ -19,8 +19,9 @@ import { traverse } from "@babel/core";
 import * as t from "@babel/types";
 
 import { Factory } from "../Factory";
-import { ConstantVisitor } from "./ConstantVisitor";
+
 import { ConstantPool } from "./ConstantPool";
+import { ConstantVisitor } from "./ConstantVisitor";
 
 export class ConstantPoolFactory extends Factory {
   /**

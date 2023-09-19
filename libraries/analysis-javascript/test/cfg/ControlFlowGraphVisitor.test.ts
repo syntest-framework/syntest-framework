@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 import { traverse } from "@babel/core";
+import { contractControlFlowProgram, EdgeType } from "@syntest/cfg";
 import * as chai from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
 import { ControlFlowGraphVisitor } from "../../lib/cfg/ControlFlowGraphVisitor";
-import { EdgeType, contractControlFlowProgram } from "@syntest/cfg";
 
 const expect = chai.expect;
 

@@ -16,18 +16,17 @@
  * limitations under the License.
  */
 
+import { Export, TypeEnum } from "@syntest/analysis-javascript";
 import { prng } from "@syntest/prng";
 
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
-import { MethodCall } from "./MethodCall";
 import { Decoding, Statement } from "../Statement";
 
-import { Export, TypeEnum } from "@syntest/analysis-javascript";
 import { ActionStatement } from "./ActionStatement";
-import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
- * @author Dimitri Stallenberg
+ * ConstructorCall
  */
 export class ConstructorCall extends ActionStatement {
   private _classIdentifier: string;
@@ -41,7 +40,6 @@ export class ConstructorCall extends ActionStatement {
    * @param type the return identifierDescription of the constructor
    * @param uniqueId optional argument
    * @param args the arguments of the constructor
-   * @param calls the child calls on the object
    */
   constructor(
     variableIdentifier: string,
@@ -62,14 +60,6 @@ export class ConstructorCall extends ActionStatement {
       export_
     );
     this._classIdentifier = classIdentifier;
-
-    for (const argument of arguments_) {
-      if (argument instanceof MethodCall) {
-        throw new TypeError(
-          "Constructor args cannot be of identifierDescription MethodCall"
-        );
-      }
-    }
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): ConstructorCall {

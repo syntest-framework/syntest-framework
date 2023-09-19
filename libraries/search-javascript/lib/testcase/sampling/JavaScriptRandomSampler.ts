@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
+import { TargetType } from "@syntest/analysis";
 import {
   ClassTarget,
-  DiscoveredObjectKind,
   ConstantPoolManager,
+  DiscoveredObjectKind,
   FunctionTarget,
   isExported,
   MethodTarget,
@@ -30,29 +31,27 @@ import { prng } from "@syntest/prng";
 
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
+import { StatementPool } from "../StatementPool";
+import { ActionStatement } from "../statements/action/ActionStatement";
+import { ConstantObject } from "../statements/action/ConstantObject";
+import { ConstructorCall } from "../statements/action/ConstructorCall";
+import { FunctionCall } from "../statements/action/FunctionCall";
 import { Getter } from "../statements/action/Getter";
 import { MethodCall } from "../statements/action/MethodCall";
+import { ObjectFunctionCall } from "../statements/action/ObjectFunctionCall";
 import { Setter } from "../statements/action/Setter";
 import { ArrayStatement } from "../statements/complex/ArrayStatement";
 import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionStatement";
 import { ObjectStatement } from "../statements/complex/ObjectStatement";
 import { BoolStatement } from "../statements/primitive/BoolStatement";
+import { IntegerStatement } from "../statements/primitive/IntegerStatement";
 import { NullStatement } from "../statements/primitive/NullStatement";
 import { NumericStatement } from "../statements/primitive/NumericStatement";
 import { StringStatement } from "../statements/primitive/StringStatement";
 import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
-import { ConstructorCall } from "../statements/action/ConstructorCall";
-import { FunctionCall } from "../statements/action/FunctionCall";
-import { ConstantObject } from "../statements/action/ConstantObject";
 import { Statement } from "../statements/Statement";
 
 import { JavaScriptTestCaseSampler } from "./JavaScriptTestCaseSampler";
-import { TargetType } from "@syntest/analysis";
-import { ObjectFunctionCall } from "../statements/action/ObjectFunctionCall";
-import { ObjectType } from "@syntest/analysis-javascript";
-import { IntegerStatement } from "../statements/primitive/IntegerStatement";
-import { ActionStatement } from "../statements/action/ActionStatement";
-import { StatementPool } from "../StatementPool";
 
 export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   constructor(
@@ -487,9 +486,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     objectTypeId: string,
     property: string
   ): Statement {
-    const objectType = <ObjectType>(
-      this.rootContext.getTypeModel().getObjectDescription(objectTypeId)
-    );
+    const objectType = this.rootContext
+      .getTypeModel()
+      .getObjectDescription(objectTypeId);
 
     const value = objectType.properties.get(property);
     if (!value) {

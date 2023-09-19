@@ -18,10 +18,10 @@
 import { NodePath } from "@babel/core";
 import { Scope as BabelScope, TraverseOptions } from "@babel/traverse";
 import * as t from "@babel/types";
-
 import { getLogger, Logger } from "@syntest/logging";
-import { reservedKeywords } from "./reservedKeywords";
+
 import { globalVariables } from "./globalVariables";
+import { reservedKeywords } from "./reservedKeywords";
 
 export const MemberSeparator = " <-> ";
 
@@ -122,7 +122,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       return (
         this._getBindingId(path.parentPath.get("object")) +
         MemberSeparator +
-        (path.isIdentifier() ? path.node.name : path.node.value)
+        (path.isIdentifier() ? path.node.name : `${path.node.value}`)
         // this._getNodeId(path) // bad
       );
     }

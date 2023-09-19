@@ -18,10 +18,11 @@
 import { traverse } from "@babel/core";
 import * as t from "@babel/types";
 import { ControlFlowGraphFactory as CoreControlFlowGraphFactory } from "@syntest/analysis";
-import { ControlFlowProgram, contractControlFlowProgram } from "@syntest/cfg";
+import { contractControlFlowProgram, ControlFlowProgram } from "@syntest/cfg";
+
+import { Factory } from "../Factory";
 
 import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
-import { Factory } from "../Factory";
 
 export class ControlFlowGraphFactory
   extends Factory

@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 import { RootContext } from "@syntest/analysis-javascript";
+
+import { StatementPool } from "../../StatementPool";
 import { Statement } from "../../statements/Statement";
 import { JavaScriptTestCaseSampler } from "../JavaScriptTestCaseSampler";
-import { StatementPool } from "../../StatementPool";
 
 export abstract class Generator<S extends Statement> {
   protected _sampler: JavaScriptTestCaseSampler;

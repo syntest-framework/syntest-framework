@@ -29,37 +29,45 @@ export type Location = {
   };
 };
 
-export type InstrumentationData = {
-  [path: string]: {
-    hash: string;
-    statementMap: {
-      [id: string]: Location;
-    };
-    branchMap: {
-      [id: string]: {
-        line: number;
-        type: string;
-        loc: Location;
-        locations: [Location, Location];
-      };
-    };
-    fnMap: {
-      [id: string]: {
-        name: string;
-        line: number;
-        decl: Location;
-        loc: Location;
-      };
-    };
-    s: {
-      [id: string]: number;
-    };
-    f: {
-      [id: string]: number;
-    };
-    b: {
-      // 0 is true, 1 is false
-      [id: string]: [number, number];
-    };
+export type StatementMap = {
+  [id: string]: Location;
+};
+
+export type BranchMap = {
+  [id: string]: {
+    line: number;
+    type: string;
+    loc: Location;
+    locations: [Location, Location];
   };
+};
+
+export type FunctionMap = {
+  [id: string]: {
+    name: string;
+    line: number;
+    decl: Location;
+    loc: Location;
+  };
+};
+
+export type InstrumentationData = {
+  hash: string;
+  statementMap: StatementMap;
+  branchMap: BranchMap;
+  fnMap: FunctionMap;
+  s: {
+    [id: string]: number;
+  };
+  f: {
+    [id: string]: number;
+  };
+  b: {
+    // 0 is true, 1 is false
+    [id: string]: [number, number];
+  };
+};
+
+export type InstrumentationDataMap = {
+  [path: string]: InstrumentationData;
 };

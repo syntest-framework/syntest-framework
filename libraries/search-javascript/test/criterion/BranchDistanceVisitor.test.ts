@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { expect } from "chai";
+
 import { BranchDistanceVisitor } from "../../lib/criterion/BranchDistanceVisitor";
 
 describe("BranchDistance string functions", () => {

@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ObjectVisitor } from "./object/ObjectVisitor";
 import traverse from "@babel/traverse";
-import { ElementVisitor } from "./element/ElementVisitor";
-import { RelationVisitor } from "./relation/RelationVisitor";
 import * as t from "@babel/types";
+
 import { Factory } from "../../Factory";
+
+import { ElementVisitor } from "./element/ElementVisitor";
+import { ObjectVisitor } from "./object/ObjectVisitor";
+import { RelationVisitor } from "./relation/RelationVisitor";
 
 export class TypeExtractor extends Factory {
   extractElements(filepath: string, ast: t.Node) {

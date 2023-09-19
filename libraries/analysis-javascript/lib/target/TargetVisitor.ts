@@ -20,7 +20,11 @@ import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { TargetType } from "@syntest/analysis";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+import { getLogger, Logger } from "@syntest/logging";
 
+import { unsupportedSyntax } from "../utils/diagnostics";
+
+import { Export } from "./export/Export";
 import {
   Callable,
   ClassTarget,
@@ -32,9 +36,6 @@ import {
   ObjectTarget,
   SubTarget,
 } from "./Target";
-import { Export } from "./export/Export";
-import { unsupportedSyntax } from "../utils/diagnostics";
-import { getLogger, Logger } from "@syntest/logging";
 
 const COMPUTED_FLAG = ":computed:";
 export class TargetVisitor extends AbstractSyntaxTreeVisitor {
@@ -91,33 +92,6 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     // we always use x as the target name instead of A
     const parentNode = path.parentPath.node;
     switch (parentNode.type) {
-      case "ClassProperty": {
-        // e.g. class A { ? = class {} }
-        // e.g. class A { ? = function () {} }
-        // e.g. class A { ? = () => {} }
-
-        if (parentNode.key.type === "Identifier") {
-          // e.g. class A { x = class {} }
-          // e.g. class A { x = function () {} }
-          // e.g. class A { x = () => {} }
-          return parentNode.key.name;
-        } else if (parentNode.key.type.includes("Literal")) {
-          // e.g. class A { "x" = class {} }
-          // e.g. class A { "x" = function () {} }
-          // e.g. class A { "x" = () => {} }
-          return "value" in parentNode.key
-            ? parentNode.key.value.toString()
-            : "null";
-        } else {
-          // e.g. const {x} = class {}
-          // e.g. const {x} = function {}
-          // e.g. const {x} = () => {}
-          // Should not be possible
-          throw new Error(
-            unsupportedSyntax(path.node.type, this._getNodeId(path))
-          );
-        }
-      }
       case "VariableDeclarator": {
         // e.g. const ?? = class {}
         // e.g. const ?? = function {}
@@ -208,16 +182,28 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           );
         }
       }
+      case "ClassProperty":
+      // e.g. class A { ? = class {} }
+      // e.g. class A { ? = function () {} }
+      // e.g. class A { ? = () => {} }
       case "ObjectProperty": {
         // e.g. {?: class {}}
         // e.g. {?: function {}}
         // e.g. {?: () => {}}
         if (parentNode.key.type === "Identifier") {
+          // e.g. class A { x = class {} }
+          // e.g. class A { x = function () {} }
+          // e.g. class A { x = () => {} }
+
           // e.g. {y: class {}}
           // e.g. {y: function {}}
           // e.g. {y: () => {}}
           return parentNode.key.name;
         } else if (parentNode.key.type.includes("Literal")) {
+          // e.g. class A { "x" = class {} }
+          // e.g. class A { "x" = function () {} }
+          // e.g. class A { "x" = () => {} }
+
           // e.g. {1: class {}}
           // e.g. {1: function {}}
           // e.g. {1: () => {}}
@@ -225,6 +211,10 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             ? parentNode.key.value.toString()
             : "null";
         } else {
+          // e.g. const {x} = class {}
+          // e.g. const {x} = function {}
+          // e.g. const {x} = () => {}
+
           // e.g. {?: class {}}
           // e.g. {?: function {}}
           // e.g. {?: () => {}}
@@ -348,33 +338,12 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     // call(() => {})
     const targetName = this._getTargetNameOfExpression(path);
 
-    if (path.parentPath.isVariableDeclarator()) {
-      const id = this._getNodeId(path);
-      const export_ = this._getExport(id);
+    // TODO is there a difference if the parent is a variable declarator?
 
-      this._extractFromFunction(
-        path,
-        id,
-        id,
-        targetName,
-        export_,
-        false,
-        false
-      );
-    } else {
-      const id = this._getNodeId(path);
-      const export_ = this._getExport(id);
+    const id = this._getNodeId(path);
+    const export_ = this._getExport(id);
 
-      this._extractFromFunction(
-        path,
-        id,
-        id,
-        targetName,
-        export_,
-        false,
-        false
-      );
-    }
+    this._extractFromFunction(path, id, id, targetName, export_, false, false);
 
     path.skip();
   };
@@ -455,15 +424,13 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       if (object.isIdentifier()) {
         // x.? = ?
         // x['?'] = ?
-        if (object.node.name === "exports") {
-          // exports.? = ?
-          isObject = false;
-          id = this._getBindingId(right);
-        } else if (
-          object.node.name === "module" &&
-          property.isIdentifier() &&
-          property.node.name === "exports"
+        if (
+          object.node.name === "exports" ||
+          (object.node.name === "module" &&
+            property.isIdentifier() &&
+            property.node.name === "exports")
         ) {
+          // exports.? = ?
           // module.exports = ?
           isObject = false;
           id = this._getBindingId(right);
@@ -704,7 +671,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             key.isNumericLiteral() ||
             key.isBigIntLiteral()
           ) {
-            targetName = `${key.node.value}`;
+            targetName = String(key.node.value);
           }
 
           if (value.isFunction()) {
@@ -791,7 +758,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             key.isNumericLiteral() ||
             key.isBigIntLiteral()
           ) {
-            targetName = `${key.node.value}`;
+            targetName = String(key.node.value);
           }
 
           if (value.isFunction()) {

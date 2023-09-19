@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { expect } from "chai";
+
 import { BranchDistance } from "../../lib/criterion/BranchDistance";
 
 describe("Random Tests", () => {

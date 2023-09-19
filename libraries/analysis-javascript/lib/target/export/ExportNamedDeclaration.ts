@@ -44,6 +44,7 @@ function extractFromObjectPattern(
     );
   }
 
+  const notIdentifier = "Property key is not an identifier";
   for (const property of path.get("properties")) {
     if (property.isRestElement()) {
       // unsupported
@@ -57,7 +58,7 @@ function extractFromObjectPattern(
       if (!key.isIdentifier()) {
         // unsupported
         // not possible i think
-        throw new Error("Property key is not an identifier");
+        throw new Error(notIdentifier);
       }
 
       const propertyName = key.node.name;
@@ -74,7 +75,7 @@ function extractFromObjectPattern(
         if (_property.node.key.type !== "Identifier") {
           // unsupported
           // not possible i think
-          throw new Error("Property key is not an identifier");
+          throw new Error(notIdentifier);
         }
 
         // so we want to find the property that has the same name as the property in the object pattern
@@ -103,7 +104,7 @@ function extractFromObjectPattern(
       if (!key.isIdentifier()) {
         // unsupported
         // should never happen
-        throw new Error("Property key is not an identifier");
+        throw new Error(notIdentifier);
       }
 
       if (match.isObjectProperty()) {

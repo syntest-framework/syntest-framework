@@ -17,9 +17,10 @@
  */
 
 import { TypeEnum } from "@syntest/analysis-javascript";
+
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
-import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -57,7 +58,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
     return [];
   }
 
-  setChild(index: number, newChild: Statement): void {
+  setChild(_index: number, _newChild: Statement): void {
     throw new Error("Primitive statements don't have children");
   }
 

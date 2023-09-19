@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 import { ObjectType } from "@syntest/analysis-javascript";
-import { Statement } from "../../../statements/Statement";
 import { prng } from "@syntest/prng";
+
+import { Statement } from "../../../statements/Statement";
 import { Generator } from "../Generator";
 
 export abstract class CallGenerator<S extends Statement> extends Generator<S> {

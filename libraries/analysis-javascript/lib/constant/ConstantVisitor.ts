@@ -18,6 +18,7 @@
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+
 import { ConstantPool } from "./ConstantPool";
 
 export class ConstantVisitor extends AbstractSyntaxTreeVisitor {

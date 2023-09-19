@@ -16,23 +16,23 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager, Tool } from "@syntest/module";
-import yargs = require("yargs");
-
-import { getTestCommand } from "./commands/test";
 import { Configuration, TestingToolModule } from "@syntest/base-language";
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
+import { Module, ModuleManager, Tool } from "@syntest/module";
 import { StorageManager } from "@syntest/storage";
-import { RandomSamplerPlugin } from "./plugins/sampler/RandomSamplerPlugin";
+import yargs = require("yargs");
+
+import { getTestCommand } from "./commands/test";
 import { TreeCrossoverPlugin } from "./plugins/crossover/TreeCrossoverPlugin";
+import { RandomSamplerPlugin } from "./plugins/sampler/RandomSamplerPlugin";
 
 export default class JavaScriptModule extends TestingToolModule {
   constructor() {
     super(
-      // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").name,
-      // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").version
     );
   }

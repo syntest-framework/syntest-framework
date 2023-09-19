@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
+import { TypeEnum } from "@syntest/analysis-javascript";
 import { prng } from "@syntest/prng";
 
-import { PrimitiveStatement } from "./PrimitiveStatement";
-import { Statement } from "../Statement";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
-import { TypeEnum } from "@syntest/analysis-javascript";
+import { Statement } from "../Statement";
+
+import { PrimitiveStatement } from "./PrimitiveStatement";
 
 /**
  * @author Dimitri Stallenberg

@@ -18,10 +18,10 @@
 
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
+import { getLogger } from "@syntest/logging";
 
 import { Export } from "./Export";
 import { ExportVisitor } from "./ExportVisitor";
-import { getLogger } from "@syntest/logging";
 
 type PartialExport = PartialDefaultExport | PartialNonDefaultExport;
 
@@ -142,7 +142,7 @@ function _extractObjectProperties(
         // e.g. exports = { "a": ? }
         // e.g. exports = { 1: ? }
         // e.g. exports = { true: ? }
-        keyName = `${key.node.value}`;
+        keyName = String(key.node.value);
       } else if (key.isIdentifier()) {
         // e.g. exports = { a: ? }
         keyName = key.node.name;
@@ -314,7 +314,7 @@ function _getNameOfProperty(
       property.isBigIntLiteral()
     ) {
       // module.exports['x'] = ?
-      return `${property.node.value}`;
+      return String(property.node.value);
     } else {
       // module.exports[a] = ?
       getLogger("ExportVisitor").warn(

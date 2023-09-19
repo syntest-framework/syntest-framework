@@ -16,38 +16,38 @@
  * limitations under the License.
  */
 
+import { ConstantPoolManager, RootContext } from "@syntest/analysis-javascript";
 import { EncodingSampler } from "@syntest/search";
 
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
-import { Getter } from "../statements/action/Getter";
-import { MethodCall } from "../statements/action/MethodCall";
-import { Setter } from "../statements/action/Setter";
-import { BoolStatement } from "../statements/primitive/BoolStatement";
-import { NumericStatement } from "../statements/primitive/NumericStatement";
-import { StringStatement } from "../statements/primitive/StringStatement";
-import { ConstructorCall } from "../statements/action/ConstructorCall";
-import { Statement } from "../statements/Statement";
-import { ConstantObject } from "../statements/action/ConstantObject";
-import { ObjectFunctionCall } from "../statements/action/ObjectFunctionCall";
-import { NullStatement } from "../statements/primitive/NullStatement";
-import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
-import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionStatement";
-import { ArrayStatement } from "../statements/complex/ArrayStatement";
-import { ObjectStatement } from "../statements/complex/ObjectStatement";
-import { IntegerStatement } from "../statements/primitive/IntegerStatement";
-import { FunctionCall } from "../statements/action/FunctionCall";
-import { FunctionCallGenerator } from "./generators/action/FunctionCallGenerator";
-import { RootContext } from "@syntest/analysis-javascript";
 import { StatementPool } from "../StatementPool";
 import { ActionStatement } from "../statements/action/ActionStatement";
-import { ConstructorCallGenerator } from "./generators/action/ConstructorCallGenerator";
-import { MethodCallGenerator } from "./generators/action/MethodCallGenerator";
-import { GetterGenerator } from "./generators/action/GetterGenerator";
-import { SetterGenerator } from "./generators/action/SetterGenerator";
+import { ConstantObject } from "../statements/action/ConstantObject";
+import { ConstructorCall } from "../statements/action/ConstructorCall";
+import { FunctionCall } from "../statements/action/FunctionCall";
+import { Getter } from "../statements/action/Getter";
+import { MethodCall } from "../statements/action/MethodCall";
+import { ObjectFunctionCall } from "../statements/action/ObjectFunctionCall";
+import { Setter } from "../statements/action/Setter";
+import { ArrayStatement } from "../statements/complex/ArrayStatement";
+import { ArrowFunctionStatement } from "../statements/complex/ArrowFunctionStatement";
+import { ObjectStatement } from "../statements/complex/ObjectStatement";
+import { BoolStatement } from "../statements/primitive/BoolStatement";
+import { IntegerStatement } from "../statements/primitive/IntegerStatement";
+import { NullStatement } from "../statements/primitive/NullStatement";
+import { NumericStatement } from "../statements/primitive/NumericStatement";
+import { StringStatement } from "../statements/primitive/StringStatement";
+import { UndefinedStatement } from "../statements/primitive/UndefinedStatement";
+import { Statement } from "../statements/Statement";
+
 import { ConstantObjectGenerator } from "./generators/action/ConstantObjectGenerator";
+import { ConstructorCallGenerator } from "./generators/action/ConstructorCallGenerator";
+import { FunctionCallGenerator } from "./generators/action/FunctionCallGenerator";
+import { GetterGenerator } from "./generators/action/GetterGenerator";
+import { MethodCallGenerator } from "./generators/action/MethodCallGenerator";
 import { ObjectFunctionCallGenerator } from "./generators/action/ObjectFunctionCallGenerator";
-import { ConstantPoolManager } from "@syntest/analysis-javascript";
+import { SetterGenerator } from "./generators/action/SetterGenerator";
 
 /**
  * JavaScriptRandomSampler class

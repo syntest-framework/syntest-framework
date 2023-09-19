@@ -15,11 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Statement } from "../../../statements/Statement";
 import { prng } from "@syntest/prng";
-import { CallGenerator } from "./CallGenerator";
-import { ConstructorCall } from "../../../statements/action/ConstructorCall";
+
 import { StatementPool } from "../../../StatementPool";
+import { ConstructorCall } from "../../../statements/action/ConstructorCall";
+import { Statement } from "../../../statements/Statement";
+
+import { CallGenerator } from "./CallGenerator";
 
 export class ConstructorCallGenerator extends CallGenerator<ConstructorCall> {
   override generate(

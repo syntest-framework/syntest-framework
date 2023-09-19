@@ -16,20 +16,20 @@
  * limitations under the License.
  */
 import { traverse } from "@babel/core";
+import { TargetType } from "@syntest/analysis";
 import * as chai from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
 import { ExportVisitor } from "../../lib/target/export/ExportVisitor";
-import { TargetVisitor } from "../../lib/target/TargetVisitor";
 import {
-  FunctionTarget,
-  SubTarget,
   ClassTarget,
+  FunctionTarget,
   MethodTarget,
-  ObjectTarget,
   ObjectFunctionTarget,
+  ObjectTarget,
+  SubTarget,
 } from "../../lib/target/Target";
-import { TargetType } from "@syntest/analysis";
+import { TargetVisitor } from "../../lib/target/TargetVisitor";
 
 const expect = chai.expect;
 

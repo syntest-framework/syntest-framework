@@ -17,8 +17,8 @@
  */
 import * as path from "node:path";
 
-import { StorageManager } from "@syntest/storage";
 import { RootContext, TypeModel } from "@syntest/analysis-javascript";
+import { StorageManager } from "@syntest/storage";
 
 export class StateStorage {
   private storageManager: StorageManager;

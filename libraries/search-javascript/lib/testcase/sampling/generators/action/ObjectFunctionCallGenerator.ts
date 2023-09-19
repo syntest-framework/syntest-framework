@@ -15,11 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Statement } from "../../../statements/Statement";
 import { prng } from "@syntest/prng";
-import { CallGenerator } from "./CallGenerator";
-import { ObjectFunctionCall } from "../../../statements/action/ObjectFunctionCall";
+
 import { StatementPool } from "../../../StatementPool";
+import { ObjectFunctionCall } from "../../../statements/action/ObjectFunctionCall";
+import { Statement } from "../../../statements/Statement";
+
+import { CallGenerator } from "./CallGenerator";
 
 export class ObjectFunctionCallGenerator extends CallGenerator<ObjectFunctionCall> {
   override generate(
@@ -28,7 +30,7 @@ export class ObjectFunctionCallGenerator extends CallGenerator<ObjectFunctionCal
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    statementPool: StatementPool
+    _statementPool: StatementPool
   ): ObjectFunctionCall {
     const type_ = this.rootContext
       .getTypeModel()

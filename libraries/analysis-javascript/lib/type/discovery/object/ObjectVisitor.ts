@@ -18,6 +18,7 @@
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+
 import { DiscoveredObjectKind, DiscoveredType } from "./DiscoveredType";
 
 export class ObjectVisitor extends AbstractSyntaxTreeVisitor {

@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 import { expect } from "chai";
-import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
 
+import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
 import { TargetFactory } from "../../lib/target/TargetFactory";
 
 describe("TargetFactory", () => {

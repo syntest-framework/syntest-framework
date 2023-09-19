@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 import { Archive } from "@syntest/search";
+import { StorageManager } from "@syntest/storage";
 
 import { JavaScriptRunner } from "../testcase/execution/JavaScriptRunner";
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
-import { StorageManager } from "@syntest/storage";
 
 export class JavaScriptSuiteBuilder {
   private storageManager: StorageManager;

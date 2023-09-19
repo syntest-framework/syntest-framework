@@ -19,9 +19,8 @@ import { traverse } from "@babel/core";
 import * as chai from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
-
-import { ElementVisitor } from "../../lib/type/discovery/element/ElementVisitor";
 import { Identifier } from "../../lib/type/discovery/element/Element";
+import { ElementVisitor } from "../../lib/type/discovery/element/ElementVisitor";
 
 const expect = chai.expect;
 

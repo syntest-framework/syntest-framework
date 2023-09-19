@@ -17,10 +17,11 @@
  */
 
 import { prng } from "@syntest/prng";
+
 import {
-  ObjectType,
   arrayProperties,
   functionProperties,
+  ObjectType,
   stringProperties,
 } from "./Type";
 import { TypeEnum } from "./TypeEnum";
@@ -383,7 +384,7 @@ export class TypeModel {
 
     const matchingTypes = probabilities;
 
-    let best: string = matchingTypes.keys().next().value;
+    let best: string = [...matchingTypes.keys()][0];
 
     for (const [type, probability] of matchingTypes.entries()) {
       if (probability > matchingTypes.get(best)) {
@@ -398,7 +399,7 @@ export class TypeModel {
     incorporateExecutionScore: boolean,
     filepath: string
   ): Map<string, Map<string, number>> {
-    const map = new Map();
+    const map = new Map<string, Map<string, number>>();
     for (const id of this._elements) {
       if (!id.startsWith(filepath)) {
         continue;
@@ -427,7 +428,7 @@ export class TypeModel {
 
     // this._scoreHasChangedMap.set(element, false);
 
-    const probabilityMap = new Map<string, number>();
+    let probabilityMap = new Map<string, number>();
 
     if (id === "anon") {
       return probabilityMap;
@@ -480,108 +481,156 @@ export class TypeModel {
     }
 
     for (const relation of usableRelations) {
-      const score = relationMap.get(relation);
-      if (!relationPairsVisited.has(id)) {
-        relationPairsVisited.set(id, new Set());
-      }
-      if (!relationPairsVisited.has(relation)) {
-        relationPairsVisited.set(relation, new Set());
-      }
-
-      relationPairsVisited.get(id).add(relation);
-      relationPairsVisited.get(relation).add(id);
-
-      const probabilityOfRelation = score / totalScore;
-
-      const probabilityMapOfRelation = this.calculateProbabilitiesForElement(
-        incorporateExecutionScore,
+      probabilityMap = this.incorporateRelation(
+        id,
+        probabilityMap,
         relation,
-        relationPairsVisited
+        relationMap,
+        relationPairsVisited,
+        totalScore,
+        incorporateExecutionScore
       );
-
-      for (const [type, probability] of probabilityMapOfRelation.entries()) {
-        let finalType = type;
-
-        if (!type.includes("<>")) {
-          // maybe should check for includes (or the inverse by checking for primitive types)
-          // this will only add only the final relation id
-          // the other method will add all relation id from the element to the final relation
-          finalType = `${relation}<>${type}`;
-        }
-
-        if (finalType.includes("<>") && finalType.split("<>")[0] === id) {
-          // skip this is a self loop
-          continue;
-        }
-
-        if (!probabilityMap.has(finalType)) {
-          probabilityMap.set(finalType, 0);
-        }
-
-        probabilityMap.set(
-          finalType,
-          probabilityMap.get(finalType) + probability * probabilityOfRelation
-        );
-      }
     }
 
     // incorporate execution scores
-    const executionScoreMap = this._typeExecutionScoreMap.get(id);
+    probabilityMap = this.incorporateExecutionScores(
+      id,
+      probabilityMap,
+      incorporateExecutionScore
+    );
 
-    if (incorporateExecutionScore && executionScoreMap.size > 1) {
-      let minValue = 0;
-      for (const score of executionScoreMap.values()) {
-        minValue = Math.min(minValue, score);
-      }
+    return this.normalizeProbabilities(probabilityMap);
+  }
 
-      let totalScore = 0;
-      for (const type of probabilityMap.keys()) {
-        let score = executionScoreMap.get(type) ?? 0;
-        score -= minValue;
-        score += 1;
-        totalScore += score;
-      }
+  incorporateRelation(
+    id: string,
+    probabilityMap: Map<string, number>,
+    relation: string,
+    relationMap: Map<string, number>,
+    relationPairsVisited: Map<string, Set<string>>,
+    totalScore: number,
+    incorporateExecutionScore: boolean
+  ): Map<string, number> {
+    const score = relationMap.get(relation);
 
-      if (totalScore < 0) {
-        throw new Error("Total score should be positive");
-      }
-
-      if (totalScore === 0) {
-        throw new Error("Total score should be positive");
-      }
-
-      if (Number.isNaN(totalScore)) {
-        throw new TypeError("Total score should be positive");
-      }
-
-      // incorporate execution score
-      for (const type of probabilityMap.keys()) {
-        let score = executionScoreMap.has(type)
-          ? executionScoreMap.get(type)
-          : 0;
-        score -= minValue;
-        score += 1;
-
-        const executionScoreDiscount = score / totalScore;
-        const probability = probabilityMap.get(type);
-        const newProbability = executionScoreDiscount * probability;
-
-        probabilityMap.set(type, newProbability);
-      }
+    if (!relationPairsVisited.has(id)) {
+      relationPairsVisited.set(id, new Set());
+    }
+    if (!relationPairsVisited.has(relation)) {
+      relationPairsVisited.set(relation, new Set());
     }
 
+    relationPairsVisited.get(id).add(relation);
+    relationPairsVisited.get(relation).add(id);
+
+    const probabilityOfRelation = score / totalScore;
+
+    const probabilityMapOfRelation = this.calculateProbabilitiesForElement(
+      incorporateExecutionScore,
+      relation,
+      relationPairsVisited
+    );
+
+    for (const [type, probability] of probabilityMapOfRelation.entries()) {
+      let finalType = type;
+
+      if (!type.includes("<>")) {
+        // maybe should check for includes (or the inverse by checking for primitive types)
+        // this will only add only the final relation id
+        // the other method will add all relation id from the element to the final relation
+        finalType = `${relation}<>${type}`;
+      }
+
+      if (finalType.includes("<>") && finalType.split("<>")[0] === id) {
+        // skip this is a self loop
+        continue;
+      }
+
+      if (!probabilityMap.has(finalType)) {
+        probabilityMap.set(finalType, 0);
+      }
+
+      probabilityMap.set(
+        finalType,
+        probabilityMap.get(finalType) + probability * probabilityOfRelation
+      );
+    }
+
+    return probabilityMap;
+  }
+
+  incorporateExecutionScores(
+    id: string,
+    probabilityMap: Map<string, number>,
+    incorporateExecutionScore: boolean
+  ): Map<string, number> {
+    const executionScoreMap = this._typeExecutionScoreMap.get(id);
+
+    if (!incorporateExecutionScore || executionScoreMap.size <= 1) {
+      return probabilityMap;
+    }
+
+    const combinedProbabilityMap = new Map<string, number>();
+
+    let minValue = 0;
+    for (const score of executionScoreMap.values()) {
+      minValue = Math.min(minValue, score);
+    }
+
+    let totalScore = 0;
+    for (const type of probabilityMap.keys()) {
+      let score = executionScoreMap.get(type) ?? 0;
+      score -= minValue;
+      score += 1;
+      totalScore += score;
+    }
+
+    if (totalScore < 0) {
+      throw new Error("Total score should be positive but is negative");
+    }
+
+    if (totalScore === 0) {
+      throw new Error("Total score should be positive but is zero");
+    }
+
+    if (Number.isNaN(totalScore)) {
+      throw new TypeError("Total score should be positive but is NaN");
+    }
+
+    // incorporate execution score
+    for (const type of probabilityMap.keys()) {
+      let score = executionScoreMap.has(type) ? executionScoreMap.get(type) : 0;
+      score -= minValue;
+      score += 1;
+
+      const executionScoreDiscount = score / totalScore;
+      const probability = probabilityMap.get(type);
+      const newProbability = executionScoreDiscount * probability;
+
+      combinedProbabilityMap.set(type, newProbability);
+    }
+
+    return combinedProbabilityMap;
+  }
+
+  normalizeProbabilities(
+    probabilityMap: Map<string, number>
+  ): Map<string, number> {
     // normalize to 1
     let totalProbability = 0;
     for (const probability of probabilityMap.values()) {
       totalProbability += probability;
     }
 
-    if (totalProbability !== 0 && totalProbability !== 1) {
-      for (const [type, probability] of probabilityMap.entries()) {
-        probabilityMap.set(type, probability / totalProbability);
-      }
+    if (totalProbability === 0 || totalProbability === 1) {
+      return probabilityMap;
     }
 
-    return probabilityMap;
+    const normalizedProbabilityMap = new Map<string, number>();
+    for (const [type, probability] of probabilityMap.entries()) {
+      normalizedProbabilityMap.set(type, probability / totalProbability);
+    }
+
+    return normalizedProbabilityMap;
   }
 }

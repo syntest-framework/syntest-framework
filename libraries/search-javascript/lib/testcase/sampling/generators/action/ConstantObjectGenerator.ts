@@ -16,9 +16,11 @@
  * limitations under the License.
  */
 import { prng } from "@syntest/prng";
-import { CallGenerator } from "./CallGenerator";
-import { ConstantObject } from "../../../statements/action/ConstantObject";
+
 import { StatementPool } from "../../../StatementPool";
+import { ConstantObject } from "../../../statements/action/ConstantObject";
+
+import { CallGenerator } from "./CallGenerator";
 
 export class ConstantObjectGenerator extends CallGenerator<ConstantObject> {
   override generate(

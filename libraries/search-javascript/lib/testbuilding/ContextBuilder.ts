@@ -16,15 +16,19 @@
  * limitations under the License.
  */
 
-import { Statement } from "../testcase/statements/Statement";
 import * as path from "node:path";
+
 import { Export } from "@syntest/analysis-javascript";
+import {
+  globalVariables,
+  reservedKeywords,
+} from "@syntest/ast-visitor-javascript";
+import { getLogger, Logger } from "@syntest/logging";
+
 import { ClassActionStatement } from "../testcase/statements/action/ClassActionStatement";
 import { FunctionCall } from "../testcase/statements/action/FunctionCall";
 import { ObjectFunctionCall } from "../testcase/statements/action/ObjectFunctionCall";
-import { reservedKeywords } from "@syntest/ast-visitor-javascript";
-import { globalVariables } from "@syntest/ast-visitor-javascript";
-import { Logger, getLogger } from "@syntest/logging";
+import { Statement } from "../testcase/statements/Statement";
 
 type Import = RegularImport | RenamedImport;
 

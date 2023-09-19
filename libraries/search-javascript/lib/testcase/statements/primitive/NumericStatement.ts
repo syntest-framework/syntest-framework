@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
+import { TypeEnum } from "@syntest/analysis-javascript";
 import { prng } from "@syntest/prng";
 
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
-
-import { PrimitiveStatement } from "./PrimitiveStatement";
 import { Statement } from "../Statement";
+
 import { IntegerStatement } from "./IntegerStatement";
-import { TypeEnum } from "@syntest/analysis-javascript";
+import { PrimitiveStatement } from "./PrimitiveStatement";
 
 /**
  * Generic number class

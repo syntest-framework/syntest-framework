@@ -19,13 +19,14 @@
 import { Decoder } from "@syntest/search";
 
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
-import { Decoding } from "../testcase/statements/Statement";
 import { ActionStatement } from "../testcase/statements/action/ActionStatement";
-import { ContextBuilder } from "./ContextBuilder";
-import { FunctionCall } from "../testcase/statements/action/FunctionCall";
 import { ClassActionStatement } from "../testcase/statements/action/ClassActionStatement";
-import { assertionFunction } from "./assertionFunctionTemplate";
+import { FunctionCall } from "../testcase/statements/action/FunctionCall";
 import { ObjectFunctionCall } from "../testcase/statements/action/ObjectFunctionCall";
+import { Decoding } from "../testcase/statements/Statement";
+
+import { assertionFunction } from "./assertionFunctionTemplate";
+import { ContextBuilder } from "./ContextBuilder";
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   private targetRootDirectory: string;

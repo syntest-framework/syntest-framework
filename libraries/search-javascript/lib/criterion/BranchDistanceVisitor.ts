@@ -15,13 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
-import { Logger, getLogger } from "@syntest/logging";
+import { getLogger, Logger } from "@syntest/logging";
 import { shouldNeverHappen } from "@syntest/search";
 
+const invalidOperator = "Invalid operator!";
 export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   protected static override LOGGER: Logger;
 
@@ -377,7 +382,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
         }
         default: {
           // should be unreachable
-          throw new Error("Invalid operator!");
+          throw new Error(invalidOperator);
         }
       }
     }
@@ -472,7 +477,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
       default: {
         // should be unreachable
-        throw new Error("Invalid operator!");
+        throw new Error(invalidOperator);
       }
     }
 
@@ -710,7 +715,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
       default: {
         // should be unreachable
-        throw new Error("Invalid operator!");
+        throw new Error(invalidOperator);
       }
     }
 
@@ -822,7 +827,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
       default: {
         // should be unreachable
-        throw new Error("Invalid operator!");
+        throw new Error(invalidOperator);
       }
     }
 

@@ -71,6 +71,7 @@ export class SilentMochaReporter {
             // eslint-disable-next-line unicorn/prefer-spread
             .concat(error);
         } else {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           test.err = error;
         }
         this.failures.push(test);

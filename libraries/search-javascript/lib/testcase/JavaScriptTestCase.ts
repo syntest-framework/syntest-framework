@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
+import { getLogger, Logger } from "@syntest/logging";
 import { prng } from "@syntest/prng";
 import { Decoder, Encoding } from "@syntest/search";
-import { getLogger, Logger } from "@syntest/logging";
 
-import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
-import { ActionStatement } from "./statements/action/ActionStatement";
-import { StatementPool } from "./StatementPool";
 import { AssertionDataTestCase } from "./execution/AssertionData";
+import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
+import { StatementPool } from "./StatementPool";
+import { ActionStatement } from "./statements/action/ActionStatement";
 
 /**
  * JavaScriptTestCase class

@@ -16,10 +16,18 @@
  * limitations under the License.
  */
 
+import { ChildProcess, fork } from "node:child_process";
 import * as path from "node:path";
 
-import { Trace, EncodingRunner, ExecutionResult } from "@syntest/search";
+import {
+  InstrumentationData,
+  InstrumentationDataMap,
+  MetaData,
+  MetaDataMap,
+} from "@syntest/instrumentation-javascript";
 import { getLogger, Logger } from "@syntest/logging";
+import { EncodingRunner, ExecutionResult, Trace } from "@syntest/search";
+import { StorageManager } from "@syntest/storage";
 
 import {
   JavaScriptExecutionResult,
@@ -30,13 +38,7 @@ import { JavaScriptDecoder } from "../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 
 import { ExecutionInformationIntegrator } from "./ExecutionInformationIntegrator";
-import { StorageManager } from "@syntest/storage";
 import { DoneMessage, Message } from "./TestExecutor";
-import { ChildProcess, fork } from "node:child_process";
-import {
-  InstrumentationData,
-  MetaData,
-} from "@syntest/instrumentation-javascript";
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   protected static LOGGER: Logger;
@@ -186,7 +188,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           undefined
         );
       } else {
-        JavaScriptRunner.LOGGER.error(error);
+        JavaScriptRunner.LOGGER.error(String(error));
         throw error;
       }
     }
@@ -201,8 +203,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   }
 
   private _extractTraces(
-    instrumentationData: InstrumentationData,
-    metaData: MetaData
+    instrumentationData: InstrumentationDataMap,
+    metaData: MetaDataMap
   ): Trace[] {
     const traces: Trace[] = [];
 
@@ -237,82 +239,59 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         });
       }
 
-      for (const branchKey of Object.keys(instrumentationData[key].branchMap)) {
-        const branch = instrumentationData[key].branchMap[branchKey];
-        const hits = <number[]>instrumentationData[key].b[branchKey];
-        let meta;
+      traces.push(
+        ...this._extractBranchTraces(
+          key,
+          instrumentationData[key],
+          metaData !== undefined && key in metaData ? metaData[key] : undefined
+        )
+      );
+    }
 
-        if (metaData !== undefined && key in metaData) {
-          const metaPath = metaData[key];
-          const metaMeta = metaPath.meta;
-          meta = metaMeta[branchKey.toString()];
-        }
+    return traces;
+  }
 
+  private _extractBranchTraces(
+    key: string,
+    instrumentationData: InstrumentationData,
+    metaData: MetaData
+  ): Trace[] {
+    const traces: Trace[] = [];
+    for (const branchKey of Object.keys(instrumentationData.branchMap)) {
+      const branch = instrumentationData.branchMap[branchKey];
+      const hits = <number[]>instrumentationData.b[branchKey];
+      let meta;
+
+      if (metaData !== undefined) {
+        const metaMeta = metaData.meta;
+        meta = metaMeta[branchKey.toString()];
+      }
+
+      for (const [index, location] of branch.locations.entries()) {
         traces.push({
-          id: branch.locations[0].id,
+          id: location.id,
           path: key,
           type: "branch",
-          location: branch.locations[0],
+          location: branch.locations[index],
 
-          hits: hits[0],
+          hits: hits[index],
 
           condition: meta?.condition,
           variables: meta?.variables,
         });
+      }
 
-        if (branch.locations.length > 2) {
-          // switch case
-          for (const [index, location] of branch.locations.entries()) {
-            if (index === 0) {
-              continue;
-            }
-            traces.push({
-              id: location.id,
-              path: key,
-              type: "branch",
-              location: branch.locations[index],
-
-              hits: hits[index],
-
-              condition: meta?.condition,
-              variables: meta?.variables,
-            });
-          }
-        } else if (branch.locations.length === 2) {
-          // normal branch
-          // or small switch
-          traces.push({
-            id: branch.locations[1].id,
-            path: key,
-            type: "branch",
-            location: branch.locations[1],
-
-            hits: hits[1],
-
-            condition: meta?.condition,
-            variables: meta?.variables,
-          });
-        } else if (
-          branch.locations.length === 1 &&
-          branch.type === "default-arg"
-        ) {
-          // this is the default-arg branch it only has one location
-          traces.push({
-            id: branch.locations[0].id,
-            path: key,
-            type: "branch",
-            location: branch.locations[0],
-
-            hits: hits[0] ? 0 : 1,
-
-            condition: meta?.condition,
-            variables: meta?.variables,
-          });
-        } else {
-          throw new Error(
-            `Invalid number of locations for branch type: ${branch.type}`
-          );
-        }
+      if (
+        !(
+          branch.locations.length > 2 || // more than 2 means switch
+          branch.locations.length === 2 || // equal to 2 means if statement (or small switch)
+          (branch.locations.length === 1 && branch.type === "default-arg")
+        ) // equal to 1 means default arg
+      ) {
+        // otherwise something is wrong
+        throw new Error(
+          `Invalid number of locations for branch type: ${branch.type}`
+        );
       }
     }
 

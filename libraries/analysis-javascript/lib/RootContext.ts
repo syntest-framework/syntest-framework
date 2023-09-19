@@ -20,27 +20,27 @@ import { existsSync, lstatSync } from "node:fs";
 
 import * as t from "@babel/types";
 import { RootContext as CoreRootContext } from "@syntest/analysis";
+import { getLogger, Logger } from "@syntest/logging";
+import TypedEmitter from "typed-emitter";
 
 import { AbstractSyntaxTreeFactory } from "./ast/AbstractSyntaxTreeFactory";
 import { ControlFlowGraphFactory } from "./cfg/ControlFlowGraphFactory";
+import { ConstantPool } from "./constant/ConstantPool";
+import { ConstantPoolFactory } from "./constant/ConstantPoolFactory";
+import { ConstantPoolManager } from "./constant/ConstantPoolManager";
 import { DependencyFactory } from "./dependency/DependencyFactory";
+import { Events } from "./Events";
 import { Export } from "./target/export/Export";
-import { TargetFactory } from "./target/TargetFactory";
-import { TypeModelFactory } from "./type/resolving/TypeModelFactory";
-import { readFile } from "./utils/fileSystem";
 import { ExportFactory } from "./target/export/ExportFactory";
-import { TypeExtractor } from "./type/discovery/TypeExtractor";
-import { TypeModel } from "./type/resolving/TypeModel";
+import { TargetFactory } from "./target/TargetFactory";
 import { Element } from "./type/discovery/element/Element";
 import { DiscoveredObjectType } from "./type/discovery/object/DiscoveredType";
 import { Relation } from "./type/discovery/relation/Relation";
+import { TypeExtractor } from "./type/discovery/TypeExtractor";
+import { TypeModel } from "./type/resolving/TypeModel";
+import { TypeModelFactory } from "./type/resolving/TypeModelFactory";
 import { TypePool } from "./type/resolving/TypePool";
-import TypedEmitter from "typed-emitter";
-import { Events } from "./Events";
-import { ConstantPoolManager } from "./constant/ConstantPoolManager";
-import { Logger, getLogger } from "@syntest/logging";
-import { ConstantPoolFactory } from "./constant/ConstantPoolFactory";
-import { ConstantPool } from "./constant/ConstantPool";
+import { readFile } from "./utils/fileSystem";
 
 export class RootContext extends CoreRootContext<t.Node> {
   protected static LOGGER: Logger;

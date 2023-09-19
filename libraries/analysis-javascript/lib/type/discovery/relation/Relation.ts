@@ -26,16 +26,6 @@ export interface Relation {
   computed?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isRelation(object: any): object is Relation {
-  return (
-    object !== undefined &&
-    object.id !== undefined &&
-    object.type !== undefined &&
-    object.involved !== undefined
-  );
-}
-
 export function getRelationName(type: RelationType): string {
   return Object.entries(RelationType).find(([, value]) => value === type)[0];
 }

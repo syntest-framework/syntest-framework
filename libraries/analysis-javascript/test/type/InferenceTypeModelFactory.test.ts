@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 import traverse from "@babel/traverse";
+
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
 import { ElementVisitor } from "../../lib/type/discovery/element/ElementVisitor";
-import { InferenceTypeModelFactory } from "../../lib/type/resolving/InferenceTypeModelFactory";
-import { RelationVisitor } from "../../lib/type/discovery/relation/RelationVisitor";
 import { RelationType } from "../../lib/type/discovery/relation/Relation";
+import { RelationVisitor } from "../../lib/type/discovery/relation/RelationVisitor";
+import { InferenceTypeModelFactory } from "../../lib/type/resolving/InferenceTypeModelFactory";
 
 function helper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();

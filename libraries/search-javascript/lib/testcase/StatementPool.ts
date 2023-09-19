@@ -15,14 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionStatement } from "./statements/action/ActionStatement";
-import { Statement } from "./statements/Statement";
 import { prng } from "@syntest/prng";
-import { ConstructorCall } from "./statements/action/ConstructorCall";
-import { ConstantObject } from "./statements/action/ConstantObject";
-import { FunctionCall } from "./statements/action/FunctionCall";
+
+import { ActionStatement } from "./statements/action/ActionStatement";
 import { ClassActionStatement } from "./statements/action/ClassActionStatement";
+import { ConstantObject } from "./statements/action/ConstantObject";
+import { ConstructorCall } from "./statements/action/ConstructorCall";
+import { FunctionCall } from "./statements/action/FunctionCall";
 import { ObjectFunctionCall } from "./statements/action/ObjectFunctionCall";
+import { Statement } from "./statements/Statement";
 
 export class StatementPool {
   // type -> statement array

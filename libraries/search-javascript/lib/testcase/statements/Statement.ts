@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
+import { TypeEnum } from "@syntest/analysis-javascript";
 import { Encoding, EncodingSampler } from "@syntest/search";
 
-import { TypeEnum } from "@syntest/analysis-javascript";
 import { ContextBuilder } from "../../testbuilding/ContextBuilder";
 
 /**

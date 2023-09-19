@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
+import { TypeModel } from "@syntest/analysis-javascript";
 import Mocha = require("mocha");
 
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 import { Statement } from "../statements/Statement";
-import { TypeModel } from "@syntest/analysis-javascript";
+
 import { Test } from "./TestExecutor";
 
 export class ExecutionInformationIntegrator {

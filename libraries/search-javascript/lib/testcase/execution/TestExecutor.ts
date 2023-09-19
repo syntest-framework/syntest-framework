@@ -16,15 +16,17 @@
  * limitations under the License.
  */
 
+import {
+  InstrumentationDataMap,
+  MetaDataMap,
+} from "@syntest/instrumentation-javascript";
 import { Runner } from "mocha";
 import Mocha = require("mocha");
+
 import { JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
-import {
-  InstrumentationData,
-  MetaData,
-} from "@syntest/instrumentation-javascript";
-import { SilentMochaReporter } from "./SilentMochaReporter";
+
 import { AssertionData } from "./AssertionData";
+import { SilentMochaReporter } from "./SilentMochaReporter";
 
 export type Message = RunMessage | DoneMessage;
 
@@ -39,8 +41,8 @@ export type DoneMessage = {
   message: "done";
   suites: Suite[];
   stats: Mocha.Stats;
-  instrumentationData: InstrumentationData;
-  metaData: MetaData;
+  instrumentationData: InstrumentationDataMap;
+  metaData: MetaDataMap;
   assertionData?: AssertionData;
   error?: string;
 };
@@ -62,6 +64,7 @@ process.on("unhandledRejection", (reason) => {
   throw reason;
 });
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 process.on("message", async (data: Message) => {
   if (typeof data !== "object") {
     throw new TypeError("Invalid data received from child process");
@@ -136,8 +139,8 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
   });
 
   type GlobalType = {
-    __coverage__: InstrumentationData;
-    __meta__: MetaData;
+    __coverage__: InstrumentationDataMap;
+    __meta__: MetaDataMap;
     __assertion__: AssertionData;
   };
 

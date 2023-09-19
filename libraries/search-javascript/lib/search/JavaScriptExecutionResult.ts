@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Trace, ExecutionResult } from "@syntest/search";
+import { ExecutionResult, Trace } from "@syntest/search";
 
 export enum JavaScriptExecutionStatus {
   PASSED,

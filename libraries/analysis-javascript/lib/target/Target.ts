@@ -49,6 +49,7 @@ export type Exportable = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isExported(target: any): target is Exportable {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return "exported" in target && target.exported === true;
 }
 
