@@ -1,6 +1,6 @@
 {
   "name": "@syntest/instrumentation-javascript",
-  "version": "0.1.0-beta.20",
+  "version": "0.1.0-beta.21",
   "description": "SynTest Instrumentation JavaScript is a library for instrumenting JavaScript code",
   "keywords": [
     "syntest",
@@ -46,10 +46,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis-javascript": "^0.1.0-beta.21",
     "@babel/core": "7.20.12",
     "@babel/traverse": "7.20.12",
     "@istanbuljs/schema": "^0.1.3",
+    "@syntest/analysis-javascript": "^0.1.0-beta.22",
     "@syntest/ast-visitor-javascript": "*",
     "@syntest/storage": "*",
     "istanbul-lib-coverage": "^3.2.0"
