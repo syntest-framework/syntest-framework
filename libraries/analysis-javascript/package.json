@@ -48,12 +48,12 @@
   "dependencies": {
     "@babel/core": "7.20.12",
     "@babel/traverse": "7.20.12",
-    "@syntest/analysis": "^0.1.0-beta.7",
+    "@syntest/analysis": "^0.2.0",
     "@syntest/ast-visitor-javascript": "*",
-    "@syntest/cfg": "^0.3.0-beta.18",
-    "@syntest/logging": "^0.1.0-beta.7",
-    "@syntest/prng": "*",
-    "@syntest/search": "^0.4.0-beta.36"
+    "@syntest/cfg": "^0.4.0",
+    "@syntest/logging": "^0.1.1",
+    "@syntest/prng": "^0.1.1",
+    "@syntest/search": "^0.4.0"
   },
   "engines": {
     "node": ">=10.24.0"
