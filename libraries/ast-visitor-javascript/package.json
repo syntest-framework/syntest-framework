@@ -1,6 +1,6 @@
 {
   "name": "@syntest/ast-visitor-javascript",
-  "version": "0.1.0-beta.8",
+  "version": "0.1.0",
   "description": "SynTest AST JavaScript is a library for visiting Abstract Syntax Trees for the JavaScript language",
   "keywords": [
     "syntest",
