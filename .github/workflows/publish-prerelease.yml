@@ -57,7 +57,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SYNTEST_CI }}
         run: |
-          npx lerna version --conventional-commits --conventional-prerelease --changelog-preset conventionalcommits --preid beta --no-changelog --yes --loglevel silly
+          npx lerna version --conventional-commits --conventional-prerelease --changelog-preset conventionalcommits --preid beta --yes --loglevel silly
       
       # Publishing
       - name: "Core - Publish"
