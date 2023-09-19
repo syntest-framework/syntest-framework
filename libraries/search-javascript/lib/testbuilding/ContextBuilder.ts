@@ -90,7 +90,7 @@ export class ContextBuilder {
     let variableName = statement.name;
 
     variableName =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".includes(
         variableName[0]
       )
         ? variableName[0].toLowerCase() + variableName.slice(1)

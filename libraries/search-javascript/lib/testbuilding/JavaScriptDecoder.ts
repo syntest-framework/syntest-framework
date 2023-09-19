@@ -101,7 +101,12 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
     if (requires.length > 0) {
       beforeEachLines = [
-        ...requires.map((m) => `\tlet ${m.left};`),
+        ...requires.map(
+          (m) =>
+            `\tlet ${(m.left.includes(":") ? m.left.split(":")[1] : m.left)
+              .replace("{", "")
+              .replace("}", "")};`
+        ),
         `\tbeforeEach(() => {`,
         "\t\t// This is a hack to force the require cache to be emptied",
         "\t\t// Without this we would be using the same required object for each test",
@@ -112,7 +117,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
               "require.resolve"
             )}];`
         ),
-        ...requires.map((m) => `\t\t${m.left} = ${m.right}`),
+        ...requires.map((m) => `\t\t(${m.left} = ${m.right});`),
         `\t});`,
         "",
       ];
@@ -125,7 +130,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       `describe('${targetName}', function() {`,
       ...beforeEachLines,
       ...tests.flatMap((testLines: string[], index) => [
-        `\tit("Test ${index} for '${targetName}'", async () => {`,
+        `\tit("Test ${index + 1} for '${targetName}'", async () => {`,
         ...testLines.map((line) => `\t\t${line}`),
         index === tests.length - 1 ? "\t})" : "\t})\n",
       ]),

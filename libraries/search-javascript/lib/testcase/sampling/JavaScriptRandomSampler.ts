@@ -325,8 +325,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .filter((target) =>
         isExported(
           targets.find(
-            (objectTarget) =>
-              objectTarget.id === (<ObjectFunctionTarget>target).objectId
+            (objectTarget) => objectTarget.id === (<MethodTarget>target).classId
           )
         )
       );
@@ -353,8 +352,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .filter((target) =>
         isExported(
           targets.find(
-            (objectTarget) =>
-              objectTarget.id === (<ObjectFunctionTarget>target).objectId
+            (objectTarget) => objectTarget.id === (<MethodTarget>target).classId
           )
         )
       );
@@ -381,8 +379,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .filter((target) =>
         isExported(
           targets.find(
-            (objectTarget) =>
-              objectTarget.id === (<ObjectFunctionTarget>target).objectId
+            (objectTarget) => objectTarget.id === (<MethodTarget>target).classId
           )
         )
       );
