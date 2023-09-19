@@ -49,8 +49,10 @@ export class JavaScriptSuiteBuilder {
     const paths: string[] = [];
 
     // write the test cases with logs to know what to assert
+    let totalAmount = 0;
     if (compact) {
       for (const key of archive.keys()) {
+        totalAmount += archive.get(key).length;
         const decodedTest = this.decoder.decode(
           archive.get(key),
           `${key}`,
@@ -67,6 +69,7 @@ export class JavaScriptSuiteBuilder {
       }
     } else {
       for (const key of archive.keys()) {
+        totalAmount += archive.get(key).length;
         for (const testCase of archive.get(key)) {
           const decodedTest = this.decoder.decode(
             testCase,
@@ -93,7 +96,7 @@ export class JavaScriptSuiteBuilder {
 
     const { stats, instrumentationData, assertionData } = await this.runner.run(
       paths,
-      archive.size * 2
+      totalAmount * 2
     );
     if (assertionData) {
       // put assertion data on testCases
