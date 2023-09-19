@@ -151,9 +151,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     let executionResult: JavaScriptExecutionResult;
     const last = Date.now();
     try {
-      const { suites, stats, instrumentationData, metaData } = await this.run([
-        testPath,
-      ]);
+      const { suites, stats, instrumentationData, metaData, assertionData } =
+        await this.run([testPath]);
       JavaScriptRunner.LOGGER.debug(`test run took: ${Date.now() - last} ms`);
       const test = suites[0].tests[0]; // only one test in this case
 
@@ -172,6 +171,10 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         test.duration,
         test.error
       );
+
+      if (assertionData && assertionData[testCase.id]) {
+        testCase.assertionData = assertionData[testCase.id];
+      }
     } catch (error) {
       if (error === "timeout") {
         // we put undefined as exception such that the test case doesnt end up in the final test suite

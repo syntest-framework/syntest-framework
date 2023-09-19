@@ -19,10 +19,10 @@
 import { prng } from "@syntest/prng";
 import { shouldNeverHappen } from "@syntest/search";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -48,7 +48,6 @@ export class ArrowFunctionStatement extends Statement {
     );
     this._parameters = parameters;
     this._returnValue = returnValue;
-    this._classType = "ArrowFunctionStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
@@ -96,32 +95,30 @@ export class ArrowFunctionStatement extends Statement {
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
+  decode(context: ContextBuilder): Decoding[] {
     if (this._returnValue === undefined) {
       return [
         {
-          decoded: `const ${this.varName} = (${this._parameters.join(
-            ", "
-          )}) => { };`,
+          decoded: `const ${context.getOrCreateVariableName(
+            this
+          )} = (${this._parameters.join(", ")}) => {};`,
           reference: this,
         },
       ];
     }
-    const returnStatement: Decoding[] = this._returnValue.decode(
-      decoder,
-      id,
-      options
-    );
+
+    const returnStatement: Decoding[] = this._returnValue.decode(context);
+
+    const decoded = `const ${context.getOrCreateVariableName(
+      this
+    )} = (${this._parameters.join(
+      ", "
+    )}) => { return ${context.getOrCreateVariableName(this.returnValue)} };`;
+
     return [
       ...returnStatement,
       {
-        decoded: `const ${this.varName} = (${this._parameters.join(
-          ", "
-        )}) => { return ${this.returnValue.varName} };`,
+        decoded: decoded,
         reference: this,
       },
     ];

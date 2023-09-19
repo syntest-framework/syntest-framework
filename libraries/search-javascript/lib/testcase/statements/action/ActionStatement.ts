@@ -22,7 +22,7 @@ import { Statement } from "../Statement";
 import { Export, TypeEnum } from "@syntest/analysis-javascript";
 
 /**
- * @author Dimitri Stallenberg
+ * ActionStatement
  */
 export abstract class ActionStatement extends Statement {
   private _args: Statement[];
@@ -32,31 +32,14 @@ export abstract class ActionStatement extends Statement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: TypeEnum,
+    ownType: TypeEnum,
     uniqueId: string,
     arguments_: Statement[],
     export_?: Export
   ) {
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId);
+    super(variableIdentifier, typeIdentifier, name, ownType, uniqueId);
     this._args = arguments_;
     this._export = export_;
-
-    this._varName = "_" + this.generateVarName(name, type, uniqueId);
-  }
-
-  protected override generateVarName(
-    name: string,
-    type: string,
-    uniqueId: string
-  ): string {
-    // TODO should use return type
-    if (this._export) {
-      return name + "_" + this._export.name + "_" + uniqueId;
-    }
-
-    return type.includes("<>")
-      ? name + "_" + type.split("<>")[1] + "_" + uniqueId
-      : name + "_" + type + "_" + uniqueId;
   }
 
   abstract override mutate(

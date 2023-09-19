@@ -19,13 +19,13 @@
 import { prng } from "@syntest/prng";
 import { shouldNeverHappen } from "@syntest/search";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
 import { ActionStatement } from "./ActionStatement";
 import { ConstantObject } from "./ConstantObject";
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -57,7 +57,6 @@ export class ObjectFunctionCall extends ActionStatement {
       uniqueId,
       arguments_
     );
-    this._classType = "ObjectFunctionCall";
     this._object = object_;
   }
 
@@ -126,37 +125,30 @@ export class ObjectFunctionCall extends ActionStatement {
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
-    const arguments_ = this.args.map((a) => a.varName).join(", ");
+  decode(context: ContextBuilder): Decoding[] {
+    const objectDecoding = this._object.decode(context);
 
-    const argumentStatements: Decoding[] = this.args.flatMap((a) =>
-      a.decode(decoder, id, options)
+    const argumentsDecoding: Decoding[] = this.args.flatMap((a) =>
+      a.decode(context)
     );
 
-    let decoded = `const ${this.varName} = await ${this._object.varName}.${this.name}(${arguments_})`;
+    const arguments_ = this.args
+      .map((a) => context.getOrCreateVariableName(a))
+      .join(", ");
 
-    if (options.addLogs) {
-      const logDirectory = decoder.getLogDirectory(id, this.varName);
-      decoded += `\nawait fs.writeFileSync('${logDirectory}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
-    }
+    const decoded = `const ${context.getOrCreateVariableName(
+      this
+    )} = await ${context.getOrCreateVariableName(this._object)}.${
+      this.name
+    }(${arguments_})`;
 
     return [
-      ...this._object.decode(decoder, id, options),
-      ...argumentStatements,
+      ...objectDecoding,
+      ...argumentsDecoding,
       {
         decoded: decoded,
         reference: this,
       },
     ];
-  }
-
-  // TODO
-  decodeErroring(): string {
-    const arguments_ = this.args.map((a) => a.varName).join(", ");
-    return `await expect(${this._object.varName}.${this.name}(${arguments_})).to.be.rejectedWith(Error);`;
   }
 }

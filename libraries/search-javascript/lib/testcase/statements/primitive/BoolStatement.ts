@@ -43,7 +43,6 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
       uniqueId,
       value
     );
-    this._classType = "BoolStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {

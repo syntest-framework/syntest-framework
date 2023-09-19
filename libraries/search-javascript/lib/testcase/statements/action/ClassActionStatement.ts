@@ -27,7 +27,7 @@ export abstract class ClassActionStatement extends ActionStatement {
   /**
    * Constructor
    * @param identifierDescription the return type options of the function
-   * @param type the return type of the function
+   * @param ownType the return type of the function
    * @param uniqueId id of the gene
    * @param methodName the name of the function
    * @param args the arguments of the function
@@ -36,12 +36,19 @@ export abstract class ClassActionStatement extends ActionStatement {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    type: TypeEnum,
+    ownType: TypeEnum,
     uniqueId: string,
     arguments_: Statement[],
     constructor_: ConstructorCall
   ) {
-    super(variableIdentifier, typeIdentifier, name, type, uniqueId, arguments_);
+    super(
+      variableIdentifier,
+      typeIdentifier,
+      name,
+      ownType,
+      uniqueId,
+      arguments_
+    );
     this._constructor = constructor_;
   }
 

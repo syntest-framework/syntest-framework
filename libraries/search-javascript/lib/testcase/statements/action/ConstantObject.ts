@@ -18,12 +18,12 @@
 
 import { prng } from "@syntest/prng";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding } from "../Statement";
 
 import { Export, TypeEnum } from "@syntest/analysis-javascript";
 import { ActionStatement } from "./ActionStatement";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -45,7 +45,6 @@ export class ConstantObject extends ActionStatement {
       [],
       export_
     );
-    this._classType = "ConstantObject";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): ConstantObject {
@@ -72,17 +71,11 @@ export class ConstantObject extends ActionStatement {
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
-    let decoded = `const ${this.varName} = ${this.name}`;
-
-    if (options.addLogs) {
-      const logDirectory = decoder.getLogDirectory(id, this.varName);
-      decoded += `\nawait fs.writeFileSync('${logDirectory}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
-    }
+  decode(context: ContextBuilder): Decoding[] {
+    const import_ = context.getOrCreateImportName(this.export);
+    const decoded = `const ${context.getOrCreateVariableName(
+      this
+    )} = ${import_}`;
 
     return [
       {

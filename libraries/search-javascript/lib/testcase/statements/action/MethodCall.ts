@@ -18,13 +18,13 @@
 
 import { prng } from "@syntest/prng";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
 import { ConstructorCall } from "./ConstructorCall";
 import { ClassActionStatement } from "./ClassActionStatement";
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -54,7 +54,6 @@ export class MethodCall extends ClassActionStatement {
       arguments_,
       constructor_
     );
-    this._classType = "MethodCall";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): MethodCall {
@@ -92,37 +91,29 @@ export class MethodCall extends ClassActionStatement {
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
-    const arguments_ = this.args.map((a) => a.varName).join(", ");
-
-    const argumentStatements: Decoding[] = this.args.flatMap((a) =>
-      a.decode(decoder, id, options)
+  decode(context: ContextBuilder): Decoding[] {
+    const constructorDecoding = this.constructor_.decode(context);
+    const argumentsDecoding: Decoding[] = this.args.flatMap((a) =>
+      a.decode(context)
     );
 
-    let decoded = `const ${this.varName} = await ${this.constructor_.varName}.${this.name}(${arguments_})`;
+    const arguments_ = this.args
+      .map((a) => context.getOrCreateVariableName(a))
+      .join(", ");
 
-    if (options.addLogs) {
-      const logDirectory = decoder.getLogDirectory(id, this.varName);
-      decoded += `\nawait fs.writeFileSync('${logDirectory}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
-    }
+    const decoded = `const ${context.getOrCreateVariableName(
+      this
+    )} = await ${context.getOrCreateVariableName(this.constructor_)}.${
+      this.name
+    }(${arguments_})`;
 
     return [
-      ...this.constructor_.decode(decoder, id, options),
-      ...argumentStatements,
+      ...constructorDecoding,
+      ...argumentsDecoding,
       {
         decoded: decoded,
         reference: this,
       },
     ];
-  }
-
-  // TODO
-  decodeErroring(): string {
-    const arguments_ = this.args.map((a) => a.varName).join(", ");
-    return `await expect(${this.constructor_.varName}.${this.name}(${arguments_})).to.be.rejectedWith(Error);`;
   }
 }

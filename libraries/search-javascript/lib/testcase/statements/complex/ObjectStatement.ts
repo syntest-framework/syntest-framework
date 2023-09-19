@@ -19,10 +19,10 @@
 import { prng } from "@syntest/prng";
 import { shouldNeverHappen } from "@syntest/search";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -42,7 +42,6 @@ export class ObjectStatement extends Statement {
   ) {
     super(variableIdentifier, typeIdentifier, name, TypeEnum.OBJECT, uniqueId);
     this._object = object;
-    this._classType = "ObjectStatement";
 
     // check for circular
     for (const [key, statement] of Object.entries(this._object)) {
@@ -161,30 +160,28 @@ export class ObjectStatement extends Statement {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      this._object
+      object
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
-    const children = Object.keys(this._object)
-      .filter((key) => this._object[key] !== undefined)
-      .map((key) => `\t\t\t"${key}": ${this._object[key].varName}`)
-      .join(",\n");
-
+  decode(context: ContextBuilder): Decoding[] {
     const childStatements: Decoding[] = Object.values(this._object)
       .filter((a) => a !== undefined)
-      .flatMap((a) => a.decode(decoder, id, options));
+      .flatMap((a) => a.decode(context));
 
-    let decoded = `const ${this.varName} = {\n${children}\n\t\t}`;
+    const children = Object.keys(this._object)
+      .filter((key) => this._object[key] !== undefined)
+      .map(
+        (key) =>
+          `\n\t\t\t"${key}": ${context.getOrCreateVariableName(
+            this._object[key]
+          )}`
+      )
+      .join(",");
 
-    if (options.addLogs) {
-      const logDirectory = decoder.getLogDirectory(id, this.varName);
-      decoded += `\nawait fs.writeFileSync('${logDirectory}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
-    }
+    const decoded = `const ${context.getOrCreateVariableName(
+      this
+    )} = {${children}${children.length > 0 ? "\n\t\t" : ""}}`;
 
     return [
       ...childStatements,

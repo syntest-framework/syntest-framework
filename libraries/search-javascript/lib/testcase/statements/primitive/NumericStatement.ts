@@ -46,7 +46,6 @@ export class NumericStatement extends PrimitiveStatement<number> {
       uniqueId,
       value
     );
-    this._classType = "NumericStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {

@@ -23,22 +23,18 @@ import { Decoding, Statement } from "../Statement";
 
 import { PrimitiveStatement } from "./PrimitiveStatement";
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
  */
 export class StringStatement extends PrimitiveStatement<string> {
-  private readonly alphabet: string;
-  private readonly maxlength: number;
-
   constructor(
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    value: string,
-    alphabet: string,
-    maxlength: number
+    value: string
   ) {
     super(
       variableIdentifier,
@@ -48,22 +44,21 @@ export class StringStatement extends PrimitiveStatement<string> {
       uniqueId,
       value
     );
-    this._classType = "StringStatement";
-
-    this.alphabet = alphabet;
-    this.maxlength = maxlength;
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {
     if (prng.nextBoolean(sampler.deltaMutationProbability)) {
       // 80%
-      if (this.value.length > 0 && this.value.length < this.maxlength) {
+      if (
+        this.value.length > 0 &&
+        this.value.length < sampler.stringMaxLength
+      ) {
         const value = prng.nextInt(0, 3);
 
         switch (value) {
           case 0: {
             // 25%
-            return this.addMutation();
+            return this.addMutation(sampler);
           }
           case 1: {
             // 25%
@@ -71,11 +66,11 @@ export class StringStatement extends PrimitiveStatement<string> {
           }
           case 2: {
             // 25%
-            return this.replaceMutation();
+            return this.replaceMutation(sampler);
           }
           default: {
             // 25%
-            return this.deltaMutation();
+            return this.deltaMutation(sampler);
           }
         }
       } else if (this.value.length > 0) {
@@ -86,14 +81,14 @@ export class StringStatement extends PrimitiveStatement<string> {
           return this.removeMutation();
         } else if (value === 1) {
           // 33%
-          return this.replaceMutation();
+          return this.replaceMutation(sampler);
         } else {
           // 33%
-          return this.deltaMutation();
+          return this.deltaMutation(sampler);
         }
       } else {
         // 100%
-        return this.addMutation();
+        return this.addMutation(sampler);
       }
     } else {
       // 20%
@@ -115,9 +110,9 @@ export class StringStatement extends PrimitiveStatement<string> {
     }
   }
 
-  addMutation(): StringStatement {
+  addMutation(sampler: JavaScriptTestCaseSampler): StringStatement {
     const position = prng.nextInt(0, this.value.length);
-    const addedChar = prng.pickOne([...this.alphabet]);
+    const addedChar = prng.pickOne([...sampler.stringAlphabet]);
 
     const newValue = [...this.value];
     newValue.splice(position, 0, addedChar);
@@ -127,9 +122,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join(""),
-      this.alphabet,
-      this.maxlength
+      newValue.join("")
     );
   }
 
@@ -144,15 +137,13 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join(""),
-      this.alphabet,
-      this.maxlength
+      newValue.join("")
     );
   }
 
-  replaceMutation(): StringStatement {
+  replaceMutation(sampler: JavaScriptTestCaseSampler): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
-    const newChar = prng.pickOne([...this.alphabet]);
+    const newChar = prng.pickOne([...sampler.stringAlphabet]);
 
     const newValue = [...this.value];
     newValue.splice(position, 1, newChar);
@@ -162,16 +153,14 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join(""),
-      this.alphabet,
-      this.maxlength
+      newValue.join("")
     );
   }
 
-  deltaMutation(): StringStatement {
+  deltaMutation(sampler: JavaScriptTestCaseSampler): StringStatement {
     const position = prng.nextInt(0, this.value.length - 1);
     const oldChar = this.value[position];
-    const indexOldChar = this.alphabet.indexOf(oldChar);
+    const indexOldChar = sampler.stringAlphabet.indexOf(oldChar);
     let delta = Number(prng.nextGaussian(0, 3).toFixed(0));
     if (delta === 0) {
       delta = prng.nextBoolean() ? 1 : -1;
@@ -179,11 +168,11 @@ export class StringStatement extends PrimitiveStatement<string> {
 
     let newIndex = indexOldChar + delta;
     if (newIndex < 0) {
-      newIndex = this.alphabet.length + newIndex;
+      newIndex = sampler.stringAlphabet.length + newIndex;
     }
-    newIndex = newIndex % this.alphabet.length;
+    newIndex = newIndex % sampler.stringAlphabet.length;
     // const delta = prng.pickOne([-2, -1, 1, -2]);
-    const newChar = this.alphabet[newIndex];
+    const newChar = sampler.stringAlphabet[newIndex];
 
     const newValue = [...this.value];
     newValue.splice(position, 1, newChar);
@@ -193,9 +182,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join(""),
-      this.alphabet,
-      this.maxlength
+      newValue.join("")
     );
   }
 
@@ -205,13 +192,11 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      this.value,
-      this.alphabet,
-      this.maxlength
+      this.value
     );
   }
 
-  override decode(): Decoding[] {
+  override decode(context: ContextBuilder): Decoding[] {
     let value = this.value;
 
     value = value.replaceAll(/\\/g, "\\\\");
@@ -222,7 +207,7 @@ export class StringStatement extends PrimitiveStatement<string> {
 
     return [
       {
-        decoded: `const ${this.varName} = "${value}";`,
+        decoded: `const ${context.getOrCreateVariableName(this)} = "${value}";`,
         reference: this,
       },
     ];

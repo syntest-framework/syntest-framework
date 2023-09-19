@@ -23,8 +23,8 @@ import {
   InstrumentationData,
   MetaData,
 } from "@syntest/instrumentation-javascript";
-import cloneDeep = require("lodash.clonedeep");
 import { SilentMochaReporter } from "./SilentMochaReporter";
+import { AssertionData } from "./AssertionData";
 
 export type Message = RunMessage | DoneMessage;
 
@@ -41,6 +41,7 @@ export type DoneMessage = {
   stats: Mocha.Stats;
   instrumentationData: InstrumentationData;
   metaData: MetaData;
+  assertionData?: AssertionData;
   error?: string;
 };
 
@@ -63,7 +64,6 @@ process.on("unhandledRejection", (reason) => {
 
 process.on("message", async (data: Message) => {
   if (typeof data !== "object") {
-    console.log(data);
     throw new TypeError("Invalid data received from child process");
   }
   if (data.message === "run") {
@@ -135,22 +135,20 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
     };
   });
 
-  // Retrieve execution traces
-  const instrumentationData = <InstrumentationData>(
-    cloneDeep(
-      (<{ __coverage__: InstrumentationData }>(<unknown>global)).__coverage__
-    )
-  );
-  const metaData = <MetaData>(
-    cloneDeep((<{ __meta__: MetaData }>(<unknown>global)).__meta__)
-  );
+  type GlobalType = {
+    __coverage__: InstrumentationData;
+    __meta__: MetaData;
+    __assertion__: AssertionData;
+  };
 
+  // Retrieve execution traces
   const result: DoneMessage = {
     message: "done",
     suites: suites,
     stats: runner.stats,
-    instrumentationData: instrumentationData,
-    metaData: metaData,
+    instrumentationData: (<GlobalType>(<unknown>global)).__coverage__,
+    metaData: (<GlobalType>(<unknown>global)).__meta__,
+    assertionData: (<GlobalType>(<unknown>global)).__assertion__,
   };
   process.send(result);
 

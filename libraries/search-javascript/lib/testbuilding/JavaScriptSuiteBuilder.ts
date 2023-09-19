@@ -15,9 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import * as path from "node:path";
-
 import { Archive } from "@syntest/search";
 
 import { JavaScriptRunner } from "../testcase/execution/JavaScriptRunner";
@@ -25,34 +22,30 @@ import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 
 import { JavaScriptDecoder } from "./JavaScriptDecoder";
 import { StorageManager } from "@syntest/storage";
-import { readdirSync, readFileSync } from "node:fs";
 
 export class JavaScriptSuiteBuilder {
   private storageManager: StorageManager;
   private decoder: JavaScriptDecoder;
   private runner: JavaScriptRunner;
-  private tempLogDirectory: string;
 
   constructor(
     storageManager: StorageManager,
     decoder: JavaScriptDecoder,
-    runner: JavaScriptRunner,
-    temporaryLogDirectory: string
+    runner: JavaScriptRunner
   ) {
     this.storageManager = storageManager;
     this.decoder = decoder;
     this.runner = runner;
-    this.tempLogDirectory = temporaryLogDirectory;
   }
 
-  createSuite(
+  async runSuite(
     archive: Map<string, JavaScriptTestCase[]>,
     sourceDirectory: string,
     testDirectory: string,
-    addLogs: boolean,
+    gatherAssertionData: boolean,
     compact: boolean,
     final = false
-  ): string[] {
+  ) {
     const paths: string[] = [];
 
     // write the test cases with logs to know what to assert
@@ -61,7 +54,7 @@ export class JavaScriptSuiteBuilder {
         const decodedTest = this.decoder.decode(
           archive.get(key),
           `${key}`,
-          addLogs,
+          gatherAssertionData,
           sourceDirectory
         );
         const testPath = this.storageManager.store(
@@ -78,7 +71,7 @@ export class JavaScriptSuiteBuilder {
           const decodedTest = this.decoder.decode(
             testCase,
             "",
-            addLogs,
+            gatherAssertionData,
             sourceDirectory
           );
           const testPath = this.storageManager.store(
@@ -93,47 +86,30 @@ export class JavaScriptSuiteBuilder {
       }
     }
 
-    return paths;
-  }
+    if (final) {
+      // eslint-disable-next-line unicorn/no-null
+      return null;
+    }
 
-  async runSuite(paths: string[], amount: number) {
-    const { stats, instrumentationData } = await this.runner.run(paths, amount);
+    const { stats, instrumentationData, assertionData } = await this.runner.run(
+      paths,
+      archive.size * 2
+    );
+    if (assertionData) {
+      // put assertion data on testCases
+      for (const [id, data] of Object.entries(assertionData)) {
+        const testCase = [...archive.values()].flat().find((x) => x.id === id);
+        if (!testCase) {
+          throw new Error("invalid id");
+        }
+
+        testCase.assertionData = data;
+      }
+    }
+
     // TODO use the results of the tests to show some statistics
 
     return { stats, instrumentationData };
-  }
-
-  gatherAssertions(testCases: JavaScriptTestCase[]): void {
-    for (const testCase of testCases) {
-      const assertions = new Map<string, string>();
-      try {
-        // extract the log statements
-        const logDirectory = readdirSync(
-          path.join(this.tempLogDirectory, testCase.id)
-        );
-
-        for (const file of logDirectory) {
-          const assertionValue = readFileSync(
-            path.join(this.tempLogDirectory, testCase.id, file),
-            "utf8"
-          );
-          assertions.set(file, assertionValue);
-        }
-      } catch {
-        continue;
-      }
-
-      this.storageManager.clearTemporaryDirectory([
-        this.tempLogDirectory,
-        testCase.id,
-      ]);
-      this.storageManager.deleteTemporaryDirectory([
-        this.tempLogDirectory,
-        testCase.id,
-      ]);
-
-      testCase.assertions = assertions;
-    }
   }
 
   reduceArchive(

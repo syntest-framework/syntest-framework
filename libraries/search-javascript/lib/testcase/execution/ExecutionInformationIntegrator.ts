@@ -50,7 +50,7 @@ export class ExecutionInformationIntegrator {
           this._typeModel.addExecutionScore(
             child.variableIdentifier,
             child.typeIdentifier,
-            child.type
+            child.ownType
           );
         }
         queue.push(child);

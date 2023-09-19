@@ -18,7 +18,6 @@
 
 import { prng } from "@syntest/prng";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
@@ -27,6 +26,7 @@ import { MethodCall } from "./MethodCall";
 import { ClassActionStatement } from "./ClassActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -57,7 +57,6 @@ export class Setter extends ClassActionStatement {
       [argument],
       constructor_
     );
-    this._classType = "Setter";
   }
 
   mutate(
@@ -96,37 +95,27 @@ export class Setter extends ClassActionStatement {
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
-    const argument = this.args.map((a) => a.varName).join(", ");
-
-    const argumentStatement: Decoding[] = this.args.flatMap((a) =>
-      a.decode(decoder, id, options)
+  decode(context: ContextBuilder): Decoding[] {
+    const constructorDecoding = this.constructor_.decode(context);
+    const argumentDecoding: Decoding[] = this.args.flatMap((a) =>
+      a.decode(context)
     );
 
-    let decoded = `${this.constructor_.varName}.${this.name} = ${argument}`;
+    const argument = this.args
+      .map((a) => context.getOrCreateVariableName(a))
+      .join(", ");
 
-    if (options.addLogs) {
-      const logDirectory = decoder.getLogDirectory(id, this.varName);
-      decoded += `\nawait fs.writeFileSync('${logDirectory}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
-    }
+    const decoded = `${context.getOrCreateVariableName(this.constructor_)}.${
+      this.name
+    } = ${argument}`;
 
     return [
-      ...this.constructor_.decode(decoder, id, options),
-      ...argumentStatement,
+      ...constructorDecoding,
+      ...argumentDecoding,
       {
         decoded: decoded,
         reference: this,
       },
     ];
-  }
-
-  // TODO
-  decodeErroring(): string {
-    const argument = this.args.map((a) => a.varName).join(", ");
-    return `await expect(${this.constructor_.varName}.${this.name} = ${argument}).to.be.rejectedWith(Error);`;
   }
 }

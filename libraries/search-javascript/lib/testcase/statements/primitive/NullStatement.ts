@@ -42,7 +42,6 @@ export class NullStatement extends PrimitiveStatement<boolean> {
       // eslint-disable-next-line unicorn/no-null
       null
     );
-    this._classType = "NullStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {

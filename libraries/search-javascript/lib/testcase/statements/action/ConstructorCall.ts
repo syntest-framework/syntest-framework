@@ -18,13 +18,13 @@
 
 import { prng } from "@syntest/prng";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { MethodCall } from "./MethodCall";
 import { Decoding, Statement } from "../Statement";
 
 import { Export, TypeEnum } from "@syntest/analysis-javascript";
 import { ActionStatement } from "./ActionStatement";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -62,7 +62,6 @@ export class ConstructorCall extends ActionStatement {
       export_
     );
     this._classIdentifier = classIdentifier;
-    this._classType = "ConstructorCall";
 
     for (const argument of arguments_) {
       if (argument instanceof MethodCall) {
@@ -117,26 +116,22 @@ export class ConstructorCall extends ActionStatement {
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
-    const arguments_ = this.args.map((a) => a.varName).join(", ");
-
-    const argumentStatements: Decoding[] = this.args.flatMap((a) =>
-      a.decode(decoder, id, options)
+  decode(context: ContextBuilder): Decoding[] {
+    const argumentsDecoding: Decoding[] = this.args.flatMap((a) =>
+      a.decode(context)
     );
 
-    let decoded = `const ${this.varName} = new ${this.export.name}(${arguments_})`;
+    const arguments_ = this.args
+      .map((a) => context.getOrCreateVariableName(a))
+      .join(", ");
 
-    if (options.addLogs) {
-      const logDirectory = decoder.getLogDirectory(id, this.varName);
-      decoded += `\nawait fs.writeFileSync('${logDirectory}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
-    }
+    const import_ = context.getOrCreateImportName(this.export);
+    const decoded = `const ${context.getOrCreateVariableName(
+      this
+    )} = new ${import_}(${arguments_})`;
 
     return [
-      ...argumentStatements,
+      ...argumentsDecoding,
       {
         decoded: decoded,
         reference: this,

@@ -16,10 +16,15 @@
  * limitations under the License.
  */
 
-import { ActionStatement } from "../testcase/statements/action/ActionStatement";
-import { Decoding } from "../testcase/statements/Statement";
+import { Statement } from "../testcase/statements/Statement";
 import * as path from "node:path";
 import { Export } from "@syntest/analysis-javascript";
+import { ClassActionStatement } from "../testcase/statements/action/ClassActionStatement";
+import { FunctionCall } from "../testcase/statements/action/FunctionCall";
+import { ObjectFunctionCall } from "../testcase/statements/action/ObjectFunctionCall";
+import { reservedKeywords } from "@syntest/ast-visitor-javascript";
+import { globalVariables } from "@syntest/ast-visitor-javascript";
+import { Logger, getLogger } from "@syntest/logging";
 
 type Import = RegularImport | RenamedImport;
 
@@ -38,80 +43,105 @@ type RenamedImport = {
   default: boolean;
 };
 
-// TODO we can also use this to generate unique identifier for the statements itself
+type Require = {
+  left: string;
+  right: string;
+};
+
 // TODO gather assertions here too per test case
 export class ContextBuilder {
+  protected static LOGGER: Logger;
   private targetRootDirectory: string;
   private sourceDirectory: string;
 
   // name -> count
-  private importedNames: Map<string, number>;
-  // // name -> import string
-  // private imports: Map<string, string>
+  private globalNameCount: Map<string, number>;
+  // name -> count
+  private testNameCount: Map<string, number>;
 
   // path -> [name]
   private imports: Map<string, Import[]>;
 
-  private logsPresent: boolean;
-  private assertionsPresent: boolean;
-
-  // old var -> new var
-  private variableMap: Map<string, string>;
-  // var -> count
-  private variableCount: Map<string, number>;
+  // Statement -> variableName
+  private statementVariableNameMap: Map<Statement, string>;
 
   constructor(targetRootDirectory: string, sourceDirectory: string) {
+    ContextBuilder.LOGGER = getLogger("ContextBuilder");
     this.targetRootDirectory = targetRootDirectory;
     this.sourceDirectory = sourceDirectory;
 
-    this.importedNames = new Map();
+    this.globalNameCount = new Map();
+    this.testNameCount = new Map();
+
     this.imports = new Map();
-
-    this.logsPresent = false;
-    this.assertionsPresent = false;
-
-    this.variableMap = new Map();
-    this.variableCount = new Map();
+    this.statementVariableNameMap = new Map();
   }
 
-  addDecoding(decoding: Decoding) {
-    // This function assumes the decodings to come in order
+  nextTestCase() {
+    this.statementVariableNameMap = new Map();
+    this.testNameCount = new Map();
+  }
 
-    if (decoding.reference instanceof ActionStatement) {
-      const export_ = decoding.reference.export;
-      if (export_) {
-        const import_ = this._addImport(export_);
-        const newName = import_.renamed ? import_.renamedTo : import_.name;
-        decoding.decoded = decoding.decoded.replaceAll(import_.name, newName);
-      }
+  getOrCreateVariableName(statement: Statement): string {
+    if (this.statementVariableNameMap.has(statement)) {
+      return this.statementVariableNameMap.get(statement);
     }
 
-    const variableName = decoding.reference.varName;
-    if (this.variableMap.has(variableName)) {
-      this.variableCount.set(
-        variableName,
-        this.variableCount.get(variableName) + 1
+    let variableName = statement.name;
+
+    variableName =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(
+        variableName[0]
+      )
+        ? variableName[0].toLowerCase() + variableName.slice(1)
+        : (ContextBuilder.LOGGER.warn(
+            `Found variable name starting with a non-alphabetic character, variable: '${variableName}'`
+          ),
+          "var" + variableName);
+
+    variableName =
+      reservedKeywords.has(variableName) || globalVariables.has(variableName)
+        ? "local" + variableName[0].toUpperCase() + variableName.slice(1)
+        : variableName;
+
+    if (
+      statement instanceof ClassActionStatement ||
+      statement instanceof FunctionCall ||
+      statement instanceof ObjectFunctionCall
+    ) {
+      variableName += "ReturnValue";
+    }
+
+    let count = -1;
+    if (
+      this.globalNameCount.has(variableName) &&
+      this.testNameCount.has(variableName)
+    ) {
+      count = Math.max(
+        this.globalNameCount.get(variableName),
+        this.testNameCount.get(variableName)
       );
+    } else if (this.globalNameCount.has(variableName)) {
+      count = this.globalNameCount.get(variableName);
+    } else if (this.testNameCount.has(variableName)) {
+      count = this.testNameCount.get(variableName);
+    }
+
+    if (count === -1) {
+      this.testNameCount.set(variableName, 1);
     } else {
-      this.variableCount.set(variableName, 0);
+      this.testNameCount.set(variableName, count + 1);
+      variableName += count;
     }
 
-    this.variableMap.set(
-      variableName,
-      variableName + this.variableCount.get(variableName)
-    );
-
-    for (const [oldVariable, newVariable] of this.variableMap.entries()) {
-      decoding.decoded = decoding.decoded.replaceAll(oldVariable, newVariable);
-    }
+    this.statementVariableNameMap.set(statement, variableName);
+    return variableName;
   }
 
-  addLogs() {
-    this.logsPresent = true;
-  }
+  getOrCreateImportName(export_: Export): string {
+    const import_ = this._addImport(export_);
 
-  addAssertions() {
-    this.assertionsPresent = true;
+    return import_.renamed ? import_.renamedTo : import_.name;
   }
 
   private _addImport(export_: Export): Import {
@@ -143,10 +173,27 @@ export class ContextBuilder {
       }
     }
 
-    if (this.importedNames.has(exportedName)) {
-      // same name new import
-      const count = this.importedNames.get(exportedName);
-      this.importedNames.set(exportedName, count + 1);
+    let count = -1;
+    // same name new import
+    if (
+      this.globalNameCount.has(exportedName) &&
+      this.testNameCount.has(exportedName)
+    ) {
+      count = Math.max(
+        this.globalNameCount.get(exportedName),
+        this.testNameCount.get(exportedName)
+      );
+    } else if (this.globalNameCount.has(exportedName)) {
+      count = this.globalNameCount.get(exportedName);
+    } else if (this.testNameCount.has(exportedName)) {
+      count = this.testNameCount.get(exportedName);
+    }
+
+    if (count === -1) {
+      this.globalNameCount.set(exportedName, 1);
+    } else {
+      this.globalNameCount.set(exportedName, count + 1);
+      this.testNameCount.set(exportedName, count + 1);
       newName = exportedName + count.toString();
 
       import_ = {
@@ -156,8 +203,6 @@ export class ContextBuilder {
         default: export_.default,
         module: export_.module,
       };
-    } else {
-      this.importedNames.set(exportedName, 1);
     }
 
     if (!this.imports.has(path_)) {
@@ -170,38 +215,70 @@ export class ContextBuilder {
 
   // TODO we could gather all the imports of a certain path together into one import
   private _getImportString(_path: string, import_: Import): string {
+    if (import_.module) {
+      throw new Error("Only non module imports can use import statements");
+    }
+
     if (import_.renamed) {
-      if (import_.module) {
-        return import_.default
-          ? `const ${import_.renamedTo} = require("${_path}");`
-          : `const {${import_.name}: ${import_.renamedTo}} = require("${_path}");`;
-      }
       return import_.default
         ? `import ${import_.renamedTo} from "${_path}";`
         : `import {${import_.name} as ${import_.renamedTo}} from "${_path}";`;
     } else {
-      if (import_.module) {
-        return import_.default
-          ? `const ${import_.name} = require("${_path}");`
-          : `const {${import_.name}} = require("${_path}");`;
-      }
       return import_.default
         ? `import ${import_.name} from "${_path}";`
         : `import {${import_.name}} from "${_path}";`;
     }
   }
 
-  getImports(): string[] {
-    const imports: string[] = [];
+  private _getRequireString(_path: string, import_: Import): Require {
+    if (!import_.module) {
+      throw new Error("Only module imports can use require statements");
+    }
+
+    const require: Require = {
+      left: "",
+      right: `require("${_path}")`,
+    };
+
+    if (import_.renamed) {
+      require.left = import_.default
+        ? import_.renamedTo
+        : `{${import_.name}: ${import_.renamedTo}}`;
+    } else {
+      require.left = import_.default ? import_.name : `{${import_.name}}`;
+    }
+
+    return require;
+  }
+
+  getImports(assertionsPresent: boolean) {
+    let requires: Require[] = [];
+    let imports: string[] = [];
 
     for (const [path_, imports_] of this.imports.entries()) {
       // TODO remove unused imports
       for (const import_ of imports_) {
-        imports.push(this._getImportString(path_, import_));
+        if (import_.module) {
+          requires.push(this._getRequireString(path_, import_));
+        } else {
+          imports.push(this._getImportString(path_, import_));
+        }
       }
     }
 
-    if (this.assertionsPresent) {
+    requires = requires // remove duplicates
+      // there should not be any in theory but lets do it anyway
+      .filter((value, index, self) => self.indexOf(value) === index)
+      // sort
+      .sort();
+
+    imports = imports // remove duplicates
+      // there should not be any in theory but lets do it anyway
+      .filter((value, index, self) => self.indexOf(value) === index)
+      // sort
+      .sort();
+
+    if (assertionsPresent) {
       imports.push(
         `import chai from 'chai'`,
         `import chaiAsPromised from 'chai-as-promised'`,
@@ -210,17 +287,10 @@ export class ContextBuilder {
       );
     }
 
-    if (this.logsPresent) {
-      imports.push(`import * as fs from 'fs'`);
-    }
     // TODO other post processing?
-    return (
-      imports
-        // remove duplicates
-        // there should not be any in theory but lets do it anyway
-        .filter((value, index, self) => self.indexOf(value) === index)
-        // sort
-        .sort()
-    );
+    return {
+      imports,
+      requires,
+    };
   }
 }

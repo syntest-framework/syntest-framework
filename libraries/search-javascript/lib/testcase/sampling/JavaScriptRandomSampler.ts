@@ -478,11 +478,11 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // TODO should be done in the typemodel somehow
       // maybe create types for the subproperties by doing /main/array/id::1::1[element-index]
       // maybe create types for the subproperties by doing /main/array/id::1::1.property
-      return this.sampleArgument(depth, "anon", "anon");
+      return this.sampleArgument(depth, "anon", "arrayElement");
     }
 
     const element = prng.pickOne(childIds);
-    return this.sampleArgument(depth, element, "");
+    return this.sampleArgument(depth, element, "arrayElement");
   }
 
   sampleObjectArgument(
@@ -704,17 +704,17 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   }
 
   sampleArray(depth: number, id: string, typeId: string, name: string) {
-    const children: Statement[] = [];
+    const elements: Statement[] = [];
 
     for (
       let index = 0;
       index < prng.nextInt(0, this.maxActionStatements);
       index++
     ) {
-      children.push(this.sampleArrayArgument(depth + 1, typeId));
+      elements.push(this.sampleArrayArgument(depth + 1, typeId));
     }
 
-    return new ArrayStatement(id, typeId, name, prng.uniqueId(), children);
+    return new ArrayStatement(id, typeId, name, prng.uniqueId(), elements);
   }
 
   sampleArrowFunction(
@@ -763,13 +763,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     );
   }
 
-  sampleString(
-    id: string,
-    typeId: string,
-    name: string,
-    alphabet = this.stringAlphabet,
-    maxlength = this.stringMaxLength
-  ): StringStatement {
+  sampleString(id: string, typeId: string, name: string): StringStatement {
     let value: string;
     if (
       this.constantPoolEnabled &&
@@ -780,22 +774,14 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     if (value === undefined) {
       value = "";
-      const valueLength = prng.nextInt(0, maxlength - 1);
+      const valueLength = prng.nextInt(0, this.stringMaxLength - 1);
 
       for (let index = 0; index < valueLength; index++) {
-        value += prng.pickOne([...alphabet]);
+        value += prng.pickOne([...this.stringAlphabet]);
       }
     }
 
-    return new StringStatement(
-      id,
-      typeId,
-      name,
-      prng.uniqueId(),
-      value,
-      alphabet,
-      maxlength
-    );
+    return new StringStatement(id, typeId, name, prng.uniqueId(), value);
   }
 
   // primitives

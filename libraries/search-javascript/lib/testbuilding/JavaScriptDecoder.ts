@@ -16,28 +16,28 @@
  * limitations under the License.
  */
 
-import * as path from "node:path";
-
 import { Decoder } from "@syntest/search";
 
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 import { Decoding } from "../testcase/statements/Statement";
 import { ActionStatement } from "../testcase/statements/action/ActionStatement";
 import { ContextBuilder } from "./ContextBuilder";
+import { FunctionCall } from "../testcase/statements/action/FunctionCall";
+import { ClassActionStatement } from "../testcase/statements/action/ClassActionStatement";
+import { assertionFunction } from "./assertionFunctionTemplate";
+import { ObjectFunctionCall } from "../testcase/statements/action/ObjectFunctionCall";
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   private targetRootDirectory: string;
-  private tempLogDirectory: string;
 
-  constructor(targetRootDirectory: string, temporaryLogDirectory: string) {
+  constructor(targetRootDirectory: string) {
     this.targetRootDirectory = targetRootDirectory;
-    this.tempLogDirectory = temporaryLogDirectory;
   }
 
   decode(
     testCases: JavaScriptTestCase | JavaScriptTestCase[],
     targetName: string,
-    addLogs = false,
+    gatherAssertionData = false,
     sourceDirectory = "../instrumented"
   ): string {
     if (testCases instanceof JavaScriptTestCase) {
@@ -49,207 +49,175 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       sourceDirectory
     );
 
-    const tests: string[] = [];
+    const tests: string[][] = [];
 
+    let assertionsPresent = false;
     for (const testCase of testCases) {
+      if (testCase.assertionData) {
+        assertionsPresent = true;
+      }
+      context.nextTestCase();
       const roots: ActionStatement[] = testCase.roots;
 
-      const importableGenes: ActionStatement[] = [];
-      let decodings: Decoding[] = roots.flatMap((root) =>
-        root.decode(this, testCase.id, {
-          addLogs,
-          exception: false,
-        })
-      );
+      let decodings: Decoding[] = roots.flatMap((root) => root.decode(context));
 
       if (decodings.length === 0) {
         throw new Error("No statements in test case");
       }
 
-      const testString: string[] = [];
-      if (addLogs) {
-        testString.push(
-          `\t\tawait fs.mkdirSync('${path.join(
-            this.tempLogDirectory,
-            testCase.id
-          )}', { recursive: true })\n
-          \t\tlet count = 0;
-          \t\ttry {\n`
-        );
-      }
-
-      if (testCase.assertions.size > 0 && testCase.assertions.has("error")) {
-        const index = Number.parseInt(testCase.assertions.get("error"));
-
-        // TODO does not work
-        //  the .to.throw stuff does not work somehow
-        // const decoded = statements[index].reference instanceof MethodCall
-        //   ? (<MethodCall>statements[index].reference).decodeWithObject(testCase.id, { addLogs, exception: true }, statements[index].objectVariable)
-        //   : statements[index].reference.decode(testCase.id, { addLogs, exception: true })
-        // statements[index] = decoded.find((x) => x.reference === statements[index].reference)
+      let errorDecoding: Decoding;
+      if (testCase.assertionData && testCase.assertionData.error) {
+        const index = testCase.assertionData.error.count;
 
         // delete statements after
-        decodings = decodings.slice(0, index + 1);
+        errorDecoding = decodings[index];
+        decodings = decodings.slice(0, index);
       }
 
       if (decodings.length === 0) {
         throw new Error("No statements in test case after error reduction");
       }
 
-      for (const [index, value] of decodings.entries()) {
-        context.addDecoding(value);
-        const asString = "\t\t" + value.decoded.replace("\n", "\n\t\t");
-        if (testString.includes(asString)) {
-          // skip repeated statements
-          continue;
-        }
+      const metaCommentBlock = this.generateMetaComments(testCase);
+
+      const testLines: string[] = this.generateTestLines(
+        context,
+        testCase,
+        decodings,
+        gatherAssertionData
+      );
+
+      const assertions: string[] = this.generateAssertions(
+        testCase,
+        errorDecoding
+      );
+
+      tests.push([...metaCommentBlock, ...testLines, ...assertions]);
+    }
+
+    const { imports, requires } = context.getImports(assertionsPresent);
+
+    let beforeEachLines: string[] = [];
+
+    if (requires.length > 0) {
+      beforeEachLines = [
+        ...requires.map((m) => `\tlet ${m.left};`),
+        `\tbeforeEach(() => {`,
+        "\t\t// This is a hack to force the require cache to be emptied",
+        "\t\t// Without this we would be using the same required object for each test",
+        ...requires.map(
+          (m) =>
+            `\t\tdelete require.cache[${m.right.replace(
+              "require",
+              "require.resolve"
+            )}];`
+        ),
+        ...requires.map((m) => `\t\t${m.left} = ${m.right}`),
+        `\t});`,
+        "",
+      ];
+    }
+
+    const lines = [
+      "// Imports",
+      ...imports,
+      gatherAssertionData ? assertionFunction : "",
+      `describe('${targetName}', function() {`,
+      ...beforeEachLines,
+      ...tests.flatMap((testLines: string[], index) => [
+        `\tit("Test ${index} for '${targetName}'", async () => {`,
+        ...testLines.map((line) => `\t\t${line}`),
+        index === tests.length - 1 ? "\t})" : "\t})\n",
+      ]),
+      "})",
+    ];
+
+    return lines.join("\n");
+  }
+
+  generateMetaComments(testCase: JavaScriptTestCase) {
+    const metaCommentBlock = [];
+    for (const metaComment of testCase.metaComments) {
+      metaCommentBlock.push(`// ${metaComment}`);
+    }
+
+    if (metaCommentBlock.length > 0) {
+      metaCommentBlock.splice(0, 0, "// Meta information");
+      metaCommentBlock.push("");
+    }
+
+    return metaCommentBlock;
+  }
+
+  generateTestLines(
+    context: ContextBuilder,
+    testCase: JavaScriptTestCase,
+    decodings: Decoding[],
+    gatherAssertionData: boolean
+  ) {
+    const testLines: string[] = [];
+    if (gatherAssertionData) {
+      testLines.push("let count = 0;", "try {");
+    }
+
+    for (const [index, value] of decodings.entries()) {
+      const asString = value.decoded;
+      if (testLines.includes(asString)) {
+        // skip repeated statements
+        continue;
+      }
+
+      testLines.push(asString);
+
+      if (gatherAssertionData) {
+        // add log per statement
+        const variableName = context.getOrCreateVariableName(value.reference);
+        testLines.push(`count = ${index + 1};`);
 
         if (
-          value.reference instanceof ActionStatement &&
-          value.reference.export
+          value.reference instanceof FunctionCall ||
+          value.reference instanceof ObjectFunctionCall ||
+          value.reference instanceof ClassActionStatement
         ) {
-          importableGenes.push(value.reference);
-        }
-
-        if (addLogs) {
-          // add log per statement
-          testString.push("\t\t" + `count = ${index};`);
-        }
-
-        testString.push(asString);
-      }
-
-      if (addLogs) {
-        testString.push(
-          `} catch (e) {`,
-          `await fs.writeFileSync('${path.join(
-            this.tempLogDirectory,
-            testCase.id,
-            "error"
-          )}', '' + count)`, // TODO we could add the error here and assert that that is the error message we expect
-          "}"
-        );
-      }
-
-      // const importsOfTest = this.gatherImports(
-      //   context,
-      //   sourceDirectory,
-      //   testString,
-      //   importableGenes
-      // );
-
-      // for (const import_ of importsOfTest) {
-      //   if (!imports.includes(import_)) {
-      //     // filter duplicates
-      //     imports.push(import_);
-      //   }
-      // }
-
-      if (addLogs) {
-        context.addLogs();
-      }
-
-      if (testCase.assertions.size > 0) {
-        context.addAssertions();
-      }
-
-      const assertions: string[] = this.generateAssertions(testCase);
-
-      if (assertions.length > 0) {
-        assertions.splice(0, 0, "\n\t\t// Assertions");
-      }
-
-      const body = [];
-
-      if (testString.length > 0) {
-        let errorStatement: string;
-        if (testCase.assertions.size > 0 && testCase.assertions.has("error")) {
-          errorStatement = testString.pop();
-        }
-
-        body.push(`${testString.join("\n")}`, `${assertions.join("\n")}`);
-
-        if (errorStatement) {
-          body.push(
-            `\t\ttry {\n\t${errorStatement}\n\t\t} catch (e) {\n\t\t\texpect(e).to.be.an('error')\n\t\t}`
+          testLines.push(
+            `addAssertion('${testCase.id}', '${variableName}', ${variableName})`
           );
         }
       }
+    }
 
-      const metaCommentBlock = [];
-
-      for (const metaComment of testCase.metaComments) {
-        metaCommentBlock.push(`\t\t// ${metaComment}`);
-      }
-
-      if (metaCommentBlock.length > 0) {
-        metaCommentBlock.splice(0, 0, "\n\t\t// Meta information");
-      }
-
-      // TODO instead of using the targetName use the function call or a better description of the test
-      tests.push(
-        `${metaCommentBlock.join("\n")}\n` +
-          `\n\t\t// Test\n` +
-          `${body.join("\n\n")}`
+    if (gatherAssertionData) {
+      testLines.push(
+        `} catch (e) {`,
+        `\tsetError('${testCase.id}', e, count)`,
+        "}"
       );
     }
 
-    const imports = context.getImports();
-
-    if (imports.some((x) => x.includes("import") && !x.includes("require"))) {
-      const importsString = imports.join("\n") + `\n\n`;
-
-      return (
-        `// Imports\n` +
-        importsString +
-        `describe('${targetName}', function() {\n\t` +
-        tests
-          .map(
-            (test) =>
-              `\tit('test for ${targetName}', async () => {\n` +
-              test +
-              `\n\t});`
-          )
-          .join("\n\n") +
-        `\n})`
-      );
-    } else {
-      const importsString = `\t\t` + imports.join("\n\t\t") + `\n`;
-
-      return (
-        `describe('${targetName}', function() {\n\t` +
-        tests
-          .map(
-            (test) =>
-              `\tit('test for ${targetName}', async () => {\n` +
-              `\t\t// Imports\n` +
-              importsString +
-              test +
-              `\n\t});`
-          )
-          .join("\n\n") +
-        `\n})`
-      );
+    if (testLines.length > 0) {
+      testLines.splice(0, 0, "// Test");
+      testLines.push("");
     }
+
+    return testLines;
   }
 
-  generateAssertions(testCase: JavaScriptTestCase): string[] {
+  generateAssertions(
+    testCase: JavaScriptTestCase,
+    errorDecoding: Decoding
+  ): string[] {
     const assertions: string[] = [];
-    if (testCase.assertions.size > 0) {
-      for (const variableName of testCase.assertions.keys()) {
-        if (variableName === "error") {
-          continue;
-        }
-
-        const assertion = testCase.assertions.get(variableName).split(";sep;");
-        const original = assertion[0];
-        let stringified = assertion[1];
-
+    if (testCase.assertionData) {
+      for (const [variableName, assertion] of Object.entries(
+        testCase.assertionData.assertions
+      )) {
+        const original = assertion.value;
+        let stringified = assertion.stringified;
         if (original === "undefined") {
-          assertions.push(`\t\texpect(${variableName}).to.equal(${original})`);
+          assertions.push(`expect(${variableName}).to.equal(${original})`);
           continue;
         } else if (original === "NaN") {
-          assertions.push(`\t\texpect(${variableName}).to.be.NaN`);
+          assertions.push(`expect(${variableName}).to.be.NaN`);
           continue;
         }
 
@@ -263,20 +231,26 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
         if (typeof value === "object" || typeof value === "function") {
           assertions.push(
-            `\t\texpect(JSON.parse(JSON.stringify(${variableName}))).to.deep.equal(${stringified})`
+            `expect(JSON.parse(JSON.stringify(${variableName}))).to.deep.equal(${stringified})`
           );
         } else {
-          assertions.push(
-            `\t\texpect(${variableName}).to.equal(${stringified})`
-          );
+          assertions.push(`expect(${variableName}).to.equal(${stringified})`);
         }
       }
     }
 
-    return assertions;
-  }
+    if (errorDecoding) {
+      assertions.push(
+        `await expect((async () => {`,
+        `\t${errorDecoding.decoded.split(" = ")[1]}`,
+        `})()).to.be.rejectedWith(\`${testCase.assertionData.error.error.message}\`)`
+      );
+    }
 
-  getLogDirectory(id: string, variableName: string): string {
-    return path.join(this.tempLogDirectory, id, variableName);
+    if (assertions.length > 0) {
+      assertions.splice(0, 0, "// Assertions");
+    }
+
+    return assertions;
   }
 }

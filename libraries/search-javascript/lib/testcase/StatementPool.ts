@@ -82,7 +82,7 @@ export class StatementPool {
         }
 
         // use type enum for primitives and arrays
-        let type: string = statement.type;
+        let type: string = statement.ownType;
 
         if (statement instanceof ConstantObject) {
           // use export identifier

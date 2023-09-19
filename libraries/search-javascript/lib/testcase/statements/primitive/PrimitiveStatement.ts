@@ -19,6 +19,7 @@
 import { TypeEnum } from "@syntest/analysis-javascript";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -64,11 +65,13 @@ export abstract class PrimitiveStatement<T> extends Statement {
     throw new Error("Unimplemented function!");
   }
 
-  decode(): Decoding[] {
+  decode(context: ContextBuilder): Decoding[] {
     const asString = String(this.value);
     return [
       {
-        decoded: `const ${this.varName} = ${asString};`,
+        decoded: `const ${context.getOrCreateVariableName(
+          this
+        )} = ${asString};`,
         reference: this,
       },
     ];

@@ -65,20 +65,51 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
 
     for (const swapA of swapStatementsA) {
       for (const swapB of swapStatementsB) {
-        if (!swapA.child.classType || !swapB.child.classType) {
-          throw new Error("All statements require a classType!");
-        }
-
         if (swapA.child.variableIdentifier === swapB.child.variableIdentifier) {
           if (
-            (swapA.child instanceof ConstructorCall ||
-              swapB.child instanceof ConstructorCall ||
-              swapA.child instanceof ConstantObject ||
-              swapB.child instanceof ConstantObject) && // if one of the two is a constructorcall or constant object both need to be
-            swapA.child.classType !== swapB.child.classType
+            swapA.child instanceof ConstructorCall &&
+            !(swapB.child instanceof ConstructorCall)
           ) {
             continue;
           }
+
+          if (
+            swapB.child instanceof ConstructorCall &&
+            !(swapA.child instanceof ConstructorCall)
+          ) {
+            continue;
+          }
+
+          if (
+            swapA.child instanceof ConstructorCall &&
+            swapB.child instanceof ConstructorCall &&
+            swapA.child.export.id !== swapB.child.export.id
+          ) {
+            continue;
+          }
+
+          if (
+            swapA.child instanceof ConstantObject &&
+            !(swapB.child instanceof ConstantObject)
+          ) {
+            continue;
+          }
+
+          if (
+            swapB.child instanceof ConstantObject &&
+            !(swapA.child instanceof ConstantObject)
+          ) {
+            continue;
+          }
+
+          if (
+            swapA.child instanceof ConstantObject &&
+            swapB.child instanceof ConstantObject &&
+            swapA.child.export.id !== swapB.child.export.id
+          ) {
+            continue;
+          }
+
           crossoverOptions.push({
             parentA: swapA,
             parentB: swapB,

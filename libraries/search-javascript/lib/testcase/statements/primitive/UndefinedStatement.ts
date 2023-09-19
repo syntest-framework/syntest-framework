@@ -42,7 +42,6 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
       // eslint-disable-next-line unicorn/no-useless-undefined
       undefined
     );
-    this._classType = "UndefinedStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {

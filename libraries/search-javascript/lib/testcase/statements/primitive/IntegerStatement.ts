@@ -46,7 +46,6 @@ export class IntegerStatement extends PrimitiveStatement<number> {
       uniqueId,
       Math.round(value)
     );
-    this._classType = "IntegerStatement";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Statement {

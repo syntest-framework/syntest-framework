@@ -18,13 +18,13 @@
 
 import { prng } from "@syntest/prng";
 
-import { JavaScriptDecoder } from "../../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding } from "../Statement";
 
 import { ClassActionStatement } from "./ClassActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 
 /**
  * @author Dimitri Stallenberg
@@ -53,7 +53,6 @@ export class Getter extends ClassActionStatement {
       [],
       constructor_
     );
-    this._classType = "Getter";
   }
 
   mutate(sampler: JavaScriptTestCaseSampler, depth: number): Getter {
@@ -78,29 +77,21 @@ export class Getter extends ClassActionStatement {
     );
   }
 
-  decode(
-    decoder: JavaScriptDecoder,
-    id: string,
-    options: { addLogs: boolean; exception: boolean }
-  ): Decoding[] {
-    let decoded = `const ${this.varName} = await ${this.constructor_.varName}.${this.name}`;
+  decode(context: ContextBuilder): Decoding[] {
+    const constructorDecoding = this.constructor_.decode(context);
 
-    if (options.addLogs) {
-      const logDirectory = decoder.getLogDirectory(id, this.varName);
-      decoded += `\nawait fs.writeFileSync('${logDirectory}', '' + ${this.varName} + ';sep;' + JSON.stringify(${this.varName}))`;
-    }
+    const decoded = `const ${context.getOrCreateVariableName(
+      this
+    )} = await ${context.getOrCreateVariableName(this.constructor_)}.${
+      this.name
+    }`;
 
     return [
-      ...this.constructor_.decode(decoder, id, options),
+      ...constructorDecoding,
       {
         decoded: decoded,
         reference: this,
       },
     ];
-  }
-
-  // TODO
-  decodeErroring(): string {
-    return `await expect(${this.constructor_.varName}.${this.name}).to.be.rejectedWith(Error);`;
   }
 }

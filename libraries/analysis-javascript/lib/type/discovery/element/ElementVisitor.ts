@@ -54,13 +54,35 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
     const id = this._getNodeId(path);
     const bindingId = this._getBindingId(path);
 
+    // Here we check if the id is already registered (we do not allow this normally)
     if (this._elementMap.has(id)) {
+      // Export specifiers can actually have the same exported and local object
+      // e.g. export { x }
       if (
         path.parentPath.isExportSpecifier() &&
         path.parentPath.get("exported") === path
       ) {
         return;
       }
+
+      // Import specifiers can actually have the same imported and local object
+      // e.g. import { x } from '...'
+      if (
+        path.parentPath.isImportSpecifier() &&
+        path.parentPath.get("imported") === path
+      ) {
+        return;
+      }
+
+      // Object properties can actually have the same value and key object
+      // e.g. const obj = { x }
+      if (
+        path.parentPath.isObjectProperty() &&
+        path.parentPath.get("value") === path
+      ) {
+        return;
+      }
+
       throw new Error(`Overriding element with id: ${id}`);
     }
 

@@ -23,11 +23,10 @@ import { getLogger, Logger } from "@syntest/logging";
 import { JavaScriptTestCaseSampler } from "./sampling/JavaScriptTestCaseSampler";
 import { ActionStatement } from "./statements/action/ActionStatement";
 import { StatementPool } from "./StatementPool";
+import { AssertionDataTestCase } from "./execution/AssertionData";
 
 /**
  * JavaScriptTestCase class
- *
- * @author Dimitri Stallenberg
  */
 export class JavaScriptTestCase extends Encoding {
   protected static LOGGER: Logger;
@@ -35,6 +34,8 @@ export class JavaScriptTestCase extends Encoding {
   private _roots: ActionStatement[];
 
   private _statementPool: StatementPool;
+
+  private _assertionData: AssertionDataTestCase | undefined;
 
   /**
    * Constructor.
@@ -114,5 +115,13 @@ export class JavaScriptTestCase extends Encoding {
 
   get roots(): ActionStatement[] {
     return this._roots.map((value) => value.copy());
+  }
+
+  get assertionData(): AssertionDataTestCase {
+    return this._assertionData;
+  }
+
+  set assertionData(data: AssertionDataTestCase) {
+    this._assertionData = data;
   }
 }
