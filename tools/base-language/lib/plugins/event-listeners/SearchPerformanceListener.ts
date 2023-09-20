@@ -82,7 +82,7 @@ export class SearchPerformanceListener extends EventListenerPlugin {
         for (const [objective, distance] of objectivePerformance) {
           const objectiveName = objective.getIdentifier().split(path.sep).pop();
           SearchPerformanceListener.LOGGER.info(
-            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()}`
+            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()})`
           );
         }
       }

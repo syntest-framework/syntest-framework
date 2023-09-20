@@ -172,7 +172,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
   ): Promise<void> {
     ObjectiveManager.LOGGER.debug(`Evaluating encoding ${encoding.id}`);
     // Execute the encoding
-    const result = await this._runner.execute(this._subject, encoding);
+    const result = await this._runner.execute(encoding);
 
     // TODO: Use events for this so we can elimate the dependency on the budget manager
     budgetManager.evaluation();
