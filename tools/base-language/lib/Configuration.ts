@@ -269,7 +269,6 @@ export class Configuration {
       "exception-objectives-enabled": {
         alias: [],
         default: true,
-        choices: [],
         description: "Wether we save exception objectives or not.",
         group: OptionGroups.SearchAlgorithm,
         hidden: false,
