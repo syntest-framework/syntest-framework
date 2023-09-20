@@ -71,7 +71,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * List of secondary objectives.
    * @protected
    */
-  protected _secondaryObjectives: Set<SecondaryObjectiveComparator<T>>;
+  protected _secondaryObjectives: SecondaryObjectiveComparator<T>[];
 
   protected _exceptionObjectivesEnabled: boolean;
 
@@ -89,7 +89,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   constructor(
     runner: EncodingRunner<T>,
-    secondaryObjectives: Set<SecondaryObjectiveComparator<T>>,
+    secondaryObjectives: SecondaryObjectiveComparator<T>[],
     exceptionObjectivesEnabled: boolean
   ) {
     ObjectiveManager.LOGGER = getLogger("ObjectiveManager");

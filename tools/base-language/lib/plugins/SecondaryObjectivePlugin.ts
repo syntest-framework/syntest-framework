@@ -30,7 +30,7 @@ export abstract class SecondaryObjectivePlugin<
   abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
 
   override getOptionChoices(option: string): string[] {
-    if (option === "secondary-objective") {
+    if (option === "secondary-objectives") {
       return [this.name];
     }
 

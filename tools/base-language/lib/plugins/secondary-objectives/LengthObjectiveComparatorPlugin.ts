@@ -24,9 +24,7 @@ import {
 import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
 
 /**
- * Plugin for RandomSearch
- *
- * @author Dimitri Stallenberg
+ * Plugin for LengthObjectiveComparator
  */
 export class LengthObjectiveComparatorPlugin<
   T extends Encoding

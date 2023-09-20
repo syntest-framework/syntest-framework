@@ -32,6 +32,7 @@ import { DefaultProcreationPlugin } from "./plugins/procreation-operators/Defaul
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
+import { ErrorObjectiveComparatorPlugin } from "./plugins/secondary-objectives/ErrorObjectiveComparatorPlugin";
 import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
@@ -63,6 +64,7 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
+    moduleManager.registerPlugin(this, new ErrorObjectiveComparatorPlugin());
     moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());

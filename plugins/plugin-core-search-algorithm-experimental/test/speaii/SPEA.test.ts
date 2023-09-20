@@ -83,7 +83,7 @@ describe("Test SPEA-II", function () {
       mockedSampler
     );
     spea = new MockedSPEAII(
-      new SimpleObjectiveManager(mockedRunner, new Set(), true),
+      new SimpleObjectiveManager(mockedRunner, [], true),
       mockedSampler,
       mockedProcreation,
       50,
@@ -91,7 +91,7 @@ describe("Test SPEA-II", function () {
     );
 
     dynaSpea = new MockedDynaSPEAII(
-      new UncoveredObjectiveManager(mockedRunner, new Set(), true),
+      new UncoveredObjectiveManager(mockedRunner, [], true),
       mockedSampler,
       mockedProcreation,
       50,
