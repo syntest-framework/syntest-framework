@@ -318,7 +318,7 @@ export class Configuration {
     return {
       "test-minimization": {
         alias: [],
-        default: false,
+        default: true,
         description: "Minimize test cases at the end of the search.",
         group: OptionGroups.PostProccessing,
         hidden: false,
@@ -326,7 +326,7 @@ export class Configuration {
       },
       "test-splitting": {
         alias: [],
-        default: false,
+        default: true,
         description: "Split test cases at the end of the search.",
         group: OptionGroups.PostProccessing,
         hidden: false,
