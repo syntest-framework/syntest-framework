@@ -54,7 +54,7 @@ export type AlgorithmOptions = {
   crossover: string;
   sampler: string;
   terminationTriggers: string[];
-  exceptionObjectivesEnabled: boolean;
+  exceptionObjectives: boolean;
 };
 
 export type BudgetOptions = {
@@ -67,6 +67,8 @@ export type BudgetOptions = {
 export type PostProcessingOptions = {
   testSplitting: boolean;
   testMinimization: boolean;
+  metaComments: boolean;
+  assertions: boolean;
 };
 
 export type SamplingOptions = {
@@ -266,7 +268,7 @@ export class Configuration {
         hidden: false,
         type: "array",
       },
-      "exception-objectives-enabled": {
+      "exception-objectives": {
         alias: [],
         default: true,
         description: "Wether we save exception objectives or not.",
@@ -328,6 +330,23 @@ export class Configuration {
         alias: [],
         default: true,
         description: "Split test cases at the end of the search.",
+        group: OptionGroups.PostProccessing,
+        hidden: false,
+        type: "boolean",
+      },
+      "meta-comments": {
+        alias: [],
+        default: true,
+        description:
+          "Add meta comments to test cases at the end of the search.",
+        group: OptionGroups.PostProccessing,
+        hidden: false,
+        type: "boolean",
+      },
+      assertions: {
+        alias: [],
+        default: true,
+        description: "Add assertions to test cases at the end of the search.",
         group: OptionGroups.PostProccessing,
         hidden: false,
         type: "boolean",

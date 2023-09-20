@@ -40,6 +40,11 @@ export interface ExecutionResult {
   getError(): Error;
 
   /**
+   * Return error identifier that occurred during the execution.
+   */
+  getErrorIdentifier(): string;
+
+  /**
    * Return all the traces produced by the execution.
    */
   getTraces(): Trace[];

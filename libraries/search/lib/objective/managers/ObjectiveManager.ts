@@ -16,8 +16,6 @@
  * limitations under the License.
  */
 
-import * as crypto from "node:crypto";
-
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Archive } from "../../Archive";
@@ -191,19 +189,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
     // Create separate exception objective when an exception occurred in the execution
     if (this._exceptionObjectivesEnabled && result.hasError()) {
-      let stack = result.getError().stack;
-
-      stack = stack
-        ? stack
-            .split("\n")
-            // only use location lines
-            .filter((line) => line.startsWith("    at"))
-            // only use locations within the source code (i.e. not from the generated tests)
-            .filter((line) => line.includes("/instrumented/")) // stupid hack should be done better somehow, suffices for now
-            .join("\n")
-        : result.getError().message;
-
-      const hash = crypto.createHash("md5").update(stack).digest("hex");
+      const hash = result.getErrorIdentifier();
 
       const numberOfExceptions = this._archive
         .getObjectives()
