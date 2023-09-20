@@ -28,8 +28,6 @@ import {
 
 /**
  * Plugin for the uncovered objective manager
- *
- * @author Dimitri Stallenberg
  */
 export class UncoveredObjectiveManagerPlugin<
   T extends Encoding
@@ -43,7 +41,8 @@ export class UncoveredObjectiveManagerPlugin<
   ): ObjectiveManager<T> {
     return new UncoveredObjectiveManager(
       options.runner,
-      options.secondaryObjectives
+      options.secondaryObjectives,
+      options.exceptionObjectivesEnabled
     );
   }
 

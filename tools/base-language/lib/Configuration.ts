@@ -54,6 +54,7 @@ export type AlgorithmOptions = {
   crossover: string;
   sampler: string;
   terminationTriggers: string[];
+  exceptionObjectivesEnabled: boolean;
 };
 
 export type BudgetOptions = {
@@ -64,6 +65,7 @@ export type BudgetOptions = {
 };
 
 export type PostProcessingOptions = {
+  testSplitting: boolean;
   testMinimization: boolean;
 };
 
@@ -264,6 +266,15 @@ export class Configuration {
         hidden: false,
         type: "array",
       },
+      "exception-objectives-enabled": {
+        alias: [],
+        default: true,
+        choices: [],
+        description: "Wether we save exception objectives or not.",
+        group: OptionGroups.SearchAlgorithm,
+        hidden: false,
+        type: "boolean",
+      },
     };
   }
 
@@ -309,7 +320,15 @@ export class Configuration {
       "test-minimization": {
         alias: [],
         default: false,
-        description: "Minimize test cases at the end of the search",
+        description: "Minimize test cases at the end of the search.",
+        group: OptionGroups.PostProccessing,
+        hidden: false,
+        type: "boolean",
+      },
+      "test-splitting": {
+        alias: [],
+        default: false,
+        description: "Split test cases at the end of the search.",
         group: OptionGroups.PostProccessing,
         hidden: false,
         type: "boolean",

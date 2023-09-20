@@ -41,7 +41,8 @@ export class TrackingObjectiveManagerPlugin<
   ): ObjectiveManager<T> {
     return new TrackingObjectiveManager(
       options.runner,
-      options.secondaryObjectives
+      options.secondaryObjectives,
+      options.exceptionObjectivesEnabled
     );
   }
 

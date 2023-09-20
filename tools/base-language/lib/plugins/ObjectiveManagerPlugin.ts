@@ -28,6 +28,7 @@ import { PluginType } from "./PluginType";
 export type ObjectiveManagerOptions<T extends Encoding> = {
   runner: EncodingRunner<T>;
   secondaryObjectives: Set<SecondaryObjectiveComparator<T>>;
+  exceptionObjectivesEnabled: boolean;
 };
 
 export abstract class ObjectiveManagerPlugin<

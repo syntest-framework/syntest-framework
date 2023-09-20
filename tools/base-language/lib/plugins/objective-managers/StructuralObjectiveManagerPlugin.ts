@@ -28,8 +28,6 @@ import {
 
 /**
  * Plugin for the structural objective manager
- *
- * @author Dimitri Stallenberg
  */
 export class StructuralObjectiveManagerPlugin<
   T extends Encoding
@@ -43,7 +41,8 @@ export class StructuralObjectiveManagerPlugin<
   ): ObjectiveManager<T> {
     return new StructuralObjectiveManager(
       options.runner,
-      options.secondaryObjectives
+      options.secondaryObjectives,
+      options.exceptionObjectivesEnabled
     );
   }
 

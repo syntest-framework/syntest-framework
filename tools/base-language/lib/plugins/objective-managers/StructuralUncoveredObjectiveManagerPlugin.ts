@@ -43,7 +43,8 @@ export class StructuralUncoveredObjectiveManagerPlugin<
   ): ObjectiveManager<T> {
     return new StructuralUncoveredObjectiveManager(
       options.runner,
-      options.secondaryObjectives
+      options.secondaryObjectives,
+      options.exceptionObjectivesEnabled
     );
   }
 
