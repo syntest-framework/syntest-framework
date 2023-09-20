@@ -18,14 +18,13 @@
 
 import { Encoding } from "./Encoding";
 import { ExecutionResult } from "./ExecutionResult";
-import { SearchSubject } from "./SearchSubject";
 
 /**
- * @author Mitchell Olsthoorn
+ * EncodingRunner
  */
 export interface EncodingRunner<T extends Encoding> {
   /**
    * execute the encoding.
    */
-  execute(subject: SearchSubject<T>, encoding: T): Promise<ExecutionResult>;
+  execute(encoding: T): Promise<ExecutionResult>;
 }
