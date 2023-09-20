@@ -80,7 +80,7 @@ describe("Test MOSA", function () {
     );
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner, new Set()),
+      new UncoveredObjectiveManager(mockedRunner, new Set(), true),
       mockedSampler,
       mockedProcreation,
       50
@@ -119,7 +119,8 @@ describe("Test MOSA", function () {
     const mosa = new MOSAFamily(
       new UncoveredObjectiveManager(
         undefined,
-        new Set<SecondaryObjectiveComparator<DummyEncodingMock>>()
+        new Set<SecondaryObjectiveComparator<DummyEncodingMock>>(),
+        true
       ),
       undefined,
       mockedProcreation,
@@ -162,7 +163,7 @@ describe("Test MOSA", function () {
     );
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner, new Set()),
+      new UncoveredObjectiveManager(mockedRunner, new Set(), true),
       mockedSampler,
       mockedProcreation,
       4
@@ -208,7 +209,7 @@ describe("Test MOSA", function () {
       mockedSampler
     );
     const mosa = new MockedMOSA(
-      new UncoveredObjectiveManager(mockedRunner, new Set()),
+      new UncoveredObjectiveManager(mockedRunner, new Set(), true),
       mockedSampler,
       mockedProcreation,
       50

@@ -28,8 +28,6 @@ import {
 
 /**
  * Plugin for the simple objective manager
- *
- * @author Dimitri Stallenberg
  */
 export class SimpleObjectiveManagerPlugin<
   T extends Encoding
@@ -43,7 +41,8 @@ export class SimpleObjectiveManagerPlugin<
   ): ObjectiveManager<T> {
     return new SimpleObjectiveManager(
       options.runner,
-      options.secondaryObjectives
+      options.secondaryObjectives,
+      options.exceptionObjectivesEnabled
     );
   }
 

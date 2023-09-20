@@ -41,7 +41,8 @@ export class SFuzzObjectiveManagerPlugin<
   ): ObjectiveManager<T> {
     return new SFuzzObjectiveManager<T>(
       options.runner,
-      options.secondaryObjectives
+      options.secondaryObjectives,
+      options.exceptionObjectivesEnabled
     );
   }
 

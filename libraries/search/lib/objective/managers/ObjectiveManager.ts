@@ -75,6 +75,8 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   protected _secondaryObjectives: Set<SecondaryObjectiveComparator<T>>;
 
+  protected _exceptionObjectivesEnabled: boolean;
+
   /**
    * The subject of the search.
    * @protected
@@ -89,15 +91,17 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   constructor(
     runner: EncodingRunner<T>,
-    secondaryObjectives: Set<SecondaryObjectiveComparator<T>>
+    secondaryObjectives: Set<SecondaryObjectiveComparator<T>>,
+    exceptionObjectivesEnabled: boolean
   ) {
     ObjectiveManager.LOGGER = getLogger("ObjectiveManager");
+    this._runner = runner;
+    this._secondaryObjectives = secondaryObjectives;
+    this._exceptionObjectivesEnabled = exceptionObjectivesEnabled;
     this._archive = new Archive<T>();
     this._currentObjectives = new Set<ObjectiveFunction<T>>();
     this._coveredObjectives = new Set<ObjectiveFunction<T>>();
     this._uncoveredObjectives = new Set<ObjectiveFunction<T>>();
-    this._runner = runner;
-    this._secondaryObjectives = secondaryObjectives;
   }
 
   /**
@@ -186,7 +190,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
     }
 
     // Create separate exception objective when an exception occurred in the execution
-    if (result.hasError()) {
+    if (this._exceptionObjectivesEnabled && result.hasError()) {
       let stack = result.getError().stack;
 
       stack = stack
