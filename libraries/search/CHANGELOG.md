@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0-beta.1](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.5.0-beta.0...@syntest/search@0.5.0-beta.1) (2023-09-20)
+
+### Features
+
+- enable exception objective option ([#375](https://github.com/syntest-framework/syntest-core/issues/375)) ([b6d0b94](https://github.com/syntest-framework/syntest-core/commit/b6d0b949b6eaa8dd89410f0e72b564d649d65e7b))
+
 ## [0.5.0-beta.0](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.4.1...@syntest/search@0.5.0-beta.0) (2023-09-20)
 
 ### Features

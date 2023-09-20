@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-core-event-listener-graphing",
-  "version": "1.0.2-beta.0",
+  "version": "1.0.2-beta.1",
   "description": "A listener plugin for the SynTest Core containing graphing functionalities",
   "keywords": [
     "syntest",
@@ -47,12 +47,12 @@
   },
   "dependencies": {
     "@syntest/analysis": "^0.2.0",
-    "@syntest/base-language": "^0.3.0-beta.0",
+    "@syntest/base-language": "^0.3.0-beta.1",
     "@syntest/cfg": "^0.4.0",
     "@syntest/logging": "^0.1.1",
     "@syntest/metric": "^0.1.1",
     "@syntest/module": "^0.1.1",
-    "@syntest/search": "^0.5.0-beta.0",
+    "@syntest/search": "^0.5.0-beta.1",
     "d3": "6.7.0",
     "jsdom": "^21.1.0"
   },
