@@ -17,15 +17,12 @@
  */
 
 import { Encoding } from "../../Encoding";
-import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * An abstract objective manager for algorithms based on an archive.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class ArchiveBasedObjectiveManager<
   T extends Encoding
@@ -62,34 +59,7 @@ export abstract class ArchiveBasedObjectiveManager<
    */
   // eslint-disable-next-line sonarjs/cognitive-complexity
   public finalize(_finalPopulation: T[]): void {
-    const encodings = this._archive.getEncodings();
-    for (const encoding of encodings) {
-      const uses = this._archive.getUses(encoding);
-      for (const use of uses) {
-        if (use instanceof ExceptionObjectiveFunction) {
-          encoding.addMetaComment(`Selected for:`);
-          for (const line of use.error.stack.split("\n")) {
-            encoding.addMetaComment(`\t${line}`);
-          }
-          encoding.addMetaComment("");
-        } else {
-          encoding.addMetaComment(
-            `Selected for objective: ${use.getIdentifier()}`
-          );
-        }
-      }
-
-      const executionResult = encoding.getExecutionResult();
-      if (executionResult) {
-        for (const objective of this._subject.getObjectives()) {
-          if (executionResult.coversId(objective.getIdentifier())) {
-            encoding.addMetaComment(
-              `Covers objective: ${objective.getIdentifier()}`
-            );
-          }
-        }
-      }
-    }
+    // pass
   }
 
   /**

@@ -17,15 +17,12 @@
  */
 
 import { Encoding } from "../../Encoding";
-import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * An abstract objective manager for algorithms based on populations.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class PopulationBasedObjectiveManager<
   T extends Encoding
@@ -64,35 +61,6 @@ export abstract class PopulationBasedObjectiveManager<
             ObjectiveManager.LOGGER.debug("updating archive");
             this._archive.update(objective, encoding, true);
           }
-        }
-      }
-
-      const executionResult = encoding.getExecutionResult();
-      if (executionResult) {
-        for (const objective of this._subject.getObjectives()) {
-          if (executionResult.coversId(objective.getIdentifier())) {
-            encoding.addMetaComment(
-              `Covers objective: ${objective.getIdentifier()}`
-            );
-          }
-        }
-      }
-    }
-
-    const encodings = this._archive.getEncodings();
-    for (const encoding of encodings) {
-      const uses = this._archive.getUses(encoding);
-      for (const use of uses) {
-        if (use instanceof ExceptionObjectiveFunction) {
-          encoding.addMetaComment(`Selected for:`);
-          for (const line of use.error.stack.split("\n")) {
-            encoding.addMetaComment(`\t${line}`);
-          }
-          encoding.addMetaComment("");
-        } else {
-          encoding.addMetaComment(
-            `Selected for objective: ${use.getIdentifier()}`
-          );
         }
       }
     }
