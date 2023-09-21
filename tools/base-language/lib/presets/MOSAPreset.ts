@@ -40,8 +40,8 @@ export class MOSAPreset extends Preset {
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = [
-      "error",
-      "length",
+      "least-errors",
+      "smallest-length",
     ];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }

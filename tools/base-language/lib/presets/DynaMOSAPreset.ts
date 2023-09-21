@@ -41,8 +41,8 @@ export class DynaMOSAPreset extends Preset {
       "structural-uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = [
-      "error",
-      "length",
+      "least-errors",
+      "smallest-length",
     ];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }

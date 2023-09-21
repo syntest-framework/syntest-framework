@@ -22,7 +22,7 @@ import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
 /**
  * Secondary objective that is based on wether the encoding introduces an error .
  */
-export class ErrorObjectiveComparator<T extends Encoding>
+export class LeastErrorsObjectiveComparator<T extends Encoding>
   implements SecondaryObjectiveComparator<T>
 {
   /**

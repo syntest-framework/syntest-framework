@@ -17,24 +17,27 @@
  */
 import {
   Encoding,
-  LengthObjectiveComparator,
   SecondaryObjectiveComparator,
+  SmallestLengthObjectiveComparator,
 } from "@syntest/search";
 
 import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
 
 /**
- * Plugin for LengthObjectiveComparator
+ * Plugin for SmallestLengthObjectiveComparator
  */
-export class LengthObjectiveComparatorPlugin<
+export class SmallestLengthObjectiveComparatorPlugin<
   T extends Encoding
 > extends SecondaryObjectivePlugin<T> {
   constructor() {
-    super("length", "Secondary objective based on the length of the test case");
+    super(
+      "smallest-length",
+      "Secondary objective based on the length of the test case"
+    );
   }
 
   createSecondaryObjective(): SecondaryObjectiveComparator<T> {
-    return new LengthObjectiveComparator();
+    return new SmallestLengthObjectiveComparator();
   }
 
   override getOptions() {

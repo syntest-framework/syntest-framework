@@ -22,7 +22,7 @@ import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
 /**
  * Secondary objective that is based on the length of the encoding.
  */
-export class LengthObjectiveComparator<T extends Encoding>
+export class SmallestLengthObjectiveComparator<T extends Encoding>
   implements SecondaryObjectiveComparator<T>
 {
   /**

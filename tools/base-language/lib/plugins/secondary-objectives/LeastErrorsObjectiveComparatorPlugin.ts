@@ -17,7 +17,7 @@
  */
 import {
   Encoding,
-  ErrorObjectiveComparator,
+  LeastErrorsObjectiveComparator,
   SecondaryObjectiveComparator,
 } from "@syntest/search";
 
@@ -26,18 +26,18 @@ import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
 /**
  * Plugin for ErrorObjectiveComparator
  */
-export class ErrorObjectiveComparatorPlugin<
+export class LeastErrorsObjectiveComparatorPlugin<
   T extends Encoding
 > extends SecondaryObjectivePlugin<T> {
   constructor() {
     super(
-      "error",
+      "least-errors",
       "Secondary objective based on wether the encoding introduces an error"
     );
   }
 
   createSecondaryObjective(): SecondaryObjectiveComparator<T> {
-    return new ErrorObjectiveComparator();
+    return new LeastErrorsObjectiveComparator();
   }
 
   override getOptions() {
