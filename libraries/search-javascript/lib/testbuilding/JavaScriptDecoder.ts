@@ -37,7 +37,6 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
   decode(
     testCases: JavaScriptTestCase | JavaScriptTestCase[],
-    targetName: string,
     gatherAssertionData = false,
     sourceDirectory = "../instrumented"
   ): string {
@@ -128,10 +127,10 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       "// Imports",
       ...imports,
       gatherAssertionData ? assertionFunction : "",
-      `describe('${targetName}', function() {`,
+      `describe('SynTest Test Suite', function() {`,
       ...beforeEachLines,
       ...tests.flatMap((testLines: string[], index) => [
-        `\tit("Test ${index + 1} for '${targetName}'", async () => {`,
+        `\tit("Test ${index + 1}", async () => {`,
         ...testLines.map((line) => `\t\t${line}`),
         index === tests.length - 1 ? "\t})" : "\t})\n",
       ]),
@@ -246,10 +245,18 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     }
 
     if (errorDecoding) {
+      let value = testCase.assertionData.error.error.message;
+
+      value = value.replaceAll(/\\/g, "\\\\");
+      value = value.replaceAll(/\n/g, "\\n");
+      value = value.replaceAll(/\r/g, "\\r");
+      value = value.replaceAll(/\t/g, "\\t");
+      value = value.replaceAll(/"/g, '\\"');
+
       assertions.push(
         `await expect((async () => {`,
         `\t${errorDecoding.decoded.split(" = ")[1]}`,
-        `})()).to.be.rejectedWith(\`${testCase.assertionData.error.error.message}\`)`
+        `})()).to.be.rejectedWith("${value}")`
       );
     }
 

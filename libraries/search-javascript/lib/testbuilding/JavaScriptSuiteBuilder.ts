@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Archive } from "@syntest/search";
+import { Target } from "@syntest/analysis";
 import { StorageManager } from "@syntest/storage";
 
 import { JavaScriptRunner } from "../testcase/execution/JavaScriptRunner";
@@ -39,7 +39,7 @@ export class JavaScriptSuiteBuilder {
   }
 
   async runSuite(
-    archive: Map<string, JavaScriptTestCase[]>,
+    archive: Map<Target, JavaScriptTestCase[]>,
     sourceDirectory: string,
     testDirectory: string,
     gatherAssertionData: boolean,
@@ -51,35 +51,33 @@ export class JavaScriptSuiteBuilder {
     // write the test cases with logs to know what to assert
     let totalAmount = 0;
     if (compact) {
-      for (const key of archive.keys()) {
-        totalAmount += archive.get(key).length;
+      for (const target of archive.keys()) {
+        totalAmount += archive.get(target).length;
         const decodedTest = this.decoder.decode(
-          archive.get(key),
-          `${key}`,
+          archive.get(target),
           gatherAssertionData,
           sourceDirectory
         );
         const testPath = this.storageManager.store(
           [testDirectory],
-          `test-${key}.spec.js`,
+          `test-${target.name}.spec.js`,
           decodedTest,
           !final
         );
         paths.push(testPath);
       }
     } else {
-      for (const key of archive.keys()) {
-        totalAmount += archive.get(key).length;
-        for (const testCase of archive.get(key)) {
+      for (const target of archive.keys()) {
+        totalAmount += archive.get(target).length;
+        for (const testCase of archive.get(target)) {
           const decodedTest = this.decoder.decode(
             testCase,
-            "",
             gatherAssertionData,
             sourceDirectory
           );
           const testPath = this.storageManager.store(
             [testDirectory],
-            `test${key}${testCase.id}.spec.js`,
+            `test${target.name}${testCase.id}.spec.js`,
             decodedTest,
             !final
           );
@@ -113,34 +111,5 @@ export class JavaScriptSuiteBuilder {
     // TODO use the results of the tests to show some statistics
 
     return { stats, instrumentationData };
-  }
-
-  reduceArchive(
-    archive: Archive<JavaScriptTestCase>
-  ): Map<string, JavaScriptTestCase[]> {
-    const reducedArchive = new Map<string, JavaScriptTestCase[]>();
-
-    for (const objective of archive.getObjectives()) {
-      const targetName = objective
-        .getSubject()
-        .name.split("/")
-        .pop()
-        .split(".")[0];
-
-      if (!reducedArchive.has(targetName)) {
-        reducedArchive.set(targetName, []);
-      }
-
-      if (
-        reducedArchive.get(targetName).includes(archive.getEncoding(objective))
-      ) {
-        // skip duplicate individuals (i.e. individuals which cover multiple objectives
-        continue;
-      }
-
-      reducedArchive.get(targetName).push(archive.getEncoding(objective));
-    }
-
-    return reducedArchive;
   }
 }

@@ -20,6 +20,7 @@ import {
   InstrumentationDataMap,
   MetaDataMap,
 } from "@syntest/instrumentation-javascript";
+import cloneDeep = require("lodash.clonedeep");
 import { Runner } from "mocha";
 import Mocha = require("mocha");
 
@@ -138,22 +139,47 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
     };
   });
 
-  type GlobalType = {
-    __coverage__: InstrumentationDataMap;
-    __meta__: MetaDataMap;
-    __assertion__: AssertionData;
-  };
-
   // Retrieve execution traces
   const result: DoneMessage = {
     message: "done",
     suites: suites,
     stats: runner.stats,
-    instrumentationData: (<GlobalType>(<unknown>global)).__coverage__,
-    metaData: (<GlobalType>(<unknown>global)).__meta__,
-    assertionData: (<GlobalType>(<unknown>global)).__assertion__,
+    instrumentationData: cloneDeep(
+      (<GlobalType>(<unknown>global)).__coverage__
+    ),
+    metaData: cloneDeep((<GlobalType>(<unknown>global)).__meta__),
+    assertionData: cloneDeep((<GlobalType>(<unknown>global)).__assertion__),
   };
+  resetInstrumentationData();
+  (<GlobalType>(<unknown>global)).__meta__ = undefined;
+  (<GlobalType>(<unknown>global)).__assertion__ = undefined;
   process.send(result);
 
   mocha.dispose();
 }
+
+function resetInstrumentationData() {
+  const coverage = (<GlobalType>(<unknown>global)).__coverage__;
+
+  if (coverage === undefined) {
+    return;
+  }
+
+  for (const key of Object.keys(coverage)) {
+    for (const statementKey of Object.keys(coverage[key].s)) {
+      coverage[key].s[statementKey] = 0;
+    }
+    for (const functionKey of Object.keys(coverage[key].f)) {
+      coverage[key].f[functionKey] = 0;
+    }
+    for (const branchKey of Object.keys(coverage[key].b)) {
+      coverage[key].b[branchKey] = [0, 0];
+    }
+  }
+}
+
+type GlobalType = {
+  __coverage__: InstrumentationDataMap;
+  __meta__: MetaDataMap;
+  __assertion__: AssertionData;
+};

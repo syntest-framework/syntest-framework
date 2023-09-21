@@ -33,7 +33,6 @@ import {
   JavaScriptExecutionResult,
   JavaScriptExecutionStatus,
 } from "../../search/JavaScriptExecutionResult";
-import { JavaScriptSubject } from "../../search/JavaScriptSubject";
 import { JavaScriptDecoder } from "../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 
@@ -135,13 +134,16 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     });
   }
 
-  async execute(
-    subject: JavaScriptSubject,
-    testCase: JavaScriptTestCase
-  ): Promise<ExecutionResult> {
+  async executeMultiple(testCases: JavaScriptTestCase[]): Promise<void> {
+    for (const testCase of testCases) {
+      testCase.setExecutionResult(await this.execute(testCase));
+    }
+  }
+
+  async execute(testCase: JavaScriptTestCase): Promise<ExecutionResult> {
     JavaScriptRunner.LOGGER.silly("Executing test case");
 
-    const decodedTestCase = this.decoder.decode(testCase, subject.name, false);
+    const decodedTestCase = this.decoder.decode(testCase, false);
 
     const testPath = this.storageManager.store(
       [this.tempTestDirectory],

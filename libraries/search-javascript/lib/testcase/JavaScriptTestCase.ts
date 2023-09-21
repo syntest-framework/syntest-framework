@@ -93,7 +93,7 @@ export class JavaScriptTestCase extends Encoding {
   }
 
   hashCode(decoder: Decoder<Encoding, string>): number {
-    const string = decoder.decode(this, `${this.id}`);
+    const string = decoder.decode(this);
     let hash = 0;
     for (let index = 0; index < string.length; index++) {
       const character = string.codePointAt(index);

@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as crypto from "node:crypto";
 
 import { ExecutionResult, Trace } from "@syntest/search";
 
@@ -28,8 +29,6 @@ export enum JavaScriptExecutionStatus {
 
 /**
  * JavaScript specific implementation of the execution results.
- *
- * @author Mitchell Olsthoorn
  */
 export class JavaScriptExecutionResult implements ExecutionResult {
   /**
@@ -87,10 +86,14 @@ export class JavaScriptExecutionResult implements ExecutionResult {
       return false;
     }
 
+    if (id.startsWith("error:::")) {
+      return this.hasError() && this.getErrorIdentifier() === id;
+    }
+
     const trace = this._traces.find((trace) => trace.id === id);
 
     if (!trace) {
-      if (id.startsWith("placeholder")) {
+      if (id.startsWith("placeholder:::")) {
         // TODO maybe this already fixed?
         // TODO stupit hack because the placeholder nodes we add in the cfg are not being registred by the instrumentation
         // should fix
@@ -134,6 +137,22 @@ export class JavaScriptExecutionResult implements ExecutionResult {
    */
   public getError(): Error {
     return this._error;
+  }
+
+  public getErrorIdentifier(): string {
+    let stack = this.getError().stack;
+
+    stack = stack
+      ? stack
+          .split("\n")
+          // only use location lines
+          .filter((line) => line.startsWith("    at"))
+          // only use locations within the source code (i.e. not from the generated tests)
+          .filter((line) => line.includes("/instrumented/")) // stupid hack should be done better somehow, suffices for now
+          .join("\n")
+      : this.getError().message;
+
+    return "error:::" + crypto.createHash("md5").update(stack).digest("hex");
   }
 
   /**
