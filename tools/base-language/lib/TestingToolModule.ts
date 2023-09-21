@@ -33,7 +33,7 @@ import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
 import { LeastErrorsObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LeastErrorsObjectiveComparatorPlugin";
-import { SmallestLengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/SmallestLengthObjectiveComparatorPlugin";
+import { SmallestEncodingObjectiveComparatorPlugin } from "./plugins/secondary-objectives/SmallestEncodingObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
@@ -70,7 +70,7 @@ export abstract class TestingToolModule extends Module {
     );
     moduleManager.registerPlugin(
       this,
-      new SmallestLengthObjectiveComparatorPlugin()
+      new SmallestEncodingObjectiveComparatorPlugin()
     );
 
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());

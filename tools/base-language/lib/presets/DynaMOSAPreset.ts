@@ -42,7 +42,7 @@ export class DynaMOSAPreset extends Preset {
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
     (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = [
       "least-errors",
-      "smallest-length",
+      "smallest-encoding",
     ];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }

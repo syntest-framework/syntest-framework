@@ -15,24 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../../Encoding";
+import {
+  Encoding,
+  SecondaryObjectiveComparator,
+  SmallestEncodingObjectiveComparator,
+} from "@syntest/search";
 
-import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
+import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
 
 /**
- * Secondary objective that is based on the length of the encoding.
+ * Plugin for SmallestEncodingObjectiveComparator
  */
-export class SmallestLengthObjectiveComparator<T extends Encoding>
-  implements SecondaryObjectiveComparator<T>
-{
-  /**
-   * @inheritDoc
-   */
-  public compare(a: T, b: T): number {
-    if (a.getLength() > b.getLength()) return -1; // a is longer so b is better
-    if (a.getLength() < b.getLength()) return 1; // a is smaller so a is better
+export class SmallestEncodingObjectiveComparatorPlugin<
+  T extends Encoding
+> extends SecondaryObjectivePlugin<T> {
+  constructor() {
+    super(
+      "smallest-encoding",
+      "Secondary objective based on the length of the test case"
+    );
+  }
 
-    // Length must be equal
-    return 0;
+  createSecondaryObjective(): SecondaryObjectiveComparator<T> {
+    return new SmallestEncodingObjectiveComparator();
+  }
+
+  override getOptions() {
+    return new Map();
   }
 }

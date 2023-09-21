@@ -68,7 +68,7 @@ export * from "./lib/objective/managers/TrackingObjectiveManager";
 export * from "./lib/objective/managers/UncoveredObjectiveManager";
 
 export * from "./lib/objective/secondary/LeastErrorsObjectiveComparator";
-export * from "./lib/objective/secondary/SmallestLengthObjectiveComparator";
+export * from "./lib/objective/secondary/SmallestEncodingObjectiveComparator";
 export * from "./lib/objective/secondary/SecondaryObjectiveComparator";
 
 // - Operator
