@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0-beta.3](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.5.0-beta.2...@syntest/search@0.5.0-beta.3) (2023-09-21)
+
+### Features
+
+- improve secondary objectives ([#377](https://github.com/syntest-framework/syntest-core/issues/377)) ([99275f1](https://github.com/syntest-framework/syntest-core/commit/99275f111abe675e10f5a04b271e61d8ff0b0789))
+
 ## [0.5.0-beta.2](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.5.0-beta.1...@syntest/search@0.5.0-beta.2) (2023-09-20)
 
 ### Features
