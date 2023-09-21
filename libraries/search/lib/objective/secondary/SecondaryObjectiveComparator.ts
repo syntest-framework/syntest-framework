@@ -26,9 +26,9 @@ export interface SecondaryObjectiveComparator<T extends Encoding> {
   /**
    * Compare two objectives.
    *
-   * Returns -1 if a < b.
+   * Returns -1 if a is worse than b.
    * Returns 0 if a == b.
-   * Returns 1 if a > b.
+   * Returns 1 if a is better than b.
    *
    * @param a The first encoding
    * @param b The second encoding

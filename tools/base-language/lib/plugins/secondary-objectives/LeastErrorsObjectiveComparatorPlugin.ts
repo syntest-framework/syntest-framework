@@ -15,38 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "@syntest/module";
 import {
   Encoding,
-  EncodingRunner,
-  ObjectiveManager,
+  LeastErrorsObjectiveComparator,
   SecondaryObjectiveComparator,
 } from "@syntest/search";
 
-import { PluginType } from "./PluginType";
+import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
 
-export type ObjectiveManagerOptions<T extends Encoding> = {
-  runner: EncodingRunner<T>;
-  secondaryObjectives: SecondaryObjectiveComparator<T>[];
-  exceptionObjectivesEnabled: boolean;
-};
-
-export abstract class ObjectiveManagerPlugin<
+/**
+ * Plugin for ErrorObjectiveComparator
+ */
+export class LeastErrorsObjectiveComparatorPlugin<
   T extends Encoding
-> extends Plugin {
-  constructor(name: string, describe: string) {
-    super(PluginType.ObjectiveManager, name, describe);
+> extends SecondaryObjectivePlugin<T> {
+  constructor() {
+    super(
+      "least-errors",
+      "Secondary objective based on wether the encoding introduces an error"
+    );
   }
 
-  abstract createObjectiveManager<O extends ObjectiveManagerOptions<T>>(
-    options: O
-  ): ObjectiveManager<T>;
+  createSecondaryObjective(): SecondaryObjectiveComparator<T> {
+    return new LeastErrorsObjectiveComparator();
+  }
 
-  override getOptionChoices(option: string): string[] {
-    if (option === "objective-manager") {
-      return [this.name];
-    }
-
-    return [];
+  override getOptions() {
+    return new Map();
   }
 }

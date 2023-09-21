@@ -25,7 +25,7 @@ export * from "./lib/plugins/search-algorithms/MOSAFamilyPlugin";
 export * from "./lib/plugins/search-algorithms/NSGAIIPlugin";
 export * from "./lib/plugins/search-algorithms/RandomSearchPlugin";
 
-export * from "./lib/plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
+export * from "./lib/plugins/secondary-objectives/SmallestEncodingObjectiveComparatorPlugin";
 
 export * from "./lib/plugins/termination-triggers/SignalTerminationTriggerPlugin";
 

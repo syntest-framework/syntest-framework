@@ -39,7 +39,10 @@ export class MOSAPreset extends Preset {
     (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSAFamily";
     (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
     (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
+    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = [
+      "least-errors",
+      "smallest-encoding",
+    ];
     (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
   }
 }

@@ -20,21 +20,32 @@ import { Encoding } from "../../Encoding";
 import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
 
 /**
- * Secondary objective that is based on the length of the encoding.
- *
- * @author Mitchell Olsthoorn
+ * Secondary objective that is based on wether the encoding introduces an error .
  */
-export class LengthObjectiveComparator<T extends Encoding>
+export class LeastErrorsObjectiveComparator<T extends Encoding>
   implements SecondaryObjectiveComparator<T>
 {
   /**
    * @inheritDoc
    */
   public compare(a: T, b: T): number {
-    if (a.getLength() < b.getLength()) return -1;
-    if (a.getLength() > b.getLength()) return 1;
+    if (!a.getExecutionResult() || !b.getExecutionResult()) {
+      // one or both of the encodings do not have an execution result
+      return 0;
+    }
 
-    // Length must be equal
+    if (
+      a.getExecutionResult().hasError() &&
+      b.getExecutionResult().hasError()
+    ) {
+      return 0; // both throw an error
+    } else if (a.getExecutionResult().hasError()) {
+      return -1; // a throws an error but b does not so b is better
+    } else if (b.getExecutionResult().hasError()) {
+      return 1; // b throws an error but a does not so a is better
+    }
+
+    // neither throws an error
     return 0;
   }
 }

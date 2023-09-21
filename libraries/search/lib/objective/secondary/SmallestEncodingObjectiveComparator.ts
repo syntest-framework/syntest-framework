@@ -15,25 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin } from "@syntest/module";
-import { Encoding, SecondaryObjectiveComparator } from "@syntest/search";
+import { Encoding } from "../../Encoding";
 
-import { PluginType } from "./PluginType";
+import { SecondaryObjectiveComparator } from "./SecondaryObjectiveComparator";
 
-export abstract class SecondaryObjectivePlugin<
-  T extends Encoding
-> extends Plugin {
-  constructor(name: string, describe: string) {
-    super(PluginType.SecondaryObjective, name, describe);
-  }
+/**
+ * Secondary objective that is based on the length of the encoding.
+ */
+export class SmallestEncodingObjectiveComparator<T extends Encoding>
+  implements SecondaryObjectiveComparator<T>
+{
+  /**
+   * @inheritDoc
+   */
+  public compare(a: T, b: T): number {
+    if (a.getLength() > b.getLength()) return -1; // a is longer so b is better
+    if (a.getLength() < b.getLength()) return 1; // a is smaller so a is better
 
-  abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
-
-  override getOptionChoices(option: string): string[] {
-    if (option === "secondary-objectives") {
-      return [this.name];
-    }
-
-    return [];
+    // Length must be equal
+    return 0;
   }
 }
