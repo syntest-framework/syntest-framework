@@ -23,7 +23,7 @@ import { getLogger } from "@syntest/logging";
 import { Export } from "./Export";
 import { ExportVisitor } from "./ExportVisitor";
 
-type PartialExport = PartialDefaultExport | PartialNonDefaultExport;
+export type PartialExport = PartialDefaultExport | PartialNonDefaultExport;
 
 type PartialDefaultExport = {
   default: true;
@@ -39,42 +39,105 @@ export function extractExportsFromAssignmentExpression(
   filePath: string,
   path_: NodePath<t.AssignmentExpression>
 ): Export[] {
-  const exports: Export[] = [];
   const left = path_.get("left");
   const right = path_.get("right");
 
-  const partialExport: PartialExport | false = _checkExportAndDefault(
+  let partialExport: PartialExport | false = checkExportAndDefault(
     visitor,
     left
   );
-  if (!partialExport) {
-    // not an export
-    return [];
+
+  if (partialExport) {
+    return extractExportsFromLeftAssignmentExpression(
+      visitor,
+      filePath,
+      partialExport,
+      right
+    );
   }
+
+  partialExport = checkExportAndDefault(visitor, right);
+
+  if (partialExport) {
+    return extractExportsFromRightAssignmentExpression(
+      visitor,
+      filePath,
+      left,
+      partialExport
+    );
+  }
+
+  return [];
+}
+
+export function extractExportsFromRightAssignmentExpression(
+  visitor: ExportVisitor,
+  filePath: string,
+  left: NodePath<t.LVal | t.Identifier>,
+  right: PartialExport
+): Export[] {
+  const exports: Export[] = [];
 
   const module = true;
 
-  if (partialExport.default && right.isObjectExpression()) {
+  const id = visitor._getBindingId(left);
+  const name = getName(left);
+  if (right.default) {
+    exports.push({
+      id: id,
+      filePath: filePath,
+      name: name,
+      renamedTo: name, // actually renamed to nothing aka default but we keep the name
+      default: right.default,
+      module: module,
+    });
+  } else {
+    exports.push({
+      id: id,
+      filePath: filePath,
+      name:
+        name === "default" ? (<PartialNonDefaultExport>right).renamedTo : name,
+      renamedTo: (<PartialNonDefaultExport>right).renamedTo,
+      default: right.default,
+      module: module,
+    });
+  }
+
+  console.log(exports);
+  return exports;
+}
+
+export function extractExportsFromLeftAssignmentExpression(
+  visitor: ExportVisitor,
+  filePath: string,
+  left: PartialExport,
+  right: NodePath<t.Expression>
+): Export[] {
+  const exports: Export[] = [];
+
+  const module = true;
+
+  if (left.default && right.isObjectExpression()) {
     // module.exports = {...}
     // exports = {...}
     // so not default actually
     // extract the stuff from the object
     const properties = right.get("properties");
     exports.push(
-      ..._extractObjectProperties(right, properties, visitor, filePath, module)
+      ...extractObjectProperties(right, properties, visitor, filePath, module)
     );
-  } else if (partialExport.default) {
+  } else if (left.default) {
     // module.exports = ?
     // exports = ?
     // but ? is not an object expression
     const id = visitor._getBindingId(right);
-    const name = _getName(right);
+    const name = getName(right);
     exports.push({
       id: id,
       filePath: filePath,
       name: name,
       renamedTo: name, // actually renamed to nothing aka default but we keep the name
-      default: partialExport.default,
+      default: left.default,
       module: module,
     });
   } else {
@@ -82,16 +145,14 @@ export function extractExportsFromAssignmentExpression(
     // exports.? = ?
     // ? can be object but we dont care since it is not a default export
     const id = visitor._getBindingId(right);
-    const name = _getName(right);
+    const name = getName(right);
     exports.push({
       id: id,
       filePath: filePath,
       name:
-        name === "default"
-          ? (<PartialNonDefaultExport>partialExport).renamedTo
-          : name,
-      renamedTo: (<PartialNonDefaultExport>partialExport).renamedTo,
-      default: partialExport.default,
+        name === "default" ? (<PartialNonDefaultExport>left).renamedTo : name,
+      renamedTo: (<PartialNonDefaultExport>left).renamedTo,
+      default: left.default,
       module: module,
     });
   }
@@ -99,7 +160,7 @@ export function extractExportsFromAssignmentExpression(
   return exports;
 }
 
-function _extractObjectProperties(
+export function extractObjectProperties(
   path: NodePath<t.Node>,
   properties: NodePath<t.ObjectMethod | t.ObjectProperty | t.SpreadElement>[],
   visitor: ExportVisitor,
@@ -191,7 +252,9 @@ function _extractObjectProperties(
   return exports;
 }
 
-function _getName(expression: NodePath<t.Expression>): string {
+export function getName(
+  expression: NodePath<t.Expression | t.LVal | t.Identifier>
+): string {
   if (expression.isIdentifier()) {
     return expression.node.name;
   }
@@ -217,20 +280,20 @@ function _getName(expression: NodePath<t.Expression>): string {
   return "default";
 }
 
-function _checkExportAndDefault(
+export function checkExportAndDefault(
   visitor: ExportVisitor,
-  expression: NodePath<t.LVal>
+  expression: NodePath<t.LVal | t.Expression>
 ): false | PartialExport {
   if (expression.isIdentifier() && expression.node.name === "exports") {
-    // exports = ?
+    // exports
     return { default: true };
   } else if (expression.isMemberExpression()) {
-    // ?.? = ?
+    // ?.?
     const object = expression.get("object");
     const property = expression.get("property");
 
     if (object.isIdentifier()) {
-      // ?.? = ?
+      // ?.?
       if (object.node.name === "module") {
         if (
           (!expression.node.computed &&
@@ -240,16 +303,16 @@ function _checkExportAndDefault(
             property.isStringLiteral() &&
             property.node.value === "exports")
         ) {
-          // module.exports = ?
-          // module['exports'] = ?
+          // module.exports
+          // module['exports']
           return { default: true };
         } else {
-          // module[exports] = ?
+          // module[exports]
           // TODO replace by logger
           console.warn(`Unsupported syntax 'module[x] = ?'`);
         }
       } else if (object.node.name === "exports") {
-        // exports.? = ?
+        // exports.?
         const name = _getNameOfProperty(
           visitor,
           property,
@@ -264,7 +327,7 @@ function _checkExportAndDefault(
         };
       }
     } else if (object.isMemberExpression()) {
-      // ?.?.? = ?
+      // ?.?.?
       const subObject = object.get("object");
       const subProperty = object.get("property");
 
@@ -278,9 +341,9 @@ function _checkExportAndDefault(
             subProperty.isStringLiteral() &&
             subProperty.node.value === "exports"))
       ) {
-        // module.exports.? = ?
-        // module['exports'].? = ?
-        // module.exports[?] = ?
+        // module.exports.?
+        // module['exports'].?
+        // module.exports[?]
         const name = _getNameOfProperty(
           visitor,
           property,

@@ -23,7 +23,13 @@ import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
 import { Export } from "./Export";
 import { extractExportsFromExportDefaultDeclaration } from "./ExportDefaultDeclaration";
 import { extractExportsFromExportNamedDeclaration } from "./ExportNamedDeclaration";
-import { extractExportsFromAssignmentExpression } from "./ExpressionStatement";
+import {
+  checkExportAndDefault,
+  extractExportsFromAssignmentExpression,
+  extractExportsFromLeftAssignmentExpression,
+  extractExportsFromRightAssignmentExpression,
+  PartialExport,
+} from "./ExpressionStatement";
 
 export class ExportVisitor extends AbstractSyntaxTreeVisitor {
   private _exports: Export[];
@@ -59,6 +65,8 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
 
   // e.g. module.exports = ...
   // e.g. exports.foo = ...
+  // e.g. ... = exports
+  // e.g. ... = module.exports
   public AssignmentExpression: (
     path: NodePath<t.AssignmentExpression>
   ) => void = (path) => {
@@ -68,6 +76,42 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
       path
     );
     this._exports.push(...exports);
+  };
+
+  // e.g. let x = module.exports
+  // e.g. let x = exports.foo
+  public VariableDeclarator: (path: NodePath<t.VariableDeclarator>) => void = (
+    path_
+  ) => {
+    const id = path_.get("id");
+    const init = path_.get("init");
+
+    let partialExport: PartialExport | false = checkExportAndDefault(this, id);
+
+    if (partialExport) {
+      this._exports.push(
+        ...extractExportsFromLeftAssignmentExpression(
+          this,
+          this.filePath,
+          partialExport,
+          init
+        )
+      );
+      return;
+    }
+
+    partialExport = checkExportAndDefault(this, init);
+
+    if (partialExport) {
+      this._exports.push(
+        ...extractExportsFromRightAssignmentExpression(
+          this,
+          this.filePath,
+          id,
+          partialExport
+        )
+      );
+    }
   };
 
   // getters
