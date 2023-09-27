@@ -93,15 +93,9 @@ export class ContextBuilder {
 
     let variableName = statement.name;
 
-    variableName =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".includes(
-        variableName[0]
-      )
-        ? variableName[0].toLowerCase() + variableName.slice(1)
-        : (ContextBuilder.LOGGER.warn(
-            `Found variable name starting with a non-alphabetic character, variable: '${variableName}'`
-          ),
-          "var" + variableName);
+    variableName = variableName.replaceAll(/[^A-Za-z]/g, "");
+
+    variableName = variableName[0].toLowerCase() + variableName.slice(1);
 
     variableName =
       reservedKeywords.has(variableName) || globalVariables.has(variableName)
@@ -222,6 +216,16 @@ export class ContextBuilder {
     if (import_.module) {
       throw new Error("Only non module imports can use import statements");
     }
+
+    // if (import_.renamed) {
+    //   return import_.default
+    //     ? `const ${import_.renamedTo} = require("${_path}";`
+    //     : `const {${import_.name} as ${import_.renamedTo}} =  equire("${_path}";`;
+    // } else {
+    //   return import_.default
+    //     ? `const ${import_.name} = require("${_path}";`
+    //     : `const {${import_.name}} = require("${_path}";`;
+    // }
 
     if (import_.renamed) {
       return import_.default

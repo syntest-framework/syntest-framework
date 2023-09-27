@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx --no -- commitlint --edit 
+# Do not run pre-commit hooks when running in CI.
+[ -n "$CI" ] && exit 0
+
+npx --no -- commitlint --edit --config ./commitlint.config.json

@@ -37,11 +37,11 @@ function targetHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
   const ast = generator.convert("", source);
 
-  const exportVisitor = new ExportVisitor("", false);
+  const exportVisitor = new ExportVisitor("", true);
   traverse(ast, exportVisitor);
   const exports = exportVisitor.exports;
 
-  const visitor = new TargetVisitor("", false, exports);
+  const visitor = new TargetVisitor("", true, exports);
   traverse(ast, visitor);
 
   return visitor.subTargets;

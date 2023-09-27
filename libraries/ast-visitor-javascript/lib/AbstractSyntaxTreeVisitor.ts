@@ -26,6 +26,15 @@ import { reservedKeywords } from "./reservedKeywords";
 export const MemberSeparator = " <-> ";
 
 export class AbstractSyntaxTreeVisitor implements TraverseOptions {
+  [k: `${string}|${string}`]: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    path: NodePath<any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    state: any
+  ) => void;
+
   protected static LOGGER: Logger;
 
   protected _filePath: string;

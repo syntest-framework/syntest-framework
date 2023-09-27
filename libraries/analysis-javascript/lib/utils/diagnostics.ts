@@ -22,3 +22,7 @@ export function unsupportedSyntax(
 ): string {
   return `Unsupported syntax found in ${pathType} at ${locationId}`;
 }
+
+export function computedProperty(pathType: string, locationId: string): string {
+  return `Computed property found in ${pathType} at ${locationId}`;
+}

@@ -125,6 +125,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
     const lines = [
       "// Imports",
+      "require = require('esm')(module)",
       ...imports,
       gatherAssertionData ? assertionFunction : "",
       `describe('SynTest Test Suite', function() {`,

@@ -22,7 +22,7 @@ import { TargetType } from "@syntest/analysis";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
 import { getLogger, Logger } from "@syntest/logging";
 
-import { unsupportedSyntax } from "../utils/diagnostics";
+import { computedProperty, unsupportedSyntax } from "../utils/diagnostics";
 
 import { Export } from "./export/Export";
 import {
@@ -37,9 +37,17 @@ import {
   SubTarget,
 } from "./Target";
 
-const COMPUTED_FLAG = ":computed:";
 export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   protected static override LOGGER: Logger;
+
+  private _logOrFail(message: string): undefined {
+    if (this.syntaxForgiving) {
+      TargetVisitor.LOGGER.warn(message);
+      return undefined;
+    } else {
+      throw new Error(message);
+    }
+  }
 
   private _exports: Export[];
 
@@ -70,7 +78,9 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. class {}
         // e.g. function () {}
         // Should not be possible
-        throw new Error("unknown class declaration");
+        return this._logOrFail(
+          unsupportedSyntax(path.type, this._getNodeId(path))
+        );
       }
     } else {
       // e.g. class x {}
@@ -106,7 +116,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // e.g. const {x} = function {}
           // e.g. const {x} = () => {}
           // Should not be possible
-          throw new Error(
+          return this._logOrFail(
             unsupportedSyntax(path.node.type, this._getNodeId(path))
           );
         }
@@ -138,13 +148,9 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
               // e.g. x[y] = class {}
               // e.g. x[y] = function {}
               // e.g. x[y] = () => {}
-              // TODO unsupported cannot get the name unless executing
-              TargetVisitor.LOGGER.warn(
-                `This tool does not support computed property assignments. Found one at ${this._getNodeId(
-                  path
-                )}`
+              return this._logOrFail(
+                computedProperty(path.node.type, this._getNodeId(path))
               );
-              return COMPUTED_FLAG;
             }
           } else if (assigned.property.type === "Identifier") {
             // e.g. x.y = class {}
@@ -168,7 +174,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             // e.g. x.? = function {}
             // e.g. x.? = () => {}
             // Should not be possible
-            throw new Error(
+            return this._logOrFail(
               unsupportedSyntax(path.node.type, this._getNodeId(path))
             );
           }
@@ -177,7 +183,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // e.g. {x} = function {}
           // e.g. {x} = () => {}
           // Should not be possible
-          throw new Error(
+          return this._logOrFail(
             unsupportedSyntax(path.node.type, this._getNodeId(path))
           );
         }
@@ -219,7 +225,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // e.g. {?: function {}}
           // e.g. {?: () => {}}
           // Should not be possible
-          throw new Error(
+          return this._logOrFail(
             unsupportedSyntax(path.node.type, this._getNodeId(path))
           );
         }
@@ -256,15 +262,19 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. c || () => {}
         return this._getTargetNameOfExpression(path.parentPath);
       }
+      case "ExportDefaultDeclaration": {
+        // e.g. export default class {}
+        // e.g. export default function () {}
+        // e.g. export default () => {}
+        return "default";
+      }
       default: {
         // e.g. class {}
         // e.g. function () {}
         // e.g. () => {}
         // Should not be possible
-        throw new Error(
-          `Unknown parent expression ${parentNode.type} for ${
-            path.node.type
-          } in ${this._getNodeId(path)}`
+        return this._logOrFail(
+          unsupportedSyntax(parentNode.type, this._getNodeId(path))
         );
       }
     }
@@ -309,6 +319,11 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     // only thing left where these can be found is:
     // call(function () {})
     const targetName = this._getTargetNameOfExpression(path);
+
+    if (!targetName) {
+      return;
+    }
+
     const id = this._getNodeId(path);
     const export_ = this._getExport(id);
 
@@ -323,6 +338,11 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     // only thing left where these can be found is:
     // call(class {})
     const targetName = this._getTargetNameOfExpression(path);
+
+    if (!targetName) {
+      return;
+    }
+
     const id = this._getNodeId(path);
     const export_ = this._getExport(id);
 
@@ -337,6 +357,10 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     // only thing left where these can be found is:
     // call(() => {})
     const targetName = this._getTargetNameOfExpression(path);
+
+    if (!targetName) {
+      return;
+    }
 
     // TODO is there a difference if the parent is a variable declarator?
 
@@ -399,6 +423,9 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     }
 
     const targetName = this._getTargetNameOfExpression(right);
+    if (!targetName) {
+      return;
+    }
     let isObject = false;
     let isMethod = false;
     let objectId: string;
@@ -408,11 +435,10 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       const object = left.get("object");
       const property = left.get("property");
 
-      if (left.get("property").isIdentifier() && left.node.computed) {
-        TargetVisitor.LOGGER.warn(
-          "We do not support dynamic computed properties: x[a] = ?"
-        );
+      if (property.isIdentifier() && left.node.computed) {
         path.skip();
+
+        this._logOrFail(computedProperty(left.type, this._getNodeId(path)));
         return;
       } else if (!left.get("property").isIdentifier() && !left.node.computed) {
         // we also dont support a.f() = ?
@@ -637,25 +663,51 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     // loop over object properties
     for (const property of path.get("properties")) {
       if (property.isObjectMethod()) {
-        if (property.node.key.type !== "Identifier") {
+        if (property.node.computed) {
           // e.g. class A { ?() {} }
           // unsupported
           // not possible i think
-          throw new Error("unknown class method key");
+          this._logOrFail(
+            computedProperty(property.type, this._getNodeId(property))
+          );
+          continue;
         }
-        const targetName = property.node.key.name;
+        const key = property.get("key");
+        if (key.isIdentifier()) {
+          const targetName = key.node.name;
 
-        const id = this._getNodeId(property);
-        this._extractFromFunction(
-          property,
-          id,
-          id,
-          targetName,
-          undefined,
-          true,
-          false,
-          objectId
-        );
+          const id = this._getNodeId(property);
+          this._extractFromFunction(
+            property,
+            id,
+            id,
+            targetName,
+            undefined,
+            true,
+            false,
+            objectId
+          );
+        } else if (key.isLiteral()) {
+          const targetName = "value" in key ? String(key.value) : "null";
+
+          const id = this._getNodeId(property);
+          this._extractFromFunction(
+            property,
+            id,
+            id,
+            targetName,
+            undefined,
+            true,
+            false,
+            objectId
+          );
+        } else {
+          // not possible i think
+          this._logOrFail(
+            unsupportedSyntax(property.node.type, this._getNodeId(property))
+          );
+          continue;
+        }
       } else if (property.isObjectProperty()) {
         const key = property.get("key");
         const value = property.get("value");
@@ -726,7 +778,13 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // e.g. class A { ?() {} }
           // unsupported
           // not possible i think
-          throw new Error("unknown class method key");
+          this._logOrFail(
+            unsupportedSyntax(
+              classBodyAttribute.node.type,
+              this._getNodeId(classBodyAttribute)
+            )
+          );
+          continue;
         }
 
         const targetName = classBodyAttribute.node.key.name;
@@ -781,8 +839,8 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           }
         }
       } else {
-        TargetVisitor.LOGGER.warn(
-          `Unsupported class body attribute: ${classBodyAttribute.node.type}`
+        return this._logOrFail(
+          unsupportedSyntax(body.node.type, this._getNodeId(classBodyAttribute))
         );
       }
     }
