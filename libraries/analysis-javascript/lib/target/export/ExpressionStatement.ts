@@ -56,15 +56,19 @@ export function extractExportsFromAssignmentExpression(
     );
   }
 
-  partialExport = checkExportAndDefault(visitor, right);
+  if (left.isLVal()) {
+    partialExport = checkExportAndDefault(visitor, right);
 
-  if (partialExport) {
-    return extractExportsFromRightAssignmentExpression(
-      visitor,
-      filePath,
-      left,
-      partialExport
-    );
+    if (partialExport) {
+      return extractExportsFromRightAssignmentExpression(
+        visitor,
+        filePath,
+        left,
+        partialExport
+      );
+    }
+  } else {
+    // no clue
   }
 
   return [];

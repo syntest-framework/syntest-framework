@@ -62,6 +62,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "@babel/types": "^7.21.5"
+    "@babel/types": "7.23.0"
   }
 }
