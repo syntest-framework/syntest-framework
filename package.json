@@ -31,7 +31,7 @@
     "clean:root": "rm -rf .nyc_output dist node_modules coverage",
     "graph": "nx graph",
     "graph:affected": "nx affected:graph",
-    "format": "prettier --config ./.prettierrc.json --ignore-path ./.prettierignore --write .",
+    "format": "prettier --config .prettierrc.json --ignore-path .prettierignore --write .",
     "format:check": "prettier --config .prettierrc.json --ignore-path .prettierignore --check .",
     "lint": "nx run-many --target=lint",
     "lint:fix": "nx run-many --target=lint:fix",
