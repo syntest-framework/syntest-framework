@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: coverage-results
-          path: ${{ github.workspace }}/**/coverage/lcov.info
+          path: ${{ github.workspace }}/*/*/coverage/lcov.info
 
       # Test Report
       - name: Test Report
@@ -132,6 +132,9 @@ jobs:
           flag-name: ${{ matrix.workspace }}
           base-path: ${{ matrix.workspace }}/
           path-to-lcov: ${{ matrix.workspace }}/coverage/lcov.info
+
+      - if: steps.check_files.outputs.files_exists == 'false'
+        run: echo "::warning file=${{ matrix.workspace }}/coverage/lcov.info::Coverage files missing"
 
   # Indicate sending coverage to Coveralls is finished
   coverage-finished:
