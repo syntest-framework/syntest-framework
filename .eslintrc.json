@@ -52,7 +52,7 @@
     ],
     "notice/notice": [
       "error",
-      { 
+      {
         "templateFile": "./NOTICE.header.ts",
         "nonMatchingTolerance": 0.8
       }
