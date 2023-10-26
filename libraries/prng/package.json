@@ -1,6 +1,6 @@
 {
   "name": "@syntest/prng",
-  "version": "0.1.1",
+  "version": "0.1.2-beta.0",
   "description": "The pseudo random number generator library of the SynTest Framework",
   "keywords": [
     "syntest",
@@ -44,7 +44,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/logging": "^0.1.1",
+    "@syntest/logging": "^0.1.2-beta.0",
     "bignumber.js": "9.0.1",
     "seedrandom": "3.0.5"
   },

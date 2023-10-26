@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0-beta.4](https://github.com/syntest-framework/syntest-core/compare/@syntest/base-language@0.3.0-beta.3...@syntest/base-language@0.3.0-beta.4) (2023-10-26)
+
+**Note:** Version bump only for package @syntest/base-language
+
 ## [0.3.0-beta.3](https://github.com/syntest-framework/syntest-core/compare/@syntest/base-language@0.3.0-beta.2...@syntest/base-language@0.3.0-beta.3) (2023-09-21)
 
 ### Features
