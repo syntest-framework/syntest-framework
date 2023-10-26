@@ -35,9 +35,20 @@ jobs:
             architecture: x64
             report_coverage: true
 
+    outputs:
+      workspaces: ${{ steps.workspaces.outputs.directories }}
+
     steps:
       # Cloning
       - uses: actions/checkout@v4
+
+      # Collection
+      - name: Collect NPM workspaces
+        id: workspaces
+        uses: secondtruth/collect-directories-by-contained-files@v1.0.0
+        with:
+          files-glob: "*/*/package.json"
+          unique: true
 
       # Setup and Caching
       - name: Use Node.js ${{ matrix.node-version }} (${{ matrix.architecture }})
@@ -81,34 +92,10 @@ jobs:
       - run: exit 0
         if: ${{ steps.test.outcome == 'success' }}
 
-  # Collect all workspaces for coverage collection
-  collection:
-    name: Collect NPM workspaces
-    needs: test
-    runs-on: ubuntu-latest
-    outputs:
-      workspaces: ${{ steps.workspaces.outputs.directories }}
-    steps:
-      # Cloning
-      - uses: actions/checkout@v4
-
-      # Download test results
-      - uses: actions/download-artifact@v3
-        with:
-          name: coverage-results
-
-      # Collection
-      - name: Collect NPM workspaces
-        id: workspaces
-        uses: secondtruth/collect-directories-by-contained-files@v1.0.0
-        with:
-          files-glob: "*/*/coverage/lcov.info"
-          unique: true
-
   # Send coverage information to Coveralls
   coverage:
     name: Coverage(${{ matrix.workspace }}) - Collection
-    needs: collection
+    needs: test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -118,7 +105,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        workspace: ${{ fromJson(needs.collection.outputs.workspaces) }}
+        workspace: ${{ fromJson(needs.test.outputs.workspaces) }}
 
     steps:
       # Cloning
@@ -126,6 +113,7 @@ jobs:
 
       # Download test results
       - uses: actions/download-artifact@v3
+        id: artifact
         with:
           name: coverage-results
 
@@ -140,6 +128,10 @@ jobs:
           flag-name: ${{ matrix.workspace }}
           base-path: ${{ matrix.workspace }}/
           path-to-lcov: ${{ matrix.workspace }}/coverage/lcov.info
+
+      # Mark job as successful even if the coverage file is missing
+      - run: exit 0
+        if: ${{ steps.artifact.outcome == 'success' }}
 
   # Indicate sending coverage to Coveralls is finished
   coverage-finished:
