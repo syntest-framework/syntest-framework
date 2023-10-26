@@ -47,8 +47,8 @@ jobs:
           architecture: ${{ matrix.architecture }}
 
           # NPM Cache using all package-lock files as hash
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
 
       # Dependencies
       - name: Core - Install Dependencies
@@ -105,14 +105,14 @@ jobs:
           - libraries/search
           - plugins/plugin-core-event-listener-graphing
           - plugins/plugin-core-metric-middleware-file-writer
-          - plugins/plugin-core-search-algorithm-sfuzz
+          - plugins/plugin-core-search-algorithm-experimental
           - tools/base-language
           - tools/init
 
     steps:
       # Cloning
       - uses: actions/checkout@v3
-      
+
       # Download test results
       - uses: actions/download-artifact@v3
         with:

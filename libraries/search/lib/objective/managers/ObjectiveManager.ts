@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,8 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import * as crypto from "node:crypto";
 
 import { getLogger, Logger } from "@syntest/logging";
 
@@ -73,7 +71,9 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * List of secondary objectives.
    * @protected
    */
-  protected _secondaryObjectives: Set<SecondaryObjectiveComparator<T>>;
+  protected _secondaryObjectives: SecondaryObjectiveComparator<T>[];
+
+  protected _exceptionObjectivesEnabled: boolean;
 
   /**
    * The subject of the search.
@@ -89,15 +89,17 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   constructor(
     runner: EncodingRunner<T>,
-    secondaryObjectives: Set<SecondaryObjectiveComparator<T>>
+    secondaryObjectives: SecondaryObjectiveComparator<T>[],
+    exceptionObjectivesEnabled: boolean
   ) {
     ObjectiveManager.LOGGER = getLogger("ObjectiveManager");
+    this._runner = runner;
+    this._secondaryObjectives = secondaryObjectives;
+    this._exceptionObjectivesEnabled = exceptionObjectivesEnabled;
     this._archive = new Archive<T>();
     this._currentObjectives = new Set<ObjectiveFunction<T>>();
     this._coveredObjectives = new Set<ObjectiveFunction<T>>();
     this._uncoveredObjectives = new Set<ObjectiveFunction<T>>();
-    this._runner = runner;
-    this._secondaryObjectives = secondaryObjectives;
   }
 
   /**
@@ -172,10 +174,10 @@ export abstract class ObjectiveManager<T extends Encoding> {
   ): Promise<void> {
     ObjectiveManager.LOGGER.debug(`Evaluating encoding ${encoding.id}`);
     // Execute the encoding
-    const result = await this._runner.execute(this._subject, encoding);
+    const result = await this._runner.execute(encoding);
 
     // TODO: Use events for this so we can elimate the dependency on the budget manager
-    budgetManager.evaluation(encoding);
+    budgetManager.evaluation();
 
     // Store the execution result in the encoding
     encoding.setExecutionResult(result);
@@ -186,26 +188,19 @@ export abstract class ObjectiveManager<T extends Encoding> {
     }
 
     // Create separate exception objective when an exception occurred in the execution
-    if (result.hasExceptions()) {
-      // TODO there must be a better way
-      //  investigate error patterns somehow
-
-      const hash = crypto
-        .createHash("md5")
-        .update(result.getExceptions())
-        .digest("hex");
+    if (this._exceptionObjectivesEnabled && result.hasError()) {
+      const hash = result.getErrorIdentifier();
 
       const numberOfExceptions = this._archive
         .getObjectives()
         .filter((objective) => objective instanceof ExceptionObjectiveFunction)
         .filter((objective) => objective.getIdentifier() === hash).length;
       if (numberOfExceptions === 0) {
-        // TODO this makes the archive become too large crashing the tool
         this._archive.update(
           new ExceptionObjectiveFunction(
             this._subject,
             hash,
-            result.getExceptions()
+            result.getError()
           ),
           encoding,
           false
@@ -224,6 +219,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
     encoding.setDistance(objectiveFunction, distance);
+    objectiveFunction.updateDistance(distance);
 
     // When the objective is covered, update the objectives and the archive
     if (distance === 0) {

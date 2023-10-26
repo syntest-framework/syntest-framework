@@ -40,8 +40,8 @@ jobs:
           architecture: ${{ matrix.architecture }}
 
           # NPM Cache using all package-lock files as hash
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
 
       # Dependencies
       - name: Core - Install Dependencies

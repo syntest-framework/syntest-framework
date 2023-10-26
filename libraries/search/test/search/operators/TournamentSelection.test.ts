@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -98,7 +98,7 @@ describe("Tournament selection", function () {
     ind4.setCrowdingDistance(4);
 
     const winner: DummyEncodingMock = tournamentSelection(
-      [ind2, ind1, ind3, ind4],
+      [ind1, ind2, ind3, ind4],
       20
     );
     expect(winner.getRank()).to.equal(0);

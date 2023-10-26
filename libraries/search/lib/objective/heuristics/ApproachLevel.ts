@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -17,23 +17,23 @@
  */
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg";
 
-import { Datapoint } from "../../util/Datapoint";
+import { Trace } from "../../Trace";
 import { cannotFindTraceThatIsCovered } from "../../util/diagnostics";
 
 export class ApproachLevel {
   public calculate(
     cfg: ControlFlowGraph,
     node: Node,
-    traces: Datapoint[]
+    traces: Trace[]
   ): {
     approachLevel: number;
     closestCoveredNode: Node;
-    closestCoveredBranchTrace: Datapoint;
+    closestCoveredBranchTrace: Trace;
     lastEdgeType: boolean;
     statementFraction: number;
   } {
     // Construct map with key as id covered and value as datapoint that covers that id
-    const idsTraceMap: Map<string, Datapoint> = new Map(
+    const idsTraceMap: Map<string, Trace> = new Map(
       traces.filter((trace) => trace.hits > 0).map((trace) => [trace.id, trace])
     );
 

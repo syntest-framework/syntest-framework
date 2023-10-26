@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -32,11 +32,15 @@ import { shouldNeverHappen } from "../util/diagnostics";
 export class ExceptionObjectiveFunction<
   T extends Encoding
 > extends ObjectiveFunction<T> {
-  protected _message: string;
+  protected _error: Error;
 
-  constructor(subject: SearchSubject<T>, id: string, message: string) {
+  constructor(subject: SearchSubject<T>, id: string, error: Error) {
     super(id, subject);
-    this._message = message;
+    this._error = error;
+  }
+
+  get error() {
+    return this._error;
   }
 
   /**

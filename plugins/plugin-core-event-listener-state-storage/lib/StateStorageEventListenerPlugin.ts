@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -19,6 +19,12 @@
 import { Events, RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram } from "@syntest/cfg";
 import { EventListenerPlugin } from "@syntest/module";
+import {
+  Encoding,
+  SearchAlgorithm,
+  Events as SearchEvents,
+  SearchSubject,
+} from "@syntest/search";
 import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 import Yargs = require("yargs");
@@ -90,6 +96,14 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
           filePath,
           dependencies
         )
+    );
+
+    (<TypedEventEmitter<SearchEvents>>process).on(
+      "searchComplete",
+      <E extends Encoding>(
+        searchAlgorithm: SearchAlgorithm<E>,
+        subject: SearchSubject<E>
+      ) => stateStorage.searchComplete(searchAlgorithm, subject)
     );
   }
 

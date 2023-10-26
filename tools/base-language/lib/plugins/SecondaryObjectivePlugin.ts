@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -30,7 +30,7 @@ export abstract class SecondaryObjectivePlugin<
   abstract createSecondaryObjective(): SecondaryObjectiveComparator<T>;
 
   override getOptionChoices(option: string): string[] {
-    if (option === "secondary-objective") {
+    if (option === "secondary-objectives") {
       return [this.name];
     }
 

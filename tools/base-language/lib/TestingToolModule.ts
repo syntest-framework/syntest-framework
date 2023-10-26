@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -21,6 +21,8 @@ import { Module, ModuleManager } from "@syntest/module";
 import { StorageManager } from "@syntest/storage";
 
 import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricListener";
+import { SearchPerformanceListener } from "./plugins/event-listeners/SearchPerformanceListener";
+import { SearchProgressBarListener } from "./plugins/event-listeners/SearchProgressBarListener";
 import { SimpleObjectiveManagerPlugin } from "./plugins/objective-managers/SimpleObjectiveManagerPlugin";
 import { StructuralObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralObjectiveManagerPlugin";
 import { StructuralUncoveredObjectiveManagerPlugin } from "./plugins/objective-managers/StructuralUncoveredObjectiveManagerPlugin";
@@ -30,7 +32,8 @@ import { DefaultProcreationPlugin } from "./plugins/procreation-operators/Defaul
 import { MOSAFamilyPlugin } from "./plugins/search-algorithms/MOSAFamilyPlugin";
 import { NSGAIIPlugin } from "./plugins/search-algorithms/NSGAIIPlugin";
 import { RandomSearchPlugin } from "./plugins/search-algorithms/RandomSearchPlugin";
-import { LengthObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LengthObjectiveComparatorPlugin";
+import { LeastErrorsObjectiveComparatorPlugin } from "./plugins/secondary-objectives/LeastErrorsObjectiveComparatorPlugin";
+import { SmallestEncodingObjectiveComparatorPlugin } from "./plugins/secondary-objectives/SmallestEncodingObjectiveComparatorPlugin";
 import { SignalTerminationTriggerPlugin } from "./plugins/termination-triggers/SignalTerminationTriggerPlugin";
 import { DynaMOSAPreset } from "./presets/DynaMOSAPreset";
 import { MOSAPreset } from "./presets/MOSAPreset";
@@ -42,10 +45,15 @@ export abstract class TestingToolModule extends Module {
     moduleManager: ModuleManager,
     _metricManager: MetricManager,
     _storageManager: StorageManager,
-    _userInterface: UserInterface,
+    userInterface: UserInterface,
     _modules: Module[]
   ): void {
     moduleManager.registerPlugin(this, new SearchMetricListener());
+    moduleManager.registerPlugin(this, new SearchPerformanceListener());
+    moduleManager.registerPlugin(
+      this,
+      new SearchProgressBarListener(userInterface)
+    );
 
     moduleManager.registerPlugin(this, new SimpleObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new StructuralObjectiveManagerPlugin());
@@ -56,13 +64,20 @@ export abstract class TestingToolModule extends Module {
     moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
+    moduleManager.registerPlugin(
+      this,
+      new LeastErrorsObjectiveComparatorPlugin()
+    );
+    moduleManager.registerPlugin(
+      this,
+      new SmallestEncodingObjectiveComparatorPlugin()
+    );
+
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
 
     moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
     moduleManager.registerPlugin(this, new NSGAIIPlugin());
     moduleManager.registerPlugin(this, new RandomSearchPlugin());
-
-    moduleManager.registerPlugin(this, new LengthObjectiveComparatorPlugin());
 
     moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
 

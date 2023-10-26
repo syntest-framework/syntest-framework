@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { MetricManager } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
 import * as chai from "chai";
 
@@ -27,11 +28,13 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
+    const metricManager = new MetricManager("");
+    metricManager.setOutputMetrics([]);
     new FileWriterMetricMiddleware(
+      metricManager,
+      [],
       "",
       new StorageManager("path", "tempPath", "fid"),
-      [],
-      [],
       ""
     );
     expect(true);

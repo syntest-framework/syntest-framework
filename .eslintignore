@@ -8,7 +8,8 @@ syntest/
 .*
 *.json
 *.md
+*.cff
 *.jpg
 NOTICE
-LICENSE.header.ts
+NOTICE.header.ts
 tsconfig.json

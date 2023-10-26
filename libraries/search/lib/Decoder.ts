@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -32,8 +32,7 @@ export interface Decoder<E extends Encoding, D> {
    * Creates a decoded version of an encoding
    *
    * @param encoding             the encoding to decode
-   * @param targetName           the name of the target, used to create informative decodings
    * @return decoded             the decoded encoding
    */
-  decode(encoding: E, targetName: string): D;
+  decode(encoding: E): D;
 }

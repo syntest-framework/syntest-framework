@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -28,8 +28,6 @@ import {
 
 /**
  * Plugin for the structural objective manager
- *
- * @author Dimitri Stallenberg
  */
 export class StructuralObjectiveManagerPlugin<
   T extends Encoding
@@ -43,7 +41,8 @@ export class StructuralObjectiveManagerPlugin<
   ): ObjectiveManager<T> {
     return new StructuralObjectiveManager(
       options.runner,
-      options.secondaryObjectives
+      options.secondaryObjectives,
+      options.exceptionObjectivesEnabled
     );
   }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -162,9 +162,6 @@ async function main() {
   await moduleManager.loadModules(modules);
   config = moduleManager.configureModules(config, baseArguments.preset);
 
-  // Set the metrics on the metric manager
-  metricManager.metrics = await moduleManager.getMetrics();
-
   moduleManager.printModuleVersionTable();
 
   const versions = [...moduleManager.modules.values()]
@@ -186,6 +183,9 @@ async function main() {
 
       // Set the arguments in the module manager
       moduleManager.args = argv;
+
+      // Set the metrics on the metric manager
+      metricManager.metrics = await moduleManager.getMetrics();
 
       // Set the output metrics
       metricManager.setOutputMetrics(

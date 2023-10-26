@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -48,7 +48,10 @@ export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
         );
       }
     }
-    offspring.push(this.sampler.sample());
+    for (let index = 0; index < Math.ceil(populationSize * 0.2); index++) {
+      offspring.push(this.sampler.sample());
+    }
+
     return offspring;
   }
 }

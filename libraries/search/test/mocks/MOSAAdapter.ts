@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { MOSAFamily } from "../../lib/algorithms/evolutionary/MOSAFamily";
 import { Encoding } from "../../lib/Encoding";
-import { MOSAFamily } from "../../lib/metaheuristics/evolutionary/MOSAFamily";
 
 import { DummySearchSubject } from "./DummySubject.mock";
 

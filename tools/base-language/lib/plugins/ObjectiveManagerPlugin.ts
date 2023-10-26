@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Core.
  *
@@ -27,7 +27,8 @@ import { PluginType } from "./PluginType";
 
 export type ObjectiveManagerOptions<T extends Encoding> = {
   runner: EncodingRunner<T>;
-  secondaryObjectives: Set<SecondaryObjectiveComparator<T>>;
+  secondaryObjectives: SecondaryObjectiveComparator<T>[];
+  exceptionObjectivesEnabled: boolean;
 };
 
 export abstract class ObjectiveManagerPlugin<
