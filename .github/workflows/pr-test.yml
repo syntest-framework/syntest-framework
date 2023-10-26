@@ -47,7 +47,7 @@ jobs:
         id: workspaces
         uses: secondtruth/collect-directories-by-contained-files@v1.0.0
         with:
-          files-glob: "/*/*/package.json"
+          files-glob: "*/*/package.json"
           unique: true
 
       # Setup and Caching
