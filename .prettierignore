@@ -1,6 +1,12 @@
 .nyc_output/
+**/.nyc_output/
 dist/
+**/dist/
 node_modules/
-.*
-*.jpg
+**/node_modules/
+LICENSE
+**/LICENSE
 NOTICE
+**/NOTICE
+.prettierignore
+**/.prettierignore

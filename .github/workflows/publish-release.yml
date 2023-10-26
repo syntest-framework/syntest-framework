@@ -12,7 +12,7 @@ jobs:
         with:
           token: ${{ secrets.SYNTEST_CI }}
           fetch-depth: 0
-          
+
       # Setup, Caching, and .npmrc file to publish to npm
       - name: Use latest Node.js LTS version
         uses: actions/setup-node@v3
@@ -20,11 +20,11 @@ jobs:
           node-version: lts/*
 
           # NPM Cache using all package-lock files as hash
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
 
           # NPM Publishing settings
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
           always-auth: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
