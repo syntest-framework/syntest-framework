@@ -55,7 +55,7 @@
     "notice/notice": [
       "error",
       { 
-        "templateFile": "./LICENSE.header.ts",
+        "templateFile": "./NOTICE.header.ts",
         "nonMatchingTolerance": 0.8
       }
     ],
