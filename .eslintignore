@@ -10,5 +10,5 @@ syntest/
 *.md
 *.jpg
 NOTICE
-LICENSE.header.ts
+NOTICE.header.ts
 tsconfig.json
