@@ -97,7 +97,7 @@ jobs:
           path-to-lcov: ${{ matrix.workspace }}/coverage/lcov.info
 
       - if: steps.check_files.outputs.files_exists == 'false'
-        run: echo "::warning file=${{ matrix.workspace }}/coverage/lcov.info::Coverage files missing"
+        run: echo "::warning file=${{ matrix.workspace }}/coverage/lcov.info::Coverage file missing"
 
   # Indicate sending coverage to Coveralls is finished
   coverage-finished:
