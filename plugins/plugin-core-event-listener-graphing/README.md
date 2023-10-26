@@ -1,1 +1,1 @@
-# Graphing plugin for the SynTest Core.
+# Graphing plugin for the SynTest Framework.

@@ -2,11 +2,11 @@
 
 > The aim of the common core of the SynTest Framework is to extract the common parts (e.g., core infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
-[![main-build](https://github.com/syntest-framework/syntest-core/actions/workflows/main-build.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-build.yml)
-[![main-quality](https://github.com/syntest-framework/syntest-core/actions/workflows/main-quality.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-quality.yml)
-[![main-test](https://github.com/syntest-framework/syntest-core/actions/workflows/main-test.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/main-test.yml)
-[![publish pre-release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-prerelease.yml)
-[![publish release](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml/badge.svg)](https://github.com/syntest-framework/syntest-core/actions/workflows/publish-release.yml)
+[![main-build](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-build.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-build.yml)
+[![main-quality](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-quality.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-quality.yml)
+[![main-test](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-test.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-test.yml)
+[![publish pre-release](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-prerelease.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-prerelease.yml)
+[![publish release](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-release.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-release.yml)
 
 core:
 ![latest NPM version](https://img.shields.io/npm/v/@syntest/search/latest?style=flat)
@@ -37,7 +37,7 @@ For more in-depth information about the architecture we refer to: [Architecture]
 
 ### NPM
 
-The simplest way to use syntest-core is by installing the npm package.
+The simplest way to use syntest-framework is by installing the npm package.
 
 ```bash
 $ npm install @syntest/search
@@ -50,7 +50,7 @@ The library can be used by cloning the project, installing its dependencies, com
 - Clone the project
 
 ```bash
-$ git clone git@github.com:syntest-framework/syntest-core.git
+$ git clone git@github.com:syntest-framework/syntest-framework.git
 ```
 
 - Install dependencies
@@ -68,7 +68,7 @@ $ npm run build
 - Install as npm module in your project
 
 ```bash
-$ npm install /path/to/syntest-core
+$ npm install /path/to/syntest-framework
 ```
 
 ## Support

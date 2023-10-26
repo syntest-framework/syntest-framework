@@ -1,14 +1,14 @@
 {
   "name": "@syntest/plugin-core-event-listener-graphing",
   "version": "1.0.2-beta.4",
-  "description": "A listener plugin for the SynTest Core containing graphing functionalities",
+  "description": "A listener plugin for the SynTest Framework containing graphing functionalities",
   "keywords": [
     "syntest",
     "automatic-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "build": "tsc --build",

@@ -1,1 +1,1 @@
-# Experimental Search Algorithms for SynTest Core
+# Experimental Search Algorithms for SynTest Framework

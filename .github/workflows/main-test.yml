@@ -27,16 +27,16 @@ jobs:
           cache-dependency-path: "**/package-lock.json"
 
       # Dependencies
-      - name: Core - Install Dependencies
+      - name: Framework - Install Dependencies
         run: npm ci
 
       # Testing
-      - name: Core - Run Tests
+      - name: Framework - Run Tests
         # Generate lcov.info file
         run: npm run test:coverage:ci
 
       # Artifact
-      - name: Core - Upload Test Results
+      - name: Framework - Upload Test Results
         uses: actions/upload-artifact@v3
         with:
           name: coverage-results

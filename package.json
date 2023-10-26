@@ -1,14 +1,18 @@
 {
-  "name": "@syntest/core",
-  "version": "0.2.0",
-  "description": "Monorepo containing the various core parts of the SynTest ecosystem.",
+  "name": "@syntest/framework",
+  "version": "0.0.0",
+  "description": "Monorepo containing the framework and various core parts of the SynTest ecosystem.",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework",
+    "testing",
+    "search-based-software-engineering",
+    "search-based-software-testing",
+    "automated-test-generation"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -18,7 +22,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "lint-staged": "lint-staged",

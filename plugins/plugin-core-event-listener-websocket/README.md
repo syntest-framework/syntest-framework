@@ -1,1 +1,1 @@
-# WebSocket publisher interface plugin for the SynTest Core.
+# WebSocket publisher interface plugin for the SynTest Framework
