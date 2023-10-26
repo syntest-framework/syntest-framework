@@ -14,12 +14,12 @@ core:
 CFG-core:
 ![latest NPM version](https://img.shields.io/npm/v/@syntest/cfg/latest?style=flat)
 ![beta NPM version](https://img.shields.io/npm/v/@syntest/cfg/beta?style=flat) <br />
-plugin-core-graphing:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-event-listener-graphing/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-event-listener-graphing/beta?style=flat) <br />
-plugin-core-sFuzz:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-search-algorithm-sfuzz/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-core-search-algorithm-sfuzz/beta?style=flat) <br />
+plugin-graphing:
+![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-event-listener-graphing/latest?style=flat)
+![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-event-listener-graphing/beta?style=flat) <br />
+plugin-sFuzz:
+![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-search-algorithm-sfuzz/latest?style=flat)
+![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-search-algorithm-sfuzz/beta?style=flat) <br />
 
 The common core of the [SynTest Framework](https://www.syntest.org).
 

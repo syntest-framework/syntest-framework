@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-event-listener-websocket",
-  "version": "0.2.1-beta.4",
-  "description": "A listener plugin for the SynTest Framework containing publishing functionalities for WebSocket",
+  "name": "@syntest/plugin-search-algorithm-experimental",
+  "version": "0.2.0-beta.3",
+  "description": "A plugin with experimental search algorithms for SynTest",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -48,19 +48,14 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.2.1-beta.0",
     "@syntest/base-language": "^0.3.0-beta.4",
-    "@syntest/cfg": "^0.4.1-beta.0",
     "@syntest/logging": "^0.1.2-beta.0",
+    "@syntest/metric": "^0.1.2-beta.0",
     "@syntest/module": "^0.1.2-beta.0",
-    "@syntest/search": "^0.5.0-beta.4",
-    "ws": "^8.13.0"
+    "@syntest/search": "^0.5.0-beta.4"
   },
   "engines": {
     "node": ">=16"
-  },
-  "devDependencies": {
-    "@types/ws": "^8.5.4"
   },
   "publishConfig": {
     "access": "public"

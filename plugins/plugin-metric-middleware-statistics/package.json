@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-metric-middleware-file-writer",
-  "version": "0.1.2-beta.0",
-  "description": "A metric middleware plugin for writing metrics to file",
+  "name": "@syntest/plugin-metric-middleware-statistics",
+  "version": "0.1.2-beta.4",
+  "description": "A metric middleware plugin for creating statistics of other metrics",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -44,9 +44,11 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
+    "@syntest/base-language": "^0.3.0-beta.4",
     "@syntest/logging": "^0.1.2-beta.0",
     "@syntest/metric": "^0.1.2-beta.0",
-    "@syntest/module": "^0.1.2-beta.0"
+    "@syntest/module": "^0.1.2-beta.0",
+    "fast-csv": "^4.3.6"
   },
   "engines": {
     "node": ">=16"

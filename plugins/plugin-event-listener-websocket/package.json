@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/plugin-core-metric-middleware-statistics",
-  "version": "0.1.2-beta.4",
-  "description": "A metric middleware plugin for creating statistics of other metrics",
+  "name": "@syntest/plugin-event-listener-websocket",
+  "version": "0.2.1-beta.4",
+  "description": "A listener plugin for the SynTest Framework containing publishing functionalities for WebSocket",
   "keywords": [
     "syntest",
     "automatic-test-generation"
@@ -19,7 +19,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
     "NOTICE",
     "README.md"
   ],
@@ -44,14 +48,19 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
+    "@syntest/analysis": "^0.2.1-beta.0",
     "@syntest/base-language": "^0.3.0-beta.4",
+    "@syntest/cfg": "^0.4.1-beta.0",
     "@syntest/logging": "^0.1.2-beta.0",
-    "@syntest/metric": "^0.1.2-beta.0",
     "@syntest/module": "^0.1.2-beta.0",
-    "fast-csv": "^4.3.6"
+    "@syntest/search": "^0.5.0-beta.4",
+    "ws": "^8.13.0"
   },
   "engines": {
     "node": ">=16"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.4"
   },
   "publishConfig": {
     "access": "public"

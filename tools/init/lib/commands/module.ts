@@ -56,11 +56,11 @@ export function getModuleCommand(
       }
 
       shell.exec(
-        "git clone git@github.com:syntest-framework/syntest-core-plugin-template.git"
+        "git clone git@github.com:syntest-framework/syntest-plugin-template.git"
       );
 
       shell.mv(
-        "syntest-core-plugin-template",
+        "syntest-plugin-template",
         (<ModuleOptions>(<unknown>arguments_)).moduleName
       );
       shell.cd((<ModuleOptions>(<unknown>arguments_)).moduleName);
