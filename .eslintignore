@@ -8,6 +8,7 @@ syntest/
 .*
 *.json
 *.md
+*.cff
 *.jpg
 NOTICE
 NOTICE.header.ts
