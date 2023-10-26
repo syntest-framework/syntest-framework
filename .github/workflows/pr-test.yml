@@ -113,6 +113,7 @@ jobs:
         with:
           name: coverage-results
 
+      # Check if the coverage file exists
       - name: Check for coverage files
         id: check_files
         uses: andstor/file-existence-action@v2
@@ -122,7 +123,7 @@ jobs:
       # Run the Coveralls action which uploads the lcov.info file
       - name: Coveralls(${{ matrix.workspace }})
         uses: coverallsapp/github-action@master
-        if: steps.check_files.outputs.files_exists == true
+        if: steps.check_files.outputs.files_exists == 'true'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
