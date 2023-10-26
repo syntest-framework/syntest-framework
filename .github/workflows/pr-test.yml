@@ -120,6 +120,7 @@ jobs:
       # Run the Coveralls action which uploads the lcov.info file
       - name: Coveralls(${{ matrix.workspace }})
         uses: coverallsapp/github-action@master
+        continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
