@@ -1,10 +1,10 @@
 {
   "name": "@syntest/plugin-event-listener-state-storage",
   "version": "0.1.2-beta.4",
-  "description": "A listener plugin for the SynTest Framework containing state storage functionalities",
+  "description": "SynTest event listener plugin for storing the state of various events happening in the framework",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

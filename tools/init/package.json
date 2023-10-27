@@ -1,10 +1,10 @@
 {
   "name": "@syntest/init",
   "version": "0.2.2-beta.0",
-  "description": "The setup application of the SynTest Framework",
+  "description": "SynTest tool for initializing the configuration file",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

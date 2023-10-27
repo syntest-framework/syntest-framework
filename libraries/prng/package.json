@@ -1,10 +1,10 @@
 {
   "name": "@syntest/prng",
   "version": "0.1.2-beta.0",
-  "description": "The pseudo random number generator library of the SynTest Framework",
+  "description": "SynTest library that provides a pseudo random number generator",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

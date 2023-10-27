@@ -1,10 +1,10 @@
 {
   "name": "@syntest/plugin-event-listener-websocket",
   "version": "0.2.1-beta.4",
-  "description": "A listener plugin for the SynTest Framework containing publishing functionalities for WebSocket",
+  "description": "SynTest event listener plugin for external communication through WebSockets",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

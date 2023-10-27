@@ -1,10 +1,10 @@
 {
   "name": "@syntest/analysis",
   "version": "0.2.1-beta.0",
-  "description": "An analysis package",
+  "description": "SynTest library for analyzing code",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

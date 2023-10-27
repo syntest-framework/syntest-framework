@@ -1,10 +1,10 @@
 {
   "name": "@syntest/plugin-metric-middleware-statistics",
   "version": "0.1.2-beta.4",
-  "description": "A metric middleware plugin for creating statistics of other metrics",
+  "description": "SynTest metric middleware plugin for creating statistics of other metrics",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

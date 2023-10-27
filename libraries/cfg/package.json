@@ -1,10 +1,10 @@
 {
   "name": "@syntest/cfg",
   "version": "0.4.1-beta.0",
-  "description": "A Control Flow Graph package",
+  "description": "SynTest library for control flow graphs",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

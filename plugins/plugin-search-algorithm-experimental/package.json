@@ -1,10 +1,10 @@
 {
   "name": "@syntest/plugin-search-algorithm-experimental",
   "version": "0.2.0-beta.3",
-  "description": "A plugin with experimental search algorithms for SynTest",
+  "description": "SynTest search algorithm plugin for experimental search algorithms",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {

@@ -1,10 +1,10 @@
 {
   "name": "@syntest/cli-graphics",
   "version": "0.2.1-beta.0",
-  "description": "The cli graphics library of the SynTest Framework",
+  "description": "SynTest library for cli graphics",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
