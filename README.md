@@ -1,37 +1,22 @@
-# SynTest Framework - Common Core
+# SynTest Framework
 
 > The aim of the common core of the SynTest Framework is to extract the common parts (e.g., core infrastructure, search algorithms, encodings) of the different language specific SynTest Tools.
 
 [![main-build](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-build.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-build.yml)
 [![main-quality](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-quality.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-quality.yml)
 [![main-test](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-test.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-test.yml)
-[![publish pre-release](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-prerelease.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-prerelease.yml)
-[![publish release](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-release.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/publish-release.yml)
-
-core:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/search/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/search/beta?style=flat) <br />
-CFG-core:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/cfg/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/cfg/beta?style=flat) <br />
-plugin-graphing:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-event-listener-graphing/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-event-listener-graphing/beta?style=flat) <br />
-plugin-sFuzz:
-![latest NPM version](https://img.shields.io/npm/v/@syntest/plugin-search-algorithm-sfuzz/latest?style=flat)
-![beta NPM version](https://img.shields.io/npm/v/@syntest/plugin-search-algorithm-sfuzz/beta?style=flat) <br />
 
 The common core of the [SynTest Framework](https://www.syntest.org).
 
-### What is SynTest?
+The SynTest Framework is a modular and extendable ecosystem of tools for automated test generation. The framework is designed to be modular and extendable, allowing for the easy integration of new search algorithms, test case representations, and code representations. The framework is designed to be language agnostic, allowing for the easy integration of new languages.
+
+## What is SynTest?
 
 SynTest is a framework for automating the generation of test cases based on JavaScript. This library is not meant to be used directly. To make use of the framework, please use one of the specific implementation for the different supported languages (e.g., Solidity and JavaScript/Typescript). These implementations can be found in the [SynTest Framework organization](https://github.com/syntest-framework).
 
-### Overview
+## Overview
 
 The common core contains the common interfaces for the code control-flow representation, test case structure, genes, and the implementation for the meta-heuristic search algorithms.
-
-For more in-depth information about the architecture we refer to: [Architecture](docs/ARCHITECTURE.md).
 
 ## Installation
 
@@ -40,7 +25,7 @@ For more in-depth information about the architecture we refer to: [Architecture]
 The simplest way to use syntest-framework is by installing the npm package.
 
 ```bash
-$ npm install @syntest/search
+npm install @syntest/search
 ```
 
 ### From source
@@ -50,25 +35,25 @@ The library can be used by cloning the project, installing its dependencies, com
 - Clone the project
 
 ```bash
-$ git clone git@github.com:syntest-framework/syntest-framework.git
+git clone git@github.com:syntest-framework/syntest-framework.git
 ```
 
 - Install dependencies
 
 ```bash
-$ npm install
+npm install
 ```
 
 - Build the core
 
 ```bash
-$ npm run build
+npm run build
 ```
 
 - Install as npm module in your project
 
 ```bash
-$ npm install /path/to/syntest-framework
+npm install /path/to/syntest-framework
 ```
 
 ## Support
