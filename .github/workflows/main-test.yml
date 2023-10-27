@@ -62,7 +62,6 @@ jobs:
           - libraries/cli-graphics
           - libraries/logging
           - libraries/metric
-          - libraries/module
           - libraries/search
           - plugins/plugin-core-event-listener-graphing
           - plugins/plugin-core-metric-middleware-file-writer
