@@ -16,19 +16,19 @@
  * limitations under the License.
  */
 
-import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
 
 export class SFuzzPreset extends Preset {
   constructor() {
     super("sFuzz", "sFuzz preset");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "sFuzz";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "sFuzz";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+  getPresetConfiguration() {
+    return {
+      searchAlgorithm: "sFuzz",
+      objectiveManager: "sFuzz",
+      procreation: "default",
+      populationSize: 50,
+    };
   }
 }

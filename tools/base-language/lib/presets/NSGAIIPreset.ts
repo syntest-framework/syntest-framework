@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
-
-import { ArgumentsObject } from "../Configuration";
 
 /**
  * Non-dominated Sorting Genetic Algorithm (NSGA-II).
@@ -26,20 +23,18 @@ import { ArgumentsObject } from "../Configuration";
  * Based on:
  * A fast and elitist multiobjective genetic algorithm: NSGA-II
  * K. Deb; A. Pratap; S. Agarwal; T. Meyarivan
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 export class NSGAIIPreset extends Preset {
   constructor() {
     super("NSGAII", "NSGAII preset");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "NSGAII";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "simple";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+  getPresetConfiguration() {
+    return {
+      searchAlgorithm: "NSGAII",
+      objectiveManager: "simple",
+      procreation: "default",
+      populationSize: 50,
+    };
   }
 }

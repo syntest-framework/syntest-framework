@@ -15,17 +15,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { getLogger, Logger } from "@syntest/logging";
 import Yargs = require("yargs");
 
 import { Extension } from "./Extension";
 
 export abstract class Preset extends Extension {
+  protected static LOGGER: Logger;
   public describe: Readonly<string>;
 
   constructor(name: string, describe: string) {
     super(name);
+    Preset.LOGGER = getLogger(Preset.name);
     this.describe = describe;
   }
 
-  abstract modifyArgs<T>(arguments_: Yargs.ArgumentsCamelCase<T>): void;
+  modifyArgs<T>(arguments_: Yargs.ArgumentsCamelCase<T>) {
+    const configuration = this.getPresetConfiguration();
+
+    for (const key of Object.keys(configuration)) {
+      if (key in arguments_) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+        if ((<any>arguments_)[key] !== configuration[key]) {
+          Preset.LOGGER.warn(
+            `Overriding option with key: "${key}" based on preset ${this.name}`
+          );
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+        (<any>arguments_)[key] = configuration[key];
+      } else {
+        Preset.LOGGER.warn(`Could not find key: "${key}" in arguments`);
+      }
+    }
+  }
+
+  abstract getPresetConfiguration(): {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  };
 }
