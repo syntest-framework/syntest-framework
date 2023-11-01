@@ -3,52 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.5.0-beta.4](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.5.0-beta.3...@syntest/search@0.5.0-beta.4) (2023-10-26)
+## [0.5.0-beta.5](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.4...@syntest/search@0.5.0-beta.5) (2023-11-01)
 
 **Note:** Version bump only for package @syntest/search
 
-## [0.5.0-beta.3](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.5.0-beta.2...@syntest/search@0.5.0-beta.3) (2023-09-21)
-
-### Features
-
-- improve secondary objectives ([#377](https://github.com/syntest-framework/syntest-core/issues/377)) ([99275f1](https://github.com/syntest-framework/syntest-core/commit/99275f111abe675e10f5a04b271e61d8ff0b0789))
-
-## [0.5.0-beta.2](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.5.0-beta.1...@syntest/search@0.5.0-beta.2) (2023-09-20)
-
-### Features
-
-- post processing options ([#376](https://github.com/syntest-framework/syntest-core/issues/376)) ([5d42cd8](https://github.com/syntest-framework/syntest-core/commit/5d42cd8050d6d6601689201e445aedb66b54a699))
-
-## [0.5.0-beta.1](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.5.0-beta.0...@syntest/search@0.5.0-beta.1) (2023-09-20)
-
-### Features
-
-- enable exception objective option ([#375](https://github.com/syntest-framework/syntest-core/issues/375)) ([b6d0b94](https://github.com/syntest-framework/syntest-core/commit/b6d0b949b6eaa8dd89410f0e72b564d649d65e7b))
-
-## [0.5.0-beta.0](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.4.1...@syntest/search@0.5.0-beta.0) (2023-09-20)
-
-### Features
-
-- remove subject from runner ([#374](https://github.com/syntest-framework/syntest-core/issues/374)) ([062e090](https://github.com/syntest-framework/syntest-core/commit/062e090aff8fc8cc7af73fd0578dc63e91ce7a76))
-
-## [0.4.1](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.4.1-beta.0...@syntest/search@0.4.1) (2023-09-19)
+## [0.5.0-beta.4](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.3...@syntest/search@0.5.0-beta.4) (2023-10-26)
 
 **Note:** Version bump only for package @syntest/search
 
-## [0.4.1-beta.0](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.4.0-beta.56...@syntest/search@0.4.1-beta.0) (2023-09-19)
-
-**Note:** Version bump only for package @syntest/search
-
-## [0.4.0](https://github.com/syntest-framework/syntest-core/compare/@syntest/search@0.4.0-beta.56...@syntest/search@0.4.0) (2023-09-19)
-
-**Note:** Version bump only for package @syntest/search
-
-## [0.3.0](https://github.com/syntest-framework/syntest-core/releases/tag/v0.2.0...v0.3.0) (2023-02-17)
+## [0.5.0-beta.3](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.2...@syntest/search@0.5.0-beta.3) (2023-09-21)
 
 ### Features
 
-- add event emissions in search algorithm and target pool ([#201](https://github.com/syntest-framework/syntest-core/issues/201)) ([c5e499a](https://github.com/syntest-framework/syntest-core/commit/c5e499af53097b6881416528d914795f67ab541d))
-- change changelog preset ([#198](https://github.com/syntest-framework/syntest-core/issues/198)) ([01df511](https://github.com/syntest-framework/syntest-core/commit/01df511a936cce6851259a512b6ea70760ad8dd4))
+- improve secondary objectives ([#377](https://github.com/syntest-framework/syntest-framework/issues/377)) ([99275f1](https://github.com/syntest-framework/syntest-framework/commit/99275f111abe675e10f5a04b271e61d8ff0b0789))
+
+## [0.5.0-beta.2](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.1...@syntest/search@0.5.0-beta.2) (2023-09-20)
+
+### Features
+
+- post processing options ([#376](https://github.com/syntest-framework/syntest-framework/issues/376)) ([5d42cd8](https://github.com/syntest-framework/syntest-framework/commit/5d42cd8050d6d6601689201e445aedb66b54a699))
+
+## [0.5.0-beta.1](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.0...@syntest/search@0.5.0-beta.1) (2023-09-20)
+
+### Features
+
+- enable exception objective option ([#375](https://github.com/syntest-framework/syntest-framework/issues/375)) ([b6d0b94](https://github.com/syntest-framework/syntest-framework/commit/b6d0b949b6eaa8dd89410f0e72b564d649d65e7b))
+
+## [0.5.0-beta.0](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.4.1...@syntest/search@0.5.0-beta.0) (2023-09-20)
+
+### Features
+
+- remove subject from runner ([#374](https://github.com/syntest-framework/syntest-framework/issues/374)) ([062e090](https://github.com/syntest-framework/syntest-framework/commit/062e090aff8fc8cc7af73fd0578dc63e91ce7a76))
+
+## [0.4.1](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.4.1-beta.0...@syntest/search@0.4.1) (2023-09-19)
+
+**Note:** Version bump only for package @syntest/search
+
+## [0.4.1-beta.0](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.4.0-beta.56...@syntest/search@0.4.1-beta.0) (2023-09-19)
+
+**Note:** Version bump only for package @syntest/search
+
+## [0.4.0](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.4.0-beta.56...@syntest/search@0.4.0) (2023-09-19)
+
+**Note:** Version bump only for package @syntest/search
+
+## [0.3.0](https://github.com/syntest-framework/syntest-framework/releases/tag/v0.2.0...v0.3.0) (2023-02-17)
+
+### Features
+
+- add event emissions in search algorithm and target pool ([#201](https://github.com/syntest-framework/syntest-framework/issues/201)) ([c5e499a](https://github.com/syntest-framework/syntest-framework/commit/c5e499af53097b6881416528d914795f67ab541d))
+- change changelog preset ([#198](https://github.com/syntest-framework/syntest-framework/issues/198)) ([01df511](https://github.com/syntest-framework/syntest-framework/commit/01df511a936cce6851259a512b6ea70760ad8dd4))
 - Extract sFuzz as a plugin
 - Extract graphing related code as plugin
 - Extract CFG related code as a library
@@ -60,7 +64,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- configuration alias bug ([#199](https://github.com/syntest-framework/syntest-core/issues/199)) ([0211cc6](https://github.com/syntest-framework/syntest-core/commit/0211cc63ffb97005d0f4eb8de1fe6b0772822b82))
+- configuration alias bug ([#199](https://github.com/syntest-framework/syntest-framework/issues/199)) ([0211cc6](https://github.com/syntest-framework/syntest-framework/commit/0211cc63ffb97005d0f4eb8de1fe6b0772822b82))
 
 ## [0.2.0] (2022-12-22)
 
@@ -91,6 +95,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - Collector functionality to keep track of statistics regarding the search process
 - CLI user interface
 
-[0.2.0]: https://github.com/syntest-framework/syntest-core/releases/tag/v0.1.2...v0.2.0
-[0.1.2]: https://github.com/syntest-framework/syntest-core/releases/tag/v0.1.1...v0.1.2
-[0.1.1]: https://github.com/syntest-framework/syntest-core/releases/tag/v0.1.1
+[0.2.0]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.2...v0.2.0
+[0.1.2]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/syntest-framework/syntest-framework/releases/tag/v0.1.1

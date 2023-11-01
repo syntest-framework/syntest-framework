@@ -117,7 +117,7 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
-### SynTest Framework - SynTest Core ###
+### SynTest Framework - SynTest Framework ###
 .npmrc
 test-results.json
 

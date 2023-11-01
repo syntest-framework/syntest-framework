@@ -1,14 +1,14 @@
 {
   "name": "@syntest/cfg",
-  "version": "0.4.1-beta.0",
-  "description": "A Control Flow Graph package",
+  "version": "0.4.1-beta.1",
+  "description": "SynTest library for control flow graphs",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "build": "tsc --build",
@@ -48,7 +48,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/logging": "^0.1.2-beta.0",
+    "@syntest/logging": "^0.1.2-beta.1",
     "lodash.clonedeep": "^4.5.0"
   },
   "engines": {
