@@ -21,16 +21,16 @@ import { ControlFlowPath } from "../ControlFlowPath";
 import { ControlFlowProgram } from "../ControlFlowProgram";
 import { EdgeType } from "../graph/EdgeType";
 
-export function extractPaths(cfp: ControlFlowProgram) {
+export function extractPathsFromProgram(cfp: ControlFlowProgram) {
   const paths: ControlFlowPath[] = [];
   for (const cff of cfp.functions) {
-    paths.push(...extractFromFunction(cff));
+    paths.push(...extractPathsFromFunction(cff));
   }
 
   return paths;
 }
 
-function extractFromFunction(cff: ControlFlowFunction) {
+export function extractPathsFromFunction(cff: ControlFlowFunction) {
   const paths: ControlFlowPath[] = [];
 
   const graph = cff.graph;
