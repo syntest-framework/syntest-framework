@@ -1,14 +1,14 @@
 {
   "name": "@syntest/module",
   "version": "0.1.2-beta.0",
-  "description": "The module library of the SynTest Framework",
+  "description": "SynTest library for a modular and extendable ecosystem",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "build": "tsc --build",

@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,11 +56,11 @@ export function getModuleCommand(
       }
 
       shell.exec(
-        "git clone git@github.com:syntest-framework/syntest-core-plugin-template.git"
+        "git clone git@github.com:syntest-framework/syntest-plugin-template.git"
       );
 
       shell.mv(
-        "syntest-core-plugin-template",
+        "syntest-plugin-template",
         (<ModuleOptions>(<unknown>arguments_)).moduleName
       );
       shell.cd((<ModuleOptions>(<unknown>arguments_)).moduleName);

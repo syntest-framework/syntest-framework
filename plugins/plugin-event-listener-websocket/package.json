@@ -1,0 +1,68 @@
+{
+  "name": "@syntest/plugin-event-listener-websocket",
+  "version": "0.2.1-beta.4",
+  "description": "SynTest event listener plugin for external communication through WebSockets",
+  "keywords": [
+    "syntest",
+    "syntest-framework"
+  ],
+  "homepage": "https://www.syntest.org",
+  "bugs": {
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
+  },
+  "license": "Apache-2.0",
+  "contributors": [
+    "Annibale Panichella",
+    "Mitchell Olsthoorn",
+    "Dimitri Stallenberg"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
+    "NOTICE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch",
+    "clean": "rm -rf .nyc_output dist node_modules coverage",
+    "clean:dist": "rm -rf dist",
+    "format": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
+    "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
+    "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
+    "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
+    "postinstall": "cp ../../NOTICE.header.ts ./",
+    "prepack": "cp ../../LICENSE ./ && cp ../../NOTICE ./",
+    "test": "echo 'no tests'",
+    "test:coverage": "echo 'no tests'",
+    "test:coverage:ci": "echo 'no tests'",
+    "test:watch": "echo 'no tests'"
+  },
+  "dependencies": {
+    "@syntest/analysis": "^0.2.1-beta.0",
+    "@syntest/base-language": "^0.3.0-beta.4",
+    "@syntest/cfg": "^0.4.1-beta.0",
+    "@syntest/logging": "^0.1.2-beta.0",
+    "@syntest/module": "^0.1.2-beta.0",
+    "@syntest/search": "^0.5.0-beta.4",
+    "ws": "^8.13.0"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

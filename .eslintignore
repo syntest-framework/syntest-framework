@@ -1,5 +1,6 @@
 .github
 .nyc_output/
+coverage/
 dist/
 docs/
 logs/

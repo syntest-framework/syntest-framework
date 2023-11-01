@@ -1,14 +1,14 @@
 {
   "name": "@syntest/analysis",
   "version": "0.2.1-beta.0",
-  "description": "An analysis package",
+  "description": "SynTest library for analyzing code",
   "keywords": [
     "syntest",
-    "control-flow-graph"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "build": "tsc --build",

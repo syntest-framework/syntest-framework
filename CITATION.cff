@@ -17,7 +17,7 @@ authors:
     given-names: Annibale
     family-names: Panichella
     affiliation: Delft University of Technology
-repository-code: "https://github.com/syntest-framework/syntest-core"
+repository-code: "https://github.com/syntest-framework/syntest-framework"
 url: "https://syntest.org"
 keywords:
   - syntest
