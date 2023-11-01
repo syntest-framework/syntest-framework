@@ -1,6 +1,6 @@
 {
   "name": "@syntest/module",
-  "version": "0.1.2-beta.0",
+  "version": "0.1.2-beta.1",
   "description": "SynTest library for a modular and extendable ecosystem",
   "keywords": [
     "syntest",
@@ -48,10 +48,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.2.1-beta.0",
-    "@syntest/logging": "^0.1.2-beta.0",
-    "@syntest/metric": "^0.1.2-beta.0",
-    "@syntest/storage": "^0.2.1-beta.0",
+    "@syntest/cli-graphics": "^0.2.1-beta.1",
+    "@syntest/logging": "^0.1.2-beta.1",
+    "@syntest/metric": "^0.1.2-beta.1",
+    "@syntest/storage": "^0.2.1-beta.1",
     "global-modules": "2.0.0",
     "yargs": "^17.7.1"
   },
