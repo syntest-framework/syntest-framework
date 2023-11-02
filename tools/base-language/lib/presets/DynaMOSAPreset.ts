@@ -26,9 +26,6 @@ import { ArgumentsObject } from "../Configuration";
  * Based on:
  * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
  * A. Panichella; F. K. Kifetew; P. Tonella
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
  */
 export class DynaMOSAPreset extends Preset {
   constructor() {

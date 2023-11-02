@@ -23,8 +23,6 @@ import { Encoding } from "../Encoding";
  * Listener for budget signals.
  *
  * These methods are called from within the search process.
- *
- * @author Mitchell Olsthoorn
  */
 export interface BudgetListener<T extends Encoding> {
   /**

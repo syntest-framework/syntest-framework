@@ -22,8 +22,6 @@ import { TerminationTrigger } from "./TerminationTrigger";
  * Manager for the termination triggers of the search process.
  *
  * Keeps track if any of the termination triggers have been triggered.
- *
- * @author Mitchell Olsthoorn
  */
 export class TerminationManager implements TerminationTrigger {
   /**

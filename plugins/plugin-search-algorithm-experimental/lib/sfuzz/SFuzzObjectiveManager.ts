@@ -28,9 +28,6 @@ import {
  * Based on:
  * sFuzz: An Efficient Adaptive Fuzzer for Solidity Smart Contracts
  * Tai D. Nguyen, Long H. Pham, Jun Sun, Yun Lin, Quang Tran Minh
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
  */
 export class SFuzzObjectiveManager<
   T extends Encoding

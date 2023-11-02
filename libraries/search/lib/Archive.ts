@@ -24,8 +24,6 @@ import { shouldNeverHappen } from "./util/diagnostics";
 
 /**
  * Archive that keeps track of the fittest encodings for each covered objective.
- *
- * @author Mitchell Olsthoorn
  */
 export class Archive<T extends Encoding> {
   protected static LOGGER: Logger;

@@ -25,8 +25,6 @@ import { Budget } from "./Budget";
 
 /**
  * Budget for the number of iteration performed without progress during the search process.
- *
- * @author Mitchell Olsthoorn
  */
 export class StagnationBudget<T extends Encoding> implements Budget<T> {
   protected static LOGGER: Logger;

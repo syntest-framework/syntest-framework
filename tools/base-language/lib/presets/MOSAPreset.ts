@@ -26,9 +26,6 @@ import { ArgumentsObject } from "../Configuration";
  * Based on:
  * Reformulating Branch Coverage as a Many-Objective Optimization Problem
  * A. Panichella; F. K. Kifetew; P. Tonella
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
  */
 export class MOSAPreset extends Preset {
   constructor() {

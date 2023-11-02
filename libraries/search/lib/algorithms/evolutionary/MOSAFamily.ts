@@ -37,9 +37,6 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
  * A. Panichella; F. K. Kifetew; P. Tonella
  *
  * Used by MOSA and DynaMOSA.
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
  */
 export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   protected static override LOGGER: Logger;

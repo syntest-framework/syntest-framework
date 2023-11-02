@@ -26,8 +26,6 @@ import { minimumValue } from "../../util/diagnostics";
  * @param population the population from which to select a parent
  * @param tournamentSize size of the tournament (minimum 2)
  * @returns AbstractTestCase selected individual
- *
- * @author Annibale Panichella
  */
 export function tournamentSelection<T extends Encoding>(
   population: T[],

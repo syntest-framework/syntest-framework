@@ -24,8 +24,6 @@ import { ArchiveBasedObjectiveManager } from "./ArchiveBasedObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on uncovered objectives.
- *
- * @author Mitchell Olsthoorn
  */
 export class UncoveredObjectiveManager<
   T extends Encoding

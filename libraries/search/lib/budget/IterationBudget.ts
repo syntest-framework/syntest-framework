@@ -24,8 +24,6 @@ import { Budget } from "./Budget";
 
 /**
  * Budget for the number of iterations performed during the search process.
- *
- * @author Mitchell Olsthoorn
  */
 export class IterationBudget<T extends Encoding> implements Budget<T> {
   protected static LOGGER: Logger;

@@ -31,8 +31,6 @@ import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveCom
 
 /**
  * Manager that keeps track of which objectives have been covered and are still to be searched.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class ObjectiveManager<T extends Encoding> {
   protected static LOGGER: Logger;

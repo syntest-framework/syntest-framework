@@ -25,9 +25,6 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  * @param population the population to sort
  * @param objectiveFunctions The objectives to consider
  * @returns {[]} the newly sorted population
- *
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export function fastNonDomSorting<T extends Encoding>(

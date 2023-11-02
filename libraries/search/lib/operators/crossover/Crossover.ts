@@ -23,9 +23,6 @@ import { Encoding } from "../../Encoding";
  * @param parents the parent individuals
  *
  * @return a tuple of children
- *
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 export abstract class Crossover<T extends Encoding> {
   private _crossoverEncodingProbability: number;
