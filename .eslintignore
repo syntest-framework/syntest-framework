@@ -1,20 +1,18 @@
 .github
-.nyc_output/
-dist/
-docs/
-logs/
-node_modules/
-syntest/
+.husky
+**/nyc_output
+**/coverage
+**/dist/
+**/logs/
+**/node_modules/
+**/LICENSE
+**/NOTICE
+**/NOTICE.header.ts
+link.sh
 .*
 *.json
 *.md
-LICENSE*
-Dockerfile
-NOTICE
-link.sh
-
-**/coverage
-**/nyc_output
+*.jpg
 
 # The instrumentation files are copied from istanbul (and modified).
 # In the future in a big refactor the instrumentation should be redone such that these files dont have to be ignored anymore.

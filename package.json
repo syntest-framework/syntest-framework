@@ -1,6 +1,6 @@
 {
-  "name": "@syntest/javascript",
-  "version": "0.0.1",
+  "name": "syntest-javascript",
+  "version": "0.0.0",
   "description": "Monorepo containing the various JavaScript parts of the SynTest ecosystem.",
   "keywords": [
     "syntest",
@@ -31,8 +31,8 @@
     "clean:root": "rm -rf .nyc_output dist node_modules coverage",
     "graph": "nx graph",
     "graph:affected": "nx affected:graph",
-    "format": "nx run-many --target=format",
-    "format:check": "nx run-many --target=format:check",
+    "format": "prettier --config .prettierrc.json --ignore-path .prettierignore --write .",
+    "format:check": "prettier --config .prettierrc.json --ignore-path .prettierignore --check .",
     "lint": "nx run-many --target=lint",
     "lint:fix": "nx run-many --target=lint:fix",
     "test": "nx run-many --target=test",
@@ -40,7 +40,7 @@
     "test:coverage": "nx run-many --stream --target=test:coverage",
     "test:coverage:ci": "nx run-many --target=test:coverage:ci",
     "test:watch": "nx watch --all -- nx affected --target=test",
-    "postinstall": "husky install"
+    "postinstall": "husky install && nx run-many --target=setup"
   },
   "workspaces": [
     "libraries/*",

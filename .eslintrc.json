@@ -28,16 +28,13 @@
       "node": true
     }
   },
-  "plugins": [
-    "@typescript-eslint",
-    "notice",
-    "unused-imports"
-  ],
+  "plugins": ["@typescript-eslint", "notice", "unused-imports"],
   "rules": {
     "import/first": "error",
     "import/newline-after-import": "error",
     "import/no-duplicates": "error",
-    "import/order": ["error",
+    "import/order": [
+      "error",
       {
         "alphabetize": {
           "order": "asc",
@@ -46,7 +43,8 @@
         "newlines-between": "always"
       }
     ],
-    "sort-imports": ["error",
+    "sort-imports": [
+      "error",
       {
         "ignoreDeclarationSort": true,
         "ignoreCase": true
@@ -54,19 +52,24 @@
     ],
     "notice/notice": [
       "error",
-      { 
-        "templateFile": "./LICENSE.header.ts",
+      {
+        "templateFile": "./NOTICE.header.ts",
         "nonMatchingTolerance": 0.8
       }
     ],
     "unicorn/filename-case": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "off",
-		"unused-imports/no-unused-imports": "error",
-		"unused-imports/no-unused-vars": [
-			"error",
-			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-		],
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "unicorn/prefer-ternary": "warn",
     "unicorn/expiring-todo-comments": "off",
     "no-fallthrough": "off",
