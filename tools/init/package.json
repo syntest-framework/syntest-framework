@@ -1,14 +1,14 @@
 {
   "name": "@syntest/init",
-  "version": "0.2.2-beta.0",
-  "description": "The setup application of the SynTest Framework",
+  "version": "0.2.2-beta.1",
+  "description": "SynTest tool for initializing the configuration file",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "build": "tsc --build",
@@ -48,10 +48,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.2.1-beta.0",
-    "@syntest/logging": "^0.1.2-beta.0",
-    "@syntest/metric": "^0.1.2-beta.0",
-    "@syntest/module": "^0.1.2-beta.0",
+    "@syntest/cli-graphics": "^0.2.1-beta.1",
+    "@syntest/logging": "^0.1.2-beta.1",
+    "@syntest/metric": "^0.1.2-beta.1",
+    "@syntest/module": "^0.1.2-beta.1",
     "shelljs": "^0.8.5",
     "yargs": "^17.7.1"
   },

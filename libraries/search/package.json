@@ -1,14 +1,14 @@
 {
   "name": "@syntest/search",
-  "version": "0.5.0-beta.4",
-  "description": "The common core of the SynTest Framework",
+  "version": "0.5.0-beta.5",
+  "description": "SynTest library that contains a collection of search algorithms",
   "keywords": [
     "syntest",
-    "automatic-test-generation"
+    "syntest-framework"
   ],
   "homepage": "https://www.syntest.org",
   "bugs": {
-    "url": "https://github.com/syntest-framework/syntest-core/issues"
+    "url": "https://github.com/syntest-framework/syntest-framework/issues"
   },
   "license": "Apache-2.0",
   "contributors": [
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syntest-framework/syntest-core.git"
+    "url": "git+https://github.com/syntest-framework/syntest-framework.git"
   },
   "scripts": {
     "build": "tsc --build",
@@ -48,10 +48,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.2.1-beta.0",
-    "@syntest/cfg": "^0.4.1-beta.0",
-    "@syntest/logging": "^0.1.2-beta.0",
-    "@syntest/prng": "^0.1.2-beta.0"
+    "@syntest/analysis": "^0.2.1-beta.1",
+    "@syntest/cfg": "^0.4.1-beta.1",
+    "@syntest/logging": "^0.1.2-beta.1",
+    "@syntest/prng": "^0.1.2-beta.1"
   },
   "engines": {
     "node": ">=16"
