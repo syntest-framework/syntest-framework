@@ -1,6 +1,6 @@
 {
   "name": "@syntest/base-language",
-  "version": "0.3.0-beta.7",
+  "version": "0.3.0-beta.8",
   "description": "SynTest abstract tool that can be used to implement a new language",
   "keywords": [
     "syntest",
@@ -52,7 +52,7 @@
     "@syntest/cli-graphics": "^0.2.1-beta.3",
     "@syntest/logging": "^0.2.0-beta.1",
     "@syntest/metric": "^0.1.2-beta.3",
-    "@syntest/module": "^0.2.0-beta.1",
+    "@syntest/module": "^0.2.0-beta.2",
     "@syntest/search": "^0.5.0-beta.7",
     "@syntest/storage": "^0.3.0-beta.1",
     "globby": "11.0.4",

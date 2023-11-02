@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2-beta.4](https://github.com/syntest-framework/syntest-framework/compare/@syntest/init@0.2.2-beta.3...@syntest/init@0.2.2-beta.4) (2023-11-02)
+
+**Note:** Version bump only for package @syntest/init
+
 ## [0.2.2-beta.3](https://github.com/syntest-framework/syntest-framework/compare/@syntest/init@0.2.2-beta.2...@syntest/init@0.2.2-beta.3) (2023-11-02)
 
 **Note:** Version bump only for package @syntest/init
