@@ -15,21 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ArgumentsObject } from "@syntest/base-language";
 import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
 
 export class DynaMOSASPEAIIPreset extends Preset {
   constructor() {
     super("DynaMOSASPEAII", "DynaMOSASPEAII preset");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "DynaSPEAII";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
-      "structural-uncovered";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+  getPresetConfiguration() {
+    return {
+      searchAlgorithm: "DynaSPEAII",
+      objectiveManager: "structural-uncovered",
+      procreation: "default",
+      populationSize: 50,
+      secondaryObjectives: ["least-errors", "smallest-encoding"],
+    };
   }
 }
