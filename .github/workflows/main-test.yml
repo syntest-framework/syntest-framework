@@ -8,17 +8,23 @@ on:
       - "docs/"
       - "**.md"
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   test:
     name: Coverage - Calculation
     runs-on: ubuntu-latest
+    outputs:
+      workspaces: ${{ steps.workspaces.outputs.directories }}
     steps:
       # Cloning
       - uses: actions/checkout@v3
+
+      # Collection
+      - name: Collect NPM workspaces
+        id: workspaces
+        uses: secondtruth/collect-directories-by-contained-files@v1.0.0
+        with:
+          files-glob: "*/*/package.json"
+          unique: true
 
       # Setup and Caching
       - name: Use latest Node.js LTS version
@@ -48,7 +54,7 @@ jobs:
 
   # Send coverage information to Coveralls
   coverage:
-    name: Coverage(${{ matrix.package }}) - Collection
+    name: Coverage(${{ matrix.workspace }}) - Collection
     needs: test
     runs-on: ubuntu-latest
     defaults:
@@ -59,14 +65,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        # Collect coverage for all packages and plugins
-        package:
-          - libraries/analysis-javascript
-          - libraries/ast-visitor-javascript
-          - libraries/instrumentation-javascript
-          - libraries/search-javascript
-          - plugins/plugin-javascript-event-listener-state-storage
-          - tools/javascript
+        workspace: ${{ fromJson(needs.test.outputs.workspaces) }}
           
     steps:
       # Cloning
@@ -77,17 +76,28 @@ jobs:
         with:
           name: coverage-results
 
+      # Check if the coverage file exists
+      - name: Check for coverage files
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: ${{ matrix.workspace }}/coverage/lcov.info
+
       # Run the Coveralls action which uploads the lcov.info file
-      - name: Coveralls(${{ matrix.package }})
+      - name: Coveralls(${{ matrix.workspace }})
         uses: coverallsapp/github-action@master
+        if: steps.check_files.outputs.files_exists == 'true'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
           # We collect all coverages in parallel
           parallel: true
-          flag-name: ${{ matrix.package }}
-          base-path: ${{ matrix.package }}/
-          path-to-lcov: ${{ github.workspace }}/${{ matrix.package }}/coverage/lcov.info
+          flag-name: ${{ matrix.workspace }}
+          base-path: ${{ matrix.workspace }}/
+          path-to-lcov: ${{ matrix.workspace }}/coverage/lcov.info
+
+      - if: steps.check_files.outputs.files_exists == 'false'
+        run: echo "::warning file=${{ matrix.workspace }}/coverage/lcov.info::Coverage file missing"
 
   # Indicate sending coverage to Coveralls is finished
   coverage-finished:
