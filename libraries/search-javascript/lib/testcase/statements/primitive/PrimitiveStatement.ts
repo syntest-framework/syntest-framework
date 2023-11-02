@@ -22,9 +22,6 @@ import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
-/**
- * @author Dimitri Stallenberg
- */
 export abstract class PrimitiveStatement<T> extends Statement {
   get value(): T {
     return this._value;

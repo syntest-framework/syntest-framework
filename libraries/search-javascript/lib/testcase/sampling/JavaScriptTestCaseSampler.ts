@@ -51,8 +51,6 @@ import { SetterGenerator } from "./generators/action/SetterGenerator";
 
 /**
  * JavaScriptRandomSampler class
- *
- * @author Dimitri Stallenberg
  */
 export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScriptTestCase> {
   private _rootContext: RootContext;

@@ -20,8 +20,6 @@ import { JavaScriptTestCase, TreeCrossover } from "@syntest/search-javascript";
 
 /**
  * Plugin for Tree Crossover
- *
- * @author Dimitri Stallenberg
  */
 export class TreeCrossoverPlugin extends CrossoverPlugin<JavaScriptTestCase> {
   constructor() {

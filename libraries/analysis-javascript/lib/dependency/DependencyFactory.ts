@@ -26,8 +26,6 @@ import { DependencyVisitor } from "./DependencyVisitor";
 
 /**
  * Dependency generator for targets.
- *
- * @author Dimitri Stallenberg
  */
 export class DependencyFactory
   extends Factory

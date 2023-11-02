@@ -25,9 +25,6 @@ import { Decoding, Statement } from "../Statement";
 
 import { ActionStatement } from "./ActionStatement";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class FunctionCall extends ActionStatement {
   /**
    * Constructor

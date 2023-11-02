@@ -24,9 +24,6 @@ import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
-/**
- * @author Dimitri Stallenberg
- */
 type ObjectType = {
   [key: string]: Statement | undefined;
 };

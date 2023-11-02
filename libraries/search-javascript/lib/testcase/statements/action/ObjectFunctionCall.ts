@@ -27,9 +27,6 @@ import { Decoding, Statement } from "../Statement";
 import { ActionStatement } from "./ActionStatement";
 import { ConstantObject } from "./ConstantObject";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class ObjectFunctionCall extends ActionStatement {
   private _object: ConstantObject;
 

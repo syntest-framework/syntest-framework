@@ -24,9 +24,6 @@ import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
 import { Decoding, Statement } from "../Statement";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class ArrowFunctionStatement extends Statement {
   private _parameters: string[];
   private _returnValue: Statement | undefined;

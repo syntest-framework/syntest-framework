@@ -26,8 +26,6 @@ import { ExportVisitor } from "./ExportVisitor";
 
 /**
  * ExportFactory for Javascript.
- *
- * @author Dimitri Stallenberg
  */
 export class ExportFactory extends Factory {
   /**

@@ -27,8 +27,6 @@ import { JavaScriptArguments } from "../../JavaScriptLauncher";
 
 /**
  * Plugin for RandomSampler
- *
- * @author Dimitri Stallenberg
  */
 export class RandomSamplerPlugin extends SamplerPlugin<JavaScriptTestCase> {
   constructor() {

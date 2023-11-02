@@ -21,9 +21,6 @@ import { Encoding, EncodingSampler } from "@syntest/search";
 
 import { ContextBuilder } from "../../testbuilding/ContextBuilder";
 
-/**
- * @author Dimitri Stallenberg
- */
 export abstract class Statement {
   private _variableIdentifier: string;
   private _typeIdentifier: string;

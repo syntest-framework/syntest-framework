@@ -24,9 +24,6 @@ import { Statement } from "../Statement";
 
 import { PrimitiveStatement } from "./PrimitiveStatement";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class BoolStatement extends PrimitiveStatement<boolean> {
   constructor(
     variableIdentifier: string,

@@ -27,8 +27,6 @@ import { PrimitiveStatement } from "./PrimitiveStatement";
 
 /**
  * Generic number class
- *
- * @author Dimitri Stallenberg
  */
 export class NumericStatement extends PrimitiveStatement<number> {
   constructor(

@@ -25,9 +25,6 @@ import { Decoding } from "../Statement";
 
 import { ActionStatement } from "./ActionStatement";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class ConstantObject extends ActionStatement {
   constructor(
     variableIdentifier: string,

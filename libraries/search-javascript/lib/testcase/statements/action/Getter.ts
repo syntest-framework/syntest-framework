@@ -26,9 +26,6 @@ import { Decoding } from "../Statement";
 import { ClassActionStatement } from "./ClassActionStatement";
 import { ConstructorCall } from "./ConstructorCall";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class Getter extends ClassActionStatement {
   /**
    * Constructor

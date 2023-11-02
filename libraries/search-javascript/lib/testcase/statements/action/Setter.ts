@@ -28,9 +28,6 @@ import { ConstructorCall } from "./ConstructorCall";
 import { Getter } from "./Getter";
 import { MethodCall } from "./MethodCall";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class Setter extends ClassActionStatement {
   /**
    * Constructor

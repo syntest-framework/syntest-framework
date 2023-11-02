@@ -25,9 +25,6 @@ import { Decoding, Statement } from "../Statement";
 
 import { PrimitiveStatement } from "./PrimitiveStatement";
 
-/**
- * @author Dimitri Stallenberg
- */
 export class StringStatement extends PrimitiveStatement<string> {
   constructor(
     variableIdentifier: string,

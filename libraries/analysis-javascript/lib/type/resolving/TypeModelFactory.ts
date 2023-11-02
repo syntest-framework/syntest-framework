@@ -23,8 +23,6 @@ import { TypeModel } from "./TypeModel";
 
 /**
  * Abstract TypeResolver class
- *
- * @author Dimitri Stallenberg
  */
 export abstract class TypeModelFactory {
   /**

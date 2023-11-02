@@ -30,8 +30,6 @@ import { TargetVisitor } from "./TargetVisitor";
 
 /**
  * TargetFactory for Javascript.
- *
- * @author Dimitri Stallenberg
  */
 export class TargetFactory
   extends Factory

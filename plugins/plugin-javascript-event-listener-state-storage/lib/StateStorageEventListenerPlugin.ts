@@ -30,8 +30,6 @@ export type StateStorageOptions = {
 
 /**
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
- *
- * @author Dimitri Stallenberg
  */
 export class StateStorageEventListenerPlugin extends EventListenerPlugin {
   private storageManager: StorageManager;

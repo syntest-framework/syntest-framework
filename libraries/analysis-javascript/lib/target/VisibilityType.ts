@@ -18,7 +18,5 @@
 
 /**
  * Visibility Types.
- *
- * @author Dimitri Stallenberg
  */
 export type VisibilityType = "public" | "private" | "protected";
