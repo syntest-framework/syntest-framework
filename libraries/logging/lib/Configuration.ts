@@ -19,7 +19,6 @@ import Yargs = require("yargs");
 
 export type LoggingOptions = {
   logDirectory: string;
-  consoleLogLevel: string;
   fileLogLevel: string[];
 };
 
