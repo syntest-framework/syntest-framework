@@ -1,6 +1,6 @@
 {
   "name": "@syntest/search",
-  "version": "0.5.0-beta.7",
+  "version": "0.5.0-beta.8",
   "description": "SynTest library that contains a collection of search algorithms",
   "keywords": [
     "syntest",
