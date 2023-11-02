@@ -34,7 +34,7 @@ describe("example test", () => {
       metricManager,
       [],
       "",
-      new StorageManager(),
+      new StorageManager("path", "tempPath", "fid"),
       ""
     );
     expect(true);

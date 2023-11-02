@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Framework.
+ * This file is part of SynTest Framework - SynTest Core.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,43 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LoggingOptions } from "@syntest/logging";
-import yargs = require("yargs");
 
-export type BaseOptions = PresetOptions & LoggingOptions & ModuleOptions;
+import * as yargs from "yargs";
 
 export enum OptionGroups {
   General = "General Options:",
-  Module = "Module Options:",
 }
 
-export type PresetOptions = {
-  preset: string;
-};
-
-export type ModuleOptions = {
-  modules: string[];
+export type ConfigOptions = {
+  config: string;
+  verbose: number;
 };
 
 export const Configuration = {
   configureOptions(yargs: yargs.Argv) {
     return yargs
-      .option("preset", {
-        alias: ["p"],
-        default: "none",
-        description: "The preset you want to use",
+      .option("config", {
+        alias: ["c"],
+        config: true,
+        default: ".syntest.json",
+        description: "Manually specify path to config file",
         group: OptionGroups.General,
         hidden: false,
         type: "string",
       })
-      .option("modules", {
-        alias: ["m"],
-        array: true,
-        default: [],
-        description: "List of dependencies or paths to modules to load",
-        group: OptionGroups.Module,
+      .option("verbose", {
+        alias: ["v"],
+        count: true,
+        default: 0,
+        description: "Increase verbosity of output",
+        group: OptionGroups.General,
         hidden: false,
-        type: "string",
+        type: "boolean",
       });
   },
 };

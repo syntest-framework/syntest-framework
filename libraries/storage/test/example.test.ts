@@ -26,7 +26,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    new StorageManager();
+    new StorageManager("path", "tempPath", "fid");
     expect(true);
   });
 });

@@ -1,5 +1,7 @@
 .nyc_output/
 **/.nyc_output/
+coverage/
+**/coverage/
 dist/
 **/dist/
 node_modules/

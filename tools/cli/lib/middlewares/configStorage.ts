@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 SynTest contributors
+ * Copyright 2020-2023 Delft University of Technology and SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Framework.
  *
@@ -15,18 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as chai from "chai";
 
-import { Configuration } from "../lib/util/Configuration";
+import { extractArgumentValues, ModuleManager } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
+import * as yargs from "yargs";
 
-const expect = chai.expect;
-
-/**
- * This test is only added such that the github action does not fail.
- */
-describe("example test", () => {
-  it("test", () => {
-    Configuration.configureUsage();
-    expect(true);
-  });
-});
+export function storeConfig(
+  moduleManager: ModuleManager,
+  storageManager: StorageManager,
+  arguments_: yargs.ArgumentsCamelCase
+): void {
+  // Store the arguments
+  const argumentsValues = extractArgumentValues(arguments_, moduleManager);
+  storageManager.store(
+    [],
+    ".syntest.json",
+    JSON.stringify(argumentsValues, undefined, 2)
+  );
+}
