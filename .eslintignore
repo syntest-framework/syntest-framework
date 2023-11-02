@@ -9,6 +9,7 @@
 **/NOTICE
 **/NOTICE.header.ts
 .*
+*.cff
+*.jpg
 *.json
 *.md
-*.jpg
