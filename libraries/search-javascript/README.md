@@ -10,7 +10,7 @@ SynTest JavaScript is a tool for automatically generating test cases for the Jav
 
 ### Overview
 
-The common core contains the common interfaces for the code control-flow representation, test case structure, genes, and the implementation for the meta-heuristic search algorithms.
+The framework contains the common interfaces for the code control-flow representation, test case structure, genes, and the implementation for the meta-heuristic search algorithms.
 
 ## Installation
 

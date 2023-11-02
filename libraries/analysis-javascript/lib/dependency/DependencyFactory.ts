@@ -18,7 +18,7 @@
 
 import { traverse } from "@babel/core";
 import * as t from "@babel/types";
-import { DependencyFactory as CoreDependencyFactory } from "@syntest/analysis";
+import { DependencyFactory as FrameworkDependencyFactory } from "@syntest/analysis";
 
 import { Factory } from "../Factory";
 
@@ -31,7 +31,7 @@ import { DependencyVisitor } from "./DependencyVisitor";
  */
 export class DependencyFactory
   extends Factory
-  implements CoreDependencyFactory<t.Node>
+  implements FrameworkDependencyFactory<t.Node>
 {
   /**
    * Generate function map for specified target.

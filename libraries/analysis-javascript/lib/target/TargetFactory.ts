@@ -20,7 +20,7 @@ import * as path from "node:path";
 
 import { traverse } from "@babel/core";
 import * as t from "@babel/types";
-import { TargetFactory as CoreTargetFactory } from "@syntest/analysis";
+import { TargetFactory as FrameworkTargetFactory } from "@syntest/analysis";
 
 import { Factory } from "../Factory";
 
@@ -35,7 +35,7 @@ import { TargetVisitor } from "./TargetVisitor";
  */
 export class TargetFactory
   extends Factory
-  implements CoreTargetFactory<t.Node>
+  implements FrameworkTargetFactory<t.Node>
 {
   /**
    * Generate function map for specified target.

@@ -20,13 +20,13 @@ import { transformSync, traverse } from "@babel/core";
 import { defaultBabelOptions } from "@syntest/analysis-javascript";
 import { getLogger, Logger } from "@syntest/logging";
 import {
-  BranchDistance as CoreBranchDistance,
+  BranchDistance as FrameworkBranchDistance,
   shouldNeverHappen,
 } from "@syntest/search";
 
 import { BranchDistanceVisitor } from "./BranchDistanceVisitor";
 
-export class BranchDistance extends CoreBranchDistance {
+export class BranchDistance extends FrameworkBranchDistance {
   protected static LOGGER: Logger;
   protected syntaxForgiving: boolean;
   protected stringAlphabet: string;

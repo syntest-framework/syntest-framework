@@ -19,7 +19,7 @@
 import { existsSync, lstatSync } from "node:fs";
 
 import * as t from "@babel/types";
-import { RootContext as CoreRootContext } from "@syntest/analysis";
+import { RootContext as FrameworkRootContext } from "@syntest/analysis";
 import { getLogger, Logger } from "@syntest/logging";
 import TypedEmitter from "typed-emitter";
 
@@ -42,7 +42,7 @@ import { TypeModelFactory } from "./type/resolving/TypeModelFactory";
 import { TypePool } from "./type/resolving/TypePool";
 import { readFile } from "./utils/fileSystem";
 
-export class RootContext extends CoreRootContext<t.Node> {
+export class RootContext extends FrameworkRootContext<t.Node> {
   protected static LOGGER: Logger;
 
   protected _exportFactory: ExportFactory;

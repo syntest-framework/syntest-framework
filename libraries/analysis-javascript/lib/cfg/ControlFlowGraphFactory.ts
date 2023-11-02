@@ -17,7 +17,7 @@
  */
 import { traverse } from "@babel/core";
 import * as t from "@babel/types";
-import { ControlFlowGraphFactory as CoreControlFlowGraphFactory } from "@syntest/analysis";
+import { ControlFlowGraphFactory as FrameworkControlFlowGraphFactory } from "@syntest/analysis";
 import { contractControlFlowProgram, ControlFlowProgram } from "@syntest/cfg";
 
 import { Factory } from "../Factory";
@@ -26,7 +26,7 @@ import { ControlFlowGraphVisitor } from "./ControlFlowGraphVisitor";
 
 export class ControlFlowGraphFactory
   extends Factory
-  implements CoreControlFlowGraphFactory<t.Node>
+  implements FrameworkControlFlowGraphFactory<t.Node>
 {
   convert(filePath: string, AST: t.Node): ControlFlowProgram {
     const visitor = new ControlFlowGraphVisitor(filePath, this.syntaxForgiving);

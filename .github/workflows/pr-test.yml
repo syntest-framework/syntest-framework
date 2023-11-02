@@ -51,17 +51,17 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       # Dependencies
-      - name: Core - Install Dependencies
+      - name: SynTest - Install Dependencies
         run: npm ci
 
       # Testing
-      - name: Core - Run Tests
+      - name: SynTest - Run Tests
         id: test
         # Generate lcov.info file and Mocha test report
         run: npm run test:coverage:ci
 
       # Artifact
-      - name: Core - Upload Test Results
+      - name: SynTest - Upload Test Results
         if: ${{ matrix.report_coverage }}
         uses: actions/upload-artifact@v3
         with:
