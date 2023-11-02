@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1-beta.2](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cli-graphics@0.2.1-beta.1...@syntest/cli-graphics@0.2.1-beta.2) (2023-11-02)
+
+**Note:** Version bump only for package @syntest/cli-graphics
+
 ## [0.2.1-beta.1](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cli-graphics@0.2.1-beta.0...@syntest/cli-graphics@0.2.1-beta.1) (2023-11-01)
 
 **Note:** Version bump only for package @syntest/cli-graphics

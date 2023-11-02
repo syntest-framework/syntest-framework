@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-search-algorithm-experimental",
-  "version": "0.2.0-beta.4",
+  "version": "0.2.0-beta.5",
   "description": "SynTest search algorithm plugin for experimental search algorithms",
   "keywords": [
     "syntest",
@@ -48,11 +48,11 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-language": "^0.3.0-beta.5",
-    "@syntest/logging": "^0.1.2-beta.1",
-    "@syntest/metric": "^0.1.2-beta.1",
-    "@syntest/module": "^0.1.2-beta.1",
-    "@syntest/search": "^0.5.0-beta.5"
+    "@syntest/base-language": "^0.3.0-beta.6",
+    "@syntest/logging": "^0.2.0-beta.0",
+    "@syntest/metric": "^0.1.2-beta.2",
+    "@syntest/module": "^0.2.0-beta.0",
+    "@syntest/search": "^0.5.0-beta.6"
   },
   "engines": {
     "node": ">=16"
