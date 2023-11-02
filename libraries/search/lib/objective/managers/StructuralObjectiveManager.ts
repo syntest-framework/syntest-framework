@@ -25,8 +25,6 @@ import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable and covered objectives.
- *
- * @author Mitchell Olsthoorn
  */
 export class StructuralObjectiveManager<
   T extends Encoding

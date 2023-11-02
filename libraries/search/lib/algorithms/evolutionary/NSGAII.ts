@@ -28,10 +28,6 @@ import { EvolutionaryAlgorithm } from "./EvolutionaryAlgorithm";
  * Based on:
  * A fast and elitist multiobjective genetic algorithm: NSGA-II
  * K. Deb; A. Pratap; S. Agarwal; T. Meyarivan
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 export class NSGAII<T extends Encoding> extends EvolutionaryAlgorithm<T> {
   /**

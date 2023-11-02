@@ -25,8 +25,6 @@ import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 
 /**
  * Subject of the search process.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class SearchSubject<T extends Encoding> {
   /**

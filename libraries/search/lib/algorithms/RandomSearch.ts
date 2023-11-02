@@ -28,8 +28,6 @@ import { SearchAlgorithm } from "./SearchAlgorithm";
 
 /**
  * Random Search algorithm that adds new encodings when these explore a new area of the search domain.
- *
- * @author Mitchell Olsthoorn
  */
 export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
   protected static override LOGGER: Logger;

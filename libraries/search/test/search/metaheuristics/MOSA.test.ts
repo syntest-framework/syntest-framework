@@ -34,9 +34,6 @@ import { MockedMOSA } from "../../mocks/MOSAAdapter";
 
 const expect = chai.expect;
 
-/**
- * @author Annibale Panichella
- */
 describe("Test MOSA", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 

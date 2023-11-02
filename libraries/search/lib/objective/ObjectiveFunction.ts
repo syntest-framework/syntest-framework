@@ -21,8 +21,6 @@ import { SearchSubject } from "../SearchSubject";
 
 /**
  * Function that models the objective.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class ObjectiveFunction<T extends Encoding> {
   protected _id: string;

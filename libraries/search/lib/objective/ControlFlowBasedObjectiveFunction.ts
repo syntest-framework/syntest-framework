@@ -25,8 +25,6 @@ import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Objective function based on control flow graph calculations.
- *
- * @author Dimitri Stallenberg
  */
 export abstract class ControlFlowBasedObjectiveFunction<
   T extends Encoding

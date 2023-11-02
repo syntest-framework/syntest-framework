@@ -26,8 +26,6 @@ import { shouldNeverHappen } from "../util/diagnostics";
  *
  * This objective function should not be added manually to the objective manager.
  * It is added dynamically when an exception occurs on runtime.
- *
- * @author Mitchell Olsthoorn
  */
 export class ExceptionObjectiveFunction<
   T extends Encoding

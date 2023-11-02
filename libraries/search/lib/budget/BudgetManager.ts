@@ -27,8 +27,6 @@ import { BudgetType } from "./BudgetType";
  * Manager for the budget of the search process.
  *
  * Keeps track how much budget is left before the search process has to be terminated.
- *
- * @author Mitchell Olsthoorn
  */
 export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   /**

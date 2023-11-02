@@ -22,8 +22,6 @@ import { BudgetListener } from "./BudgetListener";
 
 /**
  * Interface for defining a budget.
- *
- * @author Mitchell Olsthoorn
  */
 export interface Budget<T extends Encoding> extends BudgetListener<T> {
   /**

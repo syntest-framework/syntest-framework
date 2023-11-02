@@ -25,8 +25,6 @@ import { ArchiveBasedObjectiveManager } from "./ArchiveBasedObjectiveManager";
 /**
  * An objective manager that only tracks if an objective is covered
  * but doesn't provide any guidance.
- *
- * @author Mitchell Olsthoorn
  */
 export class TrackingObjectiveManager<
   T extends Encoding

@@ -26,10 +26,6 @@ import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 
-/**
- * @author Annibale Panichella
- */
-
 describe("Crowding distance", function () {
   it("empty front", () => {
     crowdingDistance([], new Set<ObjectiveFunction<DummyEncodingMock>>());

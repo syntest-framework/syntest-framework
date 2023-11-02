@@ -26,8 +26,6 @@ import { SFuzzObjectiveManager } from "./SFuzzObjectiveManager";
 
 /**
  * Plugin for the sFuzz objective manager.
- *
- * @author Dimitri Stallenberg
  */
 export class SFuzzObjectiveManagerPlugin<
   T extends Encoding

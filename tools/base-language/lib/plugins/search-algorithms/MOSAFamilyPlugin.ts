@@ -24,8 +24,6 @@ import {
 
 /**
  * Plugin for MOSA Family Algorithms
- *
- * @author Dimitri Stallenberg
  */
 export class MOSAFamilyPlugin<
   T extends Encoding

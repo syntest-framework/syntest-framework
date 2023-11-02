@@ -26,8 +26,6 @@ import { SFuzz } from "./SFuzz";
 
 /**
  * Plugin for the sFuzz search algorithm.
- *
- * @author Dimitri Stallenberg
  */
 export class SFuzzSearchAlgorithmPlugin<
   T extends Encoding

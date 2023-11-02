@@ -24,8 +24,6 @@ import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable.
- *
- * @author Mitchell Olsthoorn
  */
 export class StructuralUncoveredObjectiveManager<
   T extends Encoding
