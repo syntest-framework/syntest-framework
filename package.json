@@ -1,5 +1,5 @@
 {
-  "name": "@syntest/framework",
+  "name": "syntest-framework",
   "version": "0.0.0",
   "description": "Monorepo containing the framework and various core parts of the SynTest ecosystem",
   "keywords": [
