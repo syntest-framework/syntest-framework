@@ -44,7 +44,7 @@
     "test:coverage": "nx run-many --stream --target=test:coverage",
     "test:coverage:ci": "nx run-many --target=test:coverage:ci",
     "test:watch": "nx watch --all -- nx affected --target=test",
-    "postinstall": "husky install"
+    "postinstall": "husky install && nx run-many --target=setup"
   },
   "workspaces": [
     "libraries/*",
