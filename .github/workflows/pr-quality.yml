@@ -29,13 +29,13 @@ jobs:
           cache-dependency-path: "**/package-lock.json"
 
       # Dependencies
-      - name: Framework - Install Dependencies
+      - name: SynTest - Install Dependencies
         run: npm ci
 
       # Formatting
-      - name: Framework - Run Formatter
+      - name: SynTest - Run Formatter
         run: npm run format:check
 
       # Linting
-      - name: Framework - Run Linter
+      - name: SynTest - Run Linter
         run: npm run lint
