@@ -107,13 +107,13 @@ async function main() {
   // Configure the console log level
   let consoleLogLevel;
   if (baseArguments.verbose >= 3) {
-    consoleLogLevel = "debug";
+    consoleLogLevel = "silly";
   } else if (baseArguments.verbose >= 2) {
-    consoleLogLevel = "info";
+    consoleLogLevel = "verbose";
   } else if (baseArguments.verbose >= 1) {
-    consoleLogLevel = "warn";
+    consoleLogLevel = "info";
   } else {
-    consoleLogLevel = baseArguments.consoleLogLevel;
+    consoleLogLevel = "warn";
   }
 
   // Setup logger
