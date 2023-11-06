@@ -15,13 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { existsSync } from "node:fs";
+import * as fs from "node:fs";
 import * as path from "node:path";
+import * as url from "node:url";
 
 import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
 import { getLogger, Logger } from "@syntest/logging";
 import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
+import { findUpSync } from "find-up";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
 
@@ -268,26 +270,35 @@ export class ModuleManager {
     }
   }
 
-  getModulePath(module: string): string {
+  getModulePath(module: string | URL): string {
     let modulePath = "";
 
-    if (module.startsWith("file:")) {
-      // It is a file path
-      modulePath = path.resolve(module.replace("file:", ""));
-      if (!existsSync(modulePath)) {
-        throw new Error(modulePathNotFound(module));
+    if (module instanceof URL) {
+      modulePath = path.resolve(url.fileURLToPath(module));
+      if (
+        !fs.statSync(modulePath, {
+          throwIfNoEntry: false,
+        })
+      ) {
+        throw new Error(modulePathNotFound(module.toString()));
       }
     } else {
       // It is a npm package
-      modulePath = path.resolve(path.join("node_modules", module));
+      modulePath = findUpSync(path.join("node_modules", module), {
+        type: "directory",
+      });
 
-      if (!existsSync(modulePath)) {
+      if (modulePath === undefined) {
         // it is not locally installed lets try global
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         modulePath = path.resolve(path.join(globalModules, module));
       }
 
-      if (!existsSync(modulePath)) {
+      if (
+        !fs.statSync(modulePath, {
+          throwIfNoEntry: false,
+        })
+      ) {
         // it is not installed locally nor globally
         // TODO maybe auto install?
         throw new Error(moduleNotInstalled(module));
