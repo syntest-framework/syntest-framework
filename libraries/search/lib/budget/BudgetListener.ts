@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
  * limitations under the License.
  */
 
+import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 /**
  * Listener for budget signals.
  *
  * These methods are called from within the search process.
- *
- * @author Mitchell Olsthoorn
  */
 export interface BudgetListener<T extends Encoding> {
   /**
@@ -56,8 +54,6 @@ export interface BudgetListener<T extends Encoding> {
 
   /**
    * Signal evaluation happened.
-   *
-   * @param encoding The encoding that was evaluated
    */
-  evaluation(encoding: T): void;
+  evaluation(): void;
 }

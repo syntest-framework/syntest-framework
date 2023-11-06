@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * An abstract objective manager for algorithms based on an archive.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class ArchiveBasedObjectiveManager<
   T extends Encoding
@@ -59,16 +57,9 @@ export abstract class ArchiveBasedObjectiveManager<
   /**
    * @inheritdoc
    */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   public finalize(_finalPopulation: T[]): void {
-    const encodings = this._archive.getEncodings();
-    for (const encoding of encodings) {
-      const uses = this._archive.getUses(encoding);
-      for (const use of uses) {
-        encoding.addMetaComment(
-          `Selected for objective: ${use.getIdentifier()}`
-        );
-      }
-    }
+    // pass
   }
 
   /**

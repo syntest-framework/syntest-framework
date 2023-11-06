@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,6 @@ mockMath.random = () => 0.5;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 global.Math = mockMath;
 
-/**
- * @author Annibale Panichella
- */
 describe("Tournament selection", function () {
   it("Small Tournament size", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
@@ -98,7 +95,7 @@ describe("Tournament selection", function () {
     ind4.setCrowdingDistance(4);
 
     const winner: DummyEncodingMock = tournamentSelection(
-      [ind2, ind1, ind3, ind4],
+      [ind1, ind2, ind3, ind4],
       20
     );
     expect(winner.getRank()).to.equal(0);

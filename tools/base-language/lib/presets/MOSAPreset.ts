@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
-
-import { ArgumentsObject } from "../Configuration";
 
 /**
  * Many-objective Sorting Algorithm (MOSA).
@@ -26,20 +23,19 @@ import { ArgumentsObject } from "../Configuration";
  * Based on:
  * Reformulating Branch Coverage as a Many-Objective Optimization Problem
  * A. Panichella; F. K. Kifetew; P. Tonella
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
  */
 export class MOSAPreset extends Preset {
   constructor() {
     super("MOSA", "MOSA preset");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSAFamily";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "uncovered";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = ["length"];
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+  getPresetConfiguration() {
+    return {
+      searchAlgorithm: "MOSAFamily",
+      objectiveManager: "uncovered",
+      procreation: "default",
+      populationSize: 50,
+      secondaryObjectives: ["least-errors", "smallest-encoding"],
+    };
   }
 }

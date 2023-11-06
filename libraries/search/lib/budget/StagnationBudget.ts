@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,13 @@
 
 import { getLogger, Logger } from "@syntest/logging";
 
+import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 
 import { Budget } from "./Budget";
 
 /**
  * Budget for the number of iteration performed without progress during the search process.
- *
- * @author Mitchell Olsthoorn
  */
 export class StagnationBudget<T extends Encoding> implements Budget<T> {
   protected static LOGGER: Logger;

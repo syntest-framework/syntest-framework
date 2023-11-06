@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,13 @@
 
 import { Encoding } from "./Encoding";
 import { ExecutionResult } from "./ExecutionResult";
-import { SearchSubject } from "./SearchSubject";
 
 /**
- * @author Mitchell Olsthoorn
+ * EncodingRunner
  */
 export interface EncodingRunner<T extends Encoding> {
   /**
    * execute the encoding.
    */
-  execute(subject: SearchSubject<T>, encoding: T): Promise<ExecutionResult>;
+  execute(encoding: T): Promise<ExecutionResult>;
 }

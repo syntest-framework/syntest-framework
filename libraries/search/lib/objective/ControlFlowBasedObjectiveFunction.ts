@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Objective function based on control flow graph calculations.
- *
- * @author Dimitri Stallenberg
  */
 export abstract class ControlFlowBasedObjectiveFunction<
   T extends Encoding

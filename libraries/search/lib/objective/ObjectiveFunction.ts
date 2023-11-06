@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,11 @@ import { SearchSubject } from "../SearchSubject";
 
 /**
  * Function that models the objective.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class ObjectiveFunction<T extends Encoding> {
   protected _id: string;
   protected _subject: SearchSubject<T>;
+  protected _lowestDistance: number;
 
   /**
    * Indicates if the distance should be shallow or deep.
@@ -43,6 +42,7 @@ export abstract class ObjectiveFunction<T extends Encoding> {
     this._id = id;
     this._subject = subject;
     this.shallowDistance = false;
+    this._lowestDistance = Number.MAX_VALUE;
   }
 
   /**
@@ -80,5 +80,21 @@ export abstract class ObjectiveFunction<T extends Encoding> {
    */
   public getSubject(): SearchSubject<T> {
     return this._subject;
+  }
+
+  /**
+   * Update the lowest distance with a new distance
+   * @param distance
+   */
+  public updateDistance(distance: number) {
+    this._lowestDistance = Math.min(distance, this._lowestDistance);
+  }
+
+  /**
+   * Gets the lowest distance to this objective function
+   * @returns the lowest distance encountered so far
+   */
+  public getLowestDistance(): number {
+    return this._lowestDistance;
   }
 }

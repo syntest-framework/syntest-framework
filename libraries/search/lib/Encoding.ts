@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,21 @@
  * limitations under the License.
  */
 
+import { prng } from "@syntest/prng";
+
 import { Decoder } from "./Decoder";
 import { EncodingSampler } from "./EncodingSampler";
 import { ExecutionResult } from "./ExecutionResult";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { shouldNeverHappen } from "./util/diagnostics";
-import { prng } from "./util/prng";
 
 /**
  * Encoding of the search problem.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class Encoding {
   protected _crowdingDistance: number;
   protected _rank: number;
   protected _id: string;
-  protected _assertions: Map<string, string>;
   protected _metaComments: string[];
 
   /**
@@ -55,7 +53,6 @@ export abstract class Encoding {
     this._rank = 0;
     this._id = prng.uniqueId(20);
     this._objectives = new Map<ObjectiveFunction<Encoding>, number>();
-    this._assertions = new Map();
     this._metaComments = [];
   }
 
@@ -81,14 +78,6 @@ export abstract class Encoding {
 
   get id(): string {
     return this._id;
-  }
-
-  get assertions(): Map<string, string> {
-    return this._assertions;
-  }
-
-  set assertions(value: Map<string, string>) {
-    this._assertions = value;
   }
 
   get metaComments(): string[] {

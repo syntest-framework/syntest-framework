@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
+import { prng } from "@syntest/prng";
+
 import { Encoding } from "../../Encoding";
-import { prng } from "../../util/prng";
 import { tournamentSelection } from "../selection/TournamentSelection";
 
 import { Procreation } from "./Procreation";
@@ -47,7 +48,10 @@ export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
         );
       }
     }
-    offspring.push(this.sampler.sample());
+    for (let index = 0; index < Math.ceil(populationSize * 0.2); index++) {
+      offspring.push(this.sampler.sample());
+    }
+
     return offspring;
   }
 }

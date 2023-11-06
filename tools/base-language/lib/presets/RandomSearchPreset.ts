@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@
  * limitations under the License.
  */
 import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
-
-import { ArgumentsObject } from "../Configuration";
 
 export class RandomSearchPreset extends Preset {
   constructor() {
     super("random", "Random preset");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "random";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager = "tracking";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 1;
+  getPresetConfiguration() {
+    return {
+      searchAlgorithm: "random",
+      objectiveManager: "tracking",
+      procreation: "default",
+      populationSize: 1,
+      constantPool: false,
+      typePool: false,
+      statementPool: false,
+      incorporateExecutionInformation: false,
+      typeInferenceMode: false,
+    };
   }
 }

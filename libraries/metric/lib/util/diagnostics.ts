@@ -1,7 +1,7 @@
 /*
- * Copyright 2023-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2023-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,25 +28,19 @@ export const distributionNotRegistered = (distribution: string) =>
 
 export const seriesNotRegistered = (series: string) =>
   `Cannot record series! Metric '${series}' is not registered by any module!`;
-export const seriesTypeNotRegistered = (
+export const seriesUnitNotRegistered = (
   seriesName: string,
-  seriesType: string
+  seriesUnit: string
 ) =>
-  `Cannot record series! Metric '${seriesName}.${seriesType}' is not registered by any module!`;
+  `Cannot record series! Metric '${seriesName}.${seriesUnit}' is not registered by any module!`;
 
 export const seriesDistributionNotRegistered = (distribution: string) =>
   `Cannot record series distribution! Metric '${distribution}' is not registered by any module!`;
-export const seriesDistributionSeriesNotRegistered = (
-  distribution: string,
-  seriesName: string
-) =>
-  `Cannot record series distribution! Metric '${distribution}.${seriesName}' is not registered by any module!`;
 export const seriesDistributionTypeNotRegistered = (
   distribution: string,
-  seriesName: string,
-  seriesType: string
+  seriesUnit: string
 ) =>
-  `Cannot record series distribution! Metric '${distribution}.${seriesName}.${seriesType}' is not registered by any module!`;
+  `Cannot record series distribution! Metric '${distribution}.${seriesUnit}' is not registered by any module!`;
 
 export const shouldNeverHappen = (bugLocation: string) =>
   `This should never happen.\nThere is likely a bug in the ${bugLocation}.`;

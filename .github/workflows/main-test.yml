@@ -12,9 +12,19 @@ jobs:
   test:
     name: Coverage - Calculation
     runs-on: ubuntu-latest
+    outputs:
+      workspaces: ${{ steps.workspaces.outputs.directories }}
     steps:
       # Cloning
       - uses: actions/checkout@v3
+
+      # Collection
+      - name: Collect NPM workspaces
+        id: workspaces
+        uses: secondtruth/collect-directories-by-contained-files@v1.0.0
+        with:
+          files-glob: "*/*/package.json"
+          unique: true
 
       # Setup and Caching
       - name: Use latest Node.js LTS version
@@ -23,28 +33,28 @@ jobs:
           node-version: lts/*
 
           # NPM Cache using all package-lock files as hash
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
 
       # Dependencies
-      - name: Core - Install Dependencies
+      - name: SynTest - Install Dependencies
         run: npm ci
 
       # Testing
-      - name: Core - Run Tests
+      - name: SynTest - Run Tests
         # Generate lcov.info file
         run: npm run test:coverage:ci
 
       # Artifact
-      - name: Core - Upload Test Results
+      - name: SynTest - Upload Test Results
         uses: actions/upload-artifact@v3
         with:
           name: coverage-results
-          path: ${{ github.workspace }}/**/coverage/lcov.info
+          path: ${{ github.workspace }}/*/*/coverage/lcov.info
 
   # Send coverage information to Coveralls
   coverage:
-    name: Coverage(${{ matrix.package }}) - Collection
+    name: Coverage(${{ matrix.workspace }}) - Collection
     needs: test
     runs-on: ubuntu-latest
     defaults:
@@ -55,20 +65,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        # Collect coverage for all packages and plugins
-        package:
-          - libraries/analysis
-          - libraries/cfg
-          - libraries/cli-graphics
-          - libraries/logging
-          - libraries/metric
-          - libraries/module
-          - libraries/search
-          - plugins/plugin-core-event-listener-graphing
-          - plugins/plugin-core-metric-middleware-file-writer
-          - plugins/plugin-core-search-algorithm-sfuzz
-          - tools/base-language
-          - tools/init
+        workspace: ${{ fromJson(needs.test.outputs.workspaces) }}
 
     steps:
       # Cloning
@@ -79,17 +76,28 @@ jobs:
         with:
           name: coverage-results
 
+      # Check if the coverage file exists
+      - name: Check for coverage files
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: ${{ matrix.workspace }}/coverage/lcov.info
+
       # Run the Coveralls action which uploads the lcov.info file
-      - name: Coveralls(${{ matrix.package }})
+      - name: Coveralls(${{ matrix.workspace }})
         uses: coverallsapp/github-action@master
+        if: steps.check_files.outputs.files_exists == 'true'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
           # We collect all coverages in parallel
           parallel: true
-          flag-name: ${{ matrix.package }}
-          base-path: ${{ matrix.package }}/
-          path-to-lcov: ${{ matrix.package }}/coverage/lcov.info
+          flag-name: ${{ matrix.workspace }}
+          base-path: ${{ matrix.workspace }}/
+          path-to-lcov: ${{ matrix.workspace }}/coverage/lcov.info
+
+      - if: steps.check_files.outputs.files_exists == 'false'
+        run: echo "::warning file=${{ matrix.workspace }}/coverage/lcov.info::Coverage file missing"
 
   # Indicate sending coverage to Coveralls is finished
   coverage-finished:

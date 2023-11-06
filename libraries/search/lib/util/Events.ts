@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
+import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
-import { SearchAlgorithm } from "../metaheuristics/SearchAlgorithm";
 import { SearchSubject } from "../SearchSubject";
 import { TerminationManager } from "../termination/TerminationManager";
 

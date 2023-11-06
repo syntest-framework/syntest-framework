@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,17 +26,19 @@ import { shouldNeverHappen } from "../util/diagnostics";
  *
  * This objective function should not be added manually to the objective manager.
  * It is added dynamically when an exception occurs on runtime.
- *
- * @author Mitchell Olsthoorn
  */
 export class ExceptionObjectiveFunction<
   T extends Encoding
 > extends ObjectiveFunction<T> {
-  protected _message: string;
+  protected _error: Error;
 
-  constructor(subject: SearchSubject<T>, id: string, message: string) {
+  constructor(subject: SearchSubject<T>, id: string, error: Error) {
     super(id, subject);
-    this._message = message;
+    this._error = error;
+  }
+
+  get error() {
+    return this._error;
   }
 
   /**

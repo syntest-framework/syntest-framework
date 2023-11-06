@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,15 @@
 import { Metric } from "./Metric";
 import { MetricManager } from "./MetricManager";
 
-export abstract class MiddleWare {
+export abstract class Middleware {
+  protected metricManager: MetricManager;
   protected availableMetrics: Metric[];
   protected outputMetrics: Metric[];
 
-  constructor(availableMetrics: Metric[], outputMetrics: Metric[]) {
+  constructor(metricManager: MetricManager, availableMetrics: Metric[]) {
+    this.metricManager = metricManager;
     this.availableMetrics = availableMetrics;
-    this.outputMetrics = outputMetrics;
+    this.outputMetrics = metricManager.outputMetrics;
   }
 
   abstract run(metricManager: MetricManager): Promise<void> | void;

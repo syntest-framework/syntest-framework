@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ import * as path from "node:path";
 import { UserInterface } from "@syntest/cli-graphics";
 import {
   getLogger,
-  Configuration as LogConfiguration,
+  Configuration as LoggingConfiguration,
+  LoggingOptions,
   setupLogger,
 } from "@syntest/logging";
 import {
@@ -31,94 +32,135 @@ import {
   MetricOptions,
 } from "@syntest/metric";
 import {
-  BaseOptions,
   EventListenerPlugin,
   Configuration as ModuleConfiguration,
   ModuleManager,
+  ModuleOptions,
   PluginType,
+  PresetOptions,
 } from "@syntest/module";
+import {
+  getSeed,
+  initializePseudoRandomNumberGenerator,
+  Configuration as PrngConfiguration,
+  PrngOptions,
+} from "@syntest/prng";
 import {
   Configuration as StorageConfiguration,
   StorageManager,
   StorageOptions,
 } from "@syntest/storage";
-import uuid = require("short-uuid");
-import yargHelper = require("yargs/helpers");
+import * as uuid from "short-uuid";
+import * as yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+import {
+  Configuration as CliConfiguration,
+  ConfigOptions,
+} from "./lib/Configuration";
+import { storeConfig } from "./lib/middlewares/configStorage";
 
 async function main() {
-  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
+  // Hide the bin name from the arguments
+  const arguments_ = hideBin(process.argv);
 
-  // Setup user interface
-  const userInterface = new UserInterface();
-  userInterface.printTitle("SynTest");
-  userInterface.printSuccess("");
-  userInterface.printSuccess(flowId);
+  // Configure the base parser
+  let config = yargs
+    .usage(`Usage: $0 <command> [options]`)
+    .epilog("visit https://syntest.org for more documentation")
+    .env("SYNTEST")
+    .pkgConf("syntest")
+    .showHidden(false)
+    // We disable help and version here as we don't want the help command to be triggered
+    // when we did not configure the commands and options from the added modules yet.
+    .help(false)
+    .version(false);
 
-  // Remove binary call from args
-  const arguments_ = yargHelper.hideBin(process.argv);
+  // Wrap CLI to the terminal width
+  config = config.wrap(config.terminalWidth());
 
-  /**
-   * Configure base usage
-   *
-   * We disable help and version here because, we don't want the help command to be triggered.
-   * When we did not configure the commands and options from the added modules yet.
-   */
-  let yargs = ModuleConfiguration.configureUsage().help(false).version(false);
+  // Configure the base options
+  config = CliConfiguration.configureOptions(config);
+  config = PrngConfiguration.configureOptions(config);
+  config = LoggingConfiguration.configureOptions(config);
+  config = StorageConfiguration.configureOptions(config);
+  config = MetricConfiguration.configureOptions(config);
+  config = ModuleConfiguration.configureOptions(config);
 
-  // Configure general options
-  yargs = ModuleConfiguration.configureOptions(yargs);
-  yargs = StorageConfiguration.configureOptions(yargs);
-  yargs = LogConfiguration.configureOptions(yargs);
-  yargs = MetricConfiguration.configureOptions(yargs);
+  type BaseOptions = ConfigOptions &
+    PrngOptions &
+    LoggingOptions &
+    StorageOptions &
+    PresetOptions &
+    ModuleOptions;
 
   // Parse the arguments and config using only the base options
-  const baseArguments = yargs
-    .wrap(yargs.terminalWidth())
-    .env("SYNTEST")
-    .parseSync(arguments_);
+  const baseArguments = <BaseOptions>(<unknown>config.parseSync(arguments_));
+
+  // Initialize the pseudo random number generator
+  const seed = baseArguments.randomSeed || getSeed();
+  initializePseudoRandomNumberGenerator(seed);
+
+  // Generate a flow id
+  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
+
+  // Configure the console log level
+  let consoleLogLevel;
+  if (baseArguments.verbose >= 3) {
+    consoleLogLevel = "silly";
+  } else if (baseArguments.verbose >= 2) {
+    consoleLogLevel = "verbose";
+  } else if (baseArguments.verbose >= 1) {
+    consoleLogLevel = "info";
+  } else {
+    consoleLogLevel = "warn";
+  }
 
   // Setup logger
   setupLogger(
     path.join(
-      (<StorageOptions>(<unknown>baseArguments)).syntestDirectory,
+      baseArguments.syntestDirectory,
       flowId,
-      (<BaseOptions>(<unknown>baseArguments)).logDirectory
+      baseArguments.logDirectory
     ),
-    (<BaseOptions>(<unknown>baseArguments)).fileLogLevel,
-    (<BaseOptions>(<unknown>baseArguments)).consoleLogLevel
+    baseArguments.fileLogLevel,
+    consoleLogLevel
   );
   const LOGGER = getLogger("cli");
-  LOGGER.info(`Starting Flow with id: ${flowId}`);
 
-  // Setup storage manager
-  const storageManager = new StorageManager();
-
-  // Setup metric manager
+  // Configure module system
   const metricManager = new MetricManager("global");
-
-  // Setup module manager
+  const storageManager = new StorageManager(
+    baseArguments.syntestDirectory,
+    baseArguments.tempSyntestDirectory,
+    flowId
+  );
+  const userInterface = new UserInterface();
   const moduleManager = new ModuleManager(
     metricManager,
     storageManager,
     userInterface
   );
 
+  userInterface.printTitle("SynTest");
+  userInterface.printSuccess("");
+  userInterface.printSuccess(flowId);
+  LOGGER.info(`Starting Flow with id: ${flowId}`);
+
   // Enable help on fail
-  yargs = yargs.showHelpOnFail(true);
+  config = config.showHelpOnFail(true);
 
   // Import defined modules
-  const modules = (<BaseOptions>(<unknown>baseArguments)).modules;
+  const modules = baseArguments.modules;
+
+  // Load standard modules
   LOGGER.info("Loading standard modules...");
   await moduleManager.loadModule("@syntest/init", "@syntest/init");
+
+  // Load user defined modules
   LOGGER.info(`Loading modules... [${modules.join(", ")}]`);
   await moduleManager.loadModules(modules);
-  yargs = moduleManager.configureModules(
-    yargs,
-    (<BaseOptions>(<unknown>baseArguments)).preset
-  );
-
-  // Set the metrics on the metric manager
-  metricManager.metrics = await moduleManager.getMetrics();
+  config = moduleManager.configureModules(config, baseArguments.preset);
 
   moduleManager.printModuleVersionTable();
 
@@ -128,24 +170,28 @@ async function main() {
 
   // Execute program
   LOGGER.info("Executing program...");
-  await yargs
-    .wrap(yargs.terminalWidth())
+  await config
     .help(true)
     .version(versions)
-    .showHidden(false)
     .demandCommand()
-    .env("SYNTEST")
     .middleware(async (argv) => {
-      (<StorageOptions>(<unknown>argv)).fid = flowId;
-      // Set the arguments in the module manager
-      storageManager.args = argv;
+      const baseArguments = <BaseOptions>(<unknown>argv);
+
+      // Set the flow id and seed in the base arguments
+      baseArguments.fid = flowId;
+      baseArguments.randomSeed = seed;
+
       // Set the arguments in the module manager
       moduleManager.args = argv;
+
+      // Set the metrics on the metric manager
+      metricManager.metrics = await moduleManager.getMetrics();
+
+      // Set the output metrics
       metricManager.setOutputMetrics(
         (<MetricOptions>(<unknown>argv)).outputMetrics
       );
 
-      // process.setMaxListeners()
       // Register all listener plugins
       for (const plugin of moduleManager
         .getPluginsOfType(PluginType.EVENT_LISTENER)
@@ -158,6 +204,7 @@ async function main() {
       await moduleManager.prepare();
       LOGGER.info("Modules prepared!");
     })
+    .middleware((argv) => storeConfig(moduleManager, storageManager, argv))
     .parse(arguments_);
 }
 

@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ import { SearchSubject } from "./SearchSubject";
 
 /**
  * Sampler for encodings.
- *
- * @author Mitchell Olsthoorn
- * @author Dimitri Stallenberg
  */
 export abstract class EncodingSampler<T extends Encoding> {
   protected _subject: SearchSubject<T>;

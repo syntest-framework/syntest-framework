@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * An abstract objective manager for algorithms based on populations.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class PopulationBasedObjectiveManager<
   T extends Encoding
@@ -54,6 +52,7 @@ export abstract class PopulationBasedObjectiveManager<
   /**
    * The finalization step is used to update the archive with the final population.
    */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   public override finalize(finalPopulation: T[]): void {
     for (const encoding of finalPopulation) {
       if (encoding.getExecutionResult) {
@@ -63,16 +62,6 @@ export abstract class PopulationBasedObjectiveManager<
             this._archive.update(objective, encoding, true);
           }
         }
-      }
-    }
-
-    const encodings = this._archive.getEncodings();
-    for (const encoding of encodings) {
-      const uses = this._archive.getUses(encoding);
-      for (const use of uses) {
-        encoding.addMetaComment(
-          `Selected for objective: ${use.getIdentifier()}`
-        );
       }
     }
   }

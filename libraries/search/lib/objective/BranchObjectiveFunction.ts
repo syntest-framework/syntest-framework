@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,6 @@ import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Objective function for the branch criterion.
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 export class BranchObjectiveFunction<
   T extends Encoding
@@ -52,11 +48,26 @@ export class BranchObjectiveFunction<
     BranchObjectiveFunction.LOGGER = getLogger("BranchObjectiveFunction");
   }
 
+  /**
+   * Calculating the distance for a single encoding
+   *
+   * This returns a number structured as follows: XX.YYZZZZ
+   * Where:
+   * - XX is the approach level
+   * - YY is the fraction of uncovered statements within the block
+   * - ZZZZ is the branch distance from the objective
+   *
+   * @param encoding
+   * @returns
+   */
   // eslint-disable-next-line sonarjs/cognitive-complexity
   calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();
 
-    if (executionResult === undefined) {
+    if (
+      executionResult === undefined ||
+      executionResult.getTraces().length === 0
+    ) {
       return Number.MAX_VALUE;
     }
 
@@ -115,24 +126,20 @@ export class BranchObjectiveFunction<
     );
 
     if (statementFraction !== -1 && statementFraction !== 1) {
-      // the statement fraction should never be -1
-      // if the statement fraction is 1 it is fully covered
-      // TODO    or the error happens at the end of a body where we dont record traces anymore
-      // TODO there can still be a crash inside of the if statement making the branch distance still zero
-
-      // TODO this is a hack to give guidance to the algorithm
-      // it would be better to improve the cfg with implicit branches
-      // or to atleast choose a number based on what statement has been covered in the cfg node
-      // 0.25 is based on the fact the branch distance is minimally 0.5
-      // so 0.25 is exactly between 0.5 and 0
-      return approachLevel + 0.48 * statementFraction + 0.01;
+      // Here we use the fractions of unreached statements to generate a number between 0.01 and 0.99
+      // It must be larger than 0 otherwise it seems like the node is actually covered
+      // It must be smaller than 1 otherwise it would be the same as one further node in the approach level
+      // This represents the YY part in the distance (XX.YYZZZZ)
+      let distance = (1 - statementFraction) * 0.98 + 0.01;
+      distance = Math.round(distance * 100) / 100;
+      return approachLevel + distance;
     }
 
     if (outgoingEdges.length < 2) {
-      // todo end of block problem
+      // end of block problem
       // when a crash happens at the last line of a block the statement fraction becomes 1 since we do not record the last one
       if (statementFraction === 1) {
-        return approachLevel + 0.499_999_999;
+        return approachLevel + 0.01;
       }
 
       throw new Error(
@@ -185,7 +192,6 @@ export class BranchObjectiveFunction<
     }
 
     let branchDistance = this.branchDistance.calculate(
-      trace.condition_ast,
       trace.condition,
       trace.variables,
       lastEdgeType
@@ -210,6 +216,8 @@ export class BranchObjectiveFunction<
     }
 
     // add the distances
-    return approachLevel + branchDistance;
+    // We divide the branch distance by 100 to "free up" the YY part of the distance metric
+    // The branch distance represents the ZZZZ part in the distance (XX.YYZZZZ)
+    return approachLevel + branchDistance / 100;
   }
 }

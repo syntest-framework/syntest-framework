@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metric, MiddleWare } from "@syntest/metric";
+import { Metric, Middleware } from "@syntest/metric";
 
 import { Plugin } from "../Plugin";
 
 import { PluginType } from "./PluginType";
 
 export abstract class MetricMiddlewarePlugin extends Plugin {
+  protected metrics: Metric[];
+
   constructor(name: string, describe: string) {
     super(PluginType.METRIC_MIDDLEWARE, name, describe);
   }
 
-  abstract createMetricMiddleware(metrics: Metric[]): MiddleWare;
+  abstract createMetricMiddleware(metrics: Metric[]): Middleware;
+
+  setMetrics(metrics: Metric[]): void {
+    this.metrics = metrics;
+  }
 
   override getOptionChoices(option: string): string[] {
     // for every tool/label

@@ -25,17 +25,17 @@ jobs:
           node-version: lts/*
 
           # NPM Cache using all package-lock files as hash
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
 
       # Dependencies
-      - name: Core - Install Dependencies
+      - name: SynTest - Install Dependencies
         run: npm ci
 
       # Formatting
-      - name: Core - Run Formatter
+      - name: SynTest - Run Formatter
         run: npm run format:check
 
       # Linting
-      - name: Core - Run Linter
+      - name: SynTest - Run Linter
         run: npm run lint

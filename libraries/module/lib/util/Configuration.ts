@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,16 @@
  * limitations under the License.
  */
 import { LoggingOptions } from "@syntest/logging";
-import Yargs = require("yargs");
+import yargs = require("yargs");
 
-export type GeneralOptions = {
-  config: string;
+export type BaseOptions = PresetOptions & LoggingOptions & ModuleOptions;
+
+export enum OptionGroups {
+  General = "General Options:",
+  Module = "Module Options:",
+}
+
+export type PresetOptions = {
   preset: string;
 };
 
@@ -27,36 +33,11 @@ export type ModuleOptions = {
   modules: string[];
 };
 
-export type BaseOptions = GeneralOptions & LoggingOptions & ModuleOptions;
-
-export enum OptionGroups {
-  General = "General Options:",
-  Module = "Module Options:",
-}
-
 export const Configuration = {
-  configureUsage() {
-    return (
-      Yargs.usage(`Usage: syntest <tool> <command> [options]`)
-
-        // TODO examples
-        .epilog("visit https://syntest.org for more documentation")
-    );
-  },
-
-  configureOptions(yargs: Yargs.Argv) {
+  configureOptions(yargs: yargs.Argv) {
     return yargs
-      .option("config", {
-        alias: ["c"],
-        default: ".syntest.json",
-        description: "The syntest configuration file",
-        group: OptionGroups.General,
-        hidden: false,
-        config: true,
-        type: "string",
-      })
       .option("preset", {
-        alias: [],
+        alias: ["p"],
         default: "none",
         description: "The preset you want to use",
         group: OptionGroups.General,

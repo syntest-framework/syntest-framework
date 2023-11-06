@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,14 @@ import { Encoding } from "../../Encoding";
 
 /**
  * Interface for secondary objectives.
- *
- * @author Mitchell Olsthoorn
  */
 export interface SecondaryObjectiveComparator<T extends Encoding> {
   /**
    * Compare two objectives.
    *
-   * Returns -1 if a < b.
+   * Returns -1 if a is worse than b.
    * Returns 0 if a == b.
-   * Returns 1 if a > b.
+   * Returns 1 if a is better than b.
    *
    * @param a The first encoding
    * @param b The second encoding

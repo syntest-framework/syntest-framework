@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  * @param population the population to sort
  * @param objectiveFunctions The objectives to consider
  * @returns {[]} the newly sorted population
- *
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export function fastNonDomSorting<T extends Encoding>(

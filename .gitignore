@@ -115,10 +115,16 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-### SynTest Framework - SynTest Core ###
+# End of https://www.toptal.com/developers/gitignore/api/node
+
+### SynTest Framework - SynTest Framework ###
 .npmrc
 test-results.json
 
-# End of https://www.toptal.com/developers/gitignore/api/node
-
-
+# Ignore all workspace licensing files as these are copied from the root
+**/LICENSE
+!/LICENSE
+**/NOTICE
+!/NOTICE
+**/NOTICE.header.ts
+!/NOTICE.header.ts

@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,14 +39,14 @@ export * from "./lib/budget/TotalTimeBudget";
 // - Comparators
 export * from "./lib/comparators/DominanceComparator";
 
-// - Metaheuristics
-export * from "./lib/metaheuristics/RandomSearch";
-export * from "./lib/metaheuristics/SearchAlgorithm";
+// - Algorithms
+export * from "./lib/algorithms/RandomSearch";
+export * from "./lib/algorithms/SearchAlgorithm";
 
 // - - Evolutionary
-export * from "./lib/metaheuristics/evolutionary/EvolutionaryAlgorithm";
-export * from "./lib/metaheuristics/evolutionary/NSGAII";
-export * from "./lib/metaheuristics/evolutionary/MOSAFamily";
+export * from "./lib/algorithms/evolutionary/EvolutionaryAlgorithm";
+export * from "./lib/algorithms/evolutionary/NSGAII";
+export * from "./lib/algorithms/evolutionary/MOSAFamily";
 
 // - Objective
 export * from "./lib/objective/heuristics/ApproachLevel";
@@ -67,7 +67,8 @@ export * from "./lib/objective/managers/StructuralUncoveredObjectiveManager";
 export * from "./lib/objective/managers/TrackingObjectiveManager";
 export * from "./lib/objective/managers/UncoveredObjectiveManager";
 
-export * from "./lib/objective/secondary/LengthObjectiveComparator";
+export * from "./lib/objective/secondary/LeastErrorsObjectiveComparator";
+export * from "./lib/objective/secondary/SmallestEncodingObjectiveComparator";
 export * from "./lib/objective/secondary/SecondaryObjectiveComparator";
 
 // - Operator
@@ -87,8 +88,6 @@ export * from "./lib/termination/TerminationManager";
 export * from "./lib/termination/TerminationTrigger";
 
 // Util
-export * from "./lib/util/Datapoint";
-export * from "./lib/util/Charset";
+export * from "./lib/Trace";
 export * from "./lib/util/diagnostics";
 export * from "./lib/util/Events";
-export * from "./lib/util/prng";

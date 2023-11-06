@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2023 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
  */
 import * as chai from "chai";
 
+import { MOSAFamily } from "../../../lib/algorithms/evolutionary/MOSAFamily";
 import { EncodingRunner } from "../../../lib/EncodingRunner";
 import { EncodingSampler } from "../../../lib/EncodingSampler";
-import { MOSAFamily } from "../../../lib/metaheuristics/evolutionary/MOSAFamily";
 import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
 import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
 import { UncoveredObjectiveManager } from "../../../lib/objective/managers/UncoveredObjectiveManager";
@@ -34,9 +34,6 @@ import { MockedMOSA } from "../../mocks/MOSAAdapter";
 
 const expect = chai.expect;
 
-/**
- * @author Annibale Panichella
- */
 describe("Test MOSA", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
@@ -80,7 +77,7 @@ describe("Test MOSA", function () {
     );
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner, new Set()),
+      new UncoveredObjectiveManager(mockedRunner, [], true),
       mockedSampler,
       mockedProcreation,
       50
@@ -116,11 +113,9 @@ describe("Test MOSA", function () {
       mockedSampler
     );
 
+    const secondaries: SecondaryObjectiveComparator<DummyEncodingMock>[] = [];
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(
-        undefined,
-        new Set<SecondaryObjectiveComparator<DummyEncodingMock>>()
-      ),
+      new UncoveredObjectiveManager(undefined, secondaries, true),
       undefined,
       mockedProcreation,
       50
@@ -162,7 +157,7 @@ describe("Test MOSA", function () {
     );
 
     const mosa = new MOSAFamily(
-      new UncoveredObjectiveManager(mockedRunner, new Set()),
+      new UncoveredObjectiveManager(mockedRunner, [], true),
       mockedSampler,
       mockedProcreation,
       4
@@ -208,7 +203,7 @@ describe("Test MOSA", function () {
       mockedSampler
     );
     const mosa = new MockedMOSA(
-      new UncoveredObjectiveManager(mockedRunner, new Set()),
+      new UncoveredObjectiveManager(mockedRunner, [], true),
       mockedSampler,
       mockedProcreation,
       50

@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  *
  * @param front set of individual to consider for the crowding distance
  * @param objectiveFunctions The objectives to consider
- *
- * @author Annibale Panichella
  */
 export function crowdingDistance<T extends Encoding>(
   front: T[],

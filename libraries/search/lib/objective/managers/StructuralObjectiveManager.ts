@@ -1,7 +1,7 @@
 /*
- * Copyright 2020-2021 Delft University of Technology and SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Core.
+ * This file is part of SynTest Framework - SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import { ObjectiveManager } from "./ObjectiveManager";
 
 /**
  * Objective manager that only evaluates an encoding on currently reachable and covered objectives.
- *
- * @author Mitchell Olsthoorn
  */
 export class StructuralObjectiveManager<
   T extends Encoding

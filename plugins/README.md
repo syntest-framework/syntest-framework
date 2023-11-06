@@ -1,7 +1,7 @@
 # Plugins
 
-This folder contains all the native plugins related to the SynTest Core.
+This folder contains all the native plugins related to the SynTest Framework.
 
-Plugins consist of extensions of the tool which are not necessarily usefull for every type of user.
+Plugins consist of extensions of the framework which are not necessarily useful for every type of user.
 
-For a tutorial on how to create plugins please look at [syntest.org](https://www.syntest.org/docs/)
+For more information, see the [documentation](https://www.syntest.org.docs).
