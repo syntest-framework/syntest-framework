@@ -16,10 +16,13 @@
  * limitations under the License.
  */
 
-import { ControlFlowFunction } from "../ControlFlowFunction";
-import { ControlFlowPath } from "../ControlFlowPath";
-import { ControlFlowProgram } from "../ControlFlowProgram";
-import { EdgeType } from "../graph/EdgeType";
+import {
+  ControlFlowFunction,
+  ControlFlowProgram,
+  EdgeType,
+} from "@syntest/cfg";
+
+import { ControlFlowPath } from "./ControlFlowPath";
 
 export function extractPathsFromProgram(cfp: ControlFlowProgram) {
   const paths: ControlFlowPath[] = [];

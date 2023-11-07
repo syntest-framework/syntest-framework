@@ -17,7 +17,6 @@
  */
 
 export * from "./lib/algorithms/edgeContraction";
-export * from "./lib/algorithms/pathExtraction";
 
 export * from "./lib/graph/ContractedControlFlowGraph";
 export * from "./lib/graph/ControlFlowGraph";
