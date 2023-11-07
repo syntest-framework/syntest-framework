@@ -23,10 +23,6 @@ import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Objective function for the function branch criterion.
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 export class FunctionObjectiveFunction<
   T extends Encoding

@@ -27,8 +27,6 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  *
  * @param front set of individual to consider for the crowding distance
  * @param objectiveFunctions The objectives to consider
- *
- * @author Annibale Panichella
  */
 export function crowdingDistance<T extends Encoding>(
   front: T[],

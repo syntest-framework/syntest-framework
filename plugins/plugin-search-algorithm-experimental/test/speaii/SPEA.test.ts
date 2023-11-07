@@ -35,9 +35,6 @@ import { MockedDynaSPEAII, MockedSPEAII } from "./SPEAIIAdapter.mock";
 
 const expect = chai.expect;
 
-/**
- * @author Annibale Panichella
- */
 describe("Test SPEA-II", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
   let searchSubject: DummySearchSubject<DummyEncodingMock>;

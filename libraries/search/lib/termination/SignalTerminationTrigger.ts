@@ -20,8 +20,6 @@ import { TerminationTrigger } from "./TerminationTrigger";
 
 /**
  * Termination trigger for interrupt signals.
- *
- * @author Mitchell Olsthoorn
  */
 export class SignalTerminationTrigger implements TerminationTrigger {
   protected _triggered: boolean;

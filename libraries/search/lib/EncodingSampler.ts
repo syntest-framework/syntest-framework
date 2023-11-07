@@ -21,9 +21,6 @@ import { SearchSubject } from "./SearchSubject";
 
 /**
  * Sampler for encodings.
- *
- * @author Mitchell Olsthoorn
- * @author Dimitri Stallenberg
  */
 export abstract class EncodingSampler<T extends Encoding> {
   protected _subject: SearchSubject<T>;

@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 import { Preset } from "@syntest/module";
-import { ArgumentsCamelCase } from "yargs";
-
-import { ArgumentsObject } from "../Configuration";
 
 /**
  * Dynamic Many-Objective Sorting Algorithm (DynaMOSA).
@@ -26,24 +23,19 @@ import { ArgumentsObject } from "../Configuration";
  * Based on:
  * Automated Test Case Generation as a Many-Objective Optimisation Problem with Dynamic Selection of the Targets
  * A. Panichella; F. K. Kifetew; P. Tonella
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
  */
 export class DynaMOSAPreset extends Preset {
   constructor() {
     super("DynaMOSA", "DynaMOSA preset");
   }
 
-  modifyArgs<T>(arguments_: ArgumentsCamelCase<T>): void {
-    (<ArgumentsObject>(<unknown>arguments_)).searchAlgorithm = "MOSAFamily";
-    (<ArgumentsObject>(<unknown>arguments_)).objectiveManager =
-      "structural-uncovered";
-    (<ArgumentsObject>(<unknown>arguments_)).procreation = "default";
-    (<ArgumentsObject>(<unknown>arguments_)).secondaryObjectives = [
-      "least-errors",
-      "smallest-encoding",
-    ];
-    (<ArgumentsObject>(<unknown>arguments_)).populationSize = 50;
+  getPresetConfiguration() {
+    return {
+      searchAlgorithm: "MOSAFamily",
+      objectiveManager: "structural-uncovered",
+      procreation: "default",
+      populationSize: 50,
+      secondaryObjectives: ["least-errors", "smallest-encoding"],
+    };
   }
 }

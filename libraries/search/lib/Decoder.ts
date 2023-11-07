@@ -21,9 +21,6 @@ import { Encoding } from "./Encoding";
 /**
  * Decoder interface.
  *
- * @author Dimitri Stallenberg
- * @author Mitchell Olsthoorn
- *
  * @param E the encoding to decode
  * @param D the Object type to decode the encoding to
  */

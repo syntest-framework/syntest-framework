@@ -28,21 +28,22 @@ import * as path from "node:path";
 
 import { getLogger, Logger } from "@syntest/logging";
 import { copySync } from "fs-extra";
-import Yargs = require("yargs");
-
-import { StorageOptions } from "./util/Configuration";
 
 export class StorageManager {
   private static LOGGER: Logger;
-  private _arguments: Yargs.ArgumentsCamelCase;
+  private syntestDirectory: string;
+  private tempSyntestDirectory: string;
+  private fid: string;
 
-  get args() {
-    return this._arguments;
-  }
-
-  set args(_arguments) {
-    this._arguments = _arguments;
+  constructor(
+    syntestDirectory: string,
+    temporarySynTestDirectory: string,
+    fid: string
+  ) {
     StorageManager.LOGGER = getLogger("StorageManager");
+    this.syntestDirectory = syntestDirectory;
+    this.tempSyntestDirectory = temporarySynTestDirectory;
+    this.fid = fid;
   }
 
   private getFullPath(directoryPath: string[], temporary = false): string {
@@ -56,19 +57,11 @@ export class StorageManager {
 
     if (temporary) {
       return path.resolve(
-        path.join(
-          (<StorageOptions>(<unknown>this.args)).tempSyntestDirectory,
-          (<StorageOptions>(<unknown>this.args)).fid,
-          ...directoryPath
-        )
+        path.join(this.tempSyntestDirectory, this.fid, ...directoryPath)
       );
     }
     return path.resolve(
-      path.join(
-        (<StorageOptions>(<unknown>this.args)).syntestDirectory,
-        (<StorageOptions>(<unknown>this.args)).fid,
-        ...directoryPath
-      )
+      path.join(this.syntestDirectory, this.fid, ...directoryPath)
     );
   }
 
@@ -118,8 +111,7 @@ export class StorageManager {
   }
 
   deleteMainTemporary() {
-    const directory = (<StorageOptions>(<unknown>this.args))
-      .tempSyntestDirectory;
+    const directory = this.tempSyntestDirectory;
     if (!existsSync(directory)) {
       return;
     }

@@ -25,8 +25,6 @@ import { PopulationBasedObjectiveManager } from "./PopulationBasedObjectiveManag
 
 /**
  * A simple objective manager that always evaluates an encoding on all objectives.
- *
- * @author Mitchell Olsthoorn
  */
 export class SimpleObjectiveManager<
   T extends Encoding

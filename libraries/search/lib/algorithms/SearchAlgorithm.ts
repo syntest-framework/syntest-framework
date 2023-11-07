@@ -35,8 +35,6 @@ import { Events } from "../util/Events";
  * Abstract search algorithm to search for an optimal solution within the search space.
  *
  * The search algorithm is dependent on the encoding of the search space.
- *
- * @author Mitchell Olsthoorn
  */
 export abstract class SearchAlgorithm<T extends Encoding> {
   protected static LOGGER: Logger;

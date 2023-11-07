@@ -25,8 +25,6 @@ import { SearchTimeBudget } from "./SearchTimeBudget";
 
 /**
  * Budget for the total time of the search process.
- *
- * @author Mitchell Olsthoorn
  */
 export class TotalTimeBudget<T extends Encoding>
   extends SearchTimeBudget<T>

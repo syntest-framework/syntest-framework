@@ -1,14 +1,9 @@
-.nyc_output/
 **/.nyc_output/
-dist/
+**/coverage/
 **/dist/
-node_modules/
 **/node_modules/
-
+**/LICENSE
+**/NOTICE
 .eslintignore
 .gitignore
 .prettierignore
-LICENSE
-**/LICENSE
-NOTICE
-**/NOTICE

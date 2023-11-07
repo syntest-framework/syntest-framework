@@ -33,9 +33,6 @@ mockMath.random = () => 0.5;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 global.Math = mockMath;
 
-/**
- * @author Annibale Panichella
- */
 describe("Tournament selection", function () {
   it("Small Tournament size", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(

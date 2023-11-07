@@ -21,8 +21,6 @@ import { TerminationTriggerPlugin } from "../TerminationTriggerPlugin";
 
 /**
  * Plugin for SignalTerminationTrigger
- *
- * @author Dimitri Stallenberg
  */
 export class SignalTerminationTriggerPlugin extends TerminationTriggerPlugin {
   constructor() {

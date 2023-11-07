@@ -17,12 +17,12 @@
  */
 import Yargs = require("yargs");
 
-export type RandomOptions = {
+export type PrngOptions = {
   randomSeed: string;
 };
 
 export enum OptionGroups {
-  Random = "Random Options:",
+  Prng = "PRNG Options:",
 }
 
 export const Configuration = {
@@ -31,7 +31,7 @@ export const Configuration = {
       alias: ["s"],
       default: undefined,
       description: "Seed to be used by the pseudo random number generator.",
-      group: OptionGroups.Random,
+      group: OptionGroups.Prng,
       hidden: false,
       type: "string",
     });

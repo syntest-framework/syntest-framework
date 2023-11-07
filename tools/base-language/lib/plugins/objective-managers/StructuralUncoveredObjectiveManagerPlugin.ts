@@ -28,8 +28,6 @@ import {
 
 /**
  * Plugin for the structural uncovered objective manager
- *
- * @author Mitchell Olsthoorn
  */
 export class StructuralUncoveredObjectiveManagerPlugin<
   T extends Encoding

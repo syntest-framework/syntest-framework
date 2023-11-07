@@ -52,8 +52,6 @@ export type PublisherWSOptions = {
 
 /**
  * This plugin publishes all of the SynTest's events to the specified url with WebSocket protocol.
- *
- * @author Yehor Kozyr
  */
 export class WebsocketEventListenerPlugin extends EventListenerPlugin {
   private static LOGGER: Logger;

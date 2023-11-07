@@ -24,8 +24,6 @@ import {
 
 /**
  * Plugin for NSGAII
- *
- * @author Dimitri Stallenberg
  */
 export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   constructor() {

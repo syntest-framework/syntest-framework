@@ -33,10 +33,6 @@ import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Objective function for the branch criterion.
- *
- * @author Mitchell Olsthoorn
- * @author Annibale Panichella
- * @author Dimitri Stallenberg
  */
 export class BranchObjectiveFunction<
   T extends Encoding

@@ -21,8 +21,6 @@ import { ProcreationOptions, ProcreationPlugin } from "../ProcreationPlugin";
 
 /**
  * Plugin for SignalTerminationTrigger
- *
- * @author Dimitri Stallenberg
  */
 export class DefaultProcreationPlugin<
   T extends Encoding

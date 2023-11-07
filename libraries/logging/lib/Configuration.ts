@@ -19,7 +19,6 @@ import Yargs = require("yargs");
 
 export type LoggingOptions = {
   logDirectory: string;
-  consoleLogLevel: string;
   fileLogLevel: string[];
 };
 
@@ -40,23 +39,6 @@ export const Configuration = {
           group: OptionGroups.Logging,
           hidden: false,
           normalize: true,
-          type: "string",
-        })
-        .options("console-log-level", {
-          alias: [],
-          choices: [
-            "silent",
-            "debug",
-            "error",
-            "warn",
-            "info",
-            "verbose",
-            "silly",
-          ],
-          default: "error",
-          description: "Log level of the tool",
-          group: OptionGroups.Logging,
-          hidden: false,
           type: "string",
         })
         .options("file-log-level", {

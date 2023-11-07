@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-event-listener-websocket",
-  "version": "0.2.1-beta.5",
+  "version": "0.2.1-beta.9",
   "description": "SynTest event listener plugin for external communication through WebSockets",
   "keywords": [
     "syntest",
@@ -40,20 +40,20 @@
     "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
     "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
     "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
-    "postinstall": "cp ../../NOTICE.header.ts ./",
     "prepack": "cp ../../LICENSE ./ && cp ../../NOTICE ./",
+    "setup": "cp ../../NOTICE.header.ts ./",
     "test": "echo 'no tests'",
     "test:coverage": "echo 'no tests'",
     "test:coverage:ci": "echo 'no tests'",
     "test:watch": "echo 'no tests'"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.2.1-beta.1",
-    "@syntest/base-language": "^0.3.0-beta.5",
-    "@syntest/cfg": "^0.4.1-beta.1",
-    "@syntest/logging": "^0.1.2-beta.1",
-    "@syntest/module": "^0.1.2-beta.1",
-    "@syntest/search": "^0.5.0-beta.5",
+    "@syntest/analysis": "^0.2.1-beta.3",
+    "@syntest/base-language": "^0.3.0-beta.9",
+    "@syntest/cfg": "^0.4.1-beta.3",
+    "@syntest/logging": "^0.2.0-beta.1",
+    "@syntest/module": "^0.2.0-beta.2",
+    "@syntest/search": "^0.5.0-beta.8",
     "ws": "^8.13.0"
   },
   "engines": {

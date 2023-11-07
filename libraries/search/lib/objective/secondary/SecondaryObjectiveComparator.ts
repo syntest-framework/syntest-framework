@@ -19,8 +19,6 @@ import { Encoding } from "../../Encoding";
 
 /**
  * Interface for secondary objectives.
- *
- * @author Mitchell Olsthoorn
  */
 export interface SecondaryObjectiveComparator<T extends Encoding> {
   /**

@@ -25,9 +25,6 @@ import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
 
-/**
- * @author Annibale Panichella
- */
 describe("Dominance comparator", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 

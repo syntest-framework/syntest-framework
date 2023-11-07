@@ -24,8 +24,6 @@ import {
 
 /**
  * Plugin for RandomSearch
- *
- * @author Dimitri Stallenberg
  */
 export class RandomSearchPlugin<
   T extends Encoding

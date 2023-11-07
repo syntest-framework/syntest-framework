@@ -17,8 +17,8 @@
  */
 
 import { LoggingOptions } from "@syntest/logging";
-import { GeneralOptions } from "@syntest/module";
-import { RandomOptions } from "@syntest/prng";
+import { PresetOptions } from "@syntest/module";
+import { PrngOptions } from "@syntest/prng";
 import { StorageOptions as ModuleStorageOptions } from "@syntest/storage";
 import Yargs = require("yargs");
 
@@ -88,7 +88,7 @@ export type ResearchModeOptions = {
   outputProperties: string[];
 };
 
-export type ArgumentsObject = GeneralOptions &
+export type ArgumentsObject = PresetOptions &
   TargetOptions &
   StorageOptions &
   ModuleStorageOptions &
@@ -98,7 +98,7 @@ export type ArgumentsObject = GeneralOptions &
   PostProcessingOptions &
   SamplingOptions &
   ResearchModeOptions &
-  RandomOptions;
+  PrngOptions;
 
 export class Configuration {
   getOptions(): { [key: string]: Yargs.Options } {
