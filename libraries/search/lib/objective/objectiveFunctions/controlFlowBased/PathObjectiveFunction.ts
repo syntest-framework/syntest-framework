@@ -40,12 +40,40 @@ export class PathObjectiveFunction<
     this.controlFlowPath = controlFlowPath;
   }
 
+  override calculateDistance(encoding: T): number {
+    const executionResult = encoding.getExecutionResult();
+
+    if (
+      executionResult === undefined ||
+      executionResult.getTraces().length === 0
+    ) {
+      return Number.MAX_VALUE;
+    }
+
+    return this.shallow
+      ? Number.MAX_VALUE
+      : this._calculateControlFlowDistance(executionResult);
+  }
+
   protected override _calculateControlFlowDistance(
     executionResult: ExecutionResult
   ): number {
     let distance = 0;
 
     for (const nodeId of this.controlFlowPath.path) {
+      if (
+        nodeId === "ENTRY" ||
+        nodeId === "ERROR_EXIT" ||
+        nodeId === "SUCCESS_EXIT"
+      ) {
+        continue;
+      }
+
+      if (!this.controlFlowPath.isControlNode(nodeId)) {
+        // only check control nodes
+        continue;
+      }
+
       if (!executionResult.coversId(nodeId)) {
         distance += 1;
       }
@@ -81,6 +109,14 @@ export class ControlFlowPath {
 
   setControlNode(id: string, value: boolean) {
     this.controlNodeTable.set(id, value);
+  }
+
+  isControlNode(id: string) {
+    return this.controlNodeTable.has(id);
+  }
+
+  getControlNodeValue(id: string) {
+    return this.controlNodeTable.get(id);
   }
 
   contains(id: string) {

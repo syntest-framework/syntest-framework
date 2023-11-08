@@ -16,7 +16,12 @@
  * limitations under the License.
  */
 
-import { ControlFlowFunction, ControlFlowProgram, Edge } from "@syntest/cfg";
+import {
+  ControlFlowFunction,
+  ControlFlowProgram,
+  Edge,
+  EdgeType,
+} from "@syntest/cfg";
 
 import { Encoding } from "../../Encoding";
 import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
@@ -41,6 +46,12 @@ export function extractBranchObjectivesFromProgram<T extends Encoding>(
     );
   }
 
+  if (
+    new Set(objectives.map((x) => x.getIdentifier())).size !== objectives.length
+  ) {
+    throw new Error("Duplicate objectives found!");
+  }
+
   return objectives;
 }
 
@@ -50,7 +61,7 @@ function extractBranchObjectivesFromFunction<T extends Encoding>(
   approachLevelCalculator: ApproachLevelCalculator,
   branchDistanceCalculator: BranchDistanceCalculator
 ) {
-  const objectives: BranchObjectiveFunction<T>[] = [];
+  const objectives: Map<string, BranchObjectiveFunction<T>> = new Map();
 
   const graph = cff.graph;
 
@@ -64,7 +75,7 @@ function extractBranchObjectivesFromFunction<T extends Encoding>(
   while (edgesQueue.length > 0) {
     const [parentObjective, edge] = edgesQueue.pop();
 
-    if (visitedEdges.includes(edge)) {
+    if (visitedEdges.includes(edge) || edge.type === EdgeType.BACK_EDGE) {
       // this condition is made to avoid infinite loops
       continue;
     }
@@ -73,27 +84,30 @@ function extractBranchObjectivesFromFunction<T extends Encoding>(
 
     const outgoingEdges = graph.getOutgoingEdges(edge.target);
 
-    if (outgoingEdges.length === 0) {
-      // no next
-    } else if (outgoingEdges.length == 1) {
+    if (outgoingEdges.length === 1) {
       // passthrough so we reuse the original parent objective
       edgesQueue.push([parentObjective, outgoingEdges[0]]);
-    } else {
+    } else if (outgoingEdges.length >= 2) {
       // should always be 2 (e.g. not 3 or more)
       // control node
       for (const edge of outgoingEdges) {
-        const objective = new BranchObjectiveFunction(
-          edge.target,
-          cfp,
-          approachLevelCalculator,
-          branchDistanceCalculator
-        );
+        // get or create target
+        const objective =
+          objectives.get(edge.target) ??
+          new BranchObjectiveFunction(
+            edge.target,
+            cfp,
+            approachLevelCalculator,
+            branchDistanceCalculator
+          );
 
-        objectives.push(objective);
+        objectives.set(edge.target, objective);
 
         if (parentObjective) {
-          // connect to parent
+          // connect to child
           parentObjective.addChildObjective(objective);
+          // connect to parent
+          objective.parentObjective = parentObjective;
         }
 
         edgesQueue.push([objective, edge]);
@@ -101,5 +115,5 @@ function extractBranchObjectivesFromFunction<T extends Encoding>(
     }
   }
 
-  return objectives;
+  return [...objectives.values()];
 }

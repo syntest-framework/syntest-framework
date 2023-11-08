@@ -17,7 +17,6 @@
  */
 
 import { Encoding } from "../../Encoding";
-import { shouldNeverHappen } from "../../util/diagnostics";
 import { ObjectiveFunction } from "../objectiveFunctions/ObjectiveFunction";
 
 /**
@@ -40,13 +39,16 @@ export class ExceptionObjectiveFunction<
     return this._error;
   }
 
-  /**
-   * @inheritDoc
-   */
-  calculateDistance(): number {
-    // This method should never be called.
-    // The exception objective function is only created when an exception is already covered.
-    // So the distance is always zero.
-    throw new Error(shouldNeverHappen("method not implemented."));
+  override calculateDistance(encoding: T): number {
+    const executionResult = encoding.getExecutionResult();
+
+    if (
+      executionResult === undefined ||
+      executionResult.getTraces().length === 0
+    ) {
+      return Number.MAX_VALUE;
+    }
+
+    return executionResult.coversId(this._id) ? 0 : Number.MAX_VALUE;
   }
 }

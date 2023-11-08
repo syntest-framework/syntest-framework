@@ -24,6 +24,7 @@ import { Encoding } from "../../Encoding";
 export abstract class ObjectiveFunction<T extends Encoding> {
   protected _id: string;
   protected _lowestDistance: number;
+  protected _parentObjective: ObjectiveFunction<T>;
   protected _childObjectives: ObjectiveFunction<T>[];
 
   /**
@@ -98,11 +99,15 @@ export abstract class ObjectiveFunction<T extends Encoding> {
     this._childObjectives.push(objective);
   }
 
-  /**
-   * Gets the child objectives of this objective function
-   * @returns the child objectives
-   */
-  public getChildObjectives(): ObjectiveFunction<T>[] {
+  get childObjectives(): ObjectiveFunction<T>[] {
     return this._childObjectives;
+  }
+
+  set parentObjective(parent: ObjectiveFunction<T>) {
+    this._parentObjective = parent;
+  }
+
+  get parentObjective(): ObjectiveFunction<T> {
+    return this._parentObjective;
   }
 }
