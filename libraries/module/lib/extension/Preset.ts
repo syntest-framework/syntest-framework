@@ -34,19 +34,15 @@ export abstract class Preset extends Extension {
     const configuration = this.getPresetConfiguration();
 
     for (const key of Object.keys(configuration)) {
-      if (key in arguments_) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-        if ((<any>arguments_)[key] !== configuration[key]) {
-          Preset.LOGGER.warn(
-            `Overriding option with key: "${key}" based on preset ${this.name}`
-          );
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-        (<any>arguments_)[key] = configuration[key];
-      } else {
-        Preset.LOGGER.warn(`Could not find key: "${key}" in arguments`);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+      if ((<any>arguments_)[key] !== configuration[key]) {
+        Preset.LOGGER.warn(
+          `Overriding option with key: "${key}" based on preset ${this.name}`
+        );
       }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+      (<any>arguments_)[key] = configuration[key];
     }
   }
 
