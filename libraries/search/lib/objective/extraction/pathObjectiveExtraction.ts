@@ -21,19 +21,29 @@ import {
   ControlFlowProgram,
   EdgeType,
 } from "@syntest/cfg";
+import { prng } from "@syntest/prng";
 
-import { ControlFlowPath } from "./ControlFlowPath";
+import { Encoding } from "../../Encoding";
+import {
+  ControlFlowPath,
+  PathObjectiveFunction,
+} from "../objectiveFunctions/controlFlowBased/PathObjectiveFunction";
 
-export function extractPathsFromProgram(cfp: ControlFlowProgram) {
-  const paths: ControlFlowPath[] = [];
+export function extractPathObjectivesFromProgram<T extends Encoding>(
+  cfp: ControlFlowProgram
+) {
+  const objectives: PathObjectiveFunction<T>[] = [];
   for (const cff of cfp.functions) {
-    paths.push(...extractPathsFromFunction(cff));
+    const paths = extractPathsFromFunction(cff);
+    for (const path of paths) {
+      objectives.push(new PathObjectiveFunction(prng.uniqueId(), cfp, path));
+    }
   }
 
-  return paths;
+  return objectives;
 }
 
-export function extractPathsFromFunction(cff: ControlFlowFunction) {
+function extractPathsFromFunction(cff: ControlFlowFunction) {
   const paths: ControlFlowPath[] = [];
 
   const graph = cff.graph;

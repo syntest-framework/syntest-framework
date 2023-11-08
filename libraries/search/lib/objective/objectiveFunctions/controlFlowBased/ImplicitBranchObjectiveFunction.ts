@@ -15,24 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Encoding } from "../Encoding";
-import { SearchSubject } from "../SearchSubject";
+
+import { Encoding } from "../../../Encoding";
 
 import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
-import { ApproachLevel } from "./heuristics/ApproachLevel";
-import { BranchDistance } from "./heuristics/BranchDistance";
 
 export abstract class ImplicitBranchObjectiveFunction<
   T extends Encoding
 > extends BranchObjectiveFunction<T> {
-  protected constructor(
-    approachLevel: ApproachLevel,
-    branchDistance: BranchDistance,
-    subject: SearchSubject<T>,
-    id: string
-  ) {
-    super(approachLevel, branchDistance, subject, id);
-  }
-
   abstract override calculateDistance(encoding: T): number;
 }

@@ -17,11 +17,11 @@
  */
 import * as chai from "chai";
 
-import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
-import { ObjectiveFunction } from "../../../lib/objective/ObjectiveFunction";
+import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
+import { BranchObjectiveFunction } from "../../../lib/objective/objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
+import { ObjectiveFunction } from "../../../lib/objective/objectiveFunctions/ObjectiveFunction";
 import { crowdingDistance } from "../../../lib/operators/ranking/CrowdingDistance";
-import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
+import { DummyBranchDistanceCalculator } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
@@ -33,10 +33,10 @@ describe("Crowding distance", function () {
 
   it("front with one solution", () => {
     const objective = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective);
@@ -48,10 +48,10 @@ describe("Crowding distance", function () {
 
   it("front with two solutions", () => {
     const objective = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective);
@@ -66,16 +66,16 @@ describe("Crowding distance", function () {
 
   it("Front with more than two solutions", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -98,10 +98,10 @@ describe("Crowding distance", function () {
 
   it("Corner case with same obj values for all individual", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);

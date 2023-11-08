@@ -16,20 +16,19 @@
  * limitations under the License.
  */
 
-import { EdgeType } from "@syntest/cfg";
+import { ControlFlowProgram, EdgeType } from "@syntest/cfg";
 import { getLogger, Logger } from "@syntest/logging";
 
-import { Encoding } from "../Encoding";
-import { ExecutionResult } from "../ExecutionResult";
-import { SearchSubject } from "../SearchSubject";
+import { Encoding } from "../../../Encoding";
+import { ExecutionResult } from "../../../ExecutionResult";
 import {
   moreThanTwoOutgoingEdges,
   shouldNeverHappen,
-} from "../util/diagnostics";
+} from "../../../util/diagnostics";
+import { ApproachLevelCalculator } from "../../heuristics/ApproachLevelCalculator";
+import { BranchDistanceCalculator } from "../../heuristics/BranchDistanceCalculator";
 
 import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
-import { ApproachLevel } from "./heuristics/ApproachLevel";
-import { BranchDistance } from "./heuristics/BranchDistance";
 
 /**
  * Objective function for the branch criterion.
@@ -38,14 +37,20 @@ export class BranchObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
   protected static LOGGER: Logger;
+
+  protected approachLevelCalculator: ApproachLevelCalculator;
+  protected branchDistanceCalculator: BranchDistanceCalculator;
+
   constructor(
-    approachLevel: ApproachLevel,
-    branchDistance: BranchDistance,
-    subject: SearchSubject<T>,
-    id: string
+    id: string,
+    controlFlowProgram: ControlFlowProgram,
+    approachLevelCalculator: ApproachLevelCalculator,
+    branchDistanceCalculator: BranchDistanceCalculator
   ) {
-    super(id, subject, approachLevel, branchDistance);
-    BranchObjectiveFunction.LOGGER = getLogger("BranchObjectiveFunction");
+    super(id, controlFlowProgram);
+    BranchObjectiveFunction.LOGGER = getLogger(BranchObjectiveFunction.name);
+    this.approachLevelCalculator = approachLevelCalculator;
+    this.branchDistanceCalculator = branchDistanceCalculator;
   }
 
   /**
@@ -61,46 +66,12 @@ export class BranchObjectiveFunction<
    * @returns
    */
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  calculateDistance(encoding: T): number {
-    const executionResult = encoding.getExecutionResult();
-
-    if (
-      executionResult === undefined ||
-      executionResult.getTraces().length === 0
-    ) {
-      return Number.MAX_VALUE;
-    }
-
-    // check if the branch is covered
-    if (executionResult.coversId(this._id)) {
-      return 0;
-    } else if (this.shallow) {
-      return Number.MAX_VALUE;
-    } else {
-      return this._calculateControlFlowDistance(executionResult);
-    }
-  }
-
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   protected _calculateControlFlowDistance(
     executionResult: ExecutionResult
   ): number {
-    // find the corresponding node inside the cfg
-    const functions_ = this._subject.cfg.functions.filter(
-      (function_) => function_.graph.getNodeById(this._id) !== undefined
-    );
-
-    if (functions_.length !== 1) {
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
-    }
-
-    const function_ = functions_[0];
-
-    const targetNode = function_.graph.getNodeById(this._id);
-
-    if (!targetNode) {
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
-    }
+    // find the function that corresponds with this branch
+    const graph = this.getMatchingFunctionGraph(this._id);
+    const targetNode = graph.getNodeById(this._id);
 
     // Find approach level and ancestor based on node and covered nodes
     const {
@@ -109,8 +80,8 @@ export class BranchObjectiveFunction<
       closestCoveredBranchTrace,
       lastEdgeType,
       statementFraction,
-    } = this.approachLevel.calculate(
-      function_.graph,
+    } = this.approachLevelCalculator.calculate(
+      graph,
       targetNode,
       executionResult.getTraces()
     );
@@ -121,9 +92,7 @@ export class BranchObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    const outgoingEdges = function_.graph.getOutgoingEdges(
-      closestCoveredNode.id
-    );
+    const outgoingEdges = graph.getOutgoingEdges(closestCoveredNode.id);
 
     if (statementFraction !== -1 && statementFraction !== 1) {
       // Here we use the fractions of unreached statements to generate a number between 0.01 and 0.99
@@ -191,7 +160,7 @@ export class BranchObjectiveFunction<
       throw new TypeError(shouldNeverHappen("ObjectiveManager"));
     }
 
-    let branchDistance = this.branchDistance.calculate(
+    let branchDistance = this.branchDistanceCalculator.calculate(
       trace.condition,
       trace.variables,
       lastEdgeType

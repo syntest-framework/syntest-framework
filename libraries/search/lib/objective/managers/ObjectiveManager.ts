@@ -25,8 +25,8 @@ import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { TerminationManager } from "../../termination/TerminationManager";
 import { shouldNeverHappen } from "../../util/diagnostics";
-import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
-import { ObjectiveFunction } from "../ObjectiveFunction";
+import { ExceptionObjectiveFunction } from "../objectiveFunctions/ExceptionObjectiveFunction";
+import { ObjectiveFunction } from "../objectiveFunctions/ObjectiveFunction";
 import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
 
 /**
@@ -195,11 +195,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
         .filter((objective) => objective.getIdentifier() === hash).length;
       if (numberOfExceptions === 0) {
         this._archive.update(
-          new ExceptionObjectiveFunction(
-            this._subject,
-            hash,
-            result.getError()
-          ),
+          new ExceptionObjectiveFunction(hash, result.getError()),
           encoding,
           false
         );

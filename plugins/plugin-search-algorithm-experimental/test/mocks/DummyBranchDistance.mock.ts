@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-import { BranchDistance } from "@syntest/search";
+import { BranchDistanceCalculator } from "@syntest/search";
 
-export class DummyBranchDistance extends BranchDistance {
+export class DummyBranchDistance extends BranchDistanceCalculator {
   public calculate(): number {
     return 1;
   }

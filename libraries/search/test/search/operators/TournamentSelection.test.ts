@@ -17,11 +17,11 @@
  */
 import * as chai from "chai";
 
-import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
+import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
+import { BranchObjectiveFunction } from "../../../lib/objective/objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
 import { tournamentSelection } from "../../../lib/operators/selection/TournamentSelection";
 import { minimumValue } from "../../../lib/util/diagnostics";
-import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
+import { DummyBranchDistanceCalculator } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
@@ -36,16 +36,16 @@ global.Math = mockMath;
 describe("Tournament selection", function () {
   it("Small Tournament size", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
 
     const ind1 = new DummyEncodingMock();
@@ -62,16 +62,16 @@ describe("Tournament selection", function () {
 
   it("Comparison by rank", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
 
     const ind1 = new DummyEncodingMock();
@@ -105,16 +105,16 @@ describe("Tournament selection", function () {
 
   it("Comparison by crowding distance", () => {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
 
     const ind1 = new DummyEncodingMock();

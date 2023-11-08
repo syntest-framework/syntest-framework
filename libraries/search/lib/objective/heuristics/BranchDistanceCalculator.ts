@@ -16,29 +16,10 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { SearchSubject } from "../SearchSubject";
-
-import { ObjectiveFunction } from "./ObjectiveFunction";
-
-/**
- * Objective function for the function branch criterion.
- */
-export class FunctionObjectiveFunction<
-  T extends Encoding
-> extends ObjectiveFunction<T> {
-  constructor(subject: SearchSubject<T>, id: string) {
-    super(id, subject);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  calculateDistance(encoding: T): number {
-    if (encoding.getExecutionResult() === undefined) {
-      return Number.MAX_VALUE;
-    }
-
-    return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
-  }
+export abstract class BranchDistanceCalculator {
+  abstract calculate(
+    condition: string,
+    variables: unknown,
+    trueOrFalse: boolean
+  ): number;
 }

@@ -16,16 +16,15 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { SearchSubject } from "../SearchSubject";
+import { Encoding } from "../../Encoding";
 
 /**
  * Function that models the objective.
  */
 export abstract class ObjectiveFunction<T extends Encoding> {
   protected _id: string;
-  protected _subject: SearchSubject<T>;
   protected _lowestDistance: number;
+  protected _childObjectives: ObjectiveFunction<T>[];
 
   /**
    * Indicates if the distance should be shallow or deep.
@@ -38,11 +37,11 @@ export abstract class ObjectiveFunction<T extends Encoding> {
    */
   protected shallowDistance: boolean;
 
-  constructor(id: string, subject: SearchSubject<T>) {
+  constructor(id: string) {
     this._id = id;
-    this._subject = subject;
     this.shallowDistance = false;
     this._lowestDistance = Number.MAX_VALUE;
+    this._childObjectives = [];
   }
 
   /**
@@ -76,13 +75,6 @@ export abstract class ObjectiveFunction<T extends Encoding> {
   }
 
   /**
-   * Return the subject of the objective.
-   */
-  public getSubject(): SearchSubject<T> {
-    return this._subject;
-  }
-
-  /**
    * Update the lowest distance with a new distance
    * @param distance
    */
@@ -96,5 +88,21 @@ export abstract class ObjectiveFunction<T extends Encoding> {
    */
   public getLowestDistance(): number {
     return this._lowestDistance;
+  }
+
+  /**
+   * Adds a child objective to the objective function
+   * @param objective the child objective
+   */
+  public addChildObjective(objective: ObjectiveFunction<T>): void {
+    this._childObjectives.push(objective);
+  }
+
+  /**
+   * Gets the child objectives of this objective function
+   * @returns the child objectives
+   */
+  public getChildObjectives(): ObjectiveFunction<T>[] {
+    return this._childObjectives;
   }
 }

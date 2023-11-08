@@ -16,17 +16,14 @@
  * limitations under the License.
  */
 
-import * as path from "node:path";
-
 import { getLogger, Logger } from "@syntest/logging";
 import TypedEmitter from "typed-emitter";
 
 import { Archive } from "../Archive";
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
-import { ExecutionResult } from "../ExecutionResult";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
+import { ObjectiveFunction } from "../objective/objectiveFunctions/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
 import { TerminationManager } from "../termination/TerminationManager";
 import { Events } from "../util/Events";
@@ -225,65 +222,14 @@ export abstract class SearchAlgorithm<T extends Encoding> {
     return this._objectiveManager;
   }
 
-  private getCovered(objectiveType = "mixed"): number {
-    const covered = new Set();
-
-    for (const key of this._objectiveManager.getArchive().getObjectives()) {
-      const test = this._objectiveManager.getArchive().getEncoding(key);
-      const result: ExecutionResult = test.getExecutionResult();
-
-      // TODO this does not work when there are files with the same name in different directories!!
-      const fileName = path.basename(key.getSubject().path);
-
-      for (const current of result
-        .getTraces()
-        .filter(
-          (element) =>
-            element.type.includes(objectiveType) || objectiveType === "mixed"
-        )
-        .filter((element) => element.path.includes(fileName))) {
-        if (current.hits > 0) covered.add(current.id);
-      }
-    }
-    return covered.size;
-  }
-
-  private getUncovered(objectiveType = "mixed"): number {
-    const total = new Set();
-    const covered = new Set();
-
-    for (const key of this._objectiveManager.getArchive().getObjectives()) {
-      const test = this._objectiveManager.getArchive().getEncoding(key);
-      const result: ExecutionResult = test.getExecutionResult();
-
-      // TODO this does not work when there are files with the same name in different directories!!
-      const fileName = path.basename(key.getSubject().path);
-
-      for (const current of result
-        .getTraces()
-        .filter(
-          (element) =>
-            element.type.includes(objectiveType) || objectiveType === "mixed"
-        )
-        .filter((element) => element.path.includes(fileName))) {
-        total.add(current.id);
-
-        if (current.hits > 0) covered.add(current.id);
-      }
-    }
-    return total.size - covered.size;
-  }
-
   /**
    * The progress of the search process.
    */
-  public progress(objectiveType = "mixed"): number {
-    const numberOfCoveredObjectives = this.getCovered(objectiveType);
-    const numberOfUncoveredObjectives = this.getUncovered(objectiveType);
-    const progress =
-      (numberOfCoveredObjectives /
-        (numberOfCoveredObjectives + numberOfUncoveredObjectives)) *
-      100;
+  public progress(): number {
+    const covered = this._objectiveManager.getCoveredObjectives();
+    const uncovered = this._objectiveManager.getUncoveredObjectives();
+
+    const progress = (covered.size / (covered.size + uncovered.size)) * 100;
     const factor = 10 ** 2;
     return Math.round(progress * factor) / factor;
   }

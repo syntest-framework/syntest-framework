@@ -17,7 +17,7 @@
  */
 
 import { Encoding } from "../../Encoding";
-import { ObjectiveFunction } from "../ObjectiveFunction";
+import { ObjectiveFunction } from "../objectiveFunctions/ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
 

@@ -16,30 +16,24 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { SearchSubject } from "../SearchSubject";
+import { Encoding } from "../../Encoding";
 
-import { ApproachLevel } from "./heuristics/ApproachLevel";
-import { BranchDistance } from "./heuristics/BranchDistance";
 import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
- * Objective function based on control flow graph calculations.
+ * Objective function for the function branch criterion.
  */
-export abstract class ControlFlowBasedObjectiveFunction<
+export class FunctionObjectiveFunction<
   T extends Encoding
 > extends ObjectiveFunction<T> {
-  protected approachLevel: ApproachLevel;
-  protected branchDistance: BranchDistance;
+  /**
+   * @inheritDoc
+   */
+  calculateDistance(encoding: T): number {
+    if (encoding.getExecutionResult() === undefined) {
+      return Number.MAX_VALUE;
+    }
 
-  constructor(
-    id: string,
-    subject: SearchSubject<T>,
-    approachLevel: ApproachLevel,
-    branchDistance: BranchDistance
-  ) {
-    super(id, subject);
-    this.approachLevel = approachLevel;
-    this.branchDistance = branchDistance;
+    return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
   }
 }

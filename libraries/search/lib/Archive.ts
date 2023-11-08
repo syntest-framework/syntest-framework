@@ -19,7 +19,7 @@
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "./Encoding";
-import { ObjectiveFunction } from "./objective/ObjectiveFunction";
+import { ObjectiveFunction } from "./objective/objectiveFunctions/ObjectiveFunction";
 import { shouldNeverHappen } from "./util/diagnostics";
 
 /**

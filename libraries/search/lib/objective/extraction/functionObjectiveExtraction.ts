@@ -15,10 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BranchDistanceCalculator } from "../../lib/objective/heuristics/BranchDistanceCalculator";
 
-export class DummyBranchDistanceCalculator extends BranchDistanceCalculator {
-  public calculate(): number {
-    return 1;
+import { ControlFlowProgram } from "@syntest/cfg";
+
+import { Encoding } from "../../Encoding";
+import { FunctionObjectiveFunction } from "../objectiveFunctions/FunctionObjectiveFunction";
+
+export function extractFunctionObjectivesFromProgram<T extends Encoding>(
+  cfp: ControlFlowProgram
+) {
+  const functions: FunctionObjectiveFunction<T>[] = [];
+  for (const cff of cfp.functions) {
+    functions.push(new FunctionObjectiveFunction(cff.id));
   }
+
+  return functions;
 }

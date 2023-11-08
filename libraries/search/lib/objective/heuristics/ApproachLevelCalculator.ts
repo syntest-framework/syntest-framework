@@ -20,18 +20,20 @@ import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg";
 import { Trace } from "../../Trace";
 import { cannotFindTraceThatIsCovered } from "../../util/diagnostics";
 
-export class ApproachLevel {
-  public calculate(
+export type CalculationResult = {
+  approachLevel: number;
+  closestCoveredNode: Node;
+  closestCoveredBranchTrace: Trace;
+  lastEdgeType: boolean;
+  statementFraction: number;
+};
+
+export class ApproachLevelCalculator {
+  calculate(
     cfg: ControlFlowGraph,
     node: Node,
     traces: Trace[]
-  ): {
-    approachLevel: number;
-    closestCoveredNode: Node;
-    closestCoveredBranchTrace: Trace;
-    lastEdgeType: boolean;
-    statementFraction: number;
-  } {
+  ): CalculationResult {
     // Construct map with key as id covered and value as datapoint that covers that id
     const idsTraceMap: Map<string, Trace> = new Map(
       traces.filter((trace) => trace.hits > 0).map((trace) => [trace.id, trace])

@@ -22,7 +22,7 @@ import { DominanceComparator } from "../../comparators/DominanceComparator";
 import { Encoding } from "../../Encoding";
 import { EncodingSampler } from "../../EncodingSampler";
 import { ObjectiveManager } from "../../objective/managers/ObjectiveManager";
-import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
+import { ObjectiveFunction } from "../../objective/objectiveFunctions/ObjectiveFunction";
 import { Procreation } from "../../operators/procreation/Procreation";
 import { crowdingDistance } from "../../operators/ranking/CrowdingDistance";
 import { shouldNeverHappen } from "../../util/diagnostics";

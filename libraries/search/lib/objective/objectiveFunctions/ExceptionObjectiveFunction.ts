@@ -16,10 +16,9 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
-import { SearchSubject } from "../SearchSubject";
-import { shouldNeverHappen } from "../util/diagnostics";
+import { Encoding } from "../../Encoding";
+import { shouldNeverHappen } from "../../util/diagnostics";
+import { ObjectiveFunction } from "../objectiveFunctions/ObjectiveFunction";
 
 /**
  * Objective function for the exception criterion.
@@ -32,8 +31,8 @@ export class ExceptionObjectiveFunction<
 > extends ObjectiveFunction<T> {
   protected _error: Error;
 
-  constructor(subject: SearchSubject<T>, id: string, error: Error) {
-    super(id, subject);
+  constructor(id: string, error: Error) {
+    super(id);
     this._error = error;
   }
 

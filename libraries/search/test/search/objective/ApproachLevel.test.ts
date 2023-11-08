@@ -26,7 +26,7 @@ import {
 } from "@syntest/cfg";
 import * as chai from "chai";
 
-import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
+import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
 
 const expect = chai.expect;
 
@@ -38,10 +38,10 @@ describe("CFG ancestors search", function () {
   let CFG1: ContractedControlFlowGraph;
   let CFG2: ContractedControlFlowGraph;
   let CFG3: ContractedControlFlowGraph;
-  let approachLevel: ApproachLevel;
+  let approachLevel: ApproachLevelCalculator;
 
   beforeEach(function () {
-    approachLevel = new ApproachLevel();
+    approachLevel = new ApproachLevelCalculator();
     let nodes: Map<string, Node> = new Map();
     let edges: Edge[];
 
