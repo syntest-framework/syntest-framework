@@ -20,6 +20,7 @@ import { UserInterface } from "@syntest/cli-graphics";
 import { EventListenerPlugin } from "@syntest/module";
 import {
   BudgetManager,
+  BudgetType,
   Encoding,
   Events,
   SearchAlgorithm,
@@ -78,7 +79,9 @@ export class SearchProgressBarListener extends EventListenerPlugin {
               )
             ).length,
           maxValue: originalObjectives.length,
-          meta: `${budgetManager.getBudget()}`,
+          meta: `${budgetManager
+            .getBudgetObject(BudgetType.SEARCH_TIME)
+            .getRemainingBudget()}s`,
         });
       }
     );

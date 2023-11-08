@@ -26,6 +26,7 @@ export function extractFunctionObjectivesFromProgram<T extends Encoding>(
 ) {
   const functions: FunctionObjectiveFunction<T>[] = [];
   for (const cff of cfp.functions) {
+    // TODO some functions are actually children of other functions!
     functions.push(new FunctionObjectiveFunction(cff.id));
   }
 
