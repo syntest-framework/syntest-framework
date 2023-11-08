@@ -16,14 +16,13 @@
  * limitations under the License.
  */
 
-import { ControlFlowProgram, Edge, EdgeType } from "@syntest/cfg";
+import { ControlFlowFunction, ControlFlowProgram, Edge } from "@syntest/cfg";
 
 import { Encoding } from "../../Encoding";
 import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
 import { BranchDistanceCalculator } from "../heuristics/BranchDistanceCalculator";
 import { BranchObjectiveFunction } from "../objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export function extractBranchObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram,
   approachLevelCalculator: ApproachLevelCalculator,
@@ -32,56 +31,72 @@ export function extractBranchObjectivesFromProgram<T extends Encoding>(
   const objectives: BranchObjectiveFunction<T>[] = [];
 
   for (const cff of cfp.functions) {
-    const graph = cff.graph;
+    objectives.push(
+      ...extractBranchObjectivesFromFunction(
+        cff,
+        cfp,
+        approachLevelCalculator,
+        branchDistanceCalculator
+      )
+    );
+  }
 
-    // queue of [parent objective, edge]
-    const edgesQueue: [BranchObjectiveFunction<T>, Edge][] = [];
-    for (const edge of graph.getOutgoingEdges(graph.entry.id)) {
-      edgesQueue.push([undefined, edge]);
+  return objectives;
+}
+
+function extractBranchObjectivesFromFunction<T extends Encoding>(
+  cff: ControlFlowFunction,
+  cfp: ControlFlowProgram,
+  approachLevelCalculator: ApproachLevelCalculator,
+  branchDistanceCalculator: BranchDistanceCalculator
+) {
+  const objectives: BranchObjectiveFunction<T>[] = [];
+
+  const graph = cff.graph;
+
+  // queue of [parent objective, edge]
+  const edgesQueue: [BranchObjectiveFunction<T>, Edge][] = graph
+    .getOutgoingEdges(graph.entry.id)
+    .map((edge): [BranchObjectiveFunction<T>, Edge] => [undefined, edge]); // should always be one
+
+  const visitedEdges: Edge[] = [];
+
+  while (edgesQueue.length > 0) {
+    const [parentObjective, edge] = edgesQueue.pop();
+
+    if (visitedEdges.includes(edge)) {
+      // this condition is made to avoid infinite loops
+      continue;
     }
 
-    const visitedEdges: Edge[] = [];
+    visitedEdges.push(edge);
 
-    while (edgesQueue.length > 0) {
-      const [parentObjective, edge] = edgesQueue.pop();
+    const outgoingEdges = graph.getOutgoingEdges(edge.target);
 
-      if (visitedEdges.includes(edge)) {
-        // this condition is made to avoid infinite loops
-        continue;
-      }
+    if (outgoingEdges.length === 0) {
+      // no next
+    } else if (outgoingEdges.length == 1) {
+      // passthrough so we reuse the original parent objective
+      edgesQueue.push([parentObjective, outgoingEdges[0]]);
+    } else {
+      // should always be 2 (e.g. not 3 or more)
+      // control node
+      for (const edge of outgoingEdges) {
+        const objective = new BranchObjectiveFunction(
+          edge.target,
+          cfp,
+          approachLevelCalculator,
+          branchDistanceCalculator
+        );
 
-      if (edge.type === EdgeType.BACK_EDGE) {
-        continue;
-      }
+        objectives.push(objective);
 
-      visitedEdges.push(edge);
-
-      const outgoingEdges = graph.getOutgoingEdges(edge.target);
-
-      if (outgoingEdges.length === 0) {
-        // no next
-      } else if (outgoingEdges.length == 1) {
-        // passthrough so we reuse the original parent objective
-        edgesQueue.push([parentObjective, outgoingEdges[0]]);
-      } else {
-        // control node
-        for (const edge of outgoingEdges) {
-          const objective = new BranchObjectiveFunction(
-            edge.target,
-            cfp,
-            approachLevelCalculator,
-            branchDistanceCalculator
-          );
-
-          objectives.push(objective);
-
-          if (parentObjective) {
-            // connect to parent
-            parentObjective.addChildObjective(objective);
-          }
-
-          edgesQueue.push([objective, edge]);
+        if (parentObjective) {
+          // connect to parent
+          parentObjective.addChildObjective(objective);
         }
+
+        edgesQueue.push([objective, edge]);
       }
     }
   }
