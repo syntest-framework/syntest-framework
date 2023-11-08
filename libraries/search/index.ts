@@ -49,6 +49,10 @@ export * from "./lib/algorithms/evolutionary/NSGAII";
 export * from "./lib/algorithms/evolutionary/MOSAFamily";
 
 // - Objective
+export * from "./lib/objective/extraction/branchObjectiveExtraction";
+export * from "./lib/objective/extraction/functionObjectiveExtraction";
+export * from "./lib/objective/extraction/pathObjectiveExtraction";
+
 export * from "./lib/objective/heuristics/ApproachLevelCalculator";
 export * from "./lib/objective/heuristics/BranchDistanceCalculator";
 

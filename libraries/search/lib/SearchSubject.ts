@@ -43,7 +43,7 @@ export abstract class SearchSubject<T extends Encoding> {
    * Mapping of objectives to adjacent objectives
    * @protected
    */
-  protected _objectives: Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>;
+  protected _objectives: ObjectiveFunction<T>[];
 
   /**
    * Constructor.
@@ -52,35 +52,21 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param rootContext RootContext of the subject
    * @protected
    */
-  protected constructor(target: Target, rootContext: RootContext<unknown>) {
+  protected constructor(
+    target: Target,
+    rootContext: RootContext<unknown>,
+    objectives: ObjectiveFunction<T>[]
+  ) {
     this._target = target;
     this._rootContext = rootContext;
-    this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
-    this._extractObjectives();
+    this._objectives = objectives;
   }
-
-  /**
-   * Extract objectives from the subject based on the targets.
-   * @protected
-   */
-  protected abstract _extractObjectives(): void;
 
   /**
    * Retrieve objectives.
    */
-  public getObjectives(): ObjectiveFunction<T>[] {
-    return [...this._objectives.keys()];
-  }
-
-  /**
-   * Retrieve child objectives.
-   *
-   * @param objective The objective to get the child objectives of
-   */
-  public getChildObjectives(
-    objective: ObjectiveFunction<T>
-  ): ObjectiveFunction<T>[] {
-    return [...this._objectives.get(objective)];
+  get objectives(): ObjectiveFunction<T>[] {
+    return [...this._objectives];
   }
 
   get name(): string {

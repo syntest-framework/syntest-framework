@@ -52,9 +52,7 @@ export class StructuralObjectiveManager<
     this._coveredObjectives.add(objectiveFunction);
 
     // Add the child objectives to the current objectives
-    for (const objective of this._subject.getChildObjectives(
-      objectiveFunction
-    )) {
+    for (const objective of objectiveFunction.getChildObjectives()) {
       if (
         !this._coveredObjectives.has(objective) &&
         !this._currentObjectives.has(objective)
@@ -80,7 +78,7 @@ export class StructuralObjectiveManager<
     this._reset();
 
     // Add all objectives to the uncovered objectives
-    const objectives = subject.getObjectives();
+    const objectives = subject.objectives;
     for (const objective of objectives) {
       this._uncoveredObjectives.add(objective);
     }
@@ -92,9 +90,9 @@ export class StructuralObjectiveManager<
     for (const id of rootObjectiveIds) {
       rootObjectives = [
         ...rootObjectives,
-        ...this._subject
-          .getObjectives()
-          .filter((objective) => objective.getIdentifier() === id),
+        ...this._subject.objectives.filter(
+          (objective) => objective.getIdentifier() === id
+        ),
       ];
     }
 

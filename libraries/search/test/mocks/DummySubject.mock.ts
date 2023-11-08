@@ -23,8 +23,6 @@ import { ObjectiveFunction } from "../../lib/objective/objectiveFunctions/Object
 import { SearchSubject } from "../../lib/SearchSubject";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
-  protected objectives: ObjectiveFunction<T>[];
-
   constructor(objectives: ObjectiveFunction<T>[]) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     super(
@@ -36,20 +34,8 @@ export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
         undefined,
         undefined,
         undefined
-      )
+      ),
+      objectives
     );
-    this.objectives = objectives;
-  }
-
-  override getObjectives(): ObjectiveFunction<T>[] {
-    return this.objectives;
-  }
-
-  protected _extractObjectives(): void {
-    return;
-  }
-
-  protected _extractPaths(): void {
-    // mock
   }
 }
