@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-<%= YEAR %> Delft University of Technology and SynTest contributors
+ * Copyright 2020-<%= YEAR %> SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest JavaScript.
  *
