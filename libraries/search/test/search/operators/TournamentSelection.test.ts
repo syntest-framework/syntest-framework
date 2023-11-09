@@ -17,8 +17,8 @@
  */
 import * as chai from "chai";
 
+import { BranchObjectiveFunction } from "../../../lib/objective/branch/BranchObjectiveFunction";
 import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
-import { BranchObjectiveFunction } from "../../../lib/objective/objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
 import { tournamentSelection } from "../../../lib/operators/selection/TournamentSelection";
 import { minimumValue } from "../../../lib/util/diagnostics";
 import { DummyBranchDistanceCalculator } from "../../mocks/DummyBranchDistance.mock";

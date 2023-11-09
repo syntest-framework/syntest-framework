@@ -23,7 +23,7 @@ import { Archive } from "../Archive";
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
-import { ObjectiveFunction } from "../objective/objectiveFunctions/ObjectiveFunction";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
 import { TerminationManager } from "../termination/TerminationManager";
 import { Events } from "../util/Events";

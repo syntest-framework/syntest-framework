@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../Encoding";
-import { ObjectiveFunction } from "../objectiveFunctions/ObjectiveFunction";
+import { Encoding } from "../Encoding";
+
+import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Objective function for the exception criterion.

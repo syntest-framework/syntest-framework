@@ -21,7 +21,7 @@ import { prng } from "@syntest/prng";
 import { Decoder } from "./Decoder";
 import { EncodingSampler } from "./EncodingSampler";
 import { ExecutionResult } from "./ExecutionResult";
-import { ObjectiveFunction } from "./objective/objectiveFunctions/ObjectiveFunction";
+import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 import { shouldNeverHappen } from "./util/diagnostics";
 
 /**

@@ -26,7 +26,8 @@ import {
 import { Encoding } from "../../Encoding";
 import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
 import { BranchDistanceCalculator } from "../heuristics/BranchDistanceCalculator";
-import { BranchObjectiveFunction } from "../objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
+
+import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 
 export function extractBranchObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram,

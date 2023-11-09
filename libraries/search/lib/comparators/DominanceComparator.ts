@@ -17,7 +17,7 @@
  */
 
 import { Encoding } from "../Encoding";
-import { ObjectiveFunction } from "../objective/objectiveFunctions/ObjectiveFunction";
+import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 
 export const DominanceComparator = {
   /**

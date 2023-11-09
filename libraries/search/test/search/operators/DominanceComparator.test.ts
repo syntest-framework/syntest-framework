@@ -18,8 +18,8 @@
 import * as chai from "chai";
 
 import { DominanceComparator } from "../../../lib/comparators/DominanceComparator";
+import { BranchObjectiveFunction } from "../../../lib/objective/branch/BranchObjectiveFunction";
 import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
-import { BranchObjectiveFunction } from "../../../lib/objective/objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
 import { DummyBranchDistanceCalculator } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 

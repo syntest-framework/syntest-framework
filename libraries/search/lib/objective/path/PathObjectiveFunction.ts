@@ -19,10 +19,9 @@
 import { ControlFlowProgram } from "@syntest/cfg";
 import { getLogger, Logger } from "@syntest/logging";
 
-import { Encoding } from "../../../Encoding";
-import { ExecutionResult } from "../../../ExecutionResult";
-
-import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
+import { Encoding } from "../../Encoding";
+import { ExecutionResult } from "../../ExecutionResult";
+import { ControlFlowBasedObjectiveFunction } from "../ControlFlowBasedObjectiveFunction";
 
 export class PathObjectiveFunction<
   T extends Encoding

@@ -19,7 +19,7 @@
 import { RootContext } from "@syntest/analysis";
 
 import { Encoding } from "../../lib/Encoding";
-import { ObjectiveFunction } from "../../lib/objective/objectiveFunctions/ObjectiveFunction";
+import { ObjectiveFunction } from "../../lib/objective/ObjectiveFunction";
 import { SearchSubject } from "../../lib/SearchSubject";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {

@@ -19,7 +19,8 @@
 import { ControlFlowProgram } from "@syntest/cfg";
 
 import { Encoding } from "../../Encoding";
-import { FunctionObjectiveFunction } from "../objectiveFunctions/FunctionObjectiveFunction";
+
+import { FunctionObjectiveFunction } from "./FunctionObjectiveFunction";
 
 export function extractFunctionObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram

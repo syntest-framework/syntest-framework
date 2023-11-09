@@ -49,20 +49,20 @@ export * from "./lib/algorithms/evolutionary/NSGAII";
 export * from "./lib/algorithms/evolutionary/MOSAFamily";
 
 // - Objective
-export * from "./lib/objective/extraction/branchObjectiveExtraction";
-export * from "./lib/objective/extraction/functionObjectiveExtraction";
-export * from "./lib/objective/extraction/pathObjectiveExtraction";
+export * from "./lib/objective/branch/branchObjectiveExtraction";
+export * from "./lib/objective/function/functionObjectiveExtraction";
+export * from "./lib/objective/path/pathObjectiveExtraction";
 
 export * from "./lib/objective/heuristics/ApproachLevelCalculator";
 export * from "./lib/objective/heuristics/BranchDistanceCalculator";
 
-export * from "./lib/objective/objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
-export * from "./lib/objective/objectiveFunctions/controlFlowBased/ImplicitBranchObjectiveFunction";
-export * from "./lib/objective/objectiveFunctions/controlFlowBased/PathObjectiveFunction";
+export * from "./lib/objective/branch/BranchObjectiveFunction";
+export * from "./lib/objective/ImplicitBranchObjectiveFunction";
+export * from "./lib/objective/path/PathObjectiveFunction";
 
-export * from "./lib/objective/objectiveFunctions/ExceptionObjectiveFunction";
-export * from "./lib/objective/objectiveFunctions/FunctionObjectiveFunction";
-export * from "./lib/objective/objectiveFunctions/ObjectiveFunction";
+export * from "./lib/objective/ExceptionObjectiveFunction";
+export * from "./lib/objective/function/FunctionObjectiveFunction";
+export * from "./lib/objective/ObjectiveFunction";
 
 export * from "./lib/objective/managers/ArchiveBasedObjectiveManager";
 export * from "./lib/objective/managers/ObjectiveManager";

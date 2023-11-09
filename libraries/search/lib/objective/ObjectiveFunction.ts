@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../Encoding";
+import { Encoding } from "../Encoding";
 
 /**
  * Function that models the objective.

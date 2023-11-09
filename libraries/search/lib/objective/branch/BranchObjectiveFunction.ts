@@ -19,16 +19,15 @@
 import { ControlFlowProgram, EdgeType } from "@syntest/cfg";
 import { getLogger, Logger } from "@syntest/logging";
 
-import { Encoding } from "../../../Encoding";
-import { ExecutionResult } from "../../../ExecutionResult";
+import { Encoding } from "../../Encoding";
+import { ExecutionResult } from "../../ExecutionResult";
 import {
   moreThanTwoOutgoingEdges,
   shouldNeverHappen,
-} from "../../../util/diagnostics";
-import { ApproachLevelCalculator } from "../../heuristics/ApproachLevelCalculator";
-import { BranchDistanceCalculator } from "../../heuristics/BranchDistanceCalculator";
-
-import { ControlFlowBasedObjectiveFunction } from "./ControlFlowBasedObjectiveFunction";
+} from "../../util/diagnostics";
+import { ControlFlowBasedObjectiveFunction } from "../ControlFlowBasedObjectiveFunction";
+import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
+import { BranchDistanceCalculator } from "../heuristics/BranchDistanceCalculator";
 
 /**
  * Objective function for the branch criterion.

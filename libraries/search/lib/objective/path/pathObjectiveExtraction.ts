@@ -24,10 +24,11 @@ import {
 import { prng } from "@syntest/prng";
 
 import { Encoding } from "../../Encoding";
+
 import {
   ControlFlowPath,
   PathObjectiveFunction,
-} from "../objectiveFunctions/controlFlowBased/PathObjectiveFunction";
+} from "./PathObjectiveFunction";
 
 export function extractPathObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram

@@ -26,7 +26,7 @@ import {
 } from "@syntest/cfg";
 import * as chai from "chai";
 
-import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
+import { ApproachLevelCalculator } from "../../../../lib/objective/heuristics/ApproachLevelCalculator";
 
 const expect = chai.expect;
 

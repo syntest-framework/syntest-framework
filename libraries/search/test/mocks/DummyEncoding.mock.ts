@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { Encoding } from "../../lib/Encoding";
-import { BranchObjectiveFunction } from "../../lib/objective/objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
+import { BranchObjectiveFunction } from "../../lib/objective/branch/BranchObjectiveFunction";
 
 export class DummyEncodingMock extends Encoding {
   constructor() {

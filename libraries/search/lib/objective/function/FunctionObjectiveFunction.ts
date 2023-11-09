@@ -16,12 +16,23 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../../Encoding";
+import { Encoding } from "../../Encoding";
+import { ObjectiveFunction } from "../ObjectiveFunction";
 
-import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
-
-export abstract class ImplicitBranchObjectiveFunction<
+/**
+ * Objective function for the function branch criterion.
+ */
+export class FunctionObjectiveFunction<
   T extends Encoding
-> extends BranchObjectiveFunction<T> {
-  abstract override calculateDistance(encoding: T): number;
+> extends ObjectiveFunction<T> {
+  /**
+   * @inheritDoc
+   */
+  calculateDistance(encoding: T): number {
+    if (encoding.getExecutionResult() === undefined) {
+      return Number.MAX_VALUE;
+    }
+
+    return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
+  }
 }

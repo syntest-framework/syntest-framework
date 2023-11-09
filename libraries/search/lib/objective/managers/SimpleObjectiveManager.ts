@@ -18,7 +18,7 @@
 
 import { Encoding } from "../../Encoding";
 import { SearchSubject } from "../../SearchSubject";
-import { ObjectiveFunction } from "../objectiveFunctions/ObjectiveFunction";
+import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { ObjectiveManager } from "./ObjectiveManager";
 import { PopulationBasedObjectiveManager } from "./PopulationBasedObjectiveManager";

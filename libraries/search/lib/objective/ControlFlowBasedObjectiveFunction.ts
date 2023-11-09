@@ -18,10 +18,11 @@
 
 import { ControlFlowProgram } from "@syntest/cfg";
 
-import { Encoding } from "../../../Encoding";
-import { ExecutionResult } from "../../../ExecutionResult";
-import { shouldNeverHappen } from "../../../util/diagnostics";
-import { ObjectiveFunction } from "../ObjectiveFunction";
+import { Encoding } from "../Encoding";
+import { ExecutionResult } from "../ExecutionResult";
+import { shouldNeverHappen } from "../util/diagnostics";
+
+import { ObjectiveFunction } from "./ObjectiveFunction";
 
 /**
  * Objective function based on control flow graph calculations.

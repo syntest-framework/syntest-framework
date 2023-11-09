@@ -21,7 +21,7 @@ import { RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram } from "@syntest/cfg";
 
 import { Encoding } from "./Encoding";
-import { ObjectiveFunction } from "./objective/objectiveFunctions/ObjectiveFunction";
+import { ObjectiveFunction } from "./objective/ObjectiveFunction";
 
 /**
  * Subject of the search process.

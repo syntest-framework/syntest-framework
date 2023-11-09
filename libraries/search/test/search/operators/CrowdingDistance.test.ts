@@ -17,9 +17,9 @@
  */
 import * as chai from "chai";
 
+import { BranchObjectiveFunction } from "../../../lib/objective/branch/BranchObjectiveFunction";
 import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
-import { BranchObjectiveFunction } from "../../../lib/objective/objectiveFunctions/controlFlowBased/BranchObjectiveFunction";
-import { ObjectiveFunction } from "../../../lib/objective/objectiveFunctions/ObjectiveFunction";
+import { ObjectiveFunction } from "../../../lib/objective/ObjectiveFunction";
 import { crowdingDistance } from "../../../lib/operators/ranking/CrowdingDistance";
 import { DummyBranchDistanceCalculator } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
