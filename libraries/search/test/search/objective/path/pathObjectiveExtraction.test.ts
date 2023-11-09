@@ -25,7 +25,9 @@ import {
 } from "@syntest/cfg";
 import * as chai from "chai";
 
+import { ApproachLevelCalculator } from "../../../../lib/objective/heuristics/ApproachLevelCalculator";
 import { extractPathObjectivesFromProgram } from "../../../../lib/objective/path/pathObjectiveExtraction";
+import { DummyBranchDistanceCalculator } from "../../../mocks/DummyBranchDistance.mock";
 
 const expect = chai.expect;
 
@@ -76,7 +78,11 @@ describe("CFG ancestors search", function () {
       ],
     });
 
-    const pathObjectives = extractPathObjectivesFromProgram(cfp);
+    const pathObjectives = extractPathObjectivesFromProgram(
+      cfp,
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
+    );
 
     expect(pathObjectives.length).to.equal(2);
   });
@@ -173,7 +179,11 @@ describe("CFG ancestors search", function () {
       ],
     });
 
-    const pathObjectives = extractPathObjectivesFromProgram(cfp);
+    const pathObjectives = extractPathObjectivesFromProgram(
+      cfp,
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
+    );
 
     expect(pathObjectives.length).to.equal(4);
   });
@@ -270,7 +280,11 @@ describe("CFG ancestors search", function () {
       ],
     });
 
-    const pathObjectives = extractPathObjectivesFromProgram(cfp);
+    const pathObjectives = extractPathObjectivesFromProgram(
+      cfp,
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
+    );
 
     expect(pathObjectives.length).to.equal(3);
   });
@@ -362,7 +376,11 @@ describe("CFG ancestors search", function () {
       ],
     });
 
-    const pathObjectives = extractPathObjectivesFromProgram(cfp);
+    const pathObjectives = extractPathObjectivesFromProgram(
+      cfp,
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
+    );
 
     expect(pathObjectives.length).to.equal(3);
   });

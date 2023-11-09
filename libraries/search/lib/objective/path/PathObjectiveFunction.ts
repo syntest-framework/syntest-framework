@@ -20,23 +20,32 @@ import { ControlFlowProgram } from "@syntest/cfg";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../../Encoding";
-import { ExecutionResult } from "../../ExecutionResult";
-import { ControlFlowBasedObjectiveFunction } from "../ControlFlowBasedObjectiveFunction";
+import { BranchObjectiveFunction } from "../branch/BranchObjectiveFunction";
+import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
+import { BranchDistanceCalculator } from "../heuristics/BranchDistanceCalculator";
 
 export class PathObjectiveFunction<
   T extends Encoding
-> extends ControlFlowBasedObjectiveFunction<T> {
-  protected static LOGGER: Logger;
+> extends BranchObjectiveFunction<T> {
+  protected static override LOGGER: Logger;
   protected _controlFlowPath: ControlFlowPath;
 
   constructor(
     id: string,
     controlFlowProgram: ControlFlowProgram,
-    controlFlowPath: ControlFlowPath
+    controlFlowPath: ControlFlowPath,
+    approachLevelCalculator: ApproachLevelCalculator,
+    branchDistanceCalculator: BranchDistanceCalculator
   ) {
-    super(id, controlFlowProgram);
+    super(
+      id,
+      controlFlowProgram,
+      approachLevelCalculator,
+      branchDistanceCalculator
+    );
     PathObjectiveFunction.LOGGER = getLogger(PathObjectiveFunction.name);
     this._controlFlowPath = controlFlowPath;
+    this.branchDistanceCalculator = branchDistanceCalculator;
   }
 
   override calculateDistance(encoding: T): number {
@@ -49,17 +58,11 @@ export class PathObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    return this.shallow
-      ? Number.MAX_VALUE
-      : this._calculateControlFlowDistance(executionResult);
-  }
+    if (this.shallow) {
+      return Number.MAX_VALUE;
+    }
 
-  protected override _calculateControlFlowDistance(
-    executionResult: ExecutionResult
-  ): number {
-    let distance = 0;
-
-    for (const nodeId of this._controlFlowPath.path) {
+    for (const [index, nodeId] of this._controlFlowPath.path.entries()) {
       if (
         nodeId === "ENTRY" ||
         nodeId === "ERROR_EXIT" ||
@@ -69,11 +72,29 @@ export class PathObjectiveFunction<
       }
 
       if (!executionResult.coversId(nodeId)) {
-        distance += 1;
+        if (index === 1) {
+          // first node (excluding ENTRY) in function is not covered so the entire path is untouched
+          return Number.MAX_VALUE;
+        }
+
+        const totalDistance = this._calculateControlFlowDistance(
+          nodeId,
+          executionResult
+        );
+
+        if (totalDistance > 1) {
+          throw new Error(
+            `Total distance should be less than 1 as the previous node in the path was covered. But is ${totalDistance}`
+          );
+        }
+
+        // distance is equal to the "branch distance" + the number of nodes after this node that we still need to cover
+        return this._controlFlowPath.path.length - index + totalDistance;
       }
     }
 
-    return distance;
+    // all are covered
+    return 0;
   }
 
   get controlFlowPath() {

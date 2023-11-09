@@ -66,11 +66,12 @@ export class BranchObjectiveFunction<
    */
   // eslint-disable-next-line sonarjs/cognitive-complexity
   protected _calculateControlFlowDistance(
+    id: string,
     executionResult: ExecutionResult
   ): number {
     // find the function that corresponds with this branch
-    const graph = this.getMatchingFunctionGraph(this._id);
-    const targetNode = graph.getNodeById(this._id);
+    const graph = this.getMatchingFunctionGraph(id);
+    const targetNode = graph.getNodeById(id);
 
     // Find approach level and ancestor based on node and covered nodes
     const {
@@ -120,9 +121,7 @@ export class BranchObjectiveFunction<
 
     if (outgoingEdges.length > 2) {
       // weird
-      throw new Error(
-        moreThanTwoOutgoingEdges(closestCoveredNode.id, this._id)
-      );
+      throw new Error(moreThanTwoOutgoingEdges(closestCoveredNode.id, id));
     }
 
     const trueEdge = outgoingEdges.find(
@@ -156,7 +155,7 @@ export class BranchObjectiveFunction<
     }
 
     if (trace === undefined) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
     }
 
     let branchDistance = this.branchDistanceCalculator.calculate(
@@ -166,15 +165,15 @@ export class BranchObjectiveFunction<
     );
 
     if (Number.isNaN(approachLevel)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
     }
 
     if (Number.isNaN(branchDistance)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
     }
 
     if (Number.isNaN(approachLevel + branchDistance)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
     }
 
     if (branchDistance === 0) {

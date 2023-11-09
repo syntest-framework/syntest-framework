@@ -53,11 +53,12 @@ export abstract class ControlFlowBasedObjectiveFunction<
     } else if (this.shallow) {
       return Number.MAX_VALUE;
     } else {
-      return this._calculateControlFlowDistance(executionResult);
+      return this._calculateControlFlowDistance(this._id, executionResult);
     }
   }
 
   protected abstract _calculateControlFlowDistance(
+    id: string,
     executionResult: ExecutionResult
   ): number;
 
