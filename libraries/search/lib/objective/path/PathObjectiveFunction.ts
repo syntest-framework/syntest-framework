@@ -27,7 +27,7 @@ export class PathObjectiveFunction<
   T extends Encoding
 > extends ControlFlowBasedObjectiveFunction<T> {
   protected static LOGGER: Logger;
-  protected controlFlowPath: ControlFlowPath;
+  protected _controlFlowPath: ControlFlowPath;
 
   constructor(
     id: string,
@@ -36,7 +36,7 @@ export class PathObjectiveFunction<
   ) {
     super(id, controlFlowProgram);
     PathObjectiveFunction.LOGGER = getLogger(PathObjectiveFunction.name);
-    this.controlFlowPath = controlFlowPath;
+    this._controlFlowPath = controlFlowPath;
   }
 
   override calculateDistance(encoding: T): number {
@@ -59,17 +59,12 @@ export class PathObjectiveFunction<
   ): number {
     let distance = 0;
 
-    for (const nodeId of this.controlFlowPath.path) {
+    for (const nodeId of this._controlFlowPath.path) {
       if (
         nodeId === "ENTRY" ||
         nodeId === "ERROR_EXIT" ||
         nodeId === "SUCCESS_EXIT"
       ) {
-        continue;
-      }
-
-      if (!this.controlFlowPath.isControlNode(nodeId)) {
-        // only check control nodes
         continue;
       }
 
@@ -79,6 +74,10 @@ export class PathObjectiveFunction<
     }
 
     return distance;
+  }
+
+  get controlFlowPath() {
+    return this._controlFlowPath;
   }
 }
 
