@@ -18,15 +18,19 @@
 import * as path from "node:path";
 
 import { RootContext, SubTarget, Target } from "@syntest/analysis";
+import { isFailure, unwrap } from "@syntest/diagnostics";
+import { getLogger, Logger } from "@syntest/logging";
 import globby = require("globby");
 import TypedEventEmitter from "typed-emitter";
 
 import { Events } from "./util/Events";
 
 export class TargetSelector {
-  private _rootContext: RootContext<unknown>;
+  protected static LOGGER: Logger;
+  protected _rootContext: RootContext<unknown>;
 
   constructor(rootContext: RootContext<unknown>) {
+    TargetSelector.LOGGER = getLogger(TargetSelector.name);
     this._rootContext = rootContext;
   }
 
@@ -73,32 +77,29 @@ export class TargetSelector {
     const targetContexts: Target[] = [];
 
     for (const _path of includedMap.keys()) {
-      const includedSubTargets = includedMap.get(_path);
-      const subTargets = this._rootContext.getSubTargets(_path);
+      const includedSubTargets = new Set(includedMap.get(_path));
+      const excludedSubTargets = new Set(excludedMap.get(_path));
+      const result = this._rootContext.getSubTargets(_path);
+
+      if (isFailure(result)) {
+        TargetSelector.LOGGER.error(result.error.message);
+        continue;
+      }
+
+      const subTargets = unwrap(result);
 
       const selectedSubTargets: SubTarget[] = [];
 
       for (const target of subTargets) {
-        // check if included
         if (
-          !includedSubTargets.includes("*") &&
-          !includedSubTargets.includes(target.id)
+          this.shouldAddSubTarget(
+            target,
+            includedSubTargets,
+            excludedSubTargets
+          )
         ) {
-          continue;
+          selectedSubTargets.push(target);
         }
-
-        // check if excluded
-        if (excludedMap.has(_path)) {
-          const excludedSubTargets = excludedMap.get(_path);
-          if (
-            excludedSubTargets.includes("*") ||
-            excludedSubTargets.includes(target.id)
-          ) {
-            continue;
-          }
-        }
-
-        selectedSubTargets.push(target);
       }
 
       targetContexts.push({
@@ -113,5 +114,19 @@ export class TargetSelector {
       this._rootContext
     );
     return targetContexts;
+  }
+
+  protected shouldAddSubTarget(
+    target: SubTarget,
+    included: Set<string>,
+    excluded: Set<string> | undefined
+  ) {
+    // check if included
+    if (!included.has("*") && !included.has(target.id)) {
+      return false;
+    }
+
+    // check if excluded
+    return !(excluded && (excluded.has("*") || excluded.has(target.id)));
   }
 }

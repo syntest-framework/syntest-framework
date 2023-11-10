@@ -19,6 +19,7 @@
 
 import { RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram } from "@syntest/cfg";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 
 import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
@@ -74,7 +75,11 @@ export abstract class SearchSubject<T extends Encoding> {
   }
 
   get cfg(): ControlFlowProgram {
-    return this._rootContext.getControlFlowProgram(this.path);
+    const result = this._rootContext.getControlFlowProgram(this.path);
+
+    if (isFailure(result)) return undefined;
+
+    return unwrap(result);
   }
 
   get path(): string {
