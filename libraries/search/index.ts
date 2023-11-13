@@ -59,10 +59,10 @@ export * from "./lib/objective/heuristics/ApproachLevelCalculator";
 export * from "./lib/objective/heuristics/BranchDistanceCalculator";
 
 export * from "./lib/objective/branch/BranchObjectiveFunction";
-export * from "./lib/objective/ImplicitBranchObjectiveFunction";
+export * from "./lib/objective/implicitBranch/ImplicitBranchObjectiveFunction";
 export * from "./lib/objective/path/PathObjectiveFunction";
 
-export * from "./lib/objective/ExceptionObjectiveFunction";
+export * from "./lib/objective/exception/ExceptionObjectiveFunction";
 export * from "./lib/objective/function/FunctionObjectiveFunction";
 export * from "./lib/objective/ObjectiveFunction";
 

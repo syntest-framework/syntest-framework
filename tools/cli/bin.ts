@@ -67,9 +67,6 @@ async function main() {
 
   // Configure the base parser
   let config = yargs
-    .parserConfiguration({
-      "set-placeholder-key": undefined,
-    })
     .usage(`Usage: $0 <command> [options]`)
     .epilog("visit https://syntest.org for more documentation")
     .env("SYNTEST")

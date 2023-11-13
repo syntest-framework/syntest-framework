@@ -25,7 +25,7 @@ import { Encoding } from "../../Encoding";
 import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { TerminationManager } from "../../termination/TerminationManager";
-import { ExceptionObjectiveFunction } from "../ExceptionObjectiveFunction";
+import { ExceptionObjectiveFunction } from "../exception/ExceptionObjectiveFunction";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
 

@@ -16,23 +16,11 @@
  * limitations under the License.
  */
 
-import { RootContext } from "@syntest/analysis";
 import { Encoding, ObjectiveFunction, SearchSubject } from "@syntest/search";
 
 export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
   constructor(objectives: ObjectiveFunction<T>[]) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    super(
-      { path: "", name: "", subTargets: [] },
-      new RootContext<unknown>(
-        "",
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined
-      ),
-      objectives
-    );
+    super({ path: "", name: "", subTargets: [] }, objectives);
   }
 }

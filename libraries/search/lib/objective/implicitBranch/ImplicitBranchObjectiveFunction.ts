@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-
-import { BranchObjectiveFunction } from "./branch/BranchObjectiveFunction";
+import { Encoding } from "../../Encoding";
+import { BranchObjectiveFunction } from "../branch/BranchObjectiveFunction";
 
 export abstract class ImplicitBranchObjectiveFunction<
   T extends Encoding
