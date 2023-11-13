@@ -22,11 +22,11 @@ import TypedEmitter from "typed-emitter";
 import { Archive } from "../Archive";
 import { BudgetManager } from "../budget/BudgetManager";
 import { Encoding } from "../Encoding";
+import { Events } from "../Events";
 import { ObjectiveManager } from "../objective/managers/ObjectiveManager";
 import { ObjectiveFunction } from "../objective/ObjectiveFunction";
 import { SearchSubject } from "../SearchSubject";
 import { TerminationManager } from "../termination/TerminationManager";
-import { Events } from "../util/Events";
 
 /**
  * Abstract search algorithm to search for an optimal solution within the search space.

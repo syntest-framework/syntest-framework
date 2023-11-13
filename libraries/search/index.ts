@@ -22,8 +22,10 @@ export * from "./lib/Decoder";
 export * from "./lib/Encoding";
 export * from "./lib/EncodingRunner";
 export * from "./lib/EncodingSampler";
+export * from "./lib/Events";
 export * from "./lib/ExecutionResult";
 export * from "./lib/SearchSubject";
+export * from "./lib/Trace";
 
 // - Budget
 export * from "./lib/budget/Budget";
@@ -92,8 +94,3 @@ export * from "./lib/operators/selection/TournamentSelection";
 export * from "./lib/termination/SignalTerminationTrigger";
 export * from "./lib/termination/TerminationManager";
 export * from "./lib/termination/TerminationTrigger";
-
-// Util
-export * from "./lib/Trace";
-export * from "./lib/util/diagnostics";
-export * from "./lib/util/Events";
