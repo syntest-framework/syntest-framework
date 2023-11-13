@@ -16,21 +16,17 @@
  * limitations under the License.
  */
 
+import { IllegalArgumentError, IllegalStateError } from "@syntest/diagnostics";
 import BigNumber from "bignumber.js";
 import seedrandom = require("seedrandom");
 
 import { Charset } from "./Charset";
-import {
-  emptyArray,
-  singletonAlreadySet,
-  singletonNotSet,
-} from "./diagnostics";
 
 let random: seedrandom.PRNG | undefined;
 
 export function initializePseudoRandomNumberGenerator(seed: string) {
   if (random) {
-    throw new Error(singletonAlreadySet("PseudoRandomNumberGenerator"));
+    throw new IllegalStateError("The PRNG singleton has already been set");
   }
 
   random = seedrandom(seed);
@@ -39,7 +35,7 @@ export function initializePseudoRandomNumberGenerator(seed: string) {
 
 function generator() {
   if (!random) {
-    throw new Error(singletonNotSet("PseudoRandomNumberGenerator"));
+    throw new IllegalStateError("The PRNG singleton has not been set");
   }
 
   return random();
@@ -93,7 +89,9 @@ export const prng = {
   },
   pickOne: <T>(options: T[]): T => {
     if (options.length === 0) {
-      throw new Error(emptyArray("options"));
+      throw new IllegalArgumentError(
+        "Cannot pick random item from empty array"
+      );
     }
 
     const value = generator();
