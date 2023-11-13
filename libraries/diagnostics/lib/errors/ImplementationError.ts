@@ -15,11 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/errors/BaseError";
-export * from "./lib/errors/IllegalArgumentError";
-export * from "./lib/errors/IllegalStateError";
-export * from "./lib/errors/ImplementationError";
-export * from "./lib/errors/IOError";
+import { BaseError, ErrorOptions } from "./BaseError";
 
-export * from "./lib/ensureError";
-export * from "./lib/Result";
+/**
+ * This Error is meant to be thrown when the implementation of the program is wrong.
+ */
+export class ImplementationError extends BaseError {
+  constructor(message: string, options: ErrorOptions = {}) {
+    super("Implementation", message, options);
+  }
+}

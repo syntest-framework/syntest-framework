@@ -15,15 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { IllegalArgumentError } from "@syntest/diagnostics";
+
 import { Crossover } from "../../lib/operators/crossover/Crossover";
-import { minimumValue } from "../../lib/util/diagnostics";
 
 import { DummyEncodingMock } from "./DummyEncoding.mock";
 
 export class DummyCrossover extends Crossover<DummyEncodingMock> {
   crossOver(parents: DummyEncodingMock[]): DummyEncodingMock[] {
     if (parents.length < 2) {
-      throw new Error(minimumValue("number of parents", 2, parents.length));
+      throw new IllegalArgumentError("Minimum number of parents is equal to 2");
     }
     return [parents[0].copy(), parents[1].copy()];
   }

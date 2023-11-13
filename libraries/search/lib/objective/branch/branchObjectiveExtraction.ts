@@ -22,6 +22,7 @@ import {
   Edge,
   EdgeType,
 } from "@syntest/cfg";
+import { ImplementationError } from "@syntest/diagnostics";
 
 import { Encoding } from "../../Encoding";
 import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
@@ -50,7 +51,9 @@ export function extractBranchObjectivesFromProgram<T extends Encoding>(
   if (
     new Set(objectives.map((x) => x.getIdentifier())).size !== objectives.length
   ) {
-    throw new Error("Duplicate objectives found!");
+    throw new ImplementationError("Duplicate objectives found!", {
+      context: { objectives: objectives.map((x) => x.getIdentifier()) },
+    });
   }
 
   return objectives;

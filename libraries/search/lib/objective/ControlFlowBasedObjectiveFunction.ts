@@ -16,11 +16,15 @@
  * limitations under the License.
  */
 
-import { ControlFlowProgram } from "@syntest/cfg";
+import {
+  ContractedControlFlowGraph,
+  ControlFlowGraph,
+  ControlFlowProgram,
+} from "@syntest/cfg";
+import { IllegalArgumentError, IllegalStateError } from "@syntest/diagnostics";
 
 import { Encoding } from "../Encoding";
 import { ExecutionResult } from "../ExecutionResult";
-import { shouldNeverHappen } from "../util/diagnostics";
 
 import { ObjectiveFunction } from "./ObjectiveFunction";
 
@@ -62,15 +66,24 @@ export abstract class ControlFlowBasedObjectiveFunction<
     executionResult: ExecutionResult
   ): number;
 
-  protected getMatchingFunctionGraph(nodeId: string) {
+  protected getMatchingFunctionGraph(
+    nodeId: string
+  ): undefined | ControlFlowGraph | ContractedControlFlowGraph {
     // find the function that corresponds with this node id
     const functions_ = this.controlFlowProgram.functions.filter(
       (function_) => function_.graph.getNodeById(nodeId) !== undefined
     );
 
-    if (functions_.length !== 1) {
-      throw new Error(
-        shouldNeverHappen(ControlFlowBasedObjectiveFunction.name)
+    if (functions_.length > 1) {
+      throw new IllegalStateError(
+        "Found multiple functions with the given nodeId"
+      );
+    }
+
+    if (functions_.length === 0) {
+      // TODO or should we return undefined here?
+      throw new IllegalArgumentError(
+        "Found zero functions with the given nodeId"
       );
     }
 

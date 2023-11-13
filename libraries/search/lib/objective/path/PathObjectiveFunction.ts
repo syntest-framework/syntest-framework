@@ -17,6 +17,7 @@
  */
 
 import { ControlFlowProgram } from "@syntest/cfg";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../../Encoding";
@@ -83,8 +84,10 @@ export class PathObjectiveFunction<
         );
 
         if (totalDistance > 1) {
-          throw new Error(
-            `Total distance should be less than 1 as the previous node in the path was covered. But is ${totalDistance}`
+          // TODO this can bassically not happen unless there is an implementation error (should we keep it?)
+          throw new ImplementationError(
+            "Total distance should be less than 1 as the previous node in the path was covered",
+            { context: { actualDistance: totalDistance } }
           );
         }
 

@@ -16,14 +16,18 @@
  * limitations under the License.
  */
 import { ControlFlowGraph, EdgeType, Node } from "@syntest/cfg";
+import {
+  failure,
+  IllegalArgumentError,
+  Result,
+  success,
+} from "@syntest/diagnostics";
 
 import { Trace } from "../../Trace";
-import { cannotFindTraceThatIsCovered } from "../../util/diagnostics";
 
 export type CalculationResult = {
   approachLevel: number;
   closestCoveredNode: Node;
-  closestCoveredBranchTrace: Trace;
   lastEdgeType: boolean;
   statementFraction: number;
 };
@@ -33,62 +37,26 @@ export class ApproachLevelCalculator {
     cfg: ControlFlowGraph,
     node: Node,
     traces: Trace[]
-  ): CalculationResult {
+  ): Result<CalculationResult> {
     // Construct map with key as id covered and value as datapoint that covers that id
     const idsTraceMap: Map<string, Trace> = new Map(
       traces.filter((trace) => trace.hits > 0).map((trace) => [trace.id, trace])
     );
 
     // Construct set of all covered ids
-    const coveredNodeIds = new Set<string>(idsTraceMap.keys());
+    const targets = new Set<string>(idsTraceMap.keys());
 
-    const {
-      approachLevel,
-      closestCoveredBranch,
-      lastEdgeType,
-      statementFraction,
-    } = this._findClosestCoveredBranch(cfg, node.id, coveredNodeIds);
-
-    // if closest node is not found, we return the distance to the root branch
-    if (!closestCoveredBranch) {
-      return {
-        approachLevel: undefined,
-        closestCoveredNode: undefined,
-        closestCoveredBranchTrace: undefined,
-        lastEdgeType: undefined,
-        statementFraction: undefined,
-      };
-    }
-
-    // Retrieve trace based on ids covered by found closestCoveredBranch
-    const closestCoveredBranchTrace = idsTraceMap.get(closestCoveredBranch.id);
-
-    if (!closestCoveredBranchTrace) {
-      throw new Error(cannotFindTraceThatIsCovered());
-    }
-
-    return {
-      approachLevel,
-      closestCoveredNode: closestCoveredBranch,
-      closestCoveredBranchTrace,
-      lastEdgeType: lastEdgeType,
-      statementFraction: statementFraction,
-    };
+    return this._findClosestCoveredBranch(cfg, node.id, targets);
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   _findClosestCoveredBranch(
     cfg: ControlFlowGraph,
-    from: string,
+    nodeId: string,
     targets: Set<string>
-  ): {
-    approachLevel: number;
-    closestCoveredBranch: Node;
-    lastEdgeType: boolean;
-    statementFraction: number;
-  } {
-    const visitedNodeIdSet = new Set<string>([from]);
-    const searchQueue: [string, number][] = [[from, 0]];
+  ) {
+    const visitedNodeIdSet = new Set<string>([nodeId]);
+    const searchQueue: [string, number][] = [[nodeId, 0]];
 
     while (searchQueue.length > 0) {
       const current = searchQueue.shift();
@@ -114,15 +82,16 @@ export class ApproachLevelCalculator {
               statementCount = index + 1;
             }
           }
-          return {
+
+          return success({
             approachLevel: currentDistance,
-            closestCoveredBranch: cfg.getNodeById(edge.source),
+            closestCoveredNode: cfg.getNodeById(edge.source),
             lastEdgeType: edge.type === EdgeType.CONDITIONAL_TRUE,
             statementFraction:
               sourceNode.statements.length === 0
                 ? -1
                 : statementCount / sourceNode.statements.length,
-          };
+          });
         }
         // add element to queue and visited nodes to continue search
         visitedNodeIdSet.add(edge.source);
@@ -138,11 +107,10 @@ export class ApproachLevelCalculator {
         }
       }
     }
-    return {
-      approachLevel: -1,
-      closestCoveredBranch: undefined,
-      lastEdgeType: undefined,
-      statementFraction: undefined,
-    };
+
+    // if closest node is not found, we return the distance to the root branch
+    return failure(
+      new IllegalArgumentError("Cannot find the closest covered node")
+    );
   }
 }

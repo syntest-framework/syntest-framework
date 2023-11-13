@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { IllegalArgumentError } from "@syntest/diagnostics";
+
 import { Encoding } from "../../lib/Encoding";
 import { BranchObjectiveFunction } from "../../lib/objective/branch/BranchObjectiveFunction";
 
@@ -28,7 +30,9 @@ export class DummyEncodingMock extends Encoding {
     values: number[]
   ) {
     if (objective.length != values.length)
-      throw new Error("Something bad happened");
+      throw new IllegalArgumentError(
+        "Number of objectives and values should be equal"
+      );
 
     for (const [index, element] of objective.entries()) {
       this.setDistance(element, values[index]);

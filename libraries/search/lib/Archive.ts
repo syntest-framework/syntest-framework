@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
+import { IllegalStateError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
-import { shouldNeverHappen } from "./util/diagnostics";
 
 /**
  * Archive that keeps track of the fittest encodings for each covered objective.
@@ -103,9 +103,9 @@ export class Archive<T extends Encoding> {
 
     // Do not update if the encoding is already assigned to the objective function
     if (oldEncoding && oldEncoding === encoding) {
-      Archive.LOGGER.debug("encoding already assigned to objective function");
-      throw new Error(
-        shouldNeverHappen("encoding already assigned to objective function")
+      // TODO this could be a warning?
+      throw new IllegalStateError(
+        "Encoding already assigned to objective function"
       );
     }
 

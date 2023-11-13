@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
+import { IllegalArgumentError } from "@syntest/diagnostics";
 import { prng } from "@syntest/prng";
 
 import { Encoding } from "../../Encoding";
-import { minimumValue } from "../../util/diagnostics";
 
 /**
  * This function selects the individual for reproduction using tournament selection
@@ -31,8 +31,13 @@ export function tournamentSelection<T extends Encoding>(
   population: T[],
   tournamentSize: number
 ): T {
-  if (tournamentSize < 2)
-    throw new Error(minimumValue("tournament size", 2, tournamentSize));
+  if (tournamentSize < 2) {
+    // TODO Or should it be a result?
+    throw new IllegalArgumentError(
+      "TournamentSize should be atleast equal to 2",
+      { context: { tournamentSize: tournamentSize } }
+    );
+  }
 
   let winner = prng.pickOne(population);
 
