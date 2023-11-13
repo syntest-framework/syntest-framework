@@ -33,6 +33,8 @@ export class FunctionObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
+    return encoding.getExecutionResult().coversId(this._id)
+      ? 0
+      : Number.MAX_VALUE;
   }
 }
