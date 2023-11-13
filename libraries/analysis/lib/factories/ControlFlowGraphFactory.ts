@@ -17,7 +17,8 @@
  */
 
 import { ControlFlowProgram } from "@syntest/cfg";
+import { Result } from "@syntest/diagnostics";
 
 export interface ControlFlowGraphFactory<S> {
-  convert(filePath: string, AST: S): ControlFlowProgram;
+  convert(filePath: string, AST: S): Result<ControlFlowProgram>;
 }

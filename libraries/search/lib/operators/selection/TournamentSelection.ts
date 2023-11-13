@@ -32,7 +32,6 @@ export function tournamentSelection<T extends Encoding>(
   tournamentSize: number
 ): T {
   if (tournamentSize < 2) {
-    // TODO Or should it be a result?
     throw new IllegalArgumentError(
       "TournamentSize should be atleast equal to 2",
       { context: { tournamentSize: tournamentSize } }

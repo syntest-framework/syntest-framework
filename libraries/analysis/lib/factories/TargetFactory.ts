@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Result } from "@syntest/diagnostics";
+
 import { Target } from "../Target";
 
 export interface TargetFactory<S> {
-  extract(filePath: string, AST: S): Target;
+  extract(filePath: string, AST: S): Result<Target>;
 }

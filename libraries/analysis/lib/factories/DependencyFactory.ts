@@ -1,3 +1,5 @@
+import { Result } from "@syntest/diagnostics";
+
 /*
  * Copyright 2020-2021 SynTest contributors
  *
@@ -16,5 +18,5 @@
  * limitations under the License.
  */
 export interface DependencyFactory<S> {
-  extract(filePath: string, AST: S): string[];
+  extract(filePath: string, AST: S): Result<string[]>;
 }

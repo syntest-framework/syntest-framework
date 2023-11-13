@@ -1,3 +1,5 @@
+import { Result } from "@syntest/diagnostics";
+
 /*
  * Copyright 2020-2023 SynTest contributors
  *
@@ -16,5 +18,5 @@
  * limitations under the License.
  */
 export interface AbstractSyntaxTreeFactory<S> {
-  convert(filePath: string, source: string): S;
+  convert(filePath: string, source: string): Result<S>;
 }

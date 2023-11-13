@@ -158,10 +158,14 @@ export class RootContext<S> {
 
       if (isFailure(result)) return result;
 
-      this._abstractSyntaxTrees.set(
+      const astResult = this.abstractSyntaxTreeFactory.convert(
         absolutePath,
-        this.abstractSyntaxTreeFactory.convert(absolutePath, unwrap(result))
+        unwrap(result)
       );
+
+      if (isFailure(astResult)) return astResult;
+
+      this._abstractSyntaxTrees.set(absolutePath, unwrap(astResult));
       (<TypedEmitter<Events>>process).emit(
         "abstractSyntaxTreeResolvingComplete",
         this,
@@ -195,10 +199,14 @@ export class RootContext<S> {
 
       if (isFailure(result)) return result;
 
-      this._controlFlowProgramMap.set(
+      const cfgResult = this.controlFlowGraphFactory.convert(
         absolutePath,
-        this.controlFlowGraphFactory.convert(absolutePath, unwrap(result))
+        unwrap(result)
       );
+
+      if (isFailure(cfgResult)) return cfgResult;
+
+      this._controlFlowProgramMap.set(absolutePath, unwrap(cfgResult));
       (<TypedEmitter<Events>>process).emit(
         "controlFlowGraphResolvingComplete",
         this,
@@ -233,10 +241,14 @@ export class RootContext<S> {
 
       if (isFailure(result)) return result;
 
-      this._targetMap.set(
+      const targetResult = this.targetFactory.extract(
         absolutePath,
-        this.targetFactory.extract(absolutePath, unwrap(result))
+        unwrap(result)
       );
+
+      if (isFailure(targetResult)) return targetResult;
+
+      this._targetMap.set(absolutePath, unwrap(targetResult));
       (<TypedEmitter<Events>>process).emit(
         "targetExtractionComplete",
         this,
@@ -281,10 +293,14 @@ export class RootContext<S> {
 
       if (isFailure(result)) return result;
 
-      this._dependenciesMap.set(
+      const dependencyResult = this.dependencyFactory.extract(
         absolutePath,
-        this.dependencyFactory.extract(absolutePath, unwrap(result))
+        unwrap(result)
       );
+
+      if (isFailure(dependencyResult)) return dependencyResult;
+
+      this._dependenciesMap.set(absolutePath, unwrap(dependencyResult));
       (<TypedEmitter<Events>>process).emit(
         "dependencyResolvingComplete",
         this,

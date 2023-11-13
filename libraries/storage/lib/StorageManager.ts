@@ -147,7 +147,7 @@ export class StorageManager {
   ): string {
     if (fileName.includes("/") || fileName.includes("\\")) {
       throw new IllegalArgumentError(
-        "filename cannot contain any of the following characters /\\"
+        "Filename cannot contain any of the following characters /\\"
       );
     }
 
