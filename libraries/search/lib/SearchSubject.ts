@@ -15,10 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { RootContext, Target } from "@syntest/analysis";
-import { ControlFlowProgram } from "@syntest/cfg";
+import { Target } from "@syntest/analysis";
 
 import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
@@ -34,12 +32,6 @@ export abstract class SearchSubject<T extends Encoding> {
   protected readonly _target: Target;
 
   /**
-   * The root context.
-   * @protected
-   */
-  protected readonly _rootContext: RootContext<unknown>;
-
-  /**
    * Mapping of objectives to adjacent objectives
    * @protected
    */
@@ -52,13 +44,8 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param rootContext RootContext of the subject
    * @protected
    */
-  protected constructor(
-    target: Target,
-    rootContext: RootContext<unknown>,
-    objectives: ObjectiveFunction<T>[]
-  ) {
+  protected constructor(target: Target, objectives: ObjectiveFunction<T>[]) {
     this._target = target;
-    this._rootContext = rootContext;
     this._objectives = objectives;
   }
 
@@ -71,10 +58,6 @@ export abstract class SearchSubject<T extends Encoding> {
 
   get name(): string {
     return this._target.name;
-  }
-
-  get cfg(): ControlFlowProgram {
-    return this._rootContext.getControlFlowProgram(this.path);
   }
 
   get path(): string {
