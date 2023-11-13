@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { isFailure, isSuccess, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { edgeContraction } from "../../lib/algorithms/edgeContraction";
@@ -63,7 +64,13 @@ describe("CFG edge contraction", function () {
   });
 
   it("One edge should be contracted", () => {
-    const contractedCFG = edgeContraction(cfg);
+    const result = edgeContraction(cfg);
+
+    expect(isSuccess(result)).to.be.true;
+
+    if (isFailure(result)) throw result.error;
+
+    const contractedCFG = unwrap(result);
 
     expect(contractedCFG.nodes.size).to.equal(cfg.nodes.size - 1);
 
@@ -71,7 +78,13 @@ describe("CFG edge contraction", function () {
   });
 
   it("One edge should be contracted", () => {
-    const contractedCFG = edgeContraction(cfg);
+    const result = edgeContraction(cfg);
+
+    expect(isSuccess(result)).to.be.true;
+
+    if (isFailure(result)) throw result.error;
+
+    const contractedCFG = unwrap(result);
 
     expect(contractedCFG.getParentNode("4")).to.equal("3");
 

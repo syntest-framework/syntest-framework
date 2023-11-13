@@ -18,11 +18,10 @@
 import { BaseError, ErrorOptions } from "./BaseError";
 
 /**
- * This Error is meant to be thrown whenever something is wrong with the Input Output logic
- * e.g. a provided path does not exist
+ * This Error is meant to be thrown when the error occurs because a function is called while the state is incorrect.
  */
-export class IOError extends BaseError {
+export class IllegalStateError extends BaseError {
   constructor(message: string, options: ErrorOptions = {}) {
-    super("IO", message, options);
+    super("Illegal State", message, options);
   }
 }

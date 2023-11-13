@@ -24,6 +24,7 @@ import {
   Node,
   NodeType,
 } from "@syntest/cfg";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { ApproachLevelCalculator } from "../../../../lib/objective/heuristics/ApproachLevelCalculator";
@@ -70,9 +71,13 @@ describe("CFG ancestors search", function () {
       new Edge("4", EdgeType.NORMAL, "4", node3.id, nodeExit.id),
     ];
 
-    cfgMini = edgeContraction(
+    let result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    cfgMini = unwrap(result);
 
     // Construct CFG1
     nodes = new Map();
@@ -104,9 +109,13 @@ describe("CFG ancestors search", function () {
       new Edge("9", EdgeType.NORMAL, "9", "E", "A"),
       new Edge("10", EdgeType.NORMAL, "10", "B", "EXIT"),
     ];
-    CFG1 = edgeContraction(
+    result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    CFG1 = unwrap(result);
 
     // Construct CFG2
     nodes = new Map();
@@ -154,9 +163,13 @@ describe("CFG ancestors search", function () {
       new Edge("23", EdgeType.NORMAL, "23", "R", "S"),
       new Edge("24", EdgeType.NORMAL, "24", "ROOT", "A"),
     ];
-    CFG2 = edgeContraction(
+    result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    CFG2 = unwrap(result);
 
     // Construct CFG3
 
@@ -187,9 +200,13 @@ describe("CFG ancestors search", function () {
       new Edge("24", EdgeType.NORMAL, "24", "ROOT", "A"),
     ];
 
-    CFG3 = edgeContraction(
+    result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    CFG3 = unwrap(result);
   });
 
   it("1 branch", () => {

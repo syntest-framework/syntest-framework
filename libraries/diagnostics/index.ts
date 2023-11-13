@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 export * from "./lib/errors/BaseError";
+export * from "./lib/errors/IllegalArgumentError";
+export * from "./lib/errors/IllegalStateError";
 export * from "./lib/errors/IOError";
 
 export * from "./lib/ensureError";
