@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { IllegalStateError } from "@syntest/diagnostics";
 import {
   Metric,
   MetricManager,
@@ -55,7 +56,7 @@ export class SearchMetricListener extends EventListenerPlugin {
 
   get metricManager() {
     if (!this.currentNamespace) {
-      throw new Error("No namespace set");
+      throw new IllegalStateError("No namespace set");
     }
 
     return this._metricManager.getNamespaced(this.currentNamespace);

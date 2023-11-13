@@ -16,6 +16,5 @@
  * limitations under the License.
  */
 
-export * from "./lib/util/Configuration";
-
+export * from "./lib/Configuration";
 export * from "./lib/StorageManager";

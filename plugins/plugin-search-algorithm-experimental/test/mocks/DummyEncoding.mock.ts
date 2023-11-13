@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { IllegalStateError } from "@syntest/diagnostics";
 import { BranchObjectiveFunction, Encoding } from "@syntest/search";
 
 export class DummyEncodingMock extends Encoding {
@@ -27,7 +28,9 @@ export class DummyEncodingMock extends Encoding {
     values: number[]
   ) {
     if (objective.length != values.length)
-      throw new Error("Something bad happened");
+      throw new IllegalStateError(
+        "Number of objectives should be equal to number of values"
+      );
 
     for (const [index, element] of objective.entries()) {
       this.setDistance(element, values[index]);
