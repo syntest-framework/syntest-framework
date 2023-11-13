@@ -89,7 +89,6 @@ export const prng = {
   },
   pickOne: <T>(options: T[]): T => {
     if (options.length === 0) {
-      // TODO or should this be a result type?
       throw new IllegalArgumentError(
         "Cannot pick random item from empty array"
       );

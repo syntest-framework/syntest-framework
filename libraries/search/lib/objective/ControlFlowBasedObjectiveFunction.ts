@@ -34,7 +34,6 @@ import { getLogger, Logger } from "@syntest/logging";
 import { Encoding } from "../Encoding";
 import { ExecutionResult } from "../ExecutionResult";
 
-import { BranchObjectiveFunction } from "./branch/BranchObjectiveFunction";
 import { ApproachLevelCalculator } from "./heuristics/ApproachLevelCalculator";
 import { BranchDistanceCalculator } from "./heuristics/BranchDistanceCalculator";
 import { ObjectiveFunction } from "./ObjectiveFunction";
@@ -68,7 +67,7 @@ export abstract class ControlFlowBasedObjectiveFunction<
 
   protected getMatchingFunctionGraph(
     nodeId: string
-  ): undefined | ControlFlowGraph | ContractedControlFlowGraph {
+  ): ControlFlowGraph | ContractedControlFlowGraph {
     // find the function that corresponds with this node id
     const functions_ = this.controlFlowProgram.functions.filter(
       (function_) => function_.graph.getNodeById(nodeId) !== undefined
@@ -81,7 +80,6 @@ export abstract class ControlFlowBasedObjectiveFunction<
     }
 
     if (functions_.length === 0) {
-      // TODO or should we return undefined here?
       throw new IllegalArgumentError(
         "Found zero functions with the given nodeId"
       );
@@ -104,6 +102,7 @@ export abstract class ControlFlowBasedObjectiveFunction<
    * @param encoding
    * @returns
    */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   protected _calculateControlFlowDistance(
     id: string,
     executionResult: ExecutionResult
@@ -143,11 +142,11 @@ export abstract class ControlFlowBasedObjectiveFunction<
     }
 
     if (outgoingEdges.length < 2) {
-      // // TODO: end of block problem
-      // // when a crash happens at the last line of a block the statement fraction becomes 1 since we do not record the last one
-      // if (statementFraction === 1) {
-      //   return approachLevel + 0.01;
-      // }
+      // TODO: end of block problem
+      // when a crash happens at the last line of a block the statement fraction becomes 1 since we do not record the last one
+      if (statementFraction === 1) {
+        return approachLevel + 0.01;
+      }
 
       // return approachLevel + 0.48 * statementFraction + 0.01;
       throw new ImplementationError(
@@ -215,7 +214,7 @@ export abstract class ControlFlowBasedObjectiveFunction<
 
     if (branchDistance === 0) {
       // TODO there can still be a crash inside of the if statement giving this result
-      BranchObjectiveFunction.LOGGER.warn("branch distance is zero");
+      ControlFlowBasedObjectiveFunction.LOGGER.warn("branch distance is zero");
       branchDistance += 0.999;
     }
 

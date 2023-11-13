@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-import { IllegalStateError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "./Encoding";
@@ -103,10 +102,8 @@ export class Archive<T extends Encoding> {
 
     // Do not update if the encoding is already assigned to the objective function
     if (oldEncoding && oldEncoding === encoding) {
-      // TODO this could be a warning?
-      throw new IllegalStateError(
-        "Encoding already assigned to objective function"
-      );
+      Archive.LOGGER.warn("Encoding already assigned to objective function");
+      return;
     }
 
     // Add the encoding to the archive
