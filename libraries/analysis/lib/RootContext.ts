@@ -28,13 +28,13 @@ import {
 } from "@syntest/diagnostics";
 import TypedEmitter from "typed-emitter";
 
+import { Events } from "./Events";
 import { AbstractSyntaxTreeFactory } from "./factories/AbstractSyntaxTreeFactory";
 import { ControlFlowGraphFactory } from "./factories/ControlFlowGraphFactory";
 import { DependencyFactory } from "./factories/DependencyFactory";
 import { SourceFactory } from "./factories/SourceFactory";
 import { TargetFactory } from "./factories/TargetFactory";
 import { SubTarget, Target } from "./Target";
-import { Events } from "./util/Events";
 
 export class RootContext<S> {
   protected _rootPath: string;

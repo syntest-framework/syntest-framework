@@ -18,8 +18,8 @@
 
 import { ControlFlowProgram } from "@syntest/cfg";
 
-import { RootContext } from "../RootContext";
-import { Target } from "../Target";
+import { RootContext } from "./RootContext";
+import { Target } from "./Target";
 
 export type Events = {
   sourceResolvingStart: <S>(
