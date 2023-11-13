@@ -48,6 +48,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
+    "@syntest/diagnostics": "*",
     "winston": "3.8.2",
     "yargs": "^17.7.1"
   },
