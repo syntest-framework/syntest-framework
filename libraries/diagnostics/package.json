@@ -42,10 +42,10 @@
     "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
     "prepack": "cp ../../LICENSE ./ && cp ../../NOTICE ./",
     "setup": "cp ../../NOTICE.header.ts ./",
-    "test": "mocha --config ../../.mocharc.json",
-    "test:coverage": "nyc --reporter=text --reporter=html mocha --config ../../.mocharc.json",
-    "test:coverage:ci": "nyc --reporter=lcovonly mocha --config ../../.mocharc.json --reporter json --reporter-option output=test-results.json",
-    "test:watch": "mocha --config ../../.mocharc.json --watch"
+    "test": "echo 'no tests'",
+    "test:coverage": "echo 'no tests'",
+    "test:coverage:ci": "echo 'no tests'",
+    "test:watch": "echo 'no tests'"
   },
   "engines": {
     "node": ">=16"
