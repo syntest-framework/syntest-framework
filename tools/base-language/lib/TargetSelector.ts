@@ -23,7 +23,7 @@ import { getLogger, Logger } from "@syntest/logging";
 import globby = require("globby");
 import TypedEventEmitter from "typed-emitter";
 
-import { Events } from "./util/Events";
+import { Events } from "./Events";
 
 export class TargetSelector {
   protected static LOGGER: Logger;

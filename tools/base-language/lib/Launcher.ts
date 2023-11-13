@@ -24,8 +24,8 @@ import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 
 import { ArgumentsObject } from "./Configuration";
+import { Events } from "./Events";
 import { PropertyName } from "./Metrics";
-import { Events } from "./util/Events";
 
 export abstract class Launcher<T extends ArgumentsObject> {
   protected static LOGGER: Logger;

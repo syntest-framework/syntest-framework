@@ -42,7 +42,7 @@ export * from "./lib/presets/DynaMOSAPreset";
 export * from "./lib/presets/MOSAPreset";
 export * from "./lib/presets/NSGAIIPreset";
 
-export * from "./lib/util/Events";
+export * from "./lib/Events";
 
 export * from "./lib/Configuration";
 export * from "./lib/FileSelector";
