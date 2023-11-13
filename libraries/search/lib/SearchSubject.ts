@@ -49,18 +49,18 @@ export abstract class SearchSubject<T extends Encoding> {
     this._objectives = objectives;
   }
 
-  /**
-   * Retrieve objectives.
-   */
-  get objectives(): ObjectiveFunction<T>[] {
-    return [...this._objectives];
-  }
-
   get name(): string {
     return this._target.name;
   }
 
   get path(): string {
     return this._target.path;
+  }
+
+  /**
+   * Gets the objectives
+   */
+  get objectives(): ObjectiveFunction<T>[] {
+    return [...this._objectives];
   }
 }
