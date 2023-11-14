@@ -1,6 +1,6 @@
 {
   "name": "@syntest/analysis",
-  "version": "0.2.1-beta.3",
+  "version": "0.3.0-beta.0",
   "description": "SynTest library for analyzing code",
   "keywords": [
     "syntest",

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0-beta.9](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.8...@syntest/search@0.5.0-beta.9) (2023-11-14)
+
+### Features
+
+- implement objective extractor functions ([#383](https://github.com/syntest-framework/syntest-framework/issues/383)) ([8a80262](https://github.com/syntest-framework/syntest-framework/commit/8a80262184a826c9d0ffd37e6a90c95e3acb1327))
+
 ## [0.5.0-beta.8](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.7...@syntest/search@0.5.0-beta.8) (2023-11-02)
 
 **Note:** Version bump only for package @syntest/search
