@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0-beta.0](https://github.com/syntest-framework/syntest-framework/compare/@syntest/analysis@0.2.1-beta.3...@syntest/analysis@0.3.0-beta.0) (2023-11-14)
+
+### Features
+
+- implement objective extractor functions ([#383](https://github.com/syntest-framework/syntest-framework/issues/383)) ([8a80262](https://github.com/syntest-framework/syntest-framework/commit/8a80262184a826c9d0ffd37e6a90c95e3acb1327))
+
 ## [0.2.1-beta.3](https://github.com/syntest-framework/syntest-framework/compare/@syntest/analysis@0.2.1-beta.2...@syntest/analysis@0.2.1-beta.3) (2023-11-02)
 
 **Note:** Version bump only for package @syntest/analysis

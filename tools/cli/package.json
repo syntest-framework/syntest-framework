@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli",
-  "version": "0.3.0-beta.2",
+  "version": "0.3.0-beta.3",
   "description": "SynTest Framework command line interface",
   "keywords": [
     "syntest",
@@ -49,11 +49,11 @@
     "test:watch": "echo 'no tests'"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.2.1-beta.3",
-    "@syntest/init": "^0.2.2-beta.4",
+    "@syntest/cli-graphics": "^0.3.0-beta.0",
+    "@syntest/init": "^0.2.2-beta.5",
     "@syntest/logging": "^0.2.0-beta.1",
     "@syntest/metric": "^0.1.2-beta.3",
-    "@syntest/module": "^0.2.0-beta.2",
+    "@syntest/module": "^0.2.0-beta.3",
     "@syntest/prng": "^0.2.0-beta.1",
     "@syntest/storage": "^0.3.0-beta.1",
     "short-uuid": "^4.2.2",
