@@ -20,17 +20,17 @@ import { RootContext } from "@syntest/analysis";
 import { Model } from "./Model";
 
 export interface SourceModel extends Model {
-  filePath: string;
+  filepath: string;
   source?: string;
 }
 
 export function sourceModelFormatter<S>(
   rootContext: RootContext<S>,
-  filePath: string,
+  filepath: string,
   source?: string
 ): SourceModel {
   return {
-    filePath,
+    filepath,
     source,
   };
 }

@@ -276,35 +276,35 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
     // analysis events
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "sourceResolvingStart",
-      <S>(rootContext: RootContext<S>, filePath: string) =>
+      <S>(rootContext: RootContext<S>, filepath: string) =>
         handler(
           this.client,
           this._fid,
           "sourceResolvingStart",
-          sourceModelFormatter(rootContext, filePath)
+          sourceModelFormatter(rootContext, filepath)
         )
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "sourceResolvingComplete",
-      <S>(rootContext: RootContext<S>, filePath: string, source: string) => {
+      <S>(rootContext: RootContext<S>, filepath: string, source: string) => {
         handler(
           this.client,
           this._fid,
           "sourceResolvingComplete",
-          sourceModelFormatter(rootContext, filePath, source)
+          sourceModelFormatter(rootContext, filepath, source)
         );
       }
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "abstractSyntaxTreeResolvingStart",
-      <S>(rootContext: RootContext<S>, filePath: string) =>
+      <S>(rootContext: RootContext<S>, filepath: string) =>
         handler(
           this.client,
           this._fid,
           "abstractSyntaxTreeResolvingStart",
-          abstractSyntaxTreeModelFormatter(rootContext, filePath)
+          abstractSyntaxTreeModelFormatter(rootContext, filepath)
         )
     );
 
@@ -312,7 +312,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       "abstractSyntaxTreeResolvingComplete",
       <S>(
         rootContext: RootContext<S>,
-        filePath: string,
+        filepath: string,
         abstractSyntaxTree: S
       ) =>
         handler(
@@ -321,7 +321,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           "abstractSyntaxTreeResolvingComplete",
           abstractSyntaxTreeModelFormatter(
             rootContext,
-            filePath,
+            filepath,
             abstractSyntaxTree
           )
         )
@@ -329,12 +329,12 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "controlFlowGraphResolvingStart",
-      <S>(rootContext: RootContext<S>, filePath: string) =>
+      <S>(rootContext: RootContext<S>, filepath: string) =>
         handler(
           this.client,
           this._fid,
           "controlFlowGraphResolvingStart",
-          controlFlowGraphModelFormatter(rootContext, filePath)
+          controlFlowGraphModelFormatter(rootContext, filepath)
         )
     );
 
@@ -342,47 +342,47 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       "controlFlowGraphResolvingComplete",
       <S>(
         rootContext: RootContext<S>,
-        filePath: string,
+        filepath: string,
         cfp: ControlFlowProgram
       ) =>
         handler(
           this.client,
           this._fid,
           "controlFlowGraphResolvingComplete",
-          controlFlowGraphModelFormatter(rootContext, filePath, cfp)
+          controlFlowGraphModelFormatter(rootContext, filepath, cfp)
         )
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "targetExtractionStart",
-      <S>(rootContext: RootContext<S>, filePath: string) =>
+      <S>(rootContext: RootContext<S>, filepath: string) =>
         handler(
           this.client,
           this._fid,
           "targetExtractionStart",
-          targetModelFormatter(rootContext, filePath)
+          targetModelFormatter(rootContext, filepath)
         )
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "targetExtractionComplete",
-      <S>(rootContext: RootContext<S>, filePath: string, target: Target) =>
+      <S>(rootContext: RootContext<S>, filepath: string, target: Target) =>
         handler(
           this.client,
           this._fid,
           "targetExtractionComplete",
-          targetModelFormatter(rootContext, filePath, target)
+          targetModelFormatter(rootContext, filepath, target)
         )
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
       "dependencyResolvingStart",
-      <S>(rootContext: RootContext<S>, filePath: string) =>
+      <S>(rootContext: RootContext<S>, filepath: string) =>
         handler(
           this.client,
           this._fid,
           "dependencyResolvingStart",
-          dependencyModelFormatter(rootContext, filePath)
+          dependencyModelFormatter(rootContext, filepath)
         )
     );
 
@@ -390,14 +390,14 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       "dependencyResolvingComplete",
       <S>(
         rootContext: RootContext<S>,
-        filePath: string,
+        filepath: string,
         dependencies: string[]
       ) =>
         handler(
           this.client,
           this._fid,
           "dependencyResolvingComplete",
-          dependencyModelFormatter(rootContext, filePath, dependencies)
+          dependencyModelFormatter(rootContext, filepath, dependencies)
         )
     );
   }

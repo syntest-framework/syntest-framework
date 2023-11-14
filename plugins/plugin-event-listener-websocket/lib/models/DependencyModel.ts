@@ -20,17 +20,17 @@ import { RootContext } from "@syntest/analysis";
 import { Model } from "./Model";
 
 export interface DependencyModel extends Model {
-  filePath: string;
+  filepath: string;
   dependencies?: string[];
 }
 
 export function dependencyModelFormatter(
   rootContext: RootContext<unknown>,
-  filePath: string,
+  filepath: string,
   dependencies?: string[]
 ): DependencyModel {
   return {
-    filePath,
+    filepath,
     dependencies,
   };
 }

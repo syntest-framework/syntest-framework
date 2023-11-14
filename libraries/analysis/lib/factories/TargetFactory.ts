@@ -20,5 +20,5 @@ import { Result } from "@syntest/diagnostics";
 import { Target } from "../Target";
 
 export interface TargetFactory<S> {
-  extract(filePath: string, AST: S): Result<Target>;
+  extract(filepath: string, AST: S): Result<Target>;
 }

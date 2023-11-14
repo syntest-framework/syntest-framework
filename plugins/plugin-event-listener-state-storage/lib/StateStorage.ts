@@ -33,41 +33,41 @@ export class StateStorage {
 
   controlFlowGraphResolvingComplete<S>(
     rootContext: RootContext<S>,
-    filePath: string,
+    filepath: string,
     cfp: ControlFlowProgram
   ): void {
     this.save(
       // eslint-disable-next-line unicorn/no-null
       JSON.stringify(makeSerializeable(cfp), null, 2),
-      filePath,
+      filepath,
       "cfg.json"
     );
   }
 
   abstractSyntaxTreeResolvingComplete<S>(
     rootContext: RootContext<S>,
-    filePath: string,
+    filepath: string,
     ast: S
   ): void {
-    this.save(JSON.stringify(ast, undefined, 2), filePath, "ast.json");
+    this.save(JSON.stringify(ast, undefined, 2), filepath, "ast.json");
   }
 
   targetExtractionComplete<S>(
     rootContext: RootContext<S>,
-    filePath: string,
+    filepath: string,
     target: Target
   ): void {
-    this.save(JSON.stringify(target, undefined, 2), filePath, "target.json");
+    this.save(JSON.stringify(target, undefined, 2), filepath, "target.json");
   }
 
   dependencyResolvingComplete<S>(
     rootContext: RootContext<S>,
-    filePath: string,
+    filepath: string,
     dependencies: string[]
   ): void {
     this.save(
       JSON.stringify({ depedencies: dependencies }, undefined, 2),
-      filePath,
+      filepath,
       "dependencies.json"
     );
   }
@@ -108,7 +108,7 @@ export class StateStorage {
     const uncovered = searchAlgorithm
       .getObjectiveManager()
       .getUncoveredObjectives();
-    const filePath = subject.path;
+    const filepath = subject.path;
 
     this.save(
       JSON.stringify(
@@ -123,14 +123,14 @@ export class StateStorage {
         undefined,
         2
       ),
-      filePath,
+      filepath,
       "covered.json"
     );
   }
 
   save(
     data: string,
-    filePath: string,
+    filepath: string,
     type:
       | "cfg.json"
       | "ast.json"
@@ -138,7 +138,7 @@ export class StateStorage {
       | "dependencies.json"
       | "covered.json"
   ) {
-    const name = path.basename(filePath, path.extname(filePath));
+    const name = path.basename(filepath, path.extname(filepath));
 
     this.storageManager.store([this.storagePath, name], type, data);
   }

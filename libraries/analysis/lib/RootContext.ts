@@ -83,13 +83,13 @@ export class RootContext<S> {
     this._dependenciesMap = new Map();
   }
 
-  protected resolvePath(filePath: string): Result<string> {
-    const absolutePath = path.resolve(filePath);
+  protected resolvePath(filepath: string): Result<string> {
+    const absolutePath = path.resolve(filepath);
 
     if (!this.verifyTargetPath(absolutePath)) {
       return failure(
         new IOError("The given filepath is not in the given root path", {
-          context: { rootPath: this._rootPath, filePath: filePath },
+          context: { rootPath: this._rootPath, filepath: filepath },
         })
       );
     }
@@ -97,16 +97,16 @@ export class RootContext<S> {
     return success(absolutePath);
   }
 
-  protected verifyTargetPath(filePath: string): boolean {
-    return filePath.includes(this._rootPath);
+  protected verifyTargetPath(filepath: string): boolean {
+    return filepath.includes(this._rootPath);
   }
 
   /**
    * Loads the source code of the target
-   * @param filePath
+   * @param filepath
    */
-  getSource(filePath: string): Result<string> {
-    const result = this.resolvePath(filePath);
+  getSource(filepath: string): Result<string> {
+    const result = this.resolvePath(filepath);
 
     if (isFailure(result)) return result;
 
@@ -136,11 +136,11 @@ export class RootContext<S> {
   }
 
   /**
-   * Loads the abstract syntax tree from the given filePath
-   * @param filePath
+   * Loads the abstract syntax tree from the given filepath
+   * @param filepath
    */
-  getAbstractSyntaxTree(filePath: string): Result<S> {
-    const result = this.resolvePath(filePath);
+  getAbstractSyntaxTree(filepath: string): Result<S> {
+    const result = this.resolvePath(filepath);
 
     if (isFailure(result)) return result;
 
@@ -178,11 +178,11 @@ export class RootContext<S> {
   }
 
   /**
-   * Loads the control flow program from the given filePath
-   * @param filePath
+   * Loads the control flow program from the given filepath
+   * @param filepath
    */
-  getControlFlowProgram(filePath: string): Result<ControlFlowProgram> {
-    const result = this.resolvePath(filePath);
+  getControlFlowProgram(filepath: string): Result<ControlFlowProgram> {
+    const result = this.resolvePath(filepath);
 
     if (isFailure(result)) return result;
 
@@ -219,12 +219,12 @@ export class RootContext<S> {
   }
 
   /**
-   * Loads the target context from the given filePath
-   * @param _filePath
+   * Loads the target context from the given filepath
+   * @param _filepath
    * @returns
    */
-  getTarget(filePath: string): Result<Target> {
-    const result = this.resolvePath(filePath);
+  getTarget(filepath: string): Result<Target> {
+    const result = this.resolvePath(filepath);
 
     if (isFailure(result)) return result;
 
@@ -261,11 +261,11 @@ export class RootContext<S> {
   }
 
   /**
-   * gets all sub-targets from the given filePath
-   * @param filePath
+   * gets all sub-targets from the given filepath
+   * @param filepath
    */
-  getSubTargets(filePath: string): Result<SubTarget[]> {
-    const result = this.getTarget(filePath);
+  getSubTargets(filepath: string): Result<SubTarget[]> {
+    const result = this.getTarget(filepath);
 
     if (isFailure(result)) return result;
 
@@ -273,11 +273,11 @@ export class RootContext<S> {
   }
 
   /**
-   * Loads all dependencies from the given filePath
-   * @param filePath
+   * Loads all dependencies from the given filepath
+   * @param filepath
    */
-  getDependencies(filePath: string): Result<string[]> {
-    const result = this.resolvePath(filePath);
+  getDependencies(filepath: string): Result<string[]> {
+    const result = this.resolvePath(filepath);
 
     if (isFailure(result)) return result;
 
