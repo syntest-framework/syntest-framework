@@ -169,31 +169,25 @@ function beforeGuards(
   controlFlowGraph: ControlFlowGraph,
   source: string,
   target: string
-): Result<void> {
+): void {
   if (controlFlowGraph.getOutgoingEdges(source).length !== 1) {
-    return failure(
-      new IllegalStateError(
-        "Cannot merge nodes, node has more than one outgoing edge",
-        { context: { node: source } }
-      )
+    throw new IllegalStateError(
+      "Cannot merge nodes, node has more than one outgoing edge",
+      { context: { node: source } }
     );
   }
 
   if (controlFlowGraph.getIncomingEdges(target).length !== 1) {
-    return failure(
-      new IllegalStateError(
-        "Cannot merge nodes, node has more than one incoming edge",
-        { context: { node: target } }
-      )
+    throw new IllegalStateError(
+      "Cannot merge nodes, node has more than one incoming edge",
+      { context: { node: target } }
     );
   }
 
   if (controlFlowGraph.getOutgoingEdges(source)[0].target !== target) {
-    return failure(
-      new IllegalStateError(
-        "Cannot merge nodes, nodes are not directly connected",
-        { context: { node1: source, node2: target } }
-      )
+    throw new IllegalStateError(
+      "Cannot merge nodes, nodes are not directly connected",
+      { context: { node1: source, node2: target } }
     );
   }
 
@@ -202,10 +196,8 @@ function beforeGuards(
   const isErrorExit = target === controlFlowGraph.errorExit.id;
 
   if (isEntry && (isSuccessExit || isErrorExit)) {
-    return failure(new IllegalStateError("Cannot merge entry and exit nodes"));
+    throw new IllegalStateError("Cannot merge entry and exit nodes");
   }
-
-  return success(undefined as void);
 }
 
 function afterGuards(
@@ -214,38 +206,32 @@ function afterGuards(
   controlFlowGraph: ControlFlowGraph,
   source: string,
   target: string
-): Result<void> {
+): void {
   if (newNodes.size !== controlFlowGraph.nodes.size - 1) {
-    return failure(
-      new IllegalStateError(
-        "Exactly one node should be removed when merging nodes",
-        {
-          context: {
-            mergeNode1: source,
-            mergeNode2: target,
-            removedAmount: newNodes.size - controlFlowGraph.nodes.size,
-          },
-        }
-      )
+    throw new IllegalStateError(
+      "Exactly one node should be removed when merging nodes",
+      {
+        context: {
+          mergeNode1: source,
+          mergeNode2: target,
+          removedAmount: newNodes.size - controlFlowGraph.nodes.size,
+        },
+      }
     );
   }
 
   if (newEdges.length !== controlFlowGraph.edges.length - 1) {
-    return failure(
-      new IllegalStateError(
-        "Exactly one edge should be removed when merging nodes",
-        {
-          context: {
-            mergeNode1: source,
-            mergeNode2: target,
-            removedAmount: newEdges.length - controlFlowGraph.edges.length,
-          },
-        }
-      )
+    throw new IllegalStateError(
+      "Exactly one edge should be removed when merging nodes",
+      {
+        context: {
+          mergeNode1: source,
+          mergeNode2: target,
+          removedAmount: newEdges.length - controlFlowGraph.edges.length,
+        },
+      }
     );
   }
-
-  return success(undefined as void);
 }
 
 function mergeNodes(
@@ -253,9 +239,7 @@ function mergeNodes(
   source: string,
   target: string
 ): Result<ControlFlowGraph> {
-  const result = beforeGuards(controlFlowGraph, source, target);
-
-  if (isFailure(result)) return result;
+  beforeGuards(controlFlowGraph, source, target);
 
   const sourceNode = controlFlowGraph.getNodeById(source);
   const targetNode = controlFlowGraph.getNodeById(target);
@@ -329,15 +313,7 @@ function mergeNodes(
       return edge;
     });
 
-  const afterResult = afterGuards(
-    newNodes,
-    newEdges,
-    controlFlowGraph,
-    source,
-    target
-  );
-
-  if (isFailure(afterResult)) return afterResult;
+  afterGuards(newNodes, newEdges, controlFlowGraph, source, target);
 
   return success(
     new ControlFlowGraph(
