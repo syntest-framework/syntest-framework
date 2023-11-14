@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import {
-  ApproachLevel,
+  ApproachLevelCalculator,
   BranchObjectiveFunction,
   EncodingRunner,
   EncodingSampler,
@@ -55,16 +55,16 @@ describe("Test SPEA-II", function () {
     const branchDistance = new DummyBranchDistance();
 
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      branchDistance,
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      branchDistance
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      branchDistance,
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      branchDistance
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);

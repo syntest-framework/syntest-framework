@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 SynTest contributors
+ * Copyright 2020-2021 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Framework.
  *
@@ -16,13 +16,10 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../lib/Encoding";
-import { ObjectiveFunction } from "../../lib/objective/ObjectiveFunction";
-import { SearchSubject } from "../../lib/SearchSubject";
-
-export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
-  constructor(objectives: ObjectiveFunction<T>[]) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    super({ path: "", name: "", subTargets: [] }, objectives);
-  }
+export abstract class BranchDistanceCalculator {
+  abstract calculate(
+    condition: string,
+    variables: unknown,
+    trueOrFalse: boolean
+  ): number;
 }

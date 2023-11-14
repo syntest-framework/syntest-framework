@@ -18,9 +18,9 @@
 import * as chai from "chai";
 
 import { DominanceComparator } from "../../../lib/comparators/DominanceComparator";
-import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
-import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
+import { BranchObjectiveFunction } from "../../../lib/objective/branch/BranchObjectiveFunction";
+import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
+import { DummyBranchDistanceCalculator } from "../../mocks/DummyBranchDistance.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 
 const expect = chai.expect;
@@ -30,16 +30,16 @@ describe("Dominance comparator", function () {
 
   beforeEach(function () {
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -84,10 +84,10 @@ describe("Dominance comparator", function () {
 
   it("None dominates with three objective", () => {
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      new DummyBranchDistance(),
+      "2",
       undefined,
-      "2"
+      new ApproachLevelCalculator(),
+      new DummyBranchDistanceCalculator()
     );
     objectives.add(objective2);
 

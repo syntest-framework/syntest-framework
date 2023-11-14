@@ -156,19 +156,24 @@ export class UserInterface {
 
   // Private internal styling methods
   protected table(title: string, tableObject: TableObject): string {
-    return table(
-      [
-        tableObject.headers.map((element) => this.bold(element)),
-        ...tableObject.rows,
-        tableObject.footers.map((element) => this.bold(element)),
-      ],
-      {
-        header: {
-          alignment: "center",
-          content: chalk.greenBright(chalk.bold(title)),
-        },
-      }
-    );
+    const rows = [];
+
+    if (tableObject.headers) {
+      rows.push(tableObject.headers.map((element) => this.bold(element)));
+    }
+
+    rows.push(...tableObject.rows);
+
+    if (tableObject.footers) {
+      rows.push(tableObject.footers.map((element) => this.bold(element)));
+    }
+
+    return table(rows, {
+      header: {
+        alignment: "center",
+        content: chalk.greenBright(chalk.bold(title)),
+      },
+    });
   }
 
   protected itemization(items: ItemizationItem[], indentation = 2): string {
@@ -221,9 +226,9 @@ export type ItemizationItem = {
 };
 
 export type TableObject = {
-  headers: string[];
+  headers?: string[];
   rows: string[][];
-  footers: string[];
+  footers?: string[];
 };
 
 export type BarObject = {

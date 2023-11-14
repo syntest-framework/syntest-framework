@@ -20,12 +20,12 @@ import * as chai from "chai";
 import { MOSAFamily } from "../../../lib/algorithms/evolutionary/MOSAFamily";
 import { EncodingRunner } from "../../../lib/EncodingRunner";
 import { EncodingSampler } from "../../../lib/EncodingSampler";
-import { BranchObjectiveFunction } from "../../../lib/objective/BranchObjectiveFunction";
-import { ApproachLevel } from "../../../lib/objective/heuristics/ApproachLevel";
+import { BranchObjectiveFunction } from "../../../lib/objective/branch/BranchObjectiveFunction";
+import { ApproachLevelCalculator } from "../../../lib/objective/heuristics/ApproachLevelCalculator";
 import { UncoveredObjectiveManager } from "../../../lib/objective/managers/UncoveredObjectiveManager";
 import { SecondaryObjectiveComparator } from "../../../lib/objective/secondary/SecondaryObjectiveComparator";
 import { Crossover } from "../../../lib/operators/crossover/Crossover";
-import { DummyBranchDistance } from "../../mocks/DummyBranchDistance.mock";
+import { DummyBranchDistanceCalculator } from "../../mocks/DummyBranchDistance.mock";
 import { DummyCrossover } from "../../mocks/DummyCrossover.mock";
 import { DummyEncodingMock } from "../../mocks/DummyEncoding.mock";
 import { DummyProcreation } from "../../mocks/DummyProcreation.mock";
@@ -38,19 +38,19 @@ describe("Test MOSA", function () {
   let objectives: Set<BranchObjectiveFunction<DummyEncodingMock>>;
 
   beforeEach(function () {
-    const branchDistance = new DummyBranchDistance();
+    const branchDistance = new DummyBranchDistanceCalculator();
 
     const objective1 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      branchDistance,
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      branchDistance
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
-      new ApproachLevel(),
-      branchDistance,
+      "1",
       undefined,
-      "1"
+      new ApproachLevelCalculator(),
+      branchDistance
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);

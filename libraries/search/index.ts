@@ -49,13 +49,19 @@ export * from "./lib/algorithms/evolutionary/NSGAII";
 export * from "./lib/algorithms/evolutionary/MOSAFamily";
 
 // - Objective
-export * from "./lib/objective/heuristics/ApproachLevel";
-export * from "./lib/objective/heuristics/BranchDistance";
+export * from "./lib/objective/branch/branchObjectiveExtraction";
+export * from "./lib/objective/function/functionObjectiveExtraction";
+export * from "./lib/objective/path/pathObjectiveExtraction";
 
-export * from "./lib/objective/BranchObjectiveFunction";
-export * from "./lib/objective/ExceptionObjectiveFunction";
-export * from "./lib/objective/FunctionObjectiveFunction";
-export * from "./lib/objective/ImplicitBranchObjectiveFunction";
+export * from "./lib/objective/heuristics/ApproachLevelCalculator";
+export * from "./lib/objective/heuristics/BranchDistanceCalculator";
+
+export * from "./lib/objective/branch/BranchObjectiveFunction";
+export * from "./lib/objective/implicitBranch/ImplicitBranchObjectiveFunction";
+export * from "./lib/objective/path/PathObjectiveFunction";
+
+export * from "./lib/objective/exception/ExceptionObjectiveFunction";
+export * from "./lib/objective/function/FunctionObjectiveFunction";
 export * from "./lib/objective/ObjectiveFunction";
 
 export * from "./lib/objective/managers/ArchiveBasedObjectiveManager";

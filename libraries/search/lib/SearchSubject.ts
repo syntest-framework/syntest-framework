@@ -15,10 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { RootContext, Target } from "@syntest/analysis";
-import { ControlFlowProgram } from "@syntest/cfg";
+import { Target } from "@syntest/analysis";
 
 import { Encoding } from "./Encoding";
 import { ObjectiveFunction } from "./objective/ObjectiveFunction";
@@ -34,16 +32,10 @@ export abstract class SearchSubject<T extends Encoding> {
   protected readonly _target: Target;
 
   /**
-   * The root context.
-   * @protected
-   */
-  protected readonly _rootContext: RootContext<unknown>;
-
-  /**
    * Mapping of objectives to adjacent objectives
    * @protected
    */
-  protected _objectives: Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>;
+  protected _objectives: ObjectiveFunction<T>[];
 
   /**
    * Constructor.
@@ -52,46 +44,23 @@ export abstract class SearchSubject<T extends Encoding> {
    * @param rootContext RootContext of the subject
    * @protected
    */
-  protected constructor(target: Target, rootContext: RootContext<unknown>) {
+  protected constructor(target: Target, objectives: ObjectiveFunction<T>[]) {
     this._target = target;
-    this._rootContext = rootContext;
-    this._objectives = new Map<ObjectiveFunction<T>, ObjectiveFunction<T>[]>();
-    this._extractObjectives();
-  }
-
-  /**
-   * Extract objectives from the subject based on the targets.
-   * @protected
-   */
-  protected abstract _extractObjectives(): void;
-
-  /**
-   * Retrieve objectives.
-   */
-  public getObjectives(): ObjectiveFunction<T>[] {
-    return [...this._objectives.keys()];
-  }
-
-  /**
-   * Retrieve child objectives.
-   *
-   * @param objective The objective to get the child objectives of
-   */
-  public getChildObjectives(
-    objective: ObjectiveFunction<T>
-  ): ObjectiveFunction<T>[] {
-    return [...this._objectives.get(objective)];
+    this._objectives = objectives;
   }
 
   get name(): string {
     return this._target.name;
   }
 
-  get cfg(): ControlFlowProgram {
-    return this._rootContext.getControlFlowProgram(this.path);
-  }
-
   get path(): string {
     return this._target.path;
+  }
+
+  /**
+   * Gets the objectives
+   */
+  get objectives(): ObjectiveFunction<T>[] {
+    return [...this._objectives];
   }
 }

@@ -56,7 +56,7 @@ export class UncoveredObjectiveManager<
     this._reset();
 
     // Add all objectives to both the uncovered objectives and the current objectives
-    const objectives = subject.getObjectives();
+    const objectives = subject.objectives;
     for (const objective of objectives) {
       this._uncoveredObjectives.add(objective);
       this._currentObjectives.add(objective);

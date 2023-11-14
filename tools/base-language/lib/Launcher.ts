@@ -26,8 +26,8 @@ import { ArgumentsObject } from "./Configuration";
 import { PropertyName } from "./Metrics";
 import { Events } from "./util/Events";
 
-export abstract class Launcher {
-  protected arguments_: ArgumentsObject;
+export abstract class Launcher<T extends ArgumentsObject> {
+  protected arguments_: T;
 
   protected moduleManager: ModuleManager;
   protected metricManager: MetricManager;
@@ -35,7 +35,7 @@ export abstract class Launcher {
   protected userInterface: UserInterface;
 
   constructor(
-    arguments_: ArgumentsObject,
+    arguments_: T,
     moduleManager: ModuleManager,
     metricManager: MetricManager,
     storageManager: StorageManager,

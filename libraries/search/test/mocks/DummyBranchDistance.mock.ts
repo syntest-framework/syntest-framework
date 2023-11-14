@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BranchDistance } from "../../lib/objective/heuristics/BranchDistance";
+import { BranchDistanceCalculator } from "../../lib/objective/heuristics/BranchDistanceCalculator";
 
-export class DummyBranchDistance extends BranchDistance {
+export class DummyBranchDistanceCalculator extends BranchDistanceCalculator {
   public calculate(): number {
     return 1;
   }

@@ -16,10 +16,8 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { ObjectiveFunction } from "../objective/ObjectiveFunction";
-import { SearchSubject } from "../SearchSubject";
-import { shouldNeverHappen } from "../util/diagnostics";
+import { Encoding } from "../../Encoding";
+import { ObjectiveFunction } from "../ObjectiveFunction";
 
 /**
  * Objective function for the exception criterion.
@@ -32,8 +30,8 @@ export class ExceptionObjectiveFunction<
 > extends ObjectiveFunction<T> {
   protected _error: Error;
 
-  constructor(subject: SearchSubject<T>, id: string, error: Error) {
-    super(id, subject);
+  constructor(id: string, error: Error) {
+    super(id);
     this._error = error;
   }
 
@@ -41,13 +39,16 @@ export class ExceptionObjectiveFunction<
     return this._error;
   }
 
-  /**
-   * @inheritDoc
-   */
-  calculateDistance(): number {
-    // This method should never be called.
-    // The exception objective function is only created when an exception is already covered.
-    // So the distance is always zero.
-    throw new Error(shouldNeverHappen("method not implemented."));
+  override calculateDistance(encoding: T): number {
+    const executionResult = encoding.getExecutionResult();
+
+    if (
+      executionResult === undefined ||
+      executionResult.getTraces().length === 0
+    ) {
+      return Number.MAX_VALUE;
+    }
+
+    return executionResult.coversId(this._id) ? 0 : Number.MAX_VALUE;
   }
 }

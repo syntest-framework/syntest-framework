@@ -56,7 +56,7 @@ export class TrackingObjectiveManager<
     this._reset();
 
     // Add all objectives to both the uncovered objectives and the current objectives
-    const objectives = subject.getObjectives();
+    const objectives = subject.objectives;
     for (const objective of objectives) {
       // If the objective is a control flow based objective, set the shallow flag
       objective.shallow = true;

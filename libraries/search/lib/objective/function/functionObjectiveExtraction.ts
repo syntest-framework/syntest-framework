@@ -16,13 +16,20 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../../lib/Encoding";
-import { ObjectiveFunction } from "../../lib/objective/ObjectiveFunction";
-import { SearchSubject } from "../../lib/SearchSubject";
+import { ControlFlowProgram } from "@syntest/cfg";
 
-export class DummySearchSubject<T extends Encoding> extends SearchSubject<T> {
-  constructor(objectives: ObjectiveFunction<T>[]) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    super({ path: "", name: "", subTargets: [] }, objectives);
+import { Encoding } from "../../Encoding";
+
+import { FunctionObjectiveFunction } from "./FunctionObjectiveFunction";
+
+export function extractFunctionObjectivesFromProgram<T extends Encoding>(
+  cfp: ControlFlowProgram
+) {
+  const functions: FunctionObjectiveFunction<T>[] = [];
+  for (const cff of cfp.functions) {
+    // TODO some functions are actually children of other functions!
+    functions.push(new FunctionObjectiveFunction(cff.id));
   }
+
+  return functions;
 }

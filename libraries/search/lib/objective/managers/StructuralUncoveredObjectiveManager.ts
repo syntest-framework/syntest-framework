@@ -48,9 +48,7 @@ export class StructuralUncoveredObjectiveManager<
 
     // Add the child objectives to the current objectives
     const childObjectives: ObjectiveFunction<T>[] = [];
-    for (const objective of this._subject.getChildObjectives(
-      objectiveFunction
-    )) {
+    for (const objective of objectiveFunction.childObjectives) {
       if (
         !this._coveredObjectives.has(objective) &&
         !this._currentObjectives.has(objective)

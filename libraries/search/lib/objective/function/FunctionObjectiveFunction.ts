@@ -16,10 +16,8 @@
  * limitations under the License.
  */
 
-import { Encoding } from "../Encoding";
-import { SearchSubject } from "../SearchSubject";
-
-import { ObjectiveFunction } from "./ObjectiveFunction";
+import { Encoding } from "../../Encoding";
+import { ObjectiveFunction } from "../ObjectiveFunction";
 
 /**
  * Objective function for the function branch criterion.
@@ -27,10 +25,6 @@ import { ObjectiveFunction } from "./ObjectiveFunction";
 export class FunctionObjectiveFunction<
   T extends Encoding
 > extends ObjectiveFunction<T> {
-  constructor(subject: SearchSubject<T>, id: string) {
-    super(id, subject);
-  }
-
   /**
    * @inheritDoc
    */
@@ -39,6 +33,8 @@ export class FunctionObjectiveFunction<
       return Number.MAX_VALUE;
     }
 
-    return encoding.getExecutionResult().coversId(this._id) ? 0 : 1;
+    return encoding.getExecutionResult().coversId(this._id)
+      ? 0
+      : Number.MAX_VALUE;
   }
 }
