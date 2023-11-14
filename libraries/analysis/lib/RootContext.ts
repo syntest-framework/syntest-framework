@@ -36,6 +36,71 @@ import { SourceFactory } from "./factories/SourceFactory";
 import { TargetFactory } from "./factories/TargetFactory";
 import { SubTarget, Target } from "./Target";
 
+const caches: { [key: string]: Map<string, any> } = {};
+
+export function cache(cacheName: string) {
+  const cache = new Map<string, Result<any>>();
+  caches[cacheName] = cache;
+  return function (
+    _: RootContext<unknown>,
+    __: string,
+    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>>
+  ) {
+    const method = descriptor.value;
+    descriptor.value = function (filePath: string) {
+      const key = filePath;
+
+      if (caches[cacheName].has(key)) {
+        return <Result<any>>caches[cacheName].get(key);
+      }
+
+      const result = Reflect.apply(method, this, [filePath]);
+
+      caches[cacheName].set(key, result);
+
+      return result;
+    };
+  };
+}
+
+export function resolvePath() {
+  return function (
+    _: RootContext<unknown>,
+    __: string,
+    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>>
+  ) {
+    const method = descriptor.value;
+    descriptor.value = function (filePath: string) {
+      const result = (<RootContext<unknown>>this).resolvePath(filePath);
+
+      if (isFailure(result)) return result;
+
+      const absolutePath = unwrap(result);
+
+      return Reflect.apply(method, this, [absolutePath]);
+    };
+  };
+}
+
+// export function beforeEvent(eventName: string) {
+//   return function (target: RootContext<unknown>, propertyKey: string, descriptor: TypedPropertyDescriptor<(filePath: string) => T>) {
+//     const method = descriptor.value
+//     descriptor.value = function(filepath: string) {
+//       (<TypedEmitter<Events>>process).emit(
+//         "abstractSyntaxTreeResolvingStart",
+//         this,
+//         absolutePath
+//       );
+
+//       return Reflect.apply(method, this, [filepath])
+//     }
+// }
+// }
+
+// export function afterEvent(eventName: string) {
+
+// }
+
 export class RootContext<S> {
   protected _rootPath: string;
 
@@ -44,21 +109,6 @@ export class RootContext<S> {
   protected controlFlowGraphFactory: ControlFlowGraphFactory<S>;
   protected targetFactory: TargetFactory<S>;
   protected dependencyFactory: DependencyFactory<S>;
-
-  // Mapping: filepath -> source code
-  protected _sources: Map<string, string>;
-
-  // Mapping: filepath -> AST
-  protected _abstractSyntaxTrees: Map<string, S>;
-
-  // Mapping: filepath -> ControlFlowProgram
-  protected _controlFlowProgramMap: Map<string, ControlFlowProgram>;
-
-  // Mapping: filepath -> target
-  protected _targetMap: Map<string, Target>;
-
-  // Mapping: filepath -> dependencies
-  protected _dependenciesMap: Map<string, string[]>;
 
   constructor(
     rootPath: string,
@@ -75,15 +125,9 @@ export class RootContext<S> {
     this.controlFlowGraphFactory = controlFlowGraphFactory;
     this.targetFactory = targetFactory;
     this.dependencyFactory = dependencyFactory;
-
-    this._sources = new Map();
-    this._abstractSyntaxTrees = new Map();
-    this._controlFlowProgramMap = new Map();
-    this._targetMap = new Map();
-    this._dependenciesMap = new Map();
   }
 
-  protected resolvePath(filePath: string): Result<string> {
+  resolvePath(filePath: string): Result<string> {
     const absolutePath = path.resolve(filePath);
 
     if (!this.verifyTargetPath(absolutePath)) {
@@ -105,117 +149,89 @@ export class RootContext<S> {
    * Loads the source code of the target
    * @param filePath
    */
+  @cache("source")
+  @resolvePath()
   getSource(filePath: string): Result<string> {
-    const result = this.resolvePath(filePath);
+    const sourceResult = this.sourceFactory.produce(filePath);
 
-    if (isFailure(result)) return result;
+    if (isFailure(sourceResult)) return sourceResult;
 
-    const absolutePath = unwrap(result);
+    (<TypedEmitter<Events>>process).emit(
+      "sourceResolvingComplete",
+      this,
+      filePath,
+      unwrap(sourceResult)
+    );
 
-    // this takes up too much memory we should do some kind of garbage collection if we want to save it all
-    if (!this._sources.has(absolutePath)) {
-      (<TypedEmitter<Events>>process).emit(
-        "sourceResolvingStart",
-        this,
-        absolutePath
-      );
-      const result = this.sourceFactory.produce(absolutePath);
-
-      if (isFailure(result)) return result;
-
-      this._sources.set(absolutePath, unwrap(result));
-      (<TypedEmitter<Events>>process).emit(
-        "sourceResolvingComplete",
-        this,
-        absolutePath,
-        this._sources.get(absolutePath)
-      );
-    }
-
-    return success(this._sources.get(absolutePath));
+    return sourceResult;
   }
 
   /**
    * Loads the abstract syntax tree from the given filePath
    * @param filePath
    */
+  @cache("ast")
+  @resolvePath()
   getAbstractSyntaxTree(filePath: string): Result<S> {
-    const result = this.resolvePath(filePath);
+    (<TypedEmitter<Events>>process).emit(
+      "abstractSyntaxTreeResolvingStart",
+      this,
+      filePath
+    );
 
-    if (isFailure(result)) return result;
+    const sourceResult = this.getSource(filePath);
 
-    const absolutePath = unwrap(result);
+    if (isFailure(sourceResult)) return sourceResult;
 
-    // this takes up too much memory we should do some kind of garbage collection if we want to save it all
-    if (!this._abstractSyntaxTrees.has(absolutePath)) {
-      (<TypedEmitter<Events>>process).emit(
-        "abstractSyntaxTreeResolvingStart",
-        this,
-        absolutePath
-      );
+    const astResult = this.abstractSyntaxTreeFactory.convert(
+      filePath,
+      unwrap(sourceResult)
+    );
 
-      const result = this.getSource(absolutePath);
+    if (isFailure(astResult)) return astResult;
 
-      if (isFailure(result)) return result;
+    (<TypedEmitter<Events>>process).emit(
+      "abstractSyntaxTreeResolvingComplete",
+      this,
+      filePath,
+      unwrap(astResult)
+    );
 
-      const astResult = this.abstractSyntaxTreeFactory.convert(
-        absolutePath,
-        unwrap(result)
-      );
-
-      if (isFailure(astResult)) return astResult;
-
-      this._abstractSyntaxTrees.set(absolutePath, unwrap(astResult));
-      (<TypedEmitter<Events>>process).emit(
-        "abstractSyntaxTreeResolvingComplete",
-        this,
-        absolutePath,
-        this._abstractSyntaxTrees.get(absolutePath)
-      );
-    }
-
-    return success(this._abstractSyntaxTrees.get(absolutePath));
+    return astResult;
   }
 
   /**
    * Loads the control flow program from the given filePath
    * @param filePath
    */
+  @cache("cfp")
+  @resolvePath()
   getControlFlowProgram(filePath: string): Result<ControlFlowProgram> {
-    const result = this.resolvePath(filePath);
+    (<TypedEmitter<Events>>process).emit(
+      "controlFlowGraphResolvingStart",
+      this,
+      filePath
+    );
 
-    if (isFailure(result)) return result;
+    const astResult = this.getAbstractSyntaxTree(filePath);
 
-    const absolutePath = unwrap(result);
+    if (isFailure(astResult)) return astResult;
 
-    if (!this._controlFlowProgramMap.has(absolutePath)) {
-      (<TypedEmitter<Events>>process).emit(
-        "controlFlowGraphResolvingStart",
-        this,
-        absolutePath
-      );
+    const cfgResult = this.controlFlowGraphFactory.convert(
+      filePath,
+      unwrap(astResult)
+    );
 
-      const result = this.getAbstractSyntaxTree(absolutePath);
+    if (isFailure(cfgResult)) return cfgResult;
 
-      if (isFailure(result)) return result;
+    (<TypedEmitter<Events>>process).emit(
+      "controlFlowGraphResolvingComplete",
+      this,
+      filePath,
+      unwrap(cfgResult)
+    );
 
-      const cfgResult = this.controlFlowGraphFactory.convert(
-        absolutePath,
-        unwrap(result)
-      );
-
-      if (isFailure(cfgResult)) return cfgResult;
-
-      this._controlFlowProgramMap.set(absolutePath, unwrap(cfgResult));
-      (<TypedEmitter<Events>>process).emit(
-        "controlFlowGraphResolvingComplete",
-        this,
-        absolutePath,
-        this._controlFlowProgramMap.get(absolutePath)
-      );
-    }
-
-    return success(this._controlFlowProgramMap.get(absolutePath));
+    return cfgResult;
   }
 
   /**
@@ -223,41 +239,67 @@ export class RootContext<S> {
    * @param _filePath
    * @returns
    */
+  @cache("target")
+  @resolvePath()
   getTarget(filePath: string): Result<Target> {
-    const result = this.resolvePath(filePath);
+    (<TypedEmitter<Events>>process).emit(
+      "targetExtractionStart",
+      this,
+      filePath
+    );
 
-    if (isFailure(result)) return result;
+    const astResult = this.getAbstractSyntaxTree(filePath);
 
-    const absolutePath = unwrap(result);
+    if (isFailure(astResult)) return astResult;
 
-    if (!this._targetMap.has(absolutePath)) {
-      (<TypedEmitter<Events>>process).emit(
-        "targetExtractionStart",
-        this,
-        absolutePath
-      );
+    const targetResult = this.targetFactory.extract(
+      filePath,
+      unwrap(astResult)
+    );
 
-      const result = this.getAbstractSyntaxTree(absolutePath);
+    if (isFailure(targetResult)) return targetResult;
 
-      if (isFailure(result)) return result;
+    (<TypedEmitter<Events>>process).emit(
+      "targetExtractionComplete",
+      this,
+      filePath,
+      unwrap(targetResult)
+    );
 
-      const targetResult = this.targetFactory.extract(
-        absolutePath,
-        unwrap(result)
-      );
+    return targetResult;
+  }
 
-      if (isFailure(targetResult)) return targetResult;
+  /**
+   * Loads all dependencies from the given filePath
+   * @param filePath
+   */
+  @cache("dependencies")
+  @resolvePath()
+  getDependencies(filePath: string): Result<string[]> {
+    (<TypedEmitter<Events>>process).emit(
+      "dependencyResolvingStart",
+      this,
+      filePath
+    );
+    const astResult = this.getAbstractSyntaxTree(filePath);
 
-      this._targetMap.set(absolutePath, unwrap(targetResult));
-      (<TypedEmitter<Events>>process).emit(
-        "targetExtractionComplete",
-        this,
-        absolutePath,
-        this._targetMap.get(absolutePath)
-      );
-    }
+    if (isFailure(astResult)) return astResult;
 
-    return success(this._targetMap.get(absolutePath));
+    const dependencyResult = this.dependencyFactory.extract(
+      filePath,
+      unwrap(astResult)
+    );
+
+    if (isFailure(dependencyResult)) return dependencyResult;
+
+    (<TypedEmitter<Events>>process).emit(
+      "dependencyResolvingComplete",
+      this,
+      filePath,
+      unwrap(dependencyResult)
+    );
+
+    return dependencyResult;
   }
 
   /**
@@ -270,45 +312,5 @@ export class RootContext<S> {
     if (isFailure(result)) return result;
 
     return success(unwrap(result).subTargets);
-  }
-
-  /**
-   * Loads all dependencies from the given filePath
-   * @param filePath
-   */
-  getDependencies(filePath: string): Result<string[]> {
-    const result = this.resolvePath(filePath);
-
-    if (isFailure(result)) return result;
-
-    const absolutePath = unwrap(result);
-
-    if (!this._dependenciesMap.has(absolutePath)) {
-      (<TypedEmitter<Events>>process).emit(
-        "dependencyResolvingStart",
-        this,
-        absolutePath
-      );
-      const result = this.getAbstractSyntaxTree(absolutePath);
-
-      if (isFailure(result)) return result;
-
-      const dependencyResult = this.dependencyFactory.extract(
-        absolutePath,
-        unwrap(result)
-      );
-
-      if (isFailure(dependencyResult)) return dependencyResult;
-
-      this._dependenciesMap.set(absolutePath, unwrap(dependencyResult));
-      (<TypedEmitter<Events>>process).emit(
-        "dependencyResolvingComplete",
-        this,
-        absolutePath,
-        this._dependenciesMap.get(absolutePath)
-      );
-    }
-
-    return success(this._dependenciesMap.get(absolutePath));
   }
 }
