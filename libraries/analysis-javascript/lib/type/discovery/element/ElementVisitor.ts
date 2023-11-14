@@ -21,6 +21,7 @@ import {
   AbstractSyntaxTreeVisitor,
   MemberSeparator,
 } from "@syntest/ast-visitor-javascript";
+import { ImplementationError } from "@syntest/diagnostics";
 
 import { Element, ElementType } from "../element/Element";
 
@@ -194,7 +195,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
       }
       default: {
         // should never occur
-        throw new Error(`Unknown literal type`);
+        throw new ImplementationError(`Unknown literal type`);
       }
     }
   };

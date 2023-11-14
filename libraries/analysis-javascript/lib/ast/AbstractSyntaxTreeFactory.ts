@@ -19,17 +19,18 @@
 import { transformSync } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeFactory as FrameworkAbstractSyntaxTreeFactory } from "@syntest/analysis";
+import { Result, success } from "@syntest/diagnostics";
 
 import { defaultBabelOptions } from "./defaultBabelConfig";
 
 export class AbstractSyntaxTreeFactory
   implements FrameworkAbstractSyntaxTreeFactory<t.Node>
 {
-  convert(filepath: string, source: string): t.Node {
+  convert(filepath: string, source: string): Result<t.Node> {
     const options: unknown = JSON.parse(JSON.stringify(defaultBabelOptions));
 
     const codeMap = transformSync(source, options);
 
-    return codeMap.ast;
+    return success(codeMap.ast);
   }
 }

@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { ImplementationError } from "@syntest/diagnostics";
+
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators
 // TODO add missing
 
@@ -210,7 +212,9 @@ function getUnaryRelationType(operator: string, prefix: boolean) {
     }
   }
 
-  throw new Error(`Unsupported relation type operator: unary -> ${operator}`);
+  throw new ImplementationError(
+    `Unsupported relation type operator: unary -> ${operator}`
+  );
 }
 
 function getBinaryRelationType(operator: string) {
@@ -296,7 +300,9 @@ function getBinaryRelationType(operator: string) {
     }
   }
 
-  throw new Error(`Unsupported relation type operator: binary -> ${operator}`);
+  throw new ImplementationError(
+    `Unsupported relation type operator: binary -> ${operator}`
+  );
 }
 
 function getAssignmentRelationType(operator: string) {
@@ -351,7 +357,7 @@ function getAssignmentRelationType(operator: string) {
     }
   }
 
-  throw new Error(
+  throw new ImplementationError(
     `Unsupported relation type operator: assignment -> ${operator}`
   );
 }
@@ -373,5 +379,7 @@ export function getRelationType(
     }
   }
 
-  throw new Error(`Unsupported relation type operator: ${type} -> ${operator}`);
+  throw new ImplementationError(
+    `Unsupported relation type operator: ${type} -> ${operator}`
+  );
 }

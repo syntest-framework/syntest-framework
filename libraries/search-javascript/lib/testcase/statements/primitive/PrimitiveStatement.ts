@@ -17,6 +17,7 @@
  */
 
 import { TypeEnum } from "@syntest/analysis-javascript";
+import { ImplementationError } from "@syntest/diagnostics";
 
 import { ContextBuilder } from "../../../testbuilding/ContextBuilder";
 import { JavaScriptTestCaseSampler } from "../../sampling/JavaScriptTestCaseSampler";
@@ -56,11 +57,11 @@ export abstract class PrimitiveStatement<T> extends Statement {
   }
 
   setChild(_index: number, _newChild: Statement): void {
-    throw new Error("Primitive statements don't have children");
+    throw new ImplementationError("Primitive statements don't have children");
   }
 
   static getRandom() {
-    throw new Error("Unimplemented function!");
+    throw new ImplementationError("Unimplemented function!");
   }
 
   decode(context: ContextBuilder): Decoding[] {

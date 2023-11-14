@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { TypeEnum } from "@syntest/analysis-javascript";
-import { shouldNeverHappen } from "@syntest/search";
+import { IllegalArgumentError } from "@syntest/diagnostics";
 
 import { Statement } from "../Statement";
 
@@ -56,16 +56,21 @@ export abstract class ClassActionStatement extends ActionStatement {
 
   override setChild(index: number, newChild: Statement) {
     if (!newChild) {
-      throw new Error("Invalid new child!");
+      throw new IllegalArgumentError("Invalid new child");
     }
 
     if (index < 0 || index > this.args.length) {
-      throw new Error(shouldNeverHappen(`Invalid index used index: ${index}`));
+      throw new IllegalArgumentError("Child index is not within range", {
+        context: { index: index, range: `0 >= index <= ${this.args.length}` },
+      });
     }
 
     if (index === this.args.length) {
       if (!(newChild instanceof ConstructorCall)) {
-        throw new TypeError(shouldNeverHappen("should be a constructor"));
+        throw new IllegalArgumentError(
+          "Last child should always be of type ConstructorCall",
+          { context: { index: index } }
+        );
       }
       this._constructor = newChild;
     } else {

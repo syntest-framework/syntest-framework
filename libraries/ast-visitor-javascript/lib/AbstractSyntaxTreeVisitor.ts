@@ -18,6 +18,7 @@
 import { NodePath } from "@babel/core";
 import { Scope as BabelScope, TraverseOptions } from "@babel/traverse";
 import * as t from "@babel/types";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { globalVariables } from "./globalVariables";
@@ -75,7 +76,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
   public _getNodeId(path: NodePath<t.Node> | t.Node): string {
     const loc = "node" in path ? path.node.loc : path.loc;
     if (loc === undefined) {
-      throw new Error(
+      throw new ImplementationError(
         `Node ${path.type} in file '${this._filePath}' does not have a location`
       );
     }
@@ -110,7 +111,9 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
         );
         return this._getNodeId(path);
       } else {
-        throw new Error("Cannot get binding for labeled statement");
+        throw new ImplementationError(
+          "Cannot get binding for labeled statement"
+        );
       }
     }
 
@@ -212,7 +215,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
         );
         return this._getNodeId(path);
       } else {
-        throw new Error(
+        throw new ImplementationError(
           `Cannot find binding for ${path.node.name} at ${this._getNodeId(
             path
           )}`
@@ -243,7 +246,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
         );
         return undefined; // <NodePath<t.Program>>path.findParent((p) => p.isProgram());
       } else {
-        throw new Error(
+        throw new ImplementationError(
           `ThisExpression without parent function found at ${this._getNodeId(
             path
           )}`
@@ -264,7 +267,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
           );
           return undefined; // <NodePath<t.Program>>path.findParent((p) => p.isProgram());
         } else {
-          throw new Error(
+          throw new ImplementationError(
             `ThisExpression without parent function found at ${this._getNodeId(
               path
             )}`
@@ -277,7 +280,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       const classParent = path.findParent((p) => p.isClass());
       if (classParent === undefined || classParent === null) {
         // impossible?
-        throw new Error(
+        throw new ImplementationError(
           `ThisExpression without parent class found at ${this._getNodeId(
             path
           )}`
@@ -290,7 +293,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       const objectParent = path.findParent((p) => p.isObjectExpression());
       if (objectParent === undefined || objectParent === null) {
         // impossible?
-        throw new Error(
+        throw new ImplementationError(
           `ThisExpression without parent object found at ${this._getNodeId(
             path
           )}`
@@ -303,7 +306,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       return parent;
     }
 
-    throw new Error(
+    throw new ImplementationError(
       `ThisExpression without parent function found at ${this._getNodeId(path)}`
     );
   }
@@ -360,7 +363,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
 
   protected _getCurrentThisScopeId() {
     if (this._thisScopeStack.length === 0) {
-      throw new Error("Invalid scope stack!");
+      throw new ImplementationError("Invalid scope stack!");
     }
 
     return this._thisScopeStack[this._thisScopeStack.length - 1];

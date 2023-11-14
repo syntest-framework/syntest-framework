@@ -18,6 +18,7 @@
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+import { ImplementationError } from "@syntest/diagnostics";
 
 import { getRelationType, Relation, RelationType } from "../relation/Relation";
 
@@ -50,7 +51,9 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
           p.node === null ||
           p.node === undefined
         ) {
-          throw new Error(`Involved node is undefined or null for ${id}`);
+          throw new ImplementationError(
+            `Involved node is undefined or null for ${id}`
+          );
           // return `${id}::anonymous`; // TODO we should look into this
         }
         return this._getNodeId(p);
@@ -71,7 +74,9 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
     if (functionPath === null) {
       // should not be possible
-      throw new Error("Return statement is not inside a function");
+      throw new ImplementationError(
+        "Return statement is not inside a function"
+      );
     }
 
     if (path.has("argument")) {

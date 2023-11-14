@@ -17,6 +17,7 @@
  */
 import { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
+import { ImplementationError } from "@syntest/diagnostics";
 const { classes } = require("istanbul-lib-coverage");
 
 /**
@@ -47,7 +48,7 @@ export class SourceCoverage extends classes.FileCoverage {
 
   public _getNodeId(loc): string {
     if (loc === undefined) {
-      throw new Error(
+      throw new ImplementationError(
         `Node * in file '${this._filePath}' does not have a location`
       );
     }
@@ -64,7 +65,7 @@ export class SourceCoverage extends classes.FileCoverage {
 
   public _getPlaceholderNodeId(loc): string {
     if (loc === undefined) {
-      throw new Error(
+      throw new ImplementationError(
         `Node * in file '${this._filePath}' does not have a location`
       );
     }
@@ -167,7 +168,7 @@ export class SourceCoverage extends classes.FileCoverage {
 
     /* istanbul ignore if: paranoid check */
     if (!bMeta) {
-      throw new Error(
+      throw new ImplementationError(
         "Invalid branch " + name + `${this._getNodeId(ifPath.node.loc)}`
       );
     }

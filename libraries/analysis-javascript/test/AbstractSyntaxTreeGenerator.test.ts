@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../lib/ast/AbstractSyntaxTreeFactory";
@@ -43,7 +44,9 @@ describe("example test", () => {
     `;
 
     const generator = new AbstractSyntaxTreeFactory();
-    const ast = generator.convert("", source);
+    const result = generator.convert("", source);
+    if (isFailure(result)) throw result.error;
+    const ast = unwrap(result);
 
     expect(ast.type === "File");
   });

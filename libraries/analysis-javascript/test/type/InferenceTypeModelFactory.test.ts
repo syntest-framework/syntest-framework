@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import traverse from "@babel/traverse";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
 import { ElementVisitor } from "../../lib/type/discovery/element/ElementVisitor";
@@ -25,7 +26,9 @@ import { InferenceTypeModelFactory } from "../../lib/type/resolving/InferenceTyp
 
 function helper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
-  const ast = generator.convert("", source);
+  const result = generator.convert("", source);
+  if (isFailure(result)) throw result.error;
+  const ast = unwrap(result);
 
   const elementVisitor = new ElementVisitor("", false);
   traverse(ast, elementVisitor);

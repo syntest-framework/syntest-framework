@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { traverse } from "@babel/core";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
@@ -26,7 +27,9 @@ const expect = chai.expect;
 
 function elementHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
-  const ast = generator.convert("", source);
+  const result = generator.convert("", source);
+  if (isFailure(result)) throw result.error;
+  const ast = unwrap(result);
 
   const visitor = new ElementVisitor("", false);
   traverse(ast, visitor);

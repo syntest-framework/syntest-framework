@@ -17,6 +17,7 @@
  */
 
 import { Target } from "@syntest/analysis-javascript";
+import { IllegalStateError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 import {
   ActionStatement,
@@ -61,7 +62,7 @@ export class TestSplitting {
     }
 
     if (total === 0) {
-      throw new Error("Zero tests were created");
+      throw new IllegalStateError("Zero tests were created");
     }
 
     return finalEncodings;
@@ -74,7 +75,7 @@ export class TestSplitting {
       const executionResult = encoding.getExecutionResult();
 
       if (!executionResult) {
-        throw new Error("Invalid encoding without executionResult");
+        throw new IllegalStateError("Invalid encoding without executionResult");
       }
 
       // maximum of 2^(|roots| - 1) - 1 pairs

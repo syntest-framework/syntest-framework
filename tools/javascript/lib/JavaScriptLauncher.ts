@@ -51,6 +51,7 @@ import {
   TableObject,
   UserInterface,
 } from "@syntest/cli-graphics";
+import { IllegalArgumentError, isFailure, unwrap } from "@syntest/diagnostics";
 import { Instrumenter } from "@syntest/instrumentation-javascript";
 import { getLogger, Logger } from "@syntest/logging";
 import { MetricManager } from "@syntest/metric";
@@ -91,7 +92,7 @@ import { TestSplitting } from "./workflows/TestSplitter";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
 export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
-  private static LOGGER: Logger;
+  protected static override LOGGER: Logger;
 
   private targets: Target[];
 
@@ -132,9 +133,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     );
     this.metricManager.recordProperty(
       PropertyName.CONSTANT_POOL_PROBABILITY,
-      `${((
-        this.arguments_
-      )).constantPoolProbability.toString()}`
+      `${this.arguments_.constantPoolProbability.toString()}`
     );
 
     this.storageManager.deleteTemporaryDirectories([
@@ -189,8 +188,9 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
 
     for (const target of targetFiles) {
       if (this.arguments_.analysisExclude.includes(target)) {
-        throw new Error(
-          `Target files cannot be excluded from analysis. Target file: ${target}`
+        throw new IllegalArgumentError(
+          "Target files cannot be excluded from analysis",
+          { context: { targetFile: target } }
         );
       }
     }
@@ -441,6 +441,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
   }
 
   async postprocess(): Promise<void> {
+    this.userInterface.printHeader("Postprocessing started");
     JavaScriptLauncher.LOGGER.info("Postprocessing started");
     const start = Date.now();
     const testSplitter = new TestSplitting(this.runner);
@@ -473,6 +474,10 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       JavaScriptLauncher.LOGGER.info(
         `Splitting done took: ${timeInMs}, went from ${before} to ${after} test cases`
       );
+      this.userInterface.printSuccess(
+        `Splitting done took: ${timeInMs}, went from ${before} to ${after} test cases`
+      );
+
       // this.metricManager.recordProperty(PropertyName., `${timeInMs}`); // TODO new metric
     }
     if (this.arguments_.testMinimization) {
@@ -513,6 +518,9 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       .reduce((p, c) => p + c);
 
     JavaScriptLauncher.LOGGER.info(
+      `De-Duplication done took: ${timeInMsDeDuplication}, went from ${before} to ${after} test cases`
+    );
+    this.userInterface.printSuccess(
       `De-Duplication done took: ${timeInMsDeDuplication}, went from ${before} to ${after} test cases`
     );
 
@@ -705,7 +713,12 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       `Testing target ${target.name} in ${target.path}`
     );
 
-    const cfp = rootContext.getControlFlowProgram(target.path);
+    const result = rootContext.getControlFlowProgram(target.path);
+
+    if (isFailure(result)) throw result.error;
+
+    const cfp = unwrap(result);
+
     const branchObjectives =
       extractBranchObjectivesFromProgram<JavaScriptTestCase>(
         cfp,
@@ -715,8 +728,14 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
           this.arguments_.stringAlphabet
         )
       );
-    const pathObjectives =
-      extractPathObjectivesFromProgram<JavaScriptTestCase>(cfp);
+    const pathObjectives = extractPathObjectivesFromProgram<JavaScriptTestCase>(
+      cfp,
+      new ApproachLevelCalculator(),
+      new BranchDistanceCalculator(
+        this.arguments_.syntaxForgiving,
+        this.arguments_.stringAlphabet
+      )
+    );
     const functionObjectives =
       extractFunctionObjectivesFromProgram<JavaScriptTestCase>(cfp);
 
@@ -729,9 +748,9 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       ],
     });
 
-    const currentSubject = new JavaScriptSubject(target, this.rootContext, [
-      ...branchObjectives,
-      ...functionObjectives,
+    const currentSubject = new JavaScriptSubject(target, [
+      // ...branchObjectives,
+      // ...functionObjectives,
       ...pathObjectives,
     ]);
 
@@ -747,7 +766,14 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       return new Archive();
     }
 
-    const constantPoolManager = rootContext.getConstantPoolManager(target.path);
+    const constantPoolManagerResult = rootContext.getConstantPoolManager(
+      target.path
+    );
+
+    if (isFailure(constantPoolManagerResult))
+      throw constantPoolManagerResult.error;
+
+    const constantPoolManager = unwrap(constantPoolManagerResult);
 
     const sampler = new JavaScriptRandomSampler(
       currentSubject,

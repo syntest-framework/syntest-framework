@@ -18,6 +18,7 @@
 
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger } from "@syntest/logging";
 
 import { Export } from "./Export";
@@ -181,7 +182,7 @@ export function extractObjectProperties(
         // e.g. exports = { () {} }
         // unsupported
         // not possible i think
-        throw new Error("Unsupported export declaration");
+        throw new ImplementationError("Unsupported export declaration");
       }
 
       exports.push({
@@ -214,7 +215,7 @@ export function extractObjectProperties(
       } else {
         // e.g. exports = { ?: ? }
         // unsupported
-        throw new Error("Unsupported export declaration");
+        throw new ImplementationError("Unsupported export declaration");
       }
 
       if (value.isIdentifier()) {
@@ -247,7 +248,7 @@ export function extractObjectProperties(
           `Unsupported export declaration at ${visitor._getNodeId(path)}`
         );
       } else {
-        throw new Error(
+        throw new ImplementationError(
           `Unsupported export declaration at ${visitor._getNodeId(path)}`
         );
       }
@@ -396,6 +397,6 @@ function _getNameOfProperty(
     return property.node.name;
   } else {
     // module.exports.? = ?
-    throw new Error('Unsupported syntax "module.exports.? = ?"');
+    throw new ImplementationError('Unsupported syntax "module.exports.? = ?"');
   }
 }

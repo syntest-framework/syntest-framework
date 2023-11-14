@@ -18,6 +18,7 @@
 
 import { traverse } from "@babel/core";
 import * as t from "@babel/types";
+import { Result, success } from "@syntest/diagnostics";
 
 import { Factory } from "../../Factory";
 
@@ -34,11 +35,11 @@ export class ExportFactory extends Factory {
    * @param filePath The filePath of the target
    * @param AST The AST of the target
    */
-  extract(filePath: string, AST: t.Node): Export[] {
+  extract(filePath: string, AST: t.Node): Result<Export[]> {
     const exportVisitor = new ExportVisitor(filePath, this.syntaxForgiving);
 
     traverse(AST, exportVisitor);
 
-    return exportVisitor.exports;
+    return success(exportVisitor.exports);
   }
 }

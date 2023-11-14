@@ -18,11 +18,9 @@
 
 import { transformSync, traverse } from "@babel/core";
 import { defaultBabelOptions } from "@syntest/analysis-javascript";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
-import {
-  BranchDistanceCalculator as AbstractBranchDistanceCalculator,
-  shouldNeverHappen,
-} from "@syntest/search";
+import { BranchDistanceCalculator as AbstractBranchDistanceCalculator } from "@syntest/search";
 
 import { BranchDistanceVisitor } from "./BranchDistanceVisitor";
 
@@ -63,7 +61,7 @@ export class BranchDistanceCalculator extends AbstractBranchDistanceCalculator {
       const variables_ = Object.entries(variables)
         .map(([key, value]) => `${key}=${String(value)}`)
         .join(", ");
-      throw new Error(
+      throw new ImplementationError(
         `Invalid distance: ${distance} for ${condition} -> ${String(
           trueOrFalse
         )}. Variables: ${variables_}`
@@ -71,7 +69,9 @@ export class BranchDistanceCalculator extends AbstractBranchDistanceCalculator {
     }
 
     if (Number.isNaN(distance)) {
-      throw new TypeError(shouldNeverHappen("BranchDistance"));
+      throw new ImplementationError("Branch distance resulted in a NaN value", {
+        context: { condition: condition, trueOrFalse: trueOrFalse },
+      });
     }
 
     if (distance === 1) {

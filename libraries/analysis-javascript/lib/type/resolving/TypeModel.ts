@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { ImplementationError } from "@syntest/diagnostics";
 import { prng } from "@syntest/prng";
 
 import {
@@ -74,7 +75,9 @@ export class TypeModel {
 
   getObjectDescription(element: string): ObjectType {
     if (!this._objectTypeDescription.has(element)) {
-      throw new Error(`Element ${element} does not have an object description`);
+      throw new ImplementationError(
+        `Element ${element} does not have an object description`
+      );
     }
 
     return this._objectTypeDescription.get(element);
@@ -145,7 +148,7 @@ export class TypeModel {
 
   private _addRelationScore(id1: string, id2: string, score: number) {
     if (!this._relationScoreMap.has(id1)) {
-      throw new Error(`Element ${id1} does not exist`);
+      throw new ImplementationError(`Element ${id1} does not exist`);
     }
     if (!this._relationScoreMap.get(id1).has(id2)) {
       this._relationScoreMap.get(id1).set(id2, 0);
@@ -170,7 +173,7 @@ export class TypeModel {
     if (id1 === id2) {
       // no self loops
       return;
-      // throw new Error(`ids should not be equal to add a relation id: ${id1}`);
+      // throw new ImplementationError(`ids should not be equal to add a relation id: ${id1}`);
     }
     this._addRelationScore(id1, id2, score);
     this._addRelationScore(id2, id1, score);
@@ -182,7 +185,7 @@ export class TypeModel {
 
   addTypeScore(id: string, type: TypeEnum, score = 1) {
     if (!this._elementTypeScoreMap.has(id)) {
-      throw new Error(`Element ${id} does not exist`);
+      throw new ImplementationError(`Element ${id} does not exist`);
     }
     if (!this._elementTypeScoreMap.get(id).has(type)) {
       this._elementTypeScoreMap.get(id).set(type, 0);
@@ -245,7 +248,7 @@ export class TypeModel {
     score = -1
   ) {
     if (!this._typeExecutionScoreMap.has(id)) {
-      throw new Error(`Element ${id} does not exist`);
+      throw new ImplementationError(`Element ${id} does not exist`);
     }
 
     let type: string = typeEnum;
@@ -419,7 +422,7 @@ export class TypeModel {
     relationPairsVisited?: Map<string, Set<string>>
   ): Map<string, number> {
     // if (!this._scoreHasChangedMap.has(element)) {
-    //     throw new Error(`Element ${element} does not exist`);
+    //     throw new ImplementationError(`Element ${element} does not exist`);
     // }
     // if (this._scoreHasChangedMap.get(element) === false) {
     //     // prevent recalculation of probabilities without score changes
@@ -438,7 +441,7 @@ export class TypeModel {
     const relationMap = this._relationScoreMap.get(id);
 
     if (typeScoreMap === undefined) {
-      throw new Error(`Cannot get typescoreMap of ${id}`);
+      throw new ImplementationError(`Cannot get typescoreMap of ${id}`);
     }
 
     if (!relationPairsVisited) {
@@ -586,15 +589,21 @@ export class TypeModel {
     }
 
     if (totalScore < 0) {
-      throw new Error("Total score should be positive but is negative");
+      throw new ImplementationError(
+        "Total score should be positive but is negative"
+      );
     }
 
     if (totalScore === 0) {
-      throw new Error("Total score should be positive but is zero");
+      throw new ImplementationError(
+        "Total score should be positive but is zero"
+      );
     }
 
     if (Number.isNaN(totalScore)) {
-      throw new TypeError("Total score should be positive but is NaN");
+      throw new ImplementationError(
+        "Total score should be positive but is NaN"
+      );
     }
 
     // incorporate execution score

@@ -28,6 +28,7 @@ import {
   Node,
   NodeType,
 } from "@syntest/cfg";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
@@ -52,17 +53,17 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   get cfg(): ControlFlowProgram {
     if (!this._nodes.has("ENTRY")) {
-      throw new Error("No entry node found");
+      throw new ImplementationError("No entry node found");
     }
     if (!this._nodes.has("SUCCESS_EXIT")) {
-      throw new Error("No success exit node found");
+      throw new ImplementationError("No success exit node found");
     }
     if (!this._nodes.has("ERROR_EXIT")) {
-      throw new Error("No error exit node found");
+      throw new ImplementationError("No error exit node found");
     }
 
     if (this._nodesList.length !== this._nodes.size) {
-      throw new Error("Number of nodes dont match");
+      throw new ImplementationError("Number of nodes dont match");
     }
 
     const entryNode = this._nodes.get("ENTRY");
@@ -176,7 +177,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   private _getBreakNodes(): Set<string> {
     if (this._regularBreakNodesStack.length === 0) {
-      throw new Error("No break nodes found");
+      throw new ImplementationError("No break nodes found");
     }
     return this._regularBreakNodesStack[
       this._regularBreakNodesStack.length - 1
@@ -185,7 +186,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   private _getContinueNodes(): Set<string> {
     if (this._regularContinueNodesStack.length === 0) {
-      throw new Error("No continue nodes found");
+      throw new ImplementationError("No continue nodes found");
     }
     return this._regularContinueNodesStack[
       this._regularContinueNodesStack.length - 1
@@ -225,7 +226,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     );
 
     if (this._nodes.has(id)) {
-      throw new Error(`Node already registered ${id}`);
+      throw new ImplementationError("Node already registered", {
+        context: { nodeId: id },
+      });
     }
     this._nodes.set(id, node);
     this._nodesList.push(node);
@@ -235,7 +238,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   public _getPlaceholderNodeId(path: NodePath<t.Node>): string {
     if (path.node.loc === undefined) {
-      throw new Error(
+      throw new ImplementationError(
         `Node ${path.type} in file '${this._filePath}' does not have a location`
       );
     }
@@ -291,7 +294,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     );
 
     if (this._nodes.has(id)) {
-      throw new Error(`Node already registered ${id}`);
+      throw new ImplementationError("Node already registered", {
+        context: { nodeId: id },
+      });
     }
     this._nodes.set(id, node);
     this._nodesList.push(node);
@@ -370,7 +375,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     path.traverse(subVisitor);
 
     if (!subVisitor._nodes.has("ENTRY")) {
-      throw new Error("Should not be possible");
+      throw new ImplementationError("No entry node found");
     }
 
     const name = path.has("id")
@@ -401,7 +406,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     );
 
     if (this._nodes.has(this._getNodeId(path))) {
-      throw new Error(`Id already used id: ${this._getNodeId(path)}`);
+      throw new ImplementationError("Id already used", {
+        context: { nodeId: this._getNodeId(path) },
+      });
     } else {
       const node = this._createNode(path);
 
@@ -730,8 +737,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       path.get("update").visit();
 
       if (beforeSize === this._nodesList.length) {
-        throw new Error(
-          `No node was added for the update part of the for loop,`
+        throw new ImplementationError(
+          `No node was added for the update part of the for loop`
         );
       }
     }
@@ -789,15 +796,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     if (!path.has("left")) {
       // unsupported
-      throw new Error(
-        `ForInStatement left not implemented at ${this._getNodeId(path)}`
-      );
+      throw new ImplementationError("ForInStatement left not implemented", {
+        context: { nodeId: this._getNodeId(path) },
+      });
     }
     if (!path.has("right")) {
       // unsupported
-      throw new Error(
-        `ForInStatement right not implemented at ${this._getNodeId(path)}`
-      );
+      throw new ImplementationError("ForInStatement right not implemented", {
+        context: { nodeId: this._getNodeId(path) },
+      });
     }
 
     // left
@@ -872,15 +879,15 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     if (!path.has("left")) {
       // unsupported
-      throw new Error(
-        `ForOfStatement left not implemented at ${this._getNodeId(path)}`
-      );
+      throw new ImplementationError("ForInStatement left not implemented", {
+        context: { nodeId: this._getNodeId(path) },
+      });
     }
     if (!path.has("right")) {
       // unsupported
-      throw new Error(
-        `ForOfStatement right not implemented at ${this._getNodeId(path)}`
-      );
+      throw new ImplementationError("ForInStatement right not implemented", {
+        context: { nodeId: this._getNodeId(path) },
+      });
     }
 
     // left
@@ -1034,11 +1041,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       // labeled break node
       const label = path.get("label").node.name;
       if (!this._labeledBreakNodes.has(label)) {
-        throw new Error(
-          `Label ${label} does not exist for break node at ${this._getNodeId(
-            path
-          )}`
-        );
+        throw new ImplementationError("Label does not exist for break node", {
+          context: { label: label, id: this._getNodeId(path) },
+        });
       }
       this._labeledBreakNodes.get(label).add(node.id);
     } else {
@@ -1063,11 +1068,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       // labeled continue node
       const label = path.get("label").node.name;
       if (!this._labeledContinueNodes.has(label)) {
-        throw new Error(
-          `Label ${label} does not exist for continue node at ${this._getNodeId(
-            path
-          )}`
-        );
+        throw new ImplementationError("Label does not exist for break node", {
+          context: { label: label, id: this._getNodeId(path) },
+        });
       }
       this._labeledContinueNodes.get(label).add(node.id);
     } else {

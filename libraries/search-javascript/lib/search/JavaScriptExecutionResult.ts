@@ -17,6 +17,7 @@
  */
 import * as crypto from "node:crypto";
 
+import { ImplementationError } from "@syntest/diagnostics";
 import { ExecutionResult, Trace } from "@syntest/search";
 
 export enum JavaScriptExecutionStatus {
@@ -100,7 +101,7 @@ export class JavaScriptExecutionResult implements ExecutionResult {
         return false;
       }
 
-      throw new Error(
+      throw new ImplementationError(
         `Could not find a matching trace for the given id: ${id}`
       );
     }

@@ -17,6 +17,7 @@
  */
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
+import { ImplementationError } from "@syntest/diagnostics";
 
 import { Export } from "./Export";
 import { ExportVisitor } from "./ExportVisitor";
@@ -32,14 +33,14 @@ function extractFromObjectPattern(
   if (!initPath.isObjectExpression()) {
     // unsupported
     // e.g. export const {a} = o
-    throw new Error("Property init is not an object expression");
+    throw new ImplementationError("Property init is not an object expression");
   }
 
   if (path.get("properties").length !== initPath.get("properties").length) {
     // unsupported
     // e.g. export const {a, b} = {a: 1}
     // the number of properties in the object pattern should be the same as the number of properties in the object expression
-    throw new Error(
+    throw new ImplementationError(
       "Number of properties in object pattern and object expression do not match"
     );
   }
@@ -50,7 +51,7 @@ function extractFromObjectPattern(
       // unsupported
       // e.g. export const {a, ...b} = objectA
       // if we have a rest element, we bassically export all the properties of the rest element so it is not possible to know what is exported
-      throw new Error("RestElement is not supported");
+      throw new ImplementationError("RestElement is not supported");
     }
 
     if (property.isObjectProperty()) {
@@ -58,7 +59,7 @@ function extractFromObjectPattern(
       if (!key.isIdentifier()) {
         // unsupported
         // not possible i think
-        throw new Error(notIdentifier);
+        throw new ImplementationError(notIdentifier);
       }
 
       const propertyName = key.node.name;
@@ -69,13 +70,13 @@ function extractFromObjectPattern(
           // unsupported
           // e.g. export const {a, b} = {a, ...o}
           // if we have a sperad element, we bassically export all the properties of the spread element so it is not possible to know what is exported
-          throw new Error("SpreadElement is not supported");
+          throw new ImplementationError("SpreadElement is not supported");
         }
 
         if (_property.node.key.type !== "Identifier") {
           // unsupported
           // not possible i think
-          throw new Error(notIdentifier);
+          throw new ImplementationError(notIdentifier);
         }
 
         // so we want to find the property that has the same name as the property in the object pattern
@@ -84,7 +85,7 @@ function extractFromObjectPattern(
       });
 
       if (!match) {
-        throw new Error("Property not found");
+        throw new ImplementationError("Property not found");
       }
 
       // stupid hack to make typescript happy (is already checked above)
@@ -92,19 +93,19 @@ function extractFromObjectPattern(
         // unsupported
         // should never happen
         // if we have a sperad element, we bassically export all the properties of the spread element so it is not possible to know what is exported
-        throw new Error("SpreadElement is not supported");
+        throw new ImplementationError("SpreadElement is not supported");
       }
 
       if (match.isObjectMethod()) {
         // unsupported
         // no idea what this is
-        throw new Error("ObjectMethod is not supported");
+        throw new ImplementationError("ObjectMethod is not supported");
       }
 
       if (!key.isIdentifier()) {
         // unsupported
         // should never happen
-        throw new Error(notIdentifier);
+        throw new ImplementationError(notIdentifier);
       }
 
       if (match.isObjectProperty()) {
@@ -153,13 +154,13 @@ function extractFromArrayPattern(
   if (!initPath.isArrayExpression()) {
     // unsupported
     // e.g. export const [a] = o
-    throw new Error("Property init is not an array expression");
+    throw new ImplementationError("Property init is not an array expression");
   }
 
   if (path.get("elements").length !== initPath.get("elements").length) {
     // unsupported
     // e.g. export const [a, b] = [1]
-    throw new Error("Array length does not match");
+    throw new ImplementationError("Array length does not match");
   }
 
   for (let index = 0; index < path.get("elements").length; index++) {
@@ -168,7 +169,7 @@ function extractFromArrayPattern(
 
     if (!element.isIdentifier()) {
       // unsupported
-      throw new Error("Array element is not an identifier");
+      throw new ImplementationError("Array element is not an identifier");
     }
 
     if (initElement.isIdentifier()) {
@@ -294,12 +295,12 @@ export function extractExportsFromExportNamedDeclaration(
           // TODO verify that these work
           exports.push(...extractFromArrayPattern(visitor, filePath, id, init));
         } else {
-          throw new Error("Unsupported declaration type");
+          throw new ImplementationError("Unsupported declaration type");
         }
       }
     } else {
       // unsupported
-      throw new Error("Unsupported declaration type");
+      throw new ImplementationError("Unsupported declaration type");
     }
   } else if (path.node.specifiers) {
     for (const specifierPath of path.get("specifiers")) {
@@ -323,12 +324,12 @@ export function extractExportsFromExportNamedDeclaration(
         });
       } else {
         // unsupported
-        throw new Error("Unsupported specifier type");
+        throw new ImplementationError("Unsupported specifier type");
       }
     }
   } else {
     // unsupported
-    throw new Error("Export has no specifiers nor declarations");
+    throw new ImplementationError("Export has no specifiers nor declarations");
   }
 
   return exports;

@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import { Target } from "@syntest/analysis-javascript";
+import { IllegalStateError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 import {
   Archive,
@@ -44,7 +45,9 @@ export class DeDuplicator {
 
       for (const encoding of encodings) {
         if (!encoding.getExecutionResult()) {
-          throw new Error("Invalid encoding without executionResult");
+          throw new IllegalStateError(
+            "Invalid encoding without executionResult"
+          );
         }
 
         for (const objective of objectives) {

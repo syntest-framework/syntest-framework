@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { ImplementationError } from "@syntest/diagnostics";
 import { Decoder } from "@syntest/search";
 
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
@@ -62,7 +63,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       let decodings: Decoding[] = roots.flatMap((root) => root.decode(context));
 
       if (decodings.length === 0) {
-        throw new Error("No statements in test case");
+        throw new ImplementationError("No statements in test case");
       }
 
       let errorDecoding: Decoding;
@@ -75,7 +76,9 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       }
 
       if (decodings.length === 0) {
-        throw new Error("No statements in test case after error reduction");
+        throw new ImplementationError(
+          "No statements in test case after error reduction"
+        );
       }
 
       const metaCommentBlock = this.generateMetaComments(testCase);

@@ -17,6 +17,7 @@
  */
 import { traverse } from "@babel/core";
 import { contractControlFlowProgram, EdgeType } from "@syntest/cfg";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
@@ -26,7 +27,9 @@ const expect = chai.expect;
 
 function cfgHelper(source: string) {
   const generator = new AbstractSyntaxTreeFactory();
-  const ast = generator.convert("", source);
+  const result = generator.convert("", source);
+  if (isFailure(result)) throw result.error;
+  const ast = unwrap(result);
 
   const visitor = new ControlFlowGraphVisitor("", false);
   traverse(ast, visitor);
@@ -1213,7 +1216,11 @@ describe("ControlFlowGraphVisitor test", () => {
     
       `;
 
-    const cfg = contractControlFlowProgram(cfgHelper(source));
+    const result = contractControlFlowProgram(cfgHelper(source));
+
+    if (isFailure(result)) throw result.error;
+
+    const cfg = unwrap(result);
 
     expect(cfg.functions);
   });
@@ -1223,7 +1230,11 @@ describe("ControlFlowGraphVisitor test", () => {
 export default at
       `;
 
-    const cfg = contractControlFlowProgram(cfgHelper(source));
+    const result = contractControlFlowProgram(cfgHelper(source));
+
+    if (isFailure(result)) throw result.error;
+
+    const cfg = unwrap(result);
 
     expect(cfg.functions);
   });

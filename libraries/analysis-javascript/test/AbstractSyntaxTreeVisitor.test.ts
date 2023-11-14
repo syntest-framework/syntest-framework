@@ -17,6 +17,7 @@
  */
 import { traverse } from "@babel/core";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../lib/ast/AbstractSyntaxTreeFactory";
@@ -45,7 +46,9 @@ describe("visitor test", () => {
     `;
 
     const generator = new AbstractSyntaxTreeFactory();
-    const ast = generator.convert("", source);
+    const result = generator.convert("", source);
+    if (isFailure(result)) throw result.error;
+    const ast = unwrap(result);
 
     const visitor = new AbstractSyntaxTreeVisitor("", false);
     traverse(ast, visitor);

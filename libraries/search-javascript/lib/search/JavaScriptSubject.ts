@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 import { TargetType } from "@syntest/analysis";
-import { RootContext, SubTarget, Target } from "@syntest/analysis-javascript";
+import { SubTarget, Target } from "@syntest/analysis-javascript";
 import { ObjectiveFunction, SearchSubject } from "@syntest/search";
 
 import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
@@ -24,10 +24,9 @@ import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
   constructor(
     target: Target,
-    rootContext: RootContext,
     objectives: ObjectiveFunction<JavaScriptTestCase>[]
   ) {
-    super(target, rootContext, objectives);
+    super(target, objectives);
   }
 
   getActionableTargets(): SubTarget[] {

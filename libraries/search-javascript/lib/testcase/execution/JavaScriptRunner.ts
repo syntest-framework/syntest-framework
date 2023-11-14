@@ -20,6 +20,10 @@ import { ChildProcess, fork } from "node:child_process";
 import * as path from "node:path";
 
 import {
+  IllegalArgumentError,
+  ImplementationError,
+} from "@syntest/diagnostics";
+import {
   InstrumentationData,
   InstrumentationDataMap,
   MetaData,
@@ -82,7 +86,9 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     amount = 1
   ): Promise<Omit<DoneMessage, "message">> {
     if (amount < 1) {
-      throw new Error(`Amount of tests cannot be smaller than 1`);
+      throw new IllegalArgumentError(
+        `Amount of tests cannot be smaller than 1`
+      );
     }
     paths = paths.map((p) => path.resolve(p));
 
@@ -291,7 +297,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         ) // equal to 1 means default arg
       ) {
         // otherwise something is wrong
-        throw new Error(
+        throw new ImplementationError(
           `Invalid number of locations for branch type: ${branch.type}`
         );
       }

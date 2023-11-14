@@ -18,6 +18,7 @@
 
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger } from "@syntest/logging";
 
 import { Export } from "./Export";
@@ -76,7 +77,7 @@ function extractExportFromDeclaration(
 
     if (declaration.node.callee.type !== "Identifier") {
       // unsupported
-      throw new Error("Unsupported export default declaration");
+      throw new ImplementationError("Unsupported export default declaration");
     }
     return [
       {
@@ -114,7 +115,7 @@ function extractExportFromDeclaration(
         const key = property.get("key");
         const value = property.get("value");
         if (!key.isIdentifier()) {
-          throw new Error("unsupported syntax");
+          throw new ImplementationError("unsupported syntax");
         }
         exports.push({
           id: visitor._getBindingId(value),

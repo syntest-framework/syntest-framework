@@ -455,6 +455,10 @@ function coverLoopBranch(path: NodePath<t.Loop>) {
     });
   }
 
+  if (path.has("update")) {
+    this.insertStatementCounter(path.get("update"));
+  }
+
   if (path.has("test")) {
     const test = (<
       NodePath<t.ForStatement | t.WhileStatement | t.DoWhileStatement>

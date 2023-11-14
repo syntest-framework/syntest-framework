@@ -17,7 +17,8 @@
  */
 
 import { Export, TypeEnum } from "@syntest/analysis-javascript";
-import { Encoding, EncodingSampler, shouldNeverHappen } from "@syntest/search";
+import { IllegalArgumentError } from "@syntest/diagnostics";
+import { Encoding, EncodingSampler } from "@syntest/search";
 
 import { Statement } from "../Statement";
 
@@ -51,11 +52,13 @@ export abstract class ActionStatement extends Statement {
 
   setChild(index: number, newChild: Statement) {
     if (!newChild) {
-      throw new Error("Invalid new child!");
+      throw new IllegalArgumentError("Invalid new child!");
     }
 
     if (index < 0 || index >= this.args.length) {
-      throw new Error(shouldNeverHappen(`Invalid index used index: ${index}`));
+      throw new IllegalArgumentError("Child index is not within range", {
+        context: { index: index, range: `0 >= index < ${this.args.length}` },
+      });
     }
 
     this.args[index] = newChild;

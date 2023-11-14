@@ -19,6 +19,7 @@
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 export class DependencyVisitor extends AbstractSyntaxTreeVisitor {
@@ -63,12 +64,12 @@ export class DependencyVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. import('module1', 'module2')
         // unsupported
         // not possible
-        throw new Error("Unsupported import statement.");
+        throw new ImplementationError("Unsupported import statement.");
       }
     } else {
       // unsupported
       // no clue what this is
-      throw new Error("Unsupported import statement.");
+      throw new ImplementationError("Unsupported import statement.");
     }
   };
 

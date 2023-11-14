@@ -18,6 +18,7 @@
 import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+import { ImplementationError } from "@syntest/diagnostics";
 
 import { ConstantPool } from "./ConstantPool";
 
@@ -77,7 +78,7 @@ export class ConstantVisitor extends AbstractSyntaxTreeVisitor {
       }
       default: {
         // should never occur
-        throw new Error(`Unknown literal type`);
+        throw new ImplementationError("Unknown literal type");
       }
     }
   };

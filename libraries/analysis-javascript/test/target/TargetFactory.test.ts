@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import { expect } from "chai";
 
 import { AbstractSyntaxTreeFactory } from "../../lib/ast/AbstractSyntaxTreeFactory";
@@ -34,10 +35,14 @@ describe("TargetFactory", () => {
         }
     }
     `;
-    const ast = new AbstractSyntaxTreeFactory().convert("", code);
+    const result = new AbstractSyntaxTreeFactory().convert("", code);
+    if (isFailure(result)) throw result.error;
+    const ast = unwrap(result);
 
     const targetMapGenerator = new TargetFactory(false);
-    const target = targetMapGenerator.extract("", ast);
+    const targetResult = targetMapGenerator.extract("", ast);
+    if (isFailure(targetResult)) throw targetResult.error;
+    const target = unwrap(targetResult);
 
     expect(target.subTargets.length).to.equal(3);
   });

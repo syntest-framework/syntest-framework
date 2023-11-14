@@ -18,6 +18,7 @@
 import * as path from "node:path";
 
 import { RootContext, TypeModel } from "@syntest/analysis-javascript";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import { StorageManager } from "@syntest/storage";
 
 export class StateStorage {
@@ -30,7 +31,10 @@ export class StateStorage {
   }
 
   exportExtractionComplete(rootContext: RootContext, filepath: string): void {
-    const exports = rootContext.getExports(filepath);
+    const result = rootContext.getExports(filepath);
+    if (isFailure(result)) return;
+
+    const exports = unwrap(result);
     this.save(
       JSON.stringify(Object.fromEntries(exports.entries()), undefined, 2),
       filepath,
@@ -39,7 +43,10 @@ export class StateStorage {
   }
 
   elementExtractionComplete(rootContext: RootContext, filepath: string): void {
-    const elements = rootContext.getElements(filepath);
+    const result = rootContext.getElements(filepath);
+    if (isFailure(result)) return;
+
+    const elements = unwrap(result);
     this.save(
       JSON.stringify(Object.fromEntries(elements.entries()), undefined, 2),
       filepath,
@@ -48,7 +55,10 @@ export class StateStorage {
   }
 
   relationExtractionComplete(rootContext: RootContext, filepath: string): void {
-    const relations = rootContext.getRelations(filepath);
+    const result = rootContext.getRelations(filepath);
+    if (isFailure(result)) return;
+
+    const relations = unwrap(result);
     this.save(
       JSON.stringify(Object.fromEntries(relations.entries()), undefined, 2),
       filepath,
@@ -60,7 +70,10 @@ export class StateStorage {
     rootContext: RootContext,
     filepath: string
   ): void {
-    const objects = rootContext.getObjectTypes(filepath);
+    const result = rootContext.getObjectTypes(filepath);
+    if (isFailure(result)) return;
+
+    const objects = unwrap(result);
     this.save(
       JSON.stringify(Object.fromEntries(objects.entries()), undefined, 2),
       filepath,

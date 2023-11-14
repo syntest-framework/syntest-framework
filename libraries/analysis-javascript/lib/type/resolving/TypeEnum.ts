@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { ImplementationError } from "@syntest/diagnostics";
+
 import { ElementType } from "../discovery/element/Element";
 
 export enum TypeEnum {
@@ -71,5 +73,5 @@ export function elementTypeToTypingType(
     }
   }
 
-  throw new Error("Unknown element type");
+  throw new ImplementationError("Unknown element type");
 }

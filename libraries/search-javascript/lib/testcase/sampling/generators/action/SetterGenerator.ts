@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ImplementationError } from "@syntest/diagnostics";
 import { prng } from "@syntest/prng";
 
 import { StatementPool } from "../../../StatementPool";
@@ -39,7 +40,7 @@ export class SetterGenerator extends CallGenerator<Setter> {
     const arguments_: Statement[] = this.sampleArguments(depth, type_);
 
     if (arguments_.length !== 1) {
-      throw new Error("Setter must have exactly one argument");
+      throw new ImplementationError("Setter must have exactly one argument");
     }
 
     const constructor_ = this.sampler.sampleConstructorCall(

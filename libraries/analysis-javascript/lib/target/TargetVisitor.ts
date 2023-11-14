@@ -20,6 +20,7 @@ import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 import { TargetType } from "@syntest/analysis";
 import { AbstractSyntaxTreeVisitor } from "@syntest/ast-visitor-javascript";
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { computedProperty, unsupportedSyntax } from "../utils/diagnostics";
@@ -45,7 +46,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       TargetVisitor.LOGGER.warn(message);
       return undefined;
     } else {
-      throw new Error(message);
+      throw new ImplementationError(message);
     }
   }
 
@@ -577,12 +578,12 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     let target: FunctionTarget | ObjectFunctionTarget | MethodTarget;
 
     if (isObjectFunction && isMethod) {
-      throw new Error("Cannot be method and object function");
+      throw new ImplementationError("Cannot be method and object function");
     }
 
     if (isObjectFunction) {
       if (!superId) {
-        throw new Error(
+        throw new ImplementationError(
           "if it is an object function the object id should be given"
         );
       }
@@ -596,7 +597,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
       };
     } else if (isMethod) {
       if (!superId) {
-        throw new Error(
+        throw new ImplementationError(
           "if it is an object function the object id should be given"
         );
       }

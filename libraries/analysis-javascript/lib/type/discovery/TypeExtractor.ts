@@ -17,35 +17,45 @@
  */
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
+import { Result, success } from "@syntest/diagnostics";
 
 import { Factory } from "../../Factory";
 
+import { Element } from "./element/Element";
 import { ElementVisitor } from "./element/ElementVisitor";
+import { DiscoveredObjectType } from "./object/DiscoveredType";
 import { ObjectVisitor } from "./object/ObjectVisitor";
+import { Relation } from "./relation/Relation";
 import { RelationVisitor } from "./relation/RelationVisitor";
 
 export class TypeExtractor extends Factory {
-  extractElements(filepath: string, ast: t.Node) {
+  extractElements(filepath: string, ast: t.Node): Result<Map<string, Element>> {
     const elementVisitor = new ElementVisitor(filepath, this.syntaxForgiving);
 
     traverse(ast, elementVisitor);
 
-    return elementVisitor.elementMap;
+    return success(elementVisitor.elementMap);
   }
 
-  extractRelations(filepath: string, ast: t.Node) {
+  extractRelations(
+    filepath: string,
+    ast: t.Node
+  ): Result<Map<string, Relation>> {
     const relationVisitor = new RelationVisitor(filepath, this.syntaxForgiving);
 
     traverse(ast, relationVisitor);
 
-    return relationVisitor.relationMap;
+    return success(relationVisitor.relationMap);
   }
 
-  extractObjectTypes(filepath: string, ast: t.Node) {
+  extractObjectTypes(
+    filepath: string,
+    ast: t.Node
+  ): Result<Map<string, DiscoveredObjectType>> {
     const objectVisitor = new ObjectVisitor(filepath, this.syntaxForgiving);
 
     traverse(ast, objectVisitor);
 
-    return objectVisitor.objectTypeMap;
+    return success(objectVisitor.objectTypeMap);
   }
 }
