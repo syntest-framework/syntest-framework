@@ -17,6 +17,7 @@
  */
 import * as path from "node:path";
 
+import { IllegalStateError } from "@syntest/diagnostics";
 import {
   createLogger,
   format,
@@ -78,7 +79,7 @@ export function setupLogger(
 
 export function getLogger(context: string): Logger {
   if (singletonLogger === undefined) {
-    throw new Error(
+    throw new IllegalStateError(
       "Should call setupLogger function before using getLogger function!"
     );
   }

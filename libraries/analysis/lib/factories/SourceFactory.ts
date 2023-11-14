@@ -18,28 +18,36 @@
 import { existsSync, readFileSync } from "node:fs";
 import path = require("node:path");
 
-import {
-  fileDoesNotExist,
-  fileDoesNotHaveExtension,
-  fileIsNotAFile,
-} from "../util/diagnostics";
+import { failure, IOError, Result, success } from "@syntest/diagnostics";
 
 export class SourceFactory {
-  produce(filePath: string): string {
+  produce(filePath: string): Result<string> {
     const parsed = path.parse(filePath);
 
     if (!parsed.base) {
-      throw new Error(fileIsNotAFile(filePath));
+      return failure(
+        new IOError("The given path is not a file", {
+          context: { path: filePath },
+        })
+      );
     }
 
     if (!parsed.ext) {
-      throw new Error(fileDoesNotHaveExtension(filePath));
+      return failure(
+        new IOError("The given file does not have an extension", {
+          context: { path: filePath },
+        })
+      );
     }
 
     if (!existsSync(filePath)) {
-      throw new Error(fileDoesNotExist(filePath));
+      return failure(
+        new IOError("The given file does not exist", {
+          context: { path: filePath },
+        })
+      );
     }
 
-    return readFileSync(filePath, "utf8");
+    return success(readFileSync(filePath, "utf8"));
   }
 }

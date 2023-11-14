@@ -26,6 +26,7 @@ import {
 } from "node:fs";
 import * as path from "node:path";
 
+import { IllegalArgumentError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 import { copySync } from "fs-extra";
 
@@ -49,7 +50,7 @@ export class StorageManager {
   private getFullPath(directoryPath: string[], temporary = false): string {
     for (const pathPart of directoryPath) {
       if (pathPart.includes("/") || pathPart.includes("\\")) {
-        throw new Error(
+        throw new IllegalArgumentError(
           "Storage path cannot contain any of the following characters /\\"
         );
       }
@@ -145,14 +146,14 @@ export class StorageManager {
     append = false
   ): string {
     if (fileName.includes("/") || fileName.includes("\\")) {
-      throw new Error(
-        "filename cannot contain any of the following characters /\\"
+      throw new IllegalArgumentError(
+        "Filename cannot contain any of the following characters /\\"
       );
     }
 
     for (const pathPart of storagePath) {
       if (pathPart.includes("/") || pathPart.includes("\\")) {
-        throw new Error(
+        throw new IllegalArgumentError(
           "Storage path cannot contain any of the following characters /\\"
         );
       }

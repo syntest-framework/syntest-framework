@@ -21,7 +21,7 @@ export * from "./lib/factories/DependencyFactory";
 export * from "./lib/factories/SourceFactory";
 export * from "./lib/factories/TargetFactory";
 
-export * from "./lib/util/Events";
+export * from "./lib/Events";
 
 export * from "./lib/RootContext";
 export * from "./lib/Target";

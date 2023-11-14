@@ -26,8 +26,7 @@ export * from "./lib/extension/Plugin";
 export * from "./lib/extension/Preset";
 export * from "./lib/extension/Tool";
 
-export * from "./lib/util/Configuration";
-export * from "./lib/util/diagnostics";
+export * from "./lib/Configuration";
 export * from "./lib/util/extractArgumentValues";
 
 export * from "./lib/ModuleManager";

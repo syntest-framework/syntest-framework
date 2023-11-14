@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-import { SearchAlgorithm } from "../algorithms/SearchAlgorithm";
-import { BudgetManager } from "../budget/BudgetManager";
-import { Encoding } from "../Encoding";
-import { SearchSubject } from "../SearchSubject";
-import { TerminationManager } from "../termination/TerminationManager";
+import { SearchAlgorithm } from "./algorithms/SearchAlgorithm";
+import { BudgetManager } from "./budget/BudgetManager";
+import { Encoding } from "./Encoding";
+import { SearchSubject } from "./SearchSubject";
+import { TerminationManager } from "./termination/TerminationManager";
 
 export type Events = {
   searchInitializationStart: <E extends Encoding>(

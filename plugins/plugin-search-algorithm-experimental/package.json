@@ -51,6 +51,7 @@
     "@syntest/base-language": "^0.3.0-beta.10",
     "@syntest/logging": "^0.2.0-beta.1",
     "@syntest/metric": "^0.1.2-beta.3",
+    "@syntest/diagnostics": "*",
     "@syntest/module": "^0.2.0-beta.3",
     "@syntest/search": "^0.5.0-beta.9"
   },

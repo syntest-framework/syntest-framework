@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Framework.
  *
@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export * from "./lib/errors/BaseError";
+export * from "./lib/errors/IllegalArgumentError";
+export * from "./lib/errors/IllegalStateError";
+export * from "./lib/errors/ImplementationError";
+export * from "./lib/errors/IOError";
 
-import { ControlFlowProgram } from "@syntest/cfg";
-import { Result } from "@syntest/diagnostics";
-
-export interface ControlFlowGraphFactory<S> {
-  convert(filePath: string, AST: S): Result<ControlFlowProgram>;
-}
+export * from "./lib/ensureError";
+export * from "./lib/Result";

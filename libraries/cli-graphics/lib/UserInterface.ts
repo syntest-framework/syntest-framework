@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { IllegalStateError } from "@syntest/diagnostics";
 import chalk = require("chalk");
 import * as cliProgress from "cli-progress";
 import figlet = require("figlet");
@@ -93,10 +94,12 @@ export class UserInterface {
 
   updateProgressBar(bar: BarObject): void {
     if (this.bars === undefined) {
-      throw new Error("Progress bars have not been started yet");
+      throw new IllegalStateError("Progress bars have not been started yet");
     }
     if (this.bars.has(bar.name) === false) {
-      throw new Error(`Progress bar with name ${bar.name} does not exist`);
+      throw new IllegalStateError("Progress bar does not exist", {
+        context: { barName: bar.name },
+      });
     }
 
     this.bars
@@ -112,7 +115,7 @@ export class UserInterface {
 
   stopProgressBars(): void {
     if (this.barObject === undefined) {
-      throw new Error("Progress bars have not been started yet");
+      throw new IllegalStateError("Progress bars have not been started yet");
     }
     this.barObject.stop();
     this.barObject = undefined;

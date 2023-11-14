@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Archive } from "../../Archive";
@@ -24,7 +25,6 @@ import { Encoding } from "../../Encoding";
 import { EncodingRunner } from "../../EncodingRunner";
 import { SearchSubject } from "../../SearchSubject";
 import { TerminationManager } from "../../termination/TerminationManager";
-import { shouldNeverHappen } from "../../util/diagnostics";
 import { ExceptionObjectiveFunction } from "../exception/ExceptionObjectiveFunction";
 import { ObjectiveFunction } from "../ObjectiveFunction";
 import { SecondaryObjectiveComparator } from "../secondary/SecondaryObjectiveComparator";
@@ -210,7 +210,9 @@ export abstract class ObjectiveManager<T extends Encoding> {
     // Calculate and store the distance
     const distance = objectiveFunction.calculateDistance(encoding);
     if (Number.isNaN(distance)) {
-      throw new TypeError(shouldNeverHappen("ObjectiveManager"));
+      throw new ImplementationError(
+        "Objective function distance calculation returned a NaN value"
+      );
     }
     encoding.setDistance(objectiveFunction, distance);
     objectiveFunction.updateDistance(distance);

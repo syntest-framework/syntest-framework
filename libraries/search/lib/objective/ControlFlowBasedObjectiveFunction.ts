@@ -16,17 +16,24 @@
  * limitations under the License.
  */
 
-import { ControlFlowProgram, EdgeType } from "@syntest/cfg";
+import {
+  ContractedControlFlowGraph,
+  ControlFlowGraph,
+  ControlFlowProgram,
+  EdgeType,
+} from "@syntest/cfg";
+import {
+  IllegalArgumentError,
+  IllegalStateError,
+  ImplementationError,
+  isFailure,
+  unwrap,
+} from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import { Encoding } from "../Encoding";
 import { ExecutionResult } from "../ExecutionResult";
-import {
-  moreThanTwoOutgoingEdges,
-  shouldNeverHappen,
-} from "../util/diagnostics";
 
-import { BranchObjectiveFunction } from "./branch/BranchObjectiveFunction";
 import { ApproachLevelCalculator } from "./heuristics/ApproachLevelCalculator";
 import { BranchDistanceCalculator } from "./heuristics/BranchDistanceCalculator";
 import { ObjectiveFunction } from "./ObjectiveFunction";
@@ -58,15 +65,23 @@ export abstract class ControlFlowBasedObjectiveFunction<
     this.branchDistanceCalculator = branchDistanceCalculator;
   }
 
-  protected getMatchingFunctionGraph(nodeId: string) {
+  protected getMatchingFunctionGraph(
+    nodeId: string
+  ): ControlFlowGraph | ContractedControlFlowGraph {
     // find the function that corresponds with this node id
     const functions_ = this.controlFlowProgram.functions.filter(
       (function_) => function_.graph.getNodeById(nodeId) !== undefined
     );
 
-    if (functions_.length !== 1) {
-      throw new Error(
-        shouldNeverHappen(ControlFlowBasedObjectiveFunction.name)
+    if (functions_.length > 1) {
+      throw new IllegalStateError(
+        "Found multiple functions with the given nodeId"
+      );
+    }
+
+    if (functions_.length === 0) {
+      throw new IllegalArgumentError(
+        "Found zero functions with the given nodeId"
       );
     }
 
@@ -97,23 +112,22 @@ export abstract class ControlFlowBasedObjectiveFunction<
     const targetNode = graph.getNodeById(id);
 
     // Find approach level and ancestor based on node and covered nodes
-    const {
-      approachLevel,
-      closestCoveredNode,
-      closestCoveredBranchTrace,
-      lastEdgeType,
-      statementFraction,
-    } = this.approachLevelCalculator.calculate(
+    const result = this.approachLevelCalculator.calculate(
       graph,
       targetNode,
       executionResult.getTraces()
     );
 
-    if (closestCoveredNode === undefined) {
-      // if closest node is not found, we return the distance to the root branch
-      // this happens when the function is not entered at all
-      return Number.MAX_VALUE;
-    }
+    // if closest node is not found, we return the distance to the root branch
+    // this happens when the function is not entered at all
+    if (isFailure(result)) return Number.MAX_VALUE;
+
+    const {
+      approachLevel,
+      closestCoveredNode,
+      lastEdgeType,
+      statementFraction,
+    } = unwrap(result);
 
     const outgoingEdges = graph.getOutgoingEdges(closestCoveredNode.id);
 
@@ -128,57 +142,50 @@ export abstract class ControlFlowBasedObjectiveFunction<
     }
 
     if (outgoingEdges.length < 2) {
-      // end of block problem
+      // TODO: end of block problem
       // when a crash happens at the last line of a block the statement fraction becomes 1 since we do not record the last one
       if (statementFraction === 1) {
         return approachLevel + 0.01;
       }
 
-      throw new Error(
-        shouldNeverHappen(
-          "Statement fraction should not be zero because that means it rashed on the conditional instead of the first statement of a blok, could be that the traces are wrong"
-        )
-      );
       // return approachLevel + 0.48 * statementFraction + 0.01;
+      throw new ImplementationError(
+        "Statement fraction should not be zero because that means it crashed on the conditional instead of the first statement of a block, could be that the traces are wrong"
+      );
     }
 
     if (outgoingEdges.length > 2) {
       // weird
-      throw new Error(moreThanTwoOutgoingEdges(closestCoveredNode.id, id));
+      throw new ImplementationError("Node has more than two outgoing edges", {
+        context: { objectiveId: id, nodeId: closestCoveredNode.id },
+      });
     }
 
-    const trueEdge = outgoingEdges.find(
-      (edge) => edge.type === EdgeType.CONDITIONAL_TRUE
-    );
-    const falseEdge = outgoingEdges.find(
-      (edge) => edge.type === EdgeType.CONDITIONAL_FALSE
+    const targetEdge = outgoingEdges.find((edge) =>
+      lastEdgeType
+        ? edge.type === EdgeType.CONDITIONAL_TRUE
+        : edge.type === EdgeType.CONDITIONAL_FALSE
     );
 
-    if (!trueEdge || !falseEdge) {
+    if (!targetEdge) {
       // weird
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
+      throw new ImplementationError(
+        "Node has two outgoing edges but neither is a true/false edge",
+        { context: { objectiveId: id, nodeId: closestCoveredNode.id } }
+      );
     }
 
-    // if closest covered node is not found, we return the distance to the root branch
-    if (!closestCoveredBranchTrace) {
-      throw new Error(shouldNeverHappen("BranchObjectiveFunction"));
-    }
-
-    let trace;
-    if (lastEdgeType) {
-      const trueNode = trueEdge.target;
-      trace = executionResult
-        .getTraces()
-        .find((trace) => trace.id === trueNode && trace.type === "branch");
-    } else {
-      const falseNode = falseEdge.target;
-      trace = executionResult
-        .getTraces()
-        .find((trace) => trace.id === falseNode && trace.type === "branch");
-    }
+    const trace = executionResult
+      .getTraces()
+      .find(
+        (trace) => trace.id === targetEdge.target && trace.type === "branch"
+      );
 
     if (trace === undefined) {
-      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
+      throw new ImplementationError(
+        "Cannot find trace belonging to the true/false node",
+        { context: { objectiveId: id, nodeId: closestCoveredNode.id } }
+      );
     }
 
     let branchDistance = this.branchDistanceCalculator.calculate(
@@ -188,15 +195,21 @@ export abstract class ControlFlowBasedObjectiveFunction<
     );
 
     if (Number.isNaN(approachLevel)) {
-      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
+      throw new ImplementationError("Approach level is NaN", {
+        context: { objectiveId: id, nodeId: closestCoveredNode.id },
+      });
     }
 
     if (Number.isNaN(branchDistance)) {
-      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
+      throw new ImplementationError("Branch distance is NaN", {
+        context: { objectiveId: id, nodeId: closestCoveredNode.id },
+      });
     }
 
     if (Number.isNaN(approachLevel + branchDistance)) {
-      throw new TypeError(shouldNeverHappen(BranchObjectiveFunction.name));
+      throw new ImplementationError("Approach level + Branch Distance is NaN", {
+        context: { objectiveId: id, nodeId: closestCoveredNode.id },
+      });
     }
 
     if (branchDistance === 0) {

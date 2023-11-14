@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Framework.
  *
@@ -15,10 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { BaseError, ErrorOptions } from "./BaseError";
 
-import { ControlFlowProgram } from "@syntest/cfg";
-import { Result } from "@syntest/diagnostics";
-
-export interface ControlFlowGraphFactory<S> {
-  convert(filePath: string, AST: S): Result<ControlFlowProgram>;
+/**
+ * This Error is meant to be thrown whenever something is wrong with the Input Output logic
+ * e.g. a provided path does not exist
+ */
+export class IOError extends BaseError {
+  constructor(message: string, options: ErrorOptions = {}) {
+    super("IO", message, options);
+  }
 }

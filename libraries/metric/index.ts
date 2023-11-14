@@ -17,8 +17,7 @@
  */
 export * from "./lib/Middleware";
 
-export * from "./lib/util/Configuration";
-export * from "./lib/util/diagnostics";
+export * from "./lib/Configuration";
 
 export * from "./lib/Metric";
 export * from "./lib/MetricManager";

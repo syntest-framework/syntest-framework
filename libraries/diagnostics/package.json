@@ -1,7 +1,7 @@
 {
-  "name": "@syntest/cli",
-  "version": "0.3.0-beta.3",
-  "description": "SynTest Framework command line interface",
+  "name": "@syntest/diagnostics",
+  "version": "0.0.0",
+  "description": "SynTest library for tool diagnostics",
   "keywords": [
     "syntest",
     "syntest-framework"
@@ -16,18 +16,17 @@
     "Mitchell Olsthoorn",
     "Dimitri Stallenberg"
   ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/lib",
-    "dist/bin.d.ts",
-    "dist/bin.d.ts.map",
-    "dist/bin.js",
-    "dist/bin.js.map",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
     "NOTICE",
     "README.md"
   ],
-  "bin": {
-    "syntest": "dist/bin.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syntest-framework/syntest-framework.git"
@@ -47,18 +46,6 @@
     "test:coverage": "echo 'no tests'",
     "test:coverage:ci": "echo 'no tests'",
     "test:watch": "echo 'no tests'"
-  },
-  "dependencies": {
-    "@syntest/diagnostics": "*",
-    "@syntest/cli-graphics": "^0.3.0-beta.0",
-    "@syntest/init": "^0.2.2-beta.5",
-    "@syntest/logging": "^0.2.0-beta.1",
-    "@syntest/metric": "^0.1.2-beta.3",
-    "@syntest/module": "^0.2.0-beta.3",
-    "@syntest/prng": "^0.2.0-beta.1",
-    "@syntest/storage": "^0.3.0-beta.1",
-    "short-uuid": "^4.2.2",
-    "yargs": "^17.7.1"
   },
   "engines": {
     "node": ">=16"

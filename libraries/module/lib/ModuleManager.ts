@@ -19,31 +19,24 @@ import { existsSync } from "node:fs";
 import * as path from "node:path";
 
 import { ItemizationItem, UserInterface } from "@syntest/cli-graphics";
+import {
+  IllegalArgumentError,
+  IllegalStateError,
+  IOError,
+} from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 import { Metric, MetricManager, MetricOptions } from "@syntest/metric";
 import { StorageManager } from "@syntest/storage";
 import globalModules = require("global-modules");
 import Yargs = require("yargs");
 
+import { OptionGroups } from "./Configuration";
 import { Module } from "./extension/Module";
 import { Plugin } from "./extension/Plugin";
 import { MetricMiddlewarePlugin } from "./extension/plugins/MetricMiddlewarePlugin";
 import { PluginType } from "./extension/plugins/PluginType";
 import { Preset } from "./extension/Preset";
 import { Tool } from "./extension/Tool";
-import { OptionGroups } from "./util/Configuration";
-import {
-  moduleAlreadyLoaded,
-  moduleCannotBeLoaded,
-  moduleNotCorrectlyImplemented,
-  moduleNotInstalled,
-  modulePathNotFound,
-  pluginAlreadyLoaded,
-  pluginNotFound,
-  presetAlreadyLoaded,
-  presetNotFound,
-  toolAlreadyLoaded,
-} from "./util/diagnostics";
 
 export class ModuleManager {
   protected static LOGGER: Logger;
@@ -139,15 +132,15 @@ export class ModuleManager {
   }
 
   getPlugin(type: string, name: string): Plugin {
-    if (!this._plugins.has(type)) {
-      throw new Error(pluginNotFound(name, type));
+    const pluginsOfType = this.getPluginsOfType(type);
+
+    if (!pluginsOfType.has(name)) {
+      throw new IllegalStateError("Plugin not found", {
+        context: { type: type, name: name },
+      });
     }
 
-    if (!this._plugins.get(type).has(name)) {
-      throw new Error(pluginNotFound(name, type));
-    }
-
-    return this._plugins.get(type).get(name);
+    return pluginsOfType.get(name);
   }
 
   getPluginsOfType(type: string): Map<string, Plugin> {
@@ -268,14 +261,16 @@ export class ModuleManager {
     }
   }
 
-  getModulePath(module: string): string {
+  protected getModulePath(module: string): string {
     let modulePath = "";
 
     if (module.startsWith("file:")) {
       // It is a file path
       modulePath = path.resolve(module.replace("file:", ""));
       if (!existsSync(modulePath)) {
-        throw new Error(modulePathNotFound(module));
+        throw new IOError("Could not find filepath of module", {
+          context: { module: module },
+        });
       }
     } else {
       // It is a npm package
@@ -290,14 +285,16 @@ export class ModuleManager {
       if (!existsSync(modulePath)) {
         // it is not installed locally nor globally
         // TODO maybe auto install?
-        throw new Error(moduleNotInstalled(module));
+        throw new IOError("Module is not installed locally nor globally", {
+          context: { module: module },
+        });
       }
     }
 
     return modulePath;
   }
 
-  async loadModule(moduleId: string, modulePath: string) {
+  async loadModule(moduleId: string, modulePath: string): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { module } = await import(modulePath);
 
@@ -306,14 +303,21 @@ export class ModuleManager {
 
     // check requirements
     if (!moduleInstance.name) {
-      throw new Error(moduleNotCorrectlyImplemented("name", moduleId));
+      throw new IOError("Incorrect module implementation", {
+        context: { moduleId: moduleId, missing: "name" },
+      });
     }
     if (!moduleInstance.register) {
-      throw new Error(moduleNotCorrectlyImplemented("register", moduleId));
+      throw new IOError("Incorrect module implementation", {
+        context: { moduleId: moduleId, missing: "register" },
+      });
     }
 
     if (this.modules.has(moduleInstance.name)) {
-      throw new Error(moduleAlreadyLoaded(moduleInstance.name, moduleId));
+      throw new IOError(
+        "Module already loaded, possible duplicate module name",
+        { context: { moduleId: moduleId, name: moduleInstance.name } }
+      );
     }
 
     this._modules.set(moduleInstance.name, moduleInstance);
@@ -326,14 +330,9 @@ export class ModuleManager {
   async loadModules(modulesIds: string[]) {
     // Load modules
     for (const module of modulesIds) {
-      try {
-        ModuleManager.LOGGER.info(`Loading module: ${module}`);
-        const modulePath = this.getModulePath(module);
-        await this.loadModule(module, modulePath);
-      } catch (error) {
-        console.log(error);
-        throw new Error(moduleCannotBeLoaded(module));
-      }
+      ModuleManager.LOGGER.info(`Loading module: ${module}`);
+      const modulePath = this.getModulePath(module);
+      await this.loadModule(module, modulePath);
     }
 
     const modules = [...this.modules.values()];
@@ -350,7 +349,9 @@ export class ModuleManager {
 
   registerPreset(module: Module, preset: Preset) {
     if (this._presets.has(preset.name)) {
-      throw new Error(presetAlreadyLoaded(preset.name));
+      throw new IllegalArgumentError("Preset name already registered", {
+        context: { name: preset.name },
+      });
     }
 
     ModuleManager.LOGGER.info(`Preset loaded: ${preset.name}`);
@@ -360,7 +361,9 @@ export class ModuleManager {
 
   registerTool(module: Module, tool: Tool) {
     if (this._tools.has(tool.name)) {
-      throw new Error(toolAlreadyLoaded(tool.name));
+      throw new IllegalArgumentError("Tool name already registered", {
+        context: { name: tool.name },
+      });
     }
 
     ModuleManager.LOGGER.info(`Tool loaded: ${tool.name}`);
@@ -374,7 +377,9 @@ export class ModuleManager {
     }
 
     if (this._plugins.get(plugin.type).has(plugin.name)) {
-      throw new Error(pluginAlreadyLoaded(plugin.name, plugin.type));
+      throw new IllegalArgumentError("Plugin name already registered", {
+        context: { name: plugin.name, type: plugin.type },
+      });
     }
 
     ModuleManager.LOGGER.info(
@@ -422,8 +427,9 @@ export class ModuleManager {
 
     ModuleManager.LOGGER.info(`Preset set: ${presetChoice}`);
     if (!this._presets.has(presetChoice)) {
-      ModuleManager.LOGGER.error(`Preset not found: ${presetChoice}`);
-      throw new Error(presetNotFound(presetChoice));
+      throw new IllegalArgumentError("Preset not found", {
+        context: { name: presetChoice },
+      });
     }
 
     const presetObject = this._presets.get(presetChoice);

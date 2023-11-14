@@ -78,8 +78,9 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
   }
 
   getBudgetObject(name: BudgetType): Budget<T> {
-    if (!this._budgets.has(name))
-      throw new Error(`Budget with name ${name} does not exist`);
+    if (!this._budgets.has(name)) {
+      return undefined;
+    }
 
     return this._budgets.get(name);
   }

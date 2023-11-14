@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { IllegalArgumentError, IllegalStateError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 
 import {
@@ -34,15 +35,6 @@ import {
   SeriesUnit,
 } from "./Metric";
 import { Middleware } from "./Middleware";
-import {
-  distributionNotRegistered,
-  propertyNotRegistered,
-  seriesDistributionNotRegistered,
-  seriesDistributionTypeNotRegistered,
-  seriesNotRegistered,
-  seriesUnitNotRegistered,
-  shouldNeverHappen,
-} from "./util/diagnostics";
 
 export class MetricManager {
   protected static LOGGER: Logger;
@@ -56,13 +48,7 @@ export class MetricManager {
       this._namespacedManagers.set(namespace, manager);
     }
 
-    const namespacedManager = this._namespacedManagers.get(namespace);
-
-    if (namespacedManager === undefined) {
-      throw new Error(shouldNeverHappen("MetricManager"));
-    }
-
-    return namespacedManager;
+    return this._namespacedManagers.get(namespace);
   }
 
   private _namespace: string;
@@ -89,7 +75,7 @@ export class MetricManager {
 
   get outputMetrics() {
     if (!this._outputMetrics) {
-      throw new Error("Output metrics not set");
+      throw new IllegalStateError("Output metrics not set");
     }
     return this._outputMetrics;
   }
@@ -165,9 +151,11 @@ export class MetricManager {
     }
   }
 
-  getMergedNamespacedManager(namespace: string) {
+  getMergedNamespacedManager(namespace: string): MetricManager {
     if (!this._namespacedManagers.has(namespace)) {
-      throw new Error(`Namespace ${namespace} not registered`);
+      throw new IllegalStateError("Namespace not registered", {
+        context: { namespace: namespace },
+      });
     }
 
     const namespaced = this.getNamespaced(namespace);
@@ -213,7 +201,9 @@ export class MetricManager {
         });
 
         if (!found) {
-          throw new Error(`Output metric ${metric} not found`);
+          throw new IllegalArgumentError("Output metric not found", {
+            context: { metric: metric },
+          });
         }
         return found;
       });
@@ -228,7 +218,7 @@ export class MetricManager {
 
   get metrics() {
     if (!this._metrics) {
-      throw new Error("Metrics not set");
+      throw new IllegalStateError("Metrics not set");
     }
     return this._metrics;
   }
@@ -300,7 +290,9 @@ export class MetricManager {
     MetricManager.LOGGER.debug(`Recording property ${property} = ${value}`);
 
     if (!this.properties.has(property)) {
-      throw new Error(propertyNotRegistered(property));
+      throw new IllegalStateError("Cannot record unregistered property", {
+        context: { property: property },
+      });
     }
 
     this.properties.set(property, value);
@@ -312,7 +304,9 @@ export class MetricManager {
     );
 
     if (!this.distributions.has(distributionName)) {
-      throw new Error(distributionNotRegistered(distributionName));
+      throw new IllegalStateError("Cannot record unregistered distribution", {
+        context: { distribution: distributionName },
+      });
     }
 
     this.distributions.get(distributionName).push(value);
@@ -329,11 +323,15 @@ export class MetricManager {
     );
 
     if (!this.series.has(seriesName)) {
-      throw new Error(seriesNotRegistered(seriesName));
+      throw new IllegalStateError("Cannot record unregistered series", {
+        context: { series: seriesName },
+      });
     }
 
     if (!this.series.get(seriesName).has(seriesUnit)) {
-      throw new Error(seriesUnitNotRegistered(seriesName, seriesUnit));
+      throw new IllegalStateError("Cannot record unregistered series unit", {
+        context: { series: seriesName, unit: seriesUnit },
+      });
     }
 
     this.series.get(seriesName).get(seriesUnit).set(seriesIndex, value);
@@ -350,12 +348,21 @@ export class MetricManager {
     );
 
     if (!this.seriesDistributions.has(seriesDistributionName)) {
-      throw new Error(seriesDistributionNotRegistered(seriesDistributionName));
+      throw new IllegalStateError(
+        "Cannot record unregistered series distribution",
+        { context: { seriesDistribution: seriesDistributionName } }
+      );
     }
 
     if (!this.seriesDistributions.get(seriesDistributionName).has(seriesUnit)) {
-      throw new Error(
-        seriesDistributionTypeNotRegistered(seriesDistributionName, seriesUnit)
+      throw new IllegalStateError(
+        "Cannot record unregistered series distribution unit",
+        {
+          context: {
+            seriesDistribution: seriesDistributionName,
+            unit: seriesUnit,
+          },
+        }
       );
     }
 
@@ -390,12 +397,21 @@ export class MetricManager {
     );
 
     if (!this.seriesMeasurements.has(seriesMeasurementName)) {
-      throw new Error(seriesDistributionNotRegistered(seriesMeasurementName));
+      throw new IllegalStateError(
+        "Cannot record unregistered series measurement",
+        { context: { seriesMeasurement: seriesMeasurementName } }
+      );
     }
 
     if (!this.seriesMeasurements.get(seriesMeasurementName).has(seriesUnit)) {
-      throw new Error(
-        seriesDistributionTypeNotRegistered(seriesMeasurementName, seriesUnit)
+      throw new IllegalStateError(
+        "Cannot record unregistered series measurement unit",
+        {
+          context: {
+            seriesMeasurement: seriesMeasurementName,
+            unit: seriesUnit,
+          },
+        }
       );
     }
 

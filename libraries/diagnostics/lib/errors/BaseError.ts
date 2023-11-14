@@ -16,5 +16,30 @@
  * limitations under the License.
  */
 
-export * from "./lib/Configuration";
-export * from "./lib/StorageManager";
+type Jsonable =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | readonly Jsonable[]
+  | { readonly [key: string]: Jsonable }
+  | { toJSON(): Jsonable };
+
+export type ErrorOptions = {
+  cause?: Error;
+  context?: Jsonable;
+};
+
+export class BaseError extends Error {
+  public readonly context?: Jsonable;
+  public readonly cause: Error;
+
+  constructor(type: string, message: string, options: ErrorOptions = {}) {
+    super(`[${type}]: ${message}`);
+    this.name = this.constructor.name;
+    const { cause, context } = options;
+    this.cause = cause;
+    this.context = context;
+  }
+}

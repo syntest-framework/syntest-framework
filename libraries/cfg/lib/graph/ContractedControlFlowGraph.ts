@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { duplicateNodeInMappping, nodeNotFoundInMapping } from "../diagnostics";
+import { IllegalArgumentError } from "@syntest/diagnostics";
 
 import { ControlFlowGraph } from "./ControlFlowGraph";
 import { Edge } from "./Edge";
@@ -48,7 +48,9 @@ export class ContractedControlFlowGraph extends ControlFlowGraph {
     for (const [key, value] of this._nodeMapping) {
       for (const node of value) {
         if (this._reverseNodeMapping.has(node))
-          throw new Error(duplicateNodeInMappping());
+          throw new IllegalArgumentError("Duplicate node found in mapping", {
+            context: { node: node },
+          });
         this._reverseNodeMapping.set(node, key);
       }
     }
@@ -76,14 +78,14 @@ export class ContractedControlFlowGraph extends ControlFlowGraph {
 
   getParentNode(node: string): string {
     if (!this._reverseNodeMapping.has(node)) {
-      throw new Error(nodeNotFoundInMapping(node));
+      return undefined;
     }
     return this._reverseNodeMapping.get(node);
   }
 
   getChildNodes(node: string): string[] {
     if (!this._nodeMapping.has(node)) {
-      throw new Error(nodeNotFoundInMapping(node));
+      return undefined;
     }
     return this._nodeMapping.get(node);
   }

@@ -20,6 +20,7 @@
 import * as path from "node:path";
 
 import { UserInterface } from "@syntest/cli-graphics";
+import { BaseError } from "@syntest/diagnostics";
 import {
   getLogger,
   Configuration as LoggingConfiguration,
@@ -128,84 +129,92 @@ async function main() {
   );
   const LOGGER = getLogger("cli");
 
-  // Configure module system
-  const metricManager = new MetricManager("global");
-  const storageManager = new StorageManager(
-    baseArguments.syntestDirectory,
-    baseArguments.tempSyntestDirectory,
-    flowId
-  );
-  const userInterface = new UserInterface();
-  const moduleManager = new ModuleManager(
-    metricManager,
-    storageManager,
-    userInterface
-  );
+  try {
+    // Configure module system
+    const metricManager = new MetricManager("global");
+    const storageManager = new StorageManager(
+      baseArguments.syntestDirectory,
+      baseArguments.tempSyntestDirectory,
+      flowId
+    );
+    const userInterface = new UserInterface();
+    const moduleManager = new ModuleManager(
+      metricManager,
+      storageManager,
+      userInterface
+    );
 
-  userInterface.printTitle("SynTest");
-  userInterface.printSuccess("");
-  userInterface.printSuccess(flowId);
-  LOGGER.info(`Starting Flow with id: ${flowId}`);
+    userInterface.printTitle("SynTest");
+    userInterface.printSuccess("");
+    userInterface.printSuccess(flowId);
+    LOGGER.info(`Starting Flow with id: ${flowId}`);
 
-  // Enable help on fail
-  config = config.showHelpOnFail(true);
+    // Enable help on fail
+    config = config.showHelpOnFail(true);
 
-  // Import defined modules
-  const modules = baseArguments.modules;
+    // Import defined modules
+    const modules = baseArguments.modules;
 
-  // Load standard modules
-  LOGGER.info("Loading standard modules...");
-  await moduleManager.loadModule("@syntest/init", "@syntest/init");
+    // Load standard modules
+    LOGGER.info("Loading standard modules...");
+    await moduleManager.loadModule("@syntest/init", "@syntest/init");
 
-  // Load user defined modules
-  LOGGER.info(`Loading modules... [${modules.join(", ")}]`);
-  await moduleManager.loadModules(modules);
-  config = moduleManager.configureModules(config, baseArguments.preset);
+    // Load user defined modules
+    LOGGER.info(`Loading modules... [${modules.join(", ")}]`);
+    await moduleManager.loadModules(modules);
+    config = moduleManager.configureModules(config, baseArguments.preset);
 
-  moduleManager.printModuleVersionTable();
+    moduleManager.printModuleVersionTable();
 
-  const versions = [...moduleManager.modules.values()]
-    .map((module) => `${module.name} (${module.version})`)
-    .join("\n");
+    const versions = [...moduleManager.modules.values()]
+      .map((module) => `${module.name} (${module.version})`)
+      .join("\n");
 
-  // Execute program
-  LOGGER.info("Executing program...");
-  await config
-    .help(true)
-    .version(versions)
-    .demandCommand()
-    .middleware(async (argv) => {
-      const baseArguments = <BaseOptions>(<unknown>argv);
+    // Execute program
+    LOGGER.info("Executing program...");
+    await config
+      .help(true)
+      .version(versions)
+      .demandCommand()
+      .middleware(async (argv) => {
+        const baseArguments = <BaseOptions>(<unknown>argv);
 
-      // Set the flow id and seed in the base arguments
-      baseArguments.fid = flowId;
-      baseArguments.randomSeed = seed;
+        // Set the flow id and seed in the base arguments
+        baseArguments.fid = flowId;
+        baseArguments.randomSeed = seed;
 
-      // Set the arguments in the module manager
-      moduleManager.args = argv;
+        // Set the arguments in the module manager
+        moduleManager.args = argv;
 
-      // Set the metrics on the metric manager
-      metricManager.metrics = await moduleManager.getMetrics();
+        // Set the metrics on the metric manager
+        metricManager.metrics = await moduleManager.getMetrics();
 
-      // Set the output metrics
-      metricManager.setOutputMetrics(
-        (<MetricOptions>(<unknown>argv)).outputMetrics
-      );
+        // Set the output metrics
+        metricManager.setOutputMetrics(
+          (<MetricOptions>(<unknown>argv)).outputMetrics
+        );
 
-      // Register all listener plugins
-      for (const plugin of moduleManager
-        .getPluginsOfType(PluginType.EVENT_LISTENER)
-        .values()) {
-        await (<EventListenerPlugin>plugin).setupEventListener(metricManager);
-      }
+        // Register all listener plugins
+        for (const plugin of moduleManager
+          .getPluginsOfType(PluginType.EVENT_LISTENER)
+          .values()) {
+          await (<EventListenerPlugin>plugin).setupEventListener(metricManager);
+        }
 
-      // Prepare modules
-      LOGGER.info("Preparing modules...");
-      await moduleManager.prepare();
-      LOGGER.info("Modules prepared!");
-    })
-    .middleware((argv) => storeConfig(moduleManager, storageManager, argv))
-    .parse(arguments_);
+        // Prepare modules
+        LOGGER.info("Preparing modules...");
+        await moduleManager.prepare();
+        LOGGER.info("Modules prepared!");
+      })
+      .middleware((argv) => storeConfig(moduleManager, storageManager, argv))
+      .parse(arguments_);
+  } catch (error) {
+    if (error instanceof BaseError) {
+      LOGGER.error(error.message);
+    } else {
+      throw error;
+    }
+  }
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await

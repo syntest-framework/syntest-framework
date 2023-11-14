@@ -23,6 +23,7 @@ import {
   Node,
   NodeType,
 } from "@syntest/cfg";
+import { isFailure, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { ApproachLevelCalculator } from "../../../../lib/objective/heuristics/ApproachLevelCalculator";
@@ -67,7 +68,7 @@ describe("CFG ancestors search", function () {
       edges
     );
 
-    const cfp = contractControlFlowProgram({
+    const result = contractControlFlowProgram({
       graph: cfg,
       functions: [
         {
@@ -77,6 +78,10 @@ describe("CFG ancestors search", function () {
         },
       ],
     });
+
+    if (isFailure(result)) throw result.error;
+
+    const cfp = unwrap(result);
 
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,
@@ -168,7 +173,7 @@ describe("CFG ancestors search", function () {
       edges
     );
 
-    const cfp = contractControlFlowProgram({
+    const result = contractControlFlowProgram({
       graph: cfg,
       functions: [
         {
@@ -178,6 +183,10 @@ describe("CFG ancestors search", function () {
         },
       ],
     });
+
+    if (isFailure(result)) throw result.error;
+
+    const cfp = unwrap(result);
 
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,
@@ -269,7 +278,7 @@ describe("CFG ancestors search", function () {
       edges
     );
 
-    const cfp = contractControlFlowProgram({
+    const result = contractControlFlowProgram({
       graph: cfg,
       functions: [
         {
@@ -279,6 +288,10 @@ describe("CFG ancestors search", function () {
         },
       ],
     });
+
+    if (isFailure(result)) throw result.error;
+
+    const cfp = unwrap(result);
 
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,
@@ -365,7 +378,7 @@ describe("CFG ancestors search", function () {
       edges
     );
 
-    const cfp = contractControlFlowProgram({
+    const result = contractControlFlowProgram({
       graph: cfg,
       functions: [
         {
@@ -375,6 +388,10 @@ describe("CFG ancestors search", function () {
         },
       ],
     });
+
+    if (isFailure(result)) throw result.error;
+
+    const cfp = unwrap(result);
 
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,

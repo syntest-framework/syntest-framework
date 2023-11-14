@@ -24,6 +24,7 @@ import {
   Node,
   NodeType,
 } from "@syntest/cfg";
+import { isFailure, success, unwrap } from "@syntest/diagnostics";
 import * as chai from "chai";
 
 import { ApproachLevelCalculator } from "../../../../lib/objective/heuristics/ApproachLevelCalculator";
@@ -70,9 +71,13 @@ describe("CFG ancestors search", function () {
       new Edge("4", EdgeType.NORMAL, "4", node3.id, nodeExit.id),
     ];
 
-    cfgMini = edgeContraction(
+    let result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    cfgMini = unwrap(result);
 
     // Construct CFG1
     nodes = new Map();
@@ -104,9 +109,13 @@ describe("CFG ancestors search", function () {
       new Edge("9", EdgeType.NORMAL, "9", "E", "A"),
       new Edge("10", EdgeType.NORMAL, "10", "B", "EXIT"),
     ];
-    CFG1 = edgeContraction(
+    result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    CFG1 = unwrap(result);
 
     // Construct CFG2
     nodes = new Map();
@@ -154,9 +163,13 @@ describe("CFG ancestors search", function () {
       new Edge("23", EdgeType.NORMAL, "23", "R", "S"),
       new Edge("24", EdgeType.NORMAL, "24", "ROOT", "A"),
     ];
-    CFG2 = edgeContraction(
+    result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    CFG2 = unwrap(result);
 
     // Construct CFG3
 
@@ -187,9 +200,13 @@ describe("CFG ancestors search", function () {
       new Edge("24", EdgeType.NORMAL, "24", "ROOT", "A"),
     ];
 
-    CFG3 = edgeContraction(
+    result = edgeContraction(
       new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
     );
+
+    if (isFailure(result)) throw result.error;
+
+    CFG3 = unwrap(result);
   });
 
   it("1 branch", () => {
@@ -199,12 +216,14 @@ describe("CFG ancestors search", function () {
         "2",
         new Set<string>(["ROOT", "1", "3", "EXIT"])
       )
-    ).to.eql({
-      approachLevel: 0,
-      closestCoveredBranch: cfgMini.getNodeById(cfgMini.getParentNode("1")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 0,
+        closestCoveredNode: cfgMini.getNodeById(cfgMini.getParentNode("1")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG1 Target G, Path went to F", () => {
@@ -216,12 +235,14 @@ describe("CFG ancestors search", function () {
         "G",
         new Set<string>(["ROOT", "A", "C", "D", "F", "A", "B", "EXIT"])
       )
-    ).to.eql({
-      approachLevel: 0,
-      closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("D")),
-      lastEdgeType: false,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 0,
+        closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("D")),
+        lastEdgeType: false,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG1 Target G, Path went to E", () => {
@@ -233,12 +254,14 @@ describe("CFG ancestors search", function () {
         "G",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 1,
-      closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("C")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 1,
+        closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("C")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG1 Target G, Path went to E and looped", () => {
@@ -250,12 +273,14 @@ describe("CFG ancestors search", function () {
         "G",
         new Set<string>(["ROOT", "A", "C", "E", "A", "C", "D", "F", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 0,
-      closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("D")),
-      lastEdgeType: false,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 0,
+        closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("D")),
+        lastEdgeType: false,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG1 Target E, Path went to B", () => {
@@ -267,12 +292,14 @@ describe("CFG ancestors search", function () {
         "E",
         new Set<string>(["ROOT", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 1,
-      closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("A")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 1,
+        closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("A")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG1 Target F, Path went to B", () => {
@@ -284,12 +311,14 @@ describe("CFG ancestors search", function () {
         "F",
         new Set<string>(["ROOT", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 2,
-      closestCoveredBranch: CFG1.getNodeById(CFG1.getParentNode("A")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 2,
+        closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("A")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target E, Path went to S through H", () => {
@@ -313,12 +342,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({
-      approachLevel: 0,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("C")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 0,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("C")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target I, Path went to S through H", () => {
@@ -342,12 +373,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({
-      approachLevel: 0,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("F")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 0,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("F")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target M, Path went to S through H", () => {
@@ -371,12 +404,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({
-      approachLevel: 1,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("D")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 1,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("D")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target N, Path went to S through H", () => {
@@ -400,12 +435,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({
-      approachLevel: 1,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("F")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 1,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("F")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target R, Path went to S through H and Q", () => {
@@ -429,12 +466,14 @@ describe("CFG ancestors search", function () {
           "S",
         ])
       )
-    ).to.eql({
-      approachLevel: 0,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("P")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 0,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("P")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target R, Path went to E and B", () => {
@@ -446,12 +485,14 @@ describe("CFG ancestors search", function () {
         "R",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 2,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("C")),
-      lastEdgeType: false,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 2,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("C")),
+        lastEdgeType: false,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target S, Path went to E and B", () => {
@@ -463,12 +504,14 @@ describe("CFG ancestors search", function () {
         "S",
         new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 2,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("C")),
-      lastEdgeType: false,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 2,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("C")),
+        lastEdgeType: false,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG2 Target S, Path went to B immediately", () => {
@@ -480,12 +523,14 @@ describe("CFG ancestors search", function () {
         "S",
         new Set<string>(["ROOT", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 3,
-      closestCoveredBranch: CFG2.getNodeById(CFG2.getParentNode("A")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 3,
+        closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("A")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG3 Target S, Path went to B immediately", () => {
@@ -497,12 +542,14 @@ describe("CFG ancestors search", function () {
         "S",
         new Set<string>(["ROOT", "A", "B"])
       )
-    ).to.eql({
-      approachLevel: 1,
-      closestCoveredBranch: CFG3.getNodeById(CFG3.getParentNode("A")),
-      lastEdgeType: true,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 1,
+        closestCoveredNode: CFG3.getNodeById(CFG3.getParentNode("A")),
+        lastEdgeType: true,
+        statementFraction: -1,
+      })
+    );
   });
 
   it("CFG3 Target R, Path went through E", () => {
@@ -514,11 +561,13 @@ describe("CFG ancestors search", function () {
         "R",
         new Set<string>(["ROOT", "A", "C", "E", "S"])
       )
-    ).to.eql({
-      approachLevel: 2,
-      closestCoveredBranch: CFG3.getNodeById(CFG3.getParentNode("C")),
-      lastEdgeType: false,
-      statementFraction: -1,
-    });
+    ).to.eql(
+      success({
+        approachLevel: 2,
+        closestCoveredNode: CFG3.getNodeById(CFG3.getParentNode("C")),
+        lastEdgeType: false,
+        statementFraction: -1,
+      })
+    );
   });
 });

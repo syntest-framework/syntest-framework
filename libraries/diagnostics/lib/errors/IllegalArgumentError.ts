@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2023 SynTest contributors
+ * Copyright 2020-2023 SynTest contributors
  *
  * This file is part of SynTest Framework - SynTest Framework.
  *
@@ -15,14 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { BaseError, ErrorOptions } from "./BaseError";
 
 /**
- * This file is meant to provide consistent error messages throughout the tool.
+ * This Error is meant to be thrown when the argument(s) provided to the function are incorrect.
  */
-export const singletonNotSet = (name: string) =>
-  `The ${name} singleton has not been set yet!`;
-export const singletonAlreadySet = (name: string) =>
-  `The ${name} singleton has already been set!`;
-
-export const emptyArray = (variableName: string) =>
-  `'${variableName}' cannot be empty!`;
+export class IllegalArgumentError extends BaseError {
+  constructor(message: string, options: ErrorOptions = {}) {
+    super("Illegal Argument", message, options);
+  }
+}

@@ -17,16 +17,18 @@
  */
 
 import { UserInterface } from "@syntest/cli-graphics";
+import { getLogger, Logger } from "@syntest/logging";
 import { MetricManager } from "@syntest/metric";
 import { ModuleManager } from "@syntest/module";
 import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 
 import { ArgumentsObject } from "./Configuration";
+import { Events } from "./Events";
 import { PropertyName } from "./Metrics";
-import { Events } from "./util/Events";
 
 export abstract class Launcher<T extends ArgumentsObject> {
+  protected static LOGGER: Logger;
   protected arguments_: T;
 
   protected moduleManager: ModuleManager;
@@ -41,6 +43,7 @@ export abstract class Launcher<T extends ArgumentsObject> {
     storageManager: StorageManager,
     userInterface: UserInterface
   ) {
+    Launcher.LOGGER = getLogger(Launcher.name);
     this.arguments_ = arguments_;
     this.moduleManager = moduleManager;
     this.metricManager = metricManager;

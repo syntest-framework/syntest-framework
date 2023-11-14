@@ -15,10 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { IllegalStateError } from "@syntest/diagnostics";
 import { Metric } from "@syntest/metric";
 import Yargs = require("yargs");
-
-import { cannotAddChoicesToOptionWithoutChoices } from "../util/diagnostics";
 
 import { Command } from "./Command";
 import { Extension } from "./Extension";
@@ -97,8 +96,14 @@ export class Tool extends Extension implements Yargs.CommandModule {
         }
 
         if (!this.toolOptions.get(option).choices) {
-          throw new Error(
-            cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
+          throw new IllegalStateError(
+            "Could not add choices to option as option does not have choices",
+            {
+              context: {
+                option: option,
+                plugin: plugin.name,
+              },
+            }
           );
         }
         const newOption = {
@@ -132,8 +137,14 @@ export class Tool extends Extension implements Yargs.CommandModule {
         }
 
         if (!command.options.get(option).choices) {
-          throw new Error(
-            cannotAddChoicesToOptionWithoutChoices(option, plugin.name)
+          throw new IllegalStateError(
+            "Could not add choices to option as option does not have choices",
+            {
+              context: {
+                option: option,
+                plugin: plugin.name,
+              },
+            }
           );
         }
 
