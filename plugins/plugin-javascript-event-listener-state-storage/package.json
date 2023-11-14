@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-javascript-event-listener-state-storage",
-  "version": "0.2.0-beta.3",
+  "version": "0.2.0-beta.4",
   "description": "A listener plugin for SynTest JavaScript containing state storage functionalities",
   "keywords": [
     "syntest",
@@ -49,14 +49,14 @@
   },
   "dependencies": {
     "@syntest/analysis": "^0.3.0-beta.1",
-    "@syntest/analysis-javascript": "^0.2.0-beta.7",
+    "@syntest/analysis-javascript": "^0.2.0-beta.8",
     "@syntest/base-language": "^0.3.0-beta.11",
     "@syntest/cfg": "^0.5.0-beta.0",
+    "@syntest/diagnostics": "^0.1.0-beta.0",
     "@syntest/logging": "^0.2.0-beta.2",
     "@syntest/metric": "^0.2.0-beta.0",
     "@syntest/module": "^0.2.0-beta.4",
-    "@syntest/search": "^0.5.0-beta.10",
-    "@syntest/diagnostics": "^0.1.0-beta.0"
+    "@syntest/search": "^0.5.0-beta.10"
   },
   "engines": {
     "node": ">=16"
