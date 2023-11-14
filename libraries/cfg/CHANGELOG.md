@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0-beta.0](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cfg@0.4.1-beta.3...@syntest/cfg@0.5.0-beta.0) (2023-11-14)
+
+### Features
+
+- improve diagnostics ([#388](https://github.com/syntest-framework/syntest-framework/issues/388)) ([8dee9b7](https://github.com/syntest-framework/syntest-framework/commit/8dee9b7c266fc54908c896220084729ac8b2ffe3))
+
 ## [0.4.1-beta.3](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cfg@0.4.1-beta.2...@syntest/cfg@0.4.1-beta.3) (2023-11-02)
 
 **Note:** Version bump only for package @syntest/cfg

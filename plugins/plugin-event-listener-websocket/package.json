@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-event-listener-websocket",
-  "version": "0.2.1-beta.10",
+  "version": "0.2.1-beta.11",
   "description": "SynTest event listener plugin for external communication through WebSockets",
   "keywords": [
     "syntest",
@@ -48,12 +48,12 @@
     "test:watch": "echo 'no tests'"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.3.0-beta.0",
-    "@syntest/base-language": "^0.3.0-beta.10",
-    "@syntest/cfg": "^0.4.1-beta.3",
-    "@syntest/logging": "^0.2.0-beta.1",
-    "@syntest/module": "^0.2.0-beta.3",
-    "@syntest/search": "^0.5.0-beta.9",
+    "@syntest/analysis": "^0.3.0-beta.1",
+    "@syntest/base-language": "^0.3.0-beta.11",
+    "@syntest/cfg": "^0.5.0-beta.0",
+    "@syntest/logging": "^0.2.0-beta.2",
+    "@syntest/module": "^0.2.0-beta.4",
+    "@syntest/search": "^0.5.0-beta.10",
     "ws": "^8.13.0"
   },
   "engines": {
