@@ -24,7 +24,7 @@ const expect = chai.expect;
 
 describe("simulationTest", () => {
   it("SimpleTest", () => {
-    new StateStorage(new StorageManager(), "");
+    new StateStorage(new StorageManager("", "", ""), "");
 
     expect(true);
   });

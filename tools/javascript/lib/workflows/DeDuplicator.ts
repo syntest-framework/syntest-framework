@@ -43,14 +43,12 @@ export class DeDuplicator {
       archives.set(target, archive);
 
       for (const encoding of encodings) {
-        const executionResult = encoding.getExecutionResult();
-
-        if (!executionResult) {
+        if (!encoding.getExecutionResult()) {
           throw new Error("Invalid encoding without executionResult");
         }
 
         for (const objective of objectives) {
-          if (executionResult.coversId(objective.getIdentifier())) {
+          if (objective.calculateDistance(encoding) === 0) {
             if (!archive.hasObjective(objective)) {
               DeDuplicator.LOGGER.debug("Adding new encoding to archive");
               archive.update(objective, encoding, false);

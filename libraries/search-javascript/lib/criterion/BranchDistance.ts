@@ -20,13 +20,13 @@ import { transformSync, traverse } from "@babel/core";
 import { defaultBabelOptions } from "@syntest/analysis-javascript";
 import { getLogger, Logger } from "@syntest/logging";
 import {
-  BranchDistance as FrameworkBranchDistance,
+  BranchDistanceCalculator as AbstractBranchDistanceCalculator,
   shouldNeverHappen,
 } from "@syntest/search";
 
 import { BranchDistanceVisitor } from "./BranchDistanceVisitor";
 
-export class BranchDistance extends FrameworkBranchDistance {
+export class BranchDistanceCalculator extends AbstractBranchDistanceCalculator {
   protected static LOGGER: Logger;
   protected syntaxForgiving: boolean;
   protected stringAlphabet: string;
@@ -34,7 +34,7 @@ export class BranchDistance extends FrameworkBranchDistance {
   constructor(syntaxForgiving: boolean, stringAlphabet: string) {
     super();
     this.syntaxForgiving = syntaxForgiving;
-    BranchDistance.LOGGER = getLogger("BranchDistance");
+    BranchDistanceCalculator.LOGGER = getLogger("BranchDistance");
     this.stringAlphabet = stringAlphabet;
   }
 
@@ -84,7 +84,7 @@ export class BranchDistance extends FrameworkBranchDistance {
       const variables_ = Object.entries(variables)
         .map(([key, value]) => `${key}=${String(value)}`)
         .join(", ");
-      BranchDistance.LOGGER.warn(
+      BranchDistanceCalculator.LOGGER.warn(
         `Calculated distance for condition '${condition}' -> ${String(
           trueOrFalse
         )}, is zero. Variables: ${variables_}`

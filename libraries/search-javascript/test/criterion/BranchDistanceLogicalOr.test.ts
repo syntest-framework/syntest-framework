@@ -17,7 +17,7 @@
  */
 import { expect } from "chai";
 
-import { BranchDistance } from "../../lib/criterion/BranchDistance";
+import { BranchDistanceCalculator } from "../../lib/criterion/BranchDistance";
 
 describe("BranchDistance a || b test", () => {
   // number
@@ -26,7 +26,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -39,7 +39,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -52,7 +52,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -65,7 +65,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -80,7 +80,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -95,7 +95,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -110,7 +110,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -125,7 +125,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -139,7 +139,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -152,7 +152,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -165,7 +165,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -178,7 +178,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -193,7 +193,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -208,7 +208,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -223,7 +223,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -238,7 +238,7 @@ describe("BranchDistance a || b test", () => {
     const variables = {};
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );

@@ -56,11 +56,15 @@ import { getLogger, Logger } from "@syntest/logging";
 import { MetricManager } from "@syntest/metric";
 import { ModuleManager } from "@syntest/module";
 import {
+  ApproachLevelCalculator,
   Archive,
   BudgetManager,
   BudgetType,
   EncodingSampler,
   EvaluationBudget,
+  extractBranchObjectivesFromProgram,
+  extractFunctionObjectivesFromProgram,
+  extractPathObjectivesFromProgram,
   IterationBudget,
   ObjectiveFunction,
   SearchTimeBudget,
@@ -68,6 +72,7 @@ import {
   TotalTimeBudget,
 } from "@syntest/search";
 import {
+  BranchDistanceCalculator,
   ExecutionInformationIntegrator,
   JavaScriptDecoder,
   JavaScriptRandomSampler,
@@ -85,7 +90,7 @@ import { addMetaComments } from "./workflows/MetaComment";
 import { TestSplitting } from "./workflows/TestSplitter";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
-export class JavaScriptLauncher extends Launcher {
+export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
   private static LOGGER: Logger;
 
   private targets: Target[];
@@ -112,7 +117,7 @@ export class JavaScriptLauncher extends Launcher {
       storageManager,
       userInterface
     );
-    JavaScriptLauncher.LOGGER = getLogger("JavaScriptLauncher");
+    JavaScriptLauncher.LOGGER = getLogger(JavaScriptLauncher.name);
     this.archives = new Map();
   }
 
@@ -123,11 +128,11 @@ export class JavaScriptLauncher extends Launcher {
 
     this.metricManager.recordProperty(
       PropertyName.CONSTANT_POOL_ENABLED,
-      `${(<JavaScriptArguments>this.arguments_).constantPool.toString()}`
+      `${this.arguments_.constantPool.toString()}`
     );
     this.metricManager.recordProperty(
       PropertyName.CONSTANT_POOL_PROBABILITY,
-      `${(<JavaScriptArguments>(
+      `${((
         this.arguments_
       )).constantPoolProbability.toString()}`
     );
@@ -156,24 +161,18 @@ export class JavaScriptLauncher extends Launcher {
     );
 
     const abstractSyntaxTreeFactory = new AbstractSyntaxTreeFactory();
-    const targetFactory = new TargetFactory(
-      (<JavaScriptArguments>this.arguments_).syntaxForgiving
-    );
+    const targetFactory = new TargetFactory(this.arguments_.syntaxForgiving);
     const controlFlowGraphFactory = new ControlFlowGraphFactory(
-      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+      this.arguments_.syntaxForgiving
     );
     const dependencyFactory = new DependencyFactory(
-      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+      this.arguments_.syntaxForgiving
     );
-    const exportFactory = new ExportFactory(
-      (<JavaScriptArguments>this.arguments_).syntaxForgiving
-    );
-    const typeExtractor = new TypeExtractor(
-      (<JavaScriptArguments>this.arguments_).syntaxForgiving
-    );
+    const exportFactory = new ExportFactory(this.arguments_.syntaxForgiving);
+    const typeExtractor = new TypeExtractor(this.arguments_.syntaxForgiving);
     const typeResolver: TypeModelFactory = new InferenceTypeModelFactory();
     const constantPoolFactory = new ConstantPoolFactory(
-      (<JavaScriptArguments>this.arguments_).syntaxForgiving
+      this.arguments_.syntaxForgiving
     );
 
     const fileSelector = new FileSelector();
@@ -276,7 +275,6 @@ export class JavaScriptLauncher extends Launcher {
         ["Analysis Include", `${this.arguments_.analysisInclude.join(", ")}`],
         ["Analysis Exclude", `${this.arguments_.analysisExclude.join(", ")}`],
       ],
-      footers: ["", ""],
     };
     this.userInterface.printTable("SELECTION SETTINGS", selectionSettings);
 
@@ -302,7 +300,6 @@ export class JavaScriptLauncher extends Launcher {
 
         ["Seed", `${this.arguments_.randomSeed.toString()}`],
       ],
-      footers: ["", ""],
     };
 
     this.userInterface.printTable("SETTINGS", settings);
@@ -315,7 +312,6 @@ export class JavaScriptLauncher extends Launcher {
         ["Search Time Budget", `${this.arguments_.searchTime} seconds`],
         ["Total Time Budget", `${this.arguments_.totalTime} seconds`],
       ],
-      footers: ["", ""],
     };
 
     this.userInterface.printTable("BUDGET SETTINGS", budgetSettings);
@@ -339,55 +335,32 @@ export class JavaScriptLauncher extends Launcher {
           "Explore Illegal Values",
           String(this.arguments_.exploreIllegalValues),
         ],
-        [
-          "Use Constant Pool Values",
-          String((<JavaScriptArguments>this.arguments_).constantPool),
-        ],
+        ["Use Constant Pool Values", String(this.arguments_.constantPool)],
         [
           "Use Constant Pool Probability",
-          `${(<JavaScriptArguments>this.arguments_).constantPoolProbability}`,
+          `${this.arguments_.constantPoolProbability}`,
         ],
-        [
-          "Use Type Pool Values",
-          String((<JavaScriptArguments>this.arguments_).typePool),
-        ],
-        [
-          "Use Type Pool Probability",
-          `${(<JavaScriptArguments>this.arguments_).typePoolProbability}`,
-        ],
-        [
-          "Use Statement Pool Values",
-          String((<JavaScriptArguments>this.arguments_).statementPool),
-        ],
+        ["Use Type Pool Values", String(this.arguments_.typePool)],
+        ["Use Type Pool Probability", `${this.arguments_.typePoolProbability}`],
+        ["Use Statement Pool Values", String(this.arguments_.statementPool)],
         [
           "Use Statement Pool Probability",
-          `${(<JavaScriptArguments>this.arguments_).statementPoolProbability}`,
+          `${this.arguments_.statementPoolProbability}`,
         ],
       ],
-      footers: ["", ""],
     };
     this.userInterface.printTable("MUTATION SETTINGS", mutationSettings);
 
     const typeSettings: TableObject = {
       headers: ["Setting", "Value"],
       rows: [
-        [
-          "Type Inference Mode",
-          `${(<JavaScriptArguments>this.arguments_).typeInferenceMode}`,
-        ],
+        ["Type Inference Mode", `${this.arguments_.typeInferenceMode}`],
         [
           "Incorporate Execution Information",
-          String(
-            (<JavaScriptArguments>this.arguments_)
-              .incorporateExecutionInformation
-          ),
+          String(this.arguments_.incorporateExecutionInformation),
         ],
-        [
-          "Random Type Probability",
-          `${(<JavaScriptArguments>this.arguments_).randomTypeProbability}`,
-        ],
+        ["Random Type Probability", `${this.arguments_.randomTypeProbability}`],
       ],
-      footers: ["", ""],
     };
     this.userInterface.printTable("Type SETTINGS", typeSettings);
 
@@ -398,7 +371,6 @@ export class JavaScriptLauncher extends Launcher {
         ["Temporary Directory", `${this.arguments_.tempSyntestDirectory}`],
         ["Target Root Directory", `${this.arguments_.targetRootDirectory}`],
       ],
-      footers: ["", ""],
     };
 
     this.userInterface.printTable("DIRECTORY SETTINGS", directorySettings);
@@ -446,9 +418,9 @@ export class JavaScriptLauncher extends Launcher {
       this.decoder,
       executionInformationIntegrator,
       this.arguments_.testDirectory,
-      (<JavaScriptArguments>this.arguments_).executionTimeout,
-      (<JavaScriptArguments>this.arguments_).testTimeout,
-      (<JavaScriptArguments>this.arguments_).silenceTestOutput
+      this.arguments_.executionTimeout,
+      this.arguments_.testTimeout,
+      this.arguments_.silenceTestOutput
     );
 
     JavaScriptLauncher.LOGGER.info("Preprocessing done");
@@ -550,7 +522,6 @@ export class JavaScriptLauncher extends Launcher {
 
     finalEncodings = new Map<Target, JavaScriptTestCase[]>(
       [...newArchives.entries()].map(([target, archive]) => {
-        console.log("archive size", archive.size);
         return [target, archive.getEncodings()];
       })
     );
@@ -733,12 +704,36 @@ export class JavaScriptLauncher extends Launcher {
     JavaScriptLauncher.LOGGER.info(
       `Testing target ${target.name} in ${target.path}`
     );
-    const currentSubject = new JavaScriptSubject(
-      target,
-      this.rootContext,
-      (<JavaScriptArguments>this.arguments_).syntaxForgiving,
-      this.arguments_.stringAlphabet
-    );
+
+    const cfp = rootContext.getControlFlowProgram(target.path);
+    const branchObjectives =
+      extractBranchObjectivesFromProgram<JavaScriptTestCase>(
+        cfp,
+        new ApproachLevelCalculator(),
+        new BranchDistanceCalculator(
+          this.arguments_.syntaxForgiving,
+          this.arguments_.stringAlphabet
+        )
+      );
+    const pathObjectives =
+      extractPathObjectivesFromProgram<JavaScriptTestCase>(cfp);
+    const functionObjectives =
+      extractFunctionObjectivesFromProgram<JavaScriptTestCase>(cfp);
+
+    this.userInterface.printTable("Objective Counts", {
+      headers: ["Type", "Count"],
+      rows: [
+        ["branch", `${branchObjectives.length}`],
+        ["path", `${pathObjectives.length}`],
+        ["function", `${functionObjectives.length}`],
+      ],
+    });
+
+    const currentSubject = new JavaScriptSubject(target, this.rootContext, [
+      ...branchObjectives,
+      ...functionObjectives,
+      ...pathObjectives,
+    ]);
 
     const rootTargets = currentSubject
       .getActionableTargets()
@@ -757,16 +752,16 @@ export class JavaScriptLauncher extends Launcher {
     const sampler = new JavaScriptRandomSampler(
       currentSubject,
       constantPoolManager,
-      (<JavaScriptArguments>this.arguments_).constantPool,
-      (<JavaScriptArguments>this.arguments_).constantPoolProbability,
-      (<JavaScriptArguments>this.arguments_).typePool,
-      (<JavaScriptArguments>this.arguments_).typePoolProbability,
-      (<JavaScriptArguments>this.arguments_).statementPool,
-      (<JavaScriptArguments>this.arguments_).statementPoolProbability,
+      this.arguments_.constantPool,
+      this.arguments_.constantPoolProbability,
+      this.arguments_.typePool,
+      this.arguments_.typePoolProbability,
+      this.arguments_.statementPool,
+      this.arguments_.statementPoolProbability,
 
-      (<JavaScriptArguments>this.arguments_).typeInferenceMode,
-      (<JavaScriptArguments>this.arguments_).randomTypeProbability,
-      (<JavaScriptArguments>this.arguments_).incorporateExecutionInformation,
+      this.arguments_.typeInferenceMode,
+      this.arguments_.randomTypeProbability,
+      this.arguments_.incorporateExecutionInformation,
       this.arguments_.maxActionStatements,
       this.arguments_.stringAlphabet,
       this.arguments_.stringMaxLength,

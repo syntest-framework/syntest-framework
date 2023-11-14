@@ -17,7 +17,7 @@
  */
 import { expect } from "chai";
 
-import { BranchDistance } from "../../lib/criterion/BranchDistance";
+import { BranchDistanceCalculator } from "../../lib/criterion/BranchDistance";
 
 describe("Random Tests", () => {
   it("a !== undefined && !b true", () => {
@@ -27,7 +27,7 @@ describe("Random Tests", () => {
     };
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -44,7 +44,7 @@ describe("Random Tests", () => {
     };
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -59,7 +59,7 @@ describe("Random Tests", () => {
     };
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -76,7 +76,7 @@ describe("Random Tests", () => {
     };
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -93,7 +93,7 @@ describe("Random Tests", () => {
     };
     const trueOrFalse = false;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
@@ -109,7 +109,7 @@ describe("Random Tests", () => {
     };
     const trueOrFalse = true;
 
-    const calculator = new BranchDistance(
+    const calculator = new BranchDistanceCalculator(
       false,
       "0123456789abcdefghijklmnopqrstuvxyz"
     );
