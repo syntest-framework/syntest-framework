@@ -18,5 +18,5 @@ import { Result } from "@syntest/diagnostics";
  * limitations under the License.
  */
 export interface AbstractSyntaxTreeFactory<S> {
-  convert(filepath: string, source: string): Result<S>;
+  convert(filePath: string, source: string): Result<S>;
 }

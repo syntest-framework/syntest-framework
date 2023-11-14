@@ -21,13 +21,13 @@ import path = require("node:path");
 import { failure, IOError, Result, success } from "@syntest/diagnostics";
 
 export class SourceFactory {
-  produce(filepath: string): Result<string> {
-    const parsed = path.parse(filepath);
+  produce(filePath: string): Result<string> {
+    const parsed = path.parse(filePath);
 
     if (!parsed.base) {
       return failure(
         new IOError("The given path is not a file", {
-          context: { path: filepath },
+          context: { path: filePath },
         })
       );
     }
@@ -35,19 +35,19 @@ export class SourceFactory {
     if (!parsed.ext) {
       return failure(
         new IOError("The given file does not have an extension", {
-          context: { path: filepath },
+          context: { path: filePath },
         })
       );
     }
 
-    if (!existsSync(filepath)) {
+    if (!existsSync(filePath)) {
       return failure(
         new IOError("The given file does not exist", {
-          context: { path: filepath },
+          context: { path: filePath },
         })
       );
     }
 
-    return success(readFileSync(filepath, "utf8"));
+    return success(readFileSync(filePath, "utf8"));
   }
 }

@@ -18,5 +18,5 @@ import { Result } from "@syntest/diagnostics";
  * limitations under the License.
  */
 export interface DependencyFactory<S> {
-  extract(filepath: string, AST: S): Result<string[]>;
+  extract(filePath: string, AST: S): Result<string[]>;
 }

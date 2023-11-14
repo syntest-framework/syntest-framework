@@ -70,7 +70,7 @@ export class TargetSelector {
       this._rootContext
     );
 
-    // Mapping filepath -> targets
+    // Mapping filePath -> targets
     const includedMap = this._parseTargetStrings(include);
     const excludedMap = this._parseTargetStrings(exclude);
 

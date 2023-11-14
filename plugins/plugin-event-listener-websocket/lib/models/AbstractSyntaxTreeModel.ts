@@ -20,17 +20,17 @@ import { RootContext } from "@syntest/analysis";
 import { Model } from "./Model";
 
 export interface AbstractSyntaxTreeModel<S> extends Model {
-  filepath: string;
+  filePath: string;
   abstractSyntaxTree?: S;
 }
 
 export function abstractSyntaxTreeModelFormatter<S>(
   rootContext: RootContext<S>,
-  filepath: string,
+  filePath: string,
   abstractSyntaxTree?: S
 ): AbstractSyntaxTreeModel<S> {
   return {
-    filepath,
+    filePath,
     abstractSyntaxTree,
   };
 }

@@ -24,51 +24,51 @@ import { Target } from "./Target";
 export type Events = {
   sourceResolvingStart: <S>(
     rootContext: RootContext<S>,
-    filepath: string
+    filePath: string
   ) => void;
   sourceResolvingComplete: <S>(
     rootContext: RootContext<S>,
-    filepath: string,
+    filePath: string,
     source: string
   ) => void;
 
   abstractSyntaxTreeResolvingStart: <S>(
     rootContext: RootContext<S>,
-    filepath: string
+    filePath: string
   ) => void;
   abstractSyntaxTreeResolvingComplete: <S>(
     rootContext: RootContext<S>,
-    filepath: string,
+    filePath: string,
     abstractSyntaxTree: S
   ) => void;
 
   controlFlowGraphResolvingStart: <S>(
     rootContext: RootContext<S>,
-    filepath: string
+    filePath: string
   ) => void;
   controlFlowGraphResolvingComplete: <S>(
     rootContext: RootContext<S>,
-    filepath: string,
+    filePath: string,
     cfp: ControlFlowProgram
   ) => void;
 
   targetExtractionStart: <S>(
     rootContext: RootContext<S>,
-    filepath: string
+    filePath: string
   ) => void;
   targetExtractionComplete: <S>(
     rootContext: RootContext<S>,
-    filepath: string,
+    filePath: string,
     target: Target
   ) => void;
 
   dependencyResolvingStart: <S>(
     rootContext: RootContext<S>,
-    filepath: string
+    filePath: string
   ) => void;
   dependencyResolvingComplete: <S>(
     rootContext: RootContext<S>,
-    filepath: string,
+    filePath: string,
     dependencies: string[]
   ) => void;
 };

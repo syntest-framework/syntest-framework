@@ -25,17 +25,17 @@ import {
 import { Model } from "./Model";
 
 export interface ControlFlowGraphModel extends Model {
-  filepath: string;
+  filePath: string;
   cfp?: SerializableControlFlowProgram;
 }
 
 export function controlFlowGraphModelFormatter<S>(
   rootContext: RootContext<S>,
-  filepath: string,
+  filePath: string,
   cfp?: ControlFlowProgram
 ): ControlFlowGraphModel {
   return {
-    filepath,
+    filePath,
     cfp: cfp ? makeSerializeable(cfp) : undefined,
   };
 }

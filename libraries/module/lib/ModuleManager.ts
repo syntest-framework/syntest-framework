@@ -268,7 +268,7 @@ export class ModuleManager {
       // It is a file path
       modulePath = path.resolve(module.replace("file:", ""));
       if (!existsSync(modulePath)) {
-        throw new IOError("Could not find filepath of module", {
+        throw new IOError("Could not find filePath of module", {
           context: { module: module },
         });
       }

@@ -59,39 +59,39 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
       "controlFlowGraphResolvingComplete",
       <S>(
         rootContext: RootContext<S>,
-        filepath: string,
+        filePath: string,
         cfp: ControlFlowProgram
       ) =>
         stateStorage.controlFlowGraphResolvingComplete(
           rootContext,
-          filepath,
+          filePath,
           cfp
         )
     );
     (<TypedEventEmitter<Events>>process).on(
       "abstractSyntaxTreeResolvingComplete",
-      <S>(rootContext: RootContext<S>, filepath: string, ast: S) =>
+      <S>(rootContext: RootContext<S>, filePath: string, ast: S) =>
         stateStorage.abstractSyntaxTreeResolvingComplete(
           rootContext,
-          filepath,
+          filePath,
           ast
         )
     );
     (<TypedEventEmitter<Events>>process).on(
       "targetExtractionComplete",
-      <S>(rootContext: RootContext<S>, filepath: string, target: Target) =>
-        stateStorage.targetExtractionComplete(rootContext, filepath, target)
+      <S>(rootContext: RootContext<S>, filePath: string, target: Target) =>
+        stateStorage.targetExtractionComplete(rootContext, filePath, target)
     );
     (<TypedEventEmitter<Events>>process).on(
       "dependencyResolvingComplete",
       <S>(
         rootContext: RootContext<S>,
-        filepath: string,
+        filePath: string,
         dependencies: string[]
       ) =>
         stateStorage.dependencyResolvingComplete(
           rootContext,
-          filepath,
+          filePath,
           dependencies
         )
     );
