@@ -82,25 +82,6 @@ export function resolvePath() {
   };
 }
 
-// export function beforeEvent(eventName: string) {
-//   return function (target: RootContext<unknown>, propertyKey: string, descriptor: TypedPropertyDescriptor<(filePath: string) => T>) {
-//     const method = descriptor.value
-//     descriptor.value = function(filepath: string) {
-//       (<TypedEmitter<Events>>process).emit(
-//         "abstractSyntaxTreeResolvingStart",
-//         this,
-//         absolutePath
-//       );
-
-//       return Reflect.apply(method, this, [filepath])
-//     }
-// }
-// }
-
-// export function afterEvent(eventName: string) {
-
-// }
-
 export class RootContext<S> {
   protected _rootPath: string;
 
