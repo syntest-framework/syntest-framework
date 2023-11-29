@@ -24,6 +24,7 @@ import {
 import { prng } from "@syntest/prng";
 
 import { Encoding } from "../../Encoding";
+import { FunctionObjectiveFunction } from "../function/FunctionObjectiveFunction";
 import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
 import { BranchDistanceCalculator } from "../heuristics/BranchDistanceCalculator";
 
@@ -35,21 +36,29 @@ import {
 export function extractPathObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram,
   approachLevelCalculator: ApproachLevelCalculator,
-  branchDistanceCalculator: BranchDistanceCalculator
+  branchDistanceCalculator: BranchDistanceCalculator,
+  functionObjectives: FunctionObjectiveFunction<T>[] = []
 ) {
   const objectives: PathObjectiveFunction<T>[] = [];
   for (const cff of cfp.functions) {
+    const parentObjective: FunctionObjectiveFunction<T> =
+      functionObjectives.find((f) => f.getIdentifier() === cff.id);
+
     const paths = extractPathsFromFunction(cff);
     for (const path of paths) {
-      objectives.push(
-        new PathObjectiveFunction(
-          prng.uniqueId(),
-          cfp,
-          path,
-          approachLevelCalculator,
-          branchDistanceCalculator
-        )
+      const newObjective = new PathObjectiveFunction(
+        prng.uniqueId(),
+        cfp,
+        path,
+        approachLevelCalculator,
+        branchDistanceCalculator
       );
+      objectives.push(newObjective);
+
+      if (parentObjective) {
+        parentObjective.addChildObjective(newObjective);
+        newObjective.parentObjective = parentObjective;
+      }
     }
   }
 
