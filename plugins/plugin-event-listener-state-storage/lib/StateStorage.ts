@@ -73,8 +73,18 @@ export class StateStorage {
   }
 
   sortFunction = (a: string, b: string): number => {
-    const partsA = a.replace("placeholder:::", "").split(":::");
-    const partsB = b.replace("placeholder:::", "").split(":::");
+    const placeholderPrefix = "placeholder:::";
+    const partsA = (
+      a.startsWith(placeholderPrefix) ? a.replace(placeholderPrefix, "") : a
+    ).split(":::");
+    const partsB = (
+      b.startsWith(placeholderPrefix) ? b.replace(placeholderPrefix, "") : b
+    ).split(":::");
+    if (partsA.length < 3) {
+      return -1;
+    } else if (partsB.length < 3) {
+      return 1;
+    }
     const [indexStartA, indexEndA] = partsA[2]
       .split(":")
       .map((x) => Number.parseInt(x));
