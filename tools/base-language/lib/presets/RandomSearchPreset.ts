@@ -32,7 +32,7 @@ export class RandomSearchPreset extends Preset {
       typePool: false,
       statementPool: false,
       incorporateExecutionInformation: false,
-      typeInferenceMode: false,
+      typeInferenceMode: "none",
     };
   }
 }
