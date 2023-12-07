@@ -57,7 +57,14 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       this._objectiveManager.getUncoveredObjectives().size > 0
     )
       throw new IllegalStateError(
-        "Current objectives is empty while there are still uncovered objectives!"
+        "Current objectives is empty while there are still uncovered objectives!",
+        {
+          context: {
+            uncovered: [...this._objectiveManager.getUncoveredObjectives()].map(
+              (x) => x.getIdentifier()
+            ),
+          },
+        }
       );
 
     if (
