@@ -25,25 +25,31 @@ import {
 import { ImplementationError } from "@syntest/diagnostics";
 
 import { Encoding } from "../../Encoding";
+import { FunctionObjectiveFunction } from "../function/FunctionObjectiveFunction";
 import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
 import { BranchDistanceCalculator } from "../heuristics/BranchDistanceCalculator";
+import { ObjectiveFunction } from "../ObjectiveFunction";
 
 import { BranchObjectiveFunction } from "./BranchObjectiveFunction";
 
 export function extractBranchObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram,
   approachLevelCalculator: ApproachLevelCalculator,
-  branchDistanceCalculator: BranchDistanceCalculator
+  branchDistanceCalculator: BranchDistanceCalculator,
+  functionObjectives: FunctionObjectiveFunction<T>[] = []
 ) {
   const objectives: BranchObjectiveFunction<T>[] = [];
 
   for (const cff of cfp.functions) {
+    const parentObjective: FunctionObjectiveFunction<T> =
+      functionObjectives.find((f) => f.getIdentifier() === cff.id);
     objectives.push(
       ...extractBranchObjectivesFromFunction(
         cff,
         cfp,
         approachLevelCalculator,
-        branchDistanceCalculator
+        branchDistanceCalculator,
+        parentObjective
       )
     );
   }
@@ -63,16 +69,20 @@ function extractBranchObjectivesFromFunction<T extends Encoding>(
   cff: ControlFlowFunction,
   cfp: ControlFlowProgram,
   approachLevelCalculator: ApproachLevelCalculator,
-  branchDistanceCalculator: BranchDistanceCalculator
+  branchDistanceCalculator: BranchDistanceCalculator,
+  parentFunctionObjective: FunctionObjectiveFunction<T> | undefined
 ) {
   const objectives: Map<string, BranchObjectiveFunction<T>> = new Map();
 
   const graph = cff.graph;
 
   // queue of [parent objective, edge]
-  const edgesQueue: [BranchObjectiveFunction<T>, Edge][] = graph
+  const edgesQueue: [ObjectiveFunction<T>, Edge][] = graph
     .getOutgoingEdges(graph.entry.id)
-    .map((edge): [BranchObjectiveFunction<T>, Edge] => [undefined, edge]); // should always be one
+    .map((edge): [ObjectiveFunction<T>, Edge] => [
+      parentFunctionObjective,
+      edge,
+    ]); // should always be one
 
   const visitedEdges: Edge[] = [];
 
