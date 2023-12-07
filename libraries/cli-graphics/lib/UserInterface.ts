@@ -146,7 +146,7 @@ export class UserInterface {
     const string_ = `${bar} ${percentage}% | ETA: ${parameters.eta}s | ${
       parameters.value
       // eslint-disable-next-line sonarjs/no-nested-template-literals, @typescript-eslint/restrict-template-expressions
-    }/${parameters.total} ${payload.meta ? `| ${payload.meta}` : ""} | ${
+    }/${parameters.total} ${payload.meta ? `| ${payload.meta} ` : ""}| ${
       payload.name
     }`;
 
