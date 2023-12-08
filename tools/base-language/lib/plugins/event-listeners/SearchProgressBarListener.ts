@@ -51,7 +51,7 @@ export class SearchProgressBarListener extends EventListenerPlugin {
             name: subject.name,
             value: 0,
             maxValue: subject.objectives.length,
-            meta: `${budgetManager.getBudget()}`,
+            meta: `Budget: ${budgetManager.getBudget()}`,
           },
         ]);
       }
@@ -78,7 +78,7 @@ export class SearchProgressBarListener extends EventListenerPlugin {
               )
             ).length,
           maxValue: originalObjectives.length,
-          meta: `${budgetManager.getBudget()}%`,
+          meta: `Budget: ${budgetManager.getBudget()}%`,
         });
       }
     );
