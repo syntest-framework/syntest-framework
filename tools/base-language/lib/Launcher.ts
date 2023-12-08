@@ -17,6 +17,7 @@
  */
 
 import { UserInterface } from "@syntest/cli-graphics";
+import { BaseError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 import { MetricManager } from "@syntest/metric";
 import { ModuleManager } from "@syntest/module";
@@ -69,7 +70,10 @@ export abstract class Launcher<T extends ArgumentsObject> {
       (<TypedEventEmitter<Events>>process).emit("exitting");
       await this.exit();
     } catch (error) {
-      console.log(error);
+      if (error instanceof BaseError) {
+        Launcher.LOGGER.error(error.message);
+        console.log("Context: " + JSON.stringify(error.context));
+      }
       console.trace(error);
       await this.exit();
     }
