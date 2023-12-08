@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0-beta.11](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.10...@syntest/search@0.5.0-beta.11) (2023-12-08)
+
+### Features
+
+- improve error handling ([#395](https://github.com/syntest-framework/syntest-framework/issues/395)) ([87295d3](https://github.com/syntest-framework/syntest-framework/commit/87295d3a091ac3f5f69686970043a8473d2e08ca))
+
 ## [0.5.0-beta.10](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.9...@syntest/search@0.5.0-beta.10) (2023-11-14)
 
 ### Features
