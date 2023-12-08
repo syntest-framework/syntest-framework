@@ -33,6 +33,7 @@ import {
   FunctionObjectiveFunction,
   ImplicitBranchObjectiveFunction,
   ObjectiveFunction,
+  PathObjectiveFunction,
   SearchAlgorithm,
   SearchSubject,
 } from "@syntest/search";
@@ -98,7 +99,9 @@ export class SearchMetricListener extends EventListenerPlugin {
       ...searchAlgorithm.getObjectiveManager().getUncoveredObjectives(),
     ];
 
-    const coveredPaths = 0;
+    const coveredPaths = covered.filter(
+      (objectiveFunction) => objectiveFunction instanceof PathObjectiveFunction
+    ).length;
     const coveredBranches = covered.filter(
       (objectiveFunction) =>
         objectiveFunction instanceof BranchObjectiveFunction
@@ -261,7 +264,9 @@ export class SearchMetricListener extends EventListenerPlugin {
     ];
 
     // record finals
-    const coveredPaths = 0;
+    const coveredPaths = covered.filter(
+      (objectiveFunction) => objectiveFunction instanceof PathObjectiveFunction
+    ).length;
     const coveredBranches = covered.filter(
       (objectiveFunction) =>
         objectiveFunction instanceof BranchObjectiveFunction
@@ -311,7 +316,12 @@ export class SearchMetricListener extends EventListenerPlugin {
     );
 
     // record totals
-    const totalPaths = 0;
+    const totalPaths =
+      coveredPaths +
+      uncovered.filter(
+        (objectiveFunction) =>
+          objectiveFunction instanceof PathObjectiveFunction
+      ).length;
     const totalBranches =
       coveredBranches +
       uncovered.filter(
