@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.8](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-event-listener-state-storage@0.2.0-beta.7...@syntest/plugin-event-listener-state-storage@0.2.0-beta.8) (2023-12-08)
+
+### Bug Fixes
+
+- state storage sorting function ([#397](https://github.com/syntest-framework/syntest-framework/issues/397)) ([71d3e95](https://github.com/syntest-framework/syntest-framework/commit/71d3e953ae9e7bf796f077a98cf270076cf1c9fa))
+
 ## [0.2.0-beta.7](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-event-listener-state-storage@0.2.0-beta.6...@syntest/plugin-event-listener-state-storage@0.2.0-beta.7) (2023-12-08)
 
 **Note:** Version bump only for package @syntest/plugin-event-listener-state-storage

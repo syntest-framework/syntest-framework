@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.13](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-search-algorithm-experimental@0.2.0-beta.12...@syntest/plugin-search-algorithm-experimental@0.2.0-beta.13) (2023-12-08)
+
+**Note:** Version bump only for package @syntest/plugin-search-algorithm-experimental
+
 ## [0.2.0-beta.12](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-search-algorithm-experimental@0.2.0-beta.11...@syntest/plugin-search-algorithm-experimental@0.2.0-beta.12) (2023-12-08)
 
 **Note:** Version bump only for package @syntest/plugin-search-algorithm-experimental
