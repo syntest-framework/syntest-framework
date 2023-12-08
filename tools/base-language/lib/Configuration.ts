@@ -66,7 +66,7 @@ export type BudgetOptions = {
 
 export type PostProcessingOptions = {
   testSplitting: boolean;
-  deDuplication: boolean;
+  testDeDuplication: boolean;
   testMinimization: boolean;
   metaComments: boolean;
   assertions: boolean;
@@ -335,7 +335,7 @@ export class Configuration {
         hidden: false,
         type: "boolean",
       },
-      "de-duplication": {
+      "test-de-duplication": {
         alias: [],
         default: true,
         description: "De-duplicate test cases at the end of the search.",

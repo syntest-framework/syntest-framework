@@ -1,6 +1,6 @@
 {
   "name": "@syntest/init",
-  "version": "0.2.2-beta.6",
+  "version": "0.2.2-beta.7",
   "description": "SynTest tool for initializing the configuration file",
   "keywords": [
     "syntest",
@@ -48,10 +48,10 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.3.0-beta.1",
+    "@syntest/cli-graphics": "^0.3.0-beta.2",
     "@syntest/logging": "^0.2.0-beta.2",
     "@syntest/metric": "^0.2.0-beta.0",
-    "@syntest/module": "^0.2.0-beta.4",
+    "@syntest/module": "^0.2.0-beta.5",
     "shelljs": "^0.8.5",
     "yargs": "^17.7.1"
   },

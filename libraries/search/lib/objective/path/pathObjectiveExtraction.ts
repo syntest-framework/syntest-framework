@@ -43,7 +43,6 @@ export function extractPathObjectivesFromProgram<T extends Encoding>(
   for (const cff of cfp.functions) {
     const parentObjective: FunctionObjectiveFunction<T> =
       functionObjectives.find((f) => f.getIdentifier() === cff.id);
-
     const paths = extractPathsFromFunction(cff);
     for (const path of paths) {
       const newObjective = new PathObjectiveFunction(

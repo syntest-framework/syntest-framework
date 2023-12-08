@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0-beta.14](https://github.com/syntest-framework/syntest-framework/compare/@syntest/base-language@0.3.0-beta.13...@syntest/base-language@0.3.0-beta.14) (2023-12-08)
+
+### Features
+
+- record path coverage ([#398](https://github.com/syntest-framework/syntest-framework/issues/398)) ([331fa8b](https://github.com/syntest-framework/syntest-framework/commit/331fa8b78b54f4cd983538bd11ea91d75e773754))
+
+## [0.3.0-beta.13](https://github.com/syntest-framework/syntest-framework/compare/@syntest/base-language@0.3.0-beta.12...@syntest/base-language@0.3.0-beta.13) (2023-12-08)
+
+**Note:** Version bump only for package @syntest/base-language
+
+## [0.3.0-beta.12](https://github.com/syntest-framework/syntest-framework/compare/@syntest/base-language@0.3.0-beta.11...@syntest/base-language@0.3.0-beta.12) (2023-12-08)
+
+### Features
+
+- improve error handling ([#395](https://github.com/syntest-framework/syntest-framework/issues/395)) ([87295d3](https://github.com/syntest-framework/syntest-framework/commit/87295d3a091ac3f5f69686970043a8473d2e08ca))
+
+### Bug Fixes
+
+- UI loading bar ([#394](https://github.com/syntest-framework/syntest-framework/issues/394)) ([b488a99](https://github.com/syntest-framework/syntest-framework/commit/b488a99f6c5479f7f8de23233f0e56bebec17aa1))
+- wrong preset config type ([#393](https://github.com/syntest-framework/syntest-framework/issues/393)) ([4a3658b](https://github.com/syntest-framework/syntest-framework/commit/4a3658b622bbf8e3acbd531e0a661ceaa8cb2ec3))
+
 ## [0.3.0-beta.11](https://github.com/syntest-framework/syntest-framework/compare/@syntest/base-language@0.3.0-beta.10...@syntest/base-language@0.3.0-beta.11) (2023-11-14)
 
 ### Features

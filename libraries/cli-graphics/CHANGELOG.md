@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0-beta.2](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cli-graphics@0.3.0-beta.1...@syntest/cli-graphics@0.3.0-beta.2) (2023-12-08)
+
+### Bug Fixes
+
+- UI loading bar ([#394](https://github.com/syntest-framework/syntest-framework/issues/394)) ([b488a99](https://github.com/syntest-framework/syntest-framework/commit/b488a99f6c5479f7f8de23233f0e56bebec17aa1))
+
 ## [0.3.0-beta.1](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cli-graphics@0.3.0-beta.0...@syntest/cli-graphics@0.3.0-beta.1) (2023-11-14)
 
 ### Features

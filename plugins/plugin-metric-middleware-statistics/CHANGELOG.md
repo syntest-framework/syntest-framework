@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2-beta.14](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-metric-middleware-statistics@0.1.2-beta.13...@syntest/plugin-metric-middleware-statistics@0.1.2-beta.14) (2023-12-08)
+
+**Note:** Version bump only for package @syntest/plugin-metric-middleware-statistics
+
+## [0.1.2-beta.13](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-metric-middleware-statistics@0.1.2-beta.12...@syntest/plugin-metric-middleware-statistics@0.1.2-beta.13) (2023-12-08)
+
+**Note:** Version bump only for package @syntest/plugin-metric-middleware-statistics
+
+## [0.1.2-beta.12](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-metric-middleware-statistics@0.1.2-beta.11...@syntest/plugin-metric-middleware-statistics@0.1.2-beta.12) (2023-12-08)
+
+**Note:** Version bump only for package @syntest/plugin-metric-middleware-statistics
+
 ## [0.1.2-beta.11](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-metric-middleware-statistics@0.1.2-beta.10...@syntest/plugin-metric-middleware-statistics@0.1.2-beta.11) (2023-11-14)
 
 **Note:** Version bump only for package @syntest/plugin-metric-middleware-statistics

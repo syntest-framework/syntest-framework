@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-event-listener-state-storage",
-  "version": "0.2.0-beta.5",
+  "version": "0.2.0-beta.8",
   "description": "SynTest event listener plugin for storing the state of various events happening in the framework",
   "keywords": [
     "syntest",
@@ -49,12 +49,12 @@
   },
   "dependencies": {
     "@syntest/analysis": "^0.3.0-beta.1",
-    "@syntest/base-language": "^0.3.0-beta.11",
+    "@syntest/base-language": "^0.3.0-beta.14",
     "@syntest/cfg": "^0.5.0-beta.0",
     "@syntest/logging": "^0.2.0-beta.2",
     "@syntest/metric": "^0.2.0-beta.0",
-    "@syntest/module": "^0.2.0-beta.4",
-    "@syntest/search": "^0.5.0-beta.10"
+    "@syntest/module": "^0.2.0-beta.5",
+    "@syntest/search": "^0.5.0-beta.12"
   },
   "engines": {
     "node": ">=16"
