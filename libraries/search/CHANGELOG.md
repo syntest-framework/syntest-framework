@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0-beta.12](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.11...@syntest/search@0.5.0-beta.12) (2023-12-08)
+
+### Features
+
+- re-introduce hierarchy between objective types ([#396](https://github.com/syntest-framework/syntest-framework/issues/396)) ([5c85dc3](https://github.com/syntest-framework/syntest-framework/commit/5c85dc36878a0ee8ecc4fcf7d0a1ec774c29c65b))
+
 ## [0.5.0-beta.11](https://github.com/syntest-framework/syntest-framework/compare/@syntest/search@0.5.0-beta.10...@syntest/search@0.5.0-beta.11) (2023-12-08)
 
 ### Features

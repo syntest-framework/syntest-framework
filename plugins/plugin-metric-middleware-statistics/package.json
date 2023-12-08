@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-metric-middleware-statistics",
-  "version": "0.1.2-beta.12",
+  "version": "0.1.2-beta.13",
   "description": "SynTest metric middleware plugin for creating statistics of other metrics",
   "keywords": [
     "syntest",
@@ -44,7 +44,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/base-language": "^0.3.0-beta.12",
+    "@syntest/base-language": "^0.3.0-beta.13",
     "@syntest/logging": "^0.2.0-beta.2",
     "@syntest/metric": "^0.2.0-beta.0",
     "@syntest/module": "^0.2.0-beta.5",
