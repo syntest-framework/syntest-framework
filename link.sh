@@ -32,23 +32,23 @@ rm -rf node_modules/@syntest/init
 cd node_modules/@syntest
 
 # framework libraries
-ln -s ../../../syntest-core/libraries/analysis analysis
-ln -s ../../../syntest-core/libraries/cfg cfg
-ln -s ../../../syntest-core/libraries/cli-graphics cli-graphics
-ln -s ../../../syntest-core/libraries/diagnostics diagnostics
-ln -s ../../../syntest-core/libraries/logging logging
-ln -s ../../../syntest-core/libraries/metric metric
-ln -s ../../../syntest-core/libraries/module module
-ln -s ../../../syntest-core/libraries/prng prng
-ln -s ../../../syntest-core/libraries/search search
-ln -s ../../../syntest-core/libraries/storage storage
+ln -s ../../../syntest-framework/libraries/analysis analysis
+ln -s ../../../syntest-framework/libraries/cfg cfg
+ln -s ../../../syntest-framework/libraries/cli-graphics cli-graphics
+ln -s ../../../syntest-framework/libraries/diagnostics diagnostics
+ln -s ../../../syntest-framework/libraries/logging logging
+ln -s ../../../syntest-framework/libraries/metric metric
+ln -s ../../../syntest-framework/libraries/module module
+ln -s ../../../syntest-framework/libraries/prng prng
+ln -s ../../../syntest-framework/libraries/search search
+ln -s ../../../syntest-framework/libraries/storage storage
 
 # framework plugins
-ln -s ../../../syntest-core/plugins/plugin-event-listener-state-storage plugin-event-listener-state-storage
-ln -s ../../../syntest-core/plugins/plugin-event-listener-websocket plugin-event-listener-websocket
-ln -s ../../../syntest-core/plugins/plugin-metric-middleware-file-writer plugin-metric-middleware-file-writer
-ln -s ../../../syntest-core/plugins/plugin-metric-middleware-statistics plugin-metric-middleware-statistics
-ln -s ../../../syntest-core/plugins/plugin-search-algorithm-experimental plugin-search-algorithm-experimental
+ln -s ../../../syntest-framework/plugins/plugin-event-listener-state-storage plugin-event-listener-state-storage
+ln -s ../../../syntest-framework/plugins/plugin-event-listener-websocket plugin-event-listener-websocket
+ln -s ../../../syntest-framework/plugins/plugin-metric-middleware-file-writer plugin-metric-middleware-file-writer
+ln -s ../../../syntest-framework/plugins/plugin-metric-middleware-statistics plugin-metric-middleware-statistics
+ln -s ../../../syntest-framework/plugins/plugin-search-algorithm-experimental plugin-search-algorithm-experimental
 
 # framework tools
 ln -s ../../../syntest-framework/tools/cli cli
