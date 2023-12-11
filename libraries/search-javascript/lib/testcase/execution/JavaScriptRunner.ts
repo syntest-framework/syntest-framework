@@ -267,7 +267,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     const traces: Trace[] = [];
     for (const branchKey of Object.keys(instrumentationData.branchMap)) {
       const branch = instrumentationData.branchMap[branchKey];
-      const hits = <number[]>instrumentationData.b[branchKey];
+      const hits = instrumentationData.b[branchKey];
       let meta;
 
       if (metaData !== undefined) {

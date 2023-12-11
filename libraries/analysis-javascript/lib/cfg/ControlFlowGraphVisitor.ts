@@ -332,8 +332,9 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       this._edges.push(
         this._createEdge(this._nodes.get(parent), node, this._edgeType)
       );
-      this._edgeType = EdgeType.NORMAL;
     }
+
+    this._edgeType = EdgeType.NORMAL;
   }
 
   public Block: (path: NodePath<t.Block>) => void = (path) => {
@@ -430,6 +431,59 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       this._connectToParents(node);
       this._currentParents = [node.id];
     }
+  };
+
+  public AssignmentPattern: (path: NodePath<t.AssignmentPattern>) => void = (
+    path
+  ) => {
+    ControlFlowGraphVisitor.LOGGER.debug(
+      `Entering AssignmentPattern at ${this._getNodeId(path)}`
+    );
+
+    const branchNode = this._createNode(path);
+    this._connectToParents(branchNode);
+    this._currentParents = [branchNode.id];
+
+    const testNode = this._createNode(path.get("left")); // bit odd because the test is essentially if the argument is given or not
+    this._connectToParents(testNode);
+    this._currentParents = [testNode.id];
+
+    // consequent
+    this._edgeType = EdgeType.CONDITIONAL_TRUE;
+    // there is no consequent since that is the usual case when an argument is give
+    const consequent = this._createPlaceholderNode(path);
+    this._connectToParents(consequent);
+    this._currentParents = [consequent.id];
+
+    const consequentNodes = this._currentParents;
+
+    // alternate (the default argument)
+    this._currentParents = [testNode.id];
+    this._edgeType = EdgeType.CONDITIONAL_FALSE;
+
+    const sizeBefore = this._nodesList.length;
+    path.get("right").visit();
+
+    // there either is no alternate or it is a literal
+    if (sizeBefore === this._nodesList.length) {
+      if (path.has("right")) {
+        // this probably means the "right"/default value is a literal (or something else this visitor does not pick up on)
+        const alternate = this._createNode(path.get("right"));
+        this._connectToParents(alternate);
+        this._currentParents = [alternate.id];
+      } else {
+        // there is no default value specified?? (should not be possible)
+        throw new ImplementationError(
+          "AssignmentPattern does not have a default value"
+        );
+      }
+    }
+
+    const alternateNodes = this._currentParents;
+
+    this._currentParents = [...alternateNodes, ...consequentNodes];
+
+    path.skip();
   };
 
   public Conditional: (path: NodePath<t.Conditional>) => void = (path) => {
@@ -988,8 +1042,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
         // alternate
         // placeholder
-        this._edgeType = EdgeType.CONDITIONAL_FALSE;
         this._currentParents = [caseTestNode.id];
+        this._edgeType = EdgeType.CONDITIONAL_FALSE;
         const alternateNode = this._createPlaceholderNode(caseNode);
         this._connectToParents(alternateNode);
         this._currentParents = [alternateNode.id]; // normal

@@ -19,6 +19,7 @@
 import { createHash } from "crypto";
 
 import { SourceCoverage } from "./source-coverage";
+import { NodePath } from "@babel/traverse";
 
 const SHA = "sha1";
 
@@ -243,7 +244,7 @@ export class VisitState {
     ]);
   }
 
-  insertCounter(path, increment) {
+  insertCounter(path: NodePath, increment) {
     const T = this.types;
     if (path.isBlockStatement()) {
       path.node.body.unshift(T.expressionStatement(increment));
@@ -270,14 +271,11 @@ export class VisitState {
     } /* istanbul ignore else: not expected */ else if (path.isExpression()) {
       path.replaceWith(T.sequenceExpression([increment, path.node]));
     } else {
-      console.error(
-        "Unable to insert counter for node identifierDescription:",
-        path.node.type
-      );
+      console.error("Unable to insert counter for node:", path.node.type);
     }
   }
 
-  insertStatementCounter(path) {
+  insertStatementCounter(path: NodePath) {
     /* istanbul ignore if: paranoid check */
     if (!(path.node && path.node.loc)) {
       if (

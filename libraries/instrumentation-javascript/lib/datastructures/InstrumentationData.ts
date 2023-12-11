@@ -63,8 +63,8 @@ export type InstrumentationData = {
     [id: string]: number;
   };
   b: {
-    // 0 is true, 1 is false
-    [id: string]: [number, number];
+    // 0 is true, 1 is false (or more if switch for example)
+    [id: string]: number[];
   };
 };
 
