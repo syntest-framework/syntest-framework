@@ -241,15 +241,18 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       `${timeInMs}`
     );
 
-    if (this.targets.length === 0) {
-      // Shut server down
-      this.userInterface.printError(
-        `No targets where selected! Try changing the 'target-include' parameter`
-      );
-      await this.exit();
-      // eslint-disable-next-line unicorn/no-process-exit
-      process.exit();
-    }
+    const selectionSettings: TableObject = {
+      headers: ["Setting", "Value"],
+      rows: [
+        ["Target Root Directory", this.arguments_.targetRootDirectory],
+        ["Target Include", `${this.arguments_.targetInclude.join(", ")}`],
+        ["Target Exclude", `${this.arguments_.targetExclude.join(", ")}`],
+        ["Analysis Include", `${this.arguments_.analysisInclude.join(", ")}`],
+        ["Analysis Exclude", `${this.arguments_.analysisExclude.join(", ")}`],
+      ],
+    };
+
+    this.userInterface.printTable("SELECTION SETTINGS", selectionSettings);
 
     const itemization: ItemizationItem[] = [];
 
@@ -263,20 +266,17 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         }),
       });
     }
-
     this.userInterface.printItemization("TARGETS", itemization);
 
-    const selectionSettings: TableObject = {
-      headers: ["Setting", "Value"],
-      rows: [
-        ["Target Root Directory", this.arguments_.targetRootDirectory],
-        ["Target Include", `${this.arguments_.targetInclude.join(", ")}`],
-        ["Target Exclude", `${this.arguments_.targetExclude.join(", ")}`],
-        ["Analysis Include", `${this.arguments_.analysisInclude.join(", ")}`],
-        ["Analysis Exclude", `${this.arguments_.analysisExclude.join(", ")}`],
-      ],
-    };
-    this.userInterface.printTable("SELECTION SETTINGS", selectionSettings);
+    if (this.targets.length === 0) {
+      // Shut down
+      this.userInterface.printError(
+        `No targets where selected! Try changing the 'target-include' parameter`
+      );
+      await this.exit();
+      // eslint-disable-next-line unicorn/no-process-exit
+      process.exit();
+    }
 
     const settings: TableObject = {
       headers: ["Setting", "Value"],
@@ -461,6 +461,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         (p, c) => p + c.length,
         0
       );
+
       JavaScriptLauncher.LOGGER.info("Splitting started");
       finalEncodings = await testSplitter.execute(finalEncodings);
 
@@ -513,7 +514,6 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         0
       );
       JavaScriptLauncher.LOGGER.info("De-Duplication started");
-
       finalEncodings = await deDuplicator.execute(finalEncodings);
 
       const timeInMs = (Date.now() - start) / 1000;
@@ -536,6 +536,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         secondaryObjectives,
         objectives
       );
+
       const start = Date.now();
       JavaScriptLauncher.LOGGER.info("Meta-Commenting started");
       finalEncodings = await metaCommenter.execute(finalEncodings);
@@ -567,6 +568,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       this.storageManager.clearTemporaryDirectory([
         this.arguments_.testDirectory,
       ]);
+
       // get final results
       paths = suiteBuilder.createSuite(
         finalEncodings,
@@ -576,7 +578,6 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         false,
         false
       );
-
       const results = await suiteBuilder.runSuite(finalEncodings, paths, false);
       const summaryTotal = suiteBuilder.summariseResults(results, this.targets);
       if (summaryTotal.failures > 0) {
@@ -590,6 +591,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         rows: [],
         footers: ["Average"],
       };
+
       let coveredStatements = 0;
       let coveredBranches = 0;
       let coveredFunctions = 0;
@@ -724,6 +726,9 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
 
     const cfp = unwrap(result);
 
+    const functionObjectives =
+      extractFunctionObjectivesFromProgram<JavaScriptTestCase>(cfp);
+
     const branchObjectives =
       extractBranchObjectivesFromProgram<JavaScriptTestCase>(
         cfp,
@@ -731,7 +736,10 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         new BranchDistanceCalculator(
           this.arguments_.syntaxForgiving,
           this.arguments_.stringAlphabet
-        )
+        ),
+        this.arguments_.functionObjectivesEnabled
+          ? functionObjectives
+          : undefined
       );
     const pathObjectives = extractPathObjectivesFromProgram<JavaScriptTestCase>(
       cfp,
@@ -739,25 +747,52 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       new BranchDistanceCalculator(
         this.arguments_.syntaxForgiving,
         this.arguments_.stringAlphabet
-      )
+      ),
+      this.arguments_.functionObjectivesEnabled ? functionObjectives : undefined
     );
-    const functionObjectives =
-      extractFunctionObjectivesFromProgram<JavaScriptTestCase>(cfp);
 
     this.userInterface.printTable("Objective Counts", {
-      headers: ["Type", "Count"],
+      headers: ["Type", "Count", "Enabled"],
       rows: [
-        ["branch", `${branchObjectives.length}`],
-        ["path", `${pathObjectives.length}`],
-        ["function", `${functionObjectives.length}`],
+        [
+          "function",
+          `${functionObjectives.length}`,
+          String(this.arguments_.functionObjectivesEnabled),
+        ],
+        [
+          "branch",
+          `${branchObjectives.length}`,
+          String(this.arguments_.branchObjectivesEnabled),
+        ],
+        [
+          "path",
+          `${pathObjectives.length}`,
+          String(this.arguments_.pathObjectivesEnabled),
+        ],
       ],
     });
 
-    const currentSubject = new JavaScriptSubject(target, [
-      // ...branchObjectives,
-      // ...functionObjectives,
-      ...pathObjectives,
-    ]);
+    if (
+      !this.arguments_.functionObjectivesEnabled &&
+      !this.arguments_.branchObjectivesEnabled &&
+      !this.arguments_.pathObjectivesEnabled
+    ) {
+      JavaScriptLauncher.LOGGER.warn("All objectives are disabled!");
+    }
+
+    const objectives: ObjectiveFunction<JavaScriptTestCase>[] = [];
+
+    if (this.arguments_.functionObjectivesEnabled) {
+      objectives.push(...functionObjectives);
+    }
+    if (this.arguments_.branchObjectivesEnabled) {
+      objectives.push(...branchObjectives);
+    }
+    if (this.arguments_.pathObjectivesEnabled) {
+      objectives.push(...pathObjectives);
+    }
+
+    const currentSubject = new JavaScriptSubject(target, objectives);
 
     const rootTargets = currentSubject
       .getActionableTargets()

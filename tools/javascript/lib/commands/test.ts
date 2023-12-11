@@ -35,6 +35,8 @@ export function getTestCommand(
   const commandGroup = "Type Inference Options:";
   const samplingGroup = "Sampling Options:";
   const executorGroup = "Test Execution Options:";
+  const debuggingGroup = "Debugging Options:";
+  const objectivesGroup = "Objective Options:";
 
   options.set("incorporate-execution-information", {
     alias: [],
@@ -174,7 +176,7 @@ export function getTestCommand(
     alias: [],
     default: true,
     description: "Whether we allow 'odd' syntax or throw an error.",
-    group: "Debugging",
+    group: debuggingGroup,
     hidden: false,
     type: "boolean",
   });
@@ -183,7 +185,34 @@ export function getTestCommand(
     alias: [],
     default: true,
     description: "Whether we show the test output in the logs.",
-    group: "Debugging",
+    group: debuggingGroup,
+    hidden: false,
+    type: "boolean",
+  });
+
+  options.set("function-objectives-enabled", {
+    alias: [],
+    default: true,
+    description: "Whether we use function objectives.",
+    group: objectivesGroup,
+    hidden: false,
+    type: "boolean",
+  });
+
+  options.set("branch-objectives-enabled", {
+    alias: [],
+    default: true,
+    description: "Whether we use branch objectives.",
+    group: objectivesGroup,
+    hidden: false,
+    type: "boolean",
+  });
+
+  options.set("path-objectives-enabled", {
+    alias: [],
+    default: true,
+    description: "Whether we use path objectives.",
+    group: objectivesGroup,
     hidden: false,
     type: "boolean",
   });
@@ -227,4 +256,8 @@ export type TestCommandOptions = {
 
   syntaxForgiving: boolean;
   silenceTestOutput: boolean;
+
+  functionObjectivesEnabled: boolean;
+  branchObjectivesEnabled: boolean;
+  pathObjectivesEnabled: boolean;
 };
