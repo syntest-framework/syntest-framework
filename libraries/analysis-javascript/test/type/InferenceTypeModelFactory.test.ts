@@ -38,8 +38,8 @@ function helper(source: string) {
 
   const factory = new InferenceTypeModelFactory();
   const model = factory.resolveTypes(
-    new Map([["", elementVisitor.elementMap]]),
-    new Map([["", relationVisitor.relationMap]])
+    elementVisitor.elementMap,
+    relationVisitor.relationMap
   );
 
   return {

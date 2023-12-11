@@ -27,7 +27,12 @@ import {
   ObjectFunctionTarget,
   ObjectTarget,
 } from "@syntest/analysis-javascript";
-import { ImplementationError, isFailure, unwrap } from "@syntest/diagnostics";
+import {
+  ImplementationError,
+  isFailure,
+  unwrap,
+  unwrapOr,
+} from "@syntest/diagnostics";
 import { prng } from "@syntest/prng";
 
 import { JavaScriptSubject } from "../../search/JavaScriptSubject";
@@ -264,9 +269,11 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     if (constructor_.length === 0) {
       // default constructor no args
-      const export_ = [...this.rootContext.getAllExports().values()]
-        .flat()
-        .find((export_) => export_.id === class_.id);
+      // TODO bad splitting of ids (we should add paths to targets)
+      const filePath = class_.id.split(":")[0];
+      const export_ = unwrapOr(this.rootContext.getExports(filePath), []).find(
+        (export_) => export_.id === class_.id
+      );
 
       return new ConstructorCall(
         class_.id,

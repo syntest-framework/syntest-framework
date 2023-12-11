@@ -17,22 +17,29 @@
  */
 
 import { RootContext } from "./RootContext";
+import { Export } from "./target/export/Export";
+import { Element } from "./type/discovery/element/Element";
+import { DiscoveredObjectType } from "./type/discovery/object/DiscoveredType";
+import { Relation } from "./type/discovery/relation/Relation";
 
 export type Events = {
   exportExtractionStart: (rootContext: RootContext, filepath: string) => void;
   exportExtractionComplete: (
     rootContext: RootContext,
-    filepath: string
+    filepath: string,
+    exports_: Export[]
   ) => void;
   elementExtractionStart: (rootContext: RootContext, filepath: string) => void;
   elementExtractionComplete: (
     rootContext: RootContext,
-    filepath: string
+    filepath: string,
+    elements: Map<string, Element>
   ) => void;
   relationExtractionStart: (rootContext: RootContext, filepath: string) => void;
   relationExtractionComplete: (
     rootContext: RootContext,
-    filepath: string
+    filepath: string,
+    relations: Map<string, Relation>
   ) => void;
   objectTypeExtractionStart: (
     rootContext: RootContext,
@@ -40,7 +47,8 @@ export type Events = {
   ) => void;
   objectTypeExtractionComplete: (
     rootContext: RootContext,
-    filepath: string
+    filepath: string,
+    objects: Map<string, DiscoveredObjectType>
   ) => void;
 
   typeResolvingStart: (rootContext: RootContext) => void;

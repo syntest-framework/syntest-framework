@@ -36,29 +36,23 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
 
   constructor() {
     super();
+    this._typeModel = new TypeModel();
+    this._idToBindingIdMap = new Map();
+  }
+
+  reset() {
+    this._typeModel = new TypeModel();
+    this._idToBindingIdMap = new Map();
   }
 
   resolveTypes(
-    elementMaps: Map<string, Map<string, Element>>,
-    relationMaps: Map<string, Map<string, Relation>>
+    elements: Map<string, Element>,
+    relations: Map<string, Relation>
   ) {
-    this._typeModel = new TypeModel();
-    this._idToBindingIdMap = new Map();
-
-    for (const filepath of elementMaps.keys()) {
-      const elementMap = elementMaps.get(filepath);
-      const relationMap = relationMaps.get(filepath);
-
-      if (!elementMap || !relationMap) {
-        throw new ImplementationError(
-          "Filepath should exist in both the element and relation map"
-        );
-      }
-      this.createLiteralTypeMaps(elementMap);
-      this.createIdentifierTypeMaps(elementMap);
-      this.createRelationTypeMaps(elementMap, relationMap);
-      this.inferRelationTypes(elementMap, relationMap);
-    }
+    this.createLiteralTypeMaps(elements);
+    this.createIdentifierTypeMaps(elements);
+    this.createRelationTypeMaps(elements, relations);
+    this.inferRelationTypes(elements, relations);
 
     // TODO check for array/function/string type
 

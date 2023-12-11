@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { unwrapOr } from "@syntest/diagnostics";
 import { prng } from "@syntest/prng";
 
 import { StatementPool } from "../../../StatementPool";
@@ -32,9 +33,11 @@ export class ConstructorCallGenerator extends CallGenerator<ConstructorCall> {
     name: string,
     statementPool: StatementPool
   ): ConstructorCall {
-    const export_ = [...this.rootContext.getAllExports().values()]
-      .flat()
-      .find((export_) => export_.id === exportIdentifier);
+    // TODO bad splitting of ids (we should add paths to targets)
+    const filePath = exportIdentifier.split(":")[0];
+    const export_ = unwrapOr(this.rootContext.getExports(filePath), []).find(
+      (export_) => export_.id === exportIdentifier
+    );
 
     if (this.statementPoolEnabled) {
       const statementFromPool =

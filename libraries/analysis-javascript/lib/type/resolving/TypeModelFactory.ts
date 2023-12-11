@@ -31,7 +31,7 @@ export abstract class TypeModelFactory {
    * @param relationMap the relations to resolve the types of
    */
   abstract resolveTypes(
-    elementMaps: Map<string, Map<string, Element>>,
-    relationMaps: Map<string, Map<string, Relation>>
+    elements: Map<string, Element>,
+    relations: Map<string, Relation>
   ): TypeModel;
 }

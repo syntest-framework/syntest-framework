@@ -25,37 +25,23 @@ import { ObjectType } from "./Type";
 
 // TODO we could cache some of this stuff (unless we do dynamic adding of properties at some point)
 export class TypePool {
-  private _objectMap: Map<string, Map<string, DiscoveredObjectType>>;
-  private _exports: Map<string, Export[]>;
+  protected _exportedObjects: Map<string, DiscoveredObjectType>;
 
-  private _exportedObjects: Map<string, DiscoveredObjectType>;
-
-  constructor(
-    objectMap: Map<string, Map<string, DiscoveredObjectType>>,
-    exports: Map<string, Export[]>
-  ) {
-    this._objectMap = objectMap;
-    this._exports = exports;
-
-    this._exportedObjects = this._extractExportedTypes();
+  constructor() {
+    this._exportedObjects = new Map();
   }
 
-  private _extractExportedTypes(): Map<string, DiscoveredObjectType> {
-    const exportedTypes: Map<string, DiscoveredObjectType> = new Map();
-
-    for (const [, exports] of this._exports.entries()) {
-      for (const export_ of exports) {
-        for (const objectMap of this._objectMap.values()) {
-          for (const [objectName, discoveredObject] of objectMap.entries()) {
-            if (discoveredObject.id === export_.id) {
-              exportedTypes.set(objectName, discoveredObject);
-            }
-          }
+  public extractExportedTypes(
+    exports: Export[],
+    objects: Map<string, DiscoveredObjectType>
+  ): void {
+    for (const export_ of exports) {
+      for (const [objectName, discoveredObject] of objects.entries()) {
+        if (discoveredObject.id === export_.id) {
+          this._exportedObjects.set(objectName, discoveredObject);
         }
       }
     }
-
-    return exportedTypes;
   }
 
   protected _getMatchingTypes(objectType: ObjectType): DiscoveredObjectType[] {
