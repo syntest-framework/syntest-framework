@@ -71,7 +71,18 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       // the value does not exist or is not a distance
       throw new IllegalArgumentError(
         "Cannot get distance from unknown condition",
-        { context: { condition: condition } }
+        {
+          context: {
+            condition: condition,
+            inValueMap: this._valueMap.has(condition),
+            isDistance:
+              this._isDistanceMap.has(condition) &&
+              this._isDistanceMap.get(condition),
+            availableValues: [...this._valueMap.entries()].map(
+              (value) => `${value[0]} -> ${String(value[1])}`
+            ),
+          },
+        }
       );
     }
 
@@ -302,48 +313,6 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
 
     this._isDistanceMap.set(path.toString(), false);
   };
-
-  // public ObjectExpression: (path: NodePath<t.ObjectExpression>) => void = (path) => {
-  //   this._valueMap.set(this._getNodeId(path), )
-  //   this._isDistanceMap.set(this._getNodeId(path), false);
-  // }
-
-  // public Identifier: (path: NodePath<t.Identifier>) => void = (path) => {
-  //   if (this._variables[path.node.name] === undefined) {
-  //     // we dont know what this variable is...
-  //     this._valueMap.set(this._getNodeId(path), undefined);
-  //   } else {
-  //     this._valueMap.set(
-  //       this._getNodeId(path),
-  //       this._variables[path.node.name]
-  //     );
-  //   }
-  //   this._isDistanceMap.set(this._getNodeId(path), false);
-  // };
-
-  // public MemberExpression: (path: NodePath<t.MemberExpression>) => void = (
-  //   path
-  // ) => {
-  //   const result = generate(path.node);
-  //   const value = this._variables[result.code];
-  //   // might be undefined
-  //   this._valueMap.set(this._getNodeId(path), value);
-  //   this._isDistanceMap.set(this._getNodeId(path), false);
-  // };
-  // public Identifier: (path: NodePath<t.Identifier>) => void = (path) => {
-  //   if (this._variables[path.node.name] === undefined) {
-  //     // we dont know what this variable is...
-  //     // should never happen??
-  //     this._valueMap.set(path.toString(), undefined);
-  //     throw new ImplementationError(shouldNeverHappen('BranchDistanceVisitor'))
-  //   } else {
-  //     this._valueMap.set(
-  //       path.toString(),
-  //       this._variables[path.node.name]
-  //     );
-  //   }
-  //   this._isDistanceMap.set(path.toString(), false);
-  // };
 
   public UpdateExpression: (path: NodePath<t.UpdateExpression>) => void = (
     path
@@ -620,7 +589,6 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
 
       // distance
       case "==":
-      // TODO
       case "===": {
         if (typeof leftValue === "number" && typeof rightValue === "number") {
           value = Math.abs(leftValue - rightValue);
@@ -647,7 +615,6 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
         break;
       }
       case "!=":
-      // TODO
       case "!==": {
         if (operator === "!==") {
           value = leftValue === rightValue ? 1 : 0;
@@ -657,8 +624,12 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
         break;
       }
       case "in": {
-        if (rightValue === undefined || rightValue === null) {
-          value = 1; // TODO should this one be inverted?
+        if (
+          rightValue === undefined ||
+          rightValue === null ||
+          typeof rightValue !== "object"
+        ) {
+          value = this._inverted ? Number.MAX_VALUE : 0;
         } else {
           if (this._inverted) {
             value = leftValue in rightValue ? Number.MAX_VALUE : 0;
