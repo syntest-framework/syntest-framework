@@ -87,7 +87,7 @@ import { StorageManager } from "@syntest/storage";
 
 import { TestCommandOptions } from "./commands/test";
 import { DeDuplicator } from "./workflows/DeDuplicator";
-import { addMetaComments } from "./workflows/MetaComment";
+import { MetaCommenter } from "./workflows/MetaCommenter";
 import { TestSplitting } from "./workflows/TestSplitter";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
@@ -440,7 +440,6 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     this.userInterface.printHeader("Postprocessing started");
     JavaScriptLauncher.LOGGER.info("Postprocessing started");
     const start = Date.now();
-    const testSplitter = new TestSplitting(this.runner);
     const objectives = new Map<Target, ObjectiveFunction<JavaScriptTestCase>[]>(
       [...this.archives.entries()].map(([target, archive]) => [
         target,
@@ -455,17 +454,21 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     );
 
     if (this.arguments_.testSplitting) {
+      const testSplitter = new TestSplitting(this.userInterface, this.runner);
+
       const start = Date.now();
-      const before = [...finalEncodings.values()]
-        .map((x) => x.length)
-        .reduce((p, c) => p + c);
+      const before = [...finalEncodings.values()].reduce(
+        (p, c) => p + c.length,
+        0
+      );
       JavaScriptLauncher.LOGGER.info("Splitting started");
-      finalEncodings = await testSplitter.testSplitting(finalEncodings);
+      finalEncodings = await testSplitter.execute(finalEncodings);
 
       const timeInMs = (Date.now() - start) / 1000;
-      const after = [...finalEncodings.values()]
-        .map((x) => x.length)
-        .reduce((p, c) => p + c);
+      const after = [...finalEncodings.values()].reduce(
+        (p, c) => p + c.length,
+        0
+      );
 
       JavaScriptLauncher.LOGGER.info(
         `Splitting done took: ${timeInMs}, went from ${before} to ${after} test cases`
@@ -476,9 +479,11 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
 
       // this.metricManager.recordProperty(PropertyName., `${timeInMs}`); // TODO new metric
     }
+
     if (this.arguments_.testMinimization) {
       const start = Date.now();
       JavaScriptLauncher.LOGGER.info("Minimization started");
+      // TODO
       const timeInMs = (Date.now() - start) / 1000;
       JavaScriptLauncher.LOGGER.info(`Minimization done, took: ${timeInMs}`);
       // this.metricManager.recordProperty(PropertyName., `${timeInMs}`); // TODO new metric
@@ -495,40 +500,50 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       }
     );
 
-    const startDeduplication = Date.now();
-    const before = [...finalEncodings.values()]
-      .map((x) => x.length)
-      .reduce((p, c) => p + c);
-    JavaScriptLauncher.LOGGER.info("De-Duplication started");
+    if (this.arguments_.testDeDuplication) {
+      const deDuplicator = new DeDuplicator(
+        this.userInterface,
+        secondaryObjectives,
+        objectives
+      );
 
-    const deDuplicator = new DeDuplicator();
-    const newArchives = deDuplicator.deDuplicate(
-      secondaryObjectives,
-      objectives,
-      finalEncodings
-    );
+      const start = Date.now();
+      const before = [...finalEncodings.values()].reduce(
+        (p, c) => p + c.length,
+        0
+      );
+      JavaScriptLauncher.LOGGER.info("De-Duplication started");
 
-    const timeInMsDeDuplication = (Date.now() - startDeduplication) / 1000;
-    const after = [...newArchives.values()]
-      .map((x) => x.size)
-      .reduce((p, c) => p + c);
+      finalEncodings = await deDuplicator.execute(finalEncodings);
 
-    JavaScriptLauncher.LOGGER.info(
-      `De-Duplication done took: ${timeInMsDeDuplication}, went from ${before} to ${after} test cases`
-    );
-    this.userInterface.printSuccess(
-      `De-Duplication done took: ${timeInMsDeDuplication}, went from ${before} to ${after} test cases`
-    );
+      const timeInMs = (Date.now() - start) / 1000;
+      const after = [...finalEncodings.values()].reduce(
+        (p, c) => p + c.length,
+        0
+      );
 
-    if (this.arguments_.metaComments) {
-      addMetaComments(newArchives);
+      JavaScriptLauncher.LOGGER.info(
+        `De-Duplication done took: ${timeInMs}, went from ${before} to ${after} test cases`
+      );
+      this.userInterface.printSuccess(
+        `De-Duplication done took: ${timeInMs}, went from ${before} to ${after} test cases`
+      );
     }
 
-    finalEncodings = new Map<Target, JavaScriptTestCase[]>(
-      [...newArchives.entries()].map(([target, archive]) => {
-        return [target, archive.getEncodings()];
-      })
-    );
+    if (this.arguments_.metaComments) {
+      const metaCommenter = new MetaCommenter(
+        this.userInterface,
+        secondaryObjectives,
+        objectives
+      );
+      const start = Date.now();
+      JavaScriptLauncher.LOGGER.info("Meta-Commenting started");
+      finalEncodings = await metaCommenter.execute(finalEncodings);
+      const timeInMs = (Date.now() - start) / 1000;
+
+      JavaScriptLauncher.LOGGER.info(`Meta-Commenting done took: ${timeInMs}`);
+      this.userInterface.printSuccess(`Meta-Commenting done took: ${timeInMs}`);
+    }
 
     const suiteBuilder = new JavaScriptSuiteBuilder(
       this.storageManager,
