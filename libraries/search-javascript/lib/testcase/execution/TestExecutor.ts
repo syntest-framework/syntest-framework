@@ -128,9 +128,9 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
           error:
             status === JavaScriptExecutionStatus.FAILED
               ? {
-                  name: test.err.name,
-                  message: test.err.message,
-                  stack: test.err.stack,
+                  name: test.err ? test.err.name : "",
+                  message: test.err ? test.err.message : "",
+                  stack: test.err ? test.err.stack : "",
                 }
               : undefined,
           duration: test.duration,
@@ -153,7 +153,24 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
   resetInstrumentationData();
   (<GlobalType>(<unknown>global)).__meta__ = undefined;
   (<GlobalType>(<unknown>global)).__assertion__ = undefined;
-  process.send(result);
+
+  const cache = new Set();
+
+  // This is to prevent circular references
+  // TODO this actually removes all repeating values which is not good
+  process.send(
+    JSON.parse(
+      JSON.stringify(result, (_, value) => {
+        if (typeof value === "object" && value !== null) {
+          if (cache.has(value)) return;
+
+          cache.add(value);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return value;
+      })
+    )
+  );
 
   mocha.dispose();
 }

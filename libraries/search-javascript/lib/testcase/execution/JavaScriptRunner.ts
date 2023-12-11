@@ -112,7 +112,14 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       childProcess.on("message", (data: Message) => {
         if (typeof data !== "object") {
           return reject(
-            new TypeError("Invalid data received from child process")
+            new ImplementationError(
+              "Invalid data received from child process",
+              {
+                context: {
+                  data: data,
+                },
+              }
+            )
           );
         }
 
