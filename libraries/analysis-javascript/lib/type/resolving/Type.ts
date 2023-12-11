@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-export interface ObjectType {
+export class ObjectType {
   // name -> id
   properties: Map<string, string>;
 
@@ -31,6 +31,35 @@ export interface ObjectType {
   parameterNames: Map<number, string>;
   // id
   return: Set<string>;
+
+  constructor() {
+    this.properties = new Map();
+    this.elements = new Set();
+    this.parameters = new Map();
+    this.parameterNames = new Map();
+    this.return = new Set();
+  }
+
+  public merge(other: ObjectType): ObjectType {
+    const combined = new ObjectType();
+
+    combined.properties = new Map([
+      ...this.properties.entries(),
+      ...other.properties.entries(),
+    ]);
+    combined.elements = new Set(...this.elements, ...other.elements);
+    combined.parameters = new Map([
+      ...this.parameters.entries(),
+      ...other.parameters.entries(),
+    ]);
+    combined.parameterNames = new Map([
+      ...this.parameterNames.entries(),
+      ...other.parameterNames.entries(),
+    ]);
+    combined.return = new Set(...this.return, ...other.return);
+
+    return combined;
+  }
 }
 
 export const functionProperties = new Set([

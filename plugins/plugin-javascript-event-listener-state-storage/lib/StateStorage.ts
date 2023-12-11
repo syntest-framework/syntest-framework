@@ -108,8 +108,11 @@ export class StateStorage {
       edges: [],
     };
 
-    for (const [id, typeScores] of typeModel.elementTypeScoreMap.entries()) {
-      const executionScores = typeModel.typeExecutionScoreMap.get(id);
+    for (const [id, typeNode] of typeModel.typeNodes.entries()) {
+      const typeScores = typeNode.typeScores;
+      const executionScores = typeNode.executionScores;
+      const relationScores = typeNode.dependencyScores;
+
       const scores: Score[] = [];
 
       for (const [type, score] of typeScores.entries()) {
@@ -127,20 +130,13 @@ export class StateStorage {
         id: id,
         scores: scores,
       });
-    }
-
-    for (const [id1, relationScores] of typeModel.relationScoreMap.entries()) {
-      const executionScores = typeModel.typeExecutionScoreMap.get(id1);
 
       for (const [id2, score] of relationScores) {
         graph.edges.push({
-          source: id1,
-          target: id2,
+          source: id,
+          target: id2.id,
           relationScore: score,
-          relationExecutionScore:
-            executionScores && executionScores.has(id2)
-              ? executionScores.get(id2)
-              : 0,
+          relationExecutionScore: executionScores.get(id2.id) ?? 0,
         });
       }
     }

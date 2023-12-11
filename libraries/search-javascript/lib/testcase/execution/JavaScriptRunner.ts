@@ -40,7 +40,7 @@ import {
 import { JavaScriptDecoder } from "../../testbuilding/JavaScriptDecoder";
 import { JavaScriptTestCase } from "../JavaScriptTestCase";
 
-import { ExecutionInformationIntegrator } from "./ExecutionInformationIntegrator";
+import { ExecutionInformationProcessor } from "./ExecutionInformationProcessor";
 import { DoneMessage, Message } from "./TestExecutor";
 
 export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
@@ -48,7 +48,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
   protected storageManager: StorageManager;
   protected decoder: JavaScriptDecoder;
-  protected executionInformationIntegrator: ExecutionInformationIntegrator;
+  protected executionInformationProcessor: ExecutionInformationProcessor;
 
   protected tempTestDirectory: string;
 
@@ -62,7 +62,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   constructor(
     storageManager: StorageManager,
     decoder: JavaScriptDecoder,
-    executionInformationIntergrator: ExecutionInformationIntegrator,
+    executionInformationProcessor: ExecutionInformationProcessor,
     temporaryTestDirectory: string,
     executionTimeout: number,
     testTimeout: number,
@@ -71,7 +71,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     JavaScriptRunner.LOGGER = getLogger(JavaScriptRunner.name);
     this.storageManager = storageManager;
     this.decoder = decoder;
-    this.executionInformationIntegrator = executionInformationIntergrator;
+    this.executionInformationProcessor = executionInformationProcessor;
     this.tempTestDirectory = temporaryTestDirectory;
     this.executionTimeout = executionTimeout;
     this.testTimeout = testTimeout;
@@ -174,7 +174,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       const test = suites[0].tests[0]; // only one test in this case
 
       // If one of the executions failed, log it
-      this.executionInformationIntegrator.process(testCase, test, stats);
+      this.executionInformationProcessor.process(testCase, test, stats);
 
       const traces: Trace[] = this._extractTraces(
         instrumentationData,

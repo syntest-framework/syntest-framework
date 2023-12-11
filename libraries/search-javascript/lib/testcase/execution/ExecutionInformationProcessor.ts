@@ -24,11 +24,13 @@ import { Statement } from "../statements/Statement";
 
 import { Test } from "./TestExecutor";
 
-export class ExecutionInformationIntegrator {
+export class ExecutionInformationProcessor {
   private _typeModel: TypeModel;
+  private _incorporateExecutionInformation: boolean;
 
-  constructor(typeModel: TypeModel) {
+  constructor(typeModel: TypeModel, incorporateExecutionInformation: boolean) {
     this._typeModel = typeModel;
+    this._incorporateExecutionInformation = incorporateExecutionInformation;
   }
 
   process(testCase: JavaScriptTestCase, testResult: Test, stats: Mocha.Stats) {
@@ -44,6 +46,7 @@ export class ExecutionInformationIntegrator {
 
       for (const child of children) {
         if (
+          this._incorporateExecutionInformation &&
           testResult.error &&
           testResult.error.message &&
           testResult.error.message.includes(child.name)

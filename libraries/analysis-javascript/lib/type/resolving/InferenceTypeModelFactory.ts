@@ -60,7 +60,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
   }
 
   createNewTypeProbability(id: string, bindingId: string) {
-    this._typeModel.addId(bindingId);
+    this._typeModel.createTypeNode(bindingId);
 
     if (id === bindingId) {
       // don't set if the id and binding are equal

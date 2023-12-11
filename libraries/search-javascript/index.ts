@@ -26,7 +26,7 @@ export * from "./lib/search/JavaScriptSubject";
 export * from "./lib/testbuilding/JavaScriptDecoder";
 export * from "./lib/testbuilding/JavaScriptSuiteBuilder";
 
-export * from "./lib/testcase/execution/ExecutionInformationIntegrator";
+export * from "./lib/testcase/execution/ExecutionInformationProcessor";
 export * from "./lib/testcase/execution/JavaScriptRunner";
 export * from "./lib/testcase/execution/SilentMochaReporter";
 

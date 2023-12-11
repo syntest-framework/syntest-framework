@@ -530,34 +530,27 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       return this.sampleBool(id, id, name);
     }
 
+    let mode = this.typeInferenceMode;
     let chosenType: string;
 
-    switch (this.typeInferenceMode) {
+    if (prng.nextBoolean(this.randomTypeProbability)) {
+      mode = "none";
+    }
+
+    switch (mode) {
       case "none": {
-        chosenType = this.rootContext
-          .getTypeModel()
-          .getRandomType(false, 1, id);
+        chosenType = this.rootContext.getTypeModel().getRandomType(id);
 
         break;
       }
       case "proportional": {
         chosenType = this.rootContext
           .getTypeModel()
-          .getRandomType(
-            this.incorporateExecutionInformation,
-            this.randomTypeProbability,
-            id
-          );
+          .getRandomTypeProportional(id);
         break;
       }
       case "ranked": {
-        chosenType = this.rootContext
-          .getTypeModel()
-          .getHighestProbabilityType(
-            this.incorporateExecutionInformation,
-            this.randomTypeProbability,
-            id
-          );
+        chosenType = this.rootContext.getTypeModel().getMostLikelyType(id);
 
         break;
       }

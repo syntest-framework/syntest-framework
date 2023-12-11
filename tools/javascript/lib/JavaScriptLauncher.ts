@@ -74,7 +74,7 @@ import {
 } from "@syntest/search";
 import {
   BranchDistanceCalculator,
-  ExecutionInformationIntegrator,
+  ExecutionInformationProcessor,
   JavaScriptDecoder,
   JavaScriptRandomSampler,
   JavaScriptRunner,
@@ -407,13 +407,14 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     );
 
     this.decoder = new JavaScriptDecoder(this.arguments_.targetRootDirectory);
-    const executionInformationIntegrator = new ExecutionInformationIntegrator(
-      this.rootContext.getTypeModel()
+    const executionInformationProcessor = new ExecutionInformationProcessor(
+      this.rootContext.getTypeModel(),
+      this.arguments_.incorporateExecutionInformation
     );
     this.runner = new JavaScriptRunner(
       this.storageManager,
       this.decoder,
-      executionInformationIntegrator,
+      executionInformationProcessor,
       this.arguments_.testDirectory,
       this.arguments_.executionTimeout,
       this.arguments_.testTimeout,
