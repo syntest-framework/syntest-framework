@@ -28,16 +28,26 @@ export abstract class Generator<S extends Statement> {
   protected _statementPoolEnabled: boolean;
   protected _statementPoolProbability: number;
 
+  protected _addRemoveArgumentProbability: number;
+  protected _addArgumentProbability: number;
+  protected _removeArgumentProbability: number;
+
   constructor(
     sampler: JavaScriptTestCaseSampler,
     rootContext: RootContext,
     statementPoolEnabled: boolean,
-    statementPoolProbability: number
+    statementPoolProbability: number,
+    addRemoveArgumentProbability: number,
+    addArgumentProbability: number,
+    removeArgumentProbability: number
   ) {
     this._sampler = sampler;
     this._rootContext = rootContext;
     this._statementPoolEnabled = statementPoolEnabled;
     this._statementPoolProbability = statementPoolProbability;
+    this._addRemoveArgumentProbability = addRemoveArgumentProbability;
+    this._addArgumentProbability = addArgumentProbability;
+    this._removeArgumentProbability = removeArgumentProbability;
   }
 
   abstract generate(

@@ -78,6 +78,10 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
 
   private _exploreIllegalValues: boolean;
 
+  protected _addRemoveArgumentProbability: number;
+  protected _addArgumentProbability: number;
+  protected _removeArgumentProbability: number;
+
   private _statementPool: StatementPool | null;
 
   private _functionCallGenerator: FunctionCallGenerator;
@@ -106,7 +110,10 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     stringAlphabet: string,
     stringMaxLength: number,
     deltaMutationProbability: number,
-    exploreIllegalValues: boolean
+    exploreIllegalValues: boolean,
+    addRemoveArgumentProbability: number,
+    addArgumentProbability: number,
+    removeArgumentProbability: number
   ) {
     super(subject);
     this._constantPoolManager = constantPoolManager;
@@ -127,6 +134,10 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     this._stringMaxLength = stringMaxLength;
     this._deltaMutationProbability = deltaMutationProbability;
     this._exploreIllegalValues = exploreIllegalValues;
+
+    this._addRemoveArgumentProbability = addRemoveArgumentProbability;
+    this._addArgumentProbability = addArgumentProbability;
+    this._removeArgumentProbability = removeArgumentProbability;
   }
 
   get rootContext() {
@@ -140,43 +151,64 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this,
       rootContext,
       this._statementPoolEnabled,
-      this._statementPoolProbability
+      this._statementPoolProbability,
+      this._addRemoveArgumentProbability,
+      this._addArgumentProbability,
+      this._removeArgumentProbability
     );
     this._constructorCallGenerator = new ConstructorCallGenerator(
       this,
       rootContext,
       this._statementPoolEnabled,
-      this._statementPoolProbability
+      this._statementPoolProbability,
+      this._addRemoveArgumentProbability,
+      this._addArgumentProbability,
+      this._removeArgumentProbability
     );
     this._methodCallGenerator = new MethodCallGenerator(
       this,
       rootContext,
       this._statementPoolEnabled,
-      this._statementPoolProbability
+      this._statementPoolProbability,
+      this._addRemoveArgumentProbability,
+      this._addArgumentProbability,
+      this._removeArgumentProbability
     );
     this._getterGenerator = new GetterGenerator(
       this,
       rootContext,
       this._statementPoolEnabled,
-      this._statementPoolProbability
+      this._statementPoolProbability,
+      this._addRemoveArgumentProbability,
+      this._addArgumentProbability,
+      this._removeArgumentProbability
     );
     this._setterGenerator = new SetterGenerator(
       this,
       rootContext,
       this._statementPoolEnabled,
-      this._statementPoolProbability
+      this._statementPoolProbability,
+      this._addRemoveArgumentProbability,
+      this._addArgumentProbability,
+      this._removeArgumentProbability
     );
     this._constantObjectGenerator = new ConstantObjectGenerator(
       this,
       rootContext,
       this._statementPoolEnabled,
-      this._statementPoolProbability
+      this._statementPoolProbability,
+      this._addRemoveArgumentProbability,
+      this._addArgumentProbability,
+      this._removeArgumentProbability
     );
     this._objectFunctionCallGenerator = new ObjectFunctionCallGenerator(
       this,
       rootContext,
       this._statementPoolEnabled,
-      this._statementPoolProbability
+      this._statementPoolProbability,
+      this._addRemoveArgumentProbability,
+      this._addArgumentProbability,
+      this._removeArgumentProbability
     );
   }
 

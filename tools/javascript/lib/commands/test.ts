@@ -121,6 +121,36 @@ export function getTestCommand(
     type: "number",
   });
 
+  options.set("add-remove-argument-probability", {
+    alias: [],
+    default: 0.5,
+    description:
+      "Probability to maybe add an argument as oposed to maybe remove one.",
+    group: samplingGroup,
+    hidden: false,
+    type: "number",
+  });
+
+  options.set("add-argument-probability", {
+    alias: [],
+    default: 0.1,
+    description:
+      "Probability to add one extra anonymous argument (probability to add two args is equal to probablity squared, etc.) (maximum of 10).",
+    group: samplingGroup,
+    hidden: false,
+    type: "number",
+  });
+
+  options.set("remove-argument-probability", {
+    alias: [],
+    default: 0.1,
+    description:
+      "Probability to remove an argument (probability to remove two args is equal to probablity squared, etc.).",
+    group: samplingGroup,
+    hidden: false,
+    type: "number",
+  });
+
   options.set("execution-timeout", {
     alias: [],
     default: 2000,
@@ -187,6 +217,11 @@ export type TestCommandOptions = {
   typePoolProbability: number;
   statementPool: boolean;
   statementPoolProbability: number;
+
+  addRemoveArgumentProbability: number;
+  addArgumentProbability: number;
+  removeArgumentProbability: number;
+
   executionTimeout: number;
   testTimeout: number;
 

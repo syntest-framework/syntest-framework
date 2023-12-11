@@ -788,7 +788,10 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       this.arguments_.stringAlphabet,
       this.arguments_.stringMaxLength,
       this.arguments_.deltaMutationProbability,
-      this.arguments_.exploreIllegalValues
+      this.arguments_.exploreIllegalValues,
+      this.arguments_.addRemoveArgumentProbability,
+      this.arguments_.addArgumentProbability,
+      this.arguments_.removeArgumentProbability
     );
     sampler.rootContext = rootContext;
 

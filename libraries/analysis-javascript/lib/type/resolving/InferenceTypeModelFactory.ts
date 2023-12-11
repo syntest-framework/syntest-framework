@@ -904,8 +904,9 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
     originalInvolved: string[]
   ) {
     const [objectId, propertyId] = involved;
-    const [, originalProperty] = originalInvolved;
+    const [originalObject, originalProperty] = originalInvolved;
 
+    const objectElement = elementMap.get(originalObject);
     const propertyElement = elementMap.get(originalProperty);
 
     if (propertyElement === undefined) {
@@ -920,6 +921,15 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
           // e.g. object[0]
           // add array type to object
           this._typeModel.addElementType(objectId, relation.id);
+
+          if (
+            objectElement &&
+            objectElement.type === ElementType.Identifier &&
+            objectElement.name === "arguments"
+          ) {
+            // e.g. arguments[0]
+            // TODO get function parent and add the argument (impossible right now)
+          }
 
           break;
         }
