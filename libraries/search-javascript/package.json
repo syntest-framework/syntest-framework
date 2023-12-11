@@ -1,6 +1,6 @@
 {
   "name": "@syntest/search-javascript",
-  "version": "0.2.0-beta.11",
+  "version": "0.2.0-beta.12",
   "description": "SynTest JavaScript is a tool for automatically generating test cases for the JavaScript language",
   "keywords": [
     "syntest",
@@ -53,11 +53,11 @@
     "@babel/preset-env": "7.19.1",
     "@babel/register": "7.18.9",
     "@syntest/analysis": "^0.3.0-beta.1",
-    "@syntest/analysis-javascript": "^0.2.0-beta.10",
+    "@syntest/analysis-javascript": "^0.2.0-beta.11",
     "@syntest/ast-visitor-javascript": "^0.2.0-beta.4",
     "@syntest/cfg": "^0.5.0-beta.0",
     "@syntest/diagnostics": "^0.1.0-beta.0",
-    "@syntest/instrumentation-javascript": "^0.2.0-beta.2",
+    "@syntest/instrumentation-javascript": "^0.2.0-beta.3",
     "@syntest/logging": "^0.2.0-beta.2",
     "@syntest/prng": "^0.2.0-beta.2",
     "@syntest/search": "^0.5.0-beta.10",

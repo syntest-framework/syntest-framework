@@ -1,6 +1,6 @@
 {
   "name": "@syntest/analysis-javascript",
-  "version": "0.2.0-beta.10",
+  "version": "0.2.0-beta.11",
   "description": "SynTest Analysis JavaScript is a library for doing analysis of the JavaScript language",
   "keywords": [
     "syntest",

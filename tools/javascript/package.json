@@ -1,6 +1,6 @@
 {
   "name": "@syntest/javascript",
-  "version": "0.2.0-beta.12",
+  "version": "0.2.0-beta.13",
   "description": "SynTest JavaScript is a tool for automatically generating test cases for the JavaScript language",
   "keywords": [
     "syntest",
@@ -48,16 +48,16 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis-javascript": "^0.2.0-beta.10",
+    "@syntest/analysis-javascript": "^0.2.0-beta.11",
     "@syntest/base-language": "^0.3.0-beta.11",
     "@syntest/cli-graphics": "^0.3.0-beta.1",
     "@syntest/diagnostics": "^0.1.0-beta.0",
-    "@syntest/instrumentation-javascript": "^0.2.0-beta.2",
+    "@syntest/instrumentation-javascript": "^0.2.0-beta.3",
     "@syntest/logging": "^0.2.0-beta.2",
     "@syntest/metric": "^0.2.0-beta.0",
     "@syntest/module": "^0.2.0-beta.4",
     "@syntest/search": "^0.5.0-beta.10",
-    "@syntest/search-javascript": "^0.2.0-beta.11",
+    "@syntest/search-javascript": "^0.2.0-beta.12",
     "@syntest/storage": "^0.3.0-beta.2",
     "yargs": "^17.7.2"
   },
