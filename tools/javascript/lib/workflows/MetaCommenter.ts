@@ -51,6 +51,8 @@ export class MetaCommenter implements Workflow {
   execute(
     encodingsMap: Map<Target, JavaScriptTestCase[]>
   ): Promise<Map<Target, JavaScriptTestCase[]>> {
+    MetaCommenter.LOGGER.info("Meta-Commenting started");
+
     const totalEncodings = [...encodingsMap.values()].reduce(
       (counter, value) => counter + value.length,
       0

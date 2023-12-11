@@ -50,6 +50,9 @@ export class DeDuplicator implements Workflow {
   execute(
     encodingsMap: Map<Target, JavaScriptTestCase[]>
   ): Promise<Map<Target, JavaScriptTestCase[]>> {
+    DeDuplicator.LOGGER.info("De-Duplication started");
+    const before = [...encodingsMap.values()].reduce((p, c) => p + c.length, 0);
+
     const totalEncodings = [...encodingsMap.values()].reduce(
       (counter, value) => counter + value.length,
       0
@@ -122,16 +125,24 @@ export class DeDuplicator implements Workflow {
     }
 
     this.userInterface.stopProgressBars();
-
-    return new Promise((resolve) =>
-      resolve(
-        new Map<Target, JavaScriptTestCase[]>(
-          [...archives.entries()].map(([target, archive]) => [
-            target,
-            archive.getEncodings(),
-          ])
-        )
-      )
+    const finalEncodings = new Map<Target, JavaScriptTestCase[]>(
+      [...archives.entries()].map(([target, archive]) => [
+        target,
+        archive.getEncodings(),
+      ])
     );
+    const after = [...finalEncodings.values()].reduce(
+      (p, c) => p + c.length,
+      0
+    );
+
+    DeDuplicator.LOGGER.info(
+      `De-Duplication done, went from ${before} to ${after} test cases`
+    );
+    this.userInterface.printSuccess(
+      `De-Duplication done, went from ${before} to ${after} test cases`
+    );
+
+    return new Promise((resolve) => resolve(finalEncodings));
   }
 }

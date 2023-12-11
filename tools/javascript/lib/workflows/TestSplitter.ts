@@ -29,13 +29,13 @@ import {
 
 import { Workflow } from "./Workflow";
 
-export class TestSplitting implements Workflow {
+export class TestSplitter implements Workflow {
   protected static LOGGER: Logger;
   protected userInterface: UserInterface;
   protected runner: JavaScriptRunner;
 
   constructor(userInterface: UserInterface, runner: JavaScriptRunner) {
-    TestSplitting.LOGGER = getLogger(TestSplitting.name);
+    TestSplitter.LOGGER = getLogger(TestSplitter.name);
     this.userInterface = userInterface;
     this.runner = runner;
   }
@@ -43,6 +43,9 @@ export class TestSplitting implements Workflow {
   public async execute(
     encodingMap: Map<Target, JavaScriptTestCase[]>
   ): Promise<Map<Target, JavaScriptTestCase[]>> {
+    const before = [...encodingMap.values()].reduce((p, c) => p + c.length, 0);
+    TestSplitter.LOGGER.info("Splitting started");
+
     const finalEncodings = new Map<Target, JavaScriptTestCase[]>();
     let total = 0;
 
@@ -62,7 +65,7 @@ export class TestSplitting implements Workflow {
 
         round += 1;
 
-        TestSplitting.LOGGER.info("Split found, repeating.");
+        TestSplitter.LOGGER.info("Split found, repeating.");
       }
       finalEncodings.set(target, encodings);
       total += finalEncodings.size;
@@ -71,6 +74,18 @@ export class TestSplitting implements Workflow {
     if (total === 0) {
       throw new IllegalStateError("Zero tests were created");
     }
+
+    const after = [...finalEncodings.values()].reduce(
+      (p, c) => p + c.length,
+      0
+    );
+
+    TestSplitter.LOGGER.info(
+      `Splitting done, went from ${before} to ${after} test cases`
+    );
+    this.userInterface.printSuccess(
+      `Splitting done, went from ${before} to ${after} test cases`
+    );
 
     return finalEncodings;
   }
@@ -151,7 +166,7 @@ export class TestSplitting implements Workflow {
       // finalEncodings.push(...bestPair));
 
       for (const pair of possiblePairs) {
-        TestSplitting.LOGGER.debug(
+        TestSplitter.LOGGER.debug(
           `Split found: ${encoding.getLength()} -> ${pair[0].getLength()} + ${pair[1].getLength()}`
         );
       }

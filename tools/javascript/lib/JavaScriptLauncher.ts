@@ -86,9 +86,10 @@ import {
 import { StorageManager } from "@syntest/storage";
 
 import { TestCommandOptions } from "./commands/test";
+import { timer } from "./Timer";
 import { DeDuplicator } from "./workflows/DeDuplicator";
 import { MetaCommenter } from "./workflows/MetaCommenter";
-import { TestSplitting } from "./workflows/TestSplitter";
+import { TestSplitter } from "./workflows/TestSplitter";
 
 export type JavaScriptArguments = ArgumentsObject & TestCommandOptions;
 export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
@@ -454,40 +455,21 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     );
 
     if (this.arguments_.testSplitting) {
-      const testSplitter = new TestSplitting(this.userInterface, this.runner);
-
-      const start = Date.now();
-      const before = [...finalEncodings.values()].reduce(
-        (p, c) => p + c.length,
-        0
+      const testSplitter = new TestSplitter(this.userInterface, this.runner);
+      const timedResult = await timer(() =>
+        testSplitter.execute(finalEncodings)
       );
+      finalEncodings = timedResult.result;
 
-      JavaScriptLauncher.LOGGER.info("Splitting started");
-      finalEncodings = await testSplitter.execute(finalEncodings);
+      JavaScriptLauncher.LOGGER.info(`Splitting took: ${timedResult.time}`);
+      this.userInterface.printSuccess(`Splitting took: ${timedResult.time}`);
 
-      const timeInMs = (Date.now() - start) / 1000;
-      const after = [...finalEncodings.values()].reduce(
-        (p, c) => p + c.length,
-        0
-      );
-
-      JavaScriptLauncher.LOGGER.info(
-        `Splitting done took: ${timeInMs}, went from ${before} to ${after} test cases`
-      );
-      this.userInterface.printSuccess(
-        `Splitting done took: ${timeInMs}, went from ${before} to ${after} test cases`
-      );
-
-      // this.metricManager.recordProperty(PropertyName., `${timeInMs}`); // TODO new metric
+      // TODO
+      // this.metricManager.recordProperty(PropertyName., `${timeInMs}`);
     }
 
     if (this.arguments_.testMinimization) {
-      const start = Date.now();
-      JavaScriptLauncher.LOGGER.info("Minimization started");
       // TODO
-      const timeInMs = (Date.now() - start) / 1000;
-      JavaScriptLauncher.LOGGER.info(`Minimization done, took: ${timeInMs}`);
-      // this.metricManager.recordProperty(PropertyName., `${timeInMs}`); // TODO new metric
     }
 
     const secondaryObjectives = this.arguments_.secondaryObjectives.map(
@@ -507,27 +489,20 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         secondaryObjectives,
         objectives
       );
-
-      const start = Date.now();
-      const before = [...finalEncodings.values()].reduce(
-        (p, c) => p + c.length,
-        0
+      const timedResult = await timer(() =>
+        deDuplicator.execute(finalEncodings)
       );
-      JavaScriptLauncher.LOGGER.info("De-Duplication started");
-      finalEncodings = await deDuplicator.execute(finalEncodings);
-
-      const timeInMs = (Date.now() - start) / 1000;
-      const after = [...finalEncodings.values()].reduce(
-        (p, c) => p + c.length,
-        0
-      );
+      finalEncodings = timedResult.result;
 
       JavaScriptLauncher.LOGGER.info(
-        `De-Duplication done took: ${timeInMs}, went from ${before} to ${after} test cases`
+        `De-Duplication took: ${timedResult.time}`
       );
       this.userInterface.printSuccess(
-        `De-Duplication done took: ${timeInMs}, went from ${before} to ${after} test cases`
+        `De-Duplication took: ${timedResult.time}`
       );
+
+      // TODO
+      // this.metricManager.recordProperty(PropertyName., `${timeInMs}`);
     }
 
     if (this.arguments_.metaComments) {
@@ -537,13 +512,20 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         objectives
       );
 
-      const start = Date.now();
-      JavaScriptLauncher.LOGGER.info("Meta-Commenting started");
-      finalEncodings = await metaCommenter.execute(finalEncodings);
-      const timeInMs = (Date.now() - start) / 1000;
+      const timedResult = await timer(() =>
+        metaCommenter.execute(finalEncodings)
+      );
+      finalEncodings = timedResult.result;
 
-      JavaScriptLauncher.LOGGER.info(`Meta-Commenting done took: ${timeInMs}`);
-      this.userInterface.printSuccess(`Meta-Commenting done took: ${timeInMs}`);
+      JavaScriptLauncher.LOGGER.info(
+        `Meta-Commenting done took: ${timedResult.time}`
+      );
+      this.userInterface.printSuccess(
+        `Meta-Commenting done took: ${timedResult.time}`
+      );
+
+      // TODO
+      // this.metricManager.recordProperty(PropertyName., `${timeInMs}`);
     }
 
     const suiteBuilder = new JavaScriptSuiteBuilder(
