@@ -548,7 +548,6 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
             this.randomTypeProbability,
             id
           );
-
         break;
       }
       case "ranked": {

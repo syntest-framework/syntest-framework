@@ -289,23 +289,19 @@ export class TypeModel {
     randomTypeProbability: number,
     id: string
   ): string {
-    const probabilities = this.calculateProbabilitiesForElement(
-      incorporateExecutionScore,
-      id
-    );
+    let probabilities;
 
-    // const x = new Map();
-    // for (const [type, probability] of probabilities.entries()) {
-    //   const typeEnum = type.includes("<>") ? type.split("<>")[1] : type;
-
-    //   if (!x.has(typeEnum)) {
-    //     x.set(typeEnum, 0);
-    //   }
-
-    //   x.set(typeEnum, x.get(typeEnum) + probability);
-    // }
-    // console.log(id);
-    // console.log(x);
+    // This allows caching of type scores. The only problem is that when a score of a relation changes it will not recalculate for the current element (only for the relation element)
+    if (this._scoreHasChangedMap.get(id)) {
+      probabilities = this.calculateProbabilitiesForElement(
+        incorporateExecutionScore,
+        id
+      );
+      this._scoreHasChangedMap.set(id, false);
+    } else {
+      // prevent recalculation of probabilities without score changes
+      probabilities = this._elementTypeProbabilityMap.get(id);
+    }
 
     const genericTypes = [
       TypeEnum.ARRAY,
@@ -357,10 +353,19 @@ export class TypeModel {
     randomTypeProbability: number,
     id: string
   ): string {
-    const probabilities = this.calculateProbabilitiesForElement(
-      incorporateExecutionScore,
-      id
-    );
+    let probabilities;
+
+    // This allows caching of type scores. The only problem is that when a score of a relation changes it will not recalculate for the current element (only for the relation element)
+    if (this._scoreHasChangedMap.get(id)) {
+      probabilities = this.calculateProbabilitiesForElement(
+        incorporateExecutionScore,
+        id
+      );
+      this._scoreHasChangedMap.set(id, false);
+    } else {
+      // prevent recalculation of probabilities without score changes
+      probabilities = this._elementTypeProbabilityMap.get(id);
+    }
 
     const genericTypes = [
       TypeEnum.ARRAY,
@@ -421,16 +426,6 @@ export class TypeModel {
     id: string,
     relationPairsVisited?: Map<string, Set<string>>
   ): Map<string, number> {
-    // if (!this._scoreHasChangedMap.has(element)) {
-    //     throw new ImplementationError(`Element ${element} does not exist`);
-    // }
-    // if (this._scoreHasChangedMap.get(element) === false) {
-    //     // prevent recalculation of probabilities without score changes
-    //     return this._elementTypeProbabilityMap.get(element);
-    // }
-
-    // this._scoreHasChangedMap.set(element, false);
-
     let probabilityMap = new Map<string, number>();
 
     if (id === "anon") {
@@ -446,8 +441,6 @@ export class TypeModel {
 
     if (!relationPairsVisited) {
       relationPairsVisited = new Map();
-      // this._scoreHasChangedMap.set(element, false);
-      // this._elementTypeProbabilityMap.set(element, probabilityMap);
     }
 
     let totalScore = this._sum(typeScoreMap.values());
