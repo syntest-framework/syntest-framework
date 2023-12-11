@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1-beta.15](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-event-listener-websocket@0.2.1-beta.14...@syntest/plugin-event-listener-websocket@0.2.1-beta.15) (2023-12-11)
+
+**Note:** Version bump only for package @syntest/plugin-event-listener-websocket
+
 ## [0.2.1-beta.14](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-event-listener-websocket@0.2.1-beta.13...@syntest/plugin-event-listener-websocket@0.2.1-beta.14) (2023-12-08)
 
 **Note:** Version bump only for package @syntest/plugin-event-listener-websocket

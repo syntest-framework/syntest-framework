@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0-beta.2](https://github.com/syntest-framework/syntest-framework/compare/@syntest/analysis@0.3.0-beta.1...@syntest/analysis@0.3.0-beta.2) (2023-12-11)
+
+### Features
+
+- implement decorators ([#392](https://github.com/syntest-framework/syntest-framework/issues/392)) ([7803370](https://github.com/syntest-framework/syntest-framework/commit/78033700ca537856e5e2d821c1a131fc217a0eaa))
+
 ## [0.3.0-beta.1](https://github.com/syntest-framework/syntest-framework/compare/@syntest/analysis@0.3.0-beta.0...@syntest/analysis@0.3.0-beta.1) (2023-11-14)
 
 ### Features
