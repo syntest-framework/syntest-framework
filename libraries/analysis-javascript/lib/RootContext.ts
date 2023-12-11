@@ -66,18 +66,8 @@ export class RootContext extends FrameworkRootContext<t.Node> {
   protected _targetFiles: Set<string>;
   protected _analysisFiles: Set<string>;
 
-  // filePath -> id -> element
-  protected _elementMap: Map<string, Map<string, Element>>;
-  // filePath -> id -> relation
-  protected _relationMap: Map<string, Map<string, Relation>>;
-  // filePath -> id -> object
-  protected _objectMap: Map<string, Map<string, DiscoveredObjectType>>;
-
   protected _typeModel: TypeModel;
   protected _typePool: TypePool;
-
-  // Mapping: filePath -> target name -> Exports
-  protected _exportMap: Map<string, Export[]>;
 
   get targetFiles() {
     return this._targetFiles;
