@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 
-import { MetricManager } from "@syntest/metric";
-import { Module, ModuleManager } from "@syntest/module";
-import { StorageManager } from "@syntest/storage";
+import { ExtensionRegistrationAPI, Module } from "@syntest/module";
 
 import { StatisticsMetricMiddlewarePlugin } from "./plugins/StatisticsMetricMiddlewarePlugin";
 
@@ -32,14 +30,11 @@ export default class StatisticsModule extends Module {
     );
   }
 
-  register(
-    moduleManager: ModuleManager,
-    metricManager: MetricManager,
-    _storageManager: StorageManager
-  ): void {
-    moduleManager.registerPlugin(
-      this,
-      new StatisticsMetricMiddlewarePlugin(metricManager)
+  override register(
+    extensionRegistrationApi: ExtensionRegistrationAPI
+  ): void | Promise<void> {
+    extensionRegistrationApi.registerPlugin(
+      new StatisticsMetricMiddlewarePlugin()
     );
   }
 }

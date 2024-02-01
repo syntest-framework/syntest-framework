@@ -15,25 +15,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Yargs = require("yargs");
 
-export type PrngOptions = {
-  randomSeed: string;
+export type LogVerbosity = "silent" | LogSeverity;
+export type LogSeverity =
+  | "fatal"
+  | "error"
+  | "warn"
+  | "info"
+  | "debug"
+  | "trace";
+
+export type LogLevels = Record<string, number>;
+export type LogColors = Record<string, string>;
+
+export type LogConfig = {
+  levels: LogLevels;
+  colors: LogColors;
 };
 
-export enum OptionGroups {
-  Prng = "PRNG Options:",
-}
-
-export const Configuration = {
-  configureOptions(yargs: Yargs.Argv) {
-    return yargs.option("random-seed", {
-      alias: ["s"],
-      default: undefined,
-      description: "Seed to be used by the pseudo random number generator.",
-      group: OptionGroups.Prng,
-      hidden: false,
-      type: "string",
-    });
+export const SynTestLogLevels: LogConfig = {
+  levels: {
+    fatal: 0,
+    error: 1,
+    warn: 2,
+    info: 3,
+    debug: 4,
+    trace: 5,
+  },
+  colors: {
+    fatal: "red",
+    error: "red",
+    warn: "yellow",
+    info: "green",
+    debug: "blue",
+    trace: "magenta",
   },
 };

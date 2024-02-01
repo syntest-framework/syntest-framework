@@ -25,7 +25,7 @@ import {
 import { Events as BaseLanguageEvents } from "@syntest/base-language";
 import { ControlFlowProgram } from "@syntest/cfg";
 import { getLogger, Logger } from "@syntest/logging";
-import { EventListenerPlugin } from "@syntest/module";
+import { EventListenerPlugin, ExtensionAPI } from "@syntest/module";
 import {
   BudgetManager,
   Encoding,
@@ -48,6 +48,7 @@ import { targetModelFormatter } from "./models/TargetModel";
 
 export type PublisherWSOptions = {
   wsUrl: string;
+  fid: string;
 };
 
 /**
@@ -55,7 +56,7 @@ export type PublisherWSOptions = {
  */
 export class WebsocketEventListenerPlugin extends EventListenerPlugin {
   private static LOGGER: Logger;
-  private _fid: string;
+  private config: unknown;
   private client: WebSocket;
 
   constructor() {
@@ -69,16 +70,16 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
     );
   }
 
-  get fid() {
-    return this._fid;
+  override setup(extensionApi: ExtensionAPI): void | Promise<void> {
+    this.config = extensionApi.config;
   }
 
-  set fid(_fid: string) {
-    this._fid = _fid;
+  override cleanup(): void {
+    this.disconnect();
   }
 
   async connect() {
-    const url = (<PublisherWSOptions>(<unknown>this.args)).wsUrl;
+    const url = (<PublisherWSOptions>this.config).wsUrl;
 
     if (url === undefined) {
       WebsocketEventListenerPlugin.LOGGER.warn(
@@ -103,7 +104,10 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
         );
         client.send(
           Buffer.from(
-            JSON.stringify({ event: "publisherPluginStarted", fid: this._fid })
+            JSON.stringify({
+              event: "publisherPluginStarted",
+              fid: (<PublisherWSOptions>this.config).fid,
+            })
           )
         );
         resolve();
@@ -135,77 +139,166 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
     }
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("initializeStart", () =>
-      handler(this.client, this._fid, "initializeStart", {})
+      handler(
+        this.client,
+        (<PublisherWSOptions>this.config).fid,
+        "initializeStart",
+        {}
+      )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "initializeComplete",
-      () => handler(this.client, this._fid, "initializeComplete", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "initializeComplete",
+          {}
+        )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("preprocessStart", () =>
-      handler(this.client, this._fid, "preprocessStart", {})
+      handler(
+        this.client,
+        (<PublisherWSOptions>this.config).fid,
+        "preprocessStart",
+        {}
+      )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "preprocessComplete",
-      () => handler(this.client, this._fid, "preprocessComplete", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "preprocessComplete",
+          {}
+        )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("processStart", () =>
-      handler(this.client, this._fid, "processStart", {})
+      handler(
+        this.client,
+        (<PublisherWSOptions>this.config).fid,
+        "processStart",
+        {}
+      )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("processComplete", () =>
-      handler(this.client, this._fid, "processComplete", {})
+      handler(
+        this.client,
+        (<PublisherWSOptions>this.config).fid,
+        "processComplete",
+        {}
+      )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "postprocessStart",
-      () => handler(this.client, this._fid, "postprocessStart", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "postprocessStart",
+          {}
+        )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "postprocessComplete",
-      () => handler(this.client, this._fid, "postprocessComplete", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "postprocessComplete",
+          {}
+        )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "instrumentationStart",
-      () => handler(this.client, this._fid, "instrumentationStart", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "instrumentationStart",
+          {}
+        )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "instrumentationComplete",
-      () => handler(this.client, this._fid, "instrumentationComplete", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "instrumentationComplete",
+          {}
+        )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("targetRunStart", () =>
-      handler(this.client, this._fid, "targetRunStart", {})
+      handler(
+        this.client,
+        (<PublisherWSOptions>this.config).fid,
+        "targetRunStart",
+        {}
+      )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "targetRunComplete",
-      () => handler(this.client, this._fid, "targetRunComplete", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "targetRunComplete",
+          {}
+        )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportStart", () =>
-      handler(this.client, this._fid, "reportStart", {})
+      handler(
+        this.client,
+        (<PublisherWSOptions>this.config).fid,
+        "reportStart",
+        {}
+      )
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportComplete", () =>
-      handler(this.client, this._fid, "reportComplete", {})
+      handler(
+        this.client,
+        (<PublisherWSOptions>this.config).fid,
+        "reportComplete",
+        {}
+      )
     );
 
     // search events
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchInitializationStart",
-      () => handler(this.client, this._fid, "searchInitializationStart", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "searchInitializationStart",
+          {}
+        )
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchInitializationComplete",
-      () => handler(this.client, this._fid, "searchInitializationComplete", {})
+      () =>
+        handler(
+          this.client,
+          (<PublisherWSOptions>this.config).fid,
+          "searchInitializationComplete",
+          {}
+        )
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
@@ -218,7 +311,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       ) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "searchStart",
           searchProgressFormatter(searchAlgorithm, subject, budgetManager)
         )
@@ -235,7 +328,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       ) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "searchComplete",
           searchProgressFormatter(searchAlgorithm, subject, budgetManager)
         )
@@ -251,7 +344,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       ) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "searchIterationStart",
           searchProgressFormatter(searchAlgorithm, subject, budgetManager)
         )
@@ -267,7 +360,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       ) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "searchIterationComplete",
           searchProgressFormatter(searchAlgorithm, subject, budgetManager)
         )
@@ -279,7 +372,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(rootContext: RootContext<S>, filePath: string) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "sourceResolvingStart",
           sourceModelFormatter(rootContext, filePath)
         )
@@ -290,7 +383,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(rootContext: RootContext<S>, filePath: string, source: string) => {
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "sourceResolvingComplete",
           sourceModelFormatter(rootContext, filePath, source)
         );
@@ -302,7 +395,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(rootContext: RootContext<S>, filePath: string) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "abstractSyntaxTreeResolvingStart",
           abstractSyntaxTreeModelFormatter(rootContext, filePath)
         )
@@ -317,7 +410,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       ) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "abstractSyntaxTreeResolvingComplete",
           abstractSyntaxTreeModelFormatter(
             rootContext,
@@ -332,7 +425,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(rootContext: RootContext<S>, filePath: string) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "controlFlowGraphResolvingStart",
           controlFlowGraphModelFormatter(rootContext, filePath)
         )
@@ -347,7 +440,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       ) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "controlFlowGraphResolvingComplete",
           controlFlowGraphModelFormatter(rootContext, filePath, cfp)
         )
@@ -358,7 +451,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(rootContext: RootContext<S>, filePath: string) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "targetExtractionStart",
           targetModelFormatter(rootContext, filePath)
         )
@@ -369,7 +462,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(rootContext: RootContext<S>, filePath: string, target: Target) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "targetExtractionComplete",
           targetModelFormatter(rootContext, filePath, target)
         )
@@ -380,7 +473,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(rootContext: RootContext<S>, filePath: string) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "dependencyResolvingStart",
           dependencyModelFormatter(rootContext, filePath)
         )
@@ -395,7 +488,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       ) =>
         handler(
           this.client,
-          this._fid,
+          (<PublisherWSOptions>this.config).fid,
           "dependencyResolvingComplete",
           dependencyModelFormatter(rootContext, filePath, dependencies)
         )

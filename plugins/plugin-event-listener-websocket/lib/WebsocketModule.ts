@@ -16,14 +16,11 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager } from "@syntest/module";
-import { StorageOptions } from "@syntest/storage";
+import { ExtensionRegistrationAPI, Module } from "@syntest/module";
 
 import { WebsocketEventListenerPlugin } from "./WebsocketEventListenerPlugin";
 
 export default class WebsocketModule extends Module {
-  private publisher: WebsocketEventListenerPlugin;
-
   constructor() {
     super(
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
@@ -33,16 +30,9 @@ export default class WebsocketModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager): void {
-    this.publisher = new WebsocketEventListenerPlugin();
-    moduleManager.registerPlugin(this, this.publisher);
-  }
-
-  override prepare(): void {
-    this.publisher.fid = (<StorageOptions>(<unknown>this.args)).fid;
-  }
-
-  override cleanup(): void {
-    this.publisher.disconnect();
+  override register(
+    extensionRegistrationApi: ExtensionRegistrationAPI
+  ): void | Promise<void> {
+    extensionRegistrationApi.registerPlugin(new WebsocketEventListenerPlugin());
   }
 }

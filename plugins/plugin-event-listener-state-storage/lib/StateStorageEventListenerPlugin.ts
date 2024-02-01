@@ -18,7 +18,7 @@
 
 import { Events, RootContext, Target } from "@syntest/analysis";
 import { ControlFlowProgram } from "@syntest/cfg";
-import { EventListenerPlugin } from "@syntest/module";
+import { EventListenerPlugin, ExtensionAPI } from "@syntest/module";
 import {
   Encoding,
   SearchAlgorithm,
@@ -39,20 +39,24 @@ export type StateStorageOptions = {
  * This graphing plugin creates a listener that creates an SVG based on the generated CFG.
  */
 export class StateStorageEventListenerPlugin extends EventListenerPlugin {
+  private config: unknown;
   private storageManager: StorageManager;
 
-  constructor(storageManager: StorageManager) {
+  constructor() {
     super(
       "state-storage",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").description
     );
-    this.storageManager = storageManager;
+  }
+
+  override setup(extensionApi: ExtensionAPI): void | Promise<void> {
+    this.storageManager = extensionApi.storageManager;
+    this.config = extensionApi.config;
   }
 
   setupEventListener(): void {
-    const stateStore = (<StateStorageOptions>(<unknown>this.args))
-      .stateStorageDirectory;
+    const stateStore = (<StateStorageOptions>this.config).stateStorageDirectory;
 
     const stateStorage = new StateStorage(this.storageManager, stateStore);
     (<TypedEventEmitter<Events>>process).on(

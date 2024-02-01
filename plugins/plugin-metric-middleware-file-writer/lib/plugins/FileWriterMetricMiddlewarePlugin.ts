@@ -17,11 +17,8 @@
  */
 
 import { Metric, MetricManager, Middleware } from "@syntest/metric";
-import { MetricMiddlewarePlugin } from "@syntest/module";
-import {
-  StorageOptions as CoreStorageOptions,
-  StorageManager,
-} from "@syntest/storage";
+import { ExtensionAPI, MetricMiddlewarePlugin } from "@syntest/module";
+import { StorageManager } from "@syntest/storage";
 import Yargs = require("yargs");
 
 import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddleware";
@@ -29,24 +26,29 @@ import { FileWriterMetricMiddleware } from "../middleware/FileWriterMetricMiddle
 export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
   private metricManager: MetricManager;
   private storageManager: StorageManager;
+  private args: unknown;
 
-  constructor(metricManager: MetricManager, storageManager: StorageManager) {
+  constructor() {
     super(
       "file-writer",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
       require("../../../package.json").description
     );
-    this.metricManager = metricManager;
-    this.storageManager = storageManager;
+  }
+
+  public override setup(extensionApi: ExtensionAPI): void {
+    this.metricManager = extensionApi.metricManager;
+    this.storageManager = extensionApi.storageManager;
+    this.args = extensionApi.config;
   }
 
   createMetricMiddleware(metrics: Metric[]): Middleware {
     return new FileWriterMetricMiddleware(
       this.metricManager,
       metrics,
-      (<CoreStorageOptions>(<unknown>this.args)).fid,
+      (<StorageOptions>this.args).fid,
       this.storageManager,
-      (<StorageOptions>(<unknown>this.args)).fileWriterMetricsDirectory
+      (<StorageOptions>this.args).fileWriterMetricsDirectory
     );
   }
 
@@ -76,5 +78,6 @@ export enum OptionTypes {
 }
 
 export type StorageOptions = {
+  fid: string;
   fileWriterMetricsDirectory: string;
 };

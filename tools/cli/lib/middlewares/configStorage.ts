@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-import { extractArgumentValues, ModuleManager } from "@syntest/module";
+import { ExtensionManager, extractArgumentValues } from "@syntest/module";
 import { StorageManager } from "@syntest/storage";
 import * as yargs from "yargs";
 
 export function storeConfig(
-  moduleManager: ModuleManager,
+  moduleManager: ExtensionManager,
   storageManager: StorageManager,
   arguments_: yargs.ArgumentsCamelCase
 ): void {

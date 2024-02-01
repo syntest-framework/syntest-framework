@@ -83,7 +83,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   reset(): void {
-    EvaluationBudget.LOGGER.silly("reset");
+    EvaluationBudget.LOGGER.trace("reset");
     this._currentEvaluations = 0;
     this._tracking = false;
   }
@@ -92,7 +92,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   initializationStarted(): void {
-    EvaluationBudget.LOGGER.silly("initializationStarted");
+    EvaluationBudget.LOGGER.trace("initializationStarted");
     this._tracking = true;
   }
 
@@ -100,7 +100,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   initializationStopped(): void {
-    EvaluationBudget.LOGGER.silly("initializationStopped");
+    EvaluationBudget.LOGGER.trace("initializationStopped");
     this._tracking = false;
   }
 
@@ -108,7 +108,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStarted(): void {
-    EvaluationBudget.LOGGER.silly("searchStarted");
+    EvaluationBudget.LOGGER.trace("searchStarted");
     this._tracking = true;
   }
 
@@ -116,7 +116,7 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStopped(): void {
-    EvaluationBudget.LOGGER.silly("searchStopped");
+    EvaluationBudget.LOGGER.trace("searchStopped");
     this._tracking = false;
   }
 
@@ -124,14 +124,13 @@ export class EvaluationBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   iteration(): void {
-    EvaluationBudget.LOGGER.silly("iteration");
+    EvaluationBudget.LOGGER.trace("iteration");
   }
 
   /**
    * @inheritDoc
    */
   evaluation(): void {
-    EvaluationBudget.LOGGER.silly("evaluation");
     if (this._tracking && this._currentEvaluations < this._maxEvaluations) {
       this._currentEvaluations++;
     }

@@ -17,7 +17,7 @@
  */
 
 import { UserInterface } from "@syntest/cli-graphics";
-import { EventListenerPlugin } from "@syntest/module";
+import { EventListenerPlugin, ExtensionAPI } from "@syntest/module";
 import {
   BudgetManager,
   Encoding,
@@ -30,12 +30,15 @@ import TypedEventEmitter from "typed-emitter";
 export class SearchProgressBarListener extends EventListenerPlugin {
   private _userInterface: UserInterface;
 
-  constructor(userInterface: UserInterface) {
+  constructor() {
     super(
       "SearchProgressBarListener",
       "A listener that creates and updates a progress bar for the search process."
     );
-    this._userInterface = userInterface;
+  }
+
+  public override setup(extensionApi: ExtensionAPI): void | Promise<void> {
+    this._userInterface = extensionApi.userInterface;
   }
 
   setupEventListener(): void {

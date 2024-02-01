@@ -18,12 +18,16 @@
 import { writeFileSync } from "node:fs";
 import * as path from "node:path";
 
-import { Command, extractArgumentValues, ModuleManager } from "@syntest/module";
+import {
+  Command,
+  ExtensionManager,
+  extractArgumentValues,
+} from "@syntest/module";
 import Yargs = require("yargs");
 
 export function getConfigCommand(
   tool: string,
-  moduleManager: ModuleManager
+  moduleManager: ExtensionManager
 ): Command {
   const options = new Map<string, Yargs.Options>();
 

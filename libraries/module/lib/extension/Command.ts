@@ -18,7 +18,7 @@
 import { getLogger } from "@syntest/logging";
 import Yargs = require("yargs");
 
-import { ModuleManager } from "../ModuleManager";
+import { ExtensionManager } from "../ExtensionManager";
 
 export class Command implements Yargs.CommandModule {
   tool: Readonly<string>;
@@ -29,7 +29,7 @@ export class Command implements Yargs.CommandModule {
   describe: string;
 
   constructor(
-    moduleManager: ModuleManager,
+    moduleManager: ExtensionManager,
     tool: string,
     name: string,
     description: string,

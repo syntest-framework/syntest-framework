@@ -29,5 +29,5 @@ before(() => {
   initializePseudoRandomNumberGenerator("0");
 
   // This will set up the logger singleton
-  setupLogger("log", [], "debug");
+  setupLogger("debug", "log", []);
 });

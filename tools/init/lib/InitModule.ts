@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager, Tool } from "@syntest/module";
+import { ExtensionManager, Module, Tool } from "@syntest/module";
 import yargs = require("yargs");
 
 import { getConfigCommand } from "./commands/config";
@@ -32,13 +32,13 @@ export default class InitModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager): void | Promise<void> {
+  register(extensionManager: ExtensionManager): void | Promise<void> {
     const name = "init";
 
     const labels = ["init"];
     const commands = [
-      getConfigCommand(name, moduleManager),
-      getModuleCommand(name, moduleManager),
+      getConfigCommand(name, extensionManager),
+      getModuleCommand(name, extensionManager),
     ];
 
     const additionalOptions: Map<string, yargs.Options> = new Map();
@@ -51,6 +51,6 @@ export default class InitModule extends Module {
       additionalOptions
     );
 
-    moduleManager.registerTool(this, initTool);
+    extensionManager.registerTool(initTool);
   }
 }

@@ -22,12 +22,12 @@ import { Extension } from "./Extension";
 
 export abstract class Preset extends Extension {
   protected static LOGGER: Logger;
-  public describe: Readonly<string>;
+  public description: Readonly<string>;
 
-  constructor(name: string, describe: string) {
+  constructor(name: string, description: string) {
     super(name);
     Preset.LOGGER = getLogger(Preset.name);
-    this.describe = describe;
+    this.description = description;
   }
 
   modifyArgs<T>(arguments_: Yargs.ArgumentsCamelCase<T>) {
@@ -50,8 +50,5 @@ export abstract class Preset extends Extension {
     }
   }
 
-  abstract getPresetConfiguration(): {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
-  };
+  abstract getPresetConfiguration(): Record<string, unknown>;
 }

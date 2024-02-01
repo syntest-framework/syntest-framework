@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import * as path from "node:path";
 
 import {
@@ -24,119 +25,105 @@ import {
   Logger as WinstonLogger,
 } from "winston";
 
-let singletonLogger: WinstonLogger;
+import { LogSeverity, LogVerbosity, SynTestLogLevels } from "./LogLevels";
+
+let syntestLogger: WinstonLogger;
 
 export function setupLogger(
+  consoleVerbosity: LogVerbosity,
   logDirectory: string,
-  fileLogLevel: string[],
-  consoleLogLevel: string
+  fileLogLevel: LogSeverity[],
+  metadata: Record<string, unknown> = {}
 ) {
-  const fileTransportOptions: transports.FileTransportOptions = {
-    maxsize: 5_242_880, // 5MB
-    maxFiles: 1,
-  };
-
-  const baseLoggerOptions = {
-    levels: {
-      error: 0,
-      warn: 1,
-      info: 2,
-      debug: 3,
-      verbose: 4,
-      silly: 5,
-    },
-    silent: false,
-    exitOnError: false,
+  syntestLogger = createLogger({
+    levels: SynTestLogLevels.levels,
+    defaultMeta: metadata,
     format: format.combine(
       format.timestamp(),
       format.json(),
       format.metadata(),
       format.errors({ stack: true })
     ),
-    transports: fileLogLevel.map(
-      (logLevel: string) =>
-        new transports.File({
-          ...fileTransportOptions,
-          level: logLevel,
-          filename: path.join(logDirectory, `${logLevel}.log`),
-        })
-    ),
-  };
-
-  if (consoleLogLevel !== "silent") {
-    (<unknown[]>baseLoggerOptions.transports).push(
+    transports: [
       new transports.Console({
-        format: format.cli(),
-        level: consoleLogLevel,
-        stderrLevels: ["fatal", "error", "warn"],
-        debugStdout: false,
-      })
-    );
-  }
-  singletonLogger = createLogger(baseLoggerOptions);
+        level: consoleVerbosity === "silent" ? "error" : consoleVerbosity,
+        silent: consoleVerbosity === "silent",
+        format: format.cli({ colors: SynTestLogLevels.colors }),
+        stderrLevels: ["fatal", "error"],
+        consoleWarnLevels: ["warn"],
+      }),
+      ...fileLogLevel.map(
+        (logLevel: string) =>
+          new transports.File({
+            level: logLevel,
+            filename: path.join(logDirectory, `${logLevel}.log`),
+          })
+      ),
+    ],
+    exceptionHandlers: [
+      new transports.File({
+        filename: path.join(logDirectory, "exceptions.log"),
+      }),
+    ],
+    rejectionHandlers: [
+      new transports.File({
+        filename: path.join(logDirectory, "rejections.log"),
+      }),
+    ],
+  });
 }
 
-export function getLogger(context: string): Logger {
-  if (singletonLogger === undefined) {
-    throw new Error(
-      "Should call setupLogger function before using getLogger function!"
-    );
-  }
-  return new SubLogger(context);
-}
+type LogMethod = {
+  (message: string, ...meta: unknown[]): void;
+  (message: unknown): void;
+};
 
-/**
- * We don't want to expose the structure of the sublogger so we only export the type of the class.
- */
-export type Logger = InstanceType<typeof SubLogger>;
+export type Logger = {
+  fatal: LogMethod;
+  error: LogMethod;
+  warn: LogMethod;
+  info: LogMethod;
+  debug: LogMethod;
+  trace: LogMethod;
+  isLevelEnabled: (level: LogSeverity) => boolean;
+  isFatalEnabled(): boolean;
+  isErrorEnabled(): boolean;
+  isWarnEnabled(): boolean;
+  isInfoEnabled(): boolean;
+  isDebugEnabled(): boolean;
+  isTraceEnabled(): boolean;
+};
 
-/**
- * We use the winston logger singleton in each sublogger.
- * We do this to prevent memory leaks since each instance of a winston logger registers a bunch of event listeners.
- */
-class SubLogger {
-  private _context: string;
-  constructor(context: string) {
-    this._context = context;
-  }
-
-  error(message: string) {
-    singletonLogger.log({
-      level: "error",
-      message: message,
-      meta: { context: this._context },
-    });
-  }
-
-  warn(message: string) {
-    singletonLogger.log({
-      level: "warn",
-      message: message,
-      meta: { context: this._context },
-    });
-  }
-
-  info(message: string) {
-    singletonLogger.log({
-      level: "info",
-      message: message,
-      meta: { context: this._context },
-    });
-  }
-
-  debug(message: string) {
-    singletonLogger.log({
-      level: "debug",
-      message: message,
-      meta: { context: this._context },
-    });
+export function getLogger(namespace: string): Logger {
+  if (syntestLogger === undefined) {
+    return {
+      fatal: () => {
+        /* do nothing */
+      },
+      error: () => {
+        /* do nothing */
+      },
+      warn: () => {
+        /* do nothing */
+      },
+      info: () => {
+        /* do nothing */
+      },
+      debug: () => {
+        /* do nothing */
+      },
+      trace: () => {
+        /* do nothing */
+      },
+      isFatalEnabled: () => false,
+      isLevelEnabled: () => false,
+      isErrorEnabled: () => false,
+      isWarnEnabled: () => false,
+      isInfoEnabled: () => false,
+      isDebugEnabled: () => false,
+      isTraceEnabled: () => false,
+    };
   }
 
-  silly(message: string) {
-    singletonLogger.log({
-      level: "silly",
-      message: message,
-      meta: { context: this._context },
-    });
-  }
+  return <Logger>(<unknown>syntestLogger.child({ namespace: namespace }));
 }

@@ -18,7 +18,7 @@
 
 import { UserInterface } from "@syntest/cli-graphics";
 import { MetricManager } from "@syntest/metric";
-import { ModuleManager } from "@syntest/module";
+import { ExtensionManager } from "@syntest/module";
 import { StorageManager } from "@syntest/storage";
 import TypedEventEmitter from "typed-emitter";
 
@@ -29,14 +29,14 @@ import { Events } from "./util/Events";
 export abstract class Launcher {
   protected arguments_: ArgumentsObject;
 
-  protected moduleManager: ModuleManager;
+  protected moduleManager: ExtensionManager;
   protected metricManager: MetricManager;
   protected storageManager: StorageManager;
   protected userInterface: UserInterface;
 
   constructor(
     arguments_: ArgumentsObject,
-    moduleManager: ModuleManager,
+    moduleManager: ExtensionManager,
     metricManager: MetricManager,
     storageManager: StorageManager,
     userInterface: UserInterface
@@ -73,11 +73,6 @@ export abstract class Launcher {
   }
 
   protected registerProperties() {
-    this.metricManager.recordProperty(
-      PropertyName.PRESET,
-      `${this.arguments_.preset}`
-    );
-
     this.metricManager.recordProperty(
       PropertyName.TARGET_ROOT_DIRECTORY,
       `${this.arguments_.targetRootDirectory}`
@@ -146,10 +141,6 @@ export abstract class Launcher {
       `${this.arguments_.testMinimization.toString()}`
     );
 
-    this.metricManager.recordProperty(
-      PropertyName.RANDOM_SEED,
-      `${this.arguments_.randomSeed.toString()}`
-    );
     this.metricManager.recordProperty(
       PropertyName.MAX_DEPTH,
       `${this.arguments_.maxDepth.toString()}`

@@ -15,21 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Yargs = require("yargs");
+
+import { UserInterface } from "@syntest/cli-graphics";
+import { MetricManager } from "@syntest/metric";
+import { StorageManager } from "@syntest/storage";
+
+import { ExtensionManager } from "../ExtensionManager";
 
 export abstract class Extension {
   name: Readonly<string>;
-  _args: Yargs.ArgumentsCamelCase;
 
   constructor(name: string) {
     this.name = name;
   }
-
-  set args(arguments_: Yargs.ArgumentsCamelCase) {
-    this._args = arguments_;
-  }
-
-  get args() {
-    return this._args;
-  }
 }
+
+export type ExtensionAPI = {
+  storageManager: StorageManager;
+  extensionManager: ExtensionManager;
+  metricManager: MetricManager;
+  config: unknown;
+  userInterface: UserInterface;
+};
+
+export type ExtensionRegistrationAPI = Pick<
+  ExtensionManager,
+  "registerPlugin" | "registerPreset" | "registerTool"
+>;

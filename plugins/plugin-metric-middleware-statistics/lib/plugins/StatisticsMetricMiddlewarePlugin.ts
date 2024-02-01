@@ -17,7 +17,7 @@
  */
 
 import { Metric, MetricManager, MetricType, Middleware } from "@syntest/metric";
-import { MetricMiddlewarePlugin } from "@syntest/module";
+import { ExtensionAPI, MetricMiddlewarePlugin } from "@syntest/module";
 import Yargs = require("yargs");
 
 import { StatisticsMetricMiddleware } from "../middleware/StatisticsMetricMiddleware";
@@ -25,21 +25,25 @@ import { AUC } from "../statistics/AUC";
 import { Statistic } from "../statistics/Statistic";
 
 export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
+  private config: unknown;
   private metricManager: MetricManager;
   private statisticGenerators: Statistic[];
 
-  constructor(metricManager: MetricManager) {
+  constructor() {
     super(
       "statistics",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
       require("../../../package.json").description
     );
-    this.metricManager = metricManager;
+  }
+
+  public override setup(extensionApi: ExtensionAPI): void | Promise<void> {
+    this.metricManager = extensionApi.metricManager;
+    this.config = extensionApi.config;
   }
 
   createMetricMiddleware(metrics: Metric[]): Middleware {
-    const statistics = (<StatisticsOptions>(<unknown>this.args))
-      .statisticsMetrics;
+    const statistics = (<StatisticsOptions>this.config).statisticsMetrics;
 
     this.statisticGenerators = [];
 
@@ -83,7 +87,7 @@ export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
 
     const newMetrics: Metric[] = [];
 
-    for (const statistic of (<StatisticsOptions>(<unknown>this.args))
+    for (const statistic of (<StatisticsOptions>this.config)
       .statisticsMetrics) {
       if (statistic === "AUC") {
         for (const metric of metrics) {

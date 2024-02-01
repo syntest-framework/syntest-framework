@@ -15,10 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "@syntest/cli-graphics";
-import { MetricManager } from "@syntest/metric";
-import { Module, ModuleManager } from "@syntest/module";
-import { StorageManager } from "@syntest/storage";
+
+import { ExtensionRegistrationAPI, Module } from "@syntest/module";
 
 import { SearchMetricListener } from "./plugins/event-listeners/SearchMetricListener";
 import { SearchPerformanceListener } from "./plugins/event-listeners/SearchPerformanceListener";
@@ -41,49 +39,45 @@ import { NSGAIIPreset } from "./presets/NSGAIIPreset";
 import { RandomSearchPreset } from "./presets/RandomSearchPreset";
 
 export abstract class TestingToolModule extends Module {
-  override register(
-    moduleManager: ModuleManager,
-    _metricManager: MetricManager,
-    _storageManager: StorageManager,
-    userInterface: UserInterface,
-    _modules: Module[]
-  ): void {
-    moduleManager.registerPlugin(this, new SearchMetricListener());
-    moduleManager.registerPlugin(this, new SearchPerformanceListener());
-    moduleManager.registerPlugin(
-      this,
-      new SearchProgressBarListener(userInterface)
-    );
+  override register(extensionRegistrationApi: ExtensionRegistrationAPI): void {
+    extensionRegistrationApi.registerPlugin(new SearchMetricListener());
+    extensionRegistrationApi.registerPlugin(new SearchPerformanceListener());
+    extensionRegistrationApi.registerPlugin(new SearchProgressBarListener());
 
-    moduleManager.registerPlugin(this, new SimpleObjectiveManagerPlugin());
-    moduleManager.registerPlugin(this, new StructuralObjectiveManagerPlugin());
-    moduleManager.registerPlugin(
-      this,
+    extensionRegistrationApi.registerPlugin(new SimpleObjectiveManagerPlugin());
+    extensionRegistrationApi.registerPlugin(
+      new StructuralObjectiveManagerPlugin()
+    );
+    extensionRegistrationApi.registerPlugin(
       new StructuralUncoveredObjectiveManagerPlugin()
     );
-    moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
-    moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
+    extensionRegistrationApi.registerPlugin(
+      new TrackingObjectiveManagerPlugin()
+    );
+    extensionRegistrationApi.registerPlugin(
+      new UncoveredObjectiveManagerPlugin()
+    );
 
-    moduleManager.registerPlugin(
-      this,
+    extensionRegistrationApi.registerPlugin(
       new LeastErrorsObjectiveComparatorPlugin()
     );
-    moduleManager.registerPlugin(
-      this,
+    extensionRegistrationApi.registerPlugin(
       new SmallestEncodingObjectiveComparatorPlugin()
     );
 
-    moduleManager.registerPlugin(this, new DefaultProcreationPlugin());
+    extensionRegistrationApi.registerPlugin(new DefaultProcreationPlugin());
 
-    moduleManager.registerPlugin(this, new MOSAFamilyPlugin());
-    moduleManager.registerPlugin(this, new NSGAIIPlugin());
-    moduleManager.registerPlugin(this, new RandomSearchPlugin());
+    extensionRegistrationApi.registerPlugin(new MOSAFamilyPlugin());
+    extensionRegistrationApi.registerPlugin(new NSGAIIPlugin());
+    extensionRegistrationApi.registerPlugin(new RandomSearchPlugin());
 
-    moduleManager.registerPlugin(this, new SignalTerminationTriggerPlugin());
+    extensionRegistrationApi.registerPlugin(
+      new SignalTerminationTriggerPlugin()
+    );
 
-    moduleManager.registerPreset(this, new DynaMOSAPreset());
-    moduleManager.registerPreset(this, new MOSAPreset());
-    moduleManager.registerPreset(this, new NSGAIIPreset());
-    moduleManager.registerPreset(this, new RandomSearchPreset());
+    extensionRegistrationApi.registerPreset(new DynaMOSAPreset());
+    extensionRegistrationApi.registerPreset(new MOSAPreset());
+    extensionRegistrationApi.registerPreset(new NSGAIIPreset());
+    extensionRegistrationApi.registerPreset(new RandomSearchPreset());
   }
 }

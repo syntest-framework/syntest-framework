@@ -21,7 +21,7 @@ import Yargs = require("yargs");
 import { Command } from "../extension/Command";
 import { Plugin } from "../extension/Plugin";
 import { Tool } from "../extension/Tool";
-import { ModuleManager } from "../ModuleManager";
+import { ExtensionManager } from "../ExtensionManager";
 
 const manualRequired = "TODO fill this in yourself";
 
@@ -36,7 +36,7 @@ function addCommandOptions(
   options: { [key: string]: unknown },
   tool: Tool,
   command: Command,
-  moduleManager: ModuleManager
+  moduleManager: ExtensionManager
 ) {
   for (const [name, option] of command.options.entries()) {
     options[kebabize(name)] =
@@ -77,7 +77,7 @@ function addPluginOptions(
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export function extractArgumentValues(
   arguments_: Yargs.ArgumentsCamelCase,
-  moduleManager: ModuleManager
+  moduleManager: ExtensionManager
 ) {
   const allOptions: { [key: string]: unknown } = {};
 

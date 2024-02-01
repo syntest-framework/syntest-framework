@@ -41,7 +41,7 @@ export class TotalTimeBudget<T extends Encoding>
    * @inheritDoc
    */
   override initializationStarted(): void {
-    TotalTimeBudget.LOGGER.silly("initializationStarted");
+    TotalTimeBudget.LOGGER.trace("initializationStarted");
     this.searchStarted();
   }
 
@@ -49,7 +49,7 @@ export class TotalTimeBudget<T extends Encoding>
    * @inheritDoc
    */
   override initializationStopped(): void {
-    TotalTimeBudget.LOGGER.silly("initializationStopped");
+    TotalTimeBudget.LOGGER.trace("initializationStopped");
     this.searchStopped();
   }
 }

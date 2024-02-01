@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 
-import { MetricManager } from "@syntest/metric";
-import { Module, ModuleManager } from "@syntest/module";
-import { StorageManager } from "@syntest/storage";
+import { ExtensionRegistrationAPI, Module } from "@syntest/module";
 
 import { StateStorageEventListenerPlugin } from "./StateStorageEventListenerPlugin";
 
@@ -32,14 +30,11 @@ export default class StateStorageModule extends Module {
     );
   }
 
-  register(
-    moduleManager: ModuleManager,
-    _metricManager: MetricManager,
-    storageManager: StorageManager
-  ): void {
-    moduleManager.registerPlugin(
-      this,
-      new StateStorageEventListenerPlugin(storageManager)
+  override register(
+    extensionRegistrationApi: ExtensionRegistrationAPI
+  ): void | Promise<void> {
+    extensionRegistrationApi.registerPlugin(
+      new StateStorageEventListenerPlugin()
     );
   }
 }

@@ -16,6 +16,5 @@
  * limitations under the License.
  */
 
-export * from "./lib/Configuration";
 export * from "./lib/prng";
 export * from "./lib/seed";

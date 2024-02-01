@@ -26,7 +26,7 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    setupLogger("fakePath", ["error"], "error");
+    setupLogger("error", "fakePath", ["error"]);
     expect(true);
   });
 });

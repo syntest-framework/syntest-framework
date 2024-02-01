@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 
-import { LoggingOptions } from "@syntest/logging";
-import { PresetOptions } from "@syntest/module";
-import { PrngOptions } from "@syntest/prng";
-import { StorageOptions as ModuleStorageOptions } from "@syntest/storage";
 import Yargs = require("yargs");
 
 export enum OptionGroups {
@@ -88,17 +84,12 @@ export type ResearchModeOptions = {
   outputProperties: string[];
 };
 
-export type ArgumentsObject = PresetOptions &
-  TargetOptions &
-  StorageOptions &
-  ModuleStorageOptions &
+export type ArgumentsObject = TargetOptions &
   AlgorithmOptions &
   BudgetOptions &
-  LoggingOptions &
   PostProcessingOptions &
   SamplingOptions &
-  ResearchModeOptions &
-  PrngOptions;
+  ResearchModeOptions;
 
 export class Configuration {
   getOptions(): { [key: string]: Yargs.Options } {

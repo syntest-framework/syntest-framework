@@ -15,6 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./lib/logger";
 
-export * from "./lib/Configuration";
+export * from "./lib/logger";
+export * from "./lib/LogLevels";

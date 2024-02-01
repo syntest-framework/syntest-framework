@@ -15,13 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UserInterface } from "@syntest/cli-graphics";
-import { MetricManager } from "@syntest/metric";
-import { StorageManager } from "@syntest/storage";
 
-import { ModuleManager } from "../ModuleManager";
-
-import { Extension } from "./Extension";
+import { Extension, ExtensionRegistrationAPI } from "./Extension";
 
 export abstract class Module extends Extension {
   version: Readonly<string>;
@@ -32,26 +27,6 @@ export abstract class Module extends Extension {
   }
 
   abstract register(
-    moduleManager: ModuleManager,
-    metricManager: MetricManager,
-    storageManager: StorageManager,
-    userInterface: UserInterface,
-    modules: Module[]
+    extensionRegistrationApi: ExtensionRegistrationAPI
   ): Promise<void> | void;
-}
-
-/**
- * We have defined both an abstract class and interface called Module here.
- * This is called 'merging' it allows an abstract class to have optional methods.
- */
-export interface Module {
-  /**
-   * Called after the initialization step
-   */
-  prepare?(): Promise<void> | void;
-
-  /**
-   * Called before the exit step
-   */
-  cleanup?(): Promise<void> | void;
 }

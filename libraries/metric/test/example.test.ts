@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { setupLogger } from "@syntest/logging";
+
 import * as chai from "chai";
 
 import { MetricManager } from "../lib/MetricManager";
@@ -27,7 +27,6 @@ const expect = chai.expect;
  */
 describe("example test", () => {
   it("test", () => {
-    setupLogger("log", [], "");
     new MetricManager("");
     expect(true);
   });

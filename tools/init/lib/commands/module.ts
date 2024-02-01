@@ -18,7 +18,7 @@
 import { writeFileSync } from "node:fs";
 import * as path from "node:path";
 
-import { Command, ModuleManager } from "@syntest/module";
+import { Command, ExtensionManager } from "@syntest/module";
 import shell = require("shelljs");
 import Yargs = require("yargs");
 
@@ -28,7 +28,7 @@ export type ModuleOptions = {
 
 export function getModuleCommand(
   tool: string,
-  moduleManager: ModuleManager
+  moduleManager: ExtensionManager
 ): Command {
   const options = new Map<string, Yargs.Options>();
 

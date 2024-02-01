@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { Module, ModuleManager } from "@syntest/module";
+import { ExtensionRegistrationAPI, Module } from "@syntest/module";
 
 import { SFuzzObjectiveManagerPlugin } from "./sfuzz/SFuzzObjectiveManagerPlugin";
 import { SFuzzPreset } from "./sfuzz/SFuzzPreset";
@@ -40,16 +40,18 @@ export default class ExperimentalModule extends Module {
     );
   }
 
-  register(moduleManager: ModuleManager): void {
-    moduleManager.registerPlugin(this, new SFuzzObjectiveManagerPlugin());
-    moduleManager.registerPlugin(this, new SFuzzSearchAlgorithmPlugin());
-    moduleManager.registerPreset(this, new SFuzzPreset());
+  override register(
+    extensionRegistrationApi: ExtensionRegistrationAPI
+  ): void | Promise<void> {
+    extensionRegistrationApi.registerPlugin(new SFuzzSearchAlgorithmPlugin());
+    extensionRegistrationApi.registerPlugin(new SFuzzObjectiveManagerPlugin());
+    extensionRegistrationApi.registerPreset(new SFuzzPreset());
 
-    moduleManager.registerPlugin(this, new SPEAIIPlugin());
-    moduleManager.registerPlugin(this, new DynaSPEAIIPlugin());
+    extensionRegistrationApi.registerPlugin(new SPEAIIPlugin());
+    extensionRegistrationApi.registerPlugin(new DynaSPEAIIPlugin());
 
-    moduleManager.registerPreset(this, new SPEAIIPreset());
-    moduleManager.registerPreset(this, new MOSASPEAIIPreset());
-    moduleManager.registerPreset(this, new DynaMOSASPEAIIPreset());
+    extensionRegistrationApi.registerPreset(new SPEAIIPreset());
+    extensionRegistrationApi.registerPreset(new MOSASPEAIIPreset());
+    extensionRegistrationApi.registerPreset(new DynaMOSASPEAIIPreset());
   }
 }

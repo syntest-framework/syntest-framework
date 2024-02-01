@@ -103,7 +103,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   reset(): void {
-    SearchTimeBudget.LOGGER.silly("reset");
+    SearchTimeBudget.LOGGER.trace("reset");
     this._currentSearchTime = 0;
     this._counterTime = 0;
     this._tracking = false;
@@ -113,21 +113,21 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   initializationStarted(): void {
-    SearchTimeBudget.LOGGER.silly("initializationStarted");
+    SearchTimeBudget.LOGGER.trace("initializationStarted");
   }
 
   /**
    * @inheritDoc
    */
   initializationStopped(): void {
-    SearchTimeBudget.LOGGER.silly("initializationStopped");
+    SearchTimeBudget.LOGGER.trace("initializationStopped");
   }
 
   /**
    * @inheritDoc
    */
   searchStarted(): void {
-    SearchTimeBudget.LOGGER.silly("searchStarted");
+    SearchTimeBudget.LOGGER.trace("searchStarted");
     if (!this._tracking) {
       this._counterTime = Date.now() / 1000;
       this._tracking = true;
@@ -138,7 +138,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   searchStopped(): void {
-    SearchTimeBudget.LOGGER.silly("searchStopped");
+    SearchTimeBudget.LOGGER.trace("searchStopped");
     if (this._tracking) {
       this._currentSearchTime = this.getUsedBudget();
       this._counterTime = 0;
@@ -150,13 +150,13 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
    * @inheritDoc
    */
   iteration(): void {
-    SearchTimeBudget.LOGGER.silly("iteration");
+    SearchTimeBudget.LOGGER.trace("iteration");
   }
 
   /**
    * @inheritDoc
    */
   evaluation(): void {
-    SearchTimeBudget.LOGGER.silly("evaluation");
+    SearchTimeBudget.LOGGER.trace("evaluation");
   }
 }
