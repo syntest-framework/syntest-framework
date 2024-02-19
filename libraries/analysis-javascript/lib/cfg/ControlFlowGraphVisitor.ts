@@ -179,18 +179,14 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     if (this._regularBreakNodesStack.length === 0) {
       throw new ImplementationError("No break nodes found");
     }
-    return this._regularBreakNodesStack[
-      this._regularBreakNodesStack.length - 1
-    ];
+    return this._regularBreakNodesStack.at(-1);
   }
 
   private _getContinueNodes(): Set<string> {
     if (this._regularContinueNodesStack.length === 0) {
       throw new ImplementationError("No continue nodes found");
     }
-    return this._regularContinueNodesStack[
-      this._regularContinueNodesStack.length - 1
-    ];
+    return this._regularContinueNodesStack.at(-1);
   }
 
   private _getLocation(path: NodePath): Location {
@@ -218,7 +214,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         {
           id: id,
           location: this._getLocation(path),
-          statementAsText: path.toString(),
+          statementAsText: path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
         },
       ],
       {},
@@ -286,7 +282,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
               index: location.end.index,
             },
           },
-          statementAsText: path.toString(),
+          statementAsText: path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
         },
       ],
       {},

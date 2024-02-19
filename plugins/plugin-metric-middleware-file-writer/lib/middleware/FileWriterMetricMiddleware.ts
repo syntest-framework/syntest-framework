@@ -26,6 +26,7 @@ import {
   DistributionsMap,
   Metric,
   MetricManager,
+  MetricType,
   Middleware,
   PropertiesMap,
   PropertyMetric,
@@ -66,26 +67,32 @@ export class FileWriterMetricMiddleware extends Middleware {
 
       const properties = mergedManager.collectProperties(
         <PropertyMetric[]>(
-          this.outputMetrics.filter((metric) => metric.type === "property")
+          this.outputMetrics.filter(
+            (metric) => metric.type === MetricType.PROPERTY
+          )
         )
       );
 
       const distributions = mergedManager.collectDistributions(
         <DistributionMetric[]>(
-          this.outputMetrics.filter((metric) => metric.type === "distribution")
+          this.outputMetrics.filter(
+            (metric) => metric.type === MetricType.DISTRIBUTION
+          )
         )
       );
 
       const series = mergedManager.collectSeries(
         <SeriesMetric[]>(
-          this.outputMetrics.filter((metric) => metric.type === "series")
+          this.outputMetrics.filter(
+            (metric) => metric.type === MetricType.SERIES
+          )
         )
       );
 
       const seriesDistributions = mergedManager.collectSeriesDistributions(
         <SeriesDistributionMetric[]>(
           this.outputMetrics.filter(
-            (metric) => metric.type === "series-distribution"
+            (metric) => metric.type === MetricType.SERIES_DISTRIBUTION
           )
         )
       );
@@ -93,7 +100,7 @@ export class FileWriterMetricMiddleware extends Middleware {
       const seriesMeasurements = mergedManager.collectSeriesMeasurements(
         <SeriesMeasurementMetric[]>(
           this.outputMetrics.filter(
-            (metric) => metric.type === "series-measurement"
+            (metric) => metric.type === MetricType.SERIES_MEASUREMENT
           )
         )
       );

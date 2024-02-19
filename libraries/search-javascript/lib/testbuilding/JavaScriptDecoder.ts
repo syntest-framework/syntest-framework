@@ -260,11 +260,11 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     if (errorDecoding) {
       let value = testCase.assertionData.error.error.message;
 
-      value = value.replaceAll(/\\/g, "\\\\");
-      value = value.replaceAll(/\n/g, "\\n");
-      value = value.replaceAll(/\r/g, "\\r");
-      value = value.replaceAll(/\t/g, "\\t");
-      value = value.replaceAll(/"/g, '\\"');
+      value = value.replaceAll("\\", "\\\\");
+      value = value.replaceAll("\n", "\\n");
+      value = value.replaceAll("\r", "\\r");
+      value = value.replaceAll("\t", "\\t");
+      value = value.replaceAll('"', '\\"');
 
       assertions.push(
         `await expect((async () => {`,

@@ -29,24 +29,27 @@ export type ConfigOptions = {
 
 export const Configuration = {
   configureOptions(yargs: yargs.Argv) {
-    return yargs
-      .option("config", {
-        alias: ["c"],
-        config: true,
-        default: ".syntest.json",
-        description: "Manually specify path to config file",
-        group: OptionGroups.General,
-        hidden: false,
-        type: "string",
-      })
-      .option("verbose", {
-        alias: ["v"],
-        count: true,
-        default: 0,
-        description: "Increase verbosity of output",
-        group: OptionGroups.General,
-        hidden: false,
-        type: "boolean",
-      });
+    return (
+      yargs
+        // eslint-disable-next-line import/namespace
+        .option("config", {
+          alias: ["c"],
+          config: true,
+          default: ".syntest.json",
+          description: "Manually specify path to config file",
+          group: OptionGroups.General,
+          hidden: false,
+          type: "string",
+        })
+        .option("verbose", {
+          alias: ["v"],
+          count: true,
+          default: 0,
+          description: "Increase verbosity of output",
+          group: OptionGroups.General,
+          hidden: false,
+          type: "boolean",
+        })
+    );
   },
 };

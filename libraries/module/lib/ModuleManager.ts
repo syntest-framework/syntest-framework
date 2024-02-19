@@ -167,6 +167,7 @@ export class ModuleManager {
     }
 
     for (const [pluginType, pluginsOfType] of this.plugins.entries()) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
       if (pluginType === PluginType.METRIC_MIDDLEWARE) {
         continue;
       }

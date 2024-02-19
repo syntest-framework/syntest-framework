@@ -1,9 +1,7 @@
-import { Result } from "@syntest/diagnostics";
-
 /*
  * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Framework.
+ * This file is part of SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +15,8 @@ import { Result } from "@syntest/diagnostics";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Result } from "@syntest/diagnostics";
+
 export interface AbstractSyntaxTreeFactory<S> {
   convert(filePath: string, source: string): Result<S>;
 }

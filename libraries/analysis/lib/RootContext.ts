@@ -36,22 +36,22 @@ import { SourceFactory } from "./factories/SourceFactory";
 import { TargetFactory } from "./factories/TargetFactory";
 import { SubTarget, Target } from "./Target";
 
-const caches: { [key: string]: Map<string, any> } = {};
+const caches: { [key: string]: Map<string, any> } = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export function cache(cacheName: string) {
-  const cache = new Map<string, Result<any>>();
+  const cache = new Map<string, Result<any>>(); // eslint-disable-line @typescript-eslint/no-explicit-any
   caches[cacheName] = cache;
   return function (
     _: RootContext<unknown>,
     __: string,
-    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>>
+    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
   ) {
     const method = descriptor.value;
     descriptor.value = function (filePath: string) {
       const key = filePath;
 
       if (caches[cacheName].has(key)) {
-        return <Result<any>>caches[cacheName].get(key);
+        return <Result<any>>caches[cacheName].get(key); // eslint-disable-line @typescript-eslint/no-explicit-any
       }
 
       const result = Reflect.apply(method, this, [filePath]);
@@ -67,7 +67,7 @@ export function resolvePath() {
   return function (
     _: RootContext<unknown>,
     __: string,
-    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>>
+    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
   ) {
     const method = descriptor.value;
     descriptor.value = function (filePath: string) {

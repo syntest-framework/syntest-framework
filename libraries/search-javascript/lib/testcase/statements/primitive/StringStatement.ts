@@ -196,11 +196,11 @@ export class StringStatement extends PrimitiveStatement<string> {
   override decode(context: ContextBuilder): Decoding[] {
     let value = this.value;
 
-    value = value.replaceAll(/\\/g, "\\\\");
-    value = value.replaceAll(/\n/g, "\\n");
-    value = value.replaceAll(/\r/g, "\\r");
-    value = value.replaceAll(/\t/g, "\\t");
-    value = value.replaceAll(/"/g, '\\"');
+    value = value.replaceAll("\\", "\\\\");
+    value = value.replaceAll("\n", "\\n");
+    value = value.replaceAll("\r", "\\r");
+    value = value.replaceAll("\t", "\\t");
+    value = value.replaceAll('"', '\\"');
 
     return [
       {

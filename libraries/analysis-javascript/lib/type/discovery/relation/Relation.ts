@@ -64,8 +64,8 @@ export enum RelationType {
   // Primary Expressions
   This = "this",
   // literals are processed differently
-  ArrayInitializer = "[L]",
-  ObjectInitializer = "{L}",
+  ArrayInitializer = "[L]", // eslint-disable-line @typescript-eslint/no-duplicate-enum-values
+  ObjectInitializer = "{L}", // eslint-disable-line @typescript-eslint/no-duplicate-enum-values
   ClassDefinition = "class L",
   FunctionDefinition = "function L(R)",
   FunctionStarDefinition = "function* L(R)",

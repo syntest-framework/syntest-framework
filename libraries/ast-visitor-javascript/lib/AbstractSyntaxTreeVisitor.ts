@@ -366,6 +366,6 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       throw new ImplementationError("Invalid scope stack!");
     }
 
-    return this._thisScopeStack[this._thisScopeStack.length - 1];
+    return this._thisScopeStack.at(-1);
   }
 }

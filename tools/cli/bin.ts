@@ -2,7 +2,7 @@
 /*
  * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Framework.
+ * This file is part of SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ async function main() {
 
   // Configure the base parser
   let config = yargs
+    // eslint-disable-next-line import/namespace
     .usage(`Usage: $0 <command> [options]`)
     .epilog("visit https://syntest.org for more documentation")
     .env("SYNTEST")

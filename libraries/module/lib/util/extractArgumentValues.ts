@@ -27,7 +27,7 @@ const manualRequired = "TODO fill this in yourself";
 
 // const camelize = (s: string) => s.replace(/-./g, x=>x[1].toUpperCase())
 const kebabize = (s: string) =>
-  s.replace(
+  s.replaceAll(
     /[A-Z]+(?![a-z])|[A-Z]/g,
     ($, ofs) => (ofs ? "-" : "") + $.toLowerCase()
   );

@@ -100,13 +100,13 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       const test = <NodePath<t.Node>>path.get("test");
 
       test.visit();
-      id = test.toString();
+      id = test.toString(); // eslint-disable-line @typescript-eslint/no-base-to-string
     } else if (path.isSwitchCase() || path.isForStatement()) {
       const test = <NodePath<t.Node>>path.get("test");
 
       if (test) {
         test.visit();
-        id = test.toString();
+        id = test.toString(); // eslint-disable-line @typescript-eslint/no-base-to-string
       } else {
         path.skip();
         return;
@@ -114,7 +114,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     } else if (path.isExpressionStatement()) {
       const expression = <NodePath<t.Node>>path.get("expression");
       expression.visit();
-      id = expression.toString();
+      id = expression.toString(); // eslint-disable-line @typescript-eslint/no-base-to-string
     }
 
     // TODO for in and for of
@@ -148,7 +148,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       const property = callee.get("property");
 
       if (property.isIdentifier()) {
-        const objectValue = this._valueMap.get(object.toString());
+        const objectValue = this._valueMap.get(object.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
 
         // TODO should check if the value is actually a string
         if (typeof objectValue !== "string") {
@@ -160,7 +160,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
             const argument = path.get("arguments")[0];
             argument.visit();
             const argumentValue = <string>(
-              this._valueMap.get(argument.toString())
+              this._valueMap.get(argument.toString()) // eslint-disable-line @typescript-eslint/no-base-to-string
             );
 
             const endOfObject =
@@ -168,20 +168,20 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
                 ? objectValue.slice(-argumentValue.length)
                 : objectValue;
 
-            this._isDistanceMap.set(path.toString(), true);
+            this._isDistanceMap.set(path.toString(), true); // eslint-disable-line @typescript-eslint/no-base-to-string
 
             if (this._inverted) {
               if (endOfObject === argumentValue) {
-                this._valueMap.set(path.toString(), this._normalize(1));
+                this._valueMap.set(path.toString(), this._normalize(1)); // eslint-disable-line @typescript-eslint/no-base-to-string
               } else {
-                this._valueMap.set(path.toString(), this._normalize(0));
+                this._valueMap.set(path.toString(), this._normalize(0)); // eslint-disable-line @typescript-eslint/no-base-to-string
               }
             } else {
               if (endOfObject === argumentValue) {
-                this._valueMap.set(path.toString(), this._normalize(0));
+                this._valueMap.set(path.toString(), this._normalize(0)); // eslint-disable-line @typescript-eslint/no-base-to-string
               } else {
                 this._valueMap.set(
-                  path.toString(),
+                  path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
                   this._normalize(
                     this._realCodedEditDistance(endOfObject, argumentValue)
                   )
@@ -195,7 +195,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
             const argument = path.get("arguments")[0];
             argument.visit();
             const argumentValue = <string>(
-              this._valueMap.get(argument.toString())
+              this._valueMap.get(argument.toString()) // eslint-disable-line @typescript-eslint/no-base-to-string
             );
 
             const startOfObject =
@@ -203,20 +203,20 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
                 ? objectValue.slice(0, argumentValue.length)
                 : objectValue;
 
-            this._isDistanceMap.set(path.toString(), true);
+            this._isDistanceMap.set(path.toString(), true); // eslint-disable-line @typescript-eslint/no-base-to-string
 
             if (this._inverted) {
               if (startOfObject === argumentValue) {
-                this._valueMap.set(path.toString(), this._normalize(1));
+                this._valueMap.set(path.toString(), this._normalize(1)); // eslint-disable-line @typescript-eslint/no-base-to-string
               } else {
-                this._valueMap.set(path.toString(), this._normalize(0));
+                this._valueMap.set(path.toString(), this._normalize(0)); // eslint-disable-line @typescript-eslint/no-base-to-string
               }
             } else {
               if (startOfObject === argumentValue) {
-                this._valueMap.set(path.toString(), this._normalize(0));
+                this._valueMap.set(path.toString(), this._normalize(0)); // eslint-disable-line @typescript-eslint/no-base-to-string
               } else {
                 this._valueMap.set(
-                  path.toString(),
+                  path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
                   this._normalize(
                     this._realCodedEditDistance(startOfObject, argumentValue)
                   )
@@ -230,20 +230,20 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
             const argument = path.get("arguments")[0];
             argument.visit();
             const argumentValue = <string>(
-              this._valueMap.get(argument.toString())
+              this._valueMap.get(argument.toString()) // eslint-disable-line @typescript-eslint/no-base-to-string
             );
 
-            this._isDistanceMap.set(path.toString(), true);
+            this._isDistanceMap.set(path.toString(), true); // eslint-disable-line @typescript-eslint/no-base-to-string
 
             if (this._inverted) {
               if (objectValue.includes(argumentValue)) {
-                this._valueMap.set(path.toString(), this._normalize(1));
+                this._valueMap.set(path.toString(), this._normalize(1)); // eslint-disable-line @typescript-eslint/no-base-to-string
               } else {
-                this._valueMap.set(path.toString(), this._normalize(0));
+                this._valueMap.set(path.toString(), this._normalize(0)); // eslint-disable-line @typescript-eslint/no-base-to-string
               }
             } else {
               if (objectValue.includes(argumentValue)) {
-                this._valueMap.set(path.toString(), this._normalize(0));
+                this._valueMap.set(path.toString(), this._normalize(0)); // eslint-disable-line @typescript-eslint/no-base-to-string
               } else {
                 // search
                 if (objectValue.length > argumentValue.length) {
@@ -265,12 +265,12 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
                   }
 
                   this._valueMap.set(
-                    path.toString(),
+                    path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
                     this._normalize(minValue)
                   );
                 } else {
                   this._valueMap.set(
-                    path.toString(),
+                    path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
                     this._normalize(
                       this._realCodedEditDistance(objectValue, argumentValue)
                     )
@@ -291,27 +291,27 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     switch (path.node.type) {
       case "NullLiteral": {
         // eslint-disable-next-line unicorn/no-null
-        this._valueMap.set(path.toString(), null);
+        this._valueMap.set(path.toString(), null); // eslint-disable-line @typescript-eslint/no-base-to-string
 
         break;
       }
       case "RegExpLiteral": {
-        this._valueMap.set(path.toString(), path.node.pattern);
+        this._valueMap.set(path.toString(), path.node.pattern); // eslint-disable-line @typescript-eslint/no-base-to-string
 
         break;
       }
       case "TemplateLiteral": {
         // should evaluate the template literal... not really possible with the current setup
-        this._valueMap.set(path.toString(), "");
+        this._valueMap.set(path.toString(), ""); // eslint-disable-line @typescript-eslint/no-base-to-string
 
         break;
       }
       default: {
-        this._valueMap.set(path.toString(), path.node.value);
+        this._valueMap.set(path.toString(), path.node.value); // eslint-disable-line @typescript-eslint/no-base-to-string
       }
     }
 
-    this._isDistanceMap.set(path.toString(), false);
+    this._isDistanceMap.set(path.toString(), false); // eslint-disable-line @typescript-eslint/no-base-to-string
   };
 
   public UpdateExpression: (path: NodePath<t.UpdateExpression>) => void = (
@@ -320,9 +320,10 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     const argument = path.get("argument");
     argument.visit();
 
-    const argumentValue = <any>this._valueMap.get(argument.toString());
+    const argumentValue = <any>this._valueMap.get(argument.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
 
     // should not be distance
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (this._isDistanceMap.get(argument.toString()) === true) {
       throw new ImplementationError(
         "Argument should not result in distance value!"
@@ -335,12 +336,12 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       switch (path.node.operator) {
         case "++": {
           value = argumentValue + 1;
-          this._valueMap.set(argument.toString(), value);
+          this._valueMap.set(argument.toString(), value); // eslint-disable-line @typescript-eslint/no-base-to-string
           break;
         }
         case "--": {
           value = argumentValue - 1;
-          this._valueMap.set(argument.toString(), value);
+          this._valueMap.set(argument.toString(), value); // eslint-disable-line @typescript-eslint/no-base-to-string
           break;
         }
       }
@@ -349,12 +350,12 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       switch (path.node.operator) {
         case "++": {
           value = argumentValue;
-          this._valueMap.set(argument.toString(), argumentValue + 1);
+          this._valueMap.set(argument.toString(), argumentValue + 1); // eslint-disable-line @typescript-eslint/no-base-to-string
           break;
         }
         case "--": {
           value = argumentValue;
-          this._valueMap.set(argument.toString(), argumentValue - 1);
+          this._valueMap.set(argument.toString(), argumentValue - 1); // eslint-disable-line @typescript-eslint/no-base-to-string
           break;
         }
         default: {
@@ -364,8 +365,8 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
     }
 
-    this._valueMap.set(path.toString(), value);
-    this._isDistanceMap.set(path.toString(), false);
+    this._valueMap.set(path.toString(), value); // eslint-disable-line @typescript-eslint/no-base-to-string
+    this._isDistanceMap.set(path.toString(), false); // eslint-disable-line @typescript-eslint/no-base-to-string
     path.skip();
   };
 
@@ -381,9 +382,9 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       this._inverted = !this._inverted;
     }
 
-    const argumentValue = <any>this._valueMap.get(argument.toString());
+    const argumentValue = <any>this._valueMap.get(argument.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
 
-    const argumentIsDistance = this._isDistanceMap.get(argument.toString());
+    const argumentIsDistance = this._isDistanceMap.get(argument.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
 
     if (argumentIsDistance && path.node.operator !== "!") {
       throw new ImplementationError(
@@ -461,12 +462,12 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     }
 
     if (path.node.operator === "!") {
-      this._isDistanceMap.set(path.toString(), true);
+      this._isDistanceMap.set(path.toString(), true); // eslint-disable-line @typescript-eslint/no-base-to-string
     } else {
-      this._isDistanceMap.set(path.toString(), false);
+      this._isDistanceMap.set(path.toString(), false); // eslint-disable-line @typescript-eslint/no-base-to-string
     }
 
-    this._valueMap.set(path.toString(), value);
+    this._valueMap.set(path.toString(), value); // eslint-disable-line @typescript-eslint/no-base-to-string
     path.skip();
   };
 
@@ -479,15 +480,17 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     left.visit();
     right.visit();
 
-    const leftValue = <any>this._valueMap.get(left.toString());
-    const rightValue = <any>this._valueMap.get(right.toString());
+    const leftValue = <any>this._valueMap.get(left.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
+    const rightValue = <any>this._valueMap.get(right.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
 
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (this._isDistanceMap.get(left.toString())) {
       throw new ImplementationError(
         "Left should not result in distance value!"
       );
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (this._isDistanceMap.get(right.toString())) {
       throw new ImplementationError(
         "Right should not result in distance value!"
@@ -595,7 +598,9 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
         } else if (
           typeof leftValue === "string" &&
           typeof rightValue === "string" &&
+          // eslint-disable-next-line @typescript-eslint/no-base-to-string
           !left.toString().startsWith("typeof ") && // typeof x === 'string' (should not be compared as strings (but as enums))
+          // eslint-disable-next-line @typescript-eslint/no-base-to-string
           !right.toString().startsWith("typeof ") // 'string' === typeof x (should not be compared as strings (but as enums))
         ) {
           value = this._realCodedEditDistance(leftValue, rightValue);
@@ -720,11 +725,11 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       ].includes(operator)
     ) {
       value = this._normalize(<number>value);
-      this._isDistanceMap.set(path.toString(), true);
+      this._isDistanceMap.set(path.toString(), true); // eslint-disable-line @typescript-eslint/no-base-to-string
     } else {
-      this._isDistanceMap.set(path.toString(), false);
+      this._isDistanceMap.set(path.toString(), false); // eslint-disable-line @typescript-eslint/no-base-to-string
     }
-    this._valueMap.set(path.toString(), value);
+    this._valueMap.set(path.toString(), value); // eslint-disable-line @typescript-eslint/no-base-to-string
 
     path.skip();
   };
@@ -748,9 +753,10 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     left.visit();
     right.visit();
 
-    let leftValue = <any>this._valueMap.get(left.toString());
-    let rightValue = <any>this._valueMap.get(right.toString());
+    let leftValue = <any>this._valueMap.get(left.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
+    let rightValue = <any>this._valueMap.get(right.toString()); // eslint-disable-line @typescript-eslint/no-base-to-string
 
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (!this._isDistanceMap.get(left.toString())) {
       // should we check for number /booleans here?
       if (this._inverted) {
@@ -772,6 +778,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (!this._isDistanceMap.get(right.toString())) {
       // should we check for number /booleans here?
       if (this._inverted) {
@@ -816,8 +823,8 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
       }
     }
 
-    this._valueMap.set(path.toString(), value);
-    this._isDistanceMap.set(path.toString(), true);
+    this._valueMap.set(path.toString(), value); // eslint-disable-line @typescript-eslint/no-base-to-string
+    this._isDistanceMap.set(path.toString(), true); // eslint-disable-line @typescript-eslint/no-base-to-string
 
     path.skip();
   };

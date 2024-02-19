@@ -184,9 +184,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
 
     return yargs.usage(`Usage: $0 ${this.command} <command> [options]`);
   };
-}
 
-export interface Tool {
   /**
    * Should return a list of metrics that are stored by this tool
    */

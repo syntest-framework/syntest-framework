@@ -44,7 +44,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
         `No current object found! Location: ${this._getNodeId(path)}`
       );
     }
-    return this._objectStack[this._objectStack.length - 1];
+    return this._objectStack.at(-1);
   }
 
   private _removeFromStack(path: NodePath<t.Node>): void {

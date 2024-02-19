@@ -53,13 +53,7 @@ export abstract class Plugin extends Extension {
     labels: string[],
     command?: string | undefined
   ): string[];
-}
 
-/**
- * We have defined both an abstract class and interface called Plugin here.
- * This is called 'merging' it allows an abstract class to have optional methods.
- */
-export interface Plugin {
   /**
    * Should return a list of metrics that are stored by this plugin
    */

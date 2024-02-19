@@ -170,7 +170,7 @@ export class ControlFlowPath {
   }
 
   get last() {
-    return this._path[this._path.length - 1];
+    return this._path.at(-1);
   }
 
   get path() {

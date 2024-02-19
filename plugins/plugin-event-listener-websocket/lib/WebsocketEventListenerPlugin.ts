@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /*
  * Copyright 2020-2023 SynTest contributors
  *
- * This file is part of SynTest Framework - SynTest Framework.
+ * This file is part of SynTest Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 import {
   Events as AnalysisEvents,

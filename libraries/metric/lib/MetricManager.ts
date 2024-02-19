@@ -24,6 +24,7 @@ import {
   DistributionsMap,
   Metric,
   MetricName,
+  MetricType,
   PropertiesMap,
   PropertyMetric,
   Series,
@@ -179,25 +180,25 @@ export class MetricManager {
       const outputMetrics = metrics.map((metric) => {
         const split = metric.split(".");
         const found = this.metrics.find((m) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
           if (m.type !== split[0]) {
             return false;
           }
 
           switch (m.type) {
-            case "property":
-            case "distribution": {
+            case MetricType.PROPERTY:
+            case MetricType.DISTRIBUTION: {
               return split[1] === "*" || m.name === split[1];
             }
-            case "series":
-            case "series-distribution":
-            case "series-measurement": {
+            case MetricType.SERIES:
+            case MetricType.SERIES_DISTRIBUTION:
+            case MetricType.SERIES_MEASUREMENT: {
               return (
                 (split[1] === "*" || m.name === split[1]) &&
-                (split[2] === "*" || m.seriesUnit === split[2])
+                (split[2] === "*" || m.seriesUnit === split[2]) // eslint-disable-line @typescript-eslint/no-unsafe-enum-comparison
               );
             }
           }
-          return false;
         });
 
         if (!found) {
@@ -228,22 +229,22 @@ export class MetricManager {
 
     for (const metric of this._metrics) {
       switch (metric.type) {
-        case "property": {
+        case MetricType.PROPERTY: {
           this.properties.set(metric.name, "");
           break;
         }
-        case "distribution": {
+        case MetricType.DISTRIBUTION: {
           this.distributions.set(metric.name, []);
           break;
         }
-        case "series": {
+        case MetricType.SERIES: {
           if (!this.series.has(metric.name)) {
             this.series.set(metric.name, new Map());
           }
           this.series.get(metric.name).set(metric.seriesUnit, new Map());
           break;
         }
-        case "series-distribution": {
+        case MetricType.SERIES_DISTRIBUTION: {
           if (!this.seriesDistributions.has(metric.name)) {
             this.seriesDistributions.set(metric.name, new Map());
           }
@@ -252,7 +253,7 @@ export class MetricManager {
             .set(metric.seriesUnit, new Map());
           break;
         }
-        case "series-measurement": {
+        case MetricType.SERIES_MEASUREMENT: {
           if (!this.seriesMeasurements.has(metric.name)) {
             this.seriesMeasurements.set(metric.name, new Map());
           }
