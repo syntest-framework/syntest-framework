@@ -70,6 +70,9 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "unicorn/expiring-todo-comments": "off"
+    "unicorn/expiring-todo-comments": "off",
+    "unicorn/prefer-ternary": "warn",
+    "no-fallthrough": "off",
+    "sonarjs/cognitive-complexity": "warn"
   }
 }

@@ -1,0 +1,80 @@
+{
+  "name": "@syntest/search-javascript",
+  "version": "0.2.0-beta.15",
+  "description": "SynTest JavaScript is a tool for automatically generating test cases for the JavaScript language",
+  "keywords": [
+    "syntest",
+    "automatic-test-generation"
+  ],
+  "homepage": "https://www.syntest.org",
+  "bugs": {
+    "url": "https://github.com/syntest-framework/syntest-javascript/issues"
+  },
+  "license": "Apache-2.0",
+  "contributors": [
+    "Annibale Panichella",
+    "Mitchell Olsthoorn",
+    "Dimitri Stallenberg"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
+    "NOTICE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syntest-framework/syntest-javascript.git"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch",
+    "clean": "rm -rf .nyc_output dist node_modules",
+    "clean:dist": "rm -rf dist",
+    "format": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --write .",
+    "format:check": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore --check .",
+    "lint": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore .",
+    "lint:fix": "eslint --config ../../.eslintrc.json --ignore-path ../../.eslintignore . --fix",
+    "prepack": "cp ../../LICENSE ./ && cp ../../NOTICE ./",
+    "setup": "cp ../../NOTICE.header.ts ./",
+    "test": "mocha --config ../../.mocharc.json",
+    "test:coverage": "nyc --reporter=text --reporter=html mocha --config ../../.mocharc.json",
+    "test:coverage:ci": "nyc --reporter=lcovonly mocha --config ../../.mocharc.json --reporter json --reporter-option output=test-results.json",
+    "test:watch": "mocha --config ../../.mocharc.json --watch"
+  },
+  "dependencies": {
+    "@babel/core": "7.23.9",
+    "@babel/generator": "^7.21.9",
+    "@babel/preset-env": "7.23.9",
+    "@babel/register": "7.23.7",
+    "@syntest/analysis": "^0.3.0-beta.2",
+    "@syntest/analysis-javascript": "^0.2.0-beta.13",
+    "@syntest/ast-visitor-javascript": "^0.2.0-beta.4",
+    "@syntest/cfg": "^0.5.0-beta.0",
+    "@syntest/diagnostics": "^0.1.0-beta.0",
+    "@syntest/instrumentation-javascript": "^0.2.0-beta.5",
+    "@syntest/logging": "^0.2.0-beta.2",
+    "@syntest/prng": "^0.2.0-beta.2",
+    "@syntest/search": "^0.5.0-beta.10",
+    "@syntest/storage": "^0.3.0-beta.2",
+    "chai": "4.3.7",
+    "chai-as-promised": "7.1.1",
+    "lodash.clonedeep": "4.5.0",
+    "mocha": "10.2.0",
+    "regenerator-runtime": "0.13.9"
+  },
+  "engines": {
+    "node": ">=10.24.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@babel/types": "7.23.9"
+  }
+}
