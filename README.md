@@ -1,55 +1,25 @@
-<<<<<<< HEAD
-
 # SynTest Framework
 
-> Monorepo containing the framework and various core parts of the SynTest ecosystem
+> The aim of the SynTest ecosystem is make it easier for developers to test their code in a more effective and efficient way.
 
 [![main-build](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-build.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-build.yml)
 [![main-quality](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-quality.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-quality.yml)
 [![main-test](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-test.yml/badge.svg)](https://github.com/syntest-framework/syntest-framework/actions/workflows/main-test.yml)
 
-The SynTest Framework is a modular and extendable ecosystem of tools for automated test generation. The framework is designed to be modular and extendable, allowing for the easy integration of new search algorithms and test case representations. The framework is designed to be language agnostic, allowing for other languages to be added.
+The SynTest Framework is a modular and extendable ecosystem of tools for automated test generation. It allows for the easy integration of new search algorithms and test case representations. Furthermore, the framework is designed to be language agnostic, allowing for other languages to be added.
 
 ## Installation
 
 ### NPM
 
-The simplest way to use syntest-framework is by installing the base npm package, called `@syntest/cli`.
-
-```bash
-npm install @syntest/cli
-```
-
-## Usage
-
-# For usage, see the [documentation](https://www.syntest.org/docs).
-
-# SynTest Framework - JavaScript
-
-> The aim of this tool is make it easier for JavaScript developers to test their code in a more effective and efficient way.
-
-A tool to generate synthetic tests for the JavaScript language
-
-### What is SynTest JavaScript?
-
-SynTest JavaScript is a tool for automatically generating test cases for the JavaScript language. This tool is part of the [SynTest Framework](https://www.syntest.org). This framework contains multiple tools related to the generation of synthetic tests.
-
-### Overview
-
-The framework contains the common interfaces for the code control-flow representation, test case structure, genes, and the implementation for the meta-heuristic search algorithms.
-
-## Installation
-
-#### NPM
-
-The simplest way to use syntest javascript is by installing the following two npm packages: [@syntest/cli](https://www.npmjs.com/package/syntest/cli), [@syntest/javascript](https://www.npmjs.com/package/syntest/javascript).
+The simplest way to use SynTest Framework for JavaScript is by installing the following two npm packages: [@syntest/cli](https://www.npmjs.com/package/syntest/cli), [@syntest/javascript](https://www.npmjs.com/package/syntest/javascript).
 
 ```bash
 $ npm install @syntest/cli
 $ npm install @syntest/javascript
 ```
 
-You can install it in your project as shown in the snippit above or you can install the package globally by using the npm options `-g`.
+You can install it in your project as shown in the snippet above or you can install the package globally by using the npm options `-g`.
 
 ## Usage
 
@@ -64,7 +34,7 @@ $ npx syntest init config --modules @syntest/javascript
 This will create the `.syntest.json` configuration file for you with some pre filled in parameters.
 The file should look somewhat like this:
 
-```
+```json
 {
   ...,
   "target-root-directory": "./express",
@@ -103,8 +73,6 @@ SynTest-JavaScript is highly configurable and supports a bunch of options and ar
 
 For questions and help with how to use this tool, please see the [documentation](https://www.syntest.org).
 
-> > > > > > > syntest-javascript/main
-
 ## Support
 
 For questions and help with how to use this library, please see [SUPPORT.md](SUPPORT.md).
@@ -113,15 +81,11 @@ For questions and help with how to use this library, please see [SUPPORT.md](SUP
 
 Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change. For more information, please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-# <<<<<<< HEAD
-
 ## Authors and acknowledgment
 
 - Annibale Panichella (PI)
 - Mitchell Olsthoorn (Project Lead)
 - Dimitri Stallenberg (Developer)
-
-> > > > > > > syntest-javascript/main
 
 ## License
 
