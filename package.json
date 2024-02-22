@@ -85,7 +85,7 @@
     "mocha": "10.2.0",
     "nx": "15.7.1",
     "nyc": "15.1.0",
-    "prettier": "2.8.1",
+    "prettier": "2.8.8",
     "sinon": "15.0.1",
     "ts-node": "10.9.1",
     "typed-emitter": "^2.1.0",
