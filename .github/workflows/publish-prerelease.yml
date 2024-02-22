@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Cloning
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Use CI token that can override branch protection
           token: ${{ secrets.SYNTEST_CI }}

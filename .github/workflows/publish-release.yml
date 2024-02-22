@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Cloning
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.SYNTEST_CI }}
           fetch-depth: 0
