@@ -74,7 +74,7 @@ jobs:
       # Artifact
       - name: SynTest - Upload Test Results
         if: ${{ matrix.report_coverage }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-results
           path: ${{ github.workspace }}/*/*/coverage/lcov.info
@@ -108,7 +108,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # Download test results
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         id: artifact
         with:
           name: coverage-results
