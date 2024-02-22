@@ -79,15 +79,6 @@ jobs:
           name: coverage-results
           path: ${{ github.workspace }}/*/*/coverage/lcov.info
 
-      # Test Report
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: ${{ matrix.report_coverage }}
-        with:
-          name: Mocha Tests
-          path: ${{ github.workspace }}/**/test-results.json
-          reporter: mocha-json
-
   # Send coverage information to Coveralls
   coverage:
     name: Coverage(${{ matrix.workspace }}) - Collection
