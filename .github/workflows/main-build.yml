@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Cloning
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Setup and Caching
       - name: Use latest Node.js LTS version
