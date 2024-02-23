@@ -35,7 +35,7 @@ export class SearchPerformanceListener extends EventListenerPlugin {
   constructor() {
     super(
       "SearchPerformanceListener",
-      "A listener that outputs the performance of the search algorithm."
+      "A listener that outputs the performance of the search algorithm.",
     );
     SearchPerformanceListener.LOGGER = getLogger("SearchPerformanceListener");
   }
@@ -46,7 +46,7 @@ export class SearchPerformanceListener extends EventListenerPlugin {
       <E extends Encoding>(
         searchAlgorithm: SearchAlgorithm<E>,
         _subject: SearchSubject<E>,
-        _budgetManager: BudgetManager<E>
+        _budgetManager: BudgetManager<E>,
       ) => {
         const objectives: Set<ObjectiveFunction<E>> = searchAlgorithm
           .getObjectiveManager()
@@ -58,10 +58,10 @@ export class SearchPerformanceListener extends EventListenerPlugin {
         for (const [objective, distance] of objectivePerformance) {
           const objectiveName = objective.getIdentifier().split(path.sep).pop();
           SearchPerformanceListener.LOGGER.info(
-            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()})`
+            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()})`,
           );
         }
-      }
+      },
     );
 
     (<TypedEventEmitter<Events>>process).on(
@@ -69,7 +69,7 @@ export class SearchPerformanceListener extends EventListenerPlugin {
       <E extends Encoding>(
         searchAlgorithm: SearchAlgorithm<E>,
         _subject: SearchSubject<E>,
-        _budgetManager: BudgetManager<E>
+        _budgetManager: BudgetManager<E>,
       ) => {
         const objectives = searchAlgorithm
           .getObjectiveManager()
@@ -82,10 +82,10 @@ export class SearchPerformanceListener extends EventListenerPlugin {
         for (const [objective, distance] of objectivePerformance) {
           const objectiveName = objective.getIdentifier().split(path.sep).pop();
           SearchPerformanceListener.LOGGER.info(
-            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()})`
+            `${objectiveName}: ${distance} (lowest: ${objective.getLowestDistance()})`,
           );
         }
-      }
+      },
     );
   }
 

@@ -28,7 +28,7 @@ export class SourceFactory {
       return failure(
         new IOError("The given path is not a file", {
           context: { path: filePath },
-        })
+        }),
       );
     }
 
@@ -36,7 +36,7 @@ export class SourceFactory {
       return failure(
         new IOError("The given file does not have an extension", {
           context: { path: filePath },
-        })
+        }),
       );
     }
 
@@ -44,7 +44,7 @@ export class SourceFactory {
       return failure(
         new IOError("The given file does not exist", {
           context: { path: filePath },
-        })
+        }),
       );
     }
 

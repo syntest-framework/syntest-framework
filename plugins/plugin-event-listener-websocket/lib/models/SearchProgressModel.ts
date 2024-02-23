@@ -55,7 +55,7 @@ export interface SearchProgressModel extends Model {
 export function searchProgressModelFormatter<E extends Encoding>(
   searchAlgorithm: SearchAlgorithm<E>,
   subject: SearchSubject<E>,
-  budgetManager: BudgetManager<E>
+  budgetManager: BudgetManager<E>,
 ): SearchProgressModel {
   const iterations = budgetManager
     .getBudgetObject(BudgetType.ITERATION)
@@ -83,20 +83,20 @@ export function searchProgressModelFormatter<E extends Encoding>(
   // record covered
   const coveredPaths = 0;
   const coveredBranches = covered.filter(
-    (objectiveFunction) => objectiveFunction instanceof BranchObjectiveFunction
+    (objectiveFunction) => objectiveFunction instanceof BranchObjectiveFunction,
   ).length;
   const coveredFunctions = covered.filter(
     (objectiveFunction) =>
-      objectiveFunction instanceof FunctionObjectiveFunction
+      objectiveFunction instanceof FunctionObjectiveFunction,
   ).length;
   const coveredExceptions = covered.filter(
     (objectiveFunction) =>
-      objectiveFunction instanceof ExceptionObjectiveFunction
+      objectiveFunction instanceof ExceptionObjectiveFunction,
   ).length;
   const coveredLines = 0;
   const coveredImplicitBranches = covered.filter(
     (objectiveFunction) =>
-      objectiveFunction instanceof ImplicitBranchObjectiveFunction
+      objectiveFunction instanceof ImplicitBranchObjectiveFunction,
   ).length;
   const coveredObjectives = covered.length;
 
@@ -106,26 +106,26 @@ export function searchProgressModelFormatter<E extends Encoding>(
     coveredBranches +
     uncovered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof BranchObjectiveFunction
+        objectiveFunction instanceof BranchObjectiveFunction,
     ).length;
   const totalFunctions =
     coveredFunctions +
     uncovered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof FunctionObjectiveFunction
+        objectiveFunction instanceof FunctionObjectiveFunction,
     ).length;
   const totalExceptions =
     coveredExceptions +
     uncovered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof ExceptionObjectiveFunction
+        objectiveFunction instanceof ExceptionObjectiveFunction,
     ).length;
   const totalLines = 0;
   const totalImplicitBranches =
     coveredImplicitBranches +
     uncovered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof ImplicitBranchObjectiveFunction
+        objectiveFunction instanceof ImplicitBranchObjectiveFunction,
     ).length;
   const totalObjectives = coveredObjectives + uncovered.length;
 

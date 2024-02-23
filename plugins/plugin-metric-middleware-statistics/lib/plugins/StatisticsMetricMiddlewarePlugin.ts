@@ -32,7 +32,7 @@ export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     super(
       "statistics",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
-      require("../../../package.json").description
+      require("../../../package.json").description,
     );
     this.metricManager = metricManager;
   }
@@ -52,7 +52,7 @@ export class StatisticsMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     return new StatisticsMetricMiddleware(
       this.metricManager,
       metrics,
-      this.statisticGenerators
+      this.statisticGenerators,
     );
   }
 

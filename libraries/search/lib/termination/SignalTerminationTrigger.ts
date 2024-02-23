@@ -39,7 +39,7 @@ export class SignalTerminationTrigger implements TerminationTrigger {
   public handle(signal: string): void {
     // TODO: use framework logger
     console.log(
-      `Received ${signal}. Stopping search. Press Control-D to exit.`
+      `Received ${signal}. Stopping search. Press Control-D to exit.`,
     );
     this._triggered = true;
   }

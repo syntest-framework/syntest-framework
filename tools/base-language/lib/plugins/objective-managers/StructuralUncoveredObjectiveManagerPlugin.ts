@@ -30,19 +30,19 @@ import {
  * Plugin for the structural uncovered objective manager
  */
 export class StructuralUncoveredObjectiveManagerPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
     super("structural-uncovered", "A structural uncovered objective manager");
   }
 
   createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
+    options: ObjectiveManagerOptions<T>,
   ): ObjectiveManager<T> {
     return new StructuralUncoveredObjectiveManager(
       options.runner,
       options.secondaryObjectives,
-      options.exceptionObjectivesEnabled
+      options.exceptionObjectivesEnabled,
     );
   }
 

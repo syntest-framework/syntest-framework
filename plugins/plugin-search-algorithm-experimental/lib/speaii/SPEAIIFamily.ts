@@ -32,7 +32,7 @@ import {
  * Abstract class for SPEA family of algorithms
  */
 export abstract class SPEAIIFamily<
-  T extends Encoding
+  T extends Encoding,
 > extends EvolutionaryAlgorithm<T> {
   protected _archive: T[];
   protected _archive_size: number;
@@ -42,7 +42,7 @@ export abstract class SPEAIIFamily<
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
     populationSize: number,
-    archiveSize: number
+    archiveSize: number,
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     this._archive = [];
@@ -57,7 +57,7 @@ export abstract class SPEAIIFamily<
    */
   public calculateRawFitness(
     solutions: T[],
-    objectives: Set<ObjectiveFunction<T>>
+    objectives: Set<ObjectiveFunction<T>>,
   ): Map<T, number> {
     const strength = new Map<T, number>();
     const rawFitness = new Map<T, number>();
@@ -73,7 +73,7 @@ export abstract class SPEAIIFamily<
           DominanceComparator.compare(
             solutions[index],
             solutions[index_],
-            objectives
+            objectives,
           ) == -1
         ) {
           strength.set(solutions[index], strength.get(solutions[index]) + 1);
@@ -87,12 +87,12 @@ export abstract class SPEAIIFamily<
           DominanceComparator.compare(
             solutions[index],
             solutions[index_],
-            objectives
+            objectives,
           ) == -1
         ) {
           rawFitness.set(
             solutions[index_],
-            rawFitness.get(solutions[index_]) + strength.get(solutions[index])
+            rawFitness.get(solutions[index_]) + strength.get(solutions[index]),
           );
         }
       }
@@ -110,7 +110,7 @@ export abstract class SPEAIIFamily<
   public euclideanDistance(
     solution1: T,
     solution2: T,
-    objectives: Set<ObjectiveFunction<T>>
+    objectives: Set<ObjectiveFunction<T>>,
   ): number {
     let sumSquaredDifferences = 0;
     for (const objective of objectives) {
@@ -131,7 +131,7 @@ export abstract class SPEAIIFamily<
    */
   public distanceMatrix(
     solutions: T[],
-    objectives: Set<ObjectiveFunction<T>>
+    objectives: Set<ObjectiveFunction<T>>,
   ): number[][] {
     const distanceMatrix: number[][] = [];
     for (let index = 0; index < solutions.length; index++) {
@@ -140,7 +140,7 @@ export abstract class SPEAIIFamily<
         distanceMatrix[index][index_] = this.euclideanDistance(
           solutions[index],
           solutions[index_],
-          objectives
+          objectives,
         );
       }
     }
@@ -157,7 +157,7 @@ export abstract class SPEAIIFamily<
   public calculateFitness(
     solutions: T[],
     k: number,
-    objectives: Set<ObjectiveFunction<T>>
+    objectives: Set<ObjectiveFunction<T>>,
   ): Map<T, number> {
     const fitness = new Map<T, number>();
     const distanceMatrix = this.distanceMatrix(solutions, objectives);
@@ -182,10 +182,10 @@ export abstract class SPEAIIFamily<
   public addBestRemaining(
     fitness: Map<T, number>,
     nextFront: T[],
-    size: number
+    size: number,
   ): void {
     const dominated: T[] = [...fitness.keys()].filter(
-      (key: T) => fitness.get(key) >= 1
+      (key: T) => fitness.get(key) >= 1,
     );
 
     // Sort dominated individuals by their fitness score in ascending order
@@ -206,7 +206,7 @@ export abstract class SPEAIIFamily<
   public truncation(nextFront: T[], k: number, size: number): void {
     const distances: number[] = this.distanceMatrix(
       nextFront,
-      this._objectiveManager.getCurrentObjectives()
+      this._objectiveManager.getCurrentObjectives(),
     ).map((row: number[]) => {
       // Sort the row in ascending order and take the k-th element
       return row.sort((a, b) => a - b)[k];
@@ -220,17 +220,17 @@ export abstract class SPEAIIFamily<
 
   protected override async _iterate(
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<void> {
     const offspring = this._procreation.generateOffspringPopulation(
       this._populationSize,
-      this._population
+      this._population,
     );
 
     await this._objectiveManager.evaluateMany(
       offspring,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     // If all objectives are covered, we don't need to rank the population anymore

@@ -32,14 +32,14 @@ export class ConstantVisitor extends AbstractSyntaxTreeVisitor {
   constructor(
     filePath: string,
     syntaxForgiving: boolean,
-    constantPool: ConstantPool
+    constantPool: ConstantPool,
   ) {
     super(filePath, syntaxForgiving);
     this._constantPool = constantPool;
   }
 
   public Literal: (path: NodePath<t.Literal>) => void = (
-    path: NodePath<t.Literal>
+    path: NodePath<t.Literal>,
   ) => {
     switch (path.node.type) {
       case "StringLiteral": {

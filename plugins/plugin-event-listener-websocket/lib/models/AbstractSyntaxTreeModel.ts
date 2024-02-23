@@ -27,7 +27,7 @@ export interface AbstractSyntaxTreeModel<S> extends Model {
 export function abstractSyntaxTreeModelFormatter<S>(
   rootContext: RootContext<S>,
   filePath: string,
-  abstractSyntaxTree?: S
+  abstractSyntaxTree?: S,
 ): AbstractSyntaxTreeModel<S> {
   return {
     filePath,

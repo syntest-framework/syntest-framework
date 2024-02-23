@@ -30,7 +30,7 @@ let singletonLogger: WinstonLogger;
 export function setupLogger(
   logDirectory: string,
   fileLogLevel: string[],
-  consoleLogLevel: string
+  consoleLogLevel: string,
 ) {
   const fileTransportOptions: transports.FileTransportOptions = {
     maxsize: 5_242_880, // 5MB
@@ -52,7 +52,7 @@ export function setupLogger(
       format.timestamp(),
       format.json(),
       format.metadata(),
-      format.errors({ stack: true })
+      format.errors({ stack: true }),
     ),
     transports: fileLogLevel.map(
       (logLevel: string) =>
@@ -60,7 +60,7 @@ export function setupLogger(
           ...fileTransportOptions,
           level: logLevel,
           filename: path.join(logDirectory, `${logLevel}.log`),
-        })
+        }),
     ),
   };
 
@@ -71,7 +71,7 @@ export function setupLogger(
         level: consoleLogLevel,
         stderrLevels: ["fatal", "error", "warn"],
         debugStdout: false,
-      })
+      }),
     );
   }
   singletonLogger = createLogger(baseLoggerOptions);
@@ -80,7 +80,7 @@ export function setupLogger(
 export function getLogger(context: string): Logger {
   if (singletonLogger === undefined) {
     throw new IllegalStateError(
-      "Should call setupLogger function before using getLogger function!"
+      "Should call setupLogger function before using getLogger function!",
     );
   }
   return new SubLogger(context);

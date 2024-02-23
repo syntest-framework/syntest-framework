@@ -26,7 +26,7 @@ export class StatisticsMetricMiddleware extends Middleware {
   constructor(
     metricManager: MetricManager,
     metrics: Metric[],
-    statistics: Statistic[]
+    statistics: Statistic[],
   ) {
     super(metricManager, metrics);
 
@@ -59,7 +59,7 @@ export class StatisticsMetricMiddleware extends Middleware {
           distributions,
           series,
           seriesDistributions,
-          seriesMeasurements
+          seriesMeasurements,
         );
       }
     }

@@ -37,7 +37,7 @@ export enum TypeEnum {
 }
 
 export function elementTypeToTypingType(
-  elementType: ElementType
+  elementType: ElementType,
 ):
   | TypeEnum.STRING
   | TypeEnum.NUMERIC

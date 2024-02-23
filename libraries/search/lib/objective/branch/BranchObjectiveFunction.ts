@@ -23,7 +23,7 @@ import { ControlFlowBasedObjectiveFunction } from "../ControlFlowBasedObjectiveF
  * Objective function for the branch criterion.
  */
 export class BranchObjectiveFunction<
-  T extends Encoding
+  T extends Encoding,
 > extends ControlFlowBasedObjectiveFunction<T> {
   override calculateDistance(encoding: T): number {
     const executionResult = encoding.getExecutionResult();

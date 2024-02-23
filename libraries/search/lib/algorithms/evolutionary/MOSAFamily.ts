@@ -45,7 +45,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
-    populationSize: number
+    populationSize: number,
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     MOSAFamily.LOGGER = getLogger("MOSAFamily");
@@ -61,10 +61,10 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         {
           context: {
             uncovered: [...this._objectiveManager.getUncoveredObjectives()].map(
-              (x) => x.getIdentifier()
+              (x) => x.getIdentifier(),
             ),
           },
-        }
+        },
       );
 
     if (
@@ -77,12 +77,12 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     MOSAFamily.LOGGER.debug(
       `Number of objectives = ${
         this._objectiveManager.getCurrentObjectives().size
-      }`
+      }`,
     );
 
     const F = this.preferenceSortingAlgorithm(
       this._population,
-      this._objectiveManager.getCurrentObjectives()
+      this._objectiveManager.getCurrentObjectives(),
     );
 
     // select new population
@@ -99,7 +99,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       // Assign crowding distance to individuals
       crowdingDistance(
         currentFront,
-        this._objectiveManager.getCurrentObjectives()
+        this._objectiveManager.getCurrentObjectives(),
       );
 
       // Add the individuals of this front
@@ -119,7 +119,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
       // front contains individuals to insert
       crowdingDistance(
         currentFront,
-        this._objectiveManager.getCurrentObjectives()
+        this._objectiveManager.getCurrentObjectives(),
       );
 
       currentFront = currentFront.sort(function (a: T, b: T) {
@@ -146,13 +146,13 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    */
   public preferenceSortingAlgorithm(
     population: T[],
-    objectiveFunctions: Set<ObjectiveFunction<T>>
+    objectiveFunctions: Set<ObjectiveFunction<T>>,
   ): T[][] {
     const fronts: T[][] = [[]];
 
     if (objectiveFunctions === null) {
       MOSAFamily.LOGGER.debug(
-        "It looks like a bug in MOSA: the set of objectives cannot be null"
+        "It looks like a bug in MOSA: the set of objectives cannot be null",
       );
       return fronts;
     }
@@ -190,7 +190,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
     ) {
       const front: T[] = this.getNonDominatedFront(
         objectiveFunctions,
-        remainingSolutions
+        remainingSolutions,
       );
       fronts[frontIndex] = front;
       for (const solution of front) {
@@ -219,7 +219,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    */
   public getNonDominatedFront(
     uncoveredObjectives: Set<ObjectiveFunction<T>>,
-    remainingSolutions: T[]
+    remainingSolutions: T[],
   ): T[] {
     const front: T[] = [];
     let isDominated: boolean;
@@ -231,7 +231,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
         const flag = DominanceComparator.compare(
           current,
           best,
-          uncoveredObjectives
+          uncoveredObjectives,
         );
         if (flag == -1) {
           dominatedSolutions.push(best);
@@ -262,7 +262,7 @@ export class MOSAFamily<T extends Encoding> extends EvolutionaryAlgorithm<T> {
    */
   public preferenceCriterion(
     population: T[],
-    objectives: Set<ObjectiveFunction<T>>
+    objectives: Set<ObjectiveFunction<T>>,
   ): T[] {
     const frontZero: T[] = [];
     for (const objective of objectives) {

@@ -37,7 +37,7 @@ export abstract class Preset extends Extension {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
       if ((<any>arguments_)[key] !== configuration[key]) {
         Preset.LOGGER.warn(
-          `Overriding option with key: "${key}" based on preset ${this.name}`
+          `Overriding option with key: "${key}" based on preset ${this.name}`,
         );
       }
 

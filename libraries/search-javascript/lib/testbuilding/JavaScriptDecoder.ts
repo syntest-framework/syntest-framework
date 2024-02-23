@@ -42,7 +42,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   decode(
     testCases: JavaScriptTestCase | JavaScriptTestCase[],
     gatherAssertionData = false,
-    sourceDirectory = "../instrumented"
+    sourceDirectory = "../instrumented",
   ): string {
     if (testCases instanceof JavaScriptTestCase) {
       testCases = [testCases];
@@ -50,7 +50,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
     const context = new ContextBuilder(
       this.targetRootDirectory,
-      sourceDirectory
+      sourceDirectory,
     );
 
     const tests: string[][] = [];
@@ -80,7 +80,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
       if (decodings.length === 0) {
         JavaScriptDecoder.LOGGER.warn(
-          "No statements in test case after error reduction"
+          "No statements in test case after error reduction",
         );
         continue;
       }
@@ -91,12 +91,12 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         context,
         testCase,
         decodings,
-        gatherAssertionData
+        gatherAssertionData,
       );
 
       const assertions: string[] = this.generateAssertions(
         testCase,
-        errorDecoding
+        errorDecoding,
       );
 
       tests.push([...metaCommentBlock, ...testLines, ...assertions]);
@@ -112,7 +112,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
           (m) =>
             `\tlet ${(m.left.includes(":") ? m.left.split(":")[1] : m.left)
               .replace("{", "")
-              .replace("}", "")};`
+              .replace("}", "")};`,
         ),
         `\tbeforeEach(() => {`,
         "\t\t// This is a hack to force the require cache to be emptied",
@@ -121,8 +121,8 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
           (m) =>
             `\t\tdelete require.cache[${m.right.replace(
               "require",
-              "require.resolve"
-            )}];`
+              "require.resolve",
+            )}];`,
         ),
         ...requires.map((m) => `\t\t(${m.left} = ${m.right});`),
         `\t});`,
@@ -166,7 +166,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     context: ContextBuilder,
     testCase: JavaScriptTestCase,
     decodings: Decoding[],
-    gatherAssertionData: boolean
+    gatherAssertionData: boolean,
   ) {
     const testLines: string[] = [];
     if (gatherAssertionData) {
@@ -193,7 +193,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
           value.reference instanceof ClassActionStatement
         ) {
           testLines.push(
-            `addAssertion('${testCase.id}', '${variableName}', ${variableName})`
+            `addAssertion('${testCase.id}', '${variableName}', ${variableName})`,
           );
         }
       }
@@ -203,7 +203,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       testLines.push(
         `} catch (e) {`,
         `\tsetError('${testCase.id}', e, count)`,
-        "}"
+        "}",
       );
     }
 
@@ -217,12 +217,12 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
   generateAssertions(
     testCase: JavaScriptTestCase,
-    errorDecoding: Decoding
+    errorDecoding: Decoding,
   ): string[] {
     const assertions: string[] = [];
     if (testCase.assertionData) {
       for (const [variableName, assertion] of Object.entries(
-        testCase.assertionData.assertions
+        testCase.assertionData.assertions,
       )) {
         const original = assertion.value;
         let stringified = assertion.stringified;
@@ -237,11 +237,11 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
         // Dirty hack because json.parse does not allow undefined/NaN
         stringified = stringified.replaceAll(
           /undefined(?=[^"]*(?:"[^"]*"[^"]*)*$)/g,
-          "null"
+          "null",
         );
         stringified = stringified.replaceAll(
           /NaN(?=[^"]*(?:"[^"]*"[^"]*)*$)/g,
-          "null"
+          "null",
         );
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -249,7 +249,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
         if (typeof value === "object" || typeof value === "function") {
           assertions.push(
-            `expect(JSON.parse(JSON.stringify(${variableName}))).to.deep.equal(${stringified})`
+            `expect(JSON.parse(JSON.stringify(${variableName}))).to.deep.equal(${stringified})`,
           );
         } else {
           assertions.push(`expect(${variableName}).to.equal(${stringified})`);
@@ -269,7 +269,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       assertions.push(
         `await expect((async () => {`,
         `\t${errorDecoding.decoded.split(" = ")[1]}`,
-        `})()).to.be.rejectedWith("${value}")`
+        `})()).to.be.rejectedWith("${value}")`,
       );
     }
 

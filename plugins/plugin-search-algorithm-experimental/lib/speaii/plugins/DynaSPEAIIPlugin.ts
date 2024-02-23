@@ -24,21 +24,21 @@ import { Encoding, SearchAlgorithm } from "@syntest/search";
 import { DynaSPEAII } from "../DynaSPEAII";
 
 export class DynaSPEAIIPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("DynaSPEAII", "DynaSPEAII search algorithm");
   }
 
   createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
+    options: SearchAlgorithmOptions<T>,
   ): SearchAlgorithm<T> {
     return new DynaSPEAII<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,
       options.populationSize,
-      options.populationSize
+      options.populationSize,
     );
   }
 

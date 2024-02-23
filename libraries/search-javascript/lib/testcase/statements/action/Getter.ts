@@ -39,7 +39,7 @@ export class Getter extends ClassActionStatement {
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    constructor_: ConstructorCall
+    constructor_: ConstructorCall,
   ) {
     super(
       variableIdentifier,
@@ -48,7 +48,7 @@ export class Getter extends ClassActionStatement {
       TypeEnum.FUNCTION,
       uniqueId,
       [],
-      constructor_
+      constructor_,
     );
   }
 
@@ -60,7 +60,7 @@ export class Getter extends ClassActionStatement {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      constructor_
+      constructor_,
     );
   }
 
@@ -70,7 +70,7 @@ export class Getter extends ClassActionStatement {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      this.constructor_.copy()
+      this.constructor_.copy(),
     );
   }
 
@@ -78,7 +78,7 @@ export class Getter extends ClassActionStatement {
     const constructorDecoding = this.constructor_.decode(context);
 
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = await ${context.getOrCreateVariableName(this.constructor_)}.${
       this.name
     }`;

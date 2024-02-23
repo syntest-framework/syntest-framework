@@ -30,7 +30,7 @@ import {
  * Tai D. Nguyen, Long H. Pham, Jun Sun, Yun Lin, Quang Tran Minh
  */
 export class SFuzzObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends UncoveredObjectiveManager<T> {
   /**
    * @inheritdoc
@@ -38,7 +38,7 @@ export class SFuzzObjectiveManager<
   protected override _handleUncoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
     encoding: T,
-    distance: number
+    distance: number,
   ): void {
     if (distance > 1) {
       // This is to ignore the approach level

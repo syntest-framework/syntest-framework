@@ -73,7 +73,7 @@ export class SearchTimeBudget<T extends Encoding> implements Budget<T> {
       SearchTimeBudget.LOGGER.info(
         `Consumed ${
           this.getUsedBudget() - this._maxSearchTime
-        }s over the allocated search time`
+        }s over the allocated search time`,
       );
     }
 

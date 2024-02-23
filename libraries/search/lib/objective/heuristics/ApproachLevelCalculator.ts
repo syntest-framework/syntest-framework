@@ -36,11 +36,13 @@ export class ApproachLevelCalculator {
   calculate(
     cfg: ControlFlowGraph,
     node: Node,
-    traces: Trace[]
+    traces: Trace[],
   ): Result<CalculationResult> {
     // Construct map with key as id covered and value as datapoint that covers that id
     const idsTraceMap: Map<string, Trace> = new Map(
-      traces.filter((trace) => trace.hits > 0).map((trace) => [trace.id, trace])
+      traces
+        .filter((trace) => trace.hits > 0)
+        .map((trace) => [trace.id, trace]),
     );
 
     // Construct set of all covered ids
@@ -53,7 +55,7 @@ export class ApproachLevelCalculator {
   _findClosestCoveredBranch(
     cfg: ControlFlowGraph,
     nodeId: string,
-    targets: Set<string>
+    targets: Set<string>,
   ) {
     const visitedNodeIdSet = new Set<string>([nodeId]);
     const searchQueue: [string, number][] = [[nodeId, 0]];
@@ -110,7 +112,7 @@ export class ApproachLevelCalculator {
 
     // if closest node is not found, we return the distance to the root branch
     return failure(
-      new IllegalArgumentError("Cannot find the closest covered node")
+      new IllegalArgumentError("Cannot find the closest covered node"),
     );
   }
 }

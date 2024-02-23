@@ -35,7 +35,7 @@ export class Edge {
     label: string,
     source: string,
     target: string,
-    description?: string
+    description?: string,
   ) {
     this.id = id;
     this.type = type;

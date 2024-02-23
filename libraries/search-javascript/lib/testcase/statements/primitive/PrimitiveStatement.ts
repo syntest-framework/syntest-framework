@@ -35,7 +35,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
     name: string,
     type: TypeEnum,
     uniqueId: string,
-    value: T
+    value: T,
   ) {
     super(variableIdentifier, typeIdentifier, name, type, uniqueId);
     this._value = value;
@@ -43,7 +43,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
 
   abstract override mutate(
     sampler: JavaScriptTestCaseSampler,
-    depth: number
+    depth: number,
   ): Statement;
 
   abstract override copy(): Statement;
@@ -69,7 +69,7 @@ export abstract class PrimitiveStatement<T> extends Statement {
     return [
       {
         decoded: `const ${context.getOrCreateVariableName(
-          this
+          this,
         )} = ${asString};`,
         reference: this,
       },

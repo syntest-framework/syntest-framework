@@ -52,7 +52,7 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
   public crossOver(parents: JavaScriptTestCase[]): JavaScriptTestCase[] {
     if (parents.length !== 2) {
       throw new ImplementationError(
-        `Expected exactly 2 parents, got: ${parents.length}`
+        `Expected exactly 2 parents, got: ${parents.length}`,
       );
     }
 
@@ -136,7 +136,7 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
       } else if (parentB.parent !== undefined) {
         if (!(parentB.child instanceof ActionStatement)) {
           throw new TypeError(
-            "expected parentB child to be an actionstatement"
+            "expected parentB child to be an actionstatement",
           );
         }
         rootA[parentA.childIndex] = parentB.child.copy();
@@ -144,12 +144,12 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
       } else if (parentA.parent === undefined) {
         if (!(parentA.child instanceof ActionStatement)) {
           throw new TypeError(
-            "expected parentA child to be an actionstatement"
+            "expected parentA child to be an actionstatement",
           );
         }
         if (!(parentB.child instanceof ActionStatement)) {
           throw new TypeError(
-            "expected parentB child to be an actionstatement"
+            "expected parentB child to be an actionstatement",
           );
         }
         rootA[parentA.childIndex] = parentB.child.copy();
@@ -157,7 +157,7 @@ export class TreeCrossover extends Crossover<JavaScriptTestCase> {
       } else {
         if (!(parentA.child instanceof ActionStatement)) {
           throw new TypeError(
-            "expected parentA child to be an actionstatement"
+            "expected parentA child to be an actionstatement",
           );
         }
         parentA.parent.setChild(parentA.childIndex, parentB.child.copy());

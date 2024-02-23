@@ -29,7 +29,7 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
     variableIdentifier: string,
     typeIdentifier: string,
     name: string,
-    uniqueId: string
+    uniqueId: string,
   ) {
     super(
       variableIdentifier,
@@ -38,7 +38,7 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
       TypeEnum.UNDEFINED,
       uniqueId,
       // eslint-disable-next-line unicorn/no-useless-undefined
-      undefined
+      undefined,
     );
   }
 
@@ -49,14 +49,14 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
         this.variableIdentifier,
         this.typeIdentifier,
         this.name,
-        prng.uniqueId()
+        prng.uniqueId(),
       );
     } else {
       // 20%
       return sampler.sampleArgument(
         depth + 1,
         this.variableIdentifier,
-        this.name
+        this.name,
       );
     }
   }
@@ -66,7 +66,7 @@ export class UndefinedStatement extends PrimitiveStatement<undefined> {
       this.variableIdentifier,
       this.typeIdentifier,
       this.name,
-      this.uniqueId
+      this.uniqueId,
     );
   }
 }

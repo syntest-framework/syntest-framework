@@ -39,7 +39,7 @@ function helper(source: string) {
   const factory = new InferenceTypeModelFactory();
   const model = factory.resolveTypes(
     elementVisitor.elementMap,
-    relationVisitor.relationMap
+    relationVisitor.relationMap,
   );
 
   return {
@@ -60,13 +60,13 @@ describe("InferenceTypeModelFactory test", () => {
 
     const x = [...elements.values()].find((v) => "name" in v && v.name === "x");
     const assignment_ = [...relations.values()].find(
-      (v) => v.type === RelationType.Assignment && v.involved.includes(x.id)
+      (v) => v.type === RelationType.Assignment && v.involved.includes(x.id),
     );
 
     const function_ = [...relations.values()].find(
       (v) =>
         v.type === RelationType.FunctionDefinition &&
-        v.involved.includes(assignment_.id)
+        v.involved.includes(assignment_.id),
     );
 
     model.getObjectDescription(function_.id);

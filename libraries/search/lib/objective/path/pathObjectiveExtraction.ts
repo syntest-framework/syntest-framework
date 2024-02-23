@@ -37,7 +37,7 @@ export function extractPathObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram,
   approachLevelCalculator: ApproachLevelCalculator,
   branchDistanceCalculator: BranchDistanceCalculator,
-  functionObjectives: FunctionObjectiveFunction<T>[] = []
+  functionObjectives: FunctionObjectiveFunction<T>[] = [],
 ) {
   const objectives: PathObjectiveFunction<T>[] = [];
   for (const cff of cfp.functions) {
@@ -50,7 +50,7 @@ export function extractPathObjectivesFromProgram<T extends Encoding>(
         cfp,
         path,
         approachLevelCalculator,
-        branchDistanceCalculator
+        branchDistanceCalculator,
       );
       objectives.push(newObjective);
 

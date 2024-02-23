@@ -25,7 +25,7 @@ describe("BranchDistance string functions", () => {
       true,
       "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[]{};:'\"|\\,.<>/?~§±`'\n\t",
       {},
-      true
+      true,
     );
 
     const string1 = "";

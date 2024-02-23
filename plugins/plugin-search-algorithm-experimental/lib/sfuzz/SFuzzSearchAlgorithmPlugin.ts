@@ -28,20 +28,20 @@ import { SFuzz } from "./SFuzz";
  * Plugin for the sFuzz search algorithm.
  */
 export class SFuzzSearchAlgorithmPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("sFuzz", "sFuzz search algorithm");
   }
 
   createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
+    options: SearchAlgorithmOptions<T>,
   ): SearchAlgorithm<T> {
     return new SFuzz<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,
-      options.populationSize
+      options.populationSize,
     );
   }
 

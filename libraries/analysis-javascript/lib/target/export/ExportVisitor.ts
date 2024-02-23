@@ -41,7 +41,7 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
 
   // e.g. export { foo, bar }
   public ExportNamedDeclaration: (
-    path: NodePath<t.ExportNamedDeclaration>
+    path: NodePath<t.ExportNamedDeclaration>,
   ) => void = (path) => {
     if (path.node.source) {
       // this means that the export comes from another module
@@ -50,16 +50,16 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
     }
 
     this._exports.push(
-      ...extractExportsFromExportNamedDeclaration(this, this.filePath, path)
+      ...extractExportsFromExportNamedDeclaration(this, this.filePath, path),
     );
   };
 
   // e.g. export default foo
   public ExportDefaultDeclaration: (
-    path: NodePath<t.ExportDefaultDeclaration>
+    path: NodePath<t.ExportDefaultDeclaration>,
   ) => void = (path) => {
     this._exports.push(
-      ...extractExportsFromExportDefaultDeclaration(this, this.filePath, path)
+      ...extractExportsFromExportDefaultDeclaration(this, this.filePath, path),
     );
   };
 
@@ -68,12 +68,12 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
   // e.g. ... = exports
   // e.g. ... = module.exports
   public AssignmentExpression: (
-    path: NodePath<t.AssignmentExpression>
+    path: NodePath<t.AssignmentExpression>,
   ) => void = (path) => {
     const exports = extractExportsFromAssignmentExpression(
       this,
       this.filePath,
-      path
+      path,
     );
     this._exports.push(...exports);
   };
@@ -81,7 +81,7 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
   // e.g. let x = module.exports
   // e.g. let x = exports.foo
   public VariableDeclarator: (path: NodePath<t.VariableDeclarator>) => void = (
-    path_
+    path_,
   ) => {
     const id = path_.get("id");
     const init = path_.get("init");
@@ -94,8 +94,8 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
           this,
           this.filePath,
           partialExport,
-          init
-        )
+          init,
+        ),
       );
       return;
     }
@@ -108,8 +108,8 @@ export class ExportVisitor extends AbstractSyntaxTreeVisitor {
           this,
           this.filePath,
           id,
-          partialExport
-        )
+          partialExport,
+        ),
       );
     }
   };

@@ -26,7 +26,7 @@ function extractFromObjectPattern(
   visitor: ExportVisitor,
   filePath: string,
   path: NodePath<t.ObjectPattern>,
-  initPath: NodePath<t.Node>
+  initPath: NodePath<t.Node>,
 ): Export[] {
   const exports: Export[] = [];
 
@@ -41,7 +41,7 @@ function extractFromObjectPattern(
     // e.g. export const {a, b} = {a: 1}
     // the number of properties in the object pattern should be the same as the number of properties in the object expression
     throw new ImplementationError(
-      "Number of properties in object pattern and object expression do not match"
+      "Number of properties in object pattern and object expression do not match",
     );
   }
 
@@ -147,7 +147,7 @@ function extractFromArrayPattern(
   visitor: ExportVisitor,
   filePath: string,
   path: NodePath<t.ArrayPattern>,
-  initPath: NodePath<t.Node>
+  initPath: NodePath<t.Node>,
 ): Export[] {
   const exports: Export[] = [];
 
@@ -207,7 +207,7 @@ function extractFromArrayPattern(
 export function extractExportsFromExportNamedDeclaration(
   visitor: ExportVisitor,
   filePath: string,
-  path: NodePath<t.ExportNamedDeclaration>
+  path: NodePath<t.ExportNamedDeclaration>,
 ): Export[] {
   const exports: Export[] = [];
 
@@ -289,7 +289,7 @@ export function extractExportsFromExportNamedDeclaration(
         } else if (id.isObjectPattern()) {
           // TODO verify that these work
           exports.push(
-            ...extractFromObjectPattern(visitor, filePath, id, init)
+            ...extractFromObjectPattern(visitor, filePath, id, init),
           );
         } else if (id.isArrayPattern()) {
           // TODO verify that these work

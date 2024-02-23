@@ -32,7 +32,7 @@ export class ArrayStatement extends Statement {
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    elements: Statement[]
+    elements: Statement[],
   ) {
     super(variableIdentifier, typeIdentifier, name, TypeEnum.ARRAY, uniqueId);
     this._elements = elements;
@@ -58,7 +58,7 @@ export class ArrayStatement extends Statement {
           children.splice(
             index,
             0,
-            sampler.sampleArrayArgument(depth + 1, this.typeIdentifier)
+            sampler.sampleArrayArgument(depth + 1, this.typeIdentifier),
           );
         } else if (choice < 0.66) {
           // 33% chance to remove a child on this position
@@ -70,13 +70,13 @@ export class ArrayStatement extends Statement {
           children.splice(
             index,
             1,
-            sampler.sampleArrayArgument(depth + 1, this.typeIdentifier)
+            sampler.sampleArrayArgument(depth + 1, this.typeIdentifier),
           );
         }
       } else {
         // no children found so we always add
         children.push(
-          sampler.sampleArrayArgument(depth + 1, this.typeIdentifier)
+          sampler.sampleArrayArgument(depth + 1, this.typeIdentifier),
         );
       }
 
@@ -85,7 +85,7 @@ export class ArrayStatement extends Statement {
         this.typeIdentifier,
         this.name,
         prng.uniqueId(),
-        children
+        children,
       );
     } else {
       if (prng.nextBoolean(0.5)) {
@@ -93,7 +93,7 @@ export class ArrayStatement extends Statement {
         return sampler.sampleArgument(
           depth,
           this.variableIdentifier,
-          this.name
+          this.name,
         );
       } else {
         // 50%
@@ -101,7 +101,7 @@ export class ArrayStatement extends Statement {
           depth,
           this.variableIdentifier,
           this.typeIdentifier,
-          this.name
+          this.name,
         );
       }
     }
@@ -121,13 +121,13 @@ export class ArrayStatement extends Statement {
           }
           return true;
         })
-        .map((a) => a.copy())
+        .map((a) => a.copy()),
     );
   }
 
   decode(context: ContextBuilder): Decoding[] {
     const elementStatements: Decoding[] = this._elements.flatMap((a) =>
-      a.decode(context)
+      a.decode(context),
     );
 
     const elements = this._elements
@@ -135,7 +135,7 @@ export class ArrayStatement extends Statement {
       .join(", ");
 
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = [${elements}]`;
 
     return [

@@ -30,7 +30,7 @@ export abstract class SamplerPlugin<T extends Encoding> extends Plugin {
   }
 
   abstract createSamplerOperator<O extends SamplerOptions<T>>(
-    options: O
+    options: O,
   ): EncodingSampler<T>;
 
   override getOptionChoices(option: string): string[] {

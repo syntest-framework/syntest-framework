@@ -50,7 +50,7 @@ export class JavaScriptTestCase extends Encoding {
 
     if (roots.length === 0) {
       throw new IllegalArgumentError(
-        "Requires atleast one root action statement"
+        "Requires atleast one root action statement",
       );
     }
 

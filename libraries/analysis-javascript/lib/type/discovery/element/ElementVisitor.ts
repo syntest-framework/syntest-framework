@@ -51,7 +51,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
   private _createElement(
     path: NodePath<t.Node>,
     type: ElementType,
-    value: string
+    value: string,
   ) {
     const id = this._getNodeId(path);
     const bindingId = this._getBindingId(path);
@@ -122,7 +122,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
   }
 
   public Identifier: (path: NodePath<t.Identifier>) => void = (
-    path: NodePath<t.Identifier>
+    path: NodePath<t.Identifier>,
   ) => {
     if (path.node.name === "undefined") {
       this._createElement(path, ElementType.Undefined, "undefined");
@@ -142,7 +142,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public Literal: (path: NodePath<t.Literal>) => void = (
-    path: NodePath<t.Literal>
+    path: NodePath<t.Literal>,
   ) => {
     switch (path.node.type) {
       case "StringLiteral": {
@@ -153,7 +153,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
         this._createElement(
           path,
           ElementType.NumericalLiteral,
-          path.node.value.toString()
+          path.node.value.toString(),
         );
         break;
       }
@@ -165,7 +165,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
         this._createElement(
           path,
           ElementType.BooleanLiteral,
-          path.node.value.toString()
+          path.node.value.toString(),
         );
         break;
       }
@@ -181,7 +181,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
         this._createElement(
           path,
           ElementType.BigIntLiteral,
-          path.node.value.toString()
+          path.node.value.toString(),
         );
         break;
       }
@@ -189,7 +189,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
         this._createElement(
           path,
           ElementType.DecimalLiteral,
-          path.node.value.toString()
+          path.node.value.toString(),
         );
         break;
       }
@@ -201,7 +201,7 @@ export class ElementVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public TemplateElement: (path: NodePath<t.TemplateElement>) => void = (
-    path: NodePath<t.TemplateElement>
+    path: NodePath<t.TemplateElement>,
   ) => {
     this._createElement(path, ElementType.StringLiteral, path.node.value.raw);
   };

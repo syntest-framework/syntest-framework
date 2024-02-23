@@ -31,7 +31,7 @@ export abstract class CrossoverPlugin<T extends Encoding> extends Plugin {
   }
 
   abstract createCrossoverOperator<O extends CrossoverOptions>(
-    options: O
+    options: O,
   ): Crossover<T>;
 
   override getOptionChoices(option: string): string[] {

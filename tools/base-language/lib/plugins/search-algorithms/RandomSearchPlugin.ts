@@ -26,14 +26,14 @@ import {
  * Plugin for RandomSearch
  */
 export class RandomSearchPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("random", "Random search algorithm");
   }
 
   createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
+    options: SearchAlgorithmOptions<T>,
   ): SearchAlgorithm<T> {
     return new RandomSearch(options.objectiveManager, options.encodingSampler);
   }

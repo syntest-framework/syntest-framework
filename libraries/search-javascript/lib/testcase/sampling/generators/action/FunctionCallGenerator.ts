@@ -31,7 +31,7 @@ export class FunctionCallGenerator extends CallGenerator<FunctionCall> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    _statementPool: StatementPool
+    _statementPool: StatementPool,
   ): FunctionCall {
     const type_ = this.rootContext
       .getTypeModel()
@@ -42,7 +42,7 @@ export class FunctionCallGenerator extends CallGenerator<FunctionCall> {
     // TODO bad splitting of ids (we should add paths to targets)
     const filePath = exportIdentifier.split(":")[0];
     const export_ = unwrapOr(this.rootContext.getExports(filePath), []).find(
-      (export_) => export_.id === exportIdentifier
+      (export_) => export_.id === exportIdentifier,
     );
 
     return new FunctionCall(
@@ -51,7 +51,7 @@ export class FunctionCallGenerator extends CallGenerator<FunctionCall> {
       name,
       prng.uniqueId(),
       arguments_,
-      export_
+      export_,
     );
   }
 }

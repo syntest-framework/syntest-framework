@@ -88,7 +88,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
     exportFactory: ExportFactory,
     typeExtractor: TypeExtractor,
     typeResolver: TypeModelFactory,
-    constantPoolFactory: ConstantPoolFactory
+    constantPoolFactory: ConstantPoolFactory,
   ) {
     super(
       rootPath,
@@ -96,7 +96,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
       abstractSyntaxTreeFactory,
       controlFlowGraphFactory,
       targetFactory,
-      dependencyFactory
+      dependencyFactory,
     );
     RootContext.LOGGER = getLogger(RootContext.name);
     this._targetFiles = targetFiles;
@@ -122,7 +122,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
         return failure(
           new IllegalArgumentError("Cannot find source", {
             context: { filePath: filePath },
-          })
+          }),
         );
       }
     }
@@ -138,7 +138,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
         return failure(
           new IllegalArgumentError("Cannot find source", {
             context: { filePath: filePath },
-          })
+          }),
         );
       }
     }
@@ -152,7 +152,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
     (<TypedEmitter<Events>>process).emit(
       "exportExtractionStart",
       this,
-      filePath
+      filePath,
     );
     const astResult = this.getAbstractSyntaxTree(filePath);
 
@@ -160,7 +160,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
 
     const exportResult = this._exportFactory.extract(
       filePath,
-      unwrap(astResult)
+      unwrap(astResult),
     );
 
     if (isFailure(exportResult)) return exportResult;
@@ -169,7 +169,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
       "exportExtractionComplete",
       this,
       filePath,
-      unwrap(exportResult)
+      unwrap(exportResult),
     );
 
     return exportResult;
@@ -181,7 +181,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
     (<TypedEmitter<Events>>process).emit(
       "elementExtractionStart",
       this,
-      filePath
+      filePath,
     );
     const astResult = this.getAbstractSyntaxTree(filePath);
 
@@ -189,7 +189,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
 
     const elementsResult = this._typeExtractor.extractElements(
       filePath,
-      unwrap(astResult)
+      unwrap(astResult),
     );
 
     if (isFailure(elementsResult)) return elementsResult;
@@ -198,7 +198,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
       "elementExtractionComplete",
       this,
       filePath,
-      unwrap(elementsResult)
+      unwrap(elementsResult),
     );
 
     return elementsResult;
@@ -210,7 +210,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
     (<TypedEmitter<Events>>process).emit(
       "relationExtractionStart",
       this,
-      filePath
+      filePath,
     );
 
     const result = this.getAbstractSyntaxTree(filePath);
@@ -219,7 +219,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
 
     const relationsResult = this._typeExtractor.extractRelations(
       filePath,
-      unwrap(result)
+      unwrap(result),
     );
 
     if (isFailure(relationsResult)) return relationsResult;
@@ -228,7 +228,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
       "relationExtractionComplete",
       this,
       filePath,
-      unwrap(relationsResult)
+      unwrap(relationsResult),
     );
 
     return relationsResult;
@@ -240,7 +240,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
     (<TypedEmitter<Events>>process).emit(
       "objectTypeExtractionStart",
       this,
-      filePath
+      filePath,
     );
 
     const result = this.getAbstractSyntaxTree(filePath);
@@ -249,7 +249,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
 
     const objectsResult = this._typeExtractor.extractObjectTypes(
       filePath,
-      unwrap(result)
+      unwrap(result),
     );
 
     if (isFailure(objectsResult)) return objectsResult;
@@ -258,7 +258,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
       "objectTypeExtractionComplete",
       this,
       filePath,
-      unwrap(objectsResult)
+      unwrap(objectsResult),
     );
 
     return objectsResult;
@@ -274,7 +274,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
 
     const targetConstantPool = this._constantPoolFactory.extract(
       filePath,
-      unwrap(astResult)
+      unwrap(astResult),
     );
     const contextConstantPoolResult = this._getContextConstantPool();
 
@@ -285,7 +285,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
     const constantPoolManager = new ConstantPoolManager(
       targetConstantPool,
       unwrap(contextConstantPoolResult),
-      dynamicConstantPool
+      dynamicConstantPool,
     );
 
     RootContext.LOGGER.info("Extracting constants done");
@@ -323,7 +323,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
 
         this._typeModel = this._typeResolver.resolveTypes(
           elements.result,
-          relations.result
+          relations.result,
         );
 
         this._typePool.extractExportedTypes(exports.result, objects.result);

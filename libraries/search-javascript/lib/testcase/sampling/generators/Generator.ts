@@ -39,7 +39,7 @@ export abstract class Generator<S extends Statement> {
     statementPoolProbability: number,
     addRemoveArgumentProbability: number,
     addArgumentProbability: number,
-    removeArgumentProbability: number
+    removeArgumentProbability: number,
   ) {
     this._sampler = sampler;
     this._rootContext = rootContext;
@@ -56,7 +56,7 @@ export abstract class Generator<S extends Statement> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    statementPool: StatementPool
+    statementPool: StatementPool,
   ): S;
 
   get sampler() {

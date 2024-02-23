@@ -23,7 +23,7 @@ import { ProcreationOptions, ProcreationPlugin } from "../ProcreationPlugin";
  * Plugin for SignalTerminationTrigger
  */
 export class DefaultProcreationPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends ProcreationPlugin<T> {
   constructor() {
     super("default", "A default procreation operator");
@@ -33,7 +33,7 @@ export class DefaultProcreationPlugin<
     return new DefaultProcreation(
       options.crossover,
       options.mutateFunction,
-      options.sampler
+      options.sampler,
     );
   }
 

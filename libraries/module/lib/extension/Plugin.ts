@@ -39,7 +39,7 @@ export abstract class Plugin extends Extension {
   abstract getOptions(
     tool: string,
     labels: string[],
-    command?: string | undefined
+    command?: string | undefined,
   ): Map<string, Yargs.Options>;
 
   /**
@@ -51,7 +51,7 @@ export abstract class Plugin extends Extension {
     option: string,
     tool: string,
     labels: string[],
-    command?: string | undefined
+    command?: string | undefined,
   ): string[];
 
   /**

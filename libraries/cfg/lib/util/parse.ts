@@ -21,19 +21,19 @@ import { ControlFlowGraph } from "../graph/ControlFlowGraph";
 import { SerializableControlFlowProgram } from "./SerializableControlFlowProgram";
 
 export function makeNonSerializable(
-  serializableCfp: SerializableControlFlowProgram
+  serializableCfp: SerializableControlFlowProgram,
 ): ControlFlowProgram {
   return {
     graph: new ControlFlowGraph(
       serializableCfp.nodes.find((value) => value.id === serializableCfp.entry),
       serializableCfp.nodes.find(
-        (value) => value.id === serializableCfp.successExit
+        (value) => value.id === serializableCfp.successExit,
       ),
       serializableCfp.nodes.find(
-        (value) => value.id === serializableCfp.errorExit
+        (value) => value.id === serializableCfp.errorExit,
       ),
       new Map(serializableCfp.nodes.map((node) => [node.id, node])),
-      serializableCfp.edges
+      serializableCfp.edges,
     ),
     functions: serializableCfp.functions.map((function_) => {
       return {
@@ -44,7 +44,7 @@ export function makeNonSerializable(
           function_.nodes.find((value) => value.id === function_.successExit),
           function_.nodes.find((value) => value.id === function_.errorExit),
           new Map(function_.nodes.map((node) => [node.id, node])),
-          function_.edges
+          function_.edges,
         ),
       };
     }),

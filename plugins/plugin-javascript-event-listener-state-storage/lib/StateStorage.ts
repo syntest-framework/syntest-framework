@@ -39,48 +39,48 @@ export class StateStorage {
   exportExtractionComplete(
     rootContext: RootContext,
     filepath: string,
-    exports_: Export[]
+    exports_: Export[],
   ): void {
     this.save(
       JSON.stringify(Object.fromEntries(exports_.entries()), undefined, 2),
       filepath,
-      "exports.json"
+      "exports.json",
     );
   }
 
   elementExtractionComplete(
     rootContext: RootContext,
     filepath: string,
-    elements: Map<string, Element>
+    elements: Map<string, Element>,
   ): void {
     this.save(
       JSON.stringify(Object.fromEntries(elements.entries()), undefined, 2),
       filepath,
-      "elements.json"
+      "elements.json",
     );
   }
 
   relationExtractionComplete(
     rootContext: RootContext,
     filepath: string,
-    relations: Map<string, Relation>
+    relations: Map<string, Relation>,
   ): void {
     this.save(
       JSON.stringify(Object.fromEntries(relations.entries()), undefined, 2),
       filepath,
-      "relations.json"
+      "relations.json",
     );
   }
 
   objectTypeExtractionComplete(
     rootContext: RootContext,
     filepath: string,
-    objects: Map<string, DiscoveredObjectType>
+    objects: Map<string, DiscoveredObjectType>,
   ): void {
     this.save(
       JSON.stringify(Object.fromEntries(objects.entries()), undefined, 2),
       filepath,
-      "objects.json"
+      "objects.json",
     );
   }
 
@@ -95,7 +95,7 @@ export class StateStorage {
   save(
     data: string,
     filepath: string,
-    type: "exports.json" | "elements.json" | "relations.json" | "objects.json"
+    type: "exports.json" | "elements.json" | "relations.json" | "objects.json",
   ) {
     const name = path.basename(filepath, path.extname(filepath));
 

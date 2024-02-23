@@ -35,7 +35,7 @@ export function success<T>(result: T): SuccessResult<T> {
 }
 
 export function failure<E extends BaseError = BaseError>(
-  error: E
+  error: E,
 ): FailureResult<E> {
   return {
     success: false,
@@ -44,20 +44,20 @@ export function failure<E extends BaseError = BaseError>(
 }
 
 export function isSuccess<T, E extends BaseError = BaseError>(
-  result: Result<T, E>
+  result: Result<T, E>,
 ): result is SuccessResult<T> {
   return result.success;
 }
 
 export function isFailure<T, E extends BaseError = BaseError>(
-  result: Result<T, E>
+  result: Result<T, E>,
 ): result is FailureResult<E> {
   return !result.success;
 }
 
 export function unwrapOr<T, E extends BaseError = BaseError>(
   result: Result<T, E>,
-  alternative: T
+  alternative: T,
 ) {
   return result.success ? result.result : alternative;
 }

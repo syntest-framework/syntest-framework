@@ -72,7 +72,7 @@ describe("CFG ancestors search", function () {
     ];
 
     let result = edgeContraction(
-      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges),
     );
 
     if (isFailure(result)) throw result.error;
@@ -92,8 +92,8 @@ describe("CFG ancestors search", function () {
           NodeType.NORMAL,
           String.fromCodePoint(index),
           [],
-          { lineNumbers: [] }
-        )
+          { lineNumbers: [] },
+        ),
       );
     }
     edges = [
@@ -110,7 +110,7 @@ describe("CFG ancestors search", function () {
       new Edge("10", EdgeType.NORMAL, "10", "B", "EXIT"),
     ];
     result = edgeContraction(
-      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges),
     );
 
     if (isFailure(result)) throw result.error;
@@ -130,8 +130,8 @@ describe("CFG ancestors search", function () {
           NodeType.NORMAL,
           String.fromCodePoint(index),
           [],
-          { lineNumbers: [] }
-        )
+          { lineNumbers: [] },
+        ),
       );
     }
 
@@ -164,7 +164,7 @@ describe("CFG ancestors search", function () {
       new Edge("24", EdgeType.NORMAL, "24", "ROOT", "A"),
     ];
     result = edgeContraction(
-      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges),
     );
 
     if (isFailure(result)) throw result.error;
@@ -201,7 +201,7 @@ describe("CFG ancestors search", function () {
     ];
 
     result = edgeContraction(
-      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges)
+      new ControlFlowGraph(nodeRoot, nodeExit, nodeExit, nodes, edges),
     );
 
     if (isFailure(result)) throw result.error;
@@ -214,15 +214,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         cfgMini,
         "2",
-        new Set<string>(["ROOT", "1", "3", "EXIT"])
-      )
+        new Set<string>(["ROOT", "1", "3", "EXIT"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 0,
         closestCoveredNode: cfgMini.getNodeById(cfgMini.getParentNode("1")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -233,15 +233,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
-        new Set<string>(["ROOT", "A", "C", "D", "F", "A", "B", "EXIT"])
-      )
+        new Set<string>(["ROOT", "A", "C", "D", "F", "A", "B", "EXIT"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 0,
         closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("D")),
         lastEdgeType: false,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -252,15 +252,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
-        new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "C", "E", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 1,
         closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("C")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -271,15 +271,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG1,
         "G",
-        new Set<string>(["ROOT", "A", "C", "E", "A", "C", "D", "F", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "C", "E", "A", "C", "D", "F", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 0,
         closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("D")),
         lastEdgeType: false,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -290,15 +290,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG1,
         "E",
-        new Set<string>(["ROOT", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 1,
         closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("A")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -309,15 +309,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG1,
         "F",
-        new Set<string>(["ROOT", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 2,
         closestCoveredNode: CFG1.getNodeById(CFG1.getParentNode("A")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -340,15 +340,15 @@ describe("CFG ancestors search", function () {
           "P",
           "Q",
           "S",
-        ])
-      )
+        ]),
+      ),
     ).to.eql(
       success({
         approachLevel: 0,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("C")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -371,15 +371,15 @@ describe("CFG ancestors search", function () {
           "P",
           "Q",
           "S",
-        ])
-      )
+        ]),
+      ),
     ).to.eql(
       success({
         approachLevel: 0,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("F")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -402,15 +402,15 @@ describe("CFG ancestors search", function () {
           "P",
           "Q",
           "S",
-        ])
-      )
+        ]),
+      ),
     ).to.eql(
       success({
         approachLevel: 1,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("D")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -433,15 +433,15 @@ describe("CFG ancestors search", function () {
           "P",
           "Q",
           "S",
-        ])
-      )
+        ]),
+      ),
     ).to.eql(
       success({
         approachLevel: 1,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("F")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -464,15 +464,15 @@ describe("CFG ancestors search", function () {
           "P",
           "Q",
           "S",
-        ])
-      )
+        ]),
+      ),
     ).to.eql(
       success({
         approachLevel: 0,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("P")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -483,15 +483,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG2,
         "R",
-        new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "C", "E", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 2,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("C")),
         lastEdgeType: false,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -502,15 +502,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG2,
         "S",
-        new Set<string>(["ROOT", "A", "C", "E", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "C", "E", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 2,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("C")),
         lastEdgeType: false,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -521,15 +521,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG2,
         "S",
-        new Set<string>(["ROOT", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 3,
         closestCoveredNode: CFG2.getNodeById(CFG2.getParentNode("A")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -540,15 +540,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG3,
         "S",
-        new Set<string>(["ROOT", "A", "B"])
-      )
+        new Set<string>(["ROOT", "A", "B"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 1,
         closestCoveredNode: CFG3.getNodeById(CFG3.getParentNode("A")),
         lastEdgeType: true,
         statementFraction: -1,
-      })
+      }),
     );
   });
 
@@ -559,15 +559,15 @@ describe("CFG ancestors search", function () {
       approachLevel._findClosestCoveredBranch(
         CFG3,
         "R",
-        new Set<string>(["ROOT", "A", "C", "E", "S"])
-      )
+        new Set<string>(["ROOT", "A", "C", "E", "S"]),
+      ),
     ).to.eql(
       success({
         approachLevel: 2,
         closestCoveredNode: CFG3.getNodeById(CFG3.getParentNode("C")),
         lastEdgeType: false,
         statementFraction: -1,
-      })
+      }),
     );
   });
 });

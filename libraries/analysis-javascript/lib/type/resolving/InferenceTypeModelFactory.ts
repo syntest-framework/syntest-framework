@@ -47,7 +47,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
 
   resolveTypes(
     elements: Map<string, Element>,
-    relations: Map<string, Relation>
+    relations: Map<string, Relation>,
   ) {
     this.createLiteralTypeMaps(elements);
     this.createIdentifierTypeMaps(elements);
@@ -73,8 +73,8 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
     ) {
       throw new ImplementationError(
         `Setting a new binding id to a previously set id is not allowed. Id: ${id}, old binding: ${this._idToBindingIdMap.get(
-          id
-        )}, new binding: ${bindingId}`
+          id,
+        )}, new binding: ${bindingId}`,
       );
     }
 
@@ -97,7 +97,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
       this.createNewTypeProbability(element.id, element.bindingId);
       this._typeModel.addTypeScore(
         element.bindingId,
-        elementTypeToTypingType(element.type)
+        elementTypeToTypingType(element.type),
       );
     }
   }
@@ -114,7 +114,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
 
   createRelationTypeMaps(
     elementMap: Map<string, Element>,
-    relationMap: Map<string, Relation>
+    relationMap: Map<string, Relation>,
   ) {
     for (const relation of relationMap.values()) {
       this.createNewTypeProbability(relation.id, relation.id);
@@ -139,7 +139,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
 
   inferRelationTypes(
     elementMap: Map<string, Element>,
-    relationMap: Map<string, Relation>
+    relationMap: Map<string, Relation>,
   ) {
     const solveOrder = [
       RelationType.ClassDefinition,
@@ -195,7 +195,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
   resolveRelation(
     elementMap: Map<string, Element>,
     relationMap: Map<string, Relation>,
-    relation: Relation
+    relation: Relation,
   ): void {
     const relationId = relation.id;
     const relationType: RelationType = relation.type;
@@ -327,7 +327,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
       case RelationType.ClassDefinition: {
         if (involved.length === 0) {
           throw new ImplementationError(
-            `Class definition has no involved elements`
+            `Class definition has no involved elements`,
           );
         }
         const classId = involved[0];
@@ -348,7 +348,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
       case RelationType.AsyncFunctionStarDefinition: {
         if (involved.length === 0) {
           throw new ImplementationError(
-            `Function definition has no involved elements`
+            `Function definition has no involved elements`,
           );
         }
         const functionId = relationId;
@@ -358,7 +358,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
           elementMap,
           relationMap,
           functionId,
-          parameters
+          parameters,
         );
 
         // connect function to identifier
@@ -385,7 +385,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
           elementMap,
           relation,
           involved,
-          originalInvolved
+          originalInvolved,
         );
         break;
       }
@@ -462,7 +462,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
       case RelationType.Addition: {
         if (involved.length !== 2) {
           throw new ImplementationError(
-            `Addition relation has wrong involved elements`
+            `Addition relation has wrong involved elements`,
           );
         }
 
@@ -744,7 +744,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
   private _objectProperty(
     elementMap: Map<string, Element>,
     relation: Relation,
-    involved: string[]
+    involved: string[],
   ) {
     const [propertyId, valueId] = involved;
 
@@ -771,7 +771,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
     elementMap: Map<string, Element>,
     relationMap: Map<string, Relation>,
     relation: Relation,
-    involved: string[]
+    involved: string[],
   ) {
     const [functionId, ...parameters] = involved;
 
@@ -787,7 +787,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
   private _classProperty(elementMap: Map<string, Element>, involved: string[]) {
     if (involved.length < 2) {
       throw new ImplementationError(
-        `Class property relation should have at least 2 elements, but has ${involved.length}`
+        `Class property relation should have at least 2 elements, but has ${involved.length}`,
       );
     }
 
@@ -810,11 +810,11 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
   private _classMethod(
     elementMap: Map<string, Element>,
     relationMap: Map<string, Relation>,
-    involved: string[]
+    involved: string[],
   ) {
     if (involved.length < 2) {
       throw new ImplementationError(
-        `Class method relation should have at least 2 elements, but has ${involved.length}`
+        `Class method relation should have at least 2 elements, but has ${involved.length}`,
       );
     }
 
@@ -901,7 +901,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
     elementMap: Map<string, Element>,
     relation: Relation,
     involved: string[],
-    originalInvolved: string[]
+    originalInvolved: string[],
   ) {
     const [objectId, propertyId] = involved;
     const [originalObject, originalProperty] = originalInvolved;
@@ -939,7 +939,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
           this._typeModel.addPropertyType(
             objectId,
             propertyElement.value,
-            propertyId
+            propertyId,
           );
 
           break;
@@ -959,7 +959,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
             this._typeModel.addPropertyType(
               objectId,
               propertyElement.name,
-              propertyId
+              propertyId,
             );
           }
 
@@ -977,7 +977,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
     // should always have two involved
     if (involved.length !== 2) {
       throw new ImplementationError(
-        `Assignment relation should have two involved, but has ${involved.length}. ${relation.id}`
+        `Assignment relation should have two involved, but has ${involved.length}. ${relation.id}`,
       );
     }
     const [leftId, rightId] = involved;
@@ -1016,7 +1016,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
   private _logicalAssignment(relation: Relation, involved: string[]) {
     if (involved.length !== 2) {
       throw new ImplementationError(
-        `Assignment relation should have two involved, but has ${involved.length}`
+        `Assignment relation should have two involved, but has ${involved.length}`,
       );
     }
     const [leftId, rightId] = involved;
@@ -1032,7 +1032,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
     elementMap: Map<string, Element>,
     relationMap: Map<string, Relation>,
     functionId: string,
-    parameters: string[]
+    parameters: string[],
   ) {
     // create function type
     for (const [index, id] of parameters.entries()) {
@@ -1047,7 +1047,7 @@ export class InferenceTypeModelFactory extends TypeModelFactory {
           name = getRelationName(relation.type);
         } else {
           throw new ImplementationError(
-            `Could not find element or relation with id ${id}`
+            `Could not find element or relation with id ${id}`,
           );
         }
       }

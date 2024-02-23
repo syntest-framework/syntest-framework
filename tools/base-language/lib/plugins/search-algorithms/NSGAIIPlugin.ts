@@ -31,13 +31,13 @@ export class NSGAIIPlugin<T extends Encoding> extends SearchAlgorithmPlugin<T> {
   }
 
   createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
+    options: SearchAlgorithmOptions<T>,
   ): SearchAlgorithm<T> {
     return new NSGAII<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,
-      options.populationSize
+      options.populationSize,
     );
   }
 

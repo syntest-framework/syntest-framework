@@ -25,14 +25,14 @@ import { ObjectiveManager } from "./ObjectiveManager";
  * An abstract objective manager for algorithms based on populations.
  */
 export abstract class PopulationBasedObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManager<T> {
   /**
    * @inheritdoc
    */
   protected _handleCoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
-    _encoding: T
+    _encoding: T,
   ): ObjectiveFunction<T>[] {
     // Update the objectives
     return this._updateObjectives(objectiveFunction);
@@ -44,7 +44,7 @@ export abstract class PopulationBasedObjectiveManager<
   protected _handleUncoveredObjective(
     _objectiveFunction: ObjectiveFunction<T>,
     _encoding: T,
-    _distance: number
+    _distance: number,
   ): void {
     // Do nothing
   }

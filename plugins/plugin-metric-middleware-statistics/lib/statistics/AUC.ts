@@ -36,7 +36,7 @@ export class AUC extends Statistic {
     _distributions: DistributionsMap,
     series: SeriesMap<number>,
     _seriesDistributions: SeriesMap<Distribution>,
-    _seriesMeasurements: SeriesMap<PropertiesMap<number>>
+    _seriesMeasurements: SeriesMap<PropertiesMap<number>>,
   ): void {
     this.loopThroughSeries(
       series,
@@ -55,7 +55,7 @@ export class AUC extends Statistic {
           previousValue = value;
         }
         metricManager.recordProperty(newPropertyName, `${auc}`);
-      }
+      },
     );
   }
 }

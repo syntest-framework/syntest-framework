@@ -27,28 +27,28 @@ export type Events = {
   exportExtractionComplete: (
     rootContext: RootContext,
     filepath: string,
-    exports_: Export[]
+    exports_: Export[],
   ) => void;
   elementExtractionStart: (rootContext: RootContext, filepath: string) => void;
   elementExtractionComplete: (
     rootContext: RootContext,
     filepath: string,
-    elements: Map<string, Element>
+    elements: Map<string, Element>,
   ) => void;
   relationExtractionStart: (rootContext: RootContext, filepath: string) => void;
   relationExtractionComplete: (
     rootContext: RootContext,
     filepath: string,
-    relations: Map<string, Relation>
+    relations: Map<string, Relation>,
   ) => void;
   objectTypeExtractionStart: (
     rootContext: RootContext,
-    filepath: string
+    filepath: string,
   ) => void;
   objectTypeExtractionComplete: (
     rootContext: RootContext,
     filepath: string,
-    objects: Map<string, DiscoveredObjectType>
+    objects: Map<string, DiscoveredObjectType>,
   ) => void;
 
   typeResolvingStart: (rootContext: RootContext) => void;

@@ -46,31 +46,31 @@ export abstract class TestingToolModule extends Module {
     _metricManager: MetricManager,
     _storageManager: StorageManager,
     userInterface: UserInterface,
-    _modules: Module[]
+    _modules: Module[],
   ): void {
     moduleManager.registerPlugin(this, new SearchMetricListener());
     moduleManager.registerPlugin(this, new SearchPerformanceListener());
     moduleManager.registerPlugin(
       this,
-      new SearchProgressBarListener(userInterface)
+      new SearchProgressBarListener(userInterface),
     );
 
     moduleManager.registerPlugin(this, new SimpleObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new StructuralObjectiveManagerPlugin());
     moduleManager.registerPlugin(
       this,
-      new StructuralUncoveredObjectiveManagerPlugin()
+      new StructuralUncoveredObjectiveManagerPlugin(),
     );
     moduleManager.registerPlugin(this, new TrackingObjectiveManagerPlugin());
     moduleManager.registerPlugin(this, new UncoveredObjectiveManagerPlugin());
 
     moduleManager.registerPlugin(
       this,
-      new LeastErrorsObjectiveComparatorPlugin()
+      new LeastErrorsObjectiveComparatorPlugin(),
     );
     moduleManager.registerPlugin(
       this,
-      new SmallestEncodingObjectiveComparatorPlugin()
+      new SmallestEncodingObjectiveComparatorPlugin(),
     );
 
     moduleManager.registerPlugin(this, new DefaultProcreationPlugin());

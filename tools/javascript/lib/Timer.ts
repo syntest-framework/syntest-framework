@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 export async function timer<T>(
-  function_: () => T | Promise<T>
+  function_: () => T | Promise<T>,
 ): Promise<TimedResult<T>> {
   const start = performance.now();
 

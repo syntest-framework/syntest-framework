@@ -110,14 +110,14 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     moduleManager: ModuleManager,
     metricManager: MetricManager,
     storageManager: StorageManager,
-    userInterface: UserInterface
+    userInterface: UserInterface,
   ) {
     super(
       arguments_,
       moduleManager,
       metricManager,
       storageManager,
-      userInterface
+      userInterface,
     );
     JavaScriptLauncher.LOGGER = getLogger(JavaScriptLauncher.name);
     this.archives = new Map();
@@ -130,11 +130,11 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
 
     this.metricManager.recordProperty(
       PropertyName.CONSTANT_POOL_ENABLED,
-      `${this.arguments_.constantPool.toString()}`
+      `${this.arguments_.constantPool.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.CONSTANT_POOL_PROBABILITY,
-      `${this.arguments_.constantPoolProbability.toString()}`
+      `${this.arguments_.constantPoolProbability.toString()}`,
     );
 
     this.storageManager.deleteTemporaryDirectories([
@@ -157,33 +157,33 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         [this.arguments_.logDirectory],
         [this.arguments_.instrumentedDirectory],
       ],
-      true
+      true,
     );
 
     const abstractSyntaxTreeFactory = new AbstractSyntaxTreeFactory();
     const targetFactory = new TargetFactory(this.arguments_.syntaxForgiving);
     const controlFlowGraphFactory = new ControlFlowGraphFactory(
-      this.arguments_.syntaxForgiving
+      this.arguments_.syntaxForgiving,
     );
     const dependencyFactory = new DependencyFactory(
-      this.arguments_.syntaxForgiving
+      this.arguments_.syntaxForgiving,
     );
     const exportFactory = new ExportFactory(this.arguments_.syntaxForgiving);
     const typeExtractor = new TypeExtractor(this.arguments_.syntaxForgiving);
     const typeResolver: TypeModelFactory = new InferenceTypeModelFactory();
     const constantPoolFactory = new ConstantPoolFactory(
-      this.arguments_.syntaxForgiving
+      this.arguments_.syntaxForgiving,
     );
 
     const fileSelector = new FileSelector();
     const targetFiles = fileSelector.loadFilePaths(
       this.arguments_.targetInclude,
-      this.arguments_.targetExclude
+      this.arguments_.targetExclude,
     );
 
     if (this.arguments_.analysisInclude.length === 0) {
       JavaScriptLauncher.LOGGER.warn(
-        "'analysis-include' config parameter is empty so we only use the target files for analysis"
+        "'analysis-include' config parameter is empty so we only use the target files for analysis",
       );
     }
 
@@ -191,14 +191,14 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       if (this.arguments_.analysisExclude.includes(target)) {
         throw new IllegalArgumentError(
           "Target files cannot be excluded from analysis",
-          { context: { targetFile: target } }
+          { context: { targetFile: target } },
         );
       }
     }
 
     const analysisFiles = fileSelector.loadFilePaths(
       [...targetFiles, ...this.arguments_.analysisInclude],
-      this.arguments_.analysisExclude
+      this.arguments_.analysisExclude,
     );
 
     this.rootContext = new RootContext(
@@ -212,7 +212,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       exportFactory,
       typeExtractor,
       typeResolver,
-      constantPoolFactory
+      constantPoolFactory,
     );
 
     this.userInterface.printHeader("GENERAL INFO");
@@ -220,7 +220,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     const timeInMs = (Date.now() - start) / 1000;
     this.metricManager.recordProperty(
       PropertyName.INITIALIZATION_TIME,
-      `${timeInMs}`
+      `${timeInMs}`,
     );
 
     JavaScriptLauncher.LOGGER.info("Initialization done");
@@ -234,12 +234,12 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     const targetSelector = new TargetSelector(this.rootContext);
     this.targets = targetSelector.loadTargets(
       this.arguments_.targetInclude,
-      this.arguments_.targetExclude
+      this.arguments_.targetExclude,
     );
     let timeInMs = (Date.now() - startTargetSelection) / 1000;
     this.metricManager.recordProperty(
       PropertyName.TARGET_LOAD_TIME,
-      `${timeInMs}`
+      `${timeInMs}`,
     );
 
     const selectionSettings: TableObject = {
@@ -272,7 +272,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     if (this.targets.length === 0) {
       // Shut down
       this.userInterface.printError(
-        `No targets where selected! Try changing the 'target-include' parameter`
+        `No targets where selected! Try changing the 'target-include' parameter`,
       );
       await this.exit();
       // eslint-disable-next-line unicorn/no-process-exit
@@ -383,12 +383,12 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       this.storageManager,
       this.rootContext,
       this.targets,
-      this.arguments_.instrumentedDirectory
+      this.arguments_.instrumentedDirectory,
     );
     timeInMs = (Date.now() - startInstrumentation) / 1000;
     this.metricManager.recordProperty(
       PropertyName.INSTRUMENTATION_TIME,
-      `${timeInMs}`
+      `${timeInMs}`,
     );
 
     const startTypeResolving = Date.now();
@@ -397,19 +397,19 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     timeInMs = (Date.now() - startTypeResolving) / 1000;
     this.metricManager.recordProperty(
       PropertyName.TYPE_RESOLVE_TIME,
-      `${timeInMs}`
+      `${timeInMs}`,
     );
 
     timeInMs = (Date.now() - startPreProcessing) / 1000;
     this.metricManager.recordProperty(
       PropertyName.PREPROCESS_TIME,
-      `${timeInMs}`
+      `${timeInMs}`,
     );
 
     this.decoder = new JavaScriptDecoder(this.arguments_.targetRootDirectory);
     const executionInformationProcessor = new ExecutionInformationProcessor(
       this.rootContext.getTypeModel(),
-      this.arguments_.incorporateExecutionInformation
+      this.arguments_.incorporateExecutionInformation,
     );
     this.runner = new JavaScriptRunner(
       this.storageManager,
@@ -418,7 +418,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       this.arguments_.testDirectory,
       this.arguments_.executionTimeout,
       this.arguments_.testTimeout,
-      this.arguments_.silenceTestOutput
+      this.arguments_.silenceTestOutput,
     );
 
     JavaScriptLauncher.LOGGER.info("Preprocessing done");
@@ -446,19 +446,19 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       [...this.archives.entries()].map(([target, archive]) => [
         target,
         archive.getObjectives(),
-      ])
+      ]),
     );
     let finalEncodings = new Map<Target, JavaScriptTestCase[]>(
       [...this.archives.entries()].map(([target, archive]) => [
         target,
         archive.getEncodings(),
-      ])
+      ]),
     );
 
     if (this.arguments_.testSplitting) {
       const testSplitter = new TestSplitter(this.userInterface, this.runner);
       const timedResult = await timer(() =>
-        testSplitter.execute(finalEncodings)
+        testSplitter.execute(finalEncodings),
       );
       finalEncodings = timedResult.result;
 
@@ -478,28 +478,28 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         return (<SecondaryObjectivePlugin<JavaScriptTestCase>>(
           this.moduleManager.getPlugin(
             PluginType.SecondaryObjective,
-            secondaryObjective
+            secondaryObjective,
           )
         )).createSecondaryObjective();
-      }
+      },
     );
 
     if (this.arguments_.testDeDuplication) {
       const deDuplicator = new DeDuplicator(
         this.userInterface,
         secondaryObjectives,
-        objectives
+        objectives,
       );
       const timedResult = await timer(() =>
-        deDuplicator.execute(finalEncodings)
+        deDuplicator.execute(finalEncodings),
       );
       finalEncodings = timedResult.result;
 
       JavaScriptLauncher.LOGGER.info(
-        `De-Duplication took: ${timedResult.time}`
+        `De-Duplication took: ${timedResult.time}`,
       );
       this.userInterface.printSuccess(
-        `De-Duplication took: ${timedResult.time}`
+        `De-Duplication took: ${timedResult.time}`,
       );
 
       // TODO
@@ -510,19 +510,19 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       const metaCommenter = new MetaCommenter(
         this.userInterface,
         secondaryObjectives,
-        objectives
+        objectives,
       );
 
       const timedResult = await timer(() =>
-        metaCommenter.execute(finalEncodings)
+        metaCommenter.execute(finalEncodings),
       );
       finalEncodings = timedResult.result;
 
       JavaScriptLauncher.LOGGER.info(
-        `Meta-Commenting done took: ${timedResult.time}`
+        `Meta-Commenting done took: ${timedResult.time}`,
       );
       this.userInterface.printSuccess(
-        `Meta-Commenting done took: ${timedResult.time}`
+        `Meta-Commenting done took: ${timedResult.time}`,
       );
 
       // TODO
@@ -532,7 +532,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     const suiteBuilder = new JavaScriptSuiteBuilder(
       this.storageManager,
       this.decoder,
-      this.runner
+      this.runner,
     );
 
     try {
@@ -543,7 +543,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         this.arguments_.testDirectory,
         true,
         false,
-        false
+        false,
       );
       await suiteBuilder.runSuite(finalEncodings, paths, true);
 
@@ -559,13 +559,13 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         this.arguments_.testDirectory,
         false,
         false,
-        false
+        false,
       );
       const results = await suiteBuilder.runSuite(finalEncodings, paths, false);
       const summaryTotal = suiteBuilder.summariseResults(results, this.targets);
       if (summaryTotal.failures > 0) {
         this.userInterface.printError(
-          `${summaryTotal.failures} test case(s) have failed!`
+          `${summaryTotal.failures} test case(s) have failed!`,
         );
       }
 
@@ -615,38 +615,38 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         `${statementPercentage * 100} %`,
         `${branchPercentage * 100} %`,
         `${functionPercentage * 100} %`,
-        ""
+        "",
       );
       this.userInterface.printTable("Coverage", table);
 
       this.metricManager.recordProperty(
         PropertyName.STATEMENTS_COVERED,
-        `${coveredStatements}`
+        `${coveredStatements}`,
       );
       this.metricManager.recordProperty(
         PropertyName.BRANCHES_COVERED,
-        `${coveredBranches}`
+        `${coveredBranches}`,
       );
       this.metricManager.recordProperty(
         PropertyName.FUNCTIONS_COVERED,
-        `${coveredFunctions}`
+        `${coveredFunctions}`,
       );
       this.metricManager.recordProperty(
         PropertyName.BRANCHES_TOTAL,
-        `${totalBranches}`
+        `${totalBranches}`,
       );
       this.metricManager.recordProperty(
         PropertyName.STATEMENTS_TOTAL,
-        `${totalStatements}`
+        `${totalStatements}`,
       );
       this.metricManager.recordProperty(
         PropertyName.FUNCTIONS_TOTAL,
-        `${totalFunctions}`
+        `${totalFunctions}`,
       );
     } catch (error) {
       if (error === "timeout") {
         JavaScriptLauncher.LOGGER.error(
-          "A timeout error occured during assertion gathering or final results processing, cannot calculate the final results unfortunately"
+          "A timeout error occured during assertion gathering or final results processing, cannot calculate the final results unfortunately",
         );
       } else {
         throw error;
@@ -656,25 +656,25 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     // other results
     const archiveSizeBefore = [...this.archives.values()].reduce(
       (p, c) => p + c.size,
-      0
+      0,
     );
     this.metricManager.recordProperty(
       PropertyName.ARCHIVE_SIZE,
-      `${archiveSizeBefore}`
+      `${archiveSizeBefore}`,
     );
     const archiveSizeAfter = [...finalEncodings.values()].reduce(
       (p, c) => p + c.length,
-      0
+      0,
     );
     this.metricManager.recordProperty(
       PropertyName.MINIMIZED_ARCHIVE_SIZE,
-      `${archiveSizeAfter}`
+      `${archiveSizeAfter}`,
     );
 
     const originalSourceDirectory = path
       .join(
         "../../",
-        path.relative(process.cwd(), this.arguments_.targetRootDirectory)
+        path.relative(process.cwd(), this.arguments_.targetRootDirectory),
       )
       .replace(path.basename(this.arguments_.targetRootDirectory), "");
 
@@ -685,22 +685,22 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       this.arguments_.testDirectory,
       false,
       true,
-      true
+      true,
     );
     JavaScriptLauncher.LOGGER.info("Postprocessing done");
     const timeInMs = (Date.now() - start) / 1000;
     this.metricManager.recordProperty(
       PropertyName.POSTPROCESS_TIME,
-      `${timeInMs}`
+      `${timeInMs}`,
     );
   }
 
   private async testTarget(
     rootContext: RootContext,
-    target: Target
+    target: Target,
   ): Promise<Archive<JavaScriptTestCase>> {
     JavaScriptLauncher.LOGGER.info(
-      `Testing target ${target.name} in ${target.path}`
+      `Testing target ${target.name} in ${target.path}`,
     );
 
     const result = rootContext.getControlFlowProgram(target.path);
@@ -718,20 +718,22 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         new ApproachLevelCalculator(),
         new BranchDistanceCalculator(
           this.arguments_.syntaxForgiving,
-          this.arguments_.stringAlphabet
+          this.arguments_.stringAlphabet,
         ),
         this.arguments_.functionObjectivesEnabled
           ? functionObjectives
-          : undefined
+          : undefined,
       );
     const pathObjectives = extractPathObjectivesFromProgram<JavaScriptTestCase>(
       cfp,
       new ApproachLevelCalculator(),
       new BranchDistanceCalculator(
         this.arguments_.syntaxForgiving,
-        this.arguments_.stringAlphabet
+        this.arguments_.stringAlphabet,
       ),
-      this.arguments_.functionObjectivesEnabled ? functionObjectives : undefined
+      this.arguments_.functionObjectivesEnabled
+        ? functionObjectives
+        : undefined,
     );
 
     this.userInterface.printTable("Objective Counts", {
@@ -783,14 +785,14 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
 
     if (rootTargets.length === 0) {
       JavaScriptLauncher.LOGGER.info(
-        `No actionable exported root targets found for ${target.name} in ${target.path}`
+        `No actionable exported root targets found for ${target.name} in ${target.path}`,
       );
       // report skipped
       return new Archive();
     }
 
     const constantPoolManagerResult = rootContext.getConstantPoolManager(
-      target.path
+      target.path,
     );
 
     if (isFailure(constantPoolManagerResult))
@@ -818,7 +820,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       this.arguments_.exploreIllegalValues,
       this.arguments_.addRemoveArgumentProbability,
       this.arguments_.addArgumentProbability,
-      this.arguments_.removeArgumentProbability
+      this.arguments_.removeArgumentProbability,
     );
     sampler.rootContext = rootContext;
 
@@ -827,16 +829,16 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
         return (<SecondaryObjectivePlugin<JavaScriptTestCase>>(
           this.moduleManager.getPlugin(
             PluginType.SecondaryObjective,
-            secondaryObjective
+            secondaryObjective,
           )
         )).createSecondaryObjective();
-      }
+      },
     );
 
     const objectiveManager = (<ObjectiveManagerPlugin<JavaScriptTestCase>>(
       this.moduleManager.getPlugin(
         PluginType.ObjectiveManager,
-        this.arguments_.objectiveManager
+        this.arguments_.objectiveManager,
       )
     )).createObjectiveManager({
       runner: this.runner,
@@ -847,7 +849,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     const crossover = (<CrossoverPlugin<JavaScriptTestCase>>(
       this.moduleManager.getPlugin(
         PluginType.Crossover,
-        this.arguments_.crossover
+        this.arguments_.crossover,
       )
     )).createCrossoverOperator({
       crossoverEncodingProbability: this.arguments_.crossoverProbability,
@@ -858,13 +860,13 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     const procreation = (<ProcreationPlugin<JavaScriptTestCase>>(
       this.moduleManager.getPlugin(
         PluginType.Procreation,
-        this.arguments_.procreation
+        this.arguments_.procreation,
       )
     )).createProcreationOperator({
       crossover: crossover,
       mutateFunction: (
         sampler: EncodingSampler<JavaScriptTestCase>,
-        encoding: JavaScriptTestCase
+        encoding: JavaScriptTestCase,
       ) => {
         return encoding.mutate(<JavaScriptTestCaseSampler>(<unknown>sampler));
       },
@@ -874,7 +876,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     const algorithm = (<SearchAlgorithmPlugin<JavaScriptTestCase>>(
       this.moduleManager.getPlugin(
         PluginType.SearchAlgorithm,
-        this.arguments_.searchAlgorithm
+        this.arguments_.searchAlgorithm,
       )
     )).createSearchAlgorithm({
       objectiveManager: objectiveManager,
@@ -911,7 +913,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
           runner: this.runner,
           crossover: crossover,
           populationSize: this.arguments_.populationSize,
-        })
+        }),
       );
     }
 
@@ -919,7 +921,7 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     const archive = await algorithm.search(
       currentSubject,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     if (this.coveredInPath.has(target.path)) {
@@ -937,23 +939,25 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
     // timing and iterations/evaluations
     this.metricManager.recordProperty(
       PropertyName.TOTAL_TIME,
-      `${budgetManager.getBudgetObject(BudgetType.TOTAL_TIME).getUsedBudget()}`
+      `${budgetManager.getBudgetObject(BudgetType.TOTAL_TIME).getUsedBudget()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.SEARCH_TIME,
-      `${budgetManager.getBudgetObject(BudgetType.SEARCH_TIME).getUsedBudget()}`
+      `${budgetManager
+        .getBudgetObject(BudgetType.SEARCH_TIME)
+        .getUsedBudget()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.EVALUATIONS,
-      `${budgetManager.getBudgetObject(BudgetType.EVALUATION).getUsedBudget()}`
+      `${budgetManager.getBudgetObject(BudgetType.EVALUATION).getUsedBudget()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.ITERATIONS,
-      `${budgetManager.getBudgetObject(BudgetType.ITERATION).getUsedBudget()}`
+      `${budgetManager.getBudgetObject(BudgetType.ITERATION).getUsedBudget()}`,
     );
 
     JavaScriptLauncher.LOGGER.info(
-      `Finished testing target ${target.name} in ${target.path}`
+      `Finished testing target ${target.name} in ${target.path}`,
     );
     return archive;
   }

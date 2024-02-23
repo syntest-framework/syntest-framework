@@ -30,7 +30,7 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    value: boolean
+    value: boolean,
   ) {
     super(
       variableIdentifier,
@@ -38,7 +38,7 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
       name,
       TypeEnum.BOOLEAN,
       uniqueId,
-      value
+      value,
     );
   }
 
@@ -50,14 +50,14 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
         this.typeIdentifier,
         this.name,
         prng.uniqueId(),
-        !this.value
+        !this.value,
       );
     } else {
       // 20%
       return sampler.sampleArgument(
         depth + 1,
         this.variableIdentifier,
-        this.name
+        this.name,
       );
     }
   }
@@ -68,7 +68,7 @@ export class BoolStatement extends PrimitiveStatement<boolean> {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      this.value
+      this.value,
     );
   }
 }

@@ -43,7 +43,7 @@ export class MethodCall extends ClassActionStatement {
     name: string,
     uniqueId: string,
     arguments_: Statement[],
-    constructor_: ConstructorCall
+    constructor_: ConstructorCall,
   ) {
     super(
       variableIdentifier,
@@ -52,7 +52,7 @@ export class MethodCall extends ClassActionStatement {
       TypeEnum.FUNCTION,
       uniqueId,
       arguments_,
-      constructor_
+      constructor_,
     );
   }
 
@@ -74,7 +74,7 @@ export class MethodCall extends ClassActionStatement {
       this.name,
       prng.uniqueId(),
       arguments_,
-      constructor_
+      constructor_,
     );
   }
 
@@ -87,14 +87,14 @@ export class MethodCall extends ClassActionStatement {
       this.name,
       this.uniqueId,
       deepCopyArguments,
-      this.constructor_.copy()
+      this.constructor_.copy(),
     );
   }
 
   decode(context: ContextBuilder): Decoding[] {
     const constructorDecoding = this.constructor_.decode(context);
     const argumentsDecoding: Decoding[] = this.args.flatMap((a) =>
-      a.decode(context)
+      a.decode(context),
     );
 
     const arguments_ = this.args
@@ -102,7 +102,7 @@ export class MethodCall extends ClassActionStatement {
       .join(", ");
 
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = await ${context.getOrCreateVariableName(this.constructor_)}.${
       this.name
     }(${arguments_})`;

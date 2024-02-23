@@ -31,7 +31,7 @@ export class SetterGenerator extends CallGenerator<Setter> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    _statementPool: StatementPool
+    _statementPool: StatementPool,
   ): Setter {
     const type_ = this.rootContext
       .getTypeModel()
@@ -45,7 +45,7 @@ export class SetterGenerator extends CallGenerator<Setter> {
 
     const constructor_ = this.sampler.sampleConstructorCall(
       depth + 1,
-      exportIdentifier
+      exportIdentifier,
     );
 
     return new Setter(
@@ -54,7 +54,7 @@ export class SetterGenerator extends CallGenerator<Setter> {
       name,
       prng.uniqueId(),
       arguments_[0],
-      constructor_
+      constructor_,
     );
   }
 }

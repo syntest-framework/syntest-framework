@@ -37,17 +37,17 @@ export class Instrumenter {
     storageManager: StorageManager,
     rootContext: RootContext,
     targets: Target[],
-    instrumentedDirectory: string
+    instrumentedDirectory: string,
   ): Promise<void> {
     const absoluteRootPath = path.resolve(rootContext.rootPath);
     const destinationPath = path.join(
       instrumentedDirectory,
-      path.basename(absoluteRootPath)
+      path.basename(absoluteRootPath),
     );
     // copy everything
     storageManager.copyToTemporaryDirectory(
       [absoluteRootPath],
-      [...destinationPath.split(path.sep)]
+      [...destinationPath.split(path.sep)],
     );
 
     // overwrite the stuff that needs instrumentation
@@ -59,7 +59,7 @@ export class Instrumenter {
 
       const instrumentedSource = await this.instrument(
         unwrap(result),
-        targetPath
+        targetPath,
       );
 
       const _path = path
@@ -73,7 +73,7 @@ export class Instrumenter {
         [...directory.split(path.sep)],
         file,
         instrumentedSource,
-        true
+        true,
       );
     }
   }

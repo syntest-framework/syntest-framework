@@ -34,20 +34,20 @@ export class StateStorage {
   controlFlowGraphResolvingComplete<S>(
     rootContext: RootContext<S>,
     filePath: string,
-    cfp: ControlFlowProgram
+    cfp: ControlFlowProgram,
   ): void {
     this.save(
       // eslint-disable-next-line unicorn/no-null
       JSON.stringify(makeSerializeable(cfp), null, 2),
       filePath,
-      "cfg.json"
+      "cfg.json",
     );
   }
 
   abstractSyntaxTreeResolvingComplete<S>(
     rootContext: RootContext<S>,
     filePath: string,
-    ast: S
+    ast: S,
   ): void {
     this.save(JSON.stringify(ast, undefined, 2), filePath, "ast.json");
   }
@@ -55,7 +55,7 @@ export class StateStorage {
   targetExtractionComplete<S>(
     rootContext: RootContext<S>,
     filePath: string,
-    target: Target
+    target: Target,
   ): void {
     this.save(JSON.stringify(target, undefined, 2), filePath, "target.json");
   }
@@ -63,12 +63,12 @@ export class StateStorage {
   dependencyResolvingComplete<S>(
     rootContext: RootContext<S>,
     filePath: string,
-    dependencies: string[]
+    dependencies: string[],
   ): void {
     this.save(
       JSON.stringify({ depedencies: dependencies }, undefined, 2),
       filePath,
-      "dependencies.json"
+      "dependencies.json",
     );
   }
 
@@ -110,7 +110,7 @@ export class StateStorage {
 
   searchComplete<E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
-    subject: SearchSubject<E>
+    subject: SearchSubject<E>,
   ): void {
     const covered = searchAlgorithm
       .getObjectiveManager()
@@ -131,10 +131,10 @@ export class StateStorage {
             .sort(this.sortFunction),
         },
         undefined,
-        2
+        2,
       ),
       filePath,
-      "covered.json"
+      "covered.json",
     );
   }
 
@@ -146,7 +146,7 @@ export class StateStorage {
       | "ast.json"
       | "target.json"
       | "dependencies.json"
-      | "covered.json"
+      | "covered.json",
   ) {
     const name = path.basename(filePath, path.extname(filePath));
 

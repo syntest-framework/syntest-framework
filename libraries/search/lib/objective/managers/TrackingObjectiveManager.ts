@@ -27,14 +27,14 @@ import { ArchiveBasedObjectiveManager } from "./ArchiveBasedObjectiveManager";
  * but doesn't provide any guidance.
  */
 export class TrackingObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends ArchiveBasedObjectiveManager<T> {
   /**
    * @inheritDoc
    * @protected
    */
   protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>
+    objectiveFunction: ObjectiveFunction<T>,
   ): ObjectiveFunction<T>[] {
     // Remove objective from the uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);

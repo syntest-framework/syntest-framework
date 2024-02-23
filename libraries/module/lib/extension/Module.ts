@@ -36,7 +36,7 @@ export abstract class Module extends Extension {
     metricManager: MetricManager,
     storageManager: StorageManager,
     userInterface: UserInterface,
-    modules: Module[]
+    modules: Module[],
   ): Promise<void> | void;
 
   /**

@@ -34,7 +34,7 @@ export class DependencyVisitor extends AbstractSyntaxTreeVisitor {
   }
 
   public ImportDeclaration: (path: NodePath<t.ImportDeclaration>) => void = (
-    path
+    path,
   ) => {
     this._imports.add(path.node.source.value);
   };
@@ -55,8 +55,8 @@ export class DependencyVisitor extends AbstractSyntaxTreeVisitor {
           // This tool does not support computed dynamic import statements.
           DependencyVisitor.LOGGER.warn(
             `This tool does not support computed dynamic import statements. Found one at ${this._getNodeId(
-              path
-            )}`
+              path,
+            )}`,
           );
         }
       } else {
@@ -74,7 +74,7 @@ export class DependencyVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public CallExpression: (path: NodePath<t.CallExpression>) => void = (
-    path
+    path,
   ) => {
     if ("name" in path.node.callee && path.node.callee.name === "require") {
       if (path.node.arguments[0].type === "StringLiteral") {
@@ -83,8 +83,8 @@ export class DependencyVisitor extends AbstractSyntaxTreeVisitor {
         // This tool does not support computed dynamic require statements.
         DependencyVisitor.LOGGER.warn(
           `This tool does not support computed dynamic require statements. Found one at ${this._getNodeId(
-            path
-          )}`
+            path,
+          )}`,
         );
       }
     }

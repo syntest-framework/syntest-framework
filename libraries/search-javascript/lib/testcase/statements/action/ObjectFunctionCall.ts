@@ -44,7 +44,7 @@ export class ObjectFunctionCall extends ActionStatement {
     name: string,
     uniqueId: string,
     arguments_: Statement[],
-    object_: ConstantObject
+    object_: ConstantObject,
   ) {
     super(
       variableIdentifier,
@@ -52,14 +52,14 @@ export class ObjectFunctionCall extends ActionStatement {
       name,
       TypeEnum.FUNCTION,
       uniqueId,
-      arguments_
+      arguments_,
     );
     this._object = object_;
   }
 
   mutate(
     sampler: JavaScriptTestCaseSampler,
-    depth: number
+    depth: number,
   ): ObjectFunctionCall {
     const arguments_ = this.args.map((a: Statement) => a.copy());
     let object_ = this._object.copy();
@@ -78,7 +78,7 @@ export class ObjectFunctionCall extends ActionStatement {
       this.name,
       prng.uniqueId(),
       arguments_,
-      object_
+      object_,
     );
   }
 
@@ -97,7 +97,7 @@ export class ObjectFunctionCall extends ActionStatement {
       if (!(newChild instanceof ConstantObject)) {
         throw new IllegalArgumentError(
           "Last child should always be of type ConstantObject",
-          { context: { index: index } }
+          { context: { index: index } },
         );
       }
       this._object = newChild;
@@ -123,7 +123,7 @@ export class ObjectFunctionCall extends ActionStatement {
       this.name,
       this.uniqueId,
       deepCopyArguments,
-      this._object.copy()
+      this._object.copy(),
     );
   }
 
@@ -131,7 +131,7 @@ export class ObjectFunctionCall extends ActionStatement {
     const objectDecoding = this._object.decode(context);
 
     const argumentsDecoding: Decoding[] = this.args.flatMap((a) =>
-      a.decode(context)
+      a.decode(context),
     );
 
     const arguments_ = this.args
@@ -139,7 +139,7 @@ export class ObjectFunctionCall extends ActionStatement {
       .join(", ");
 
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = await ${context.getOrCreateVariableName(this._object)}.${
       this.name
     }(${arguments_})`;

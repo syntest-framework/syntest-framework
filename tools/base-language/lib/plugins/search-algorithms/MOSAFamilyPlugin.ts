@@ -26,20 +26,20 @@ import {
  * Plugin for MOSA Family Algorithms
  */
 export class MOSAFamilyPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends SearchAlgorithmPlugin<T> {
   constructor() {
     super("MOSAFamily", "Many-Objective Sorting Algorithm");
   }
 
   createSearchAlgorithm(
-    options: SearchAlgorithmOptions<T>
+    options: SearchAlgorithmOptions<T>,
   ): SearchAlgorithm<T> {
     return new MOSAFamily<T>(
       options.objectiveManager,
       options.encodingSampler,
       options.procreation,
-      options.populationSize
+      options.populationSize,
     );
   }
 

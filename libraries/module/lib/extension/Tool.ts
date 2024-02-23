@@ -39,7 +39,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
     describe: string,
     commands: Command[],
     toolOptions: Map<string, Yargs.Options>,
-    handler?: (arguments_: Yargs.ArgumentsCamelCase) => void | Promise<void>
+    handler?: (arguments_: Yargs.ArgumentsCamelCase) => void | Promise<void>,
   ) {
     super(name);
     this.labels = labels;
@@ -61,7 +61,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
       for (const option of toolOptions.keys()) {
         this.toolOptions.set(
           `${plugin.name}-${option}`,
-          toolOptions.get(option)
+          toolOptions.get(option),
         );
       }
 
@@ -69,13 +69,13 @@ export class Tool extends Extension implements Yargs.CommandModule {
         const commandOptions = plugin.getOptions(
           this.name,
           this.labels,
-          command.command
+          command.command,
         );
 
         for (const option of commandOptions.keys()) {
           command.options.set(
             `${plugin.name}-${option}`,
-            commandOptions.get(option)
+            commandOptions.get(option),
           );
         }
       }
@@ -88,7 +88,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
         const addedChoices = plugin.getOptionChoices(
           option,
           this.name,
-          this.labels
+          this.labels,
         );
 
         if (addedChoices.length === 0) {
@@ -103,7 +103,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
                 option: option,
                 plugin: plugin.name,
               },
-            }
+            },
           );
         }
         const newOption = {
@@ -129,7 +129,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
           option,
           this.name,
           this.labels,
-          command.command
+          command.command,
         );
 
         if (addedChoices.length === 0) {
@@ -144,7 +144,7 @@ export class Tool extends Extension implements Yargs.CommandModule {
                 option: option,
                 plugin: plugin.name,
               },
-            }
+            },
           );
         }
 

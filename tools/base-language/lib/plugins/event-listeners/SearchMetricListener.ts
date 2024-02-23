@@ -51,7 +51,7 @@ export class SearchMetricListener extends EventListenerPlugin {
   constructor() {
     super(
       "SearchMetricListener",
-      "A listener that collects statistics about the search process."
+      "A listener that collects statistics about the search process.",
     );
   }
 
@@ -73,7 +73,7 @@ export class SearchMetricListener extends EventListenerPlugin {
   recordSeries<E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
     subject: SearchSubject<E>,
-    budgetManager: BudgetManager<E>
+    budgetManager: BudgetManager<E>,
   ): void {
     const iterations = budgetManager
       .getBudgetObject(BudgetType.ITERATION)
@@ -100,24 +100,24 @@ export class SearchMetricListener extends EventListenerPlugin {
     ];
 
     const coveredPaths = covered.filter(
-      (objectiveFunction) => objectiveFunction instanceof PathObjectiveFunction
+      (objectiveFunction) => objectiveFunction instanceof PathObjectiveFunction,
     ).length;
     const coveredBranches = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof BranchObjectiveFunction
+        objectiveFunction instanceof BranchObjectiveFunction,
     ).length;
     const coveredFunctions = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof FunctionObjectiveFunction
+        objectiveFunction instanceof FunctionObjectiveFunction,
     ).length;
     const coveredExceptions = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof ExceptionObjectiveFunction
+        objectiveFunction instanceof ExceptionObjectiveFunction,
     ).length;
     const coveredLines = 0;
     const coveredImplicitBranches = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof ImplicitBranchObjectiveFunction
+        objectiveFunction instanceof ImplicitBranchObjectiveFunction,
     ).length;
     const coveredObjectives = covered.length;
 
@@ -133,7 +133,7 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredObjectives,
       coveredExceptions,
       covered,
-      uncovered
+      uncovered,
     );
     this.recordCoveredSeries(
       SeriesUnit.TOTAL_TIME,
@@ -146,7 +146,7 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredObjectives,
       coveredExceptions,
       covered,
-      uncovered
+      uncovered,
     );
     this.recordCoveredSeries(
       SeriesUnit.ITERATION,
@@ -159,7 +159,7 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredObjectives,
       coveredExceptions,
       covered,
-      uncovered
+      uncovered,
     );
     this.recordCoveredSeries(
       SeriesUnit.EVALUATION,
@@ -172,7 +172,7 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredObjectives,
       coveredExceptions,
       covered,
-      uncovered
+      uncovered,
     );
   }
 
@@ -187,7 +187,7 @@ export class SearchMetricListener extends EventListenerPlugin {
     covered: number,
     coveredExceptions: number,
     coveredObjectives: ObjectiveFunction<E>[],
-    uncoveredObjectives: ObjectiveFunction<E>[]
+    uncoveredObjectives: ObjectiveFunction<E>[],
   ) {
     for (const objective of coveredObjectives) {
       this.metricManager.recordSeriesMeasurement(
@@ -195,7 +195,7 @@ export class SearchMetricListener extends EventListenerPlugin {
         seriesUnit,
         seriesIndex,
         objective.getIdentifier(),
-        objective.getLowestDistance()
+        objective.getLowestDistance(),
       );
     }
 
@@ -205,7 +205,7 @@ export class SearchMetricListener extends EventListenerPlugin {
         seriesUnit,
         seriesIndex,
         objective.getIdentifier(),
-        objective.getLowestDistance()
+        objective.getLowestDistance(),
       );
     }
 
@@ -213,48 +213,48 @@ export class SearchMetricListener extends EventListenerPlugin {
       SeriesName.PATH_OBJECTIVES_COVERED,
       seriesUnit,
       seriesIndex,
-      coveredPaths
+      coveredPaths,
     );
     this.metricManager.recordSeries(
       SeriesName.BRANCH_OBJECTIVES_COVERED,
       seriesUnit,
       seriesIndex,
-      coveredBranches
+      coveredBranches,
     );
     this.metricManager.recordSeries(
       SeriesName.EXCEPTION_OBJECTIVES_COVERED,
       seriesUnit,
       seriesIndex,
-      coveredExceptions
+      coveredExceptions,
     );
     this.metricManager.recordSeries(
       SeriesName.FUNCTION_OBJECTIVES_COVERED,
       seriesUnit,
       seriesIndex,
-      coveredFunctions
+      coveredFunctions,
     );
     this.metricManager.recordSeries(
       SeriesName.LINE_OBJECTIVES_COVERED,
       seriesUnit,
       seriesIndex,
-      coveredLines
+      coveredLines,
     );
     this.metricManager.recordSeries(
       SeriesName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
       seriesUnit,
       seriesIndex,
-      coveredImplicitBranches
+      coveredImplicitBranches,
     );
     this.metricManager.recordSeries(
       SeriesName.OBJECTIVES_COVERED,
       seriesUnit,
       seriesIndex,
-      covered
+      covered,
     );
   }
 
   recordFinalProperties<T extends Encoding>(
-    searchAlgorithm: SearchAlgorithm<T>
+    searchAlgorithm: SearchAlgorithm<T>,
   ): void {
     const covered = [
       ...searchAlgorithm.getObjectiveManager().getCoveredObjectives(),
@@ -265,54 +265,54 @@ export class SearchMetricListener extends EventListenerPlugin {
 
     // record finals
     const coveredPaths = covered.filter(
-      (objectiveFunction) => objectiveFunction instanceof PathObjectiveFunction
+      (objectiveFunction) => objectiveFunction instanceof PathObjectiveFunction,
     ).length;
     const coveredBranches = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof BranchObjectiveFunction
+        objectiveFunction instanceof BranchObjectiveFunction,
     ).length;
     const coveredFunctions = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof FunctionObjectiveFunction
+        objectiveFunction instanceof FunctionObjectiveFunction,
     ).length;
     const coveredExceptions = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof ExceptionObjectiveFunction
+        objectiveFunction instanceof ExceptionObjectiveFunction,
     ).length;
     const coveredLines = 0;
     const coveredImplicitBranches = covered.filter(
       (objectiveFunction) =>
-        objectiveFunction instanceof ImplicitBranchObjectiveFunction
+        objectiveFunction instanceof ImplicitBranchObjectiveFunction,
     ).length;
     const coveredObjectives = covered.length;
 
     this.metricManager.recordProperty(
       PropertyName.PATH_OBJECTIVES_COVERED,
-      coveredPaths.toString()
+      coveredPaths.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.BRANCH_OBJECTIVES_COVERED,
-      coveredBranches.toString()
+      coveredBranches.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.FUNCTION_OBJECTIVES_COVERED,
-      coveredFunctions.toString()
+      coveredFunctions.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.EXCEPTION_OBJECTIVES_COVERED,
-      coveredExceptions.toString()
+      coveredExceptions.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.LINE_OBJECTIVES_COVERED,
-      coveredLines.toString()
+      coveredLines.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.IMPLICIT_BRANCH_OBJECTIVES_COVERED,
-      coveredImplicitBranches.toString()
+      coveredImplicitBranches.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.OBJECTIVES_COVERED,
-      coveredObjectives.toString()
+      coveredObjectives.toString(),
     );
 
     // record totals
@@ -320,62 +320,62 @@ export class SearchMetricListener extends EventListenerPlugin {
       coveredPaths +
       uncovered.filter(
         (objectiveFunction) =>
-          objectiveFunction instanceof PathObjectiveFunction
+          objectiveFunction instanceof PathObjectiveFunction,
       ).length;
     const totalBranches =
       coveredBranches +
       uncovered.filter(
         (objectiveFunction) =>
-          objectiveFunction instanceof BranchObjectiveFunction
+          objectiveFunction instanceof BranchObjectiveFunction,
       ).length;
     const totalFunctions =
       coveredFunctions +
       uncovered.filter(
         (objectiveFunction) =>
-          objectiveFunction instanceof FunctionObjectiveFunction
+          objectiveFunction instanceof FunctionObjectiveFunction,
       ).length;
     const totalExceptions =
       coveredExceptions +
       uncovered.filter(
         (objectiveFunction) =>
-          objectiveFunction instanceof ExceptionObjectiveFunction
+          objectiveFunction instanceof ExceptionObjectiveFunction,
       ).length;
     const totalLines = 0;
     const totalImplicitBranches =
       coveredImplicitBranches +
       uncovered.filter(
         (objectiveFunction) =>
-          objectiveFunction instanceof ImplicitBranchObjectiveFunction
+          objectiveFunction instanceof ImplicitBranchObjectiveFunction,
       ).length;
     const total = coveredObjectives + uncovered.length;
 
     this.metricManager.recordProperty(
       PropertyName.PATH_OBJECTIVES_TOTAL,
-      totalPaths.toString()
+      totalPaths.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.BRANCH_OBJECTIVES_TOTAL,
-      totalBranches.toString()
+      totalBranches.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.FUNCTION_OBJECTIVES_TOTAL,
-      totalFunctions.toString()
+      totalFunctions.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.EXCEPTION_OBJECTIVES_TOTAL,
-      totalExceptions.toString()
+      totalExceptions.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.LINE_OBJECTIVES_TOTAL,
-      totalLines.toString()
+      totalLines.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.IMPLICIT_BRANCH_OBJECTIVES_TOTAL,
-      totalImplicitBranches.toString()
+      totalImplicitBranches.toString(),
     );
     this.metricManager.recordProperty(
       PropertyName.OBJECTIVES_TOTAL,
-      total.toString()
+      total.toString(),
     );
   }
 
@@ -387,13 +387,13 @@ export class SearchMetricListener extends EventListenerPlugin {
       <E extends Encoding>(
         searchAlgorithm: SearchAlgorithm<E>,
         subject: SearchSubject<E>,
-        budgetManager: BudgetManager<E>
+        budgetManager: BudgetManager<E>,
       ) => {
         // create a new metric manager for this search subject
         this.currentNamespace = subject.path;
 
         this.recordSeries(searchAlgorithm, subject, budgetManager);
-      }
+      },
     );
 
     (<TypedEventEmitter<Events>>process).on(
@@ -401,19 +401,19 @@ export class SearchMetricListener extends EventListenerPlugin {
       <E extends Encoding>(
         searchAlgorithm: SearchAlgorithm<E>,
         subject: SearchSubject<E>,
-        budgetManager: BudgetManager<E>
-      ) => this.recordSeries(searchAlgorithm, subject, budgetManager)
+        budgetManager: BudgetManager<E>,
+      ) => this.recordSeries(searchAlgorithm, subject, budgetManager),
     );
     (<TypedEventEmitter<Events>>process).on(
       "searchComplete",
       <E extends Encoding>(
         searchAlgorithm: SearchAlgorithm<E>,
         subject: SearchSubject<E>,
-        budgetManager: BudgetManager<E>
+        budgetManager: BudgetManager<E>,
       ) => {
         this.recordSeries(searchAlgorithm, subject, budgetManager);
         this.recordFinalProperties(searchAlgorithm);
-      }
+      },
     );
   }
 

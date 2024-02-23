@@ -31,12 +31,12 @@ export class ConstructorCallGenerator extends CallGenerator<ConstructorCall> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    statementPool: StatementPool
+    statementPool: StatementPool,
   ): ConstructorCall {
     // TODO bad splitting of ids (we should add paths to targets)
     const filePath = exportIdentifier.split(":")[0];
     const export_ = unwrapOr(this.rootContext.getExports(filePath), []).find(
-      (export_) => export_.id === exportIdentifier
+      (export_) => export_.id === exportIdentifier,
     );
 
     if (this.statementPoolEnabled) {
@@ -64,7 +64,7 @@ export class ConstructorCallGenerator extends CallGenerator<ConstructorCall> {
       name,
       prng.uniqueId(),
       arguments_,
-      export_
+      export_,
     );
   }
 }

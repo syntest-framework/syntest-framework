@@ -123,10 +123,10 @@ async function main() {
     path.join(
       baseArguments.syntestDirectory,
       flowId,
-      baseArguments.logDirectory
+      baseArguments.logDirectory,
     ),
     baseArguments.fileLogLevel,
-    consoleLogLevel
+    consoleLogLevel,
   );
   const LOGGER = getLogger("cli");
 
@@ -136,13 +136,13 @@ async function main() {
     const storageManager = new StorageManager(
       baseArguments.syntestDirectory,
       baseArguments.tempSyntestDirectory,
-      flowId
+      flowId,
     );
     const userInterface = new UserInterface();
     const moduleManager = new ModuleManager(
       metricManager,
       storageManager,
-      userInterface
+      userInterface,
     );
 
     userInterface.printTitle("SynTest");
@@ -192,7 +192,7 @@ async function main() {
 
         // Set the output metrics
         metricManager.setOutputMetrics(
-          (<MetricOptions>(<unknown>argv)).outputMetrics
+          (<MetricOptions>(<unknown>argv)).outputMetrics,
         );
 
         // Register all listener plugins

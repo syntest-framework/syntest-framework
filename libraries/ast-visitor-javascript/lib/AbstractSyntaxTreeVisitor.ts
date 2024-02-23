@@ -33,7 +33,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     path: NodePath<any>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    state: any
+    state: any,
   ) => void;
 
   protected static LOGGER: Logger;
@@ -77,7 +77,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     const loc = "node" in path ? path.node.loc : path.loc;
     if (loc === undefined) {
       throw new ImplementationError(
-        `Node ${path.type} in file '${this._filePath}' does not have a location`
+        `Node ${path.type} in file '${this._filePath}' does not have a location`,
       );
     }
 
@@ -107,12 +107,12 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       // not supported
       if (this.syntaxForgiving) {
         AbstractSyntaxTreeVisitor.LOGGER.warn(
-          `Unsupported labeled statement found at ${this._getNodeId(path)}`
+          `Unsupported labeled statement found at ${this._getNodeId(path)}`,
         );
         return this._getNodeId(path);
       } else {
         throw new ImplementationError(
-          "Cannot get binding for labeled statement"
+          "Cannot get binding for labeled statement",
         );
       }
     }
@@ -210,15 +210,15 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       if (this.syntaxForgiving) {
         AbstractSyntaxTreeVisitor.LOGGER.warn(
           `Cannot find binding for ${path.node.name} at ${this._getNodeId(
-            path
-          )}`
+            path,
+          )}`,
         );
         return this._getNodeId(path);
       } else {
         throw new ImplementationError(
           `Cannot find binding for ${path.node.name} at ${this._getNodeId(
-            path
-          )}`
+            path,
+          )}`,
         );
       }
     } else {
@@ -227,7 +227,7 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
   }
 
   public _getThisParent(
-    path: NodePath<t.Node>
+    path: NodePath<t.Node>,
   ): NodePath<
     | t.FunctionDeclaration
     | t.FunctionExpression
@@ -241,15 +241,15 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
       if (this.syntaxForgiving) {
         AbstractSyntaxTreeVisitor.LOGGER.warn(
           `ThisExpression without parent function found at ${this._getNodeId(
-            path
-          )}`
+            path,
+          )}`,
         );
         return undefined; // <NodePath<t.Program>>path.findParent((p) => p.isProgram());
       } else {
         throw new ImplementationError(
           `ThisExpression without parent function found at ${this._getNodeId(
-            path
-          )}`
+            path,
+          )}`,
         );
       }
     }
@@ -262,15 +262,15 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
         if (this.syntaxForgiving) {
           AbstractSyntaxTreeVisitor.LOGGER.warn(
             `ThisExpression without parent function found at ${this._getNodeId(
-              path
-            )}`
+              path,
+            )}`,
           );
           return undefined; // <NodePath<t.Program>>path.findParent((p) => p.isProgram());
         } else {
           throw new ImplementationError(
             `ThisExpression without parent function found at ${this._getNodeId(
-              path
-            )}`
+              path,
+            )}`,
           );
         }
       }
@@ -282,8 +282,8 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
         // impossible?
         throw new ImplementationError(
           `ThisExpression without parent class found at ${this._getNodeId(
-            path
-          )}`
+            path,
+          )}`,
         );
       }
       return <NodePath<t.Class>>classParent;
@@ -295,8 +295,8 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
         // impossible?
         throw new ImplementationError(
           `ThisExpression without parent object found at ${this._getNodeId(
-            path
-          )}`
+            path,
+          )}`,
         );
       }
       return <NodePath<t.ObjectExpression>>objectParent;
@@ -307,19 +307,21 @@ export class AbstractSyntaxTreeVisitor implements TraverseOptions {
     }
 
     throw new ImplementationError(
-      `ThisExpression without parent function found at ${this._getNodeId(path)}`
+      `ThisExpression without parent function found at ${this._getNodeId(
+        path,
+      )}`,
     );
   }
 
   enter = (path: NodePath<t.Node>) => {
     AbstractSyntaxTreeVisitor.LOGGER.silly(
-      `Visiting node ${path.type} in file '${this._filePath}': location: ${path.node.loc?.start.line}:${path.node.loc?.start.column} - ${path.node.loc?.end.line}:${path.node.loc?.end.column} - type: ${path.node.type}`
+      `Visiting node ${path.type} in file '${this._filePath}': location: ${path.node.loc?.start.line}:${path.node.loc?.start.column} - ${path.node.loc?.end.line}:${path.node.loc?.end.column} - type: ${path.node.type}`,
     );
   };
 
   exit = (path: NodePath<t.Node>) => {
     AbstractSyntaxTreeVisitor.LOGGER.silly(
-      `Exiting node ${path.type} in file '${this._filePath}': location: ${path.node.loc?.start.line}:${path.node.loc?.start.column} - ${path.node.loc?.end.line}:${path.node.loc?.end.column} - type: ${path.node.type}`
+      `Exiting node ${path.type} in file '${this._filePath}': location: ${path.node.loc?.start.line}:${path.node.loc?.start.column} - ${path.node.loc?.end.line}:${path.node.loc?.end.column} - type: ${path.node.type}`,
     );
   };
 

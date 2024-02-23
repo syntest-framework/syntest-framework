@@ -25,14 +25,14 @@ import { ObjectiveManager } from "./ObjectiveManager";
  * An abstract objective manager for algorithms based on an archive.
  */
 export abstract class ArchiveBasedObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManager<T> {
   /**
    * @inheritdoc
    */
   protected _handleCoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
-    encoding: T
+    encoding: T,
   ): ObjectiveFunction<T>[] {
     // Update the objectives
     const childObjectives = this._updateObjectives(objectiveFunction);
@@ -49,7 +49,7 @@ export abstract class ArchiveBasedObjectiveManager<
   protected _handleUncoveredObjective(
     _objectiveFunction: ObjectiveFunction<T>,
     _encoding: T,
-    _distance: number
+    _distance: number,
   ): void {
     // Do nothing
   }
@@ -71,12 +71,12 @@ export abstract class ArchiveBasedObjectiveManager<
    */
   protected _updateArchive(
     objectiveFunction: ObjectiveFunction<T>,
-    encoding: T
+    encoding: T,
   ) {
     ObjectiveManager.LOGGER.debug("updating archive");
     if (!this._archive.hasObjective(objectiveFunction)) {
       ObjectiveManager.LOGGER.debug(
-        `new objective covered: ${objectiveFunction.getIdentifier()}`
+        `new objective covered: ${objectiveFunction.getIdentifier()}`,
       );
       this._archive.update(objectiveFunction, encoding, false);
       return;
@@ -94,7 +94,7 @@ export abstract class ArchiveBasedObjectiveManager<
         // Override the encoding if the current one is better
         if (comparison > 0) {
           ObjectiveManager.LOGGER.debug(
-            "overwriting archive with better encoding"
+            "overwriting archive with better encoding",
           );
 
           this._archive.update(objectiveFunction, encoding, false);

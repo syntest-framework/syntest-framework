@@ -31,7 +31,7 @@ export class StringStatement extends PrimitiveStatement<string> {
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    value: string
+    value: string,
   ) {
     super(
       variableIdentifier,
@@ -39,7 +39,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       name,
       TypeEnum.STRING,
       uniqueId,
-      value
+      value,
     );
   }
 
@@ -94,14 +94,14 @@ export class StringStatement extends PrimitiveStatement<string> {
         return sampler.sampleArgument(
           depth + 1,
           this.variableIdentifier,
-          this.name
+          this.name,
         );
       } else {
         // 50%
         return sampler.sampleString(
           this.variableIdentifier,
           this.typeIdentifier,
-          this.name
+          this.name,
         );
       }
     }
@@ -119,7 +119,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join("")
+      newValue.join(""),
     );
   }
 
@@ -134,7 +134,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join("")
+      newValue.join(""),
     );
   }
 
@@ -150,7 +150,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join("")
+      newValue.join(""),
     );
   }
 
@@ -179,7 +179,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue.join("")
+      newValue.join(""),
     );
   }
 
@@ -189,7 +189,7 @@ export class StringStatement extends PrimitiveStatement<string> {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      this.value
+      this.value,
     );
   }
 

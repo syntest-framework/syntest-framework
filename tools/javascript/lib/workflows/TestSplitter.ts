@@ -41,7 +41,7 @@ export class TestSplitter implements Workflow {
   }
 
   public async execute(
-    encodingMap: Map<Target, JavaScriptTestCase[]>
+    encodingMap: Map<Target, JavaScriptTestCase[]>,
   ): Promise<Map<Target, JavaScriptTestCase[]>> {
     const before = [...encodingMap.values()].reduce((p, c) => p + c.length, 0);
     TestSplitter.LOGGER.info("Splitting started");
@@ -77,14 +77,14 @@ export class TestSplitter implements Workflow {
 
     const after = [...finalEncodings.values()].reduce(
       (p, c) => p + c.length,
-      0
+      0,
     );
 
     TestSplitter.LOGGER.info(
-      `Splitting done, went from ${before} to ${after} test cases`
+      `Splitting done, went from ${before} to ${after} test cases`,
     );
     this.userInterface.printSuccess(
-      `Splitting done, went from ${before} to ${after} test cases`
+      `Splitting done, went from ${before} to ${after} test cases`,
     );
 
     return finalEncodings;
@@ -92,7 +92,7 @@ export class TestSplitter implements Workflow {
 
   private async _testSplitting(
     originalEncodings: JavaScriptTestCase[],
-    round: number
+    round: number,
   ) {
     const finalEncodings: JavaScriptTestCase[] = [];
 
@@ -132,8 +132,8 @@ export class TestSplitter implements Workflow {
           this._equalResults(
             <JavaScriptExecutionResult>executionResult,
             pair.map(
-              (child) => <JavaScriptExecutionResult>child.getExecutionResult()
-            )
+              (child) => <JavaScriptExecutionResult>child.getExecutionResult(),
+            ),
           )
         ) {
           possiblePairs.push(pair);
@@ -167,7 +167,7 @@ export class TestSplitter implements Workflow {
 
       for (const pair of possiblePairs) {
         TestSplitter.LOGGER.debug(
-          `Split found: ${encoding.getLength()} -> ${pair[0].getLength()} + ${pair[1].getLength()}`
+          `Split found: ${encoding.getLength()} -> ${pair[0].getLength()} + ${pair[1].getLength()}`,
         );
       }
       finalEncodings.push(...possiblePairs.flat());
@@ -228,7 +228,7 @@ export class TestSplitter implements Workflow {
 
   private _equalResults(
     originalResult: JavaScriptExecutionResult,
-    splitResults: JavaScriptExecutionResult[]
+    splitResults: JavaScriptExecutionResult[],
   ): boolean {
     // compare errors
     if (originalResult.hasError()) {

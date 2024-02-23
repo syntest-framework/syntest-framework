@@ -58,13 +58,13 @@ describe("Test SPEA-II", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      branchDistance
+      branchDistance,
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      branchDistance
+      branchDistance,
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -77,14 +77,14 @@ describe("Test SPEA-II", function () {
     mockedProcreation = new DummyProcreation(
       mockedCrossover,
       (sampler, encoding) => encoding.mutate(),
-      mockedSampler
+      mockedSampler,
     );
     spea = new MockedSPEAII(
       new SimpleObjectiveManager(mockedRunner, [], true),
       mockedSampler,
       mockedProcreation,
       50,
-      3
+      3,
     );
 
     dynaSpea = new MockedDynaSPEAII(
@@ -92,7 +92,7 @@ describe("Test SPEA-II", function () {
       mockedSampler,
       mockedProcreation,
       50,
-      3
+      3,
     );
 
     ind1 = new DummyEncodingMock();
@@ -140,7 +140,7 @@ describe("Test SPEA-II", function () {
 
     const frontZero = dynaSpea.preferenceCriterion(
       [ind1, ind2, ind3, ind4, ind5],
-      objectives
+      objectives,
     );
     expect(frontZero.length).to.equal(2);
     expect(frontZero).to.contain(ind2);

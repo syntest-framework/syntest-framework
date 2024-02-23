@@ -30,19 +30,19 @@ import {
  * Plugin for the uncovered objective manager
  */
 export class UncoveredObjectiveManagerPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
     super("uncovered", "An uncovered objective manager");
   }
 
   createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
+    options: ObjectiveManagerOptions<T>,
   ): ObjectiveManager<T> {
     return new UncoveredObjectiveManager(
       options.runner,
       options.secondaryObjectives,
-      options.exceptionObjectivesEnabled
+      options.exceptionObjectivesEnabled,
     );
   }
 

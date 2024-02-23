@@ -28,7 +28,7 @@ export const DominanceComparator = {
   compare<T extends Encoding>(
     individual1: T,
     individual2: T,
-    objectives: Set<ObjectiveFunction<T>>
+    objectives: Set<ObjectiveFunction<T>>,
   ): number {
     let dominatesX = false;
     let dominatesY = false;

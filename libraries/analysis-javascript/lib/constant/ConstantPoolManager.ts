@@ -26,7 +26,7 @@ export class ConstantPoolManager {
   constructor(
     targetConstantPool: ConstantPool,
     contextConstantPool: ConstantPool,
-    dynamicConstantPool: ConstantPool
+    dynamicConstantPool: ConstantPool,
   ) {
     this._targetConstantPool = targetConstantPool;
     this._contextConstantPool = contextConstantPool;

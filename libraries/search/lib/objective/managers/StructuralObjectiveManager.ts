@@ -27,18 +27,18 @@ import { ObjectiveManager } from "./ObjectiveManager";
  * Objective manager that only evaluates an encoding on currently reachable and covered objectives.
  */
 export class StructuralObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends ArchiveBasedObjectiveManager<T> {
   /**
    * @inheritDoc
    * @protected
    */
   protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>
+    objectiveFunction: ObjectiveFunction<T>,
   ): ObjectiveFunction<T>[] {
     ObjectiveManager.LOGGER.debug("updating objectives");
     ObjectiveManager.LOGGER.debug(
-      `covered: ${objectiveFunction.getIdentifier()}`
+      `covered: ${objectiveFunction.getIdentifier()}`,
     );
 
     // Remove objective from the current and uncovered objectives
@@ -58,7 +58,7 @@ export class StructuralObjectiveManager<
         !this._currentObjectives.has(objective)
       ) {
         ObjectiveManager.LOGGER.debug(
-          `adding new objective: ${objective.getIdentifier()}`
+          `adding new objective: ${objective.getIdentifier()}`,
         );
         this._currentObjectives.add(objective);
       }
@@ -85,12 +85,12 @@ export class StructuralObjectiveManager<
 
     // Set the current objectives
     const rootObjectives: ObjectiveFunction<T>[] = subject.objectives.filter(
-      (x) => x.parentObjective === undefined
+      (x) => x.parentObjective === undefined,
     );
 
     for (const objective of rootObjectives) {
       ObjectiveManager.LOGGER.debug(
-        `adding root objective: ${objective.getIdentifier()}`
+        `adding root objective: ${objective.getIdentifier()}`,
       );
       this._currentObjectives.add(objective);
     }

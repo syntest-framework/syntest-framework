@@ -29,11 +29,11 @@ describe("Random Tests", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
-      0.5
+      0.5,
     );
   });
 
@@ -46,7 +46,7 @@ describe("Random Tests", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
@@ -61,11 +61,11 @@ describe("Random Tests", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
-      0.5
+      0.5,
     );
   });
 
@@ -78,11 +78,11 @@ describe("Random Tests", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
-      0.5
+      0.5,
     );
   });
 
@@ -95,7 +95,7 @@ describe("Random Tests", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
@@ -111,7 +111,7 @@ describe("Random Tests", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);

@@ -39,7 +39,7 @@ export class TerminationManager implements TerminationTrigger {
    */
   isTriggered(): boolean {
     return !this._terminationTriggers.every(
-      (trigger) => !trigger.isTriggered()
+      (trigger) => !trigger.isTriggered(),
     );
   }
 
@@ -61,7 +61,7 @@ export class TerminationManager implements TerminationTrigger {
   public removeTrigger(trigger: TerminationTrigger): TerminationManager {
     this._terminationTriggers.splice(
       this._terminationTriggers.indexOf(trigger),
-      1
+      1,
     );
     return this;
   }

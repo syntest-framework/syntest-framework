@@ -27,7 +27,7 @@ export interface DependencyModel extends Model {
 export function dependencyModelFormatter(
   rootContext: RootContext<unknown>,
   filePath: string,
-  dependencies?: string[]
+  dependencies?: string[],
 ): DependencyModel {
   return {
     filePath,

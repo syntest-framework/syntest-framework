@@ -39,7 +39,7 @@ export class MetaCommenter implements Workflow {
   constructor(
     userInterface: UserInterface,
     secondaryObjectives: SecondaryObjectiveComparator<JavaScriptTestCase>[],
-    objectivesMap: Map<Target, ObjectiveFunction<JavaScriptTestCase>[]>
+    objectivesMap: Map<Target, ObjectiveFunction<JavaScriptTestCase>[]>,
   ) {
     MetaCommenter.LOGGER = getLogger(MetaCommenter.name);
     this.userInterface = userInterface;
@@ -49,13 +49,13 @@ export class MetaCommenter implements Workflow {
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   execute(
-    encodingsMap: Map<Target, JavaScriptTestCase[]>
+    encodingsMap: Map<Target, JavaScriptTestCase[]>,
   ): Promise<Map<Target, JavaScriptTestCase[]>> {
     MetaCommenter.LOGGER.info("Meta-Commenting started");
 
     const totalEncodings = [...encodingsMap.values()].reduce(
       (counter, value) => counter + value.length,
-      0
+      0,
     );
     this.userInterface.startProgressBars([
       {
@@ -84,7 +84,7 @@ export class MetaCommenter implements Workflow {
 
         if (!encoding.getExecutionResult()) {
           throw new IllegalStateError(
-            "Invalid encoding without executionResult"
+            "Invalid encoding without executionResult",
           );
         }
 
@@ -103,7 +103,7 @@ export class MetaCommenter implements Workflow {
             for (const secondaryObjective of this.secondaryObjectives) {
               const comparison = secondaryObjective.compare(
                 encoding,
-                currentEncoding
+                currentEncoding,
               );
 
               // If one of the two encodings is better, don't evaluate the next objectives
@@ -111,7 +111,7 @@ export class MetaCommenter implements Workflow {
                 // Override the encoding if the current one is better
                 if (comparison > 0) {
                   MetaCommenter.LOGGER.debug(
-                    "Overwriting archive with better encoding"
+                    "Overwriting archive with better encoding",
                   );
 
                   archive.update(objective, encoding, false);
@@ -137,7 +137,7 @@ export class MetaCommenter implements Workflow {
             encoding.addMetaComment("");
           } else {
             encoding.addMetaComment(
-              `Selected for objective: ${use.getIdentifier()}`
+              `Selected for objective: ${use.getIdentifier()}`,
             );
           }
         }
@@ -147,7 +147,7 @@ export class MetaCommenter implements Workflow {
           for (const objective of archive.getObjectives()) {
             if (objective.calculateDistance(encoding) === 0) {
               encoding.addMetaComment(
-                `Covers objective: ${objective.getIdentifier()}`
+                `Covers objective: ${objective.getIdentifier()}`,
               );
             }
           }

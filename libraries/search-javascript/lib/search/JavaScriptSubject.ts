@@ -24,7 +24,7 @@ import { JavaScriptTestCase } from "../testcase/JavaScriptTestCase";
 export class JavaScriptSubject extends SearchSubject<JavaScriptTestCase> {
   constructor(
     target: Target,
-    objectives: ObjectiveFunction<JavaScriptTestCase>[]
+    objectives: ObjectiveFunction<JavaScriptTestCase>[],
   ) {
     super(target, objectives);
   }

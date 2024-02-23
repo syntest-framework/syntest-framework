@@ -54,7 +54,7 @@ export class ExecutionInformationProcessor {
           this._typeModel.addExecutionScore(
             child.variableIdentifier,
             child.typeIdentifier,
-            child.ownType
+            child.ownType,
           );
         }
         queue.push(child);

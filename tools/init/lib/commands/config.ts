@@ -23,7 +23,7 @@ import Yargs = require("yargs");
 
 export function getConfigCommand(
   tool: string,
-  moduleManager: ModuleManager
+  moduleManager: ModuleManager,
 ): Command {
   const options = new Map<string, Yargs.Options>();
 
@@ -36,13 +36,13 @@ export function getConfigCommand(
     (arguments_: Yargs.ArgumentsCamelCase) => {
       const allOptions: { [key: string]: unknown } = extractArgumentValues(
         arguments_,
-        moduleManager
+        moduleManager,
       );
 
       writeFileSync(
         path.resolve(".syntest.json"),
-        JSON.stringify(allOptions, undefined, 2)
+        JSON.stringify(allOptions, undefined, 2),
       );
-    }
+    },
   );
 }

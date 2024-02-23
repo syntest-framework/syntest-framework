@@ -37,7 +37,7 @@ export abstract class ProcreationPlugin<T extends Encoding> extends Plugin {
   }
 
   abstract createProcreationOperator<O extends ProcreationOptions<T>>(
-    options: O
+    options: O,
   ): Procreation<T>;
 
   override getOptionChoices(option: string): string[] {

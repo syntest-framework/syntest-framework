@@ -29,7 +29,7 @@ export class TreeCrossoverPlugin extends CrossoverPlugin<JavaScriptTestCase> {
   createCrossoverOperator(options: CrossoverOptions): TreeCrossover {
     return new TreeCrossover(
       options.crossoverEncodingProbability,
-      options.crossoverStatementProbability
+      options.crossoverStatementProbability,
     );
   }
 

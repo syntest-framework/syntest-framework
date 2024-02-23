@@ -30,7 +30,7 @@ export class ObjectFunctionCallGenerator extends CallGenerator<ObjectFunctionCal
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    _statementPool: StatementPool
+    _statementPool: StatementPool,
   ): ObjectFunctionCall {
     const type_ = this.rootContext
       .getTypeModel()
@@ -40,7 +40,7 @@ export class ObjectFunctionCallGenerator extends CallGenerator<ObjectFunctionCal
 
     const object_ = this.sampler.sampleConstantObject(
       depth + 1,
-      exportIdentifier
+      exportIdentifier,
     );
 
     return new ObjectFunctionCall(
@@ -49,7 +49,7 @@ export class ObjectFunctionCallGenerator extends CallGenerator<ObjectFunctionCal
       name,
       prng.uniqueId(),
       arguments_,
-      object_
+      object_,
     );
   }
 }

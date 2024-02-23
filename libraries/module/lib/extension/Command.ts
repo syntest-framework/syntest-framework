@@ -34,7 +34,7 @@ export class Command implements Yargs.CommandModule {
     name: string,
     description: string,
     options: Map<string, Yargs.Options>,
-    handler: (arguments_: Yargs.ArgumentsCamelCase) => void | Promise<void>
+    handler: (arguments_: Yargs.ArgumentsCamelCase) => void | Promise<void>,
   ) {
     this.tool = tool;
     this.command = name;

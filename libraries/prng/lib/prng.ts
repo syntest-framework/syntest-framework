@@ -55,7 +55,7 @@ export const prng = {
   },
   nextBigInt: (
     min: BigNumber = new BigNumber(0),
-    max = new BigNumber(Number.MAX_SAFE_INTEGER)
+    max = new BigNumber(Number.MAX_SAFE_INTEGER),
   ): BigNumber => {
     const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min).integerValue();
@@ -67,7 +67,7 @@ export const prng = {
   },
   nextBigDouble: (
     min: BigNumber = new BigNumber(0),
-    max = new BigNumber(Number.MAX_SAFE_INTEGER)
+    max = new BigNumber(Number.MAX_SAFE_INTEGER),
   ): BigNumber => {
     const value = new BigNumber(generator());
     return value.multipliedBy(max.minus(min)).plus(min);
@@ -90,7 +90,7 @@ export const prng = {
   pickOne: <T>(options: T[]): T => {
     if (options.length === 0) {
       throw new IllegalArgumentError(
-        "Cannot pick random item from empty array"
+        "Cannot pick random item from empty array",
       );
     }
 
@@ -101,7 +101,7 @@ export const prng = {
   },
   uniqueId: (
     length = 7,
-    characters: string = Charset.alpha + Charset.alphaCapital
+    characters: string = Charset.alpha + Charset.alphaCapital,
   ): string => {
     const charactersLength = characters.length;
     let result = "";

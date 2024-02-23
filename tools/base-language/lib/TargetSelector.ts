@@ -67,7 +67,7 @@ export class TargetSelector {
   loadTargets(include: string[], exclude: string[]): Target[] {
     (<TypedEventEmitter<Events>>process).emit(
       "targetLoadStart",
-      this._rootContext
+      this._rootContext,
     );
 
     // Mapping filepath -> targets
@@ -95,7 +95,7 @@ export class TargetSelector {
           this.shouldAddSubTarget(
             target,
             includedSubTargets,
-            excludedSubTargets
+            excludedSubTargets,
           )
         ) {
           selectedSubTargets.push(target);
@@ -111,7 +111,7 @@ export class TargetSelector {
 
     (<TypedEventEmitter<Events>>process).emit(
       "targetLoadComplete",
-      this._rootContext
+      this._rootContext,
     );
     return targetContexts;
   }
@@ -119,7 +119,7 @@ export class TargetSelector {
   protected shouldAddSubTarget(
     target: SubTarget,
     included: Set<string>,
-    excluded: Set<string> | undefined
+    excluded: Set<string> | undefined,
   ) {
     // check if included
     if (!included.has("*") && !included.has(target.id)) {

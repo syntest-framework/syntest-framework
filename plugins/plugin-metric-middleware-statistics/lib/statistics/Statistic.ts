@@ -39,12 +39,12 @@ export abstract class Statistic {
     distributions: DistributionsMap,
     series: SeriesMap<number>,
     seriesDistributions: SeriesMap<Distribution>,
-    seriesMeasurements: SeriesMap<PropertiesMap<number>>
+    seriesMeasurements: SeriesMap<PropertiesMap<number>>,
   ): void;
 
   loopThroughProperties(
     properties: PropertiesMap<string>,
-    callback: (newPropertyName: string, propertyValue: string) => void
+    callback: (newPropertyName: string, propertyValue: string) => void,
   ) {
     for (const [property, value] of properties) {
       callback(`${this.name}-${property}`, value);
@@ -53,7 +53,7 @@ export abstract class Statistic {
 
   loopThroughDistributions(
     distributions: DistributionsMap,
-    callback: (newPropertyName: string, distribution: Distribution) => void
+    callback: (newPropertyName: string, distribution: Distribution) => void,
   ) {
     for (const [distributionName, distribution] of distributions) {
       callback(`${this.name}-${distributionName}`, distribution);
@@ -66,8 +66,8 @@ export abstract class Statistic {
       newPropertyName: string,
       seriesName: MetricName,
       seriesUnit: SeriesUnit,
-      series: Series<number>
-    ) => void
+      series: Series<number>,
+    ) => void,
   ) {
     for (const [seriesName, seriesByUnit] of series) {
       for (const [seriesUnit, series_] of seriesByUnit) {
@@ -75,7 +75,7 @@ export abstract class Statistic {
           `${this.name}-${seriesName}-${seriesUnit}`,
           seriesName,
           seriesUnit,
-          series_
+          series_,
         );
       }
     }
@@ -87,8 +87,8 @@ export abstract class Statistic {
       newPropertyName: string,
       seriesDistributionName: MetricName,
       seriesUnit: SeriesUnit,
-      series: Series<Distribution>
-    ) => void
+      series: Series<Distribution>,
+    ) => void,
   ) {
     for (const [
       seriesDistributionName,
@@ -99,7 +99,7 @@ export abstract class Statistic {
           `${this.name}-${seriesDistributionName}-${seriesUnit}`,
           seriesDistributionName,
           seriesUnit,
-          series
+          series,
         );
       }
     }
@@ -111,8 +111,8 @@ export abstract class Statistic {
       newPropertyName: string,
       seriesDistributionName: MetricName,
       seriesUnit: SeriesUnit,
-      series: Series<PropertiesMap<number>>
-    ) => void
+      series: Series<PropertiesMap<number>>,
+    ) => void,
   ) {
     for (const [
       seriesMeasurementName,
@@ -123,7 +123,7 @@ export abstract class Statistic {
           `${this.name}-${seriesMeasurementName}-${seriesUnit}`,
           seriesMeasurementName,
           seriesUnit,
-          series
+          series,
         );
       }
     }

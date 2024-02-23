@@ -33,7 +33,7 @@ export class TypePool {
 
   public extractExportedTypes(
     exports: Export[],
-    objects: Map<string, DiscoveredObjectType>
+    objects: Map<string, DiscoveredObjectType>,
   ): void {
     for (const export_ of exports) {
       for (const [objectName, discoveredObject] of objects.entries()) {
@@ -63,7 +63,7 @@ export class TypePool {
 
   public getRandomMatchingType(
     objectType: ObjectType,
-    extraFilter?: (type: DiscoveredObjectType) => boolean
+    extraFilter?: (type: DiscoveredObjectType) => boolean,
   ): DiscoveredObjectType {
     let matchingTypes: DiscoveredObjectType[] =
       this._getMatchingTypes(objectType);

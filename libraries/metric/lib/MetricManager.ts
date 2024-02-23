@@ -277,7 +277,7 @@ export class MetricManager {
   async runPipeline(middleware: Middleware[]): Promise<void> {
     for (const _middleware of middleware) {
       MetricManager.LOGGER.debug(
-        `Running middleware ${_middleware.constructor.name}`
+        `Running middleware ${_middleware.constructor.name}`,
       );
       await _middleware.run(this);
     }
@@ -301,7 +301,7 @@ export class MetricManager {
 
   recordDistribution(distributionName: MetricName, value: number) {
     MetricManager.LOGGER.debug(
-      `Recording distribution ${distributionName} = ${value}`
+      `Recording distribution ${distributionName} = ${value}`,
     );
 
     if (!this.distributions.has(distributionName)) {
@@ -317,10 +317,10 @@ export class MetricManager {
     seriesName: MetricName,
     seriesUnit: SeriesUnit,
     seriesIndex: SeriesIndex,
-    value: number
+    value: number,
   ) {
     MetricManager.LOGGER.debug(
-      `Recording series ${seriesName}.${seriesUnit}[${seriesIndex}] = ${value}`
+      `Recording series ${seriesName}.${seriesUnit}[${seriesIndex}] = ${value}`,
     );
 
     if (!this.series.has(seriesName)) {
@@ -342,16 +342,16 @@ export class MetricManager {
     seriesDistributionName: MetricName,
     seriesUnit: SeriesUnit,
     seriesIndex: SeriesIndex,
-    value: number
+    value: number,
   ) {
     MetricManager.LOGGER.debug(
-      `Recording series distribution ${seriesDistributionName}.${seriesUnit}[${seriesIndex}] = ${value}`
+      `Recording series distribution ${seriesDistributionName}.${seriesUnit}[${seriesIndex}] = ${value}`,
     );
 
     if (!this.seriesDistributions.has(seriesDistributionName)) {
       throw new IllegalStateError(
         "Cannot record unregistered series distribution",
-        { context: { seriesDistribution: seriesDistributionName } }
+        { context: { seriesDistribution: seriesDistributionName } },
       );
     }
 
@@ -363,7 +363,7 @@ export class MetricManager {
             seriesDistribution: seriesDistributionName,
             unit: seriesUnit,
           },
-        }
+        },
       );
     }
 
@@ -391,16 +391,16 @@ export class MetricManager {
     seriesUnit: SeriesUnit,
     seriesIndex: SeriesIndex,
     key: string,
-    value: number
+    value: number,
   ) {
     MetricManager.LOGGER.debug(
-      `Recording series measurement ${seriesMeasurementName}.${seriesUnit}[${seriesIndex}].${key} = ${value}`
+      `Recording series measurement ${seriesMeasurementName}.${seriesUnit}[${seriesIndex}].${key} = ${value}`,
     );
 
     if (!this.seriesMeasurements.has(seriesMeasurementName)) {
       throw new IllegalStateError(
         "Cannot record unregistered series measurement",
-        { context: { seriesMeasurement: seriesMeasurementName } }
+        { context: { seriesMeasurement: seriesMeasurementName } },
       );
     }
 
@@ -412,7 +412,7 @@ export class MetricManager {
             seriesMeasurement: seriesMeasurementName,
             unit: seriesUnit,
           },
-        }
+        },
       );
     }
 
@@ -449,7 +449,7 @@ export class MetricManager {
 
   getSeries(
     seriesName: MetricName,
-    seriesUnit: SeriesUnit
+    seriesUnit: SeriesUnit,
   ): Map<SeriesIndex, number> | undefined {
     MetricManager.LOGGER.debug(`Getting series ${seriesName}.${seriesUnit}`);
 
@@ -462,10 +462,10 @@ export class MetricManager {
 
   getSeriesDistribution(
     seriesDistributionName: MetricName,
-    seriesUnit: SeriesUnit
+    seriesUnit: SeriesUnit,
   ): Map<SeriesIndex, number[]> | undefined {
     MetricManager.LOGGER.debug(
-      `Getting series distribution ${seriesDistributionName}.${seriesUnit}`
+      `Getting series distribution ${seriesDistributionName}.${seriesUnit}`,
     );
 
     if (!this.seriesDistributions.has(seriesDistributionName)) {
@@ -477,10 +477,10 @@ export class MetricManager {
 
   getSeriesMeasurement(
     seriesMeasurementName: string,
-    seriesUnit: SeriesUnit
+    seriesUnit: SeriesUnit,
   ): Series<PropertiesMap<number>> | undefined {
     MetricManager.LOGGER.debug(
-      `Getting series measurement ${seriesMeasurementName}.${seriesUnit}`
+      `Getting series measurement ${seriesMeasurementName}.${seriesUnit}`,
     );
 
     if (!this.seriesMeasurements.has(seriesMeasurementName)) {
@@ -551,7 +551,7 @@ export class MetricManager {
   }
 
   collectSeriesDistributions(
-    wanted: SeriesDistributionMetric[]
+    wanted: SeriesDistributionMetric[],
   ): SeriesMap<Distribution> {
     const seriesDistributions = new Map<
       MetricName,
@@ -561,7 +561,7 @@ export class MetricManager {
     for (const seriesDistribution of wanted) {
       const value = this.getSeriesDistribution(
         seriesDistribution.name,
-        seriesDistribution.seriesUnit
+        seriesDistribution.seriesUnit,
       );
 
       if (!seriesDistributions.has(seriesDistribution.name)) {
@@ -577,7 +577,7 @@ export class MetricManager {
   }
 
   collectSeriesMeasurements(
-    wanted: SeriesMeasurementMetric[]
+    wanted: SeriesMeasurementMetric[],
   ): SeriesMap<PropertiesMap<number>> {
     const seriesMeasurements = new Map<
       MetricName,
@@ -587,7 +587,7 @@ export class MetricManager {
     for (const seriesMeasurement of wanted) {
       const value = this.getSeriesMeasurement(
         seriesMeasurement.name,
-        seriesMeasurement.seriesUnit
+        seriesMeasurement.seriesUnit,
       );
 
       if (!seriesMeasurements.has(seriesMeasurement.name)) {

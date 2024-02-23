@@ -36,7 +36,7 @@ export default class ExperimentalModule extends Module {
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").name,
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      require("../../package.json").version
+      require("../../package.json").version,
     );
   }
 

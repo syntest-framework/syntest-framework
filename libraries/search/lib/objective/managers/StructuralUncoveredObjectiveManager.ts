@@ -26,18 +26,18 @@ import { StructuralObjectiveManager } from "./StructuralObjectiveManager";
  * Objective manager that only evaluates an encoding on currently reachable.
  */
 export class StructuralUncoveredObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends StructuralObjectiveManager<T> {
   /**
    * @inheritDoc
    * @protected
    */
   protected override _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>
+    objectiveFunction: ObjectiveFunction<T>,
   ): ObjectiveFunction<T>[] {
     ObjectiveManager.LOGGER.debug("updating objectives");
     ObjectiveManager.LOGGER.debug(
-      `covered: ${objectiveFunction.getIdentifier()}`
+      `covered: ${objectiveFunction.getIdentifier()}`,
     );
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);
@@ -54,7 +54,7 @@ export class StructuralUncoveredObjectiveManager<
         !this._currentObjectives.has(objective)
       ) {
         ObjectiveManager.LOGGER.debug(
-          `adding new objective: ${objective.getIdentifier()}`
+          `adding new objective: ${objective.getIdentifier()}`,
         );
 
         this._currentObjectives.add(objective);

@@ -34,7 +34,7 @@ export class RandomSamplerPlugin extends SamplerPlugin<JavaScriptTestCase> {
   }
 
   createSamplerOperator(
-    options: SamplerOptions<JavaScriptTestCase>
+    options: SamplerOptions<JavaScriptTestCase>,
   ): EncodingSampler<JavaScriptTestCase> {
     return new JavaScriptRandomSampler(
       options.subject as unknown as JavaScriptSubject,
@@ -57,7 +57,7 @@ export class RandomSamplerPlugin extends SamplerPlugin<JavaScriptTestCase> {
       (<JavaScriptArguments>(<unknown>this.args)).exploreIllegalValues,
       (<JavaScriptArguments>(<unknown>this.args)).addRemoveArgumentProbability,
       (<JavaScriptArguments>(<unknown>this.args)).addArgumentProbability,
-      (<JavaScriptArguments>(<unknown>this.args)).removeArgumentProbability
+      (<JavaScriptArguments>(<unknown>this.args)).removeArgumentProbability,
     );
   }
 

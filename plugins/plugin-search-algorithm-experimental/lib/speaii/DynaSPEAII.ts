@@ -34,7 +34,7 @@ export class DynaSPEAII<T extends Encoding> extends SPEAIIFamily<T> {
     // First add all solutions closest to the objectives, then fill remaining spots with normal environmental selection
     const frontZero: T[] = this.preferenceCriterion(
       totalPopulation,
-      this._objectiveManager.getCurrentObjectives()
+      this._objectiveManager.getCurrentObjectives(),
     );
     if (frontZero.length == this._archive_size) {
       this._archive = frontZero;
@@ -42,7 +42,7 @@ export class DynaSPEAII<T extends Encoding> extends SPEAIIFamily<T> {
       return;
     }
     const remainingPopulation: T[] = totalPopulation.filter(
-      (individual) => !frontZero.includes(individual)
+      (individual) => !frontZero.includes(individual),
     );
     const remainingSize = this._archive_size - frontZero.length;
     // 1. Copy all non-dominated individuals
@@ -57,12 +57,12 @@ export class DynaSPEAII<T extends Encoding> extends SPEAIIFamily<T> {
     const fitness: Map<T, number> = this.calculateFitness(
       [...remainingPopulation],
       k,
-      this._objectiveManager.getCurrentObjectives()
+      this._objectiveManager.getCurrentObjectives(),
     );
 
     // All solutions with fitness <1 are non-dominated
     const nextFront: T[] = [...fitness.keys()].filter(
-      (key: T) => fitness.get(key) < 1
+      (key: T) => fitness.get(key) < 1,
     );
 
     // If there are not enough non-dominated solutions, add the best remaining solutions
@@ -85,7 +85,7 @@ export class DynaSPEAII<T extends Encoding> extends SPEAIIFamily<T> {
    */
   public preferenceCriterion(
     population: T[],
-    objectives: Set<ObjectiveFunction<T>>
+    objectives: Set<ObjectiveFunction<T>>,
   ): T[] {
     const frontZero: T[] = [];
     for (const objective of objectives) {

@@ -39,7 +39,7 @@ describe("CFG suite", function () {
       exit,
       exit,
       new Map([entry, exit, branchNode].map((node) => [node.id, node])),
-      []
+      [],
     );
 
     expect(cfg.getNodesByType(NodeType.ENTRY)).to.deep.contain(entry);
@@ -66,7 +66,7 @@ describe("CFG suite", function () {
           },
         },
       ],
-      {}
+      {},
     );
     const exit: Node = new Node(
       "1",
@@ -88,7 +88,7 @@ describe("CFG suite", function () {
           },
         },
       ],
-      {}
+      {},
     );
     const branchNode: Node = new Node("2", NodeType.NORMAL, "2", [], {
       lineNumbers: [],
@@ -99,11 +99,11 @@ describe("CFG suite", function () {
       exit,
       exit,
       new Map([entry, exit, branchNode].map((node) => [node.id, node])),
-      []
+      [],
     );
 
     expect(cfg.getNodeByPredicate((n: Node) => n.id === "2")).to.deep.equal(
-      branchNode
+      branchNode,
     );
     expect(cfg.getNodesByLineNumbers(new Set([26]))[0]).to.deep.equal(exit);
   });
@@ -127,7 +127,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const exit: Node = new Node(
       "1",
@@ -147,7 +147,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const branchNode: Node = new Node("2", NodeType.NORMAL, "2", [], {
       lineNumbers: [],
@@ -158,7 +158,7 @@ describe("CFG suite", function () {
       exit,
       exit,
       new Map([entry, exit, branchNode].map((node) => [node.id, node])),
-      []
+      [],
     );
 
     expect(cfg.getNodesByPredicates((n: Node) => n.id === "2")).to.deep.equal([
@@ -191,7 +191,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const exit: Node = new Node(
       "1",
@@ -211,7 +211,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const branchNode: Node = new Node("2", NodeType.NORMAL, "2", [], {
       lineNumbers: [],
@@ -222,7 +222,7 @@ describe("CFG suite", function () {
       exit,
       exit,
       new Map([entry, exit, branchNode].map((node) => [node.id, node])),
-      []
+      [],
     );
 
     expect(cfg.getNodeById("2")).to.deep.equal(branchNode);
@@ -250,7 +250,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const exit: Node = new Node(
       "1",
@@ -270,7 +270,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const branchNode: Node = new Node(
       "2",
@@ -303,7 +303,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
 
     const cfg = new ControlFlowGraph(
@@ -311,7 +311,7 @@ describe("CFG suite", function () {
       exit,
       exit,
       new Map([entry, exit, branchNode].map((node) => [node.id, node])),
-      []
+      [],
     );
 
     expect(cfg.getNodesByLineNumbers(new Set<number>([26]))).to.deep.equal([
@@ -349,7 +349,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const exit: Node = new Node(
       "1",
@@ -369,7 +369,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
     const branchNode: Node = new Node(
       "2",
@@ -402,7 +402,7 @@ describe("CFG suite", function () {
             },
           },
         })],
-      {}
+      {},
     );
 
     const cfg = new ControlFlowGraph(
@@ -410,21 +410,21 @@ describe("CFG suite", function () {
       exit,
       exit,
       new Map([entry, exit, branchNode].map((node) => [node.id, node])),
-      []
+      [],
     );
 
     expect(cfg.getNodeOfTypeByLine(26, NodeType.ENTRY)).to.deep.equal(entry);
     expect(cfg.getNodeOfTypeByLine(32, NodeType.ENTRY)).to.deep.equal(
-      undefined
+      undefined,
     );
     expect(cfg.getNodeOfTypeByLine(26, NodeType.NORMAL)).to.deep.equal(
-      branchNode
+      branchNode,
     );
     expect(cfg.getNodeOfTypeByLine(32, NodeType.NORMAL)).to.deep.equal(
-      branchNode
+      branchNode,
     );
     expect(cfg.getNodeOfTypeByLine(27, NodeType.NORMAL)).to.deep.equal(
-      undefined
+      undefined,
     );
   });
 });

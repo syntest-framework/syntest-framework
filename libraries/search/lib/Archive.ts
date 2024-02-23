@@ -87,7 +87,7 @@ export class Archive<T extends Encoding> {
   update(
     objectiveFunction: ObjectiveFunction<T>,
     encoding: T,
-    keepOld: boolean
+    keepOld: boolean,
   ): void {
     const oldEncoding = this._map.get(objectiveFunction);
 

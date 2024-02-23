@@ -32,7 +32,7 @@ export interface ControlFlowGraphModel extends Model {
 export function controlFlowGraphModelFormatter<S>(
   rootContext: RootContext<S>,
   filePath: string,
-  cfp?: ControlFlowProgram
+  cfp?: ControlFlowProgram,
 ): ControlFlowGraphModel {
   return {
     filePath,

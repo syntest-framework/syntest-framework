@@ -39,7 +39,7 @@ export class TypeExtractor extends Factory {
 
   extractRelations(
     filepath: string,
-    ast: t.Node
+    ast: t.Node,
   ): Result<Map<string, Relation>> {
     const relationVisitor = new RelationVisitor(filepath, this.syntaxForgiving);
 
@@ -50,7 +50,7 @@ export class TypeExtractor extends Factory {
 
   extractObjectTypes(
     filepath: string,
-    ast: t.Node
+    ast: t.Node,
   ): Result<Map<string, DiscoveredObjectType>> {
     const objectVisitor = new ObjectVisitor(filepath, this.syntaxForgiving);
 

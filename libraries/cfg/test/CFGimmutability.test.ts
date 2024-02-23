@@ -50,8 +50,8 @@ describe("CFG Immutability check", function () {
                 },
               },
             })],
-          {}
-        )
+          {},
+        ),
       );
     }
     const cfg = new ControlFlowGraph(
@@ -59,7 +59,7 @@ describe("CFG Immutability check", function () {
       nodes[1],
       nodes[1],
       new Map(nodes.map((node) => [node.id, node])),
-      []
+      [],
     );
     const rootNode = cfg.entry;
     expect(rootNode.statements).to.empty;
@@ -69,7 +69,7 @@ describe("CFG Immutability check", function () {
 
     // nodes.at(0)!.lines[0] = 23; <- this will not compile because of readonly
     nodes.push(
-      new Node("dummy", NodeType.NORMAL, "dummy", [], { lineNumbers: [] })
+      new Node("dummy", NodeType.NORMAL, "dummy", [], { lineNumbers: [] }),
     );
     expect(cfg.getNodeById("A")?.statements[0].location.start.line).to.eql(26);
     expect(cfg.nodes.size).to.not.equal(nodes.length);

@@ -68,7 +68,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   }
 
   private _getTargetNameOfDeclaration(
-    path: NodePath<t.FunctionDeclaration | t.ClassDeclaration>
+    path: NodePath<t.FunctionDeclaration | t.ClassDeclaration>,
   ): string {
     if (path.node.id === null) {
       if (path.parentPath.node.type === "ExportDefaultDeclaration") {
@@ -80,7 +80,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. function () {}
         // Should not be possible
         return this._logOrFail(
-          unsupportedSyntax(path.type, this._getNodeId(path))
+          unsupportedSyntax(path.type, this._getNodeId(path)),
         );
       }
     } else {
@@ -118,7 +118,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // e.g. const {x} = () => {}
           // Should not be possible
           return this._logOrFail(
-            unsupportedSyntax(path.node.type, this._getNodeId(path))
+            unsupportedSyntax(path.node.type, this._getNodeId(path)),
           );
         }
       }
@@ -150,7 +150,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
               // e.g. x[y] = function {}
               // e.g. x[y] = () => {}
               return this._logOrFail(
-                computedProperty(path.node.type, this._getNodeId(path))
+                computedProperty(path.node.type, this._getNodeId(path)),
               );
             }
           } else if (assigned.property.type === "Identifier") {
@@ -176,7 +176,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             // e.g. x.? = () => {}
             // Should not be possible
             return this._logOrFail(
-              unsupportedSyntax(path.node.type, this._getNodeId(path))
+              unsupportedSyntax(path.node.type, this._getNodeId(path)),
             );
           }
         } else {
@@ -185,7 +185,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // e.g. {x} = () => {}
           // Should not be possible
           return this._logOrFail(
-            unsupportedSyntax(path.node.type, this._getNodeId(path))
+            unsupportedSyntax(path.node.type, this._getNodeId(path)),
           );
         }
       }
@@ -227,7 +227,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // e.g. {?: () => {}}
           // Should not be possible
           return this._logOrFail(
-            unsupportedSyntax(path.node.type, this._getNodeId(path))
+            unsupportedSyntax(path.node.type, this._getNodeId(path)),
           );
         }
       }
@@ -275,7 +275,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         // e.g. () => {}
         // Should not be possible
         return this._logOrFail(
-          unsupportedSyntax(parentNode.type, this._getNodeId(path))
+          unsupportedSyntax(parentNode.type, this._getNodeId(path)),
         );
       }
     }
@@ -295,14 +295,14 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         targetName,
         export_,
         false,
-        false
+        false,
       );
 
       path.skip();
     };
 
   public ClassDeclaration: (path: NodePath<t.ClassDeclaration>) => void = (
-    path
+    path,
   ) => {
     // e.g. class A {}
     const targetName = this._getTargetNameOfDeclaration(path);
@@ -315,7 +315,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public FunctionExpression: (path: NodePath<t.FunctionExpression>) => void = (
-    path
+    path,
   ) => {
     // only thing left where these can be found is:
     // call(function () {})
@@ -334,7 +334,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ClassExpression: (path: NodePath<t.ClassExpression>) => void = (
-    path
+    path,
   ) => {
     // only thing left where these can be found is:
     // call(class {})
@@ -353,7 +353,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ArrowFunctionExpression: (
-    path: NodePath<t.ArrowFunctionExpression>
+    path: NodePath<t.ArrowFunctionExpression>,
   ) => void = (path) => {
     // only thing left where these can be found is:
     // call(() => {})
@@ -374,7 +374,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public VariableDeclarator: (path: NodePath<t.VariableDeclarator>) => void = (
-    path
+    path,
   ) => {
     if (!path.has("init")) {
       path.skip();
@@ -396,7 +396,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         targetName,
         export_,
         false,
-        false
+        false,
       );
     } else if (init.isClass()) {
       this._extractFromClass(init, id, typeId, targetName, export_);
@@ -410,7 +410,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public AssignmentExpression: (
-    path: NodePath<t.AssignmentExpression>
+    path: NodePath<t.AssignmentExpression>,
   ) => void = (path) => {
     const left = path.get("left");
     const right = path.get("right");
@@ -466,7 +466,8 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           objectId = this._getBindingId(object);
           // find object
           const objectTarget = this._subTargets.find(
-            (value) => value.id === objectId && value.type === TargetType.OBJECT
+            (value) =>
+              value.id === objectId && value.type === TargetType.OBJECT,
           );
 
           if (!objectTarget) {
@@ -552,7 +553,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         export_,
         isObject,
         isMethod,
-        objectId
+        objectId,
       );
     } else if (right.isClass()) {
       this._extractFromClass(right, id, typeId, targetName, export_);
@@ -573,7 +574,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     export_: Export | undefined,
     isObjectFunction: boolean,
     isMethod: boolean,
-    superId?: string
+    superId?: string,
   ) {
     let target: FunctionTarget | ObjectFunctionTarget | MethodTarget;
 
@@ -584,7 +585,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     if (isObjectFunction) {
       if (!superId) {
         throw new ImplementationError(
-          "if it is an object function the object id should be given"
+          "if it is an object function the object id should be given",
         );
       }
       target = {
@@ -598,7 +599,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     } else if (isMethod) {
       if (!superId) {
         throw new ImplementationError(
-          "if it is an object function the object id should be given"
+          "if it is an object function the object id should be given",
         );
       }
       target = {
@@ -647,7 +648,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     objectId: string,
     typeId: string,
     objectName: string,
-    export_?: Export
+    export_?: Export,
   ) {
     const target: ObjectTarget = {
       id: objectId,
@@ -669,7 +670,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           // unsupported
           // not possible i think
           this._logOrFail(
-            computedProperty(property.type, this._getNodeId(property))
+            computedProperty(property.type, this._getNodeId(property)),
           );
           continue;
         }
@@ -686,7 +687,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             undefined,
             true,
             false,
-            objectId
+            objectId,
           );
         } else if (key.isLiteral()) {
           const targetName = "value" in key ? String(key.value) : "null";
@@ -700,12 +701,12 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
             undefined,
             true,
             false,
-            objectId
+            objectId,
           );
         } else {
           // not possible i think
           this._logOrFail(
-            unsupportedSyntax(property.node.type, this._getNodeId(property))
+            unsupportedSyntax(property.node.type, this._getNodeId(property)),
           );
           continue;
         }
@@ -736,7 +737,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
               undefined,
               true,
               false,
-              objectId
+              objectId,
             );
           } else if (value.isClass()) {
             this._extractFromClass(value, id, id, targetName);
@@ -758,7 +759,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
     classId: string,
     typeId: string,
     className: string,
-    export_?: Export | undefined
+    export_?: Export | undefined,
   ): void {
     const target: ClassTarget = {
       id: classId,
@@ -782,8 +783,8 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           this._logOrFail(
             unsupportedSyntax(
               classBodyAttribute.node.type,
-              this._getNodeId(classBodyAttribute)
-            )
+              this._getNodeId(classBodyAttribute),
+            ),
           );
           continue;
         }
@@ -800,7 +801,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
           undefined,
           false,
           true,
-          classId
+          classId,
         );
       } else if (classBodyAttribute.isClassProperty()) {
         const key = classBodyAttribute.get("key");
@@ -829,7 +830,7 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
               undefined,
               false,
               true,
-              classId
+              classId,
             );
           } else if (value.isClass()) {
             this._extractFromClass(value, id, id, targetName);
@@ -841,7 +842,10 @@ export class TargetVisitor extends AbstractSyntaxTreeVisitor {
         }
       } else {
         return this._logOrFail(
-          unsupportedSyntax(body.node.type, this._getNodeId(classBodyAttribute))
+          unsupportedSyntax(
+            body.node.type,
+            this._getNodeId(classBodyAttribute),
+          ),
         );
       }
     }

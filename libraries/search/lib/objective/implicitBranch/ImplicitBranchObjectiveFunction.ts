@@ -20,7 +20,7 @@ import { Encoding } from "../../Encoding";
 import { BranchObjectiveFunction } from "../branch/BranchObjectiveFunction";
 
 export abstract class ImplicitBranchObjectiveFunction<
-  T extends Encoding
+  T extends Encoding,
 > extends BranchObjectiveFunction<T> {
   abstract override calculateDistance(encoding: T): number;
 }

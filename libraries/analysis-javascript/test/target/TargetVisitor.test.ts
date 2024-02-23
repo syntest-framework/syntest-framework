@@ -54,7 +54,7 @@ function checkFunction(
   target: SubTarget,
   name: string,
   exported: boolean,
-  isAsync: boolean
+  isAsync: boolean,
 ): void {
   expect(target.type).to.equal(TargetType.FUNCTION);
 
@@ -78,7 +78,7 @@ function checkObjectFunction(
   target: SubTarget,
   name: string,
   objectId: string,
-  isAsync: boolean
+  isAsync: boolean,
 ): void {
   expect(target.type).to.equal(TargetType.OBJECT_FUNCTION);
 
@@ -105,7 +105,7 @@ function checkClassMethod(
   methodType: string,
   visibility: string,
   isStatic: boolean,
-  isAsync: boolean
+  isAsync: boolean,
 ): void {
   expect(target.type).to.equal(TargetType.METHOD);
 
@@ -242,7 +242,7 @@ describe("TargetVisitor test", () => {
       "constructor",
       "public",
       false,
-      false
+      false,
     );
     checkClassMethod(
       targets[2],
@@ -251,7 +251,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      false
+      false,
     );
     checkClassMethod(
       targets[3],
@@ -260,7 +260,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       true,
-      false
+      false,
     );
     checkClassMethod(
       targets[4],
@@ -269,7 +269,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      true
+      true,
     );
     checkClassMethod(
       targets[5],
@@ -278,7 +278,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       true,
-      true
+      true,
     );
     checkClassMethod(
       targets[6],
@@ -287,7 +287,7 @@ describe("TargetVisitor test", () => {
       "get",
       "public",
       false,
-      false
+      false,
     );
     checkClassMethod(
       targets[7],
@@ -296,7 +296,7 @@ describe("TargetVisitor test", () => {
       "set",
       "public",
       false,
-      false
+      false,
     );
   });
 
@@ -331,7 +331,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      false
+      false,
     );
   });
 
@@ -354,7 +354,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      false
+      false,
     );
   });
 
@@ -377,7 +377,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      false
+      false,
     );
   });
 
@@ -403,7 +403,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      false
+      false,
     );
   });
 
@@ -429,7 +429,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      false
+      false,
     );
   });
 
@@ -456,7 +456,7 @@ describe("TargetVisitor test", () => {
       "method",
       "public",
       false,
-      false
+      false,
     );
   });
 

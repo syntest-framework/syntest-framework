@@ -27,7 +27,7 @@ export interface SourceModel extends Model {
 export function sourceModelFormatter<S>(
   rootContext: RootContext<S>,
   filePath: string,
-  source?: string
+  source?: string,
 ): SourceModel {
   return {
     filePath,

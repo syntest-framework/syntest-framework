@@ -38,7 +38,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
     path: NodePath<t.Node>,
     type: RelationType,
     involved: NodePath<t.Node>[],
-    computed = false
+    computed = false,
   ) {
     const id = this._getNodeId(path);
     const relation: Relation = {
@@ -52,7 +52,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
           p.node === undefined
         ) {
           throw new ImplementationError(
-            `Involved node is undefined or null for ${id}`
+            `Involved node is undefined or null for ${id}`,
           );
           // return `${id}::anonymous`; // TODO we should look into this
         }
@@ -65,7 +65,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   }
   // special
   public ReturnStatement: (path: NodePath<t.ReturnStatement>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.Return;
 
@@ -75,7 +75,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
     if (functionPath === null) {
       // should not be possible
       throw new ImplementationError(
-        "Return statement is not inside a function"
+        "Return statement is not inside a function",
       );
     }
 
@@ -87,7 +87,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public CallExpression: (path: NodePath<t.CallExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.Call;
     this._createRelation(path, type, [
@@ -102,14 +102,14 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ObjectProperty: (path: NodePath<t.ObjectProperty>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.ObjectProperty;
     this._createRelation(
       path,
       type,
       [path.get("key"), path.get("value")],
-      path.node.computed
+      path.node.computed,
     );
   };
 
@@ -119,7 +119,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
       path,
       type,
       [path.get("key"), ...path.get("params")],
-      path.node.computed
+      path.node.computed,
     );
   };
 
@@ -136,14 +136,14 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
         path,
         RelationType.StaticClassProperty,
         involved,
-        path.node.computed
+        path.node.computed,
       );
     } else {
       this._createRelation(
         path,
         RelationType.ClassProperty,
         involved,
-        path.node.computed
+        path.node.computed,
       );
     }
   };
@@ -157,7 +157,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
           path,
           RelationType.ClassConstructor,
           [classParent, path, ...path.get("params")],
-          path.node.computed
+          path.node.computed,
         );
         break;
       }
@@ -166,7 +166,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
           path,
           RelationType.ClassGetter,
           [classParent, path],
-          path.node.computed
+          path.node.computed,
         );
         break;
       }
@@ -175,7 +175,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
           path,
           RelationType.ClassSetter,
           [classParent, path, ...path.get("params")],
-          path.node.computed
+          path.node.computed,
         );
         break;
       }
@@ -185,28 +185,28 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
             path,
             RelationType.StaticAsyncClassMethod,
             [classParent, path, ...path.get("params")],
-            path.node.computed
+            path.node.computed,
           );
         } else if (path.node.static) {
           this._createRelation(
             path,
             RelationType.StaticClassMethod,
             [classParent, path, ...path.get("params")],
-            path.node.computed
+            path.node.computed,
           );
         } else if (path.node.async) {
           this._createRelation(
             path,
             RelationType.AsyncClassMethod,
             [classParent, path, ...path.get("params")],
-            path.node.computed
+            path.node.computed,
           );
         } else {
           this._createRelation(
             path,
             RelationType.ClassMethod,
             [classParent, path, ...path.get("params")],
-            path.node.computed
+            path.node.computed,
           );
         }
       }
@@ -220,7 +220,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
       this._createRelation(
         path,
         type,
-        path.get("elements").filter((p) => p.node !== null)
+        path.get("elements").filter((p) => p.node !== null),
       );
     } else {
       this._createRelation(path, type, []);
@@ -244,7 +244,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
   // primary expression
   public ThisExpression: (path: NodePath<t.ThisExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.This;
 
@@ -256,7 +256,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ArrayExpression: (path: NodePath<t.ArrayExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.ArrayInitializer;
 
@@ -264,7 +264,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
       this._createRelation(
         path,
         type,
-        path.get("elements").filter((p) => p.node !== null)
+        path.get("elements").filter((p) => p.node !== null),
       );
     } else {
       this._createRelation(path, type, []);
@@ -272,7 +272,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ObjectExpression: (path: NodePath<t.ObjectExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.ObjectInitializer;
 
@@ -284,7 +284,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public FunctionExpression: (path: NodePath<t.FunctionExpression>) => void = (
-    path
+    path,
   ) => {
     const id = path.has("id") ? path.get("id") : path;
     const involved = [id, ...path.get("params")];
@@ -293,7 +293,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
       this._createRelation(
         path,
         RelationType.AsyncFunctionStarDefinition,
-        involved
+        involved,
       );
     } else if (path.node.generator) {
       this._createRelation(path, RelationType.FunctionStarDefinition, involved);
@@ -301,7 +301,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
       this._createRelation(
         path,
         RelationType.AsyncFunctionDefinition,
-        involved
+        involved,
       );
     } else {
       this._createRelation(path, RelationType.FunctionDefinition, involved);
@@ -335,7 +335,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
     };
 
   public ArrowFunctionExpression: (
-    path: NodePath<t.ArrowFunctionExpression>
+    path: NodePath<t.ArrowFunctionExpression>,
   ) => void = (path) => {
     const type = RelationType.FunctionDefinition;
     // no id for arrow functions
@@ -351,21 +351,21 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ClassExpression: (path: NodePath<t.ClassExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.ClassDefinition;
     this._createRelation(path, type, [path.get("id")]);
   };
 
   public ClassDeclaration: (path: NodePath<t.ClassDeclaration>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.ClassDefinition;
     this._createRelation(path, type, [path.get("id")]);
   };
 
   public TemplateLiteral: (path: NodePath<t.TemplateLiteral>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.TemplateLiteral;
     this._createRelation(path, type, [
@@ -375,7 +375,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public SequenceExpression: (path: NodePath<t.SequenceExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.Sequence;
     this._createRelation(path, type, path.get("expressions"));
@@ -383,26 +383,26 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
   // left-hand-side expression
   public MemberExpression: (path: NodePath<t.MemberExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.PropertyAccessor;
     this._createRelation(
       path,
       type,
       [path.get("object"), path.get("property")],
-      path.node.computed
+      path.node.computed,
     );
   };
 
   public OptionalMemberExpression: (
-    path: NodePath<t.OptionalMemberExpression>
+    path: NodePath<t.OptionalMemberExpression>,
   ) => void = (path) => {
     const type = RelationType.OptionalPropertyAccessor;
     this._createRelation(
       path,
       type,
       [path.get("object"), path.get("property")],
-      path.node.computed
+      path.node.computed,
     );
   };
 
@@ -422,7 +422,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   // UNARY
   // increment and decrement
   public UpdateExpression: (path: NodePath<t.UpdateExpression>) => void = (
-    path
+    path,
   ) => {
     const type = getRelationType("unary", path.node.operator, path.node.prefix);
     this._createRelation(path, type, [path.get("argument")]);
@@ -430,14 +430,14 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
   // unary
   public UnaryExpression: (path: NodePath<t.UnaryExpression>) => void = (
-    path
+    path,
   ) => {
     const type = getRelationType("unary", path.node.operator, path.node.prefix);
     this._createRelation(path, type, [path.get("argument")]);
   };
 
   public AwaitExpression: (path: NodePath<t.AwaitExpression>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.Await;
     this._createRelation(path, type, [path.get("argument")]);
@@ -445,14 +445,14 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
   // binary
   public BinaryExpression: (path: NodePath<t.BinaryExpression>) => void = (
-    path
+    path,
   ) => {
     const type = getRelationType("binary", path.node.operator);
     this._createRelation(path, type, [path.get("left"), path.get("right")]);
   };
 
   public LogicalExpression: (path: NodePath<t.LogicalExpression>) => void = (
-    path
+    path,
   ) => {
     const type = getRelationType("binary", path.node.operator);
     this._createRelation(path, type, [path.get("left"), path.get("right")]);
@@ -460,7 +460,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
   // ternary
   public ConditionalExpression: (
-    path: NodePath<t.ConditionalExpression>
+    path: NodePath<t.ConditionalExpression>,
   ) => void = (path) => {
     const type = RelationType.Conditional;
     this._createRelation(path, type, [
@@ -472,21 +472,21 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
 
   // assignment
   public AssignmentExpression: (
-    path: NodePath<t.AssignmentExpression>
+    path: NodePath<t.AssignmentExpression>,
   ) => void = (path) => {
     const type = getRelationType("assignment", path.node.operator);
     this._createRelation(path, type, [path.get("left"), path.get("right")]);
   };
 
   public AssignmentPattern: (path: NodePath<t.AssignmentPattern>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.Assignment;
     this._createRelation(path, type, [path.get("left"), path.get("right")]);
   };
 
   public VariableDeclarator: (path: NodePath<t.VariableDeclarator>) => void = (
-    path
+    path,
   ) => {
     if (path.has("init")) {
       const type = RelationType.Assignment;
@@ -506,7 +506,7 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   // TODO comma
 
   public WhileStatement: (path: NodePath<t.WhileStatement>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.While;
     this._createRelation(path, type, [path.get("test")]);
@@ -527,21 +527,21 @@ export class RelationVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ForInStatement: (path: NodePath<t.ForInStatement>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.ForIn;
     this._createRelation(path, type, [path.get("left"), path.get("right")]);
   };
 
   public ForOfStatement: (path: NodePath<t.ForOfStatement>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.ForIn;
     this._createRelation(path, type, [path.get("left"), path.get("right")]);
   };
 
   public SwitchStatement: (path: NodePath<t.SwitchStatement>) => void = (
-    path
+    path,
   ) => {
     const type = RelationType.Switch;
     this._createRelation(path, type, [

@@ -28,18 +28,18 @@ export default class StatisticsModule extends Module {
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").name,
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      require("../../package.json").version
+      require("../../package.json").version,
     );
   }
 
   register(
     moduleManager: ModuleManager,
     metricManager: MetricManager,
-    _storageManager: StorageManager
+    _storageManager: StorageManager,
   ): void {
     moduleManager.registerPlugin(
       this,
-      new StatisticsMetricMiddlewarePlugin(metricManager)
+      new StatisticsMetricMiddlewarePlugin(metricManager),
     );
   }
 }

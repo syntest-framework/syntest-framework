@@ -59,7 +59,7 @@ export abstract class Statement {
     typeIdentifier: string,
     name: string,
     ownType: TypeEnum,
-    uniqueId: string
+    uniqueId: string,
   ) {
     this._variableIdentifier = variableIdentifier;
     this._typeIdentifier = typeIdentifier;

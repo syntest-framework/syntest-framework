@@ -39,7 +39,7 @@ export class BranchDistanceCalculator extends AbstractBranchDistanceCalculator {
   calculate(
     condition: string,
     variables: Record<string, unknown>,
-    trueOrFalse: boolean
+    trueOrFalse: boolean,
   ): number {
     if (condition === undefined || variables === undefined) {
       return 1;
@@ -51,7 +51,7 @@ export class BranchDistanceCalculator extends AbstractBranchDistanceCalculator {
       this.syntaxForgiving,
       this.stringAlphabet,
       variables,
-      !trueOrFalse
+      !trueOrFalse,
     );
 
     traverse(ast, visitor);
@@ -63,8 +63,8 @@ export class BranchDistanceCalculator extends AbstractBranchDistanceCalculator {
         .join(", ");
       throw new ImplementationError(
         `Invalid distance: ${distance} for ${condition} -> ${String(
-          trueOrFalse
-        )}. Variables: ${variables_}`
+          trueOrFalse,
+        )}. Variables: ${variables_}`,
       );
     }
 
@@ -86,8 +86,8 @@ export class BranchDistanceCalculator extends AbstractBranchDistanceCalculator {
         .join(", ");
       BranchDistanceCalculator.LOGGER.warn(
         `Calculated distance for condition '${condition}' -> ${String(
-          trueOrFalse
-        )}, is zero. Variables: ${variables_}`
+          trueOrFalse,
+        )}, is zero. Variables: ${variables_}`,
       );
     }
     return distance;

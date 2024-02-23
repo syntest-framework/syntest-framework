@@ -29,14 +29,14 @@ const manualRequired = "TODO fill this in yourself";
 const kebabize = (s: string) =>
   s.replaceAll(
     /[A-Z]+(?![a-z])|[A-Z]/g,
-    ($, ofs) => (ofs ? "-" : "") + $.toLowerCase()
+    ($, ofs) => (ofs ? "-" : "") + $.toLowerCase(),
   );
 
 function addCommandOptions(
   options: { [key: string]: unknown },
   tool: Tool,
   command: Command,
-  moduleManager: ModuleManager
+  moduleManager: ModuleManager,
 ) {
   for (const [name, option] of command.options.entries()) {
     options[kebabize(name)] =
@@ -54,7 +54,7 @@ function addPluginOptions(
   options: { [key: string]: unknown },
   tool: Tool,
   command: Command,
-  plugin: Plugin
+  plugin: Plugin,
 ) {
   const toolOptions = plugin.getOptions(tool.name, tool.labels);
 
@@ -66,7 +66,7 @@ function addPluginOptions(
   const commandOptions = plugin.getOptions(
     tool.name,
     tool.labels,
-    command.command
+    command.command,
   );
   for (const [name, option] of commandOptions.entries()) {
     options[kebabize(name)] =
@@ -77,7 +77,7 @@ function addPluginOptions(
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export function extractArgumentValues(
   arguments_: Yargs.ArgumentsCamelCase,
-  moduleManager: ModuleManager
+  moduleManager: ModuleManager,
 ) {
   const allOptions: { [key: string]: unknown } = {};
 

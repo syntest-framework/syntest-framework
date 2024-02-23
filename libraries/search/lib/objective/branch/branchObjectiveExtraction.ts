@@ -36,7 +36,7 @@ export function extractBranchObjectivesFromProgram<T extends Encoding>(
   cfp: ControlFlowProgram,
   approachLevelCalculator: ApproachLevelCalculator,
   branchDistanceCalculator: BranchDistanceCalculator,
-  functionObjectives: FunctionObjectiveFunction<T>[] = []
+  functionObjectives: FunctionObjectiveFunction<T>[] = [],
 ) {
   const objectives: BranchObjectiveFunction<T>[] = [];
 
@@ -49,8 +49,8 @@ export function extractBranchObjectivesFromProgram<T extends Encoding>(
         cfp,
         approachLevelCalculator,
         branchDistanceCalculator,
-        parentObjective
-      )
+        parentObjective,
+      ),
     );
   }
 
@@ -70,7 +70,7 @@ function extractBranchObjectivesFromFunction<T extends Encoding>(
   cfp: ControlFlowProgram,
   approachLevelCalculator: ApproachLevelCalculator,
   branchDistanceCalculator: BranchDistanceCalculator,
-  parentFunctionObjective: FunctionObjectiveFunction<T> | undefined
+  parentFunctionObjective: FunctionObjectiveFunction<T> | undefined,
 ) {
   const objectives: Map<string, BranchObjectiveFunction<T>> = new Map();
 
@@ -112,7 +112,7 @@ function extractBranchObjectivesFromFunction<T extends Encoding>(
             edge.target,
             cfp,
             approachLevelCalculator,
-            branchDistanceCalculator
+            branchDistanceCalculator,
           );
 
         objectives.set(edge.target, objective);

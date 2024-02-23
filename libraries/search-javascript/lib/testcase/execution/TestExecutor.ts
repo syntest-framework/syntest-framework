@@ -145,7 +145,7 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
     suites: suites,
     stats: runner.stats,
     instrumentationData: cloneDeep(
-      (<GlobalType>(<unknown>global)).__coverage__
+      (<GlobalType>(<unknown>global)).__coverage__,
     ),
     metaData: cloneDeep((<GlobalType>(<unknown>global)).__meta__),
     assertionData: cloneDeep((<GlobalType>(<unknown>global)).__assertion__),
@@ -168,8 +168,8 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return value;
-      })
-    )
+      }),
+    ),
   );
 
   mocha.dispose();

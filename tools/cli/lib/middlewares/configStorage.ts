@@ -23,13 +23,13 @@ import * as yargs from "yargs";
 export function storeConfig(
   moduleManager: ModuleManager,
   storageManager: StorageManager,
-  arguments_: yargs.ArgumentsCamelCase
+  arguments_: yargs.ArgumentsCamelCase,
 ): void {
   // Store the arguments
   const argumentsValues = extractArgumentValues(arguments_, moduleManager);
   storageManager.store(
     [],
     ".syntest.json",
-    JSON.stringify(argumentsValues, undefined, 2)
+    JSON.stringify(argumentsValues, undefined, 2),
   );
 }

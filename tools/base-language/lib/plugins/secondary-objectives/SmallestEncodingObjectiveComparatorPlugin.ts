@@ -27,12 +27,12 @@ import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
  * Plugin for SmallestEncodingObjectiveComparator
  */
 export class SmallestEncodingObjectiveComparatorPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends SecondaryObjectivePlugin<T> {
   constructor() {
     super(
       "smallest-encoding",
-      "Secondary objective based on the length of the test case"
+      "Secondary objective based on the length of the test case",
     );
   }
 

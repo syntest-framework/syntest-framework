@@ -26,7 +26,7 @@ import { ApproachLevelCalculator } from "../heuristics/ApproachLevelCalculator";
 import { BranchDistanceCalculator } from "../heuristics/BranchDistanceCalculator";
 
 export class PathObjectiveFunction<
-  T extends Encoding
+  T extends Encoding,
 > extends BranchObjectiveFunction<T> {
   protected static override LOGGER: Logger;
   protected _controlFlowPath: ControlFlowPath;
@@ -36,13 +36,13 @@ export class PathObjectiveFunction<
     controlFlowProgram: ControlFlowProgram,
     controlFlowPath: ControlFlowPath,
     approachLevelCalculator: ApproachLevelCalculator,
-    branchDistanceCalculator: BranchDistanceCalculator
+    branchDistanceCalculator: BranchDistanceCalculator,
   ) {
     super(
       id,
       controlFlowProgram,
       approachLevelCalculator,
-      branchDistanceCalculator
+      branchDistanceCalculator,
     );
     PathObjectiveFunction.LOGGER = getLogger(PathObjectiveFunction.name);
     this._controlFlowPath = controlFlowPath;
@@ -80,14 +80,14 @@ export class PathObjectiveFunction<
 
         const totalDistance = this._calculateControlFlowDistance(
           nodeId,
-          executionResult
+          executionResult,
         );
 
         if (totalDistance > 1) {
           // TODO this can bassically not happen unless there is an implementation error (should we keep it?)
           throw new ImplementationError(
             "Total distance should be less than 1 as the previous node in the path was covered",
-            { context: { actualDistance: totalDistance } }
+            { context: { actualDistance: totalDistance } },
           );
         }
 

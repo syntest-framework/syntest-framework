@@ -21,6 +21,6 @@ import { JavaScriptTestCase } from "@syntest/search-javascript";
 
 export interface Workflow {
   execute(
-    encodingMap: Map<Target, JavaScriptTestCase[]>
+    encodingMap: Map<Target, JavaScriptTestCase[]>,
   ): Promise<Map<Target, JavaScriptTestCase[]>>;
 }

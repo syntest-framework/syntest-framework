@@ -33,7 +33,7 @@ export default class JavaScriptModule extends TestingToolModule {
       // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").name,
       // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      require("../../package.json").version
+      require("../../package.json").version,
     );
   }
 
@@ -42,7 +42,7 @@ export default class JavaScriptModule extends TestingToolModule {
     metricManager: MetricManager,
     storageManager: StorageManager,
     userInterface: UserInterface,
-    modules: Module[]
+    modules: Module[],
   ): void {
     const name = "javascript";
     const labels = ["javascript", "testing"];
@@ -52,7 +52,7 @@ export default class JavaScriptModule extends TestingToolModule {
         moduleManager,
         metricManager,
         storageManager,
-        userInterface
+        userInterface,
       ),
     ];
 
@@ -69,7 +69,7 @@ export default class JavaScriptModule extends TestingToolModule {
       labels,
       "A tool for testing javascript projects.",
       commands,
-      additionalOptions
+      additionalOptions,
     );
 
     moduleManager.registerTool(this, javascriptTool);
@@ -82,7 +82,7 @@ export default class JavaScriptModule extends TestingToolModule {
       metricManager,
       storageManager,
       userInterface,
-      modules
+      modules,
     );
   }
 }
