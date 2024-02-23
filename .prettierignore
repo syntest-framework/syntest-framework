@@ -6,4 +6,5 @@
 **/NOTICE
 .eslintignore
 .gitignore
+.husky/
 .prettierignore

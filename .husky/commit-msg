@@ -1,6 +1,4 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
+#!/bin/sh
 # Do not run pre-commit hooks when running in CI.
 [ -n "$CI" ] && exit 0
 
