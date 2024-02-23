@@ -42,7 +42,7 @@ import { ObjectiveFunction } from "./ObjectiveFunction";
  * Objective function based on control flow graph calculations.
  */
 export abstract class ControlFlowBasedObjectiveFunction<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveFunction<T> {
   protected controlFlowProgram: ControlFlowProgram;
   protected approachLevelCalculator: ApproachLevelCalculator;
@@ -53,11 +53,11 @@ export abstract class ControlFlowBasedObjectiveFunction<
     id: string,
     controlFlowProgram: ControlFlowProgram,
     approachLevelCalculator: ApproachLevelCalculator,
-    branchDistanceCalculator: BranchDistanceCalculator
+    branchDistanceCalculator: BranchDistanceCalculator,
   ) {
     super(id);
     ControlFlowBasedObjectiveFunction.LOGGER = getLogger(
-      ControlFlowBasedObjectiveFunction.name
+      ControlFlowBasedObjectiveFunction.name,
     );
 
     this.controlFlowProgram = controlFlowProgram;
@@ -66,22 +66,22 @@ export abstract class ControlFlowBasedObjectiveFunction<
   }
 
   protected getMatchingFunctionGraph(
-    nodeId: string
+    nodeId: string,
   ): ControlFlowGraph | ContractedControlFlowGraph {
     // find the function that corresponds with this node id
     const functions_ = this.controlFlowProgram.functions.filter(
-      (function_) => function_.graph.getNodeById(nodeId) !== undefined
+      (function_) => function_.graph.getNodeById(nodeId) !== undefined,
     );
 
     if (functions_.length > 1) {
       throw new IllegalStateError(
-        "Found multiple functions with the given nodeId"
+        "Found multiple functions with the given nodeId",
       );
     }
 
     if (functions_.length === 0) {
       throw new IllegalArgumentError(
-        "Found zero functions with the given nodeId"
+        "Found zero functions with the given nodeId",
       );
     }
 
@@ -105,7 +105,7 @@ export abstract class ControlFlowBasedObjectiveFunction<
   // eslint-disable-next-line sonarjs/cognitive-complexity
   protected _calculateControlFlowDistance(
     id: string,
-    executionResult: ExecutionResult
+    executionResult: ExecutionResult,
   ): number {
     // find the function that corresponds with this branch
     const graph = this.getMatchingFunctionGraph(id);
@@ -115,7 +115,7 @@ export abstract class ControlFlowBasedObjectiveFunction<
     const result = this.approachLevelCalculator.calculate(
       graph,
       targetNode,
-      executionResult.getTraces()
+      executionResult.getTraces(),
     );
 
     // if closest node is not found, we return the distance to the root branch
@@ -150,7 +150,7 @@ export abstract class ControlFlowBasedObjectiveFunction<
 
       // return approachLevel + 0.48 * statementFraction + 0.01;
       throw new ImplementationError(
-        "Statement fraction should not be zero because that means it crashed on the conditional instead of the first statement of a block, could be that the traces are wrong"
+        "Statement fraction should not be zero because that means it crashed on the conditional instead of the first statement of a block, could be that the traces are wrong",
       );
     }
 
@@ -164,34 +164,34 @@ export abstract class ControlFlowBasedObjectiveFunction<
     const targetEdge = outgoingEdges.find((edge) =>
       lastEdgeType
         ? edge.type === EdgeType.CONDITIONAL_TRUE
-        : edge.type === EdgeType.CONDITIONAL_FALSE
+        : edge.type === EdgeType.CONDITIONAL_FALSE,
     );
 
     if (!targetEdge) {
       // weird
       throw new ImplementationError(
         "Node has two outgoing edges but neither is a true/false edge",
-        { context: { objectiveId: id, nodeId: closestCoveredNode.id } }
+        { context: { objectiveId: id, nodeId: closestCoveredNode.id } },
       );
     }
 
     const trace = executionResult
       .getTraces()
       .find(
-        (trace) => trace.id === targetEdge.target && trace.type === "branch"
+        (trace) => trace.id === targetEdge.target && trace.type === "branch",
       );
 
     if (trace === undefined) {
       throw new ImplementationError(
         "Cannot find trace belonging to the true/false node",
-        { context: { objectiveId: id, nodeId: closestCoveredNode.id } }
+        { context: { objectiveId: id, nodeId: closestCoveredNode.id } },
       );
     }
 
     let branchDistance = this.branchDistanceCalculator.calculate(
       trace.condition,
       trace.variables,
-      lastEdgeType
+      lastEdgeType,
     );
 
     if (Number.isNaN(approachLevel)) {

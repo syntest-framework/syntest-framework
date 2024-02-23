@@ -63,10 +63,10 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
     super(
       "websocket",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module
-      require("../../package.json").description
+      require("../../package.json").description,
     );
     WebsocketEventListenerPlugin.LOGGER = getLogger(
-      "WebsocketEventListenerPlugin"
+      "WebsocketEventListenerPlugin",
     );
   }
 
@@ -83,7 +83,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
 
     if (url === undefined) {
       WebsocketEventListenerPlugin.LOGGER.warn(
-        `There was no websocket url provided to the websocket plugin. Skipping connection.`
+        `There was no websocket url provided to the websocket plugin. Skipping connection.`,
       );
       return;
     }
@@ -94,18 +94,18 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
     await new Promise<void>((resolve, reject) => {
       client.on("error", (error) => {
         WebsocketEventListenerPlugin.LOGGER.error(
-          `Error connecting to server with url: ${url}\n error: ${error.name}, ${error.message}`
+          `Error connecting to server with url: ${url}\n error: ${error.name}, ${error.message}`,
         );
         reject();
       });
       client.on("open", () => {
         WebsocketEventListenerPlugin.LOGGER.info(
-          `Connected to server with url: ${url}`
+          `Connected to server with url: ${url}`,
         );
         client.send(
           Buffer.from(
-            JSON.stringify({ event: "publisherPluginStarted", fid: this._fid })
-          )
+            JSON.stringify({ event: "publisherPluginStarted", fid: this._fid }),
+          ),
         );
         resolve();
       });
@@ -114,7 +114,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       });
       client.on("close", () => {
         WebsocketEventListenerPlugin.LOGGER.info(
-          `Disconnected from server with url: ${url}`
+          `Disconnected from server with url: ${url}`,
         );
         client.terminate();
       });
@@ -136,77 +136,77 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
     }
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("initializeStart", () =>
-      handler(this.client, this._fid, "initializeStart", {})
+      handler(this.client, this._fid, "initializeStart", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "initializeComplete",
-      () => handler(this.client, this._fid, "initializeComplete", {})
+      () => handler(this.client, this._fid, "initializeComplete", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("preprocessStart", () =>
-      handler(this.client, this._fid, "preprocessStart", {})
+      handler(this.client, this._fid, "preprocessStart", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "preprocessComplete",
-      () => handler(this.client, this._fid, "preprocessComplete", {})
+      () => handler(this.client, this._fid, "preprocessComplete", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("processStart", () =>
-      handler(this.client, this._fid, "processStart", {})
+      handler(this.client, this._fid, "processStart", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("processComplete", () =>
-      handler(this.client, this._fid, "processComplete", {})
+      handler(this.client, this._fid, "processComplete", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "postprocessStart",
-      () => handler(this.client, this._fid, "postprocessStart", {})
+      () => handler(this.client, this._fid, "postprocessStart", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "postprocessComplete",
-      () => handler(this.client, this._fid, "postprocessComplete", {})
+      () => handler(this.client, this._fid, "postprocessComplete", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "instrumentationStart",
-      () => handler(this.client, this._fid, "instrumentationStart", {})
+      () => handler(this.client, this._fid, "instrumentationStart", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "instrumentationComplete",
-      () => handler(this.client, this._fid, "instrumentationComplete", {})
+      () => handler(this.client, this._fid, "instrumentationComplete", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("targetRunStart", () =>
-      handler(this.client, this._fid, "targetRunStart", {})
+      handler(this.client, this._fid, "targetRunStart", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on(
       "targetRunComplete",
-      () => handler(this.client, this._fid, "targetRunComplete", {})
+      () => handler(this.client, this._fid, "targetRunComplete", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportStart", () =>
-      handler(this.client, this._fid, "reportStart", {})
+      handler(this.client, this._fid, "reportStart", {}),
     );
 
     (<TypedEventEmitter<BaseLanguageEvents>>process).on("reportComplete", () =>
-      handler(this.client, this._fid, "reportComplete", {})
+      handler(this.client, this._fid, "reportComplete", {}),
     );
 
     // search events
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchInitializationStart",
-      () => handler(this.client, this._fid, "searchInitializationStart", {})
+      () => handler(this.client, this._fid, "searchInitializationStart", {}),
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchInitializationComplete",
-      () => handler(this.client, this._fid, "searchInitializationComplete", {})
+      () => handler(this.client, this._fid, "searchInitializationComplete", {}),
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
@@ -215,14 +215,14 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
         searchAlgorithm: SearchAlgorithm<Encoding>,
         subject: SearchSubject<Encoding>,
         budgetManager: BudgetManager<Encoding>,
-        _terminationManager: TerminationManager
+        _terminationManager: TerminationManager,
       ) =>
         handler(
           this.client,
           this._fid,
           "searchStart",
-          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
-        )
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager),
+        ),
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
@@ -232,14 +232,14 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
         searchAlgorithm: SearchAlgorithm<Encoding>,
         subject: SearchSubject<Encoding>,
         budgetManager: BudgetManager<Encoding>,
-        _terminationManager: TerminationManager
+        _terminationManager: TerminationManager,
       ) =>
         handler(
           this.client,
           this._fid,
           "searchComplete",
-          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
-        )
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager),
+        ),
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
@@ -248,14 +248,14 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
         searchAlgorithm: SearchAlgorithm<Encoding>,
         subject: SearchSubject<Encoding>,
         budgetManager: BudgetManager<Encoding>,
-        _terminationManager: TerminationManager
+        _terminationManager: TerminationManager,
       ) =>
         handler(
           this.client,
           this._fid,
           "searchIterationStart",
-          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
-        )
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager),
+        ),
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
@@ -264,14 +264,14 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
         searchAlgorithm: SearchAlgorithm<Encoding>,
         subject: SearchSubject<Encoding>,
         budgetManager: BudgetManager<Encoding>,
-        _terminationManager: TerminationManager
+        _terminationManager: TerminationManager,
       ) =>
         handler(
           this.client,
           this._fid,
           "searchIterationComplete",
-          searchProgressFormatter(searchAlgorithm, subject, budgetManager)
-        )
+          searchProgressFormatter(searchAlgorithm, subject, budgetManager),
+        ),
     );
 
     // analysis events
@@ -282,8 +282,8 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this.client,
           this._fid,
           "sourceResolvingStart",
-          sourceModelFormatter(rootContext, filePath)
-        )
+          sourceModelFormatter(rootContext, filePath),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -293,9 +293,9 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this.client,
           this._fid,
           "sourceResolvingComplete",
-          sourceModelFormatter(rootContext, filePath, source)
+          sourceModelFormatter(rootContext, filePath, source),
         );
-      }
+      },
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -305,8 +305,8 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this.client,
           this._fid,
           "abstractSyntaxTreeResolvingStart",
-          abstractSyntaxTreeModelFormatter(rootContext, filePath)
-        )
+          abstractSyntaxTreeModelFormatter(rootContext, filePath),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -314,7 +314,7 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
-        abstractSyntaxTree: S
+        abstractSyntaxTree: S,
       ) =>
         handler(
           this.client,
@@ -323,9 +323,9 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           abstractSyntaxTreeModelFormatter(
             rootContext,
             filePath,
-            abstractSyntaxTree
-          )
-        )
+            abstractSyntaxTree,
+          ),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -335,8 +335,8 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this.client,
           this._fid,
           "controlFlowGraphResolvingStart",
-          controlFlowGraphModelFormatter(rootContext, filePath)
-        )
+          controlFlowGraphModelFormatter(rootContext, filePath),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -344,14 +344,14 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
-        cfp: ControlFlowProgram
+        cfp: ControlFlowProgram,
       ) =>
         handler(
           this.client,
           this._fid,
           "controlFlowGraphResolvingComplete",
-          controlFlowGraphModelFormatter(rootContext, filePath, cfp)
-        )
+          controlFlowGraphModelFormatter(rootContext, filePath, cfp),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -361,8 +361,8 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this.client,
           this._fid,
           "targetExtractionStart",
-          targetModelFormatter(rootContext, filePath)
-        )
+          targetModelFormatter(rootContext, filePath),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -372,8 +372,8 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this.client,
           this._fid,
           "targetExtractionComplete",
-          targetModelFormatter(rootContext, filePath, target)
-        )
+          targetModelFormatter(rootContext, filePath, target),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -383,8 +383,8 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
           this.client,
           this._fid,
           "dependencyResolvingStart",
-          dependencyModelFormatter(rootContext, filePath)
-        )
+          dependencyModelFormatter(rootContext, filePath),
+        ),
     );
 
     (<TypedEventEmitter<AnalysisEvents>>process).on(
@@ -392,21 +392,21 @@ export class WebsocketEventListenerPlugin extends EventListenerPlugin {
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
-        dependencies: string[]
+        dependencies: string[],
       ) =>
         handler(
           this.client,
           this._fid,
           "dependencyResolvingComplete",
-          dependencyModelFormatter(rootContext, filePath, dependencies)
-        )
+          dependencyModelFormatter(rootContext, filePath, dependencies),
+        ),
     );
   }
 
   override getOptions(
     tool: string,
     labels: string[],
-    command: string
+    command: string,
   ): Map<string, Yargs.Options> {
     const optionsMap = new Map<string, Yargs.Options>();
 

@@ -27,7 +27,7 @@ import { PopulationBasedObjectiveManager } from "./PopulationBasedObjectiveManag
  * A simple objective manager that always evaluates an encoding on all objectives.
  */
 export class SimpleObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends PopulationBasedObjectiveManager<T> {
   /**
    * @inheritDoc
@@ -36,7 +36,7 @@ export class SimpleObjectiveManager<
    */
   protected _updateArchive(
     objectiveFunction: ObjectiveFunction<T>,
-    encoding: T
+    encoding: T,
   ) {
     ObjectiveManager.LOGGER.debug("updating archive");
     this._archive.update(objectiveFunction, encoding, true);
@@ -47,7 +47,7 @@ export class SimpleObjectiveManager<
    * @protected
    */
   protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>
+    objectiveFunction: ObjectiveFunction<T>,
   ): ObjectiveFunction<T>[] {
     // Remove objective from the uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);

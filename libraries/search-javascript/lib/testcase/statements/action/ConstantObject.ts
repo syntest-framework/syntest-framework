@@ -31,7 +31,7 @@ export class ConstantObject extends ActionStatement {
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    export_: Export
+    export_: Export,
   ) {
     super(
       variableIdentifier,
@@ -40,7 +40,7 @@ export class ConstantObject extends ActionStatement {
       TypeEnum.OBJECT,
       uniqueId,
       [],
-      export_
+      export_,
     );
   }
 
@@ -54,7 +54,7 @@ export class ConstantObject extends ActionStatement {
           this.typeIdentifier,
           this.export.id,
           this.name,
-          sampler.statementPool
+          sampler.statementPool,
         );
   }
 
@@ -64,14 +64,14 @@ export class ConstantObject extends ActionStatement {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      this.export
+      this.export,
     );
   }
 
   decode(context: ContextBuilder): Decoding[] {
     const import_ = context.getOrCreateImportName(this.export);
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = ${import_}`;
 
     return [

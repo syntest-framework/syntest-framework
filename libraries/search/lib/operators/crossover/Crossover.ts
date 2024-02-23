@@ -30,7 +30,7 @@ export abstract class Crossover<T extends Encoding> {
 
   constructor(
     crossoverEncodingProbability: number,
-    crossoverStatementProbability: number
+    crossoverStatementProbability: number,
   ) {
     this._crossoverEncodingProbability = crossoverEncodingProbability;
     this._crossoverStatementProbability = crossoverStatementProbability;

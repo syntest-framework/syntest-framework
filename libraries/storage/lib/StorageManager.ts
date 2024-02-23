@@ -39,7 +39,7 @@ export class StorageManager {
   constructor(
     syntestDirectory: string,
     temporarySynTestDirectory: string,
-    fid: string
+    fid: string,
   ) {
     StorageManager.LOGGER = getLogger("StorageManager");
     this.syntestDirectory = syntestDirectory;
@@ -51,18 +51,18 @@ export class StorageManager {
     for (const pathPart of directoryPath) {
       if (pathPart.includes("/") || pathPart.includes("\\")) {
         throw new IllegalArgumentError(
-          "Storage path cannot contain any of the following characters /\\"
+          "Storage path cannot contain any of the following characters /\\",
         );
       }
     }
 
     if (temporary) {
       return path.resolve(
-        path.join(this.tempSyntestDirectory, this.fid, ...directoryPath)
+        path.join(this.tempSyntestDirectory, this.fid, ...directoryPath),
       );
     }
     return path.resolve(
-      path.join(this.syntestDirectory, this.fid, ...directoryPath)
+      path.join(this.syntestDirectory, this.fid, ...directoryPath),
     );
   }
 
@@ -143,18 +143,18 @@ export class StorageManager {
     fileName: string,
     data: string,
     temporary = false,
-    append = false
+    append = false,
   ): string {
     if (fileName.includes("/") || fileName.includes("\\")) {
       throw new IllegalArgumentError(
-        "Filename cannot contain any of the following characters /\\"
+        "Filename cannot contain any of the following characters /\\",
       );
     }
 
     for (const pathPart of storagePath) {
       if (pathPart.includes("/") || pathPart.includes("\\")) {
         throw new IllegalArgumentError(
-          "Storage path cannot contain any of the following characters /\\"
+          "Storage path cannot contain any of the following characters /\\",
         );
       }
     }
@@ -162,7 +162,7 @@ export class StorageManager {
     this.createDirectory(storagePath, temporary);
     const fullPath = path.join(
       this.getFullPath(storagePath, temporary),
-      fileName
+      fileName,
     );
 
     if (append && existsSync(fullPath)) {
@@ -192,7 +192,7 @@ export class StorageManager {
 
   copyToTemporaryDirectory(
     originalDirectoryPath: string[],
-    destinationDirectoryPath: string[]
+    destinationDirectoryPath: string[],
   ) {
     const originalPath = path.join(...originalDirectoryPath);
     const destinationPath = this.getFullPath(destinationDirectoryPath, true);

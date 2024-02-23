@@ -66,7 +66,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     temporaryTestDirectory: string,
     executionTimeout: number,
     testTimeout: number,
-    silenceTestOutput: boolean
+    silenceTestOutput: boolean,
   ) {
     JavaScriptRunner.LOGGER = getLogger(JavaScriptRunner.name);
     this.storageManager = storageManager;
@@ -83,11 +83,11 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
   async run(
     paths: string[],
-    amount = 1
+    amount = 1,
   ): Promise<Omit<DoneMessage, "message">> {
     if (amount < 1) {
       throw new IllegalArgumentError(
-        `Amount of tests cannot be smaller than 1`
+        `Amount of tests cannot be smaller than 1`,
       );
     }
     paths = paths.map((p) => path.resolve(p));
@@ -102,7 +102,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     return await new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         JavaScriptRunner.LOGGER.warn(
-          `Execution timeout reached killing process, timeout: ${this.executionTimeout} times ${amount}`
+          `Execution timeout reached killing process, timeout: ${this.executionTimeout} times ${amount}`,
         );
         childProcess.removeAllListeners();
         childProcess.kill();
@@ -118,8 +118,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
                 context: {
                   data: data,
                 },
-              }
-            )
+              },
+            ),
           );
         }
 
@@ -162,7 +162,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       [this.tempTestDirectory],
       "tempTest.spec.js",
       decodedTestCase,
-      true
+      true,
     );
 
     let executionResult: JavaScriptExecutionResult;
@@ -178,7 +178,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
       const traces: Trace[] = this._extractTraces(
         instrumentationData,
-        metaData
+        metaData,
       );
 
       // Retrieve execution information
@@ -186,7 +186,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         test.status,
         traces,
         test.duration,
-        test.error
+        test.error,
       );
 
       if (assertionData && assertionData[testCase.id]) {
@@ -200,7 +200,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
           JavaScriptExecutionStatus.INFINITE_LOOP,
           [],
           -1,
-          undefined
+          undefined,
         );
       } else {
         JavaScriptRunner.LOGGER.error(String(error));
@@ -211,7 +211,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
     // Remove test file
     this.storageManager.deleteTemporary(
       [this.tempTestDirectory],
-      "tempTest.spec.js"
+      "tempTest.spec.js",
     );
 
     return executionResult;
@@ -219,7 +219,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
 
   private _extractTraces(
     instrumentationData: InstrumentationDataMap,
-    metaData: MetaDataMap
+    metaData: MetaDataMap,
   ): Trace[] {
     const traces: Trace[] = [];
 
@@ -239,7 +239,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       }
 
       for (const statementKey of Object.keys(
-        instrumentationData[key].statementMap
+        instrumentationData[key].statementMap,
       )) {
         const statement = instrumentationData[key].statementMap[statementKey];
         const hits = instrumentationData[key].s[statementKey];
@@ -258,8 +258,8 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
         ...this._extractBranchTraces(
           key,
           instrumentationData[key],
-          metaData !== undefined && key in metaData ? metaData[key] : undefined
-        )
+          metaData !== undefined && key in metaData ? metaData[key] : undefined,
+        ),
       );
     }
 
@@ -269,7 +269,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
   private _extractBranchTraces(
     key: string,
     instrumentationData: InstrumentationData,
-    metaData: MetaData
+    metaData: MetaData,
   ): Trace[] {
     const traces: Trace[] = [];
     for (const branchKey of Object.keys(instrumentationData.branchMap)) {
@@ -305,7 +305,7 @@ export class JavaScriptRunner implements EncodingRunner<JavaScriptTestCase> {
       ) {
         // otherwise something is wrong
         throw new ImplementationError(
-          `Invalid number of locations for branch type: ${branch.type}`
+          `Invalid number of locations for branch type: ${branch.type}`,
         );
       }
     }

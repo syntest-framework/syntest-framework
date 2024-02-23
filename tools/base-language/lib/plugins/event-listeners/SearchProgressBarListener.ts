@@ -33,7 +33,7 @@ export class SearchProgressBarListener extends EventListenerPlugin {
   constructor(userInterface: UserInterface) {
     super(
       "SearchProgressBarListener",
-      "A listener that creates and updates a progress bar for the search process."
+      "A listener that creates and updates a progress bar for the search process.",
     );
     this._userInterface = userInterface;
   }
@@ -44,7 +44,7 @@ export class SearchProgressBarListener extends EventListenerPlugin {
       <E extends Encoding>(
         _searchAlgorithm: SearchAlgorithm<E>,
         subject: SearchSubject<E>,
-        budgetManager: BudgetManager<E>
+        budgetManager: BudgetManager<E>,
       ) => {
         this._userInterface.startProgressBars([
           {
@@ -54,7 +54,7 @@ export class SearchProgressBarListener extends EventListenerPlugin {
             meta: `Budget: ${budgetManager.getBudget()}`,
           },
         ]);
-      }
+      },
     );
 
     (<TypedEventEmitter<Events>>process).on(
@@ -62,7 +62,7 @@ export class SearchProgressBarListener extends EventListenerPlugin {
       <E extends Encoding>(
         searchAlgorithm: SearchAlgorithm<E>,
         subject: SearchSubject<E>,
-        budgetManager: BudgetManager<E>
+        budgetManager: BudgetManager<E>,
       ) => {
         const originalObjectives = subject.objectives;
         this._userInterface.updateProgressBar({
@@ -74,13 +74,14 @@ export class SearchProgressBarListener extends EventListenerPlugin {
             .filter((coveredObjective) =>
               originalObjectives.find(
                 (objective) =>
-                  objective.getIdentifier() === coveredObjective.getIdentifier()
-              )
+                  objective.getIdentifier() ===
+                  coveredObjective.getIdentifier(),
+              ),
             ).length,
           maxValue: originalObjectives.length,
           meta: `Budget: ${budgetManager.getBudget()}%`,
         });
-      }
+      },
     );
     (<TypedEventEmitter<Events>>process).on("searchComplete", () => {
       this._userInterface.stopProgressBars();

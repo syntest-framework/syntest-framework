@@ -26,7 +26,7 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
  * It is added dynamically when an exception occurs on runtime.
  */
 export class ExceptionObjectiveFunction<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveFunction<T> {
   protected _error: Error;
 

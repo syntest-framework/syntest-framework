@@ -38,12 +38,12 @@ export class SPEAII<T extends Encoding> extends SPEAIIFamily<T> {
     const fitness: Map<T, number> = this.calculateFitness(
       [...this._population, ...this._archive],
       k,
-      this._objectiveManager.getCurrentObjectives()
+      this._objectiveManager.getCurrentObjectives(),
     );
 
     // All solutions with fitness <1 are non-dominated
     const nextFront: T[] = [...fitness.keys()].filter(
-      (key: T) => fitness.get(key) < 1
+      (key: T) => fitness.get(key) < 1,
     );
 
     // If there are not enough non-dominated solutions, add the best dominated solutions

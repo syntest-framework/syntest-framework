@@ -44,7 +44,7 @@ export function cache(cacheName: string) {
   return function (
     _: RootContext<unknown>,
     __: string,
-    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
+    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>>, // eslint-disable-line @typescript-eslint/no-explicit-any
   ) {
     const method = descriptor.value;
     descriptor.value = function (filePath: string) {
@@ -67,7 +67,7 @@ export function resolvePath() {
   return function (
     _: RootContext<unknown>,
     __: string,
-    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
+    descriptor: TypedPropertyDescriptor<(filePath: string) => Result<any>>, // eslint-disable-line @typescript-eslint/no-explicit-any
   ) {
     const method = descriptor.value;
     descriptor.value = function (filePath: string) {
@@ -97,7 +97,7 @@ export class RootContext<S> {
     abstractSyntaxTreeFactory: AbstractSyntaxTreeFactory<S>,
     controlFlowGraphFactory: ControlFlowGraphFactory<S>,
     targetFactory: TargetFactory<S>,
-    dependencyFactory: DependencyFactory<S>
+    dependencyFactory: DependencyFactory<S>,
   ) {
     this._rootPath = path.resolve(rootPath);
 
@@ -115,7 +115,7 @@ export class RootContext<S> {
       return failure(
         new IOError("The given filepath is not in the given root path", {
           context: { rootPath: this._rootPath, filePath: filePath },
-        })
+        }),
       );
     }
 
@@ -141,7 +141,7 @@ export class RootContext<S> {
       "sourceResolvingComplete",
       this,
       filePath,
-      unwrap(sourceResult)
+      unwrap(sourceResult),
     );
 
     return sourceResult;
@@ -157,7 +157,7 @@ export class RootContext<S> {
     (<TypedEmitter<Events>>process).emit(
       "abstractSyntaxTreeResolvingStart",
       this,
-      filePath
+      filePath,
     );
 
     const sourceResult = this.getSource(filePath);
@@ -166,7 +166,7 @@ export class RootContext<S> {
 
     const astResult = this.abstractSyntaxTreeFactory.convert(
       filePath,
-      unwrap(sourceResult)
+      unwrap(sourceResult),
     );
 
     if (isFailure(astResult)) return astResult;
@@ -175,7 +175,7 @@ export class RootContext<S> {
       "abstractSyntaxTreeResolvingComplete",
       this,
       filePath,
-      unwrap(astResult)
+      unwrap(astResult),
     );
 
     return astResult;
@@ -191,7 +191,7 @@ export class RootContext<S> {
     (<TypedEmitter<Events>>process).emit(
       "controlFlowGraphResolvingStart",
       this,
-      filePath
+      filePath,
     );
 
     const astResult = this.getAbstractSyntaxTree(filePath);
@@ -200,7 +200,7 @@ export class RootContext<S> {
 
     const cfgResult = this.controlFlowGraphFactory.convert(
       filePath,
-      unwrap(astResult)
+      unwrap(astResult),
     );
 
     if (isFailure(cfgResult)) return cfgResult;
@@ -209,7 +209,7 @@ export class RootContext<S> {
       "controlFlowGraphResolvingComplete",
       this,
       filePath,
-      unwrap(cfgResult)
+      unwrap(cfgResult),
     );
 
     return cfgResult;
@@ -226,7 +226,7 @@ export class RootContext<S> {
     (<TypedEmitter<Events>>process).emit(
       "targetExtractionStart",
       this,
-      filePath
+      filePath,
     );
 
     const astResult = this.getAbstractSyntaxTree(filePath);
@@ -235,7 +235,7 @@ export class RootContext<S> {
 
     const targetResult = this.targetFactory.extract(
       filePath,
-      unwrap(astResult)
+      unwrap(astResult),
     );
 
     if (isFailure(targetResult)) return targetResult;
@@ -244,7 +244,7 @@ export class RootContext<S> {
       "targetExtractionComplete",
       this,
       filePath,
-      unwrap(targetResult)
+      unwrap(targetResult),
     );
 
     return targetResult;
@@ -260,7 +260,7 @@ export class RootContext<S> {
     (<TypedEmitter<Events>>process).emit(
       "dependencyResolvingStart",
       this,
-      filePath
+      filePath,
     );
     const astResult = this.getAbstractSyntaxTree(filePath);
 
@@ -268,7 +268,7 @@ export class RootContext<S> {
 
     const dependencyResult = this.dependencyFactory.extract(
       filePath,
-      unwrap(astResult)
+      unwrap(astResult),
     );
 
     if (isFailure(dependencyResult)) return dependencyResult;
@@ -277,7 +277,7 @@ export class RootContext<S> {
       "dependencyResolvingComplete",
       this,
       filePath,
-      unwrap(dependencyResult)
+      unwrap(dependencyResult),
     );
 
     return dependencyResult;

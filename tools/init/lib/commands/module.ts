@@ -28,7 +28,7 @@ export type ModuleOptions = {
 
 export function getModuleCommand(
   tool: string,
-  moduleManager: ModuleManager
+  moduleManager: ModuleManager,
 ): Command {
   const options = new Map<string, Yargs.Options>();
 
@@ -56,12 +56,12 @@ export function getModuleCommand(
       }
 
       shell.exec(
-        "git clone git@github.com:syntest-framework/syntest-plugin-template.git"
+        "git clone git@github.com:syntest-framework/syntest-plugin-template.git",
       );
 
       shell.mv(
         "syntest-plugin-template",
-        (<ModuleOptions>(<unknown>arguments_)).moduleName
+        (<ModuleOptions>(<unknown>arguments_)).moduleName,
       );
       shell.cd((<ModuleOptions>(<unknown>arguments_)).moduleName);
       shell.rm("-rf", ".git");
@@ -69,16 +69,16 @@ export function getModuleCommand(
 
       writeFileSync(
         path.join("lib", "index.ts"),
-        getIndexFile(`./${(<ModuleOptions>(<unknown>arguments_)).moduleName}`)
+        getIndexFile(`./${(<ModuleOptions>(<unknown>arguments_)).moduleName}`),
       );
       writeFileSync(
         path.join(
           "lib",
-          `${(<ModuleOptions>(<unknown>arguments_)).moduleName}.ts`
+          `${(<ModuleOptions>(<unknown>arguments_)).moduleName}.ts`,
         ),
-        getModuleFile((<ModuleOptions>(<unknown>arguments_)).moduleName)
+        getModuleFile((<ModuleOptions>(<unknown>arguments_)).moduleName),
       );
-    }
+    },
   );
 }
 

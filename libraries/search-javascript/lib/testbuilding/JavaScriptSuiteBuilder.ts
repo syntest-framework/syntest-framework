@@ -33,7 +33,7 @@ export class JavaScriptSuiteBuilder {
   constructor(
     storageManager: StorageManager,
     decoder: JavaScriptDecoder,
-    runner: JavaScriptRunner
+    runner: JavaScriptRunner,
   ) {
     this.storageManager = storageManager;
     this.decoder = decoder;
@@ -55,7 +55,7 @@ export class JavaScriptSuiteBuilder {
     testDirectory: string,
     gatherAssertionData: boolean,
     compact: boolean,
-    final = false
+    final = false,
   ) {
     const paths: { [key: string]: number } = {};
 
@@ -64,13 +64,13 @@ export class JavaScriptSuiteBuilder {
         const decodedTest = this.decoder.decode(
           archive.get(target),
           gatherAssertionData,
-          sourceDirectory
+          sourceDirectory,
         );
         const testPath = this.storageManager.store(
           [testDirectory],
           `test-${target.name}.spec.js`,
           decodedTest,
-          !final
+          !final,
         );
 
         if (paths[testPath] !== undefined) {
@@ -83,13 +83,13 @@ export class JavaScriptSuiteBuilder {
           const decodedTest = this.decoder.decode(
             testCase,
             gatherAssertionData,
-            sourceDirectory
+            sourceDirectory,
           );
           const testPath = this.storageManager.store(
             [testDirectory],
             `test-${target.name}-${testCase.id}.spec.js`,
             decodedTest,
-            !final
+            !final,
           );
 
           if (paths[testPath] !== undefined) {
@@ -115,7 +115,7 @@ export class JavaScriptSuiteBuilder {
   async runSuite(
     archive: Map<Target, JavaScriptTestCase[]>,
     paths: { [key: string]: number },
-    gatherAssertionData: boolean
+    gatherAssertionData: boolean,
   ) {
     const results = [];
 
@@ -148,7 +148,7 @@ export class JavaScriptSuiteBuilder {
       stats: Mocha.Stats;
       instrumentationData: InstrumentationDataMap;
     }[],
-    targets: Target[]
+    targets: Target[],
   ) {
     type Summary = {
       branch: {
@@ -211,12 +211,12 @@ export class JavaScriptSuiteBuilder {
         for (const branchKey of Object.keys(data.b)) {
           for (const branchIndex of data.b[branchKey].keys()) {
             summary["branch"].total.add(
-              branchKey + " - " + String(branchIndex)
+              branchKey + " - " + String(branchIndex),
             );
 
             if (data.b[branchKey][branchIndex]) {
               summary["branch"].covered.add(
-                branchKey + " - " + String(branchIndex)
+                branchKey + " - " + String(branchIndex),
               );
             }
           }

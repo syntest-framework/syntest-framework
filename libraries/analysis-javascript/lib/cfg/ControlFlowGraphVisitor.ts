@@ -83,8 +83,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(returnNode),
           successExitNode,
-          EdgeType.NORMAL
-        )
+          EdgeType.NORMAL,
+        ),
       );
     }
 
@@ -94,32 +94,32 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(throwNode),
           errorExitNode,
-          EdgeType.EXCEPTION
-        )
+          EdgeType.EXCEPTION,
+        ),
       );
     }
 
     if (this._regularBreakNodesStack.length > 0) {
       ControlFlowGraphVisitor.LOGGER.warn(
-        `Found ${this._regularBreakNodesStack.length} break node stacks that are not connected to a loop`
+        `Found ${this._regularBreakNodesStack.length} break node stacks that are not connected to a loop`,
       );
     }
 
     if (this._regularContinueNodesStack.length > 0) {
       ControlFlowGraphVisitor.LOGGER.warn(
-        `Found ${this._regularContinueNodesStack.length} continue node stacks that are not connected to a loop`
+        `Found ${this._regularContinueNodesStack.length} continue node stacks that are not connected to a loop`,
       );
     }
 
     if (this._labeledBreakNodes.size > 0) {
       ControlFlowGraphVisitor.LOGGER.warn(
-        `Found ${this._labeledBreakNodes.size} break node labels that are not connected to a label exit`
+        `Found ${this._labeledBreakNodes.size} break node labels that are not connected to a label exit`,
       );
     }
 
     if (this._labeledContinueNodes.size > 0) {
       ControlFlowGraphVisitor.LOGGER.warn(
-        `Found ${this._labeledContinueNodes.size} continue node labels that are not connected to a label exit`
+        `Found ${this._labeledContinueNodes.size} continue node labels that are not connected to a label exit`,
       );
     }
 
@@ -129,7 +129,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         successExitNode,
         errorExitNode,
         this._nodes,
-        this._edges
+        this._edges,
       ),
       functions: this._functions.map((function_, index) => {
         if (
@@ -218,7 +218,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         },
       ],
       {},
-      path.node.type
+      path.node.type,
     );
 
     if (this._nodes.has(id)) {
@@ -235,7 +235,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   public _getPlaceholderNodeId(path: NodePath<t.Node>): string {
     if (path.node.loc === undefined) {
       throw new ImplementationError(
-        `Node ${path.type} in file '${this._filePath}' does not have a location`
+        `Node ${path.type} in file '${this._filePath}' does not have a location`,
       );
     }
 
@@ -286,7 +286,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         },
       ],
       {},
-      path.node.type
+      path.node.type,
     );
 
     if (this._nodes.has(id)) {
@@ -304,7 +304,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     source: Node,
     target: Node,
     edgeType: EdgeType,
-    label = ""
+    label = "",
   ): Edge {
     return new Edge(
       `${source.id}->${target.id}`,
@@ -312,7 +312,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       label,
       source.id,
       target.id,
-      "description"
+      "description",
     );
   }
 
@@ -326,7 +326,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
     // it is actually possible that there are no parents
     for (const parent of this._currentParents) {
       this._edges.push(
-        this._createEdge(this._nodes.get(parent), node, this._edgeType)
+        this._createEdge(this._nodes.get(parent), node, this._edgeType),
       );
     }
 
@@ -335,7 +335,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   public Block: (path: NodePath<t.Block>) => void = (path) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering block at ${this._getNodeId(path)}`
+      `Entering block at ${this._getNodeId(path)}`,
     );
 
     // we need to repeat this from the baseclass because we cannot use super.Program
@@ -355,7 +355,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   // functions
   public Function: (path: NodePath<t.Function>) => void = (path) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering function at ${this._getNodeId(path)}`
+      `Entering function at ${this._getNodeId(path)}`,
     );
 
     if (!this._nodes.has(this._getNodeId(path))) {
@@ -367,7 +367,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     const subVisitor = new ControlFlowGraphVisitor(
       this.filePath,
-      this.syntaxForgiving
+      this.syntaxForgiving,
     );
     path.traverse(subVisitor);
 
@@ -390,7 +390,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         graph: cfp.graph,
       },
       // sub functions within this function
-      ...cfp.functions
+      ...cfp.functions,
     );
 
     path.skip();
@@ -399,7 +399,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   // actual control flow graph related nodes
   public Statement: (path: NodePath<t.Statement>) => void = (path) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering statement: ${path.type}\tline: ${path.node.loc.start.line}\tcolumn: ${path.node.loc.start.column}`
+      `Entering statement: ${path.type}\tline: ${path.node.loc.start.line}\tcolumn: ${path.node.loc.start.column}`,
     );
 
     if (this._nodes.has(this._getNodeId(path))) {
@@ -416,7 +416,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   public Expression: (path: NodePath<t.Expression>) => void = (path) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering Expression at ${this._getNodeId(path)}`
+      `Entering Expression at ${this._getNodeId(path)}`,
     );
 
     if (this._nodes.has(this._getNodeId(path))) {
@@ -430,10 +430,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public AssignmentPattern: (path: NodePath<t.AssignmentPattern>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering AssignmentPattern at ${this._getNodeId(path)}`
+      `Entering AssignmentPattern at ${this._getNodeId(path)}`,
     );
 
     const branchNode = this._createNode(path);
@@ -470,7 +470,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       } else {
         // there is no default value specified?? (should not be possible)
         throw new ImplementationError(
-          "AssignmentPattern does not have a default value"
+          "AssignmentPattern does not have a default value",
         );
       }
     }
@@ -484,7 +484,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   public Conditional: (path: NodePath<t.Conditional>) => void = (path) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering IfStatement at ${this._getNodeId(path)}`
+      `Entering IfStatement at ${this._getNodeId(path)}`,
     );
 
     const branchNode = this._createNode(path);
@@ -539,10 +539,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   // labels
   public LabeledStatement: (path: NodePath<t.LabeledStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering LabeledStatement at ${this._getNodeId(path)}`
+      `Entering LabeledStatement at ${this._getNodeId(path)}`,
     );
 
     const label = path.get("label").node.name;
@@ -580,8 +580,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(continueNode),
           labelNode,
-          EdgeType.BACK_EDGE
-        )
+          EdgeType.BACK_EDGE,
+        ),
       );
     }
 
@@ -594,10 +594,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   // loops
   public DoWhileStatement: (path: NodePath<t.DoWhileStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering DoWhileStatement at ${this._getNodeId(path)}`
+      `Entering DoWhileStatement at ${this._getNodeId(path)}`,
     );
 
     const doWhileNode = this._createNode(path);
@@ -633,7 +633,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
     // the back edge
     this._edges.push(
-      this._createEdge(consequent, firstBodyNode, EdgeType.BACK_EDGE)
+      this._createEdge(consequent, firstBodyNode, EdgeType.BACK_EDGE),
     );
 
     // false
@@ -657,8 +657,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(continueNode),
           loopNode,
-          EdgeType.BACK_EDGE
-        )
+          EdgeType.BACK_EDGE,
+        ),
       );
     }
 
@@ -666,10 +666,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public WhileStatement: (path: NodePath<t.WhileStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering WhileStatement at ${this._getNodeId(path)}`
+      `Entering WhileStatement at ${this._getNodeId(path)}`,
     );
 
     const whileNode = this._createNode(path);
@@ -724,8 +724,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(continueNode),
           loopNode,
-          EdgeType.BACK_EDGE
-        )
+          EdgeType.BACK_EDGE,
+        ),
       );
     }
 
@@ -734,7 +734,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
   public ForStatement: (path: NodePath<t.ForStatement>) => void = (path) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering ForStatement at ${this._getNodeId(path)}`
+      `Entering ForStatement at ${this._getNodeId(path)}`,
     );
 
     const forNode = this._createNode(path);
@@ -788,7 +788,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
 
       if (beforeSize === this._nodesList.length) {
         throw new ImplementationError(
-          `No node was added for the update part of the for loop`
+          `No node was added for the update part of the for loop`,
         );
       }
     }
@@ -822,8 +822,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(continueNode),
           testNode,
-          EdgeType.BACK_EDGE
-        )
+          EdgeType.BACK_EDGE,
+        ),
       );
     }
 
@@ -831,10 +831,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ForInStatement: (path: NodePath<t.ForInStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering ForInStatement at ${this._getNodeId(path)}`
+      `Entering ForInStatement at ${this._getNodeId(path)}`,
     );
 
     const forInNode = this._createNode(path);
@@ -905,8 +905,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(continueNode),
           testNode,
-          EdgeType.BACK_EDGE
-        )
+          EdgeType.BACK_EDGE,
+        ),
       );
     }
 
@@ -914,10 +914,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ForOfStatement: (path: NodePath<t.ForOfStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering ForOfStatement at ${this._getNodeId(path)}`
+      `Entering ForOfStatement at ${this._getNodeId(path)}`,
     );
 
     const forOfNode = this._createNode(path);
@@ -988,8 +988,8 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
         this._createEdge(
           this._nodes.get(continueNode),
           testNode,
-          EdgeType.BACK_EDGE
-        )
+          EdgeType.BACK_EDGE,
+        ),
       );
     }
 
@@ -997,10 +997,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public SwitchStatement: (path: NodePath<t.SwitchStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering SwitchStatement at ${this._getNodeId(path)}`
+      `Entering SwitchStatement at ${this._getNodeId(path)}`,
     );
 
     this._regularBreakNodesStack.push(new Set());
@@ -1065,7 +1065,7 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
       // connect fall through nodes to switch exit
       ...fallThrough,
       // connect all break nodes to switch exit
-      ...this._regularBreakNodesStack.pop()
+      ...this._regularBreakNodesStack.pop(),
     );
     this._connectToParents(switchExit);
     this._currentParents = [switchExit.id];
@@ -1079,10 +1079,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   // which is why we empty the parents list instead of adding the node to it
 
   public BreakStatement: (path: NodePath<t.BreakStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering BreakStatement at ${this._getNodeId(path)}`
+      `Entering BreakStatement at ${this._getNodeId(path)}`,
     );
 
     const node = this._createNode(path);
@@ -1105,10 +1105,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ContinueStatement: (path: NodePath<t.ContinueStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering ContinueStatement at ${this._getNodeId(path)}`
+      `Entering ContinueStatement at ${this._getNodeId(path)}`,
     );
 
     const node = this._createNode(path);
@@ -1132,10 +1132,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ReturnStatement: (path: NodePath<t.ReturnStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering ReturnStatement at ${this._getNodeId(path)}`
+      `Entering ReturnStatement at ${this._getNodeId(path)}`,
     );
 
     const node = this._createNode(path);
@@ -1155,10 +1155,10 @@ export class ControlFlowGraphVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ThrowStatement: (path: NodePath<t.ThrowStatement>) => void = (
-    path
+    path,
   ) => {
     ControlFlowGraphVisitor.LOGGER.debug(
-      `Entering ThrowStatement at ${this._getNodeId(path)}`
+      `Entering ThrowStatement at ${this._getNodeId(path)}`,
     );
 
     const node = this._createNode(path);

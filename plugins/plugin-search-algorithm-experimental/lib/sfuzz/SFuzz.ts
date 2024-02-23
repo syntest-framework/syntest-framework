@@ -40,7 +40,7 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
-    populationSize: number
+    populationSize: number,
   ) {
     super(objectiveManager, encodingSampler, procreation, populationSize);
     SFuzz.LOGGER = getLogger("sFuzz");
@@ -52,7 +52,7 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
       this._objectiveManager.getUncoveredObjectives().size > 0
     )
       throw new IllegalStateError(
-        "Current objectives is empty while there are still uncovered objectives!"
+        "Current objectives is empty while there are still uncovered objectives!",
       );
 
     if (
@@ -65,12 +65,12 @@ export class SFuzz<T extends Encoding> extends MOSAFamily<T> {
     SFuzz.LOGGER.debug(
       `Number of objectives = ${
         this._objectiveManager.getCurrentObjectives().size
-      }`
+      }`,
     );
 
     const F = this.preferenceSortingAlgorithm(
       this._population,
-      this._objectiveManager.getCurrentObjectives()
+      this._objectiveManager.getCurrentObjectives(),
     );
 
     SFuzz.LOGGER.debug(`First front size = ${F[0].length}`);

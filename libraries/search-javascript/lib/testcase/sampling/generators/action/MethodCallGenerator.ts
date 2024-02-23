@@ -30,7 +30,7 @@ export class MethodCallGenerator extends CallGenerator<MethodCall> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    _statementPool: StatementPool
+    _statementPool: StatementPool,
   ): MethodCall {
     const type_ = this.rootContext
       .getTypeModel()
@@ -40,7 +40,7 @@ export class MethodCallGenerator extends CallGenerator<MethodCall> {
 
     const constructor_ = this.sampler.sampleConstructorCall(
       depth + 1,
-      exportIdentifier
+      exportIdentifier,
     );
 
     return new MethodCall(
@@ -49,7 +49,7 @@ export class MethodCallGenerator extends CallGenerator<MethodCall> {
       name,
       prng.uniqueId(),
       arguments_,
-      constructor_
+      constructor_,
     );
   }
 }

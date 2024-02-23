@@ -18,7 +18,7 @@
 
 export function unsupportedSyntax(
   pathType: string,
-  locationId: string
+  locationId: string,
 ): string {
   return `Unsupported syntax found in ${pathType} at ${locationId}`;
 }

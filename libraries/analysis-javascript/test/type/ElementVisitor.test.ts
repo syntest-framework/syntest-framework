@@ -55,12 +55,12 @@ describe("ElementVisitor test", () => {
     }
 
     const name1 = elements.filter(
-      (element) => (<Identifier>element).name === "name1"
+      (element) => (<Identifier>element).name === "name1",
     );
 
     expect(name1.length).to.equal(2);
     expect((<Identifier>name1[0]).bindingId).to.equal(
-      (<Identifier>name1[1]).bindingId
+      (<Identifier>name1[1]).bindingId,
     );
   });
 
@@ -82,11 +82,11 @@ describe("ElementVisitor test", () => {
     }
 
     const name1 = elements.filter(
-      (element) => (<Identifier>element).name === "name1"
+      (element) => (<Identifier>element).name === "name1",
     );
     expect(name1.length).to.equal(2);
     expect((<Identifier>name1[0]).bindingId).to.equal(
-      (<Identifier>name1[1]).bindingId
+      (<Identifier>name1[1]).bindingId,
     );
   });
 
@@ -108,11 +108,11 @@ describe("ElementVisitor test", () => {
     }
 
     const name1 = elements.filter(
-      (element) => (<Identifier>element).name === "name1"
+      (element) => (<Identifier>element).name === "name1",
     );
     expect(name1.length).to.equal(2);
     expect((<Identifier>name1[0]).bindingId).to.not.equal(
-      (<Identifier>name1[1]).bindingId
+      (<Identifier>name1[1]).bindingId,
     );
   });
 
@@ -133,11 +133,11 @@ describe("ElementVisitor test", () => {
     }
 
     const name1 = elements.filter(
-      (element) => (<Identifier>element).name === "name1"
+      (element) => (<Identifier>element).name === "name1",
     );
     expect(name1.length).to.equal(2);
     expect((<Identifier>name1[0]).bindingId).to.not.equal(
-      (<Identifier>name1[1]).bindingId
+      (<Identifier>name1[1]).bindingId,
     );
   });
 

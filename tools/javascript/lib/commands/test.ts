@@ -28,7 +28,7 @@ export function getTestCommand(
   moduleManager: ModuleManager,
   metricManager: MetricManager,
   storageManager: StorageManager,
-  userInterface: UserInterface
+  userInterface: UserInterface,
 ): Command {
   const options = new Map<string, Yargs.Options>();
 
@@ -229,10 +229,10 @@ export function getTestCommand(
         moduleManager,
         metricManager,
         storageManager,
-        userInterface
+        userInterface,
       );
       await launcher.run();
-    }
+    },
   );
 }
 

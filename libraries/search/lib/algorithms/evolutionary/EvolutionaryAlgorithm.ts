@@ -29,7 +29,7 @@ import { SearchAlgorithm } from "../SearchAlgorithm";
  * Uses the T encoding.
  */
 export abstract class EvolutionaryAlgorithm<
-  T extends Encoding
+  T extends Encoding,
 > extends SearchAlgorithm<T> {
   /**
    * The sampler used to sample new encodings.
@@ -60,7 +60,7 @@ export abstract class EvolutionaryAlgorithm<
     objectiveManager: ObjectiveManager<T>,
     encodingSampler: EncodingSampler<T>,
     procreation: Procreation<T>,
-    populationSize: number
+    populationSize: number,
   ) {
     super(objectiveManager);
     this._encodingSampler = encodingSampler;
@@ -74,7 +74,7 @@ export abstract class EvolutionaryAlgorithm<
    */
   protected async _initialize(
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<void> {
     for (let index = 0; index < this._populationSize; index++) {
       this._population.push(this._encodingSampler.sample());
@@ -84,7 +84,7 @@ export abstract class EvolutionaryAlgorithm<
     await this._objectiveManager.evaluateMany(
       this._population,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     // Compute ranking and crowding distance
@@ -97,17 +97,17 @@ export abstract class EvolutionaryAlgorithm<
    */
   protected async _iterate(
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<void> {
     const offspring = this._procreation.generateOffspringPopulation(
       this._populationSize,
-      this._population
+      this._population,
     );
 
     await this._objectiveManager.evaluateMany(
       offspring,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     // If all objectives are covered, we don't need to rank the population anymore

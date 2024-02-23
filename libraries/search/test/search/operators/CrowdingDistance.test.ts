@@ -36,7 +36,7 @@ describe("Crowding distance", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective);
@@ -51,7 +51,7 @@ describe("Crowding distance", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective);
@@ -69,13 +69,13 @@ describe("Crowding distance", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -101,7 +101,7 @@ describe("Crowding distance", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objectives = new Set<ObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);

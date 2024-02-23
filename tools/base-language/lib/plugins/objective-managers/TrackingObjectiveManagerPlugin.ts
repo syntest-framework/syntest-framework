@@ -30,19 +30,19 @@ import {
  * Plugin for the tracking objective manager
  */
 export class TrackingObjectiveManagerPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
     super("tracking", "A tracking objective manager");
   }
 
   createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
+    options: ObjectiveManagerOptions<T>,
   ): ObjectiveManager<T> {
     return new TrackingObjectiveManager(
       options.runner,
       options.secondaryObjectives,
-      options.exceptionObjectivesEnabled
+      options.exceptionObjectivesEnabled,
     );
   }
 

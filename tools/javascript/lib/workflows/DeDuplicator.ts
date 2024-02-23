@@ -38,7 +38,7 @@ export class DeDuplicator implements Workflow {
   constructor(
     userInterface: UserInterface,
     secondaryObjectives: SecondaryObjectiveComparator<JavaScriptTestCase>[],
-    objectivesMap: Map<Target, ObjectiveFunction<JavaScriptTestCase>[]>
+    objectivesMap: Map<Target, ObjectiveFunction<JavaScriptTestCase>[]>,
   ) {
     DeDuplicator.LOGGER = getLogger(DeDuplicator.name);
     this.userInterface = userInterface;
@@ -48,14 +48,14 @@ export class DeDuplicator implements Workflow {
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   execute(
-    encodingsMap: Map<Target, JavaScriptTestCase[]>
+    encodingsMap: Map<Target, JavaScriptTestCase[]>,
   ): Promise<Map<Target, JavaScriptTestCase[]>> {
     DeDuplicator.LOGGER.info("De-Duplication started");
     const before = [...encodingsMap.values()].reduce((p, c) => p + c.length, 0);
 
     const totalEncodings = [...encodingsMap.values()].reduce(
       (counter, value) => counter + value.length,
-      0
+      0,
     );
     this.userInterface.startProgressBars([
       {
@@ -84,7 +84,7 @@ export class DeDuplicator implements Workflow {
 
         if (!encoding.getExecutionResult()) {
           throw new IllegalStateError(
-            "Invalid encoding without executionResult"
+            "Invalid encoding without executionResult",
           );
         }
 
@@ -103,7 +103,7 @@ export class DeDuplicator implements Workflow {
             for (const secondaryObjective of this.secondaryObjectives) {
               const comparison = secondaryObjective.compare(
                 encoding,
-                currentEncoding
+                currentEncoding,
               );
 
               // If one of the two encodings is better, don't evaluate the next objectives
@@ -111,7 +111,7 @@ export class DeDuplicator implements Workflow {
                 // Override the encoding if the current one is better
                 if (comparison > 0) {
                   DeDuplicator.LOGGER.debug(
-                    "Overwriting archive with better encoding"
+                    "Overwriting archive with better encoding",
                   );
 
                   archive.update(objective, encoding, false);
@@ -129,18 +129,18 @@ export class DeDuplicator implements Workflow {
       [...archives.entries()].map(([target, archive]) => [
         target,
         archive.getEncodings(),
-      ])
+      ]),
     );
     const after = [...finalEncodings.values()].reduce(
       (p, c) => p + c.length,
-      0
+      0,
     );
 
     DeDuplicator.LOGGER.info(
-      `De-Duplication done, went from ${before} to ${after} test cases`
+      `De-Duplication done, went from ${before} to ${after} test cases`,
     );
     this.userInterface.printSuccess(
-      `De-Duplication done, went from ${before} to ${after} test cases`
+      `De-Duplication done, went from ${before} to ${after} test cases`,
     );
 
     return new Promise((resolve) => resolve(finalEncodings));

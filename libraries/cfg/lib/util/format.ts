@@ -24,7 +24,7 @@ import {
 } from "./SerializableControlFlowProgram";
 
 function makeFunctionSerializeable(
-  cff: ControlFlowFunction
+  cff: ControlFlowFunction,
 ): SerializableControlFlowFunction {
   return {
     id: cff.id,
@@ -38,7 +38,7 @@ function makeFunctionSerializeable(
 }
 
 export function makeSerializeable(
-  cfp: ControlFlowProgram
+  cfp: ControlFlowProgram,
 ): SerializableControlFlowProgram {
   const data: SerializableControlFlowProgram = {
     entry: cfp.graph.entry.id,
@@ -47,7 +47,7 @@ export function makeSerializeable(
     nodes: [...cfp.graph.nodes.values()],
     edges: [...cfp.graph.edges],
     functions: cfp.functions.map((function_) =>
-      makeFunctionSerializeable(function_)
+      makeFunctionSerializeable(function_),
     ),
   };
 

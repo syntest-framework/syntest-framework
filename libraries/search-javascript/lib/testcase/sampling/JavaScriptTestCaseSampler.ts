@@ -113,7 +113,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     exploreIllegalValues: boolean,
     addRemoveArgumentProbability: number,
     addArgumentProbability: number,
-    removeArgumentProbability: number
+    removeArgumentProbability: number,
   ) {
     super(subject);
     this._constantPoolManager = constantPoolManager;
@@ -154,7 +154,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this._statementPoolProbability,
       this._addRemoveArgumentProbability,
       this._addArgumentProbability,
-      this._removeArgumentProbability
+      this._removeArgumentProbability,
     );
     this._constructorCallGenerator = new ConstructorCallGenerator(
       this,
@@ -163,7 +163,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this._statementPoolProbability,
       this._addRemoveArgumentProbability,
       this._addArgumentProbability,
-      this._removeArgumentProbability
+      this._removeArgumentProbability,
     );
     this._methodCallGenerator = new MethodCallGenerator(
       this,
@@ -172,7 +172,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this._statementPoolProbability,
       this._addRemoveArgumentProbability,
       this._addArgumentProbability,
-      this._removeArgumentProbability
+      this._removeArgumentProbability,
     );
     this._getterGenerator = new GetterGenerator(
       this,
@@ -181,7 +181,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this._statementPoolProbability,
       this._addRemoveArgumentProbability,
       this._addArgumentProbability,
-      this._removeArgumentProbability
+      this._removeArgumentProbability,
     );
     this._setterGenerator = new SetterGenerator(
       this,
@@ -190,7 +190,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this._statementPoolProbability,
       this._addRemoveArgumentProbability,
       this._addArgumentProbability,
-      this._removeArgumentProbability
+      this._removeArgumentProbability,
     );
     this._constantObjectGenerator = new ConstantObjectGenerator(
       this,
@@ -199,7 +199,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this._statementPoolProbability,
       this._addRemoveArgumentProbability,
       this._addArgumentProbability,
-      this._removeArgumentProbability
+      this._removeArgumentProbability,
     );
     this._objectFunctionCallGenerator = new ObjectFunctionCallGenerator(
       this,
@@ -208,7 +208,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
       this._statementPoolProbability,
       this._addRemoveArgumentProbability,
       this._addArgumentProbability,
-      this._removeArgumentProbability
+      this._removeArgumentProbability,
     );
   }
 
@@ -254,7 +254,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
 
   abstract sampleConstructorCall(
     depth: number,
-    classId?: string
+    classId?: string,
   ): ConstructorCall;
   abstract sampleClassAction(depth: number): MethodCall | Getter | Setter;
   abstract sampleMethodCall(depth: number): MethodCall;
@@ -263,7 +263,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
 
   abstract sampleConstantObject(
     depth: number,
-    objectId?: string
+    objectId?: string,
   ): ConstantObject;
   abstract sampleObjectFunctionCall(depth: number): ObjectFunctionCall;
 
@@ -275,7 +275,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   abstract sampleObjectArgument(
     depth: number,
     objectId: string,
-    property?: string
+    property?: string,
   ): Statement;
 
   abstract sampleArgument(depth: number, id: string, name: string): Statement;
@@ -284,21 +284,21 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     depth: number,
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): ObjectStatement | ConstructorCall | ConstantObject | FunctionCall;
 
   abstract sampleArray(
     depth: number,
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): ArrayStatement;
 
   abstract sampleArrowFunction(
     depth: number,
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): ArrowFunctionStatement;
 
   abstract sampleString(
@@ -306,7 +306,7 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
     typeId: string,
     name: string,
     alphabet?: string,
-    maxlength?: number
+    maxlength?: number,
   ): StringStatement;
 
   // primitive types
@@ -317,18 +317,18 @@ export abstract class JavaScriptTestCaseSampler extends EncodingSampler<JavaScri
   abstract sampleNumber(
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): NumericStatement;
   abstract sampleInteger(
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): IntegerStatement;
 
   abstract sampleUndefined(
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): UndefinedStatement;
 
   get constantPoolManager(): ConstantPoolManager {

@@ -44,7 +44,7 @@ export class DefaultProcreation<E extends Encoding> extends Procreation<E> {
       } else {
         offspring.push(
           this.mutateFunction(this.sampler, parentA),
-          this.mutateFunction(this.sampler, parentB)
+          this.mutateFunction(this.sampler, parentB),
         );
       }
     }

@@ -27,36 +27,36 @@ export type Events = {
     searchAlgorithm: SearchAlgorithm<E>,
     subject: SearchSubject<E>,
     budgetManager: BudgetManager<E>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ) => void;
   searchInitializationComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
     subject: SearchSubject<E>,
     budgetManager: BudgetManager<E>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ) => void;
   searchStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
     subject: SearchSubject<E>,
     budgetManager: BudgetManager<E>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ) => void;
   searchComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
     subject: SearchSubject<E>,
     budgetManager: BudgetManager<E>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ) => void;
   searchIterationStart: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
     subject: SearchSubject<E>,
     budgetManager: BudgetManager<E>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ) => void;
   searchIterationComplete: <E extends Encoding>(
     searchAlgorithm: SearchAlgorithm<E>,
     subject: SearchSubject<E>,
     budgetManager: BudgetManager<E>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ) => void;
 };

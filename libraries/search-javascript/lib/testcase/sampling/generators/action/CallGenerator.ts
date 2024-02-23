@@ -30,7 +30,7 @@ export abstract class CallGenerator<S extends Statement> extends Generator<S> {
       arguments_[index] = this.sampler.sampleArgument(
         depth + 1,
         parameterId,
-        name
+        name,
       );
     }
 
@@ -41,7 +41,7 @@ export abstract class CallGenerator<S extends Statement> extends Generator<S> {
         arguments_[index] = this.sampler.sampleArgument(
           depth + 1,
           prng.pickOne(parameterIds),
-          String(index)
+          String(index),
         );
       }
     }

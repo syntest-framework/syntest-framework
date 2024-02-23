@@ -71,7 +71,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    */
   protected abstract _initialize(
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<void> | void;
 
   /**
@@ -83,7 +83,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
    */
   protected abstract _iterate(
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<void>;
 
   /**
@@ -96,7 +96,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
   public async search(
     subject: SearchSubject<T>,
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<Archive<T>> {
     SearchAlgorithm.LOGGER.info("Starting search");
 
@@ -111,7 +111,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       this,
       subject,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     // Initialize search process
@@ -125,7 +125,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       this,
       subject,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     budgetManager.searchStarted();
@@ -135,7 +135,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       this,
       subject,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     // Start search until the budget has expired, a termination trigger has been triggered, or there are no more objectives
@@ -149,7 +149,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         this,
         subject,
         budgetManager,
-        terminationManager
+        terminationManager,
       );
 
       // Start next iteration of the search process
@@ -163,7 +163,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
         this,
         subject,
         budgetManager,
-        terminationManager
+        terminationManager,
       );
     }
 
@@ -175,7 +175,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
       this,
       subject,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
 
     // Finalize the population
@@ -187,7 +187,7 @@ export abstract class SearchAlgorithm<T extends Encoding> {
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   public calculateObjectivePerformance(
-    objectives: ObjectiveFunction<T>[]
+    objectives: ObjectiveFunction<T>[],
   ): Map<ObjectiveFunction<T>, number> {
     const objectivePerformace = new Map<ObjectiveFunction<T>, number>();
 

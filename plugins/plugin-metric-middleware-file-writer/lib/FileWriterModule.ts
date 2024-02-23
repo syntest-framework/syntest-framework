@@ -28,18 +28,18 @@ export default class FileWriterModule extends Module {
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       require("../../package.json").name,
       // eslint-disable-next-line @typescript-eslint/no-var-requires,unicorn/prefer-module, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      require("../../package.json").version
+      require("../../package.json").version,
     );
   }
 
   register(
     moduleManager: ModuleManager,
     metricManager: MetricManager,
-    storageManager: StorageManager
+    storageManager: StorageManager,
   ): void {
     moduleManager.registerPlugin(
       this,
-      new FileWriterMetricMiddlewarePlugin(metricManager, storageManager)
+      new FileWriterMetricMiddlewarePlugin(metricManager, storageManager),
     );
   }
 }

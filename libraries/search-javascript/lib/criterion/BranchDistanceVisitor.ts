@@ -47,7 +47,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     syntaxForgiving: boolean,
     stringAlphabet: string,
     variables: Record<string, unknown>,
-    inverted: boolean
+    inverted: boolean,
   ) {
     super("", syntaxForgiving);
     this._stringAlphabet = stringAlphabet;
@@ -79,10 +79,10 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
               this._isDistanceMap.has(condition) &&
               this._isDistanceMap.get(condition),
             availableValues: [...this._valueMap.entries()].map(
-              (value) => `${value[0]} -> ${String(value[1])}`
+              (value) => `${value[0]} -> ${String(value[1])}`,
             ),
           },
-        }
+        },
       );
     }
 
@@ -138,7 +138,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public CallExpression: (path: NodePath<t.CallExpression>) => void = (
-    path
+    path,
   ) => {
     const callee = path.get("callee");
 
@@ -183,8 +183,8 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
                 this._valueMap.set(
                   path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
                   this._normalize(
-                    this._realCodedEditDistance(endOfObject, argumentValue)
-                  )
+                    this._realCodedEditDistance(endOfObject, argumentValue),
+                  ),
                 );
               }
             }
@@ -218,8 +218,8 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
                 this._valueMap.set(
                   path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
                   this._normalize(
-                    this._realCodedEditDistance(startOfObject, argumentValue)
-                  )
+                    this._realCodedEditDistance(startOfObject, argumentValue),
+                  ),
                 );
               }
             }
@@ -255,25 +255,25 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
                   ) {
                     const substring = objectValue.slice(
                       start,
-                      argumentValue.length
+                      argumentValue.length,
                     );
 
                     minValue = Math.min(
                       minValue,
-                      this._realCodedEditDistance(substring, argumentValue)
+                      this._realCodedEditDistance(substring, argumentValue),
                     );
                   }
 
                   this._valueMap.set(
                     path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
-                    this._normalize(minValue)
+                    this._normalize(minValue),
                   );
                 } else {
                   this._valueMap.set(
                     path.toString(), // eslint-disable-line @typescript-eslint/no-base-to-string
                     this._normalize(
-                      this._realCodedEditDistance(objectValue, argumentValue)
-                    )
+                      this._realCodedEditDistance(objectValue, argumentValue),
+                    ),
                   );
                 }
               }
@@ -315,7 +315,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public UpdateExpression: (path: NodePath<t.UpdateExpression>) => void = (
-    path
+    path,
   ) => {
     const argument = path.get("argument");
     argument.visit();
@@ -326,7 +326,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (this._isDistanceMap.get(argument.toString()) === true) {
       throw new ImplementationError(
-        "Argument should not result in distance value!"
+        "Argument should not result in distance value!",
       );
     }
 
@@ -371,7 +371,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public UnaryExpression: (path: NodePath<t.UnaryExpression>) => void = (
-    path
+    path,
   ) => {
     const argument = path.get("argument");
     if (path.node.operator === "!") {
@@ -388,7 +388,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
 
     if (argumentIsDistance && path.node.operator !== "!") {
       throw new ImplementationError(
-        "Argument should not result in distance value!"
+        "Argument should not result in distance value!",
       );
     }
 
@@ -472,7 +472,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public BinaryExpression: (path: NodePath<t.BinaryExpression>) => void = (
-    path
+    path,
   ) => {
     const left = path.get("left");
     const right = path.get("right");
@@ -486,14 +486,14 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
     // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (this._isDistanceMap.get(left.toString())) {
       throw new ImplementationError(
-        "Left should not result in distance value!"
+        "Left should not result in distance value!",
       );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-base-to-string
     if (this._isDistanceMap.get(right.toString())) {
       throw new ImplementationError(
-        "Right should not result in distance value!"
+        "Right should not result in distance value!",
       );
     }
     let operator = path.node.operator;
@@ -735,7 +735,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public LogicalExpression: (path: NodePath<t.LogicalExpression>) => void = (
-    path
+    path,
   ) => {
     let operator = path.node.operator;
 
@@ -910,13 +910,13 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
             !this._stringAlphabet.includes(s_index)
           ) {
             BranchDistanceVisitor.LOGGER.warn(
-              `Cannot search for character missing from the sampling alphabet one of these is missing: ${t_index}, ${s_index}`
+              `Cannot search for character missing from the sampling alphabet one of these is missing: ${t_index}, ${s_index}`,
             );
             cost = Number.MAX_VALUE;
           } else {
             cost = Math.abs(
               this._stringAlphabet.indexOf(s_index) -
-                this._stringAlphabet.indexOf(t_index)
+                this._stringAlphabet.indexOf(t_index),
             );
           }
           cost = this._normalize(cost);
@@ -927,7 +927,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
         d[index][index_] = this.minimum(
           d[index - 1][index_] + 1,
           d[index][index_ - 1] + 1,
-          d[index - 1][index_ - 1] + cost
+          d[index - 1][index_ - 1] + cost,
         );
       }
     }
@@ -962,7 +962,7 @@ export class BranchDistanceVisitor extends AbstractSyntaxTreeVisitor {
             1 +
             Math.min(
               table[index][index_ - 1],
-              Math.min(table[index - 1][index_], table[index - 1][index_ - 1])
+              Math.min(table[index - 1][index_], table[index - 1][index_ - 1]),
             );
         }
       }

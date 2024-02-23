@@ -31,7 +31,7 @@ export function getAllFiles(
   extn: string,
   files?: string[] | undefined,
   result?: string[] | undefined,
-  regex?: RegExp | undefined
+  regex?: RegExp | undefined,
 ) {
   files = files || readdirSync(directory);
   result = result || [];

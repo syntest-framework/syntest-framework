@@ -47,7 +47,7 @@ export class FileWriterMetricMiddleware extends Middleware {
     metrics: Metric[],
     fid: string,
     storageManager: StorageManager,
-    outputDirectory: string
+    outputDirectory: string,
   ) {
     super(metricManager, metrics);
     this.fid = fid;
@@ -68,55 +68,55 @@ export class FileWriterMetricMiddleware extends Middleware {
       const properties = mergedManager.collectProperties(
         <PropertyMetric[]>(
           this.outputMetrics.filter(
-            (metric) => metric.type === MetricType.PROPERTY
+            (metric) => metric.type === MetricType.PROPERTY,
           )
-        )
+        ),
       );
 
       const distributions = mergedManager.collectDistributions(
         <DistributionMetric[]>(
           this.outputMetrics.filter(
-            (metric) => metric.type === MetricType.DISTRIBUTION
+            (metric) => metric.type === MetricType.DISTRIBUTION,
           )
-        )
+        ),
       );
 
       const series = mergedManager.collectSeries(
         <SeriesMetric[]>(
           this.outputMetrics.filter(
-            (metric) => metric.type === MetricType.SERIES
+            (metric) => metric.type === MetricType.SERIES,
           )
-        )
+        ),
       );
 
       const seriesDistributions = mergedManager.collectSeriesDistributions(
         <SeriesDistributionMetric[]>(
           this.outputMetrics.filter(
-            (metric) => metric.type === MetricType.SERIES_DISTRIBUTION
+            (metric) => metric.type === MetricType.SERIES_DISTRIBUTION,
           )
-        )
+        ),
       );
 
       const seriesMeasurements = mergedManager.collectSeriesMeasurements(
         <SeriesMeasurementMetric[]>(
           this.outputMetrics.filter(
-            (metric) => metric.type === MetricType.SERIES_MEASUREMENT
+            (metric) => metric.type === MetricType.SERIES_MEASUREMENT,
           )
-        )
+        ),
       );
 
       if (properties.size > 0) {
         await this.writePropertiesToCSV(
           this.outputDirectory,
           namespace,
-          properties
+          properties,
         );
       }
       if (distributions.size > 0) {
         await this.writeDistributionsToCSV(
           this.outputDirectory,
           namespace,
-          distributions
+          distributions,
         );
       }
       if (series.size > 0) {
@@ -126,14 +126,14 @@ export class FileWriterMetricMiddleware extends Middleware {
         await this.writeSeriesDistributionToCSV(
           this.outputDirectory,
           namespace,
-          seriesDistributions
+          seriesDistributions,
         );
       }
       if (seriesMeasurements.size > 0) {
         await this.writeSeriesMeasurementToCSV(
           this.outputDirectory,
           namespace,
-          seriesMeasurements
+          seriesMeasurements,
         );
       }
     }
@@ -153,7 +153,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writePropertiesToCSV(
     filePath: string,
     namespace: string,
-    properties: PropertiesMap<string>
+    properties: PropertiesMap<string>,
   ): Promise<void> {
     const fileName = "properties.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -186,7 +186,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writeDistributionsToCSV(
     filePath: string,
     namespace: string,
-    distributions: DistributionsMap
+    distributions: DistributionsMap,
   ): Promise<void> {
     const fileName = "distributions.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -229,7 +229,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writeSeriesToCSV(
     filePath: string,
     namespace: string,
-    series: SeriesMap<number>
+    series: SeriesMap<number>,
   ): Promise<void> {
     const fileName = "series.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -274,7 +274,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writeSeriesDistributionToCSV(
     filePath: string,
     namespace: string,
-    seriesDistributions: SeriesMap<Distribution>
+    seriesDistributions: SeriesMap<Distribution>,
   ): Promise<void> {
     const fileName = "series-distributions.csv";
     const exists = existsSync(path.join(filePath, fileName));
@@ -324,7 +324,7 @@ export class FileWriterMetricMiddleware extends Middleware {
   async writeSeriesMeasurementToCSV(
     filePath: string,
     namespace: string,
-    seriesDistributions: SeriesMap<PropertiesMap<number>>
+    seriesDistributions: SeriesMap<PropertiesMap<number>>,
   ): Promise<void> {
     const fileName = "series-measurements.csv";
     const exists = existsSync(path.join(filePath, fileName));

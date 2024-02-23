@@ -28,7 +28,7 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
@@ -41,11 +41,11 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
-      0.5
+      0.5,
     );
   });
 
@@ -56,12 +56,12 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.closeTo(
       0.4888,
-      0.001
+      0.001,
     ); // two changes of 1 diff?
   });
 
@@ -72,7 +72,7 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
@@ -86,7 +86,7 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
@@ -99,11 +99,11 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
-      0.5
+      0.5,
     );
   });
 
@@ -114,12 +114,12 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.closeTo(
       0.4897,
-      0.001
+      0.001,
     );
   });
 
@@ -130,12 +130,12 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.closeTo(
       0.4897,
-      0.001
+      0.001,
     );
   });
 
@@ -146,12 +146,12 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.closeTo(
       0.4897,
-      0.001
+      0.001,
     );
   });
 
@@ -162,7 +162,7 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
@@ -176,7 +176,7 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);
@@ -189,11 +189,11 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(
-      0.5
+      0.5,
     );
   });
 
@@ -204,12 +204,12 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.closeTo(
       0.4888,
-      0.001
+      0.001,
     ); // two changes of 1 diff?
   });
 
@@ -220,7 +220,7 @@ describe("BranchDistance string functions", () => {
 
     const calculator = new BranchDistanceCalculator(
       false,
-      "0123456789abcdefghijklmnopqrstuvxyz"
+      "0123456789abcdefghijklmnopqrstuvxyz",
     );
 
     expect(calculator.calculate(condition, variables, trueOrFalse)).to.equal(0);

@@ -21,7 +21,7 @@ import { Encoding, SecondaryObjectiveComparator } from "@syntest/search";
 import { PluginType } from "./PluginType";
 
 export abstract class SecondaryObjectivePlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends Plugin {
   constructor(name: string, describe: string) {
     super(PluginType.SecondaryObjective, name, describe);

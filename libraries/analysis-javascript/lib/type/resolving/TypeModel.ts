@@ -108,7 +108,7 @@ export class TypeModel {
     id: string,
     typeId: string,
     typeEnum: TypeEnum,
-    score = -1
+    score = -1,
   ) {
     this.getTypeNode(id).addExecutionScore(typeId, typeEnum, score);
   }
@@ -116,7 +116,7 @@ export class TypeModel {
   private _sum(iterable: Iterable<number>) {
     return [...iterable].reduce(
       (total, currentValue) => total + currentValue,
-      0
+      0,
     );
   }
 
@@ -203,7 +203,7 @@ export class TypeModel {
   }
 
   calculateProbabilitiesForFile(
-    filepath: string
+    filepath: string,
   ): Map<string, Map<string, number>> {
     const map = new Map<string, Map<string, number>>();
     for (const [id, typeNode] of this._typeNodes.entries()) {

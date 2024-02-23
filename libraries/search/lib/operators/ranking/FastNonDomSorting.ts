@@ -29,7 +29,7 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export function fastNonDomSorting<T extends Encoding>(
   population: T[],
-  objectiveFunctions: Set<ObjectiveFunction<T>>
+  objectiveFunctions: Set<ObjectiveFunction<T>>,
 ): T[][] {
   const S: { [id: string]: T[] } = {};
   const F: T[][] = [[]];

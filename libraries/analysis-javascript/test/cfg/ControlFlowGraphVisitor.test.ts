@@ -209,7 +209,7 @@ describe("ControlFlowGraphVisitor test", () => {
     // const x = 0
     // true
     expect(cfg.graph.getOutgoingEdges(test)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
     const trueBranch = cfg.graph.getOutgoingEdges(test)[0].target;
 
@@ -224,7 +224,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false
     expect(cfg.graph.getOutgoingEdges(test)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const falseBranch = cfg.graph.getOutgoingEdges(test)[1].target;
 
@@ -279,7 +279,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // true
     expect(cfg.graph.getOutgoingEdges(test)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
 
     const truePlaceholder = cfg.graph.getOutgoingEdges(test)[0].target;
@@ -292,7 +292,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false
     expect(cfg.graph.getOutgoingEdges(test)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const falsePlaceholder = cfg.graph.getOutgoingEdges(test)[1].target;
 
@@ -349,7 +349,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // true
     expect(cfg.graph.getOutgoingEdges(test)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
 
     const truePlaceholder = cfg.graph.getOutgoingEdges(test)[0].target;
@@ -362,7 +362,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false
     expect(cfg.graph.getOutgoingEdges(test)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const falsePlaceholder = cfg.graph.getOutgoingEdges(test)[1].target;
 
@@ -419,7 +419,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // true
     expect(cfg.graph.getOutgoingEdges(test)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
 
     const truePlaceholder = cfg.graph.getOutgoingEdges(test)[0].target;
@@ -432,7 +432,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false
     expect(cfg.graph.getOutgoingEdges(test)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const falsePlaceholder = cfg.graph.getOutgoingEdges(test)[1].target;
 
@@ -495,10 +495,10 @@ describe("ControlFlowGraphVisitor test", () => {
     const falsePlaceholderTest = cfg.graph.getOutgoingEdges(test)[1].target;
 
     expect(cfg.graph.getIncomingEdges(falsePlaceholderTest)).to.have.lengthOf(
-      1
+      1,
     );
     expect(cfg.graph.getOutgoingEdges(falsePlaceholderTest)).to.have.lengthOf(
-      1
+      1,
     );
 
     const loopExit = cfg.graph.getOutgoingEdges(falsePlaceholderTest)[0].target;
@@ -605,10 +605,10 @@ describe("ControlFlowGraphVisitor test", () => {
       cfg.graph.getOutgoingEdges(doWhileStatement)[0].target;
 
     expect(cfg.graph.getIncomingEdges(doWhileBodyIfStatement)).to.have.lengthOf(
-      2
+      2,
     );
     expect(cfg.graph.getOutgoingEdges(doWhileBodyIfStatement)).to.have.lengthOf(
-      1
+      1,
     );
 
     const test = cfg.graph.getOutgoingEdges(doWhileBodyIfStatement)[0].target;
@@ -618,7 +618,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // true
     expect(cfg.graph.getOutgoingEdges(test)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
     const breakStatement = cfg.graph.getOutgoingEdges(test)[0].target;
 
@@ -627,7 +627,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false
     expect(cfg.graph.getOutgoingEdges(test)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const placeHolderNode = cfg.graph.getOutgoingEdges(test)[1].target;
 
@@ -642,7 +642,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // true while
     expect(cfg.graph.getOutgoingEdges(whileStatement)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
     const truePlaceholder =
       cfg.graph.getOutgoingEdges(whileStatement)[0].target;
@@ -655,7 +655,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false while
     expect(cfg.graph.getOutgoingEdges(whileStatement)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const falsePlaceholder2 =
       cfg.graph.getOutgoingEdges(whileStatement)[1].target;
@@ -705,7 +705,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // true
     expect(cfg.graph.getOutgoingEdges(test)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
     const constX = cfg.graph.getOutgoingEdges(test)[0].target;
 
@@ -718,7 +718,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false
     expect(cfg.graph.getOutgoingEdges(test)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const falsePlaceholder = cfg.graph.getOutgoingEdges(test)[1].target;
 
@@ -766,7 +766,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // true
     expect(cfg.graph.getOutgoingEdges(test)[0].type).to.equal(
-      EdgeType.CONDITIONAL_TRUE
+      EdgeType.CONDITIONAL_TRUE,
     );
     const constX = cfg.graph.getOutgoingEdges(test)[0].target;
 
@@ -779,7 +779,7 @@ describe("ControlFlowGraphVisitor test", () => {
 
     // false
     expect(cfg.graph.getOutgoingEdges(test)[1].type).to.equal(
-      EdgeType.CONDITIONAL_FALSE
+      EdgeType.CONDITIONAL_FALSE,
     );
     const falsePlaceholder = cfg.graph.getOutgoingEdges(test)[1].target;
 

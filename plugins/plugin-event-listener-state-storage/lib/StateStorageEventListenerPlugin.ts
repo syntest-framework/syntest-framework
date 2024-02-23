@@ -45,7 +45,7 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
     super(
       "state-storage",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
-      require("../../package.json").description
+      require("../../package.json").description,
     );
     this.storageManager = storageManager;
   }
@@ -60,13 +60,13 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
-        cfp: ControlFlowProgram
+        cfp: ControlFlowProgram,
       ) =>
         stateStorage.controlFlowGraphResolvingComplete(
           rootContext,
           filePath,
-          cfp
-        )
+          cfp,
+        ),
     );
     (<TypedEventEmitter<Events>>process).on(
       "abstractSyntaxTreeResolvingComplete",
@@ -74,41 +74,41 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
         stateStorage.abstractSyntaxTreeResolvingComplete(
           rootContext,
           filePath,
-          ast
-        )
+          ast,
+        ),
     );
     (<TypedEventEmitter<Events>>process).on(
       "targetExtractionComplete",
       <S>(rootContext: RootContext<S>, filePath: string, target: Target) =>
-        stateStorage.targetExtractionComplete(rootContext, filePath, target)
+        stateStorage.targetExtractionComplete(rootContext, filePath, target),
     );
     (<TypedEventEmitter<Events>>process).on(
       "dependencyResolvingComplete",
       <S>(
         rootContext: RootContext<S>,
         filePath: string,
-        dependencies: string[]
+        dependencies: string[],
       ) =>
         stateStorage.dependencyResolvingComplete(
           rootContext,
           filePath,
-          dependencies
-        )
+          dependencies,
+        ),
     );
 
     (<TypedEventEmitter<SearchEvents>>process).on(
       "searchComplete",
       <E extends Encoding>(
         searchAlgorithm: SearchAlgorithm<E>,
-        subject: SearchSubject<E>
-      ) => stateStorage.searchComplete(searchAlgorithm, subject)
+        subject: SearchSubject<E>,
+      ) => stateStorage.searchComplete(searchAlgorithm, subject),
     );
   }
 
   override getOptions(
     tool: string,
     labels: string[],
-    command: string
+    command: string,
   ): Map<string, Yargs.Options> {
     const optionsMap = new Map<string, Yargs.Options>();
 

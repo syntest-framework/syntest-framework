@@ -68,7 +68,7 @@ export class JavaScriptExecutionResult implements ExecutionResult {
     status: JavaScriptExecutionStatus,
     traces: Trace[],
     duration: number,
-    error?: Error | undefined
+    error?: Error | undefined,
   ) {
     this._status = status;
     this._traces = traces;
@@ -102,7 +102,7 @@ export class JavaScriptExecutionResult implements ExecutionResult {
       }
 
       throw new ImplementationError(
-        `Could not find a matching trace for the given id: ${id}`
+        `Could not find a matching trace for the given id: ${id}`,
       );
     }
 

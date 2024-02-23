@@ -41,7 +41,7 @@ export abstract class ClassActionStatement extends ActionStatement {
     ownType: TypeEnum,
     uniqueId: string,
     arguments_: Statement[],
-    constructor_: ConstructorCall
+    constructor_: ConstructorCall,
   ) {
     super(
       variableIdentifier,
@@ -49,7 +49,7 @@ export abstract class ClassActionStatement extends ActionStatement {
       name,
       ownType,
       uniqueId,
-      arguments_
+      arguments_,
     );
     this._constructor = constructor_;
   }
@@ -69,7 +69,7 @@ export abstract class ClassActionStatement extends ActionStatement {
       if (!(newChild instanceof ConstructorCall)) {
         throw new IllegalArgumentError(
           "Last child should always be of type ConstructorCall",
-          { context: { index: index } }
+          { context: { index: index } },
         );
       }
       this._constructor = newChild;

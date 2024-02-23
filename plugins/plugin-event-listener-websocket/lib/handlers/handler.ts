@@ -21,7 +21,7 @@ export function handler(
   client: WebSocket,
   fid: string,
   event: string,
-  data: { [key: string]: unknown }
+  data: { [key: string]: unknown },
 ) {
   client.send(
     Buffer.from(
@@ -29,7 +29,7 @@ export function handler(
         fid,
         event,
         data,
-      })
-    )
+      }),
+    ),
   );
 }

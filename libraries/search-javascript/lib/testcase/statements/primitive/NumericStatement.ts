@@ -34,7 +34,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    value: number
+    value: number,
   ) {
     super(
       variableIdentifier,
@@ -42,7 +42,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
       name,
       TypeEnum.NUMERIC,
       uniqueId,
-      value
+      value,
     );
   }
 
@@ -56,7 +56,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
           this.typeIdentifier,
           this.name,
           prng.uniqueId(),
-          this.value
+          this.value,
         ).deltaMutation(sampler);
       }
       return this.deltaMutation(sampler);
@@ -67,14 +67,14 @@ export class NumericStatement extends PrimitiveStatement<number> {
         return sampler.sampleArgument(
           depth + 1,
           this.variableIdentifier,
-          this.name
+          this.name,
         );
       } else {
         // 50%
         return sampler.sampleNumber(
           this.variableIdentifier,
           this.typeIdentifier,
-          this.name
+          this.name,
         );
       }
     }
@@ -103,7 +103,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
       this.typeIdentifier,
       this.name,
       prng.uniqueId(),
-      newValue
+      newValue,
     );
   }
 
@@ -113,7 +113,7 @@ export class NumericStatement extends PrimitiveStatement<number> {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      this.value
+      this.value,
     );
   }
 }

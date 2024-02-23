@@ -43,7 +43,7 @@ export class Setter extends ClassActionStatement {
     name: string,
     uniqueId: string,
     argument: Statement,
-    constructor_: ConstructorCall
+    constructor_: ConstructorCall,
   ) {
     super(
       variableIdentifier,
@@ -52,13 +52,13 @@ export class Setter extends ClassActionStatement {
       TypeEnum.FUNCTION,
       uniqueId,
       [argument],
-      constructor_
+      constructor_,
     );
   }
 
   mutate(
     sampler: JavaScriptTestCaseSampler,
-    depth: number
+    depth: number,
   ): Getter | Setter | MethodCall {
     let argument = this.args.map((a: Statement) => a.copy())[0];
     let constructor_ = this.constructor_.copy();
@@ -75,7 +75,7 @@ export class Setter extends ClassActionStatement {
       this.name,
       prng.uniqueId(),
       argument,
-      constructor_
+      constructor_,
     );
   }
 
@@ -88,14 +88,14 @@ export class Setter extends ClassActionStatement {
       this.name,
       this.uniqueId,
       deepCopyArgument,
-      this.constructor_.copy()
+      this.constructor_.copy(),
     );
   }
 
   decode(context: ContextBuilder): Decoding[] {
     const constructorDecoding = this.constructor_.decode(context);
     const argumentDecoding: Decoding[] = this.args.flatMap((a) =>
-      a.decode(context)
+      a.decode(context),
     );
 
     const argument = this.args

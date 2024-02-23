@@ -42,7 +42,7 @@ export abstract class Launcher<T extends ArgumentsObject> {
     moduleManager: ModuleManager,
     metricManager: MetricManager,
     storageManager: StorageManager,
-    userInterface: UserInterface
+    userInterface: UserInterface,
   ) {
     Launcher.LOGGER = getLogger(Launcher.name);
     this.arguments_ = arguments_;
@@ -82,104 +82,104 @@ export abstract class Launcher<T extends ArgumentsObject> {
   protected registerProperties() {
     this.metricManager.recordProperty(
       PropertyName.PRESET,
-      `${this.arguments_.preset}`
+      `${this.arguments_.preset}`,
     );
 
     this.metricManager.recordProperty(
       PropertyName.TARGET_ROOT_DIRECTORY,
-      `${this.arguments_.targetRootDirectory}`
+      `${this.arguments_.targetRootDirectory}`,
     );
     this.metricManager.recordProperty(
       PropertyName.INCLUDE,
-      `[${this.arguments_.targetInclude.join(", ")}]`
+      `[${this.arguments_.targetInclude.join(", ")}]`,
     );
     this.metricManager.recordProperty(
       PropertyName.EXCLUDE,
-      `[${this.arguments_.targetExclude.join(", ")}]`
+      `[${this.arguments_.targetExclude.join(", ")}]`,
     );
 
     this.metricManager.recordProperty(
       PropertyName.SEARCH_ALGORITHM,
-      `${this.arguments_.searchAlgorithm}`
+      `${this.arguments_.searchAlgorithm}`,
     );
     this.metricManager.recordProperty(
       PropertyName.POPULATION_SIZE,
-      `${this.arguments_.populationSize}`
+      `${this.arguments_.populationSize}`,
     );
     this.metricManager.recordProperty(
       PropertyName.OBJECTIVE_MANAGER,
-      `${this.arguments_.objectiveManager}`
+      `${this.arguments_.objectiveManager}`,
     );
     this.metricManager.recordProperty(
       PropertyName.SECONDARY_OBJECTIVES,
-      `[${this.arguments_.secondaryObjectives.join(", ")}]`
+      `[${this.arguments_.secondaryObjectives.join(", ")}]`,
     );
     this.metricManager.recordProperty(
       PropertyName.PROCREATION,
-      `${this.arguments_.procreation}`
+      `${this.arguments_.procreation}`,
     );
     this.metricManager.recordProperty(
       PropertyName.CROSSOVER,
-      `${this.arguments_.crossover}`
+      `${this.arguments_.crossover}`,
     );
     this.metricManager.recordProperty(
       PropertyName.SAMPLER,
-      `${this.arguments_.sampler}`
+      `${this.arguments_.sampler}`,
     );
     this.metricManager.recordProperty(
       PropertyName.TERMINATION_TRIGGERS,
-      `[${this.arguments_.terminationTriggers.join(", ")}]`
+      `[${this.arguments_.terminationTriggers.join(", ")}]`,
     );
 
     this.metricManager.recordProperty(
       PropertyName.MAX_TOTAL_TIME,
-      `${this.arguments_.totalTime}`
+      `${this.arguments_.totalTime}`,
     );
     this.metricManager.recordProperty(
       PropertyName.MAX_SEARCH_TIME,
-      `${this.arguments_.searchTime}`
+      `${this.arguments_.searchTime}`,
     );
     this.metricManager.recordProperty(
       PropertyName.MAX_EVALUATIONS,
-      `${this.arguments_.evaluations}`
+      `${this.arguments_.evaluations}`,
     );
     this.metricManager.recordProperty(
       PropertyName.MAX_ITERATIONS,
-      `${this.arguments_.iterations}`
+      `${this.arguments_.iterations}`,
     );
 
     this.metricManager.recordProperty(
       PropertyName.TEST_MINIMIZATION,
-      `${this.arguments_.testMinimization.toString()}`
+      `${this.arguments_.testMinimization.toString()}`,
     );
 
     this.metricManager.recordProperty(
       PropertyName.RANDOM_SEED,
-      `${this.arguments_.randomSeed.toString()}`
+      `${this.arguments_.randomSeed.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.MAX_DEPTH,
-      `${this.arguments_.maxDepth.toString()}`
+      `${this.arguments_.maxDepth.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.MAX_ACTION_STATEMENTS,
-      `${this.arguments_.maxActionStatements.toString()}`
+      `${this.arguments_.maxActionStatements.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.EXPLORE_ILLEGAL_VALUES,
-      `${this.arguments_.exploreIllegalValues.toString()}`
+      `${this.arguments_.exploreIllegalValues.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.DELTA_MUTATION_PROBABILITY,
-      `${this.arguments_.deltaMutationProbability.toString()}`
+      `${this.arguments_.deltaMutationProbability.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.MULTI_POINT_CROSSOVER_PROBABILITY,
-      `${this.arguments_.multiPointCrossoverProbability.toString()}`
+      `${this.arguments_.multiPointCrossoverProbability.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.CROSSOVER_PROBABILITY,
-      `${this.arguments_.crossoverProbability.toString()}`
+      `${this.arguments_.crossoverProbability.toString()}`,
     );
     // this.metricManager.recordProperty(
     //   PropertyName.STRING_ALPHABET,
@@ -187,16 +187,16 @@ export abstract class Launcher<T extends ArgumentsObject> {
     // );
     this.metricManager.recordProperty(
       PropertyName.STRING_MAX_LENGTH,
-      `${this.arguments_.stringMaxLength.toString()}`
+      `${this.arguments_.stringMaxLength.toString()}`,
     );
     this.metricManager.recordProperty(
       PropertyName.NUMERIC_MAX_VALUE,
-      `${this.arguments_.numericMaxValue.toString()}`
+      `${this.arguments_.numericMaxValue.toString()}`,
     );
 
     this.metricManager.recordProperty(
       PropertyName.CONFIGURATION,
-      `${this.arguments_.configuration.toString()}`
+      `${this.arguments_.configuration.toString()}`,
     );
   }
 

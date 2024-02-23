@@ -34,14 +34,14 @@ export class ArrowFunctionStatement extends Statement {
     name: string,
     uniqueId: string,
     parameters: string[],
-    returnValue: Statement | undefined
+    returnValue: Statement | undefined,
   ) {
     super(
       variableIdentifier,
       typeIdentifier,
       name,
       TypeEnum.FUNCTION,
-      uniqueId
+      uniqueId,
     );
     this._parameters = parameters;
     this._returnValue = returnValue;
@@ -58,7 +58,7 @@ export class ArrowFunctionStatement extends Statement {
         this._parameters,
         this.returnValue
           ? this._returnValue.mutate(sampler, depth + 1)
-          : undefined
+          : undefined,
       );
     } else {
       // 20%
@@ -67,7 +67,7 @@ export class ArrowFunctionStatement extends Statement {
         return sampler.sampleArgument(
           depth,
           this.variableIdentifier,
-          this.name
+          this.name,
         );
       } else {
         // 50%
@@ -75,7 +75,7 @@ export class ArrowFunctionStatement extends Statement {
           depth,
           this.variableIdentifier,
           this.typeIdentifier,
-          this.name
+          this.name,
         );
       }
     }
@@ -88,7 +88,7 @@ export class ArrowFunctionStatement extends Statement {
       this.name,
       this.uniqueId,
       this._parameters,
-      this._returnValue
+      this._returnValue,
     );
   }
 
@@ -97,7 +97,7 @@ export class ArrowFunctionStatement extends Statement {
       return [
         {
           decoded: `const ${context.getOrCreateVariableName(
-            this
+            this,
           )} = (${this._parameters.join(", ")}) => {};`,
           reference: this,
         },
@@ -107,9 +107,9 @@ export class ArrowFunctionStatement extends Statement {
     const returnStatement: Decoding[] = this._returnValue.decode(context);
 
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = (${this._parameters.join(
-      ", "
+      ", ",
     )}) => { return ${context.getOrCreateVariableName(this.returnValue)} };`;
 
     return [

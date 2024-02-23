@@ -61,7 +61,7 @@ export class ModuleManager {
   constructor(
     metricManager: MetricManager,
     storageManager: StorageManager,
-    userInterface: UserInterface
+    userInterface: UserInterface,
   ) {
     ModuleManager.LOGGER = getLogger("ModuleManager");
     this._metricManager = metricManager;
@@ -160,7 +160,7 @@ export class ModuleManager {
         ModuleManager.LOGGER.info(
           `Tool ${tool.name} has ${toolMetrics.length} metrics: [${toolMetrics
             .map((metric) => Object.values(metric).join("."))
-            .join(", ")}]`
+            .join(", ")}]`,
         );
         metrics.push(...toolMetrics);
       }
@@ -179,7 +179,7 @@ export class ModuleManager {
               pluginMetrics.length
             } metrics: [${pluginMetrics
               .map((metric) => Object.values(metric).join("."))
-              .join(", ")}]`
+              .join(", ")}]`,
           );
           metrics.push(...pluginMetrics);
         }
@@ -200,7 +200,7 @@ export class ModuleManager {
     metricMiddlewarePlugins.sort(
       (a, b) =>
         order.indexOf(`metric-middleware-${a.name}`) -
-        order.indexOf(`metric-middleware-${b.name}`)
+        order.indexOf(`metric-middleware-${b.name}`),
     );
 
     for (const plugin of metricMiddlewarePlugins) {
@@ -214,7 +214,7 @@ export class ModuleManager {
             pluginMetrics.length
           } metrics: [${pluginMetrics
             .map((metric) => Object.values(metric).join("."))
-            .join(", ")}]`
+            .join(", ")}]`,
         );
         metrics.push(...pluginMetrics);
       }
@@ -244,11 +244,11 @@ export class ModuleManager {
     metricPlugins.sort(
       (a, b) =>
         order.indexOf(`metric-middleware-${a.name}`) -
-        order.indexOf(`metric-middleware-${b.name}`)
+        order.indexOf(`metric-middleware-${b.name}`),
     );
 
     const metricMiddleWare = metricPlugins.map((plugin) =>
-      plugin.createMetricMiddleware(this._metricManager.metrics)
+      plugin.createMetricMiddleware(this._metricManager.metrics),
     );
     await this._metricManager.runPipeline(metricMiddleWare);
 
@@ -317,7 +317,7 @@ export class ModuleManager {
     if (this.modules.has(moduleInstance.name)) {
       throw new IOError(
         "Module already loaded, possible duplicate module name",
-        { context: { moduleId: moduleId, name: moduleInstance.name } }
+        { context: { moduleId: moduleId, name: moduleInstance.name } },
       );
     }
 
@@ -343,7 +343,7 @@ export class ModuleManager {
         this._metricManager,
         this._storageManager,
         this._userInterface,
-        modules
+        modules,
       );
     }
   }
@@ -384,7 +384,7 @@ export class ModuleManager {
     }
 
     ModuleManager.LOGGER.info(
-      `- Plugin loaded: ${plugin.type} - ${plugin.name}`
+      `- Plugin loaded: ${plugin.type} - ${plugin.name}`,
     );
     this._plugins.get(plugin.type).set(plugin.name, plugin);
     this._pluginsOfModule.get(module.name).push(plugin);
@@ -394,7 +394,7 @@ export class ModuleManager {
     ModuleManager.LOGGER.info("Configuring modules");
 
     const presetOptions = [...this._presets.values()].map(
-      (preset) => preset.name
+      (preset) => preset.name,
     );
     // add presets options to yargs by overriding it
     yargs.option("preset", {
@@ -435,7 +435,7 @@ export class ModuleManager {
 
     const presetObject = this._presets.get(presetChoice);
     yargs = yargs.middleware((arguments_) =>
-      presetObject.modifyArgs(arguments_)
+      presetObject.modifyArgs(arguments_),
     );
 
     return yargs;

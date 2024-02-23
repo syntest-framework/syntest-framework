@@ -49,7 +49,7 @@ export class SourceCoverage extends classes.FileCoverage {
   public _getNodeId(loc): string {
     if (loc === undefined) {
       throw new ImplementationError(
-        `Node * in file '${this._filePath}' does not have a location`
+        `Node * in file '${this._filePath}' does not have a location`,
       );
     }
 
@@ -66,7 +66,7 @@ export class SourceCoverage extends classes.FileCoverage {
   public _getPlaceholderNodeId(loc): string {
     if (loc === undefined) {
       throw new ImplementationError(
-        `Node * in file '${this._filePath}' does not have a location`
+        `Node * in file '${this._filePath}' does not have a location`,
       );
     }
 
@@ -169,7 +169,7 @@ export class SourceCoverage extends classes.FileCoverage {
     /* istanbul ignore if: paranoid check */
     if (!bMeta) {
       throw new ImplementationError(
-        "Invalid branch " + name + `${this._getNodeId(ifPath.node.loc)}`
+        "Invalid branch " + name + `${this._getNodeId(ifPath.node.loc)}`,
       );
     }
     if (location !== undefined) {

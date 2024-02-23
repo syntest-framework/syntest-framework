@@ -23,7 +23,7 @@ import { ObjectiveFunction } from "../ObjectiveFunction";
  * Objective function for the function branch criterion.
  */
 export class FunctionObjectiveFunction<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveFunction<T> {
   /**
    * @inheritDoc

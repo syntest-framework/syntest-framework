@@ -41,7 +41,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   private _getCurrentObject(path: NodePath<t.Node>): DiscoveredType {
     if (this._objectStack.length === 0) {
       throw new ImplementationError(
-        `No current object found! Location: ${this._getNodeId(path)}`
+        `No current object found! Location: ${this._getNodeId(path)}`,
       );
     }
     return this._objectStack.at(-1);
@@ -55,13 +55,13 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
       throw new ImplementationError(
         `Unexpected object stack state: ${
           currentObject.id
-        } !== ${this._getNodeId(path)}`
+        } !== ${this._getNodeId(path)}`,
       );
     }
   }
 
   private _getPropertyName(
-    path: NodePath<t.ClassProperty["key"] | t.ObjectProperty["key"]>
+    path: NodePath<t.ClassProperty["key"] | t.ObjectProperty["key"]>,
   ): string | undefined {
     if ("computed" in path.parent && path.parent.computed) {
       // e.g. { [x.y]: 5 }
@@ -86,15 +86,15 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
 
     ObjectVisitor.LOGGER.warn(
       `Unexpected property name type: ${path.node.type} at ${this._getNodeId(
-        path
-      )}`
+        path,
+      )}`,
     );
     return undefined;
   }
 
   // classes
   public ClassExpression: (path: NodePath<t.ClassExpression>) => void = (
-    path: NodePath<t.ClassExpression>
+    path: NodePath<t.ClassExpression>,
   ) => {
     const complexType: DiscoveredType = {
       id: this._getNodeId(path),
@@ -112,7 +112,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ClassDeclaration: (path: NodePath<t.ClassDeclaration>) => void = (
-    path: NodePath<t.ClassDeclaration>
+    path: NodePath<t.ClassDeclaration>,
   ) => {
     const complexType: DiscoveredType = {
       id: this._getNodeId(path),
@@ -130,7 +130,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ClassMethod: (path: NodePath<t.ClassMethod>) => void = (
-    path: NodePath<t.ClassMethod>
+    path: NodePath<t.ClassMethod>,
   ) => {
     const name = this._getPropertyName(path.get("key"));
     const currentObject = this._getCurrentObject(path);
@@ -139,7 +139,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ClassPrivateMethod: (path: NodePath<t.ClassPrivateMethod>) => void = (
-    path: NodePath<t.ClassPrivateMethod>
+    path: NodePath<t.ClassPrivateMethod>,
   ) => {
     const name = this._getPropertyName(path.get("key").get("id"));
     const currentObject = this._getCurrentObject(path);
@@ -148,7 +148,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ClassProperty: (path: NodePath<t.ClassProperty>) => void = (
-    path: NodePath<t.ClassProperty>
+    path: NodePath<t.ClassProperty>,
   ) => {
     const name = this._getPropertyName(path.get("key"));
     const currentObject = this._getCurrentObject(path);
@@ -157,7 +157,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ClassPrivateProperty: (
-    path: NodePath<t.ClassPrivateProperty>
+    path: NodePath<t.ClassPrivateProperty>,
   ) => void = (path: NodePath<t.ClassPrivateProperty>) => {
     const name = this._getPropertyName(path.get("key").get("id"));
     const currentObject = this._getCurrentObject(path);
@@ -176,7 +176,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
 
   // Objects
   public ObjectExpression: (path: NodePath<t.ObjectExpression>) => void = (
-    path: NodePath<t.ObjectExpression>
+    path: NodePath<t.ObjectExpression>,
   ) => {
     const complexType: DiscoveredType = {
       id: this._getNodeId(path),
@@ -196,7 +196,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ObjectPattern: (path: NodePath<t.ObjectPattern>) => void = (
-    path: NodePath<t.ObjectPattern>
+    path: NodePath<t.ObjectPattern>,
   ) => {
     const complexType: DiscoveredType = {
       id: this._getNodeId(path),
@@ -216,7 +216,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ObjectMethod: (path: NodePath<t.ObjectMethod>) => void = (
-    path: NodePath<t.ObjectMethod>
+    path: NodePath<t.ObjectMethod>,
   ) => {
     const name = this._getPropertyName(path.get("key"));
     const currentObject = this._getCurrentObject(path);
@@ -225,15 +225,15 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ObjectProperty: (path: NodePath<t.ObjectProperty>) => void = (
-    path: NodePath<t.ObjectProperty>
+    path: NodePath<t.ObjectProperty>,
   ) => {
     const currentObject = this._getCurrentObject(path);
 
     if (path.node.computed) {
       ObjectVisitor.LOGGER.warn(
         `This tool does not support computed property assignments. Found one at ${this._getNodeId(
-          path
-        )}`
+          path,
+        )}`,
       );
       return;
     }
@@ -271,7 +271,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
     };
 
   public FunctionExpression: (path: NodePath<t.FunctionExpression>) => void = (
-    path: NodePath<t.FunctionExpression>
+    path: NodePath<t.FunctionExpression>,
   ) => {
     const complexType: DiscoveredType = {
       id: this._getNodeId(path),
@@ -289,7 +289,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public ArrowFunctionExpression: (
-    path: NodePath<t.ArrowFunctionExpression>
+    path: NodePath<t.ArrowFunctionExpression>,
   ) => void = (path: NodePath<t.ArrowFunctionExpression>) => {
     const complexType: DiscoveredType = {
       id: this._getNodeId(path),
@@ -307,7 +307,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
   };
 
   public MemberExpression: (path: NodePath<t.MemberExpression>) => void = (
-    path: NodePath<t.MemberExpression>
+    path: NodePath<t.MemberExpression>,
   ) => {
     if (path.node.computed) {
       return;
@@ -325,7 +325,7 @@ export class ObjectVisitor extends AbstractSyntaxTreeVisitor {
         throw new ImplementationError(
           `Unexpected object type: ${
             path.node.object.type
-          } at ${this._getNodeId(path)}`
+          } at ${this._getNodeId(path)}`,
         );
       }
 

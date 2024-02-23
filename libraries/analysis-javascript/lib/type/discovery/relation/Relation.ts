@@ -213,7 +213,7 @@ function getUnaryRelationType(operator: string, prefix: boolean) {
   }
 
   throw new ImplementationError(
-    `Unsupported relation type operator: unary -> ${operator}`
+    `Unsupported relation type operator: unary -> ${operator}`,
   );
 }
 
@@ -301,7 +301,7 @@ function getBinaryRelationType(operator: string) {
   }
 
   throw new ImplementationError(
-    `Unsupported relation type operator: binary -> ${operator}`
+    `Unsupported relation type operator: binary -> ${operator}`,
   );
 }
 
@@ -358,14 +358,14 @@ function getAssignmentRelationType(operator: string) {
   }
 
   throw new ImplementationError(
-    `Unsupported relation type operator: assignment -> ${operator}`
+    `Unsupported relation type operator: assignment -> ${operator}`,
   );
 }
 
 export function getRelationType(
   type: string,
   operator: string,
-  prefix = false
+  prefix = false,
 ): RelationType {
   switch (type) {
     case "unary": {
@@ -380,6 +380,6 @@ export function getRelationType(
   }
 
   throw new ImplementationError(
-    `Unsupported relation type operator: ${type} -> ${operator}`
+    `Unsupported relation type operator: ${type} -> ${operator}`,
   );
 }

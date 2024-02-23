@@ -30,19 +30,19 @@ import {
  * Plugin for the simple objective manager
  */
 export class SimpleObjectiveManagerPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
     super("simple", "A simple objective manager");
   }
 
   createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
+    options: ObjectiveManagerOptions<T>,
   ): ObjectiveManager<T> {
     return new SimpleObjectiveManager(
       options.runner,
       options.secondaryObjectives,
-      options.exceptionObjectivesEnabled
+      options.exceptionObjectivesEnabled,
     );
   }
 

@@ -54,7 +54,7 @@ export class VisitState {
     sourceFilePath,
     inputSourceMap,
     ignoreClassMethods = [],
-    reportLogic = false
+    reportLogic = false,
   ) {
     this.varName = genVar(sourceFilePath);
     this.metaVarName = this.varName.replace("cov_", "meta_");
@@ -149,7 +149,7 @@ export class VisitState {
     if (
       path.isFunctionExpression() &&
       this.ignoreClassMethods.some(
-        (name) => path.node.id && name === path.node.id.name
+        (name) => path.node.id && name === path.node.id.name,
       )
     ) {
       this.nextIgnore = n;
@@ -204,12 +204,12 @@ export class VisitState {
         T.memberExpression(
           T.memberExpression(
             T.callExpression(T.identifier(this.varName), []),
-            T.identifier(type)
+            T.identifier(type),
           ),
           T.numericLiteral(id),
-          true
-        )
-      )
+          true,
+        ),
+      ),
     );
   }
 
@@ -223,23 +223,23 @@ export class VisitState {
         "=",
         T.memberExpression(
           T.callExpression(T.identifier(this.varName), []),
-          T.identifier(tempName)
+          T.identifier(tempName),
         ),
-        node // Only evaluates once.
+        node, // Only evaluates once.
       ),
       T.parenthesizedExpression(
         T.conditionalExpression(
           T.memberExpression(
             T.callExpression(T.identifier(this.varName), []),
-            T.identifier(tempName)
+            T.identifier(tempName),
           ),
           this.increase(type, id, index),
-          T.nullLiteral()
-        )
+          T.nullLiteral(),
+        ),
       ),
       T.memberExpression(
         T.callExpression(T.identifier(this.varName), []),
-        T.identifier(tempName)
+        T.identifier(tempName),
       ),
     ]);
   }
@@ -286,7 +286,7 @@ export class VisitState {
         // stupid hack to make sure the traces match with the cfg
         // this one is for when init is empty in the variable declarator
         const index = this.cov.newStatement(
-          path.parentPath.parentPath.node.loc
+          path.parentPath.parentPath.node.loc,
         );
         const increment = this.increase("s", index, null);
         this.insertCounter(path.parentPath.parentPath, increment);
@@ -345,7 +345,7 @@ export class VisitState {
     } else {
       console.error(
         "Unable to process function body node identifierDescription:",
-        path.node.type
+        path.node.type,
       );
     }
   }
@@ -358,7 +358,7 @@ export class VisitState {
   getBranchMetaTracker(
     branchName: string,
     testAsCode: string,
-    variables: string[]
+    variables: string[],
   ) {
     const T = this.types;
 
@@ -367,7 +367,7 @@ export class VisitState {
       T.objectExpression([
         T.objectProperty(
           T.stringLiteral("condition"),
-          T.stringLiteral(testAsCode)
+          T.stringLiteral(testAsCode),
         ),
         T.ObjectProperty(
           T.stringLiteral("variables"),
@@ -377,10 +377,10 @@ export class VisitState {
               .map(([source, identifier]) => {
                 return T.objectProperty(
                   T.stringLiteral(source),
-                  T.identifier(identifier)
+                  T.identifier(identifier),
                 );
               }),
-          ])
+          ]),
         ),
       ]),
     ]);
@@ -400,7 +400,7 @@ export class VisitState {
     const increment = this.getBranchIncrement(
       ifPath,
       branchName,
-      placeholder ? undefined : path.node.loc
+      placeholder ? undefined : path.node.loc,
     );
 
     this.insertCounter(path, increment);

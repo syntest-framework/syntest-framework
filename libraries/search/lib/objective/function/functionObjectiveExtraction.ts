@@ -23,7 +23,7 @@ import { Encoding } from "../../Encoding";
 import { FunctionObjectiveFunction } from "./FunctionObjectiveFunction";
 
 export function extractFunctionObjectivesFromProgram<T extends Encoding>(
-  cfp: ControlFlowProgram
+  cfp: ControlFlowProgram,
 ) {
   const functions: FunctionObjectiveFunction<T>[] = [];
   for (const cff of cfp.functions) {

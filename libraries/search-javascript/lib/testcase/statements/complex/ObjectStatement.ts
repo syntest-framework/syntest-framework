@@ -35,7 +35,7 @@ export class ObjectStatement extends Statement {
     typeIdentifier: string,
     name: string,
     uniqueId: string,
-    object: ObjectType
+    object: ObjectType,
   ) {
     super(variableIdentifier, typeIdentifier, name, TypeEnum.OBJECT, uniqueId);
     this._object = object;
@@ -62,7 +62,7 @@ export class ObjectStatement extends Statement {
           this.typeIdentifier,
           this.name,
           prng.uniqueId(),
-          object
+          object,
         );
       }
 
@@ -86,7 +86,7 @@ export class ObjectStatement extends Statement {
           object[key] = sampler.sampleObjectArgument(
             depth + 1,
             this.typeIdentifier,
-            key
+            key,
           );
         } else if (choice < 0.66) {
           // 33% chance to remove a child on this position
@@ -104,7 +104,7 @@ export class ObjectStatement extends Statement {
         object[key] = sampler.sampleObjectArgument(
           depth + 1,
           this.typeIdentifier,
-          key
+          key,
         );
       }
 
@@ -113,7 +113,7 @@ export class ObjectStatement extends Statement {
         this.typeIdentifier,
         this.name,
         prng.uniqueId(),
-        object
+        object,
       );
     } else {
       // 20%
@@ -122,7 +122,7 @@ export class ObjectStatement extends Statement {
         return sampler.sampleArgument(
           depth,
           this.variableIdentifier,
-          this.name
+          this.name,
         );
       } else {
         // 50%
@@ -130,7 +130,7 @@ export class ObjectStatement extends Statement {
           depth,
           this.variableIdentifier,
           this.typeIdentifier,
-          this.name
+          this.name,
         );
       }
     }
@@ -157,7 +157,7 @@ export class ObjectStatement extends Statement {
       this.typeIdentifier,
       this.name,
       this.uniqueId,
-      object
+      object,
     );
   }
 
@@ -171,13 +171,13 @@ export class ObjectStatement extends Statement {
       .map(
         (key) =>
           `\n\t\t\t"${key}": ${context.getOrCreateVariableName(
-            this._object[key]
-          )}`
+            this._object[key],
+          )}`,
       )
       .join(",");
 
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = {${children}${children.length > 0 ? "\n\t\t" : ""}}`;
 
     return [

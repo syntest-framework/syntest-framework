@@ -20,6 +20,6 @@ export abstract class BranchDistanceCalculator {
   abstract calculate(
     condition: string,
     variables: unknown,
-    trueOrFalse: boolean
+    trueOrFalse: boolean,
   ): number;
 }

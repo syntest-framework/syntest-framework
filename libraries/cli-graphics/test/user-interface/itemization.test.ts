@@ -68,7 +68,7 @@ describe("itemization test", () => {
   - Item 3
     - Subitem 3.1
     - Subitem 3.2
-`
+`,
     );
   });
 });

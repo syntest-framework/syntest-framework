@@ -30,19 +30,19 @@ import {
  * Plugin for the structural objective manager
  */
 export class StructuralObjectiveManagerPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
     super("structural", "A structural objective manager");
   }
 
   createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
+    options: ObjectiveManagerOptions<T>,
   ): ObjectiveManager<T> {
     return new StructuralObjectiveManager(
       options.runner,
       options.secondaryObjectives,
-      options.exceptionObjectivesEnabled
+      options.exceptionObjectivesEnabled,
     );
   }
 

@@ -38,13 +38,13 @@ describe("Tournament selection", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
 
     const ind1 = new DummyEncodingMock();
@@ -64,13 +64,13 @@ describe("Tournament selection", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
 
     const ind1 = new DummyEncodingMock();
@@ -95,7 +95,7 @@ describe("Tournament selection", function () {
 
     const winner: DummyEncodingMock = tournamentSelection(
       [ind1, ind2, ind3, ind4],
-      20
+      20,
     );
     expect(winner.getRank()).to.equal(0);
     expect(winner.getDistance(objective1)).to.equal(0);
@@ -107,13 +107,13 @@ describe("Tournament selection", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
 
     const ind1 = new DummyEncodingMock();
@@ -138,7 +138,7 @@ describe("Tournament selection", function () {
 
     const winner: DummyEncodingMock = tournamentSelection(
       [ind2, ind1, ind3, ind4],
-      20
+      20,
     );
     expect(winner.getRank()).to.equal(0);
     expect(winner.getDistance(objective1)).to.equal(0);

@@ -27,7 +27,7 @@ export abstract class TerminationTriggerPlugin extends Plugin {
     super(PluginType.TerminationTrigger, name, describe);
   }
   abstract createTerminationTrigger<O extends TerminationTriggerOptions>(
-    options: O
+    options: O,
   ): TerminationTrigger;
 
   override getOptionChoices(option: string): string[] {

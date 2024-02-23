@@ -50,7 +50,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
       budget.getRemainingBudget() / budget.getTotalBudget() <
       minBudget.getRemainingBudget() / minBudget.getTotalBudget()
         ? budget
-        : minBudget
+        : minBudget,
     );
 
     const value = (budget.getRemainingBudget() / budget.getTotalBudget()) * 100;
@@ -63,7 +63,7 @@ export class BudgetManager<T extends Encoding> implements BudgetListener<T> {
    */
   hasBudgetLeft(): boolean {
     return [...this._budgets.values()].every(
-      (budget) => budget.getRemainingBudget() > 0
+      (budget) => budget.getRemainingBudget() > 0,
     );
   }
 

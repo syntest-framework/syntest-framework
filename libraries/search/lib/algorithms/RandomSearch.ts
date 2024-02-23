@@ -40,7 +40,7 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
    */
   constructor(
     objectiveManager: ObjectiveManager<T>,
-    encodingSampler: EncodingSampler<T>
+    encodingSampler: EncodingSampler<T>,
   ) {
     super(objectiveManager);
     RandomSearch.LOGGER = getLogger("RandomSearch");
@@ -61,7 +61,7 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
    */
   protected async _iterate(
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<void> {
     // Sample a new random encoding
     const randomEncoding: T = this._encodingSampler.sample();
@@ -71,7 +71,7 @@ export class RandomSearch<T extends Encoding> extends SearchAlgorithm<T> {
     await this._objectiveManager.evaluateMany(
       this._population,
       budgetManager,
-      terminationManager
+      terminationManager,
     );
   }
 }

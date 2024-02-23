@@ -27,11 +27,11 @@ export class DummyEncodingMock extends Encoding {
 
   public setDummyEvaluation(
     objective: BranchObjectiveFunction<DummyEncodingMock>[],
-    values: number[]
+    values: number[],
   ) {
     if (objective.length != values.length)
       throw new IllegalArgumentError(
-        "Number of objectives and values should be equal"
+        "Number of objectives and values should be equal",
       );
 
     for (const [index, element] of objective.entries()) {

@@ -27,7 +27,7 @@ export interface TargetModel extends Model {
 export function targetModelFormatter(
   rootContext: RootContext<unknown>,
   filePath: string,
-  target?: Target
+  target?: Target,
 ): TargetModel {
   return {
     filePath,

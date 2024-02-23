@@ -26,14 +26,14 @@ import { ArchiveBasedObjectiveManager } from "./ArchiveBasedObjectiveManager";
  * Objective manager that only evaluates an encoding on uncovered objectives.
  */
 export class UncoveredObjectiveManager<
-  T extends Encoding
+  T extends Encoding,
 > extends ArchiveBasedObjectiveManager<T> {
   /**
    * @inheritDoc
    * @protected
    */
   protected _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>
+    objectiveFunction: ObjectiveFunction<T>,
   ): ObjectiveFunction<T>[] {
     // Remove objective from the current and uncovered objectives
     this._uncoveredObjectives.delete(objectiveFunction);

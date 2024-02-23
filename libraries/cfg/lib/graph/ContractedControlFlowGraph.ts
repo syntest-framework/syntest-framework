@@ -38,7 +38,7 @@ export class ContractedControlFlowGraph extends ControlFlowGraph {
     nodes: Map<string, Node>,
     edges: Edge[],
     fullGraph: ControlFlowGraph,
-    nodeMapping: Map<string, string[]>
+    nodeMapping: Map<string, string[]>,
   ) {
     super(entry, successExit, errorExit, nodes, edges);
     this._fullGraph = fullGraph;

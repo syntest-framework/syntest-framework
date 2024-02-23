@@ -79,7 +79,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     exploreIllegalValues: boolean,
     addRemoveArgumentProbability: number,
     addArgumentProbability: number,
-    removeArgumentProbability: number
+    removeArgumentProbability: number,
   ) {
     super(
       subject,
@@ -100,7 +100,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       exploreIllegalValues,
       addRemoveArgumentProbability,
       addArgumentProbability,
-      removeArgumentProbability
+      removeArgumentProbability,
     );
   }
 
@@ -129,7 +129,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       if (constructor_ && prng.nextBoolean(this.statementPoolProbability)) {
         // TODO ignoring getters and setters for now
         const result = this.rootContext.getSubTargets(
-          constructor_.typeIdentifier.split(":")[0]
+          constructor_.typeIdentifier.split(":")[0],
         );
 
         if (isFailure(result)) throw result.error;
@@ -141,7 +141,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
             (target) =>
               target.type === TargetType.METHOD &&
               (<MethodTarget>target).methodType === "method" &&
-              (<MethodTarget>target).classId === constructor_.classIdentifier
+              (<MethodTarget>target).classId === constructor_.classIdentifier,
           )
         );
         if (methods.length > 0) {
@@ -160,7 +160,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
             method.name,
             prng.uniqueId(),
             arguments_,
-            constructor_
+            constructor_,
           );
         }
       }
@@ -177,17 +177,17 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
             isExported(
               targets.find(
                 (classTarget) =>
-                  classTarget.id === (<MethodTarget>target).classId
-              )
+                  classTarget.id === (<MethodTarget>target).classId,
+              ),
             )) || // check whether parent class is exported
           (target.type === TargetType.OBJECT_FUNCTION &&
             isExported(
               targets.find(
                 (objectTarget) =>
-                  objectTarget.id === (<ObjectFunctionTarget>target).objectId
-              )
-            )) // check whether parent object is exported
-      )
+                  objectTarget.id === (<ObjectFunctionTarget>target).objectId,
+              ),
+            )), // check whether parent object is exported
+      ),
     );
 
     switch (action.type) {
@@ -215,7 +215,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       prng.pickOne(
         (<JavaScriptSubject>this._subject)
           .getActionableTargetsByType(TargetType.FUNCTION)
-          .filter((target) => isExported(target))
+          .filter((target) => isExported(target)),
       )
     );
 
@@ -225,7 +225,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       function_.typeId,
       function_.id,
       function_.name,
-      this.statementPool
+      this.statementPool,
     );
   }
 
@@ -240,7 +240,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         throw new ImplementationError("missing class with id: " + id);
       } else if (!isExported(result)) {
         throw new ImplementationError(
-          "class with id: " + id + "is not exported"
+          "class with id: " + id + "is not exported",
         );
       }
       return result;
@@ -251,7 +251,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       prng.pickOne(
         (<JavaScriptSubject>this._subject)
           .getActionableTargetsByType(TargetType.CLASS)
-          .filter((target) => isExported(target))
+          .filter((target) => isExported(target)),
       )
     );
   }
@@ -266,7 +266,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .filter(
         (method) =>
           (<MethodTarget>method).classId === class_.id &&
-          (<MethodTarget>method).methodType === "constructor"
+          (<MethodTarget>method).methodType === "constructor",
       );
 
     if (constructor_.length > 1) {
@@ -278,7 +278,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       // TODO bad splitting of ids (we should add paths to targets)
       const filePath = class_.id.split(":")[0];
       const export_ = unwrapOr(this.rootContext.getExports(filePath), []).find(
-        (export_) => export_.id === class_.id
+        (export_) => export_.id === class_.id,
       );
 
       return new ConstructorCall(
@@ -288,7 +288,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         class_.name,
         prng.uniqueId(),
         [],
-        export_
+        export_,
       );
     } else {
       const action = constructor_[0];
@@ -298,7 +298,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         (<MethodTarget>action).typeId,
         class_.id,
         class_.name,
-        this.statementPool
+        this.statementPool,
       );
     }
   }
@@ -313,9 +313,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
           (<MethodTarget>method).methodType !== "constructor" &&
           isExported(
             targets.find(
-              (classTarget) => classTarget.id === (<MethodTarget>method).classId
-            )
-          )
+              (classTarget) =>
+                classTarget.id === (<MethodTarget>method).classId,
+            ),
+          ),
       );
 
     const randomMethod = <MethodTarget>prng.pickOne(methods);
@@ -345,9 +346,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .filter((target) =>
         isExported(
           targets.find(
-            (objectTarget) => objectTarget.id === (<MethodTarget>target).classId
-          )
-        )
+            (objectTarget) =>
+              objectTarget.id === (<MethodTarget>target).classId,
+          ),
+        ),
       );
 
     const method = <MethodTarget>prng.pickOne(methods);
@@ -359,7 +361,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       method.typeId,
       class_.id,
       method.name,
-      this.statementPool
+      this.statementPool,
     );
   }
 
@@ -372,9 +374,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .filter((target) =>
         isExported(
           targets.find(
-            (objectTarget) => objectTarget.id === (<MethodTarget>target).classId
-          )
-        )
+            (objectTarget) =>
+              objectTarget.id === (<MethodTarget>target).classId,
+          ),
+        ),
       );
 
     const method = <MethodTarget>prng.pickOne(methods);
@@ -386,7 +389,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       method.id,
       class_.id,
       method.name,
-      this.statementPool
+      this.statementPool,
     );
   }
 
@@ -399,9 +402,10 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       .filter((target) =>
         isExported(
           targets.find(
-            (objectTarget) => objectTarget.id === (<MethodTarget>target).classId
-          )
-        )
+            (objectTarget) =>
+              objectTarget.id === (<MethodTarget>target).classId,
+          ),
+        ),
       );
 
     const method = <MethodTarget>prng.pickOne(methods);
@@ -413,7 +417,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       method.typeId,
       class_.id,
       method.name,
-      this.statementPool
+      this.statementPool,
     );
   }
 
@@ -428,7 +432,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         throw new ImplementationError("missing object with id: " + id);
       } else if (!isExported(result)) {
         throw new ImplementationError(
-          "object with id: " + id + " is not exported"
+          "object with id: " + id + " is not exported",
         );
       }
       return result;
@@ -439,7 +443,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       prng.pickOne(
         (<JavaScriptSubject>this._subject)
           .getActionableTargetsByType(TargetType.OBJECT)
-          .filter((target) => isExported(target))
+          .filter((target) => isExported(target)),
       )
     );
   }
@@ -454,7 +458,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       object_.typeId,
       object_.id,
       object_.name,
-      this.statementPool
+      this.statementPool,
     );
   }
 
@@ -467,9 +471,9 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         isExported(
           targets.find(
             (objectTarget) =>
-              objectTarget.id === (<ObjectFunctionTarget>target).objectId
-          )
-        )
+              objectTarget.id === (<ObjectFunctionTarget>target).objectId,
+          ),
+        ),
       );
 
     const randomFunction = <ObjectFunctionTarget>prng.pickOne(functions);
@@ -481,7 +485,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       randomFunction.typeId,
       object_.id,
       randomFunction.name,
-      this.statementPool
+      this.statementPool,
     );
   }
 
@@ -507,7 +511,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   sampleObjectArgument(
     depth: number,
     objectTypeId: string,
-    property: string
+    property: string,
   ): Statement {
     const objectType = this.rootContext
       .getTypeModel()
@@ -516,7 +520,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     const value = objectType.properties.get(property);
     if (!value) {
       throw new ImplementationError(
-        `Property ${property} not found in object ${objectTypeId}`
+        `Property ${property} not found in object ${objectTypeId}`,
       );
     }
 
@@ -556,7 +560,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       }
       default: {
         throw new ImplementationError(
-          "Invalid identifierDescription inference mode selected"
+          "Invalid identifierDescription inference mode selected",
         );
       }
     }
@@ -629,7 +633,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         // TODO this prevents ONLY allows sampling of matching class constructors
         .getRandomMatchingType(
           typeObject,
-          (type_) => type_.kind === DiscoveredObjectKind.CLASS
+          (type_) => type_.kind === DiscoveredObjectKind.CLASS,
         );
 
       if (typeFromTypePool && prng.nextBoolean(this.typePoolProbability)) {
@@ -638,7 +642,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
           case DiscoveredObjectKind.CLASS: {
             // find constructor of class
             const result = this.rootContext.getSubTargets(
-              typeFromTypePool.id.split(":")[0]
+              typeFromTypePool.id.split(":")[0],
             );
 
             if (isFailure(result)) throw result.error;
@@ -649,7 +653,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
                 (target) =>
                   target.type === TargetType.METHOD &&
                   (<MethodTarget>target).methodType === "constructor" &&
-                  (<MethodTarget>target).classId === typeFromTypePool.id
+                  (<MethodTarget>target).classId === typeFromTypePool.id,
               )
             );
 
@@ -660,7 +664,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
                 constructor_.typeId, // constructor call id
                 typeFromTypePool.id, // class export id
                 name,
-                this.statementPool
+                this.statementPool,
               );
             }
 
@@ -670,7 +674,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
               typeFromTypePool.id, // constructor call id
               typeFromTypePool.id, // class export id
               name,
-              this.statementPool
+              this.statementPool,
             );
           }
           case DiscoveredObjectKind.FUNCTION: {
@@ -680,7 +684,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
               typeFromTypePool.id,
               typeFromTypePool.id,
               name,
-              this.statementPool
+              this.statementPool,
             );
           }
           case DiscoveredObjectKind.INTERFACE: {
@@ -691,7 +695,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
               typeFromTypePool.id,
               typeFromTypePool.id,
               name,
-              this.statementPool
+              this.statementPool,
             );
           }
           case DiscoveredObjectKind.OBJECT: {
@@ -701,7 +705,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
               typeFromTypePool.id,
               typeFromTypePool.id,
               name,
-              this.statementPool
+              this.statementPool,
             );
           }
           // No default
@@ -736,7 +740,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
     depth: number,
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): ArrowFunctionStatement {
     const typeObject = this.rootContext
       .getTypeModel()
@@ -757,7 +761,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
 
     // filter duplicates
     parameters = parameters.filter(
-      (item, index) => parameters.indexOf(item) === index
+      (item, index) => parameters.indexOf(item) === index,
     );
 
     if (typeObject.return.size === 0) {
@@ -767,7 +771,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
         name,
         prng.uniqueId(),
         parameters,
-        undefined // maybe something random?
+        undefined, // maybe something random?
       );
     }
 
@@ -779,7 +783,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       name,
       prng.uniqueId(),
       parameters,
-      this.sampleArgument(depth + 1, chosenReturn, "return")
+      this.sampleArgument(depth + 1, chosenReturn, "return"),
     );
   }
 
@@ -811,7 +815,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
       typeId,
       name,
       prng.uniqueId(),
-      prng.nextBoolean()
+      prng.nextBoolean(),
     );
   }
 
@@ -856,7 +860,7 @@ export class JavaScriptRandomSampler extends JavaScriptTestCaseSampler {
   sampleUndefined(
     id: string,
     typeId: string,
-    name: string
+    name: string,
   ): UndefinedStatement {
     return new UndefinedStatement(id, typeId, name, prng.uniqueId());
   }

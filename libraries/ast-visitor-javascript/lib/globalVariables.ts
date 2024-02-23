@@ -19,5 +19,5 @@ import * as globals from "globals";
 
 export const globalVariables = new Set(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  Object.values(globals).flatMap((value) => Object.keys(value))
+  Object.values(globals).flatMap((value) => Object.keys(value)),
 );

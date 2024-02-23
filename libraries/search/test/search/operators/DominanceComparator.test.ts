@@ -33,13 +33,13 @@ describe("Dominance comparator", function () {
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     const objective2 = new BranchObjectiveFunction<DummyEncodingMock>(
       "1",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     objectives = new Set<BranchObjectiveFunction<DummyEncodingMock>>();
     objectives.add(objective1);
@@ -87,7 +87,7 @@ describe("Dominance comparator", function () {
       "2",
       undefined,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
     objectives.add(objective2);
 

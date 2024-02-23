@@ -132,7 +132,7 @@ export abstract class Encoding {
    */
   setDistance(
     objectiveFunction: ObjectiveFunction<Encoding>,
-    distance: number
+    distance: number,
   ): void {
     if (Number.isNaN(distance)) {
       throw new IllegalArgumentError("Cannot set objective distance to NaN");

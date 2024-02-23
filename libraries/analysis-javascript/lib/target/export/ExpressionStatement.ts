@@ -38,14 +38,14 @@ type PartialNonDefaultExport = {
 export function extractExportsFromAssignmentExpression(
   visitor: ExportVisitor,
   filePath: string,
-  path_: NodePath<t.AssignmentExpression>
+  path_: NodePath<t.AssignmentExpression>,
 ): Export[] {
   const left = path_.get("left");
   const right = path_.get("right");
 
   let partialExport: PartialExport | false = checkExportAndDefault(
     visitor,
-    left
+    left,
   );
 
   if (partialExport) {
@@ -53,7 +53,7 @@ export function extractExportsFromAssignmentExpression(
       visitor,
       filePath,
       partialExport,
-      right
+      right,
     );
   }
 
@@ -65,7 +65,7 @@ export function extractExportsFromAssignmentExpression(
         visitor,
         filePath,
         left,
-        partialExport
+        partialExport,
       );
     }
   } else {
@@ -79,7 +79,7 @@ export function extractExportsFromRightAssignmentExpression(
   visitor: ExportVisitor,
   filePath: string,
   left: NodePath<t.LVal | t.Identifier>,
-  right: PartialExport
+  right: PartialExport,
 ): Export[] {
   const exports: Export[] = [];
 
@@ -115,7 +115,7 @@ export function extractExportsFromLeftAssignmentExpression(
   visitor: ExportVisitor,
   filePath: string,
   left: PartialExport,
-  right: NodePath<t.Expression>
+  right: NodePath<t.Expression>,
 ): Export[] {
   const exports: Export[] = [];
 
@@ -128,7 +128,7 @@ export function extractExportsFromLeftAssignmentExpression(
     // extract the stuff from the object
     const properties = right.get("properties");
     exports.push(
-      ...extractObjectProperties(right, properties, visitor, filePath, module)
+      ...extractObjectProperties(right, properties, visitor, filePath, module),
     );
   } else if (left.default) {
     // module.exports = ?
@@ -169,7 +169,7 @@ export function extractObjectProperties(
   properties: NodePath<t.ObjectMethod | t.ObjectProperty | t.SpreadElement>[],
   visitor: ExportVisitor,
   filePath: string,
-  module: boolean
+  module: boolean,
 ): Export[] {
   const default_ = false;
   const exports: Export[] = [];
@@ -244,11 +244,11 @@ export function extractObjectProperties(
       if (visitor.syntaxForgiving) {
         // Log it
         getLogger("ExportVisitor").warn(
-          `Unsupported export declaration at ${visitor._getNodeId(path)}`
+          `Unsupported export declaration at ${visitor._getNodeId(path)}`,
         );
       } else {
         throw new ImplementationError(
-          `Unsupported export declaration at ${visitor._getNodeId(path)}`
+          `Unsupported export declaration at ${visitor._getNodeId(path)}`,
         );
       }
     }
@@ -257,7 +257,7 @@ export function extractObjectProperties(
 }
 
 export function getName(
-  expression: NodePath<t.Expression | t.LVal | t.Identifier>
+  expression: NodePath<t.Expression | t.LVal | t.Identifier>,
 ): string {
   if (expression.isIdentifier()) {
     return expression.node.name;
@@ -286,7 +286,7 @@ export function getName(
 
 export function checkExportAndDefault(
   visitor: ExportVisitor,
-  expression: NodePath<t.LVal | t.Expression>
+  expression: NodePath<t.LVal | t.Expression>,
 ): false | PartialExport {
   if (expression.isIdentifier() && expression.node.name === "exports") {
     // exports
@@ -320,7 +320,7 @@ export function checkExportAndDefault(
         const name = _getNameOfProperty(
           visitor,
           property,
-          expression.node.computed
+          expression.node.computed,
         );
         if (!name) {
           return false;
@@ -351,7 +351,7 @@ export function checkExportAndDefault(
         const name = _getNameOfProperty(
           visitor,
           property,
-          expression.node.computed
+          expression.node.computed,
         );
         if (!name) {
           return false;
@@ -370,7 +370,7 @@ export function checkExportAndDefault(
 function _getNameOfProperty(
   visitor: ExportVisitor,
   property: NodePath<t.PrivateName | t.Expression>,
-  computed: boolean
+  computed: boolean,
 ): string | undefined {
   if (computed) {
     // module.exports[?] = ?
@@ -386,8 +386,8 @@ function _getNameOfProperty(
       // module.exports[a] = ?
       getLogger("ExportVisitor").warn(
         `This tool does not support computed export statements. Found one at ${visitor._getNodeId(
-          property
-        )}`
+          property,
+        )}`,
       );
       return undefined;
     }

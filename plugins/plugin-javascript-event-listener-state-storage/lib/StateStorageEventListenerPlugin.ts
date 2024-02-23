@@ -45,7 +45,7 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
     super(
       "javascript-state-storage",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
-      require("../../package.json").description
+      require("../../package.json").description,
     );
     this.storageManager = storageManager;
   }
@@ -59,7 +59,7 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
     (<TypedEventEmitter<Events>>process).on(
       "exportExtractionComplete",
       (rootContext: RootContext, filepath: string, exports_: Export[]) =>
-        stateStorage.exportExtractionComplete(rootContext, filepath, exports_)
+        stateStorage.exportExtractionComplete(rootContext, filepath, exports_),
     );
 
     (<TypedEventEmitter<Events>>process).on(
@@ -67,9 +67,9 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
       (
         rootContext: RootContext,
         filepath: string,
-        elements: Map<string, Element>
+        elements: Map<string, Element>,
       ) =>
-        stateStorage.elementExtractionComplete(rootContext, filepath, elements)
+        stateStorage.elementExtractionComplete(rootContext, filepath, elements),
     );
 
     (<TypedEventEmitter<Events>>process).on(
@@ -77,13 +77,13 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
       (
         rootContext: RootContext,
         filepath: string,
-        relations: Map<string, Relation>
+        relations: Map<string, Relation>,
       ) =>
         stateStorage.relationExtractionComplete(
           rootContext,
           filepath,
-          relations
-        )
+          relations,
+        ),
     );
 
     (<TypedEventEmitter<Events>>process).on(
@@ -91,26 +91,26 @@ export class StateStorageEventListenerPlugin extends EventListenerPlugin {
       (
         rootContext: RootContext,
         filepath: string,
-        objects: Map<string, DiscoveredObjectType>
+        objects: Map<string, DiscoveredObjectType>,
       ) =>
         stateStorage.objectTypeExtractionComplete(
           rootContext,
           filepath,
-          objects
-        )
+          objects,
+        ),
     );
 
     (<TypedEventEmitter<Events>>process).on(
       "typeResolvingComplete",
       (rootContext: RootContext) =>
-        stateStorage.typeResolvingComplete(rootContext)
+        stateStorage.typeResolvingComplete(rootContext),
     );
   }
 
   override getOptions(
     tool: string,
     labels: string[],
-    command: string
+    command: string,
   ): Map<string, Yargs.Options> {
     const optionsMap = new Map<string, Yargs.Options>();
 

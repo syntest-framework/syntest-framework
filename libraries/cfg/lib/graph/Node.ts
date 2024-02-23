@@ -38,7 +38,7 @@ export class Node {
     label: string,
     statements: Statement[],
     metadata: MetaData,
-    description?: string
+    description?: string,
   ) {
     this.id = id;
     this.type = type;

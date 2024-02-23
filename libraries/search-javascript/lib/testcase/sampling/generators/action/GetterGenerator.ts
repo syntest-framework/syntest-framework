@@ -29,11 +29,11 @@ export class GetterGenerator extends CallGenerator<Getter> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    _statementPool: StatementPool
+    _statementPool: StatementPool,
   ): Getter {
     const constructor_ = this.sampler.sampleConstructorCall(
       depth + 1,
-      exportIdentifier
+      exportIdentifier,
     );
 
     return new Getter(
@@ -41,7 +41,7 @@ export class GetterGenerator extends CallGenerator<Getter> {
       typeIdentifier,
       name,
       prng.uniqueId(),
-      constructor_
+      constructor_,
     );
   }
 }

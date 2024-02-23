@@ -27,7 +27,7 @@ export abstract class Procreation<E extends Encoding> {
   constructor(
     crossover: Crossover<E>,
     mutateFunction: (sampler: EncodingSampler<E>, encoding: E) => E,
-    sampler: EncodingSampler<E>
+    sampler: EncodingSampler<E>,
   ) {
     this._crossover = crossover;
     this._sampler = sampler;
@@ -36,7 +36,7 @@ export abstract class Procreation<E extends Encoding> {
 
   abstract generateOffspringPopulation(
     populationSize: number,
-    population: E[]
+    population: E[],
   ): E[];
 
   get crossover(): Crossover<E> {

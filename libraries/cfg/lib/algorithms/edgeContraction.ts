@@ -40,7 +40,7 @@ import { NodeType } from "../graph/NodeType";
  * @returns the contracted control flow graph
  */
 export function edgeContraction(
-  controlFlowGraph: ControlFlowGraph
+  controlFlowGraph: ControlFlowGraph,
 ): Result<ContractedControlFlowGraph> {
   const original = controlFlowGraph;
   const nodeMapping = new Map<string, string[]>();
@@ -93,7 +93,7 @@ export function edgeContraction(
       return failure(
         new IllegalStateError("Missing placeholder node between 2 nodes", {
           context: { node1: edge.source, node2: edge.target },
-        })
+        }),
       );
     }
   }
@@ -106,14 +106,14 @@ export function edgeContraction(
       controlFlowGraph.nodes,
       controlFlowGraph.edges,
       original,
-      nodeMapping
-    )
+      nodeMapping,
+    ),
   );
 }
 
 // side effects
 export function contractControlFlowProgram(
-  program: ControlFlowProgram
+  program: ControlFlowProgram,
 ): Result<ControlFlowProgram> {
   const result = edgeContraction(program.graph);
 
@@ -139,7 +139,7 @@ export function contractControlFlowProgram(
  */
 function bfs(
   controlFlowGraph: ControlFlowGraph,
-  condition: (edge: Edge) => boolean
+  condition: (edge: Edge) => boolean,
 ): Edge | undefined {
   const queue: Edge[] = [];
   const visited: Set<string> = new Set();
@@ -168,26 +168,26 @@ function bfs(
 function beforeGuards(
   controlFlowGraph: ControlFlowGraph,
   source: string,
-  target: string
+  target: string,
 ): void {
   if (controlFlowGraph.getOutgoingEdges(source).length !== 1) {
     throw new IllegalStateError(
       "Cannot merge nodes, node has more than one outgoing edge",
-      { context: { node: source } }
+      { context: { node: source } },
     );
   }
 
   if (controlFlowGraph.getIncomingEdges(target).length !== 1) {
     throw new IllegalStateError(
       "Cannot merge nodes, node has more than one incoming edge",
-      { context: { node: target } }
+      { context: { node: target } },
     );
   }
 
   if (controlFlowGraph.getOutgoingEdges(source)[0].target !== target) {
     throw new IllegalStateError(
       "Cannot merge nodes, nodes are not directly connected",
-      { context: { node1: source, node2: target } }
+      { context: { node1: source, node2: target } },
     );
   }
 
@@ -205,7 +205,7 @@ function afterGuards(
   newEdges: Edge[],
   controlFlowGraph: ControlFlowGraph,
   source: string,
-  target: string
+  target: string,
 ): void {
   if (newNodes.size !== controlFlowGraph.nodes.size - 1) {
     throw new IllegalStateError(
@@ -216,7 +216,7 @@ function afterGuards(
           mergeNode2: target,
           removedAmount: newNodes.size - controlFlowGraph.nodes.size,
         },
-      }
+      },
     );
   }
 
@@ -229,7 +229,7 @@ function afterGuards(
           mergeNode2: target,
           removedAmount: newEdges.length - controlFlowGraph.edges.length,
         },
-      }
+      },
     );
   }
 }
@@ -237,7 +237,7 @@ function afterGuards(
 function mergeNodes(
   controlFlowGraph: ControlFlowGraph,
   source: string,
-  target: string
+  target: string,
 ): Result<ControlFlowGraph> {
   beforeGuards(controlFlowGraph, source, target);
 
@@ -252,21 +252,21 @@ function mergeNodes(
     {
       ...sourceNode.metadata,
       ...targetNode.metadata,
-    }
+    },
   );
 
   const filteredNodes = [...controlFlowGraph.nodes.values()].filter(
-    (node) => node.id !== source && node.id !== target
+    (node) => node.id !== source && node.id !== target,
   );
 
   const newNodesArray = [mergedNode, ...filteredNodes];
 
   const newNodes = new Map<string, Node>(
-    newNodesArray.map((node) => [node.id, node])
+    newNodesArray.map((node) => [node.id, node]),
   );
 
   const removedEdges = controlFlowGraph.edges.filter(
-    (edge) => edge.source === source && edge.target === target
+    (edge) => edge.source === source && edge.target === target,
   );
 
   if (removedEdges.length !== 1) {
@@ -279,8 +279,8 @@ function mergeNodes(
             mergeNode2: target,
             removedAmount: removedEdges.length,
           },
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -295,7 +295,7 @@ function mergeNodes(
           edge.label,
           mergedNode.id,
           edge.target,
-          edge.description
+          edge.description,
         );
       }
 
@@ -307,7 +307,7 @@ function mergeNodes(
           edge.label,
           edge.source,
           mergedNode.id,
-          edge.description
+          edge.description,
         );
       }
       return edge;
@@ -321,7 +321,7 @@ function mergeNodes(
       controlFlowGraph.successExit,
       controlFlowGraph.errorExit,
       newNodes,
-      newEdges
-    )
+      newEdges,
+    ),
   );
 }

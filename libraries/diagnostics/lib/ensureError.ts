@@ -28,7 +28,7 @@ export function ensureError(value: unknown): Error {
   } catch {}
 
   return new Error(
-    `This value was thrown as is, not through an Error: ${stringified}`
+    `This value was thrown as is, not through an Error: ${stringified}`,
   );
 }
 
@@ -40,6 +40,6 @@ export function ensureBaseError(value: unknown): BaseError {
   return new BaseError(
     "unknown",
     "The error thrown is an error without using the SynTest specific error types.",
-    { cause: error }
+    { cause: error },
   );
 }

@@ -49,7 +49,7 @@ export class ConstructorCall extends ActionStatement {
     name: string,
     uniqueId: string,
     arguments_: Statement[],
-    export_: Export
+    export_: Export,
   ) {
     super(
       variableIdentifier,
@@ -58,11 +58,11 @@ export class ConstructorCall extends ActionStatement {
       TypeEnum.FUNCTION,
       uniqueId,
       arguments_,
-      export_
+      export_,
     );
     if (!export_) {
       throw new ImplementationError(
-        "Export of constructor call cannot be undefined"
+        "Export of constructor call cannot be undefined",
       );
     }
     this._classIdentifier = classIdentifier;
@@ -84,7 +84,7 @@ export class ConstructorCall extends ActionStatement {
         this.name,
         prng.uniqueId(),
         arguments_,
-        this.export
+        this.export,
       );
     } else {
       return sampler.constructorCallGenerator.generate(
@@ -93,7 +93,7 @@ export class ConstructorCall extends ActionStatement {
         this.typeIdentifier,
         this.export.id,
         this.name,
-        sampler.statementPool
+        sampler.statementPool,
       );
     }
   }
@@ -108,13 +108,13 @@ export class ConstructorCall extends ActionStatement {
       this.name,
       this.uniqueId,
       deepCopyArguments,
-      this.export
+      this.export,
     );
   }
 
   decode(context: ContextBuilder): Decoding[] {
     const argumentsDecoding: Decoding[] = this.args.flatMap((a) =>
-      a.decode(context)
+      a.decode(context),
     );
 
     const arguments_ = this.args
@@ -123,7 +123,7 @@ export class ConstructorCall extends ActionStatement {
 
     const import_ = context.getOrCreateImportName(this.export);
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = new ${import_}(${arguments_})`;
 
     return [

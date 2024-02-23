@@ -36,7 +36,7 @@ export abstract class ActionStatement extends Statement {
     ownType: TypeEnum,
     uniqueId: string,
     arguments_: Statement[],
-    export_?: Export
+    export_?: Export,
   ) {
     super(variableIdentifier, typeIdentifier, name, ownType, uniqueId);
     this._args = arguments_;
@@ -45,7 +45,7 @@ export abstract class ActionStatement extends Statement {
 
   abstract override mutate(
     sampler: EncodingSampler<Encoding>,
-    depth: number
+    depth: number,
   ): ActionStatement;
 
   abstract override copy(): ActionStatement;

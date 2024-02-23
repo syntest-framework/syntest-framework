@@ -39,7 +39,7 @@ export class ControlFlowGraph {
     successExit: Node,
     errorExit: Node,
     nodes: Map<string, Node>,
-    edges: Edge[]
+    edges: Edge[],
   ) {
     this._entry = entry;
     this._successExit = successExit;
@@ -164,8 +164,8 @@ export class ControlFlowGraph {
       node.statements.some(
         (statement) =>
           lineNumbers.has(statement.location.start.line) ||
-          lineNumbers.has(statement.location.end.line)
-      )
+          lineNumbers.has(statement.location.end.line),
+      ),
     );
   }
 
@@ -178,7 +178,7 @@ export class ControlFlowGraph {
         n.statements.some(
           (statement) =>
             statement.location.start.line === lineNumber ||
-            statement.location.end.line === lineNumber
+            statement.location.end.line === lineNumber,
         )
       );
     });

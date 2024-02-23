@@ -30,12 +30,12 @@ export class ConstantObjectGenerator extends CallGenerator<ConstantObject> {
     typeIdentifier: string,
     exportIdentifier: string,
     name: string,
-    statementPool: StatementPool
+    statementPool: StatementPool,
   ): ConstantObject {
     // TODO bad splitting of ids (we should add paths to targets)
     const filePath = exportIdentifier.split(":")[0];
     const export_ = unwrapOr(this.rootContext.getExports(filePath), []).find(
-      (export_) => export_.id === exportIdentifier
+      (export_) => export_.id === exportIdentifier,
     );
 
     if (this.statementPoolEnabled) {
@@ -55,7 +55,7 @@ export class ConstantObjectGenerator extends CallGenerator<ConstantObject> {
       typeIdentifier,
       name,
       prng.uniqueId(),
-      export_
+      export_,
     );
   }
 }

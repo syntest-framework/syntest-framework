@@ -88,7 +88,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
   constructor(
     runner: EncodingRunner<T>,
     secondaryObjectives: SecondaryObjectiveComparator<T>[],
-    exceptionObjectivesEnabled: boolean
+    exceptionObjectivesEnabled: boolean,
   ) {
     ObjectiveManager.LOGGER = getLogger("ObjectiveManager");
     this._runner = runner;
@@ -108,7 +108,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
    */
   protected abstract _handleCoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
-    encoding: T
+    encoding: T,
   ): ObjectiveFunction<T>[];
 
   /**
@@ -121,7 +121,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
   protected abstract _handleUncoveredObjective(
     objectiveFunction: ObjectiveFunction<T>,
     encoding: T,
-    distance: number
+    distance: number,
   ): void;
 
   /**
@@ -133,7 +133,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
    * @protected
    */
   protected abstract _updateObjectives(
-    objectiveFunction: ObjectiveFunction<T>
+    objectiveFunction: ObjectiveFunction<T>,
   ): ObjectiveFunction<T>[];
 
   /**
@@ -146,7 +146,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
   public async evaluateMany(
     encodings: T[],
     budgetManager: BudgetManager<T>,
-    terminationManager: TerminationManager
+    terminationManager: TerminationManager,
   ): Promise<void> {
     for (const encoding of encodings) {
       // If there is no budget left or a termination trigger has been triggered, stop evaluating
@@ -168,7 +168,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
   public async evaluateOne(
     encoding: T,
     budgetManager: BudgetManager<T>,
-    _terminationManager: TerminationManager
+    _terminationManager: TerminationManager,
   ): Promise<void> {
     ObjectiveManager.LOGGER.debug(`Evaluating encoding ${encoding.id}`);
     // Execute the encoding
@@ -197,7 +197,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
         this._archive.update(
           new ExceptionObjectiveFunction(hash, result.getError()),
           encoding,
-          false
+          false,
         );
       }
     }
@@ -205,13 +205,13 @@ export abstract class ObjectiveManager<T extends Encoding> {
 
   protected evaluateObjective(
     encoding: T,
-    objectiveFunction: ObjectiveFunction<T>
+    objectiveFunction: ObjectiveFunction<T>,
   ) {
     // Calculate and store the distance
     const distance = objectiveFunction.calculateDistance(encoding);
     if (Number.isNaN(distance)) {
       throw new ImplementationError(
-        "Objective function distance calculation returned a NaN value"
+        "Objective function distance calculation returned a NaN value",
       );
     }
     encoding.setDistance(objectiveFunction, distance);
@@ -222,12 +222,12 @@ export abstract class ObjectiveManager<T extends Encoding> {
       ObjectiveManager.LOGGER.debug(
         `Objective ${objectiveFunction.getIdentifier()} covered by encoding ${
           encoding.id
-        }`
+        }`,
       );
 
       const newObjectives = this._handleCoveredObjective(
         objectiveFunction,
-        encoding
+        encoding,
       );
 
       for (const objective of newObjectives) {
@@ -237,7 +237,7 @@ export abstract class ObjectiveManager<T extends Encoding> {
       ObjectiveManager.LOGGER.debug(
         `Distance from objective ${objectiveFunction.getIdentifier()} is ${distance} for encoding ${
           encoding.id
-        }`
+        }`,
       );
 
       this._handleUncoveredObjective(objectiveFunction, encoding, distance);

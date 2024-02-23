@@ -65,7 +65,7 @@ describe("CFG ancestors search", function () {
       nodeExit,
       nodeExit,
       nodes,
-      edges
+      edges,
     );
 
     const result = contractControlFlowProgram({
@@ -86,7 +86,7 @@ describe("CFG ancestors search", function () {
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
 
     expect(pathObjectives.length).to.equal(2);
@@ -136,14 +136,14 @@ describe("CFG ancestors search", function () {
         EdgeType.CONDITIONAL_TRUE,
         "1",
         conditionNode1.id,
-        trueNode1.id
+        trueNode1.id,
       ),
       new Edge(
         "2",
         EdgeType.CONDITIONAL_FALSE,
         "2",
         conditionNode1.id,
-        falseNode1.id
+        falseNode1.id,
       ),
       new Edge("3", EdgeType.NORMAL, "3", trueNode1.id, conditionNode2.id),
       new Edge("4", EdgeType.NORMAL, "4", falseNode1.id, conditionNode2.id),
@@ -152,14 +152,14 @@ describe("CFG ancestors search", function () {
         EdgeType.CONDITIONAL_TRUE,
         "5",
         conditionNode2.id,
-        trueNode2.id
+        trueNode2.id,
       ),
       new Edge(
         "6",
         EdgeType.CONDITIONAL_FALSE,
         "6",
         conditionNode2.id,
-        falseNode2.id
+        falseNode2.id,
       ),
       new Edge("7", EdgeType.NORMAL, "7", trueNode2.id, nodeExit.id),
       new Edge("8", EdgeType.NORMAL, "8", falseNode2.id, nodeExit.id),
@@ -170,7 +170,7 @@ describe("CFG ancestors search", function () {
       nodeExit,
       nodeExit,
       nodes,
-      edges
+      edges,
     );
 
     const result = contractControlFlowProgram({
@@ -191,7 +191,7 @@ describe("CFG ancestors search", function () {
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
 
     expect(pathObjectives.length).to.equal(4);
@@ -241,14 +241,14 @@ describe("CFG ancestors search", function () {
         EdgeType.CONDITIONAL_TRUE,
         "1",
         conditionNode1.id,
-        trueNode1.id
+        trueNode1.id,
       ),
       new Edge(
         "2",
         EdgeType.CONDITIONAL_FALSE,
         "2",
         conditionNode1.id,
-        falseNode1.id
+        falseNode1.id,
       ),
       new Edge("3", EdgeType.NORMAL, "3", trueNode1.id, conditionNode2.id),
       new Edge("4", EdgeType.NORMAL, "4", falseNode1.id, nodeExit.id),
@@ -257,14 +257,14 @@ describe("CFG ancestors search", function () {
         EdgeType.CONDITIONAL_TRUE,
         "5",
         conditionNode2.id,
-        trueNode2.id
+        trueNode2.id,
       ),
       new Edge(
         "6",
         EdgeType.CONDITIONAL_FALSE,
         "6",
         conditionNode2.id,
-        falseNode2.id
+        falseNode2.id,
       ),
       new Edge("7", EdgeType.NORMAL, "7", trueNode2.id, nodeExit.id),
       new Edge("8", EdgeType.NORMAL, "8", falseNode2.id, nodeExit.id),
@@ -275,7 +275,7 @@ describe("CFG ancestors search", function () {
       nodeExit,
       nodeExit,
       nodes,
-      edges
+      edges,
     );
 
     const result = contractControlFlowProgram({
@@ -296,7 +296,7 @@ describe("CFG ancestors search", function () {
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
 
     expect(pathObjectives.length).to.equal(3);
@@ -347,7 +347,7 @@ describe("CFG ancestors search", function () {
         EdgeType.CONDITIONAL_FALSE,
         "2",
         loopNode1.id,
-        loopExit1.id
+        loopExit1.id,
       ),
       new Edge("3", EdgeType.NORMAL, "3", loopBody1.id, conditionNode2.id),
       new Edge(
@@ -355,14 +355,14 @@ describe("CFG ancestors search", function () {
         EdgeType.CONDITIONAL_TRUE,
         "4",
         conditionNode2.id,
-        trueNode2.id
+        trueNode2.id,
       ),
       new Edge(
         "5",
         EdgeType.CONDITIONAL_FALSE,
         "5",
         conditionNode2.id,
-        falseNode2.id
+        falseNode2.id,
       ),
       new Edge("6", EdgeType.BACK_EDGE, "6", trueNode2.id, loopNode1.id),
       new Edge("7", EdgeType.BACK_EDGE, "7", falseNode2.id, loopNode1.id),
@@ -375,7 +375,7 @@ describe("CFG ancestors search", function () {
       nodeExit,
       nodeExit,
       nodes,
-      edges
+      edges,
     );
 
     const result = contractControlFlowProgram({
@@ -396,7 +396,7 @@ describe("CFG ancestors search", function () {
     const pathObjectives = extractPathObjectivesFromProgram(
       cfp,
       new ApproachLevelCalculator(),
-      new DummyBranchDistanceCalculator()
+      new DummyBranchDistanceCalculator(),
     );
 
     expect(pathObjectives.length).to.equal(3);

@@ -30,7 +30,7 @@ import { ObjectiveFunction } from "../../objective/ObjectiveFunction";
  */
 export function crowdingDistance<T extends Encoding>(
   front: T[],
-  objectiveFunctions: Set<ObjectiveFunction<T>>
+  objectiveFunctions: Set<ObjectiveFunction<T>>,
 ) {
   const size = front.length;
 
@@ -63,10 +63,10 @@ export function crowdingDistance<T extends Encoding>(
 
     // set crowding distance for extreme points
     orderedFront[0].setCrowdingDistance(
-      orderedFront[0].getCrowdingDistance() + 2
+      orderedFront[0].getCrowdingDistance() + 2,
     );
     orderedFront[size - 1].setCrowdingDistance(
-      orderedFront[size - 1].getCrowdingDistance() + 2
+      orderedFront[size - 1].getCrowdingDistance() + 2,
     );
 
     const denominator = Math.abs(objectiveMin - objectiveMax);

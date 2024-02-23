@@ -32,7 +32,7 @@ export class ConstantPoolFactory extends Factory {
   extract(
     filePath: string,
     AST: t.Node,
-    constantPool?: ConstantPool | undefined
+    constantPool?: ConstantPool | undefined,
   ): ConstantPool {
     if (!constantPool) {
       constantPool = new ConstantPool();
@@ -40,7 +40,7 @@ export class ConstantPoolFactory extends Factory {
     const constantVisitor = new ConstantVisitor(
       filePath,
       this.syntaxForgiving,
-      constantPool
+      constantPool,
     );
     traverse(AST, constantVisitor);
 

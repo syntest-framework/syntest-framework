@@ -27,7 +27,7 @@ import { ExportVisitor } from "./ExportVisitor";
 export function extractExportsFromExportDefaultDeclaration(
   visitor: ExportVisitor,
   filePath: string,
-  path: NodePath<t.ExportDefaultDeclaration>
+  path: NodePath<t.ExportDefaultDeclaration>,
 ): Export[] {
   const declaration = path.get("declaration");
   return extractExportFromDeclaration(visitor, filePath, declaration);
@@ -41,7 +41,7 @@ function extractExportFromDeclaration(
     | t.FunctionDeclaration
     | t.ClassDeclaration
     | t.Expression
-  >
+  >,
 ): Export[] {
   if (declaration.isIdentifier()) {
     // export default x
@@ -134,12 +134,12 @@ function extractExportFromDeclaration(
       ...extractExportFromDeclaration(
         visitor,
         filePath,
-        declaration.get("left")
+        declaration.get("left"),
       ),
       ...extractExportFromDeclaration(
         visitor,
         filePath,
-        declaration.get("right")
+        declaration.get("right"),
       ),
     ];
   }
@@ -152,8 +152,8 @@ function extractExportFromDeclaration(
   // etc.
   getLogger("ExportDefaultDeclaration").warn(
     `Unsupported export default declaration at ${visitor._getNodeId(
-      declaration
-    )}`
+      declaration,
+    )}`,
   );
   return [];
 }

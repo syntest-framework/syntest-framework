@@ -27,12 +27,12 @@ import { SecondaryObjectivePlugin } from "../SecondaryObjectivePlugin";
  * Plugin for ErrorObjectiveComparator
  */
 export class LeastErrorsObjectiveComparatorPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends SecondaryObjectivePlugin<T> {
   constructor() {
     super(
       "least-errors",
-      "Secondary objective based on wether the encoding introduces an error"
+      "Secondary objective based on wether the encoding introduces an error",
     );
   }
 

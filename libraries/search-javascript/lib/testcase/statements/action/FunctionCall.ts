@@ -38,7 +38,7 @@ export class FunctionCall extends ActionStatement {
     name: string,
     uniqueId: string,
     arguments_: Statement[],
-    export_: Export
+    export_: Export,
   ) {
     super(
       variableIdentifier,
@@ -47,7 +47,7 @@ export class FunctionCall extends ActionStatement {
       TypeEnum.FUNCTION,
       uniqueId,
       arguments_,
-      export_
+      export_,
     );
   }
 
@@ -66,7 +66,7 @@ export class FunctionCall extends ActionStatement {
       this.name,
       prng.uniqueId(),
       arguments_,
-      this.export
+      this.export,
     );
   }
 
@@ -79,13 +79,13 @@ export class FunctionCall extends ActionStatement {
       this.name,
       this.uniqueId,
       deepCopyArguments,
-      this.export
+      this.export,
     );
   }
 
   decode(context: ContextBuilder): Decoding[] {
     const argumentDecoding: Decoding[] = this.args.flatMap((a) =>
-      a.decode(context)
+      a.decode(context),
     );
 
     const arguments_ = this.args
@@ -94,7 +94,7 @@ export class FunctionCall extends ActionStatement {
 
     const import_ = context.getOrCreateImportName(this.export);
     const decoded = `const ${context.getOrCreateVariableName(
-      this
+      this,
     )} = await ${import_}(${arguments_})`;
 
     return [

@@ -28,19 +28,19 @@ import { SFuzzObjectiveManager } from "./SFuzzObjectiveManager";
  * Plugin for the sFuzz objective manager.
  */
 export class SFuzzObjectiveManagerPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends ObjectiveManagerPlugin<T> {
   constructor() {
     super("sFuzz", "sFuzz objective manager");
   }
 
   createObjectiveManager(
-    options: ObjectiveManagerOptions<T>
+    options: ObjectiveManagerOptions<T>,
   ): ObjectiveManager<T> {
     return new SFuzzObjectiveManager<T>(
       options.runner,
       options.secondaryObjectives,
-      options.exceptionObjectivesEnabled
+      options.exceptionObjectivesEnabled,
     );
   }
 

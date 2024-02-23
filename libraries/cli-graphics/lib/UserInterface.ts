@@ -84,7 +84,7 @@ export class UserInterface {
         barCompleteChar: "\u2588",
         barIncompleteChar: "\u2591",
       },
-      cliProgress.Presets.shades_grey
+      cliProgress.Presets.shades_grey,
     );
 
     for (const bar of bars) {
@@ -125,21 +125,21 @@ export class UserInterface {
   protected barFormatter(
     options: cliProgress.Options,
     parameters: cliProgress.Params,
-    payload: Payload
+    payload: Payload,
   ): string {
     const bar =
       chalk.green(
         options.barCompleteString.slice(
           0,
-          Math.max(0, Math.round(parameters.progress * options.barsize))
-        )
+          Math.max(0, Math.round(parameters.progress * options.barsize)),
+        ),
       ) +
       options.barIncompleteString.slice(
         0,
         Math.max(
           0,
-          options.barsize - Math.round(parameters.progress * options.barsize)
-        )
+          options.barsize - Math.round(parameters.progress * options.barsize),
+        ),
       );
 
     const percentage = Math.round(parameters.progress * 100);
@@ -197,8 +197,8 @@ export class UserInterface {
         figlet.textSync(text, {
           horizontalLayout: "full",
           font: "Rectangles",
-        })
-      )
+        }),
+      ),
     );
   }
 

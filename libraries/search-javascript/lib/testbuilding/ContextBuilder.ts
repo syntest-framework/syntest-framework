@@ -118,7 +118,7 @@ export class ContextBuilder {
     ) {
       count = Math.max(
         this.globalNameCount.get(variableName),
-        this.testNameCount.get(variableName)
+        this.testNameCount.get(variableName),
       );
     } else if (this.globalNameCount.has(variableName)) {
       count = this.globalNameCount.get(variableName);
@@ -146,7 +146,7 @@ export class ContextBuilder {
   private _addImport(export_: Export): Import {
     const path_ = export_.filePath.replace(
       path.resolve(this.targetRootDirectory),
-      path.join(this.sourceDirectory, path.basename(this.targetRootDirectory))
+      path.join(this.sourceDirectory, path.basename(this.targetRootDirectory)),
     );
 
     const exportedName = export_.renamedTo;
@@ -180,7 +180,7 @@ export class ContextBuilder {
     ) {
       count = Math.max(
         this.globalNameCount.get(exportedName),
-        this.testNameCount.get(exportedName)
+        this.testNameCount.get(exportedName),
       );
     } else if (this.globalNameCount.has(exportedName)) {
       count = this.globalNameCount.get(exportedName);
@@ -216,7 +216,7 @@ export class ContextBuilder {
   private _getImportString(_path: string, import_: Import): string {
     if (import_.module) {
       throw new ImplementationError(
-        "Only non module imports can use import statements"
+        "Only non module imports can use import statements",
       );
     }
 
@@ -244,7 +244,7 @@ export class ContextBuilder {
   private _getRequireString(_path: string, import_: Import): Require {
     if (!import_.module) {
       throw new ImplementationError(
-        "Only module imports can use require statements"
+        "Only module imports can use require statements",
       );
     }
 
@@ -296,7 +296,7 @@ export class ContextBuilder {
         `import chai from 'chai'`,
         `import chaiAsPromised from 'chai-as-promised'`,
         `const expect = chai.expect;`,
-        `chai.use(chaiAsPromised);`
+        `chai.use(chaiAsPromised);`,
       );
     }
 

@@ -29,12 +29,12 @@ import { Encoding } from "../../Encoding";
  */
 export function tournamentSelection<T extends Encoding>(
   population: T[],
-  tournamentSize: number
+  tournamentSize: number,
 ): T {
   if (tournamentSize < 2) {
     throw new IllegalArgumentError(
       "TournamentSize should be atleast equal to 2",
-      { context: { tournamentSize: tournamentSize } }
+      { context: { tournamentSize: tournamentSize } },
     );
   }
 

@@ -39,7 +39,7 @@ export abstract class SearchAlgorithmPlugin<T extends Encoding> extends Plugin {
   }
 
   abstract createSearchAlgorithm<O extends SearchAlgorithmOptions<T>>(
-    options: O
+    options: O,
   ): SearchAlgorithm<T>;
 
   override getOptionChoices(option: string): string[] {

@@ -34,7 +34,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
     super(
       "file-writer",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-var-requires, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access
-      require("../../../package.json").description
+      require("../../../package.json").description,
     );
     this.metricManager = metricManager;
     this.storageManager = storageManager;
@@ -46,7 +46,7 @@ export class FileWriterMetricMiddlewarePlugin extends MetricMiddlewarePlugin {
       metrics,
       (<FrameworkStorageOptions>(<unknown>this.args)).fid,
       this.storageManager,
-      (<StorageOptions>(<unknown>this.args)).fileWriterMetricsDirectory
+      (<StorageOptions>(<unknown>this.args)).fileWriterMetricsDirectory,
     );
   }
 

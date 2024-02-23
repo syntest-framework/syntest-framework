@@ -160,7 +160,7 @@ export class TypeNode {
   }
 
   protected _calculateProbabilities(
-    visitedDependencyPairs?: Map<TypeNode, Set<TypeNode>>
+    visitedDependencyPairs?: Map<TypeNode, Set<TypeNode>>,
   ) {
     if (!visitedDependencyPairs) {
       visitedDependencyPairs = new Map();
@@ -206,7 +206,7 @@ export class TypeNode {
       probabilities,
       visitedDependencyPairs,
       relevantDependencies,
-      totalScore
+      totalScore,
     );
 
     // incorporate execution scores
@@ -222,7 +222,7 @@ export class TypeNode {
     probabilities: Map<string, number>,
     visitedDependencyPairs: Map<TypeNode, Set<TypeNode>>,
     relevantDependencies: Set<TypeNode>,
-    totalScore: number
+    totalScore: number,
   ): Map<string, number> {
     for (const dependency of relevantDependencies) {
       // add to visited pairs
@@ -237,7 +237,7 @@ export class TypeNode {
 
       // calculate probabilties
       const dependencyProbabilities = dependency._calculateProbabilities(
-        visitedDependencyPairs
+        visitedDependencyPairs,
       );
       const dependencyScore = this._dependencyScores.get(dependency);
       const dependencyScalar = dependencyScore / totalScore;
@@ -262,7 +262,7 @@ export class TypeNode {
 
         probabilities.set(
           finalType,
-          currentValue + probability * dependencyScalar
+          currentValue + probability * dependencyScalar,
         );
       }
     }
@@ -271,7 +271,7 @@ export class TypeNode {
   }
 
   protected _incorporateExecutionScores(
-    probabilities: Map<string, number>
+    probabilities: Map<string, number>,
   ): Map<string, number> {
     // if there are no executionscores return
     if (this._executionScores.size <= 1) {
@@ -327,7 +327,7 @@ export class TypeNode {
   }
 
   protected _normalizeProbabilities(
-    probabilities: Map<string, number>
+    probabilities: Map<string, number>,
   ): Map<string, number> {
     // normalize to 1
     let totalProbability = 0;
@@ -350,7 +350,7 @@ export class TypeNode {
   private _sum(iterable: Iterable<number>) {
     return [...iterable].reduce(
       (total, currentValue) => total + currentValue,
-      0
+      0,
     );
   }
 

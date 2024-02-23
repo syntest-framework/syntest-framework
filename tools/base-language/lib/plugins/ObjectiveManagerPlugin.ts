@@ -32,14 +32,14 @@ export type ObjectiveManagerOptions<T extends Encoding> = {
 };
 
 export abstract class ObjectiveManagerPlugin<
-  T extends Encoding
+  T extends Encoding,
 > extends Plugin {
   constructor(name: string, describe: string) {
     super(PluginType.ObjectiveManager, name, describe);
   }
 
   abstract createObjectiveManager<O extends ObjectiveManagerOptions<T>>(
-    options: O
+    options: O,
   ): ObjectiveManager<T>;
 
   override getOptionChoices(option: string): string[] {

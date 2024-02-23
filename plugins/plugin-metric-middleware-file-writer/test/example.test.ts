@@ -35,7 +35,7 @@ describe("example test", () => {
       [],
       "",
       new StorageManager("path", "tempPath", "fid"),
-      ""
+      "",
     );
     expect(true);
   });

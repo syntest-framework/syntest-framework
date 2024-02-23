@@ -60,7 +60,7 @@ export class Visitor {
       sourceFilePath,
       opts.inputSourceMap,
       opts.ignoreClassMethods,
-      opts.reportLogic
+      opts.reportLogic,
     );
   }
 
@@ -99,13 +99,13 @@ export class Visitor {
       if (path.scope.getBinding("Function")) {
         gvTemplate = globalTemplateAlteredFunction({
           GLOBAL_COVERAGE_SCOPE: this.types.stringLiteral(
-            "return " + this.opts.coverageGlobalScope
+            "return " + this.opts.coverageGlobalScope,
           ),
         });
       } else {
         gvTemplate = globalTemplateFunction({
           GLOBAL_COVERAGE_SCOPE: this.types.stringLiteral(
-            "return " + this.opts.coverageGlobalScope
+            "return " + this.opts.coverageGlobalScope,
           ),
         });
       }
@@ -135,9 +135,9 @@ export class Visitor {
       this.types.expressionStatement(
         this.types.callExpression(
           this.types.identifier(this.visitState.varName),
-          []
-        )
-      )
+          [],
+        ),
+      ),
     );
     path.node.body.unshift(cv);
     path.node.body.unshift(meta);
@@ -205,7 +205,7 @@ function coverAssignmentPattern(path: NodePath<t.AssignmentPattern>) {
   if (body.isBlockStatement()) {
     body.node.body.unshift(
       t.expressionStatement(statementIncrement),
-      t.expressionStatement(increment)
+      t.expressionStatement(increment),
     );
   } else {
     console.error("Unable to process function body node:", path.node.type);
@@ -277,7 +277,7 @@ function convertArrowExpression(path) {
 
 function extractAndReplaceVariablesFromTest(
   scope: Scope,
-  test: NodePath<t.Expression>
+  test: NodePath<t.Expression>,
 ) {
   const variables = [];
 
@@ -310,7 +310,7 @@ function extractAndReplaceVariablesFromTest(
             t.sequenceExpression([
               t.assignmentExpression("=", newIdentifier, p.node),
               newIdentifier,
-            ])
+            ]),
           );
 
           p.skip();
@@ -325,7 +325,7 @@ function extractAndReplaceVariablesFromTest(
             t.sequenceExpression([
               t.assignmentExpression("=", newIdentifier, p.node),
               newIdentifier,
-            ])
+            ]),
           );
 
           p.skip();
@@ -340,7 +340,7 @@ function extractAndReplaceVariablesFromTest(
             t.sequenceExpression([
               t.assignmentExpression("=", newIdentifier, p.node),
               newIdentifier,
-            ])
+            ]),
           );
 
           p.skip();
@@ -348,7 +348,7 @@ function extractAndReplaceVariablesFromTest(
       },
       // calls and such are possible but are problamatic because they could have side effects changing the behaviour
     },
-    test
+    test,
   );
 
   return variables;
@@ -369,7 +369,7 @@ function coverIfBranches(path) {
         this.insertBranchCounter(
           path,
           path.get("consequent").get("body")[0],
-          branch
+          branch,
         );
       } else {
         this.insertBranchCounter(path, path.get("consequent"), branch, true);
@@ -386,7 +386,7 @@ function coverIfBranches(path) {
         this.insertBranchCounter(
           path,
           path.get("alternate").get("body")[0],
-          branch
+          branch,
         );
       } else {
         this.insertBranchCounter(path, path.get("alternate"), branch, true);
@@ -405,7 +405,7 @@ function coverIfBranches(path) {
   const metaTracker = this.getBranchMetaTracker(
     branch,
     testAsString,
-    variables
+    variables,
   );
 
   const identifier = path.scope.generateUidIdentifier("test");
@@ -418,8 +418,8 @@ function coverIfBranches(path) {
           ([source, identifier], index) =>
             index ===
             variables.findIndex(
-              ([source2, identifier2]) => identifier === identifier2
-            )
+              ([source2, identifier2]) => identifier === identifier2,
+            ),
         )
         .filter(([source, identifier]) => {
           const binding = path.scope.getBinding(identifier);
@@ -430,7 +430,7 @@ function coverIfBranches(path) {
           return t.variableDeclarator(t.identifier(identifier));
         }),
       t.variableDeclarator(identifier),
-    ])
+    ]),
   );
 
   test.replaceWith(
@@ -439,7 +439,7 @@ function coverIfBranches(path) {
       t.assignmentExpression("=", identifier, test.node),
       metaTracker,
       identifier,
-    ])
+    ]),
   );
 }
 
@@ -496,7 +496,7 @@ function coverLoopBranch(path: NodePath<t.Loop>) {
     const metaTracker = this.getBranchMetaTracker(
       branch,
       testAsString,
-      variables
+      variables,
     );
 
     const identifier = path.scope.generateUidIdentifier("test");
@@ -509,8 +509,8 @@ function coverLoopBranch(path: NodePath<t.Loop>) {
             ([source, identifier], index) =>
               index ===
               variables.findIndex(
-                ([source2, identifier2]) => identifier === identifier2
-              )
+                ([source2, identifier2]) => identifier === identifier2,
+              ),
           )
           .filter(([source, identifier]) => {
             const binding = path.scope.getBinding(identifier);
@@ -521,7 +521,7 @@ function coverLoopBranch(path: NodePath<t.Loop>) {
             return t.variableDeclarator(t.identifier(identifier));
           }),
         t.variableDeclarator(identifier),
-      ])
+      ]),
     );
 
     test.replaceWith(
@@ -530,7 +530,7 @@ function coverLoopBranch(path: NodePath<t.Loop>) {
         t.assignmentExpression("=", identifier, test.node),
         metaTracker,
         identifier,
-      ])
+      ]),
     );
   }
 }
@@ -604,7 +604,7 @@ function coverTernary(path: NodePath<t.Conditional>) {
   const metaTracker = this.getBranchMetaTracker(
     branch,
     testAsString,
-    variables
+    variables,
   );
   // path.parentPath.insertBefore(metaTracker)
   // path.replaceWith(T.sequenceExpression([metaTracker, path.node]))
@@ -623,8 +623,8 @@ function coverTernary(path: NodePath<t.Conditional>) {
             ([source, identifier], index) =>
               index ===
               variables.findIndex(
-                ([source2, identifier2]) => identifier === identifier2
-              )
+                ([source2, identifier2]) => identifier === identifier2,
+              ),
           )
           .filter(([source, identifier]) => {
             const binding = path.scope.getBinding(identifier);
@@ -635,7 +635,7 @@ function coverTernary(path: NodePath<t.Conditional>) {
             return t.variableDeclarator(t.identifier(identifier));
           }),
         t.variableDeclarator(identifier),
-      ])
+      ]),
     );
 
   test.replaceWith(
@@ -645,7 +645,7 @@ function coverTernary(path: NodePath<t.Conditional>) {
       t.assignmentExpression("=", identifier, test.node),
       metaTracker,
       identifier,
-    ])
+    ]),
   );
 }
 
@@ -712,17 +712,17 @@ const codeVisitor = {
     blockProp("consequent"),
     blockProp("alternate"),
     coverStatement,
-    coverIfBranches
+    coverIfBranches,
   ),
   ForStatement: entries(blockProp("body"), coverStatement, coverLoopBranch),
   ForInStatement: entries(
     blockProp("body"),
-    coverStatement
+    coverStatement,
     // coverLoopBranch
   ),
   ForOfStatement: entries(
     blockProp("body"),
-    coverStatement
+    coverStatement,
     // coverLoopBranch
   ),
   WhileStatement: entries(blockProp("body"), coverStatement, coverLoopBranch),
@@ -769,7 +769,7 @@ const coverageTemplate = template(
         return actualCoverage;
     }
 `,
-  { preserveComments: true }
+  { preserveComments: true },
 );
 
 const metaTemplate = template(
@@ -794,7 +794,7 @@ const metaTemplate = template(
         meta[path].meta[branch] = metaInformation
     }
 `,
-  { preserveComments: true }
+  { preserveComments: true },
 );
 // the rewire plugin (and potentially other babel middleware)
 // may cause files to be instrumented twice, see:
