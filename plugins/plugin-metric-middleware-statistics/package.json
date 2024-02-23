@@ -48,7 +48,7 @@
     "@syntest/logging": "^0.2.0-beta.2",
     "@syntest/metric": "^0.2.0-beta.0",
     "@syntest/module": "^0.2.0-beta.5",
-    "fast-csv": "^4.3.6"
+    "fast-csv": "^5.0.0"
   },
   "engines": {
     "node": ">=16"
