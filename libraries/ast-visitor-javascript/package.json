@@ -52,7 +52,7 @@
     "@babel/traverse": "7.23.9",
     "@syntest/diagnostics": "^0.1.0-beta.0",
     "@syntest/logging": "^0.2.0-beta.2",
-    "globals": "^13.20.0"
+    "globals": "^14.0.0"
   },
   "engines": {
     "node": ">=10.24.0"
