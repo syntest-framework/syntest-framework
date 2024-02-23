@@ -1,5 +1,3 @@
-.github
-.husky
 **/nyc_output
 **/coverage
 **/dist/
@@ -13,6 +11,8 @@
 *.jpg
 *.json
 *.md
+.github
+.husky
 
 # The instrumentation files are copied from istanbul (and modified).
 # In the future in a big refactor the instrumentation should be redone such that these files dont have to be ignored anymore.
