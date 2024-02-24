@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0-beta.1](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cfg@0.5.0-beta.0...@syntest/cfg@0.5.0-beta.1) (2024-02-24)
+
+**Note:** Version bump only for package @syntest/cfg
+
 ## [0.5.0-beta.0](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cfg@0.4.1-beta.3...@syntest/cfg@0.5.0-beta.0) (2023-11-14)
 
 ### Features

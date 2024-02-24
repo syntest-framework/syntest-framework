@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2-beta.16](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-metric-middleware-statistics@0.1.2-beta.15...@syntest/plugin-metric-middleware-statistics@0.1.2-beta.16) (2024-02-24)
+
+### Bug Fixes
+
+- **deps:** update dependency fast-csv to v5 ([#432](https://github.com/syntest-framework/syntest-framework/issues/432)) ([3bc5ba7](https://github.com/syntest-framework/syntest-framework/commit/3bc5ba7f8841374c1d3ddb62325f722ef513d0db))
+
 ## [0.1.2-beta.15](https://github.com/syntest-framework/syntest-framework/compare/@syntest/plugin-metric-middleware-statistics@0.1.2-beta.14...@syntest/plugin-metric-middleware-statistics@0.1.2-beta.15) (2023-12-11)
 
 **Note:** Version bump only for package @syntest/plugin-metric-middleware-statistics

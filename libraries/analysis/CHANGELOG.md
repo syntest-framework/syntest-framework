@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0-beta.3](https://github.com/syntest-framework/syntest-framework/compare/@syntest/analysis@0.3.0-beta.2...@syntest/analysis@0.3.0-beta.3) (2024-02-24)
+
+**Note:** Version bump only for package @syntest/analysis
+
 ## [0.3.0-beta.2](https://github.com/syntest-framework/syntest-framework/compare/@syntest/analysis@0.3.0-beta.1...@syntest/analysis@0.3.0-beta.2) (2023-12-11)
 
 ### Features

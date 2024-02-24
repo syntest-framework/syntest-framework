@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cfg",
-  "version": "0.5.0-beta.0",
+  "version": "0.5.0-beta.1",
   "description": "SynTest library for control flow graphs",
   "keywords": [
     "syntest",
@@ -48,8 +48,8 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/diagnostics": "^0.1.0-beta.0",
-    "@syntest/logging": "^0.2.0-beta.2",
+    "@syntest/diagnostics": "^0.1.0-beta.1",
+    "@syntest/logging": "^0.2.0-beta.3",
     "lodash.clonedeep": "^4.5.0"
   },
   "engines": {

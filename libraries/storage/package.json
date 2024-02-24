@@ -1,6 +1,6 @@
 {
   "name": "@syntest/storage",
-  "version": "0.3.0-beta.2",
+  "version": "0.3.0-beta.3",
   "description": "SynTest library for storing namespaced data in a file system",
   "keywords": [
     "syntest",
@@ -44,8 +44,8 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/diagnostics": "^0.1.0-beta.0",
-    "@syntest/logging": "^0.2.0-beta.2",
+    "@syntest/diagnostics": "^0.1.0-beta.1",
+    "@syntest/logging": "^0.2.0-beta.3",
     "fs-extra": "^11.1.1",
     "yargs": "^17.7.1"
   },

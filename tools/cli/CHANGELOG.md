@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0-beta.6](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cli@0.3.0-beta.5...@syntest/cli@0.3.0-beta.6) (2024-02-24)
+
+**Note:** Version bump only for package @syntest/cli
+
 ## [0.3.0-beta.5](https://github.com/syntest-framework/syntest-framework/compare/@syntest/cli@0.3.0-beta.4...@syntest/cli@0.3.0-beta.5) (2023-12-08)
 
 **Note:** Version bump only for package @syntest/cli
