@@ -4,24 +4,6 @@
       "analyzeSourceFiles": true
     }
   },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": [
-          "build",
-          "format",
-          "format:check",
-          "lint",
-          "lint:fix",
-          "test",
-          "test:coverage",
-          "test:coverage:ci"
-        ],
-        "parallel": 10
-      }
-    }
-  },
   "namedInputs": {
     "build-system": [
       "{workspaceRoot}/nx.json",
@@ -50,35 +32,44 @@
     "build": {
       "dependsOn": ["clean:dist", "^build"],
       "inputs": ["build-system", "typescript", "^typescript"],
-      "outputs": ["{projectRoot}/dist"]
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
     },
     "format": {
-      "inputs": ["build-system", "prettier", "typescript"],
-      "outputs": ["{projectRoot}/lib"]
+      "inputs": ["build-system", "eslint", "mocha", "prettier", "typescript"],
+      "outputs": ["{projectRoot}/lib"],
+      "cache": true
     },
     "format:check": {
-      "inputs": ["build-system", "prettier", "typescript"]
+      "inputs": ["build-system", "eslint", "mocha", "prettier", "typescript"],
+      "cache": true
     },
     "lint": {
-      "inputs": ["build-system", "eslint", "typescript"]
+      "inputs": ["build-system", "eslint", "typescript"],
+      "cache": true
     },
     "lint:fix": {
       "inputs": ["build-system", "eslint", "typescript"],
-      "outputs": ["{projectRoot}/lib"]
+      "outputs": ["{projectRoot}/lib"],
+      "cache": true
     },
     "test": {
       "dependsOn": ["^build"],
-      "inputs": ["build-system", "mocha", "typescript"]
+      "inputs": ["build-system", "mocha", "typescript"],
+      "cache": true
     },
     "test:coverage": {
       "dependsOn": ["build", "^build"],
       "inputs": ["build-system", "mocha", "typescript"],
-      "outputs": ["{projectRoot}/coverage"]
+      "outputs": ["{projectRoot}/coverage"],
+      "cache": true
     },
     "test:coverage:ci": {
       "dependsOn": ["build", "^build"],
       "inputs": ["build-system", "mocha", "typescript"],
-      "outputs": ["{projectRoot}/coverage"]
+      "outputs": ["{projectRoot}/coverage"],
+      "cache": true
     }
-  }
+  },
+  "parallel": 10
 }

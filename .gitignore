@@ -119,6 +119,7 @@ dist
 
 ### SynTest Framework ###
 .npmrc
+.nx/cache
 test-results.json
 
 # Ignore all workspace licensing files as these are copied from the root
