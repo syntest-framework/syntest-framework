@@ -7,4 +7,5 @@
 .eslintignore
 .gitignore
 .husky/
+.nx/cache/
 .prettierignore
