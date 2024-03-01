@@ -51,8 +51,8 @@
     "tools/*"
   ],
   "devDependencies": {
-    "@commitlint/cli": "18.6.1",
-    "@commitlint/config-conventional": "18.6.2",
+    "@commitlint/cli": "19.0.3",
+    "@commitlint/config-conventional": "19.0.3",
     "@types/babel__core": "7.20.5",
     "@types/babel__traverse": "7.20.5",
     "@types/chai": "4.3.12",
@@ -68,7 +68,7 @@
     "@typescript-eslint/eslint-plugin": "7.1.0",
     "@typescript-eslint/parser": "7.1.0",
     "chai": "4.4.1",
-    "commitlint": "18.6.1",
+    "commitlint": "19.0.3",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-import-resolver-typescript": "^3.5.3",
