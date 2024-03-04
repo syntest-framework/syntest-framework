@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.4](https://github.com/syntest-framework/syntest-framework/compare/@syntest/prng@0.2.0-beta.3...@syntest/prng@0.2.0-beta.4) (2024-03-04)
+
+**Note:** Version bump only for package @syntest/prng
+
 ## [0.2.0-beta.3](https://github.com/syntest-framework/syntest-framework/compare/@syntest/prng@0.2.0-beta.2...@syntest/prng@0.2.0-beta.3) (2024-02-24)
 
 **Note:** Version bump only for package @syntest/prng

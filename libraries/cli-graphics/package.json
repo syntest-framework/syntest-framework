@@ -1,6 +1,6 @@
 {
   "name": "@syntest/cli-graphics",
-  "version": "0.3.0-beta.3",
+  "version": "0.3.0-beta.4",
   "description": "SynTest library for cli graphics",
   "keywords": [
     "syntest",
@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@syntest/diagnostics": "^0.1.0-beta.1",
-    "@syntest/logging": "^0.2.0-beta.3",
+    "@syntest/logging": "^0.2.0-beta.4",
     "chalk": "5.3.",
     "clear": "0.1.0",
     "cli-progress": "3.12.0",

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.18](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/search-javascript@0.2.0-beta.17...@syntest/search-javascript@0.2.0-beta.18) (2024-03-04)
+
+**Note:** Version bump only for package @syntest/search-javascript
+
 ## [0.2.0-beta.17](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/search-javascript@0.2.0-beta.16...@syntest/search-javascript@0.2.0-beta.17) (2024-03-01)
 
 ### Bug Fixes

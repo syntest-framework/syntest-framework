@@ -1,6 +1,6 @@
 {
   "name": "@syntest/plugin-javascript-event-listener-state-storage",
-  "version": "0.2.0-beta.11",
+  "version": "0.2.0-beta.12",
   "description": "A listener plugin for SynTest JavaScript containing state storage functionalities",
   "keywords": [
     "syntest",
@@ -48,15 +48,15 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@syntest/analysis": "^0.3.0-beta.3",
-    "@syntest/analysis-javascript": "^0.2.0-beta.15",
-    "@syntest/base-language": "^0.3.0-beta.16",
-    "@syntest/cfg": "^0.5.0-beta.1",
+    "@syntest/analysis": "^0.3.0-beta.4",
+    "@syntest/analysis-javascript": "^0.2.0-beta.16",
+    "@syntest/base-language": "^0.3.0-beta.17",
+    "@syntest/cfg": "^0.5.0-beta.2",
     "@syntest/diagnostics": "^0.1.0-beta.1",
-    "@syntest/logging": "^0.2.0-beta.3",
-    "@syntest/metric": "^0.2.0-beta.1",
-    "@syntest/module": "^0.2.0-beta.6",
-    "@syntest/search": "^0.5.0-beta.14"
+    "@syntest/logging": "^0.2.0-beta.4",
+    "@syntest/metric": "^0.2.0-beta.2",
+    "@syntest/module": "^0.2.0-beta.7",
+    "@syntest/search": "^0.5.0-beta.15"
   },
   "engines": {
     "node": ">=16"
