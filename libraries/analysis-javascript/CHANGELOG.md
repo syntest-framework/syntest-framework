@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.17](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/analysis-javascript@0.2.0-beta.16...@syntest/analysis-javascript@0.2.0-beta.17) (2024-03-25)
+
+### Bug Fixes
+
+- **deps:** update babel monorepo ([#462](https://github.com/syntest-framework/syntest-javascript/issues/462)) ([0f39334](https://github.com/syntest-framework/syntest-javascript/commit/0f3933497b3110e27f135863c33a92bcaf164db5))
+
 ## [0.2.0-beta.16](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/analysis-javascript@0.2.0-beta.15...@syntest/analysis-javascript@0.2.0-beta.16) (2024-03-04)
 
 **Note:** Version bump only for package @syntest/analysis-javascript
