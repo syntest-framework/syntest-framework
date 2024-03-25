@@ -1,6 +1,6 @@
 {
   "name": "@syntest/instrumentation-javascript",
-  "version": "0.2.0-beta.9",
+  "version": "0.2.0-beta.10",
   "description": "SynTest Instrumentation JavaScript is a library for instrumenting JavaScript code",
   "keywords": [
     "syntest",
@@ -51,10 +51,10 @@
     "@babel/core": "7.24.3",
     "@babel/traverse": "7.24.1",
     "@istanbuljs/schema": "^0.1.3",
-    "@syntest/analysis-javascript": "^0.2.0-beta.17",
-    "@syntest/ast-visitor-javascript": "^0.2.0-beta.8",
+    "@syntest/analysis-javascript": "^0.2.0-beta.18",
+    "@syntest/ast-visitor-javascript": "^0.2.0-beta.9",
     "@syntest/diagnostics": "^0.1.0-beta.1",
-    "@syntest/storage": "^0.3.0-beta.4",
+    "@syntest/storage": "^0.3.0-beta.5",
     "istanbul-lib-coverage": "^3.2.0"
   },
   "devDependencies": {

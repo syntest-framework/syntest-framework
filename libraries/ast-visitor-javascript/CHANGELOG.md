@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.9](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/ast-visitor-javascript@0.2.0-beta.8...@syntest/ast-visitor-javascript@0.2.0-beta.9) (2024-03-25)
+
+**Note:** Version bump only for package @syntest/ast-visitor-javascript
+
 ## [0.2.0-beta.8](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/ast-visitor-javascript@0.2.0-beta.7...@syntest/ast-visitor-javascript@0.2.0-beta.8) (2024-03-25)
 
 ### Bug Fixes

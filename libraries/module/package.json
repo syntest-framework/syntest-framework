@@ -1,6 +1,6 @@
 {
   "name": "@syntest/module",
-  "version": "0.2.0-beta.7",
+  "version": "0.2.0-beta.8",
   "description": "SynTest library for a modular and extendable ecosystem",
   "keywords": [
     "syntest",
@@ -48,11 +48,11 @@
     "test:watch": "echo 'no tests'"
   },
   "dependencies": {
-    "@syntest/cli-graphics": "^0.3.0-beta.4",
+    "@syntest/cli-graphics": "^0.3.0-beta.5",
     "@syntest/diagnostics": "^0.1.0-beta.1",
-    "@syntest/logging": "^0.2.0-beta.4",
-    "@syntest/metric": "^0.2.0-beta.2",
-    "@syntest/storage": "^0.3.0-beta.4",
+    "@syntest/logging": "^0.2.0-beta.5",
+    "@syntest/metric": "^0.2.0-beta.3",
+    "@syntest/storage": "^0.3.0-beta.5",
     "global-modules": "2.0.0",
     "yargs": "^17.7.1"
   },
