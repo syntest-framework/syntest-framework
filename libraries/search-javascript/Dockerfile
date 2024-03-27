@@ -1,4 +1,4 @@
-FROM node:20.11
+FROM node:20.12
 
 # set environment variables for run time
 ENV time_per_target=
