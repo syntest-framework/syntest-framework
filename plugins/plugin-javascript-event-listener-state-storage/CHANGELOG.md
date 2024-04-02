@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.15](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/plugin-javascript-event-listener-state-storage@0.2.0-beta.14...@syntest/plugin-javascript-event-listener-state-storage@0.2.0-beta.15) (2024-04-02)
+
+**Note:** Version bump only for package @syntest/plugin-javascript-event-listener-state-storage
+
 ## [0.2.0-beta.14](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/plugin-javascript-event-listener-state-storage@0.2.0-beta.13...@syntest/plugin-javascript-event-listener-state-storage@0.2.0-beta.14) (2024-03-25)
 
 **Note:** Version bump only for package @syntest/plugin-javascript-event-listener-state-storage

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.10](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/ast-visitor-javascript@0.2.0-beta.9...@syntest/ast-visitor-javascript@0.2.0-beta.10) (2024-04-02)
+
+### Bug Fixes
+
+- **deps:** update dependency globals to v15 ([#467](https://github.com/syntest-framework/syntest-javascript/issues/467)) ([6ed65cd](https://github.com/syntest-framework/syntest-javascript/commit/6ed65cdb94acf432f194000ed90359a06fc7d858))
+
 ## [0.2.0-beta.9](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/ast-visitor-javascript@0.2.0-beta.8...@syntest/ast-visitor-javascript@0.2.0-beta.9) (2024-03-25)
 
 **Note:** Version bump only for package @syntest/ast-visitor-javascript
