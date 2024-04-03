@@ -48,7 +48,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@babel/core": "7.24.3",
+    "@babel/core": "7.24.4",
     "@babel/traverse": "7.24.1",
     "@istanbuljs/schema": "^0.1.3",
     "@syntest/analysis-javascript": "^0.2.0-beta.19",
