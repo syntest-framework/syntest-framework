@@ -1,6 +1,6 @@
 {
   "name": "@syntest/analysis-javascript",
-  "version": "0.2.0-beta.19",
+  "version": "0.2.0-beta.20",
   "description": "SynTest Analysis JavaScript is a library for doing analysis of the JavaScript language",
   "keywords": [
     "syntest",
@@ -51,7 +51,7 @@
     "@babel/core": "7.24.4",
     "@babel/traverse": "7.24.1",
     "@syntest/analysis": "^0.3.0-beta.5",
-    "@syntest/ast-visitor-javascript": "^0.2.0-beta.10",
+    "@syntest/ast-visitor-javascript": "^0.2.0-beta.11",
     "@syntest/cfg": "^0.5.0-beta.3",
     "@syntest/diagnostics": "^0.1.0-beta.1",
     "@syntest/logging": "^0.2.0-beta.5",

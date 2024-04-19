@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0-beta.12](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/instrumentation-javascript@0.2.0-beta.11...@syntest/instrumentation-javascript@0.2.0-beta.12) (2024-04-19)
+
+### Bug Fixes
+
+- **deps:** update babel monorepo to v7.24.4 ([#475](https://github.com/syntest-framework/syntest-javascript/issues/475)) ([26daaa9](https://github.com/syntest-framework/syntest-javascript/commit/26daaa9814671ca2cb72e112394ac8b368456a86))
+
 ## [0.2.0-beta.11](https://github.com/syntest-framework/syntest-javascript/compare/@syntest/instrumentation-javascript@0.2.0-beta.10...@syntest/instrumentation-javascript@0.2.0-beta.11) (2024-04-02)
 
 **Note:** Version bump only for package @syntest/instrumentation-javascript
