@@ -54,7 +54,7 @@
     "@commitlint/cli": "19.5.0",
     "@commitlint/config-conventional": "19.5.0",
     "@types/babel__core": "7.20.5",
-    "@types/babel__traverse": "7.20.5",
+    "@types/babel__traverse": "7.20.6",
     "@types/chai": "4.3.14",
     "@types/cli-progress": "3.11.5",
     "@types/figlet": "^1.5.5",
