@@ -48,7 +48,7 @@
     "test:watch": "mocha --config ../../.mocharc.json --watch"
   },
   "dependencies": {
-    "@babel/core": "7.24.4",
+    "@babel/core": "7.29.6",
     "@babel/generator": "^7.21.9",
     "@babel/preset-env": "7.24.4",
     "@babel/register": "7.23.7",
