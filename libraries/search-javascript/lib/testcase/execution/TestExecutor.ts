@@ -20,9 +20,12 @@ import {
   InstrumentationDataMap,
   MetaDataMap,
 } from "@syntest/instrumentation-javascript";
+import { DEFAULT_EXTENSIONS, transformSync } from "@babel/core";
 import cloneDeep = require("lodash.clonedeep");
 import { Runner } from "mocha";
 import Mocha = require("mocha");
+import { addHook } from "pirates";
+import { loadConfig, register } from "tsconfig-paths";
 
 import { JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
 
@@ -58,6 +61,37 @@ export type Test = {
   duration: number;
 };
 
+// Compile the project's modules, TypeScript included, to CommonJS. pirates is called directly
+// because @babel/register hooks node_modules as well and its hook drops the format Node passes
+// for an ES module there, so an ES-only dependency failed to load (pirates issue #130).
+addHook(
+  (code, filename) =>
+    transformSync(code, {
+      filename,
+      presets: [
+        [
+          // eslint-disable-next-line unicorn/prefer-module
+          require.resolve("@babel/preset-env"),
+          // Compile only what this Node lacks, so the search observes the behaviour and error
+          // messages of the code as it runs natively, which the final suite asserts on
+          { targets: { node: "current" } },
+        ],
+        // eslint-disable-next-line unicorn/prefer-module
+        require.resolve("@babel/preset-typescript"),
+      ],
+    }).code,
+  {
+    exts: [...DEFAULT_EXTENSIONS, ".ts", ".mts", ".cts"],
+    ignoreNodeModules: true,
+  },
+);
+
+// Resolve tsconfig "paths" aliases, such as "@/*", the way tsc resolves them
+const tsconfig = loadConfig();
+if (tsconfig.resultType === "success") {
+  register({ baseUrl: tsconfig.absoluteBaseUrl, paths: tsconfig.paths });
+}
+
 process.on("uncaughtException", (reason) => {
   throw reason;
 });
@@ -92,11 +126,6 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
   const mocha = new Mocha(argv); // require('ts-node/register')
   // eslint-disable-next-line unicorn/prefer-module
   require("regenerator-runtime/runtime");
-  // eslint-disable-next-line unicorn/prefer-module, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
-  require("@babel/register")({
-    // eslint-disable-next-line unicorn/prefer-module
-    presets: [require.resolve("@babel/preset-env")],
-  });
 
   for (const _path of paths) {
     // eslint-disable-next-line unicorn/prefer-module

@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { NodePath, PluginObj, transformSync } from "@babel/core";
+import * as t from "@babel/types";
 import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 import { Decoder } from "@syntest/search";
@@ -30,23 +32,60 @@ import { Decoding } from "../testcase/statements/Statement";
 import { assertionFunction } from "./assertionFunctionTemplate";
 import { ContextBuilder } from "./ContextBuilder";
 
+/**
+ * Removes every import specifier the suite never references, and each import declaration
+ * left without one. Statements cut after an error leave their imports behind, and the
+ * framework names are imported whether or not a test uses them.
+ */
+function withoutUnusedImports(code: string): string {
+  const plugin = (): PluginObj => ({
+    visitor: {
+      ImportDeclaration(path: NodePath<t.ImportDeclaration>) {
+        if (path.node.specifiers.length === 0) return;
+        for (const specifier of path.get("specifiers")) {
+          if (!path.scope.getBinding(specifier.node.local.name)?.referenced) {
+            specifier.remove();
+          }
+        }
+        if (path.node.specifiers.length === 0) path.remove();
+      },
+    },
+  });
+
+  return transformSync(code, {
+    babelrc: false,
+    configFile: false,
+    parserOpts: { sourceType: "module" },
+    plugins: [plugin],
+  }).code;
+}
+
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   protected static LOGGER: Logger;
   private targetRootDirectory: string;
+  private testFramework: "mocha" | "vitest";
 
-  constructor(targetRootDirectory: string) {
+  constructor(
+    targetRootDirectory: string,
+    testFramework: "mocha" | "vitest" = "mocha",
+  ) {
     JavaScriptDecoder.LOGGER = getLogger(JavaScriptDecoder.name);
     this.targetRootDirectory = targetRootDirectory;
+    this.testFramework = testFramework;
   }
 
   decode(
     testCases: JavaScriptTestCase | JavaScriptTestCase[],
     gatherAssertionData = false,
     sourceDirectory = "../instrumented",
+    final = false,
   ): string {
     if (testCases instanceof JavaScriptTestCase) {
       testCases = [testCases];
     }
+
+    // The search runs every suite with mocha, so only the final suite changes
+    const vitest = final && this.testFramework === "vitest";
 
     const context = new ContextBuilder(
       this.targetRootDirectory,
@@ -97,12 +136,17 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       const assertions: string[] = this.generateAssertions(
         testCase,
         errorDecoding,
+        vitest,
       );
 
       tests.push([...metaCommentBlock, ...testLines, ...assertions]);
     }
 
-    const { imports, requires } = context.getImports(assertionsPresent);
+    // vitest's own expect is chai's, so its suite imports no chai
+    const { imports, requires } = context.getImports(
+      assertionsPresent && !vitest,
+      !final,
+    );
 
     let beforeEachLines: string[] = [];
 
@@ -132,7 +176,10 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
     const lines = [
       "// Imports",
-      "require = require('esm')(module)",
+      // shortcut: CommonJS targets still load through require, which vitest's ES module suite lacks
+      vitest
+        ? `import { beforeEach, describe, expect, it } from "vitest";`
+        : "require = require('esm')(module)",
       ...imports,
       gatherAssertionData ? assertionFunction : "",
       `describe('SynTest Test Suite', function() {`,
@@ -145,7 +192,10 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       "})",
     ];
 
-    return lines.join("\n");
+    // A final suite is kept in the project, so it imports only what its tests reference
+    return final
+      ? withoutUnusedImports(lines.join("\n"))
+      : lines.join("\n");
   }
 
   generateMetaComments(testCase: JavaScriptTestCase) {
@@ -218,6 +268,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   generateAssertions(
     testCase: JavaScriptTestCase,
     errorDecoding: Decoding,
+    vitest = false,
   ): string[] {
     const assertions: string[] = [];
     if (testCase.assertionData) {
@@ -226,11 +277,21 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       )) {
         const original = assertion.value;
         let stringified = assertion.stringified;
+        // JSON.stringify returns undefined for a function, which JSON.parse rejects
+        if (assertion.type === "function") {
+          assertions.push(`expect(${variableName}).to.be.a("function")`);
+          continue;
+        }
         if (original === "undefined") {
           assertions.push(`expect(${variableName}).to.equal(${original})`);
           continue;
         } else if (original === "NaN") {
-          assertions.push(`expect(${variableName}).to.be.NaN`);
+          // A chai property assertion reads as an unused expression to linters
+          assertions.push(
+            vitest
+              ? `expect(${variableName}).toBeNaN()`
+              : `expect(${variableName}).to.be.NaN`,
+          );
           continue;
         }
 
@@ -266,10 +327,13 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       value = value.replaceAll("\t", "\\t");
       value = value.replaceAll('"', '\\"');
 
+      // Both matchers pass when the rejection message contains the string
       assertions.push(
         `await expect((async () => {`,
         `\t${errorDecoding.decoded.split(" = ")[1]}`,
-        `})()).to.be.rejectedWith("${value}")`,
+        vitest
+          ? `})()).rejects.toThrow("${value}")`
+          : `})()).to.be.rejectedWith("${value}")`,
       );
     }
 

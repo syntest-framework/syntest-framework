@@ -406,7 +406,10 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       `${timeInMs}`,
     );
 
-    this.decoder = new JavaScriptDecoder(this.arguments_.targetRootDirectory);
+    this.decoder = new JavaScriptDecoder(
+      this.arguments_.targetRootDirectory,
+      this.arguments_.testFramework,
+    );
     const executionInformationProcessor = new ExecutionInformationProcessor(
       this.rootContext.getTypeModel(),
       this.arguments_.incorporateExecutionInformation,
@@ -671,12 +674,15 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       `${archiveSizeAfter}`,
     );
 
-    const originalSourceDirectory = path
-      .join(
-        "../../",
-        path.relative(process.cwd(), this.arguments_.targetRootDirectory),
-      )
-      .replace(path.basename(this.arguments_.targetRootDirectory), "");
+    // The final suite is stored in <syntest-directory>/<fid>/<test-directory>
+    const originalSourceDirectory = path.relative(
+      path.resolve(
+        this.arguments_.syntestDirectory,
+        this.arguments_.fid,
+        this.arguments_.testDirectory,
+      ),
+      path.dirname(path.resolve(this.arguments_.targetRootDirectory)),
+    );
 
     // create final suite
     suiteBuilder.createSuite(
