@@ -20,9 +20,11 @@ import {
   InstrumentationDataMap,
   MetaDataMap,
 } from "@syntest/instrumentation-javascript";
+import { DEFAULT_EXTENSIONS } from "@babel/core";
 import cloneDeep = require("lodash.clonedeep");
 import { Runner } from "mocha";
 import Mocha = require("mocha");
+import { loadConfig, register } from "tsconfig-paths";
 
 import { JavaScriptExecutionStatus } from "../../search/JavaScriptExecutionResult";
 
@@ -57,6 +59,12 @@ export type Test = {
   error?: Error | undefined;
   duration: number;
 };
+
+// Resolve tsconfig "paths" aliases, such as "@/*", the way tsc resolves them
+const tsconfig = loadConfig();
+if (tsconfig.resultType === "success") {
+  register({ baseUrl: tsconfig.absoluteBaseUrl, paths: tsconfig.paths });
+}
 
 process.on("uncaughtException", (reason) => {
   throw reason;
@@ -94,8 +102,13 @@ async function runMocha(silent: boolean, paths: string[], timeout: number) {
   require("regenerator-runtime/runtime");
   // eslint-disable-next-line unicorn/prefer-module, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
   require("@babel/register")({
-    // eslint-disable-next-line unicorn/prefer-module
-    presets: [require.resolve("@babel/preset-env")],
+    presets: [
+      // eslint-disable-next-line unicorn/prefer-module
+      require.resolve("@babel/preset-env"),
+      // eslint-disable-next-line unicorn/prefer-module
+      require.resolve("@babel/preset-typescript"),
+    ],
+    extensions: [...DEFAULT_EXTENSIONS, ".ts", ".mts", ".cts"],
   });
 
   for (const _path of paths) {

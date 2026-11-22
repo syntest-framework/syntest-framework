@@ -17,6 +17,7 @@
  */
 
 import { existsSync, lstatSync } from "node:fs";
+import { stripTypeScriptTypes } from "node:module";
 
 import * as t from "@babel/types";
 import {
@@ -143,7 +144,11 @@ export class RootContext extends FrameworkRootContext<t.Node> {
       }
     }
 
-    return success(readFile(filePath));
+    const source = readFile(filePath);
+    // Types become whitespace, so every node keeps its TypeScript line and column
+    return success(
+      /\.[cm]?ts$/.test(filePath) ? stripTypeScriptTypes(source) : source,
+    );
   }
 
   @cache("exports")
