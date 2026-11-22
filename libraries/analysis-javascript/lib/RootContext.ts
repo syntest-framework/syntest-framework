@@ -53,7 +53,8 @@ import { TypeExtractor } from "./type/discovery/TypeExtractor";
 import { TypeModel } from "./type/resolving/TypeModel";
 import { TypeModelFactory } from "./type/resolving/TypeModelFactory";
 import { TypePool } from "./type/resolving/TypePool";
-import { readFile } from "./utils/fileSystem";
+import { addAnnotatedParameterTypes } from "./type/resolving/TypeScriptAnnotations";
+import { isTypeScript, readFile } from "./utils/fileSystem";
 
 export class RootContext extends FrameworkRootContext<t.Node> {
   protected static LOGGER: Logger;
@@ -147,7 +148,7 @@ export class RootContext extends FrameworkRootContext<t.Node> {
     const source = readFile(filePath);
     // Types become whitespace, so every node keeps its TypeScript line and column
     return success(
-      /\.[cm]?ts$/.test(filePath) ? stripTypeScriptTypes(source) : source,
+      isTypeScript(filePath) ? stripTypeScriptTypes(source) : source,
     );
   }
 
@@ -330,6 +331,15 @@ export class RootContext extends FrameworkRootContext<t.Node> {
           elements.result,
           relations.result,
         );
+        // Type node ids carry the resolved path, as getElements resolves it
+        const resolved = this.resolvePath(filePath);
+        if (isTypeScript(filePath) && !isFailure(resolved)) {
+          addAnnotatedParameterTypes(
+            this._typeModel,
+            unwrap(resolved),
+            readFile(unwrap(resolved)),
+          );
+        }
 
         this._typePool.extractExportedTypes(exports.result, objects.result);
       }

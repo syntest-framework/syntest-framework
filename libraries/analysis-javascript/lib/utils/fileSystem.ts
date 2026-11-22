@@ -19,6 +19,10 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import * as path from "node:path";
 
+export function isTypeScript(filePath: string): boolean {
+  return /\.[cm]?ts$/.test(filePath);
+}
+
 export function readFile(absolutePath: string): string {
   if (!path.isAbsolute(absolutePath)) {
     absolutePath = path.resolve(absolutePath);
