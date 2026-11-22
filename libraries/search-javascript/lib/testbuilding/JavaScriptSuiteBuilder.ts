@@ -65,6 +65,7 @@ export class JavaScriptSuiteBuilder {
           archive.get(target),
           gatherAssertionData,
           sourceDirectory,
+          final,
         );
         const testPath = this.storageManager.store(
           [testDirectory],
@@ -84,6 +85,7 @@ export class JavaScriptSuiteBuilder {
             testCase,
             gatherAssertionData,
             sourceDirectory,
+            final,
           );
           const testPath = this.storageManager.store(
             [testDirectory],

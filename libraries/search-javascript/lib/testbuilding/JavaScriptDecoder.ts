@@ -33,20 +33,29 @@ import { ContextBuilder } from "./ContextBuilder";
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   protected static LOGGER: Logger;
   private targetRootDirectory: string;
+  private testFramework: "mocha" | "vitest";
 
-  constructor(targetRootDirectory: string) {
+  constructor(
+    targetRootDirectory: string,
+    testFramework: "mocha" | "vitest" = "mocha",
+  ) {
     JavaScriptDecoder.LOGGER = getLogger(JavaScriptDecoder.name);
     this.targetRootDirectory = targetRootDirectory;
+    this.testFramework = testFramework;
   }
 
   decode(
     testCases: JavaScriptTestCase | JavaScriptTestCase[],
     gatherAssertionData = false,
     sourceDirectory = "../instrumented",
+    final = false,
   ): string {
     if (testCases instanceof JavaScriptTestCase) {
       testCases = [testCases];
     }
+
+    // The search runs every suite with mocha, so only the final suite changes
+    const vitest = final && this.testFramework === "vitest";
 
     const context = new ContextBuilder(
       this.targetRootDirectory,
@@ -97,12 +106,16 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       const assertions: string[] = this.generateAssertions(
         testCase,
         errorDecoding,
+        vitest,
       );
 
       tests.push([...metaCommentBlock, ...testLines, ...assertions]);
     }
 
-    const { imports, requires } = context.getImports(assertionsPresent);
+    // vitest's own expect is chai's, so its suite imports no chai
+    const { imports, requires } = context.getImports(
+      assertionsPresent && !vitest,
+    );
 
     let beforeEachLines: string[] = [];
 
@@ -132,7 +145,10 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
 
     const lines = [
       "// Imports",
-      "require = require('esm')(module)",
+      // shortcut: CommonJS targets still load through require, which vitest's ES module suite lacks
+      vitest
+        ? `import { beforeEach, describe, expect, it } from "vitest";`
+        : "require = require('esm')(module)",
       ...imports,
       gatherAssertionData ? assertionFunction : "",
       `describe('SynTest Test Suite', function() {`,
@@ -218,6 +234,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   generateAssertions(
     testCase: JavaScriptTestCase,
     errorDecoding: Decoding,
+    vitest = false,
   ): string[] {
     const assertions: string[] = [];
     if (testCase.assertionData) {
@@ -266,10 +283,13 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       value = value.replaceAll("\t", "\\t");
       value = value.replaceAll('"', '\\"');
 
+      // Both matchers pass when the rejection message contains the string
       assertions.push(
         `await expect((async () => {`,
         `\t${errorDecoding.decoded.split(" = ")[1]}`,
-        `})()).to.be.rejectedWith("${value}")`,
+        vitest
+          ? `})()).rejects.toThrow("${value}")`
+          : `})()).to.be.rejectedWith("${value}")`,
       );
     }
 

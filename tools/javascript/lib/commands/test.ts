@@ -56,6 +56,16 @@ export function getTestCommand(
     type: "string",
   });
 
+  options.set("test-framework", {
+    alias: [],
+    choices: ["mocha", "vitest"],
+    default: "mocha",
+    description: "The test framework the final test suite is written for.",
+    group: commandGroup,
+    hidden: false,
+    type: "string",
+  });
+
   options.set("random-type-probability", {
     alias: [],
     default: 0.1,
@@ -239,6 +249,7 @@ export function getTestCommand(
 export type TestCommandOptions = {
   incorporateExecutionInformation: boolean;
   typeInferenceMode: string;
+  testFramework: "mocha" | "vitest";
   randomTypeProbability: number;
   constantPool: boolean;
   constantPoolProbability: number;

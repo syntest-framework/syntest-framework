@@ -406,7 +406,10 @@ export class JavaScriptLauncher extends Launcher<JavaScriptArguments> {
       `${timeInMs}`,
     );
 
-    this.decoder = new JavaScriptDecoder(this.arguments_.targetRootDirectory);
+    this.decoder = new JavaScriptDecoder(
+      this.arguments_.targetRootDirectory,
+      this.arguments_.testFramework,
+    );
     const executionInformationProcessor = new ExecutionInformationProcessor(
       this.rootContext.getTypeModel(),
       this.arguments_.incorporateExecutionInformation,
