@@ -103,8 +103,9 @@ async function main() {
   const seed = baseArguments.randomSeed || getSeed();
   initializePseudoRandomNumberGenerator(seed);
 
-  // Generate a flow id
-  const flowId = `FID-${Date.now()}-${uuid.generate()}`;
+  // Use the given flow id, so a suite kept in a project has a stable path, or generate one
+  const flowId =
+    baseArguments.fid || `FID-${Date.now()}-${uuid.generate()}`;
 
   // Configure the console log level
   let consoleLogLevel;
