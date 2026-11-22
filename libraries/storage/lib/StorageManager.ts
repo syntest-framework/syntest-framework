@@ -112,7 +112,8 @@ export class StorageManager {
   }
 
   deleteMainTemporary() {
-    const directory = this.tempSyntestDirectory;
+    // Only this flow's directory, since flows that run at the same time share the main one
+    const directory = path.join(this.tempSyntestDirectory, this.fid);
     if (!existsSync(directory)) {
       return;
     }
