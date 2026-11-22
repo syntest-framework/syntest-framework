@@ -264,7 +264,7 @@ export class ContextBuilder {
     return require;
   }
 
-  getImports(assertionsPresent: boolean) {
+  getImports(assertionsPresent: boolean, ownChai = false) {
     let requires: Require[] = [];
     let imports: string[] = [];
 
@@ -292,9 +292,19 @@ export class ContextBuilder {
       .sort();
 
     if (assertionsPresent) {
+      // The project's own chai can be an ES module, which @babel/register loads as CommonJS
+      // and fails on, so the suites the search runs import the chai this package depends on
+      const chai = ownChai
+        ? // eslint-disable-next-line unicorn/prefer-module
+          JSON.stringify(require.resolve("chai"))
+        : "'chai'";
+      const chaiAsPromised = ownChai
+        ? // eslint-disable-next-line unicorn/prefer-module
+          JSON.stringify(require.resolve("chai-as-promised"))
+        : "'chai-as-promised'";
       imports.push(
-        `import chai from 'chai'`,
-        `import chaiAsPromised from 'chai-as-promised'`,
+        `import chai from ${chai}`,
+        `import chaiAsPromised from ${chaiAsPromised}`,
         `const expect = chai.expect;`,
         `chai.use(chaiAsPromised);`,
       );

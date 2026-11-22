@@ -115,6 +115,7 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
     // vitest's own expect is chai's, so its suite imports no chai
     const { imports, requires } = context.getImports(
       assertionsPresent && !vitest,
+      !final,
     );
 
     let beforeEachLines: string[] = [];
