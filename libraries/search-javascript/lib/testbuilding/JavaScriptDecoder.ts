@@ -244,6 +244,11 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       )) {
         const original = assertion.value;
         let stringified = assertion.stringified;
+        // JSON.stringify returns undefined for a function, which JSON.parse rejects
+        if (assertion.type === "function") {
+          assertions.push(`expect(${variableName}).to.be.a("function")`);
+          continue;
+        }
         if (original === "undefined") {
           assertions.push(`expect(${variableName}).to.equal(${original})`);
           continue;

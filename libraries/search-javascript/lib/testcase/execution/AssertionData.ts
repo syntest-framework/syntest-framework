@@ -24,6 +24,7 @@ export type AssertionDataTestCase = {
     [varName: string]: {
       value: unknown;
       stringified: string;
+      type: string;
     };
   };
   error?: {

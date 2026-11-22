@@ -30,7 +30,8 @@ function addAssertion(id, variableName, value) {
 
   global.__assertion__[id].assertions[variableName] = {
     value: '' + value,
-    stringified: '' + JSON.stringify(value)
+    stringified: '' + JSON.stringify(value),
+    type: typeof value
   }
 }
 function setError(id, error, count) {
