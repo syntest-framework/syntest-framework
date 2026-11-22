@@ -69,8 +69,13 @@ addHook(
     transformSync(code, {
       filename,
       presets: [
-        // eslint-disable-next-line unicorn/prefer-module
-        require.resolve("@babel/preset-env"),
+        [
+          // eslint-disable-next-line unicorn/prefer-module
+          require.resolve("@babel/preset-env"),
+          // Compile only what this Node lacks, so the search observes the behaviour and error
+          // messages of the code as it runs natively, which the final suite asserts on
+          { targets: { node: "current" } },
+        ],
         // eslint-disable-next-line unicorn/prefer-module
         require.resolve("@babel/preset-typescript"),
       ],
