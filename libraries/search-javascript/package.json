@@ -52,7 +52,6 @@
     "@babel/generator": "^7.21.9",
     "@babel/preset-env": "7.24.4",
     "@babel/preset-typescript": "7.29.7",
-    "@babel/register": "7.23.7",
     "@syntest/analysis": "^0.3.0-beta.5",
     "@syntest/analysis-javascript": "^0.2.0-beta.20",
     "@syntest/ast-visitor-javascript": "^0.2.0-beta.11",
@@ -67,6 +66,7 @@
     "chai-as-promised": "7.1.1",
     "lodash.clonedeep": "4.5.0",
     "mocha": "10.4.0",
+    "pirates": "4.0.7",
     "regenerator-runtime": "0.14.1",
     "tsconfig-paths": "4.2.0"
   },

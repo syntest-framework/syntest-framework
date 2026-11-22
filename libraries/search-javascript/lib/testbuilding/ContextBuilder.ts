@@ -292,8 +292,8 @@ export class ContextBuilder {
       .sort();
 
     if (assertionsPresent) {
-      // The project's own chai can be an ES module, which @babel/register loads as CommonJS
-      // and fails on, so the suites the search runs import the chai this package depends on
+      // The suites the search runs import the chai this package depends on, since the project
+      // may have none or an ES-only major that chai-as-promised 7 does not support
       const chai = ownChai
         ? // eslint-disable-next-line unicorn/prefer-module
           JSON.stringify(require.resolve("chai"))
