@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import { NodePath, PluginObj, transformSync } from "@babel/core";
+import * as t from "@babel/types";
 import { ImplementationError } from "@syntest/diagnostics";
 import { getLogger, Logger } from "@syntest/logging";
 import { Decoder } from "@syntest/search";
@@ -29,6 +31,34 @@ import { Decoding } from "../testcase/statements/Statement";
 
 import { assertionFunction } from "./assertionFunctionTemplate";
 import { ContextBuilder } from "./ContextBuilder";
+
+/**
+ * Removes every import specifier the suite never references, and each import declaration
+ * left without one. Statements cut after an error leave their imports behind, and the
+ * framework names are imported whether or not a test uses them.
+ */
+function withoutUnusedImports(code: string): string {
+  const plugin = (): PluginObj => ({
+    visitor: {
+      ImportDeclaration(path: NodePath<t.ImportDeclaration>) {
+        if (path.node.specifiers.length === 0) return;
+        for (const specifier of path.get("specifiers")) {
+          if (!path.scope.getBinding(specifier.node.local.name)?.referenced) {
+            specifier.remove();
+          }
+        }
+        if (path.node.specifiers.length === 0) path.remove();
+      },
+    },
+  });
+
+  return transformSync(code, {
+    babelrc: false,
+    configFile: false,
+    parserOpts: { sourceType: "module" },
+    plugins: [plugin],
+  }).code;
+}
 
 export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
   protected static LOGGER: Logger;
@@ -162,7 +192,10 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
       "})",
     ];
 
-    return lines.join("\n");
+    // A final suite is kept in the project, so it imports only what its tests reference
+    return final
+      ? withoutUnusedImports(lines.join("\n"))
+      : lines.join("\n");
   }
 
   generateMetaComments(testCase: JavaScriptTestCase) {
@@ -253,7 +286,12 @@ export class JavaScriptDecoder implements Decoder<JavaScriptTestCase, string> {
           assertions.push(`expect(${variableName}).to.equal(${original})`);
           continue;
         } else if (original === "NaN") {
-          assertions.push(`expect(${variableName}).to.be.NaN`);
+          // A chai property assertion reads as an unused expression to linters
+          assertions.push(
+            vitest
+              ? `expect(${variableName}).toBeNaN()`
+              : `expect(${variableName}).to.be.NaN`,
+          );
           continue;
         }
 
